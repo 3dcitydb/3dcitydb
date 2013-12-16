@@ -1,0 +1,28 @@
+-- <?xml version = '1.0' encoding = 'UTF-8'?>
+-- <type xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+--   <properties>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+--       <value class="java.lang.String">3DcityDB</value>
+--     </entry>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+--       <value class="oracle.javatools.db.ReferenceID">
+--         <name>DB_INFO_OBJ</name>
+--         <identifier class="java.math.BigDecimal">114526</identifier>
+--         <schemaName>YAO</schemaName>
+--         <type>TYPE</type>
+--       </value>
+--     </entry>
+--   </properties>
+-- </type>
+
+CREATE OR REPLACE
+TYPE DB_INFO_OBJ AS OBJECT(
+  SRID NUMBER,
+  GML_SRS_NAME VARCHAR2(1000),
+  COORD_REF_SYS_NAME VARCHAR2(80),
+  COORD_REF_SYS_KIND VARCHAR2(24),
+  VERSIONING VARCHAR2(100)
+);
+/

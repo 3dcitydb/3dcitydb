@@ -1,0 +1,25 @@
+-- <?xml version = '1.0' encoding = 'UTF-8'?>
+-- <package xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+--   <properties>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+--       <value class="java.lang.String">3DcityDB</value>
+--     </entry>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+--       <value class="oracle.javatools.db.ReferenceID">
+--         <name>GEODB_DELETE_BY_LINEAGE</name>
+--         <identifier class="java.math.BigDecimal">114538</identifier>
+--         <schemaName>YAO</schemaName>
+--         <type>PACKAGE</type>
+--       </value>
+--     </entry>
+--   </properties>
+-- </package>
+
+CREATE OR REPLACE
+PACKAGE geodb_delete_by_lineage
+AS
+  procedure delete_buildings(lineage_value varchar2);
+END geodb_delete_by_lineage;
+/

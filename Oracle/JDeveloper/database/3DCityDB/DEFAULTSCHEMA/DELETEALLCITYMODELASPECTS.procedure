@@ -1,0 +1,36 @@
+-- <?xml version = '1.0' encoding = 'UTF-8'?>
+-- <procedure xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+--   <properties>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+--       <value class="java.lang.String">3DcityDB</value>
+--     </entry>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+--       <value class="oracle.javatools.db.ReferenceID">
+--         <name>DELETEALLCITYMODELASPECTS</name>
+--         <identifier class="java.math.BigDecimal">114524</identifier>
+--         <schemaName>YAO</schemaName>
+--         <type>PROCEDURE</type>
+--       </value>
+--     </entry>
+--   </properties>
+-- </procedure>
+
+CREATE OR REPLACE
+PROCEDURE DeleteAllCityModelAspects
+
+IS
+  status NUMBER;
+  message VARCHAR2(256);
+
+BEGIN
+  DelAllCityModelAspectsBdy(status, message);
+  IF status = 1 THEN
+    DBMS_OUTPUT.put_line('Alle CityModelAspects gelöscht');
+  ELSE
+    DBMS_OUTPUT.put_line('Fehler: ' || message);
+  END IF;
+
+END;
+/

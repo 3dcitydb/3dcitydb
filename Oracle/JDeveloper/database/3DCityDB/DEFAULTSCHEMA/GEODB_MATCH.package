@@ -1,0 +1,37 @@
+-- <?xml version = '1.0' encoding = 'UTF-8'?>
+-- <package xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+--   <properties>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+--       <value class="java.lang.String">3DcityDB</value>
+--     </entry>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+--       <value class="oracle.javatools.db.ReferenceID">
+--         <name>GEODB_MATCH</name>
+--         <identifier class="java.math.BigDecimal">114566</identifier>
+--         <schemaName>YAO</schemaName>
+--         <type>PACKAGE</type>
+--       </value>
+--     </entry>
+--   </properties>
+-- </package>
+
+CREATE OR REPLACE
+PACKAGE geodb_match
+AS
+  procedure create_matching_table(lod_cand number, lineage cityobject.lineage%type, lod_master number, delta_cand number, delta_master number, tolerance number := 0.001, aggregate_building number := 1);
+
+  procedure collect_cand_building(lod number, lineage cityobject.lineage%type);
+  procedure collect_master_building(lod number, lineage cityobject.lineage%type);
+  procedure collect_geometry(lod number);
+  procedure rectify_geometry(tolerance number := 0.001);
+  procedure aggregate_geometry(table_name varchar2, tolerance number := 0.001, aggregate_building number := 1);
+  procedure join_cand_master(lod_cand number, lineage cityobject.lineage%type, lod_master number, tolerance number := 0.001);
+	procedure create_relevant_matches(delta_cand number, delta_master number);
+  procedure clear_matching_tables;
+
+  function aggregate_mbr(table_name varchar2) return mdsys.sdo_geometry;
+  function aggregate_geometry_by_id(id number, tolerance number := 0.001, aggregate_building number := 1) return mdsys.sdo_geometry;
+END geodb_match;
+/

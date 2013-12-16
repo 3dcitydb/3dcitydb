@@ -1,0 +1,70 @@
+-- <?xml version = '1.0' encoding = 'UTF-8'?>
+-- <procedure xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+--   <properties>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+--       <value class="java.lang.String">3DcityDB</value>
+--     </entry>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+--       <value class="oracle.javatools.db.ReferenceID">
+--         <name>DELETECITYMODELASPECTBDY</name>
+--         <identifier class="java.math.BigDecimal">114502</identifier>
+--         <schemaName>YAO</schemaName>
+--         <type>PROCEDURE</type>
+--       </value>
+--     </entry>
+--   </properties>
+-- </procedure>
+
+CREATE OR REPLACE
+PROCEDURE DeleteCityModelAspectBdy(
+  cityModelAspectId NUMBER,
+  outStatus OUT NUMBER,
+  outMessage OUT VARCHAR2
+)
+
+IS
+  -- lokale Variablen
+  workspaceName VARCHAR2(30);
+  cmaCount NUMBER;
+  cmaCountException EXCEPTION;
+
+BEGIN
+  -- Abragen der Existenz und des Status der Planung
+  checkCityModelAspect(cityModelAspectId, cmaCount);
+
+  IF cmaCount = 1 THEN   --  CityModelAspect existiert
+
+    -- Suchen des Workspacenamen des CityModelAspects
+    SELECT workspace_name INTO workspaceName
+    FROM city_model_aspect
+    WHERE id = cityModelAspectId;
+
+    -- Tupel in der Zuordnungstabelle löschen
+    DELETE city_model_aspect_component
+    WHERE city_model_aspect_id = cityModelAspectId;
+
+    -- Tupel in der Tabelle löschen
+    DELETE city_model_aspect
+    WHERE id = cityModelAspectId;
+
+    -- Workspace löschen
+    DBMS_WM.GoToWorkspace('LIVE');
+    DBMS_WM.RemoveWorkspace(workspaceName);
+
+    COMMIT;
+    setOutParameter(1, NULL, outStatus, outMessage);
+
+  ELSE   -- CityModelAspect existiert nicht
+    RAISE cmaCountException;
+  END IF;
+
+EXCEPTION
+  WHEN cmaCountException THEN
+    setOutParameter(0, '3D-Geo-DB: CityModelAspect existiert nicht', outStatus, outMessage);
+  WHEN OTHERS THEN
+    setOutParameter(0, sqlerrm, outStatus, outMessage);
+
+END;
+/

@@ -1,0 +1,68 @@
+-- <?xml version = '1.0' encoding = 'UTF-8'?>
+-- <procedure xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+--   <properties>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+--       <value class="java.lang.String">3DcityDB</value>
+--     </entry>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+--       <value class="oracle.javatools.db.ReferenceID">
+--         <name>DELALLCITYMODELASPECTSBDY</name>
+--         <identifier class="java.math.BigDecimal">114505</identifier>
+--         <schemaName>YAO</schemaName>
+--         <type>PROCEDURE</type>
+--       </value>
+--     </entry>
+--   </properties>
+-- </procedure>
+
+CREATE OR REPLACE
+PROCEDURE DelAllCityModelAspectsBdy(
+  outStatus OUT NUMBER,
+  outMessage OUT VARCHAR2
+)
+
+IS
+  -- lokale Variablen
+  workspacename VARCHAR2(30);
+  cmaId NUMBER;
+  CURSOR workspaces IS -- enthält alle Workspacenamen
+  SELECT workspace_name
+  FROM city_model_aspect;
+
+BEGIN
+  -- Cursor durchlaufen und jeweiligen Workspace löschen
+  OPEN workspaces;
+    LOOP
+      FETCH workspaces INTO workspacename;
+      EXIT WHEN workspaces%NOTFOUND;
+
+      -- ID des CityModelAspects abfragen
+      SELECT id INTO cmaId
+      FROM city_model_aspect
+      WHERE workspace_name LIKE workspacename ;
+
+      -- Workspace löschen
+      DBMS_WM.RemoveWorkspace(workspacename);
+
+      -- Tupel löschen
+      DELETE city_model_aspect_component
+      WHERE city_model_aspect_id = cmaId;
+
+      DELETE city_model_aspect
+      WHERE id = cmaId;
+
+      DBMS_OUTPUT.PUT_LINE(cmaId || ' gelöscht');
+    END LOOP;
+  CLOSE workspaces;
+
+  COMMIT;
+  setOutParameter(1, NULL, outStatus, outMessage);
+
+EXCEPTION
+  WHEN OTHERS THEN
+    setOutParameter(0, sqlerrm, outStatus, outMessage);
+
+END;
+/

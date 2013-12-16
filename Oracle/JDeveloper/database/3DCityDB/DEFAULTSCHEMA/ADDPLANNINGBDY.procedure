@@ -1,0 +1,60 @@
+-- <?xml version = '1.0' encoding = 'UTF-8'?>
+-- <procedure xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+--   <properties>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+--       <value class="java.lang.String">3DcityDB</value>
+--     </entry>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+--       <value class="oracle.javatools.db.ReferenceID">
+--         <name>ADDPLANNINGBDY</name>
+--         <identifier class="java.math.BigDecimal">114487</identifier>
+--         <schemaName>YAO</schemaName>
+--         <type>PROCEDURE</type>
+--       </value>
+--     </entry>
+--   </properties>
+-- </procedure>
+
+CREATE OR REPLACE
+PROCEDURE AddPlanningBdy(
+  title VARCHAR2,
+  description VARCHAR2,
+  executive VARCHAR2,
+  spatialExtent MDSYS.SDO_GEOMETRY,
+  outStatus OUT NUMBER,
+  outMessage OUT VARCHAR2
+)
+
+IS
+  -- lokale Variablen
+  sequenceGeneratedId NUMBER;
+
+BEGIN
+  -- den nächsten Zähler der Sequenz abholen
+  SELECT planning_seq.nextval INTO sequenceGeneratedId
+  FROM dual;
+
+  -- Anlegen eines neuen Tupels
+  INSERT INTO planning
+  VALUES(
+    sequenceGeneratedId,
+    title,
+    description,
+    executive,
+    spatialExtent,
+    CURRENT_TIMESTAMP,
+    null
+  );
+
+  COMMIT;
+
+  setOutParameter(1, TO_CHAR(sequenceGeneratedId), outStatus, outMessage);
+
+EXCEPTION
+  WHEN OTHERS THEN
+    setOutParameter(0, sqlerrm, outStatus, outMessage);
+
+END;
+/

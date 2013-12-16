@@ -1,0 +1,36 @@
+-- <?xml version = '1.0' encoding = 'UTF-8'?>
+-- <package xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+--   <properties>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+--       <value class="java.lang.String">3DcityDB</value>
+--     </entry>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+--       <value class="oracle.javatools.db.ReferenceID">
+--         <name>GEODB_IDX</name>
+--         <identifier class="java.math.BigDecimal">114532</identifier>
+--         <schemaName>YAO</schemaName>
+--         <type>PACKAGE</type>
+--       </value>
+--     </entry>
+--   </properties>
+-- </package>
+
+CREATE OR REPLACE
+PACKAGE geodb_idx
+AS
+  TYPE index_table IS TABLE OF INDEX_OBJ;
+  FUNCTION index_status(idx INDEX_OBJ) RETURN VARCHAR2;
+  FUNCTION index_status(table_name VARCHAR2, column_name VARCHAR2) RETURN VARCHAR2;
+  FUNCTION status_spatial_indexes RETURN STRARRAY;
+  FUNCTION status_normal_indexes RETURN STRARRAY;
+  FUNCTION create_index(idx INDEX_OBJ, is_versioned BOOLEAN, params VARCHAR2 := '') RETURN VARCHAR2;
+  FUNCTION drop_index(idx INDEX_OBJ, is_versioned BOOLEAN) RETURN VARCHAR2;
+  FUNCTION create_spatial_indexes RETURN STRARRAY;
+  FUNCTION drop_spatial_indexes RETURN STRARRAY;
+  FUNCTION create_normal_indexes RETURN STRARRAY;
+  FUNCTION drop_normal_indexes RETURN STRARRAY;
+  FUNCTION get_index(table_name VARCHAR2, column_name VARCHAR2) RETURN INDEX_OBJ;
+END geodb_idx;
+/

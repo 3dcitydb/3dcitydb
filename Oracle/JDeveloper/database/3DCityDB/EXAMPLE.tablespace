@@ -1,0 +1,53 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<tablespace xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+  <ID class="oracle.javatools.db.IdentifierBasedID">
+    <identifier class="java.lang.String">fa3a835d-aecc-4272-b3c4-35b2b68eb414</identifier>
+  </ID>
+  <name>EXAMPLE</name>
+  <fileType>SMALLFILE</fileType>
+  <properties>
+    <entry>
+      <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+      <value class="java.lang.String">3DcityDB</value>
+    </entry>
+    <entry>
+      <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+      <value class="oracle.javatools.db.ReferenceID">
+        <name>EXAMPLE</name>
+        <type>TABLESPACE</type>
+      </value>
+    </entry>
+    <entry>
+      <key>OracleTablespaceProperties</key>
+      <value class="oracle.javatools.db.ora.OracleTablespaceProperties">
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">d2f7cfb8-425f-4444-bf45-2864b0e46748</identifier>
+        </ID>
+        <autoAllocate>true</autoAllocate>
+        <blockSize>8192</blockSize>
+        <defaultTableCompression>NOCOMPRESS</defaultTableCompression>
+        <extentManagementType>LOCAL</extentManagementType>
+        <forceLogging>false</forceLogging>
+        <logging>NOLOGGING</logging>
+        <onlineStatus>ONLINE</onlineStatus>
+        <properties>
+          <entry>
+            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+            <value class="oracle.javatools.db.ReferenceID">
+              <parent class="oracle.javatools.db.ReferenceID">
+                <name>EXAMPLE</name>
+                <type>TABLESPACE</type>
+              </parent>
+              <type>OracleTablespaceProperties</type>
+            </value>
+          </entry>
+        </properties>
+        <segmentManagement>AUTO</segmentManagement>
+      </value>
+    </entry>
+    <entry>
+      <key>TablespaceType</key>
+      <value class="oracle.javatools.db.Tablespace$TablespaceType">PERMANENT</value>
+    </entry>
+  </properties>
+</tablespace>

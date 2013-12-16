@@ -1,0 +1,67 @@
+-- <?xml version = '1.0' encoding = 'UTF-8'?>
+-- <procedure xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+--   <properties>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+--       <value class="java.lang.String">3DcityDB</value>
+--     </entry>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+--       <value class="oracle.javatools.db.ReferenceID">
+--         <name>GETALLDIFFBDY</name>
+--         <identifier class="java.math.BigDecimal">114495</identifier>
+--         <schemaName>YAO</schemaName>
+--         <type>PROCEDURE</type>
+--       </value>
+--     </entry>
+--   </properties>
+-- </procedure>
+
+CREATE OR REPLACE
+PROCEDURE GetAllDiffBdy(
+  outStatus OUT NUMBER,
+  outMessage OUT VARCHAR2
+)
+
+IS
+  -- lokale Variablen
+  planningAlternativeId VARCHAR2(30);
+  status NUMBER;
+  message VARCHAR(256);
+  diff NUMBER;
+  GetDiffException EXCEPTION;
+  CURSOR planningAlternatives IS  -- enthält alle Workspacenamen
+    SELECT id
+    FROM planning_alternative
+    WHERE termination_date IS NULL;
+
+BEGIN
+  diff := 0;
+  -- Cursor durchlaufen und jeweiligen Differenzen abfragen
+  OPEN planningAlternatives;
+    LOOP
+      FETCH planningAlternatives INTO planningAlternativeId;
+      EXIT WHEN planningAlternatives%NOTFOUND;
+
+      GetDiffBdy(planningAlternativeId, status, message);
+
+      IF status = 1 THEN
+        DBMS_OUTPUT.put_line(planningAlternativeId || ': ' || TO_NUMBER(message));
+        diff := diff + TO_NUMBER(message);
+      ELSE
+        RAISE GetDiffException;
+      END IF;
+
+    END LOOP;
+  CLOSE planningAlternatives;
+
+  setOutParameter(1, TO_CHAR(diff), outStatus, outMessage);
+
+EXCEPTION
+  WHEN GetDiffException THEN
+    setOutParameter(0, '3D-Geo-DB: Fehler beim Lesen der Differenzen', outStatus, outMessage);
+  WHEN OTHERS THEN
+    setOutParameter(0, sqlerrm, outStatus, outMessage);
+
+END;
+/

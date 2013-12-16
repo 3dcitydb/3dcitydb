@@ -1,0 +1,539 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<table xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+  <ID class="oracle.javatools.db.IdentifierBasedID">
+    <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
+  </ID>
+  <name>WATERBOD_TO_WATERBND_SRF</name>
+  <columns>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">ac0d393c-2e39-40a4-ab3e-246370b9fb4e</identifier>
+      </ID>
+      <name>WATERBOUNDARY_SURFACE_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">fc034206-789e-4978-9425-40bbbbc3f56b</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+        <properties>
+          <entry>
+            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+            <value class="oracle.javatools.db.ReferenceID">
+              <parent class="oracle.javatools.db.ReferenceID">
+                <name>WATERBOUNDARY_SURFACE_ID</name>
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>WATERBOD_TO_WATERBND_SRF</name>
+                  <identifier class="java.math.BigDecimal">115883</identifier>
+                  <schemaName>YAO</schemaName>
+                  <type>TABLE</type>
+                </parent>
+                <type>COLUMN</type>
+              </parent>
+              <type>DataTypeUsage</type>
+            </value>
+          </entry>
+        </properties>
+      </dataTypeUsage>
+      <notNull>true</notNull>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>WATERBOUNDARY_SURFACE_ID</name>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>WATERBOD_TO_WATERBND_SRF</name>
+              <identifier class="java.math.BigDecimal">115883</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <type>COLUMN</type>
+          </value>
+        </entry>
+      </properties>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">8dfda1ef-3ea3-464b-b26b-1eac64233c06</identifier>
+      </ID>
+      <name>WATERBODY_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">8748851b-54ae-4b33-9d3c-969b3ba8d2e5</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+        <properties>
+          <entry>
+            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+            <value class="oracle.javatools.db.ReferenceID">
+              <parent class="oracle.javatools.db.ReferenceID">
+                <name>WATERBODY_ID</name>
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>WATERBOD_TO_WATERBND_SRF</name>
+                  <identifier class="java.math.BigDecimal">115883</identifier>
+                  <schemaName>YAO</schemaName>
+                  <type>TABLE</type>
+                </parent>
+                <type>COLUMN</type>
+              </parent>
+              <type>DataTypeUsage</type>
+            </value>
+          </entry>
+        </properties>
+      </dataTypeUsage>
+      <notNull>true</notNull>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>WATERBODY_ID</name>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>WATERBOD_TO_WATERBND_SRF</name>
+              <identifier class="java.math.BigDecimal">115883</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <type>COLUMN</type>
+          </value>
+        </entry>
+      </properties>
+    </column>
+  </columns>
+  <constraints>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">0e322137-1a44-428f-84d1-d62ecad134e9</identifier>
+      </ID>
+      <name>WATERBOD_TO_WATERBND_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>WATERBOUNDARY_SURFACE_ID</name>
+          <identifier class="java.lang.String">ac0d393c-2e39-40a4-ab3e-246370b9fb4e</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>WATERBOD_TO_WATERBND_SRF</name>
+            <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
+            <schemaName>YAO</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>YAO</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>WATERBOD_TO_WATERBND_FK</name>
+            <childObjectNames>
+              <childObjectName>WATERBOUNDARY_SURFACE_ID</childObjectName>
+            </childObjectNames>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>WATERBOD_TO_WATERBND_SRF</name>
+              <identifier class="java.math.BigDecimal">115883</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <subType>FKConstraint</subType>
+            <type>CONSTRAINT</type>
+          </value>
+        </entry>
+      </properties>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>WATERBOUNDARY_SURFACE_PK</name>
+        <identifier class="java.lang.String">301b1ac9-cce0-4c11-a6b7-9f7df89031d2</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>WATERBOUNDARY_SURFACE</name>
+          <identifier class="java.lang.String">85b6cb4f-89cb-4cd9-b7bc-fd94e4c4fad7</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">5778aebc-dfd5-4f4f-9f90-5e8e3db544fb</identifier>
+      </ID>
+      <name>WATERBOD_TO_WATERBND_FK1</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>WATERBODY_ID</name>
+          <identifier class="java.lang.String">8dfda1ef-3ea3-464b-b26b-1eac64233c06</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>WATERBOD_TO_WATERBND_SRF</name>
+            <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
+            <schemaName>YAO</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>YAO</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>WATERBOD_TO_WATERBND_FK1</name>
+            <childObjectNames>
+              <childObjectName>WATERBODY_ID</childObjectName>
+            </childObjectNames>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>WATERBOD_TO_WATERBND_SRF</name>
+              <identifier class="java.math.BigDecimal">115883</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <subType>FKConstraint</subType>
+            <type>CONSTRAINT</type>
+          </value>
+        </entry>
+      </properties>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>WATERBODY_PK</name>
+        <identifier class="java.lang.String">25c96466-e6b6-4786-a06b-ad4037729639</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>WATERBODY</name>
+          <identifier class="java.lang.String">02526c7c-f956-47e2-9299-e791a0defeca</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.PKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">2c024d3a-e035-46a0-9e85-be7ca91b3164</identifier>
+      </ID>
+      <name>WATERBOD_TO_WATERBND_PK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>WATERBOUNDARY_SURFACE_ID</name>
+          <identifier class="java.lang.String">ac0d393c-2e39-40a4-ab3e-246370b9fb4e</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>WATERBOD_TO_WATERBND_SRF</name>
+            <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
+            <schemaName>YAO</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>YAO</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>WATERBODY_ID</name>
+          <identifier class="java.lang.String">8dfda1ef-3ea3-464b-b26b-1eac64233c06</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>WATERBOD_TO_WATERBND_SRF</name>
+            <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
+            <schemaName>YAO</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>YAO</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <indexID class="oracle.javatools.db.IdentifierBasedID">
+        <name>WATERBOD_TO_WATERBND_PK</name>
+        <identifier class="java.lang.String">33124678-8969-4368-a240-f0be68b11161</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>WATERBOD_TO_WATERBND_SRF</name>
+          <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
+        <type>INDEX</type>
+      </indexID>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>WATERBOD_TO_WATERBND_PK</name>
+            <childObjectNames>
+              <childObjectName>WATERBOUNDARY_SURFACE_ID</childObjectName>
+              <childObjectName>WATERBODY_ID</childObjectName>
+            </childObjectNames>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>WATERBOD_TO_WATERBND_SRF</name>
+              <identifier class="java.math.BigDecimal">115883</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <subType>PKConstraint</subType>
+            <type>CONSTRAINT</type>
+          </value>
+        </entry>
+      </properties>
+    </constraint>
+  </constraints>
+  <indexes>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">33124678-8969-4368-a240-f0be68b11161</identifier>
+      </ID>
+      <name>WATERBOD_TO_WATERBND_PK</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">d36cc396-9c2a-4a3f-9227-877a689b2c14</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">be6a53f0-f1b6-41d8-8ab4-b73da777b73e</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>WATERBOUNDARY_SURFACE_ID</name>
+              <identifier class="java.lang.String">ac0d393c-2e39-40a4-ab3e-246370b9fb4e</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>WATERBOD_TO_WATERBND_SRF</name>
+                <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
+                <schemaName>YAO</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <schemaName>YAO</schemaName>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>WATERBOD_TO_WATERBND_PK</name>
+                      <identifier class="java.math.BigDecimal">115884</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>WATERBOD_TO_WATERBND_SRF</name>
+                        <identifier class="java.math.BigDecimal">115883</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>WATERBOD_TO_WATERBND_PK</name>
+                  <identifier class="java.math.BigDecimal">115884</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>WATERBOD_TO_WATERBND_SRF</name>
+                    <identifier class="java.math.BigDecimal">115883</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">cabd2e49-20f5-413b-8f90-ed0b75f184ad</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">ca97bf7d-bcab-4bd6-9497-3bbcbb53e764</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>WATERBODY_ID</name>
+              <identifier class="java.lang.String">8dfda1ef-3ea3-464b-b26b-1eac64233c06</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>WATERBOD_TO_WATERBND_SRF</name>
+                <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
+                <schemaName>YAO</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <schemaName>YAO</schemaName>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>WATERBOD_TO_WATERBND_PK</name>
+                      <identifier class="java.math.BigDecimal">115884</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>WATERBOD_TO_WATERBND_SRF</name>
+                        <identifier class="java.math.BigDecimal">115883</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>WATERBOD_TO_WATERBND_PK</name>
+                  <identifier class="java.math.BigDecimal">115884</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>WATERBOD_TO_WATERBND_SRF</name>
+                    <identifier class="java.math.BigDecimal">115883</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>UNIQUE</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>WATERBOD_TO_WATERBND_PK</name>
+            <identifier class="java.math.BigDecimal">115884</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>WATERBOD_TO_WATERBND_SRF</name>
+              <identifier class="java.math.BigDecimal">115883</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">8069d8d2-5bf8-44ee-9156-9a6c4e6e764a</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>WATERBOD_TO_WATERBND_PK</name>
+                    <identifier class="java.math.BigDecimal">115884</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>WATERBOD_TO_WATERBND_SRF</name>
+                      <identifier class="java.math.BigDecimal">115883</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>YAO</name>
+      </schema>
+      <systemGenerated>true</systemGenerated>
+    </indexe>
+  </indexes>
+  <properties>
+    <entry>
+      <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+      <value class="java.lang.String">3DcityDB</value>
+    </entry>
+    <entry>
+      <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+      <value class="oracle.javatools.db.ReferenceID">
+        <name>WATERBOD_TO_WATERBND_SRF</name>
+        <identifier class="java.math.BigDecimal">115883</identifier>
+        <schemaName>YAO</schemaName>
+        <type>TABLE</type>
+      </value>
+    </entry>
+    <entry>
+      <key>OracleStorageProperties</key>
+      <value class="oracle.javatools.db.ora.OracleStorageProperties">
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">bca7bdfa-744a-4488-8029-ad8ad81da8d1</identifier>
+        </ID>
+        <bufferMode>DEFAULT</bufferMode>
+        <initrans>1</initrans>
+        <logging>true</logging>
+        <percentFree>10</percentFree>
+        <properties>
+          <entry>
+            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+            <value class="oracle.javatools.db.ReferenceID">
+              <parent class="oracle.javatools.db.ReferenceID">
+                <name>WATERBOD_TO_WATERBND_SRF</name>
+                <identifier class="java.math.BigDecimal">115883</identifier>
+                <schemaName>YAO</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>OracleStorageProperties</type>
+            </value>
+          </entry>
+        </properties>
+        <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+          <name>USERS</name>
+          <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+          <type>TABLESPACE</type>
+        </tablespaceID>
+      </value>
+    </entry>
+    <entry>
+      <key>TableType</key>
+      <value class="oracle.javatools.db.Table$TableType">NORMAL</value>
+    </entry>
+  </properties>
+  <schema>
+    <name>YAO</name>
+  </schema>
+</table>

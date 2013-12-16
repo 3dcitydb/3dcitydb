@@ -1,0 +1,266 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<table xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+  <ID class="oracle.javatools.db.IdentifierBasedID">
+    <identifier class="java.lang.String">7d17f3f5-55bd-490f-a004-ade9628ed8ee</identifier>
+  </ID>
+  <name>SURFACE_TO_TEXIMAGE</name>
+  <columns>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">37fd87a6-d499-4015-aedd-84e63b45ad8f</identifier>
+      </ID>
+      <name>TEX_IMAGE_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">f3eccd57-028c-4563-845c-843430660d2c</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>true</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">6f307d87-a6b9-49ac-a020-ad1001b16c3e</identifier>
+      </ID>
+      <name>SURFACE_DATA_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">236bdcff-20dc-4986-88c0-eb4ba8f732fa</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>true</notNull>
+    </column>
+  </columns>
+  <constraints>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">09fd8e8b-37a3-413b-8371-5d3eda855aa1</identifier>
+      </ID>
+      <name>SURFACE_TO_TEXIMAGE_FK1</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>SURFACE_DATA_ID</name>
+          <identifier class="java.lang.String">6f307d87-a6b9-49ac-a020-ad1001b16c3e</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>SURFACE_TO_TEXIMAGE</name>
+            <identifier class="java.lang.String">7d17f3f5-55bd-490f-a004-ade9628ed8ee</identifier>
+            <schemaName>YAO</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>YAO</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>SURFACE_DATA_PK</name>
+        <identifier class="java.lang.String">f87e5dfd-62f3-46e1-bd88-a6e501e6d349</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>SURFACE_DATA</name>
+          <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">afdfa9ad-ffef-4637-a114-2973c70dc7a8</identifier>
+      </ID>
+      <name>SURFACE_TO_TEXIMAGE_FK2</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>TEX_IMAGE_ID</name>
+          <identifier class="java.lang.String">37fd87a6-d499-4015-aedd-84e63b45ad8f</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>SURFACE_TO_TEXIMAGE</name>
+            <identifier class="java.lang.String">7d17f3f5-55bd-490f-a004-ade9628ed8ee</identifier>
+            <schemaName>YAO</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>YAO</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>TEX_IMAGE_PK</name>
+        <identifier class="java.lang.String">f3e4f0fb-6098-4645-8cde-b6f4a07b6cee</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>TEX_IMAGE</name>
+          <identifier class="java.lang.String">59f8b5bc-55de-412e-8329-d2d608d7cd22</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.PKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">284f6ae0-1323-4e87-b120-c8f03a1e094b</identifier>
+      </ID>
+      <name>SURFACE_TO_TEXIMAGE_PK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>TEX_IMAGE_ID</name>
+          <identifier class="java.lang.String">37fd87a6-d499-4015-aedd-84e63b45ad8f</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>SURFACE_TO_TEXIMAGE</name>
+            <identifier class="java.lang.String">7d17f3f5-55bd-490f-a004-ade9628ed8ee</identifier>
+            <schemaName>YAO</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>YAO</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>SURFACE_DATA_ID</name>
+          <identifier class="java.lang.String">6f307d87-a6b9-49ac-a020-ad1001b16c3e</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>SURFACE_TO_TEXIMAGE</name>
+            <identifier class="java.lang.String">7d17f3f5-55bd-490f-a004-ade9628ed8ee</identifier>
+            <schemaName>YAO</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>YAO</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <indexID class="oracle.javatools.db.IdentifierBasedID">
+        <name>SURFACE_TO_TEXIMAGE_PK</name>
+        <identifier class="java.lang.String">32f2a31e-e565-46bc-a78d-9a6c7635c981</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>SURFACE_TO_TEXIMAGE</name>
+          <identifier class="java.lang.String">7d17f3f5-55bd-490f-a004-ade9628ed8ee</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
+        <type>INDEX</type>
+      </indexID>
+    </constraint>
+  </constraints>
+  <indexes>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">32f2a31e-e565-46bc-a78d-9a6c7635c981</identifier>
+      </ID>
+      <name>SURFACE_TO_TEXIMAGE_PK</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">b5f541d8-4258-4a10-bc85-f9870068abe3</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">30d3e0f3-39ff-4eeb-85d5-b63d8944a20d</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>TEX_IMAGE_ID</name>
+              <identifier class="java.lang.String">37fd87a6-d499-4015-aedd-84e63b45ad8f</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>SURFACE_TO_TEXIMAGE</name>
+                <identifier class="java.lang.String">7d17f3f5-55bd-490f-a004-ade9628ed8ee</identifier>
+                <schemaName>YAO</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <schemaName>YAO</schemaName>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">824b32c8-546f-4167-9a14-77c1783ac257</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">5d2c1b52-e4d2-4256-a50e-6253d69a562a</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>SURFACE_DATA_ID</name>
+              <identifier class="java.lang.String">6f307d87-a6b9-49ac-a020-ad1001b16c3e</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>SURFACE_TO_TEXIMAGE</name>
+                <identifier class="java.lang.String">7d17f3f5-55bd-490f-a004-ade9628ed8ee</identifier>
+                <schemaName>YAO</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <schemaName>YAO</schemaName>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>UNIQUE</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">3032f115-3c20-4e51-a6f0-f620292f667d</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <percentFree>10</percentFree>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>YAO</name>
+      </schema>
+      <systemGenerated>true</systemGenerated>
+    </indexe>
+  </indexes>
+  <properties>
+    <entry>
+      <key>OracleStorageProperties</key>
+      <value class="oracle.javatools.db.ora.OracleStorageProperties">
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">41296c1c-b095-4fd4-85c0-5025f0625e39</identifier>
+        </ID>
+        <bufferMode>DEFAULT</bufferMode>
+        <initrans>1</initrans>
+        <logging>true</logging>
+        <percentFree>10</percentFree>
+        <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+          <name>USERS</name>
+          <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+          <type>TABLESPACE</type>
+        </tablespaceID>
+      </value>
+    </entry>
+    <entry>
+      <key>TableType</key>
+      <value class="oracle.javatools.db.Table$TableType">NORMAL</value>
+    </entry>
+  </properties>
+  <schema>
+    <name>YAO</name>
+  </schema>
+</table>

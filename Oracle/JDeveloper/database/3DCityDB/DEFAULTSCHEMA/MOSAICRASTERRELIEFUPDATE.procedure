@@ -1,0 +1,78 @@
+-- <?xml version = '1.0' encoding = 'UTF-8'?>
+-- <procedure xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+--   <properties>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+--       <value class="java.lang.String">3DcityDB</value>
+--     </entry>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+--       <value class="oracle.javatools.db.ReferenceID">
+--         <name>MOSAICRASTERRELIEFUPDATE</name>
+--         <identifier class="java.math.BigDecimal">75379</identifier>
+--         <schemaName>YAO</schemaName>
+--         <type>PROCEDURE</type>
+--       </value>
+--     </entry>
+--   </properties>
+-- </procedure>
+
+CREATE OR REPLACE
+PROCEDURE mosaicRasterReliefUpdate(
+	idVal IN NUMBER, reason IN VARCHAR2, updatingPerson IN VARCHAR2 )
+AS
+	gr	sdo_georaster;
+	geor	sdo_georaster;
+	fprnt	sdo_geometry;
+	srs_id	DATABASE_SRS.SRID%TYPE;
+        tabname VARCHAR2(50);
+
+BEGIN
+	-- // Fetch SRID for this database
+	SELECT srid INTO srs_id FROM DATABASE_SRS;
+
+	-- // discard the old raster
+	-- delete from RASTER_RELIEF_RDT where RASTER_RELIEF_ID = idVal;
+
+	-- // set the modelSRID of all imported raster tiles
+	SET_RASTER_RELIEF_SRID;
+
+	-- // get owner of table scheme
+        SELECT USER INTO tabname FROM dual;
+        tabname := tabname||'.RASTER_RELIEF_RDT';
+        gr := sdo_geor.init( tabname );
+
+	DBMS_OUTPUT.PUT_LINE('Mosaicking DTM tiles...');
+	sdo_geor.mosaic( 'RASTER_RELIEF_IMP', 'RASTERPROPERTY', gr, null );
+	-- // set the CRS of the big raster
+	sdo_geor.setModelSRID(gr,srs_id);
+	-- // update big raster in table RASTER_RELIEF
+	UPDATE RASTER_RELIEF set RASTERPROPERTY = gr where id = idVAL;
+
+	-- // update footprint
+	SELECT sdo_geor.generateSpatialExtent(RASTERPROPERTY) into fprnt
+	       FROM RASTER_RELIEF WHERE id = idVal for update;
+
+	update CITYOBJECT set ENVELOPE = fprnt, LAST_MODIFICATION_DATE = SYSDATE,
+	       UPDATING_PERSON = updatingPerson, REASON_FOR_UPDATE = reason
+	       where id=idVal;
+	update CITYOBJECT set ENVELOPE = fprnt, LAST_MODIFICATION_DATE = SYSDATE,
+	       UPDATING_PERSON = updatingPerson, REASON_FOR_UPDATE = reason
+	       where id=(select RELIEF_FEATURE_ID from RELIEF_FEAT_TO_REL_COMP
+	       		 where RELIEF_COMPONENT_ID=idVal);
+	update RELIEF_COMPONENT set EXTENT = fprnt where id=idVal;
+
+	-- // create pyramid
+	SELECT RASTERPROPERTY INTO geor from RASTER_RELIEF
+	       where id = idVal for update;
+
+	-- // params can be rLevel=XXX and resampling=NN | BILINEAR | AVERAGE4 |
+	-- //                                         AVERAGE16 | CUBIC
+	-- // e.g. 'rLevel=4, resampling=BILINEAR'
+	DBMS_OUTPUT.PUT_LINE('Generating raster pyramid...');
+	sdo_geor.generatePyramid( geor, 'resampling=CUBIC');
+	update RASTER_RELIEF set RASTERPROPERTY = geor where id = idVal;
+
+	COMMIT;
+END mosaicRasterReliefUpdate;
+/

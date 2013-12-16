@@ -1,0 +1,61 @@
+-- <?xml version = '1.0' encoding = 'UTF-8'?>
+-- <procedure xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+--   <properties>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+--       <value class="java.lang.String">3DcityDB</value>
+--     </entry>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+--       <value class="oracle.javatools.db.ReferenceID">
+--         <name>DELTERMPLANNINGALTERNATIVESBDY</name>
+--         <identifier class="java.math.BigDecimal">114500</identifier>
+--         <schemaName>YAO</schemaName>
+--         <type>PROCEDURE</type>
+--       </value>
+--     </entry>
+--   </properties>
+-- </procedure>
+
+CREATE OR REPLACE
+PROCEDURE DelTermPlanningAlternativesBdy(
+  outStatus OUT NUMBER,
+  outMessage OUT VARCHAR2
+)
+
+IS
+  -- lokale Variablen
+  planningAlternativeId NUMBER;
+  workspacename VARCHAR2(30);
+  CURSOR workspaces IS  -- enthält die Workspacenamen aller beendeten Planungsalternativen
+    SELECT workspace_name
+    FROM planning_alternative
+    WHERE termination_date IS NOT NULL;
+
+BEGIN
+  -- Cursor durchlaufen und jeweiligen Workspace löschen
+  OPEN workspaces;
+    LOOP
+      FETCH workspaces INTO workspacename;
+      EXIT WHEN workspaces%NOTFOUND;
+
+      SELECT id INTO planningAlternativeId
+      FROM planning_alternative
+      WHERE workspace_name LIKE workspacename;
+
+      DBMS_WM.RemoveWorkspace(workspacename);
+      DELETE planning_alternative WHERE id = planningAlternativeId;
+
+      DBMS_OUTPUT.PUT_LINE(planningAlternativeId || ' gelöscht');
+    END LOOP;
+  CLOSE workspaces;
+
+  COMMIT;
+  setOutParameter(1, NULL, outStatus, outMessage);
+
+EXCEPTION
+  WHEN OTHERS THEN
+    setOutParameter(0, sqlerrm, outStatus, outMessage);
+
+END;
+/

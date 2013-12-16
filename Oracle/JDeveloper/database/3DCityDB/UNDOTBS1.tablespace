@@ -1,0 +1,49 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<tablespace xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+  <ID class="oracle.javatools.db.IdentifierBasedID">
+    <identifier class="java.lang.String">8e2fe4ea-196a-4e00-8bb0-c85b088fd99e</identifier>
+  </ID>
+  <name>UNDOTBS1</name>
+  <fileType>SMALLFILE</fileType>
+  <properties>
+    <entry>
+      <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+      <value class="java.lang.String">3DcityDB</value>
+    </entry>
+    <entry>
+      <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+      <value class="oracle.javatools.db.ReferenceID">
+        <name>UNDOTBS1</name>
+        <type>TABLESPACE</type>
+      </value>
+    </entry>
+    <entry>
+      <key>OracleTablespaceProperties</key>
+      <value class="oracle.javatools.db.ora.OracleTablespaceProperties">
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">c6012f9a-9058-4fb2-a98a-d33d000242ab</identifier>
+        </ID>
+        <autoAllocate>true</autoAllocate>
+        <extentManagementType>LOCAL</extentManagementType>
+        <forceLogging>false</forceLogging>
+        <properties>
+          <entry>
+            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+            <value class="oracle.javatools.db.ReferenceID">
+              <parent class="oracle.javatools.db.ReferenceID">
+                <name>UNDOTBS1</name>
+                <type>TABLESPACE</type>
+              </parent>
+              <type>OracleTablespaceProperties</type>
+            </value>
+          </entry>
+        </properties>
+        <retention>NOGUARANTEE</retention>
+      </value>
+    </entry>
+    <entry>
+      <key>TablespaceType</key>
+      <value class="oracle.javatools.db.Tablespace$TablespaceType">UNDO</value>
+    </entry>
+  </properties>
+</tablespace>

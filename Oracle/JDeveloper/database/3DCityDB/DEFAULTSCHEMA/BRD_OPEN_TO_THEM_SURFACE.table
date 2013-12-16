@@ -1,0 +1,261 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<table xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+  <ID class="oracle.javatools.db.IdentifierBasedID">
+    <identifier class="java.lang.String">49a6fb19-690e-45bc-a01e-5db2ff438e8b</identifier>
+  </ID>
+  <name>BRD_OPEN_TO_THEM_SURFACE</name>
+  <columns>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">37e6a7cc-528f-48cc-80d2-3a64f0fd7078</identifier>
+      </ID>
+      <name>BRIDGE_OPENING_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">41867b71-b261-4fc1-9540-10fa4e59b9fb</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>true</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">577188ae-dad5-4c49-b490-178c9c472cf2</identifier>
+      </ID>
+      <name>THEMATIC_SURFACE_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">a54b6266-5baf-40df-b1c4-90ee97b2c5ee</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>true</notNull>
+    </column>
+  </columns>
+  <constraints>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">5b50b3ab-35a2-405a-b02f-5440182cd180</identifier>
+      </ID>
+      <name>BRD_OPEN_TO_THEM_SURFACE_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>BRIDGE_OPENING_ID</name>
+          <identifier class="java.lang.String">37e6a7cc-528f-48cc-80d2-3a64f0fd7078</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>BRD_OPEN_TO_THEM_SURFACE</name>
+            <identifier class="java.lang.String">49a6fb19-690e-45bc-a01e-5db2ff438e8b</identifier>
+            <schemaName>YAO</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>BRIDGE_OPENING_PK</name>
+        <identifier class="java.lang.String">e4b71753-101a-4679-b05d-fe216834f180</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>BRIDGE_OPENING</name>
+          <identifier class="java.lang.String">117b4ee0-917a-4ee3-88b6-7afb68c0e85a</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">775083f3-7a2f-4fe4-b891-2ca8a4c13f50</identifier>
+      </ID>
+      <name>BRD_OPEN_TO_THEM_SURFACE_FK1</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>THEMATIC_SURFACE_ID</name>
+          <identifier class="java.lang.String">577188ae-dad5-4c49-b490-178c9c472cf2</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>BRD_OPEN_TO_THEM_SURFACE</name>
+            <identifier class="java.lang.String">49a6fb19-690e-45bc-a01e-5db2ff438e8b</identifier>
+            <schemaName>YAO</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>BIRDGE_THEMATIC_SURFACE_PK</name>
+        <identifier class="java.lang.String">e970ac7a-530e-4f53-9667-11a29f136a78</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>BIRDGE_THEMATIC_SURFACE</name>
+          <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.PKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">4de576f5-c107-45b3-8702-1b3e83000880</identifier>
+      </ID>
+      <name>BRD_OPEN_TO_THEM_SURFACE_PK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>BRIDGE_OPENING_ID</name>
+          <identifier class="java.lang.String">37e6a7cc-528f-48cc-80d2-3a64f0fd7078</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>BRD_OPEN_TO_THEM_SURFACE</name>
+            <identifier class="java.lang.String">49a6fb19-690e-45bc-a01e-5db2ff438e8b</identifier>
+            <schemaName>YAO</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>THEMATIC_SURFACE_ID</name>
+          <identifier class="java.lang.String">577188ae-dad5-4c49-b490-178c9c472cf2</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>BRD_OPEN_TO_THEM_SURFACE</name>
+            <identifier class="java.lang.String">49a6fb19-690e-45bc-a01e-5db2ff438e8b</identifier>
+            <schemaName>YAO</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <indexID class="oracle.javatools.db.IdentifierBasedID">
+        <name>BRD_OPEN_TO_THEM_SURF_PX</name>
+        <identifier class="java.lang.String">aaa1a725-c226-45e1-8247-75d7590b61cb</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>BRD_OPEN_TO_THEM_SURFACE</name>
+          <identifier class="java.lang.String">49a6fb19-690e-45bc-a01e-5db2ff438e8b</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
+        <type>INDEX</type>
+      </indexID>
+    </constraint>
+  </constraints>
+  <indexes>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">aaa1a725-c226-45e1-8247-75d7590b61cb</identifier>
+      </ID>
+      <name>BRD_OPEN_TO_THEM_SURF_PX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">70ab0e8c-ad75-4341-9b60-938434364553</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">9d7d8cff-48f9-4bfc-9ae3-b432526d2f1c</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>BRIDGE_OPENING_ID</name>
+              <identifier class="java.lang.String">37e6a7cc-528f-48cc-80d2-3a64f0fd7078</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>BRD_OPEN_TO_THEM_SURFACE</name>
+                <identifier class="java.lang.String">49a6fb19-690e-45bc-a01e-5db2ff438e8b</identifier>
+                <schemaName>YAO</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">d8503234-c9f9-4813-9e0e-1f8b7b7f43a7</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">ff900b5d-5f86-4834-afbd-82e9757207ae</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>THEMATIC_SURFACE_ID</name>
+              <identifier class="java.lang.String">577188ae-dad5-4c49-b490-178c9c472cf2</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>BRD_OPEN_TO_THEM_SURFACE</name>
+                <identifier class="java.lang.String">49a6fb19-690e-45bc-a01e-5db2ff438e8b</identifier>
+                <schemaName>YAO</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>UNIQUE</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">6d9b5f77-64df-43b8-a6b7-add7c4382c4f</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <percentFree>10</percentFree>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>YAO</name>
+      </schema>
+      <systemGenerated>true</systemGenerated>
+    </indexe>
+  </indexes>
+  <properties>
+    <entry>
+      <key>OracleStorageProperties</key>
+      <value class="oracle.javatools.db.ora.OracleStorageProperties">
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">e47bea09-b663-4e4c-9ee4-6d84f1cba007</identifier>
+        </ID>
+        <bufferMode>DEFAULT</bufferMode>
+        <initrans>1</initrans>
+        <logging>true</logging>
+        <percentFree>10</percentFree>
+        <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+          <name>USERS</name>
+          <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+          <type>TABLESPACE</type>
+        </tablespaceID>
+      </value>
+    </entry>
+    <entry>
+      <key>TableType</key>
+      <value class="oracle.javatools.db.Table$TableType">NORMAL</value>
+    </entry>
+  </properties>
+  <schema>
+    <name>YAO</name>
+  </schema>
+</table>

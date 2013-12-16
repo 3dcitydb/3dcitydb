@@ -1,0 +1,33 @@
+-- CREATE_SPATIAL_INDEX.sql
+--
+-- Authors:     Prof. Dr. Lutz Pluemer <pluemer@ikg.uni-bonn.de>
+--              Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
+--              Dr. Gerhard Groeger <groeger@ikg.uni-bonn.de>
+--              Joerg Schmittwilken <schmittwilken@ikg.uni-bonn.de>
+--              Viktor Stroh <stroh@ikg.uni-bonn.de>
+--
+-- Copyright:   (c) 2004-2006, Institute for Cartography and Geoinformation,
+--                             Universit�t Bonn, Germany
+--                             http://www.ikg.uni-bonn.de
+--
+--              This skript is free software under the LGPL Version 2.1.
+--              See the GNU Lesser General Public License at
+--              http://www.gnu.org/copyleft/lgpl.html
+--              for more details.
+-------------------------------------------------------------------------------
+-- About:
+--
+--
+-------------------------------------------------------------------------------
+--
+-- ChangeLog:
+--
+-- Version | Date       | Description                               | Author
+-- 0.2.2     2006-04-03   release version                             LPlu
+--                                                                    TKol
+--                                                                    GGro
+--                                                                    JSch
+--                                                                    VStr
+--
+
+CREATE INDEX "PLANNING_SPATIAL_EXTENT_IDX" ON "PLANNING"("SPATIAL_EXTENT") INDEXTYPE IS MDSYS.SPATIAL_INDEX;

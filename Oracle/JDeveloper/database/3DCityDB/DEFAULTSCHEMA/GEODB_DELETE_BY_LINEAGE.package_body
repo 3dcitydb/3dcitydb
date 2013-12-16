@@ -1,0 +1,48 @@
+-- <?xml version = '1.0' encoding = 'UTF-8'?>
+-- <packageBody xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+--   <properties>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+--       <value class="java.lang.String">3DcityDB</value>
+--     </entry>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+--       <value class="oracle.javatools.db.ReferenceID">
+--         <name>GEODB_DELETE_BY_LINEAGE</name>
+--         <identifier class="java.math.BigDecimal">114539</identifier>
+--         <schemaName>YAO</schemaName>
+--         <type>PACKAGE BODY</type>
+--       </value>
+--     </entry>
+--   </properties>
+-- </packageBody>
+
+CREATE OR REPLACE
+PACKAGE BODY GEODB_DELETE_BY_LINEAGE
+AS
+
+  procedure delete_buildings(lineage_value varchar2)
+  is
+    cursor building_cur is
+      select b.id from building b, cityobject c where b.id = c.id and c.lineage = lineage_value;
+  begin
+    for building_rec in building_cur loop
+      begin
+        geodb_delete.delete_building(building_rec.id);
+      exception
+        when others then
+          dbms_output.put_line('delete_buildings: deletion of building with ID ' || building_rec.id || ' threw: ' || SQLERRM);
+      end;
+    end loop;
+
+    -- cleanup
+    geodb_delete.cleanup_appearances;
+    geodb_delete.cleanup_cityobjectgroups;
+    geodb_delete.cleanup_citymodels;
+  exception
+    when others then
+      dbms_output.put_line('delete_buildings: ' || SQLERRM);
+  end;
+
+END geodb_delete_by_lineage;
+/

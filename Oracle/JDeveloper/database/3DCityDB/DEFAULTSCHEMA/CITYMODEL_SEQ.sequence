@@ -1,0 +1,33 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<sequence xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+  <ID class="oracle.javatools.db.IdentifierBasedID">
+    <identifier class="java.lang.String">60605408-80a3-4f95-8bdd-4b2d0f13a98d</identifier>
+  </ID>
+  <name>CITYMODEL_SEQ</name>
+  <cacheFlag>true</cacheFlag>
+  <cacheSize>10000</cacheSize>
+  <cycleFlag>false</cycleFlag>
+  <incrementBy>1</incrementBy>
+  <lastNumber>1</lastNumber>
+  <minValue>1</minValue>
+  <orderFlag>false</orderFlag>
+  <properties>
+    <entry>
+      <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+      <value class="java.lang.String">3DcityDB</value>
+    </entry>
+    <entry>
+      <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+      <value class="oracle.javatools.db.ReferenceID">
+        <name>CITYMODEL_SEQ</name>
+        <identifier class="java.math.BigDecimal">115887</identifier>
+        <schemaName>YAO</schemaName>
+        <type>SEQUENCE</type>
+      </value>
+    </entry>
+  </properties>
+  <schema>
+    <name>DEFAULTSCHEMA</name>
+  </schema>
+  <startWith>1</startWith>
+</sequence>

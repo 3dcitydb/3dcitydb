@@ -1,0 +1,46 @@
+-- <?xml version = '1.0' encoding = 'UTF-8'?>
+-- <procedure xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+--   <properties>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+--       <value class="java.lang.String">3DcityDB</value>
+--     </entry>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+--       <value class="oracle.javatools.db.ReferenceID">
+--         <name>SET_RASTER_RELIEF_SRID</name>
+--         <identifier class="java.math.BigDecimal">75375</identifier>
+--         <schemaName>YAO</schemaName>
+--         <type>PROCEDURE</type>
+--       </value>
+--     </entry>
+--   </properties>
+-- </procedure>
+
+CREATE OR REPLACE
+PROCEDURE SET_RASTER_RELIEF_SRID  IS
+	geor          sdo_georaster;
+	raster_relief_id RASTER_RELIEF_IMP.ID%TYPE;
+	srs_id        DATABASE_SRS.SRID%TYPE;
+
+CURSOR c_raster_relief_imp IS  /* select all imported raster_relief tiles */
+   SELECT id, rasterproperty FROM RASTER_RELIEF_IMP FOR UPDATE;
+
+BEGIN
+
+-- // Fetch SRID for this database
+SELECT srid INTO srs_id FROM DATABASE_SRS;
+
+OPEN c_raster_relief_imp;
+   LOOP
+      FETCH c_raster_relief_imp INTO raster_relief_id, geor;
+      exit when c_raster_relief_imp%NOTFOUND;
+
+    	sdo_geor.setModelSRID(geor, srs_id);
+    	UPDATE RASTER_RELIEF_IMP SET rasterproperty=geor
+    	WHERE CURRENT OF c_raster_relief_imp;
+   END LOOP;
+CLOSE c_raster_relief_imp;
+
+END set_Raster_Relief_SRID;
+/

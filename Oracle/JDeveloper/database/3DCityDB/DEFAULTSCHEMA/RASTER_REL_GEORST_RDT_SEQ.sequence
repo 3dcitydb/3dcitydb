@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<sequence xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+  <ID class="oracle.javatools.db.IdentifierBasedID">
+    <identifier class="java.lang.String">2bbe0f38-1b21-4347-aa05-50d297772157</identifier>
+  </ID>
+  <name>RASTER_REL_GEORST_RDT_SEQ</name>
+  <cacheFlag>false</cacheFlag>
+  <cycleFlag>false</cycleFlag>
+  <incrementBy>1</incrementBy>
+  <lastNumber>1</lastNumber>
+  <minValue>1</minValue>
+  <orderFlag>false</orderFlag>
+  <schema>
+    <name>DEFAULTSCHEMA</name>
+  </schema>
+  <startWith>1</startWith>
+</sequence>

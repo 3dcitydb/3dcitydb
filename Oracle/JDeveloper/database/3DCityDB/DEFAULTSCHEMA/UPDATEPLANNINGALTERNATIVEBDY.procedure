@@ -1,0 +1,74 @@
+-- <?xml version = '1.0' encoding = 'UTF-8'?>
+-- <procedure xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+--   <properties>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+--       <value class="java.lang.String">3DcityDB</value>
+--     </entry>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+--       <value class="oracle.javatools.db.ReferenceID">
+--         <name>UPDATEPLANNINGALTERNATIVEBDY</name>
+--         <identifier class="java.math.BigDecimal">114492</identifier>
+--         <schemaName>YAO</schemaName>
+--         <type>PROCEDURE</type>
+--       </value>
+--     </entry>
+--   </properties>
+-- </procedure>
+
+CREATE OR REPLACE
+PROCEDURE UpdatePlanningAlternativeBdy(
+  planningAlternativeId NUMBER,
+  newTitle VARCHAR2,
+  newDescription VARCHAR2,
+  newGenerator VARCHAR2,
+  newPlanner VARCHAR2,
+  outStatus OUT NUMBER,
+  outMessage OUT VARCHAR2
+)
+
+IS
+  -- lokale Variablen
+  paCount NUMBER;
+  paStatus NUMBER;
+  paCountException EXCEPTION;
+  paStatusException EXCEPTION;
+
+BEGIN
+  -- Abragen der Existenz und des Status der Planung
+  checkPlanningAlternative(planningAlternativeId, paCount, paStatus);
+
+  IF paCount = 1 THEN   -- Planungsalternative existiert
+    IF paStatus = 1 THEN  -- Planungsalternative noch aktiv
+      -- Ändern eines bestehenden Tupels
+      UPDATE planning_alternative
+      SET
+        title = newTitle,
+        description = newDescription,
+        generator = newGenerator,
+        planner = newPlanner
+      WHERE id = planningAlternativeId;
+
+      COMMIT;
+      setOutParameter(1, NULL, outStatus, outMessage);
+
+    ELSE   -- Planungsalternative bereits beendet
+      RAISE paStatusException;
+    END IF;
+
+  ELSE   -- Planungsalternative existiert nicht
+    RAISE paCountException;
+  END IF;
+
+
+EXCEPTION
+  WHEN paCountException THEN
+    setOutParameter(0, '3D-Geo-DB: Planungsalternative existiert nicht', outStatus, outMessage);
+  WHEN paStatusException THEN
+    setOutParameter(0, '3D-Geo-DB: Planungsalternative ist bereits beendet', outStatus, outMessage);
+  WHEN OTHERS THEN
+    setOutParameter(0, sqlerrm, outStatus, outMessage);
+
+END;
+/

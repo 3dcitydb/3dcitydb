@@ -1,0 +1,381 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<table xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+  <ID class="oracle.javatools.db.IdentifierBasedID">
+    <identifier class="java.lang.String">620e967c-d1d8-4fbe-93f6-b0282a94bc9d</identifier>
+  </ID>
+  <name>RASTER_REL_GEORASTER_RDT</name>
+  <columns>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">9dac97a1-348b-4c40-ad61-915733fa89f1</identifier>
+      </ID>
+      <name>RASTERID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">afc924f2-09d4-48e0-b014-763fa4f270fb</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>true</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">564365f4-f4ac-4923-9d9e-de654d101746</identifier>
+      </ID>
+      <name>PYRAMIDLEVEL</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">75aabc51-5912-4d4f-a0b2-9b6291b5f4da</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>true</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">9db1e129-a8aa-4aa6-9f5b-a45cea02abd6</identifier>
+      </ID>
+      <name>BANDBLOCKNUMBER</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">e41ed227-6d62-45de-b591-cd37528a2695</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>true</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">44e7dd2e-fee4-4330-bd31-9898f4bba15d</identifier>
+      </ID>
+      <name>ROWBLOCKNUMBER</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">35fd2574-19dc-4463-9c4d-0db6be3a4ce5</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>true</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">694044b3-6708-4d01-96c5-48a387610003</identifier>
+      </ID>
+      <name>COLUMNBLOCKNUMBER</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">0f6fdf36-ea54-48c1-a2da-e68b6b39ad9f</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>true</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">ce2ef95f-0f0b-47af-af5b-e272289a6d56</identifier>
+      </ID>
+      <name>BLOCKMBR</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">6ac71150-281f-4021-ab48-6c25410e21b8</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.NameBasedID">
+          <name>SDO_GEOMETRY</name>
+          <schemaName>MDSYS</schemaName>
+          <type>TYPE</type>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">185eac86-3a74-4049-8c1d-efb02ea69f6b</identifier>
+      </ID>
+      <name>RASTERBLOCK</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">03e7ead8-f1db-441c-a902-632106b460ff</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.Oracle8</providerClass>
+          <typeName>BLOB</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+      <properties>
+        <entry>
+          <key>OracleColumnProperties</key>
+          <value class="oracle.javatools.db.ora.OracleColumnProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">99b76e07-26fc-4560-a7f5-dbe7d33ae184</identifier>
+            </ID>
+            <LOBProperties>
+              <ID class="oracle.javatools.db.IdentifierBasedID">
+                <identifier class="java.lang.String">9ab24da1-556e-49f5-bba0-0352c4886ff7</identifier>
+              </ID>
+              <name></name>
+              <cache>CACHE</cache>
+              <retention>false</retention>
+              <storage>
+                <ID class="oracle.javatools.db.IdentifierBasedID">
+                  <identifier class="java.lang.String">f9d4df1e-7977-4fbe-bbbb-af1ce4bc3bdb</identifier>
+                </ID>
+                <bufferMode>DEFAULT</bufferMode>
+                <logging>true</logging>
+              </storage>
+              <storageEnabledInRow>true</storageEnabledInRow>
+            </LOBProperties>
+          </value>
+        </entry>
+      </properties>
+    </column>
+  </columns>
+  <constraints>
+    <constraint class="oracle.javatools.db.PKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">55e1c3b2-7a7f-40b3-a215-8481b9ca134d</identifier>
+      </ID>
+      <name>RASTER_REL_GEORASTER_RDT_PK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>RASTERID</name>
+          <identifier class="java.lang.String">9dac97a1-348b-4c40-ad61-915733fa89f1</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>RASTER_REL_GEORASTER_RDT</name>
+            <identifier class="java.lang.String">620e967c-d1d8-4fbe-93f6-b0282a94bc9d</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>PYRAMIDLEVEL</name>
+          <identifier class="java.lang.String">564365f4-f4ac-4923-9d9e-de654d101746</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>RASTER_REL_GEORASTER_RDT</name>
+            <identifier class="java.lang.String">620e967c-d1d8-4fbe-93f6-b0282a94bc9d</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>BANDBLOCKNUMBER</name>
+          <identifier class="java.lang.String">9db1e129-a8aa-4aa6-9f5b-a45cea02abd6</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>RASTER_REL_GEORASTER_RDT</name>
+            <identifier class="java.lang.String">620e967c-d1d8-4fbe-93f6-b0282a94bc9d</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>ROWBLOCKNUMBER</name>
+          <identifier class="java.lang.String">44e7dd2e-fee4-4330-bd31-9898f4bba15d</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>RASTER_REL_GEORASTER_RDT</name>
+            <identifier class="java.lang.String">620e967c-d1d8-4fbe-93f6-b0282a94bc9d</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>COLUMNBLOCKNUMBER</name>
+          <identifier class="java.lang.String">694044b3-6708-4d01-96c5-48a387610003</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>RASTER_REL_GEORASTER_RDT</name>
+            <identifier class="java.lang.String">620e967c-d1d8-4fbe-93f6-b0282a94bc9d</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <indexID class="oracle.javatools.db.IdentifierBasedID">
+        <name>RASTER_REL_GEORASTER_RDT_PK</name>
+        <identifier class="java.lang.String">d82223ba-9e07-4c29-a346-528d898b3e55</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>RASTER_REL_GEORASTER_RDT</name>
+          <identifier class="java.lang.String">620e967c-d1d8-4fbe-93f6-b0282a94bc9d</identifier>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
+        <type>INDEX</type>
+      </indexID>
+    </constraint>
+  </constraints>
+  <indexes>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">d82223ba-9e07-4c29-a346-528d898b3e55</identifier>
+      </ID>
+      <name>RASTER_REL_GEORASTER_RDT_PK</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">b4fff0eb-6a57-4bb6-880f-9df9c2ffef8e</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">6895d73b-d9ac-42b3-a929-ae8728d86786</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>RASTERID</name>
+              <identifier class="java.lang.String">9dac97a1-348b-4c40-ad61-915733fa89f1</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>RASTER_REL_GEORASTER_RDT</name>
+                <identifier class="java.lang.String">620e967c-d1d8-4fbe-93f6-b0282a94bc9d</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <schemaName>DEFAULTSCHEMA</schemaName>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">fe81f42a-5751-4742-9ae8-23c6a98012fe</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">53442f55-dbbb-438d-b0ab-b318421ac87b</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>PYRAMIDLEVEL</name>
+              <identifier class="java.lang.String">564365f4-f4ac-4923-9d9e-de654d101746</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>RASTER_REL_GEORASTER_RDT</name>
+                <identifier class="java.lang.String">620e967c-d1d8-4fbe-93f6-b0282a94bc9d</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <schemaName>DEFAULTSCHEMA</schemaName>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">76135a21-5282-47ec-b6df-ecefd7c20930</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">d2ffbd70-a090-47fa-bf35-03d7d9787ea0</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>BANDBLOCKNUMBER</name>
+              <identifier class="java.lang.String">9db1e129-a8aa-4aa6-9f5b-a45cea02abd6</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>RASTER_REL_GEORASTER_RDT</name>
+                <identifier class="java.lang.String">620e967c-d1d8-4fbe-93f6-b0282a94bc9d</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <schemaName>DEFAULTSCHEMA</schemaName>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">b3abdda1-1acd-4919-9039-b614da390216</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">c6059816-b05b-499d-b378-5ec97184c2e5</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>ROWBLOCKNUMBER</name>
+              <identifier class="java.lang.String">44e7dd2e-fee4-4330-bd31-9898f4bba15d</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>RASTER_REL_GEORASTER_RDT</name>
+                <identifier class="java.lang.String">620e967c-d1d8-4fbe-93f6-b0282a94bc9d</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <schemaName>DEFAULTSCHEMA</schemaName>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">cf08325a-757d-4e0b-8b85-e5979bbb38ee</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">9a06e7ba-7d27-4029-b29a-1eb12e86452c</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>COLUMNBLOCKNUMBER</name>
+              <identifier class="java.lang.String">694044b3-6708-4d01-96c5-48a387610003</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>RASTER_REL_GEORASTER_RDT</name>
+                <identifier class="java.lang.String">620e967c-d1d8-4fbe-93f6-b0282a94bc9d</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <schemaName>DEFAULTSCHEMA</schemaName>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>UNIQUE</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>true</systemGenerated>
+    </indexe>
+  </indexes>
+  <properties>
+    <entry>
+      <key>TableType</key>
+      <value class="oracle.javatools.db.Table$TableType">NORMAL</value>
+    </entry>
+  </properties>
+  <schema>
+    <name>DEFAULTSCHEMA</name>
+  </schema>
+</table>

@@ -1,0 +1,117 @@
+-- <?xml version = '1.0' encoding = 'UTF-8'?>
+-- <procedure xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
+--   <properties>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</key>
+--       <value class="java.lang.String">3DcityDB</value>
+--     </entry>
+--     <entry>
+--       <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+--       <value class="oracle.javatools.db.ReferenceID">
+--         <name>MOSAICRASTERRELIEFINITIAL</name>
+--         <identifier class="java.math.BigDecimal">75378</identifier>
+--         <schemaName>YAO</schemaName>
+--         <type>PROCEDURE</type>
+--       </value>
+--     </entry>
+--   </properties>
+-- </procedure>
+
+CREATE OR REPLACE
+PROCEDURE mosaicRasterReliefInitial (
+	gmlIdRelief VARCHAR2, gmlIdRaster VARCHAR2, gmlIdCodespace VARCHAR2,
+	nameVal VARCHAR2, descVal VARCHAR2, lineageVal IN VARCHAR2,
+	LoDVal IN NUMBER )
+AS
+	gr               sdo_georaster;
+	geor             sdo_georaster;
+	fprnt            sdo_geometry;
+	relief_id        CITYOBJECT.ID%TYPE;
+	relief_component_id CITYOBJECT.ID%TYPE;
+	srs_id		 DATABASE_SRS.SRID%TYPE;
+        tabname          VARCHAR2(50);
+
+BEGIN
+	-- // Fetch SRID for this database
+	SELECT srid INTO srs_id FROM DATABASE_SRS;
+
+	-- // generate new ID values for the two new CITYOBJECTs (RASTER_RELIEF
+	-- // and RELIEF)
+	SELECT CITYOBJECT_SEQ.nextval INTO relief_component_id FROM DUAL;
+	SELECT CITYOBJECT_SEQ.nextval INTO relief_id FROM DUAL;
+
+	-- // use dummy because real envelope is not known before calling mosaic
+	fprnt := mdsys.sdo_geometry (3003, srs_id, null,
+	                             mdsys.sdo_elem_info_array (1,1003,3),
+	                             mdsys.sdo_ordinate_array ( 0, 0, 0, 1, 1, 1 ) );
+
+	-- // create ReliefFeature object
+	INSERT INTO CITYOBJECT ( ID, GMLID, GMLID_CODESPACE, CLASS_ID, ENVELOPE,
+				 CREATION_DATE, LINEAGE )
+	       VALUES ( relief_id, gmlIdRelief, gmlIdCodespace, 14, fprnt, SYSDATE, lineageVal );
+	INSERT INTO RELIEF_FEATURE ( ID, NAME, DESCRIPTION, LOD )
+	       VALUES ( relief_id, nameVal, descVal, LoDVal);
+
+	-- // create RASTER object
+	INSERT INTO CITYOBJECT ( ID, GMLID, GMLID_CODESPACE, CLASS_ID, ENVELOPE,
+				 CREATION_DATE, LINEAGE )
+	       VALUES ( relief_component_id, gmlIdRaster, gmlIdCodespace, 19, fprnt,
+	       		SYSDATE, lineageVal );
+	INSERT INTO RELIEF_COMPONENT ( ID, NAME, DESCRIPTION, LOD )
+	       VALUES ( relief_component_id, nameVal, descVal, LoDVal );
+
+	-- // set the modelSRID of all raster tiles
+	SET_RASTER_RELIEF_SRID;
+	-- // create big raster object by mosaicking the image tiles
+	DBMS_OUTPUT.PUT_LINE('Mosaicking DTM tiles...');
+
+	-- // get owner of table scheme
+        SELECT USER INTO tabname FROM dual;
+        tabname := tabname||'.RASTER_RELIEF_RDT';
+        gr := sdo_geor.init( tabname );
+
+	sdo_geor.mosaic( 'RASTER_RELIEF_IMP', 'RASTERPROPERTY', gr, null );
+	-- // set the CRS of the big raster
+	sdo_geor.setModelSRID(gr,srs_id);
+	-- // insert big raster into table RASTER_RELIEF
+	INSERT INTO RASTER_RELIEF ( ID, RASTERPROPERTY )
+	       VALUES ( relief_component_id, gr );
+
+	-- // update footprint
+	SELECT sdo_geor.generateSpatialExtent(RASTERPROPERTY) into fprnt
+	       FROM RASTER_RELIEF
+	       WHERE id = relief_component_id for update;
+
+	-- // set correct envelope in all respective tables
+	UPDATE RELIEF_COMPONENT set EXTENT = fprnt where ID = relief_component_id;
+	-- // ***** Problem: footprint is 2D, but must be 3D for CITYOBJECT
+	-- UPDATE CITYOBJECT set ENVELOPE = fprnt where ID = relief_id;
+	-- UPDATE CITYOBJECT set ENVELOPE = fprnt where ID = relief_component_id;
+
+	-- // insert association between ReliefFeature and Raster
+	INSERT INTO RELIEF_FEAT_TO_REL_COMP ( RELIEF_FEATURE_ID, RELIEF_COMPONENT_ID )
+	       VALUES ( relief_id, relief_component_id);
+
+	-- // create pyramid
+	SELECT RASTERPROPERTY INTO geor from RASTER_RELIEF
+	       WHERE id = relief_component_id FOR UPDATE;
+
+	-- // params can be rLevel=XXX and resampling=NN | BILINEAR | AVERAGE4 |
+	-- //                                         AVERAGE16 | CUBIC
+	-- // e.g. 'rLevel=4, resampling=BILINEAR'
+	DBMS_OUTPUT.PUT_LINE('Generating raster pyramid...');
+	sdo_geor.generatePyramid( geor, 'resampling=CUBIC');
+	update RASTER_RELIEF set RASTERPROPERTY = geor where id = relief_component_id;
+
+	-- // update tuples in RASTER_RELIEF_IMP to point to the generated
+	-- // RELIEF and RASTER_RELIEF tuples
+	UPDATE RASTER_RELIEF_IMP set RELIEF_ID=relief_id,
+	                             RASTER_RELIEF_ID=relief_component_id;
+
+	COMMIT;
+	DBMS_OUTPUT.PUT_LINE('New Raster-Cityobject generated with ID '||
+	                     relief_component_id);
+	DBMS_OUTPUT.PUT_LINE('New ReliefFeature-Cityobject generated with ID '||
+	                     relief_id);
+END mosaicRasterReliefInitial;
+/
