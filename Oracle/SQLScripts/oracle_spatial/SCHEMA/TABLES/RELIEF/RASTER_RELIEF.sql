@@ -1,24 +1,19 @@
 -- RASTER_RELIEF.sql
 --
 -- Authors:     Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---              Gerhard KÃ¶nig <gerhard.koenig@tu-berlin.de>
+--              Zhihang Yao <zhihang.yao@tum.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
---              Alexandra Stadler <stadler@igg.tu-berlin.de>
+--              Philipp Willkomm <pwillkomm@moss.de>
+--              Gerhard König <gerhard.koenig@tu-berlin.de>
+--              Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 --
---              Prof. Dr. Lutz Pluemer <pluemer@ikg.uni-bonn.de>
---              Dr. Gerhard Groeger <groeger@ikg.uni-bonn.de>
---              Joerg Schmittwilken <schmittwilken@ikg.uni-bonn.de>
---              Viktor Stroh <stroh@ikg.uni-bonn.de>
---              Dr. Andreas Poth <poth@lat-lon.de>
+-- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+--                             Technische Universität München, Germany
+--                             http://www.gis.bv.tum.de
 --
--- Copyright:   (c) 2007-2008  Institute for Geodesy and Geoinformation Science,
---                             Technische Universitï¿½t Berlin, Germany
+--              (c) 2007-2012  Institute for Geodesy and Geoinformation Science,
+--                             Technische Universität Berlin, Germany
 --                             http://www.igg.tu-berlin.de
---              (c) 2004-2006, Institute for Cartography and Geoinformation,
---                             Universitï¿½t Bonn, Germany
---                             http://www.ikg.uni-bonn.de
---              (c) 2005-2006, lat/lon GmbH, Germany
---                             http://www.lat-lon.de
 --
 --              This skript is free software under the LGPL Version 2.1.
 --              See the GNU Lesser General Public License at
@@ -33,24 +28,24 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 2.0.0     2007-11-23   release version                             LPlu
+-- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
 --                                                                    TKol
---                                                                    GGro
---                                                                    JSch
---                                                                    VStr
---                                                                    APot
+--                                                                    CNag
+--                                                                    PWil
+-- 2.0.0     2007-11-23   release version                             TKol
+--                                                                    GKoe
+--                                                                    CNag
+--                                                                    ALor
 --
--- DROP TABLE "RASTER_RELIEF" CASCADE CONSTRAINT PURGE;
 
-CREATE TABLE "RASTER_RELIEF" (
-"ID" NUMBER NOT NULL,
--- "LOD" NUMBER (1) NOT NULL,
-"RASTERPROPERTY" MDSYS.SDO_GEORASTER NOT NULL
--- "RELIEF_ID" NUMBER NOT NULL,
--- "NAME" VARCHAR2 (256),
--- "TYPE" VARCHAR2 (256),
--- "EXTENT" MDSYS.SDO_GEOMETRY 
+CREATE TABLE RASTER_RELIEF (
+ID NUMBER NOT NULL,
+URI VARCHAR2(4000),
+GEORASTER_ID NUMBER 
 );
-
-ALTER TABLE "RASTER_RELIEF"
-ADD CONSTRAINT "RASTER_RLF_PK" PRIMARY KEY ( "ID" )  ENABLE;
+ALTER TABLE RASTER_RELIEF
+ADD CONSTRAINT RASTER_RLF_PK PRIMARY KEY
+( 
+ID
+)  
+ ENABLE;

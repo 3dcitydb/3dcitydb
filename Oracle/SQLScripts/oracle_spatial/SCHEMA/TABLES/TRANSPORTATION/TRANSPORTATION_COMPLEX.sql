@@ -1,12 +1,18 @@
 -- TRANSPORTATION_COMPLEX.sql
 --
 -- Authors:     Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---              Gerhard KÃ¶nig <gerhard.koenig@tu-berlin.de>
+--              Zhihang Yao <zhihang.yao@tum.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
---              Alexandra Stadler <stadler@igg.tu-berlin.de>
+--              Philipp Willkomm <pwillkomm@moss.de>
+--              Gerhard König <gerhard.koenig@tu-berlin.de>
+--              Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 --
--- Copyright:   (c) 2007-2008  Institute for Geodesy and Geoinformation Science,
---                             Technische Universitï¿½t Berlin, Germany
+-- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+--                             Technische Universität München, Germany
+--                             http://www.gis.bv.tum.de
+--
+--              (c) 2007-2012  Institute for Geodesy and Geoinformation Science,
+--                             Technische Universität Berlin, Germany
 --                             http://www.igg.tu-berlin.de
 --
 --              This skript is free software under the LGPL Version 2.1.
@@ -22,20 +28,25 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
+--                                                                    TKol
+--                                                                    CNag
+--                                                                    PWil
 -- 2.0.0     2007-11-23   release version                             TKol
 --                                                                    GKoe
 --                                                                    CNag
---                                                                    ASta
+--                                                                    ALor
 --
 CREATE TABLE TRANSPORTATION_COMPLEX
 (
 ID NUMBER NOT NULL,
-NAME VARCHAR2(1000),
-NAME_CODESPACE VARCHAR2(4000),
-DESCRIPTION VARCHAR2(4000),
+OBJECTCLASS_ID NUMBER,
+CLASS VARCHAR2(256),
+CLASS_CODESPACE VARCHAR2(4000),
 FUNCTION VARCHAR2(1000),
+FUNCTION_CODESPACE VARCHAR2(4000),
 USAGE VARCHAR2(1000),
-TYPE VARCHAR2(256),
+USAGE_CODESPACE VARCHAR2(4000),
 LOD0_NETWORK MDSYS.SDO_GEOMETRY,
 LOD1_MULTI_SURFACE_ID NUMBER,
 LOD2_MULTI_SURFACE_ID NUMBER,

@@ -1,12 +1,18 @@
 -- OBJECTCLASS_INSTANCES.sql
 --
 -- Authors:     Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---              Gerhard KÃ¶nig <gerhard.koenig@tu-berlin.de>
+--              Zhihang Yao <zhihang.yao@tum.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
---              Alexandra Stadler <stadler@igg.tu-berlin.de>
+--              Philipp Willkomm <pwillkomm@moss.de>
+--              Gerhard König <gerhard.koenig@tu-berlin.de>
+--              Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 --
--- Copyright:   (c) 2007-2008  Institute for Geodesy and Geoinformation Science,
---                             Technische Universitï¿½t Berlin, Germany
+-- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+--                             Technische Universität München, Germany
+--                             http://www.gis.bv.tum.de
+--
+--              (c) 2007-2012  Institute for Geodesy and Geoinformation Science,
+--                             Technische Universität Berlin, Germany
 --                             http://www.igg.tu-berlin.de
 --
 --              This skript is free software under the LGPL Version 2.1.
@@ -22,9 +28,14 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
+--                                                                    TKol
+--                                                                    CNag
+--                                                                    PWil
 -- 2.0.0     2007-11-23   release version                             TKol
 --                                                                    GKoe
 --                                                                    CNag
+--                                                                    ALor
 --
 DELETE FROM OBJECTCLASS;
 
@@ -220,5 +231,140 @@ VALUES (58,'Address',2);
 
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (59,'ImplicitGeometry',1);
+
+--// extending the BoudarySurface (OuterCeilingSurface and OuterFloorSurface) of Building for CityGML 2.0
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (60,'OuterCeilingSurface',29);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (61,'OuterFloorSurface',29);
+
+--// BRIDGE
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (62,'_AbstractBridge',3);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (63,'BridgePart',62);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (64,'Bridge',62);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (65,'BridgeInstallation',3);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (66,'IntBridgeInstallation',3);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (67,'_BridgeBoundarySurface',3);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (68,'BridgeCeilingSurface',67);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (69,'BridgeInteriorWallSurface',67);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (70,'BridgeFloorSurface',67);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (71,'BridgeRoofSurface',67);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (72,'BridgeWallSurface',67);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (73,'BridgeGroundSurface',67);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (74,'BridgeClosureSurface',67);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (75,'BridgeOuterCeilingSurface',67);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (76,'BridgeOuterFloorSurface',67);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (77,'_BridgeOpening',3);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (78,'BridgeWindow',77);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (79,'BridgeDoor',77);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (80,'BridgeFurniture',3);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (81,'BridgeRoom',3);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (82,'BridgeConstructionElement',3);
+
+--// TUNNEL
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (83,'_AbstractTunnel',3);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (84,'TunnelPart',83);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (85,'Tunnel',83);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (86,'TunnelInstallation',3);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (87,'IntTunnelInstallation',3);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (88,'_TunnelBoundarySurface',3);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (89,'TunnelCeilingSurface',88);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (90,'TunnelInteriorWallSurface',88);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (91,'TunnelFloorSurface',88);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (92,'TunnelRoofSurface',88);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (93,'TunnelWallSurface',88);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (94,'TunnelGroundSurface',88);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (95,'TunnelClosureSurface',88);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (96,'TunnelOuterCeilingSurface',88);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (97,'TunnelOuterFloorSurface',88);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (98,'_TunnelOpening',3);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (99,'TunnelWindow',98);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (100,'TunnelDoor',98);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (101,'TunnelFurniture',3);
+
+INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
+VALUES (102,'TunnelHollowSpace',3);
 
 COMMIT;

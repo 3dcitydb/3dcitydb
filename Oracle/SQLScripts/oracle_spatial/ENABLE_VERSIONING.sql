@@ -1,12 +1,18 @@
 -- ENABLE_VERSIONING.sql
 --
 -- Authors:     Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---              Gerhard KÃ¶nig <gerhard.koenig@tu-berlin.de>
+--              Zhihang Yao <zhihang.yao@tum.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
---              Alexandra Stadler <stadler@igg.tu-berlin.de>
+--              Philipp Willkomm <pwillkomm@moss.de>
+--              Gerhard König <gerhard.koenig@tu-berlin.de>
+--              Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 --
--- Copyright:   (c) 2007-2008  Institute for Geodesy and Geoinformation Science,
---                             Technische Universitï¿½t Berlin, Germany
+-- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+--                             Technische Universität München, Germany
+--                             http://www.gis.bv.tum.de
+--
+--              (c) 2007-2012  Institute for Geodesy and Geoinformation Science,
+--                             Technische Universität Berlin, Germany
 --                             http://www.igg.tu-berlin.de
 --
 --              This skript is free software under the LGPL Version 2.1.
@@ -22,6 +28,10 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
+--                                                                    TKol
+--                                                                    CNag
+--                                                                    PWil
 -- 2.0.1     2008-06-28   log message included                        TKol
 -- 2.0.0     2007-11-23   release version                             TKol
 --                                                                    GKoe
@@ -30,4 +40,4 @@
 SELECT 'EnableVersioning procedure is working, that takes a while.' as message from DUAL;
 
 
-EXECUTE DBMS_WM.EnableVersioning('ADDRESS,ADDRESS_TO_BUILDING,APPEAR_TO_SURFACE_DATA,APPEARANCE,BREAKLINE_RELIEF,BUILDING,BUILDING_FURNITURE,BUILDING_INSTALLATION,CITY_FURNITURE,CITYMODEL,CITYOBJECT,CITYOBJECT_GENERICATTRIB,CITYOBJECT_MEMBER,CITYOBJECTGROUP,EXTERNAL_REFERENCE,GENERALIZATION,GENERIC_CITYOBJECT,GROUP_TO_CITYOBJECT,IMPLICIT_GEOMETRY,LAND_USE,MASSPOINT_RELIEF,OPENING,OPENING_TO_THEM_SURFACE,PLANT_COVER,RELIEF_COMPONENT,RELIEF_FEAT_TO_REL_COMP,RELIEF_FEATURE,ROOM,SOLITARY_VEGETAT_OBJECT,SURFACE_DATA,SURFACE_GEOMETRY,TEXTUREPARAM,THEMATIC_SURFACE,TIN_RELIEF,TRAFFIC_AREA,TRANSPORTATION_COMPLEX,WATERBOD_TO_WATERBND_SRF,WATERBODY,WATERBOUNDARY_SURFACE','VIEW_WO_OVERWRITE');
+EXECUTE DBMS_WM.EnableVersioning('ADDRESS,ADDRESS_TO_BUILDING,ADDRESS_TO_BRIDGE,APPEAR_TO_SURFACE_DATA,APPEARANCE,BREAKLINE_RELIEF,BUILDING,BUILDING_FURNITURE,BUILDING_INSTALLATION,BRD_CONSTR_ELEMENT,BRD_OPEN_TO_THEM_SURFACE,BRD_THEMATIC_SURFACE,BRIDGE_FURNITURE,BRIDGE_INSTALLATION,BRIDGE_OPENING,BRIDGE_ROOM,BRIDGE,CITY_FURNITURE,CITYMODEL,CITYOBJECT,CITYOBJECT_GENERICATTRIB,CITYOBJECT_MEMBER,CITYOBJECTGROUP,EXTERNAL_REFERENCE,GENERALIZATION,GENERIC_CITYOBJECT,GROUP_TO_CITYOBJECT,IMPLICIT_GEOMETRY,LAND_USE,MASSPOINT_RELIEF,OPENING,OPENING_TO_THEM_SURFACE,PLANT_COVER,RELIEF_COMPONENT,RELIEF_FEAT_TO_REL_COMP,RELIEF_FEATURE,ROOM,RASTER_RELIEF,RASTER_REL_GEORASTER_RDT,SOLITARY_VEGETAT_OBJECT,SURFACE_DATA,SURFACE_GEOMETRY,TEX_IMAGE,TEXTUREPARAM,THEMATIC_SURFACE,TIN_RELIEF,TRAFFIC_AREA,TRANSPORTATION_COMPLEX,TUNNEL_FURNITURE,TUNNEL_HOLLOWSPACE,TUNNEL_INSTALLATION,TUNNEL_OPEN_TO_THEM_SURF,TUNNEL_OPENING,TUNNEL_THEMATIC_SURFACE,TUNNEL,WATERBOD_TO_WATERBND_SRF,WATERBODY,WATERBOUNDARY_SURFACE','VIEW_WO_OVERWRITE');

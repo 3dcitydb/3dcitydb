@@ -1,12 +1,18 @@
 -- SURFACE_GEOMETRY.sql
 --
 -- Authors:     Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---              Gerhard KÃ¶nig <gerhard.koenig@tu-berlin.de>
+--              Zhihang Yao <zhihang.yao@tum.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
---              Alexandra Stadler <stadler@igg.tu-berlin.de>
+--              Philipp Willkomm <pwillkomm@moss.de>
+--              Gerhard König <gerhard.koenig@tu-berlin.de>
+--              Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 --
--- Copyright:   (c) 2007-2008  Institute for Geodesy and Geoinformation Science,
---                             Technische Universitï¿½t Berlin, Germany
+-- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+--                             Technische Universität München, Germany
+--                             http://www.gis.bv.tum.de
+--
+--              (c) 2007-2012  Institute for Geodesy and Geoinformation Science,
+--                             Technische Universität Berlin, Germany
 --                             http://www.igg.tu-berlin.de
 --
 --              This skript is free software under the LGPL Version 2.1.
@@ -22,24 +28,29 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
+--                                                                    TKol
+--                                                                    CNag
+--                                                                    PWil
 -- 2.0.0     2007-11-23   release version                             TKol
 --                                                                    GKoe
 --                                                                    CNag
---                                                                    ASta
+--                                                                    ALor
 --
 CREATE TABLE SURFACE_GEOMETRY
 (
 ID NUMBER NOT NULL,
 GMLID VARCHAR2(256),
-GMLID_CODESPACE VARCHAR2(1000),
 PARENT_ID NUMBER,
 ROOT_ID NUMBER,
+CITYOBJECT_ID NUMBER,
 IS_SOLID NUMBER(1, 0),
 IS_COMPOSITE NUMBER(1, 0),
 IS_TRIANGULATED NUMBER(1, 0),
 IS_XLINK NUMBER(1, 0),
 IS_REVERSE NUMBER(1, 0),
-GEOMETRY MDSYS.SDO_GEOMETRY
+GEOMETRY MDSYS.SDO_GEOMETRY,
+SOLID_GEOMETRY MDSYS.SDO_GEOMETRY 
 )
 ;
 ALTER TABLE SURFACE_GEOMETRY

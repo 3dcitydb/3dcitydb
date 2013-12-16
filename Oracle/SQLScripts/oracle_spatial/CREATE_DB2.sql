@@ -1,13 +1,18 @@
-
 -- CREATE_DB2.sql
 --
 -- Authors:     Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---              Gerhard KÃ¶nig <gerhard.koenig@tu-berlin.de>
+--              Zhihang Yao <zhihang.yao@tum.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
---              Alexandra Stadler <stroh@igg.tu-berlin.de>
+--              Philipp Willkomm <pwillkomm@moss.de>
+--              Gerhard König <gerhard.koenig@tu-berlin.de>
+--              Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 --
--- Copyright:   (c) 2007-2008, Institute for Geodesy and Geoinformation Science,
---                             Technische Universitï¿½t Berlin, Germany
+-- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+--                             Technische Universität München, Germany
+--                             http://www.gis.bv.tum.de
+--
+--              (c) 2007-2012  Institute for Geodesy and Geoinformation Science,
+--                             Technische Universität Berlin, Germany
 --                             http://www.igg.tu-berlin.de
 --
 --              This skript is free software under the LGPL Version 2.1.
@@ -23,11 +28,17 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
+--                                                                    TKol
+--                                                                    CNag
+--                                                                    PWil
 -- 2.0.1     2008-06-28   versioning is enabled depending on var      TKol
 -- 2.0.0     2007-11-23   release version                             TKol
 --                                                                    GKoe
 --                                                                    CNag
---                                                                    ASta
+--                                                                    ALor
+--
+
 --
 SET SERVEROUTPUT ON
 SET FEEDBACK ON
@@ -72,21 +83,16 @@ COMMIT;
 @@SCHEMA/TABLES/APPEARANCE/SURFACE_DATA.sql
 @@SCHEMA/TABLES/APPEARANCE/TEXTUREPARAM.sql
 @@SCHEMA/TABLES/APPEARANCE/APPEAR_TO_SURFACE_DATA.sql
+@@SCHEMA/TABLES/APPEARANCE/TEX_IMAGE.sql
 @@SCHEMA/TABLES/RELIEF/BREAKLINE_RELIEF.sql
 @@SCHEMA/TABLES/RELIEF/MASSPOINT_RELIEF.sql
 @@SCHEMA/TABLES/RELIEF/RASTER_RELIEF.sql
-@@SCHEMA/TABLES/RELIEF/RASTER_RELIEF_IMP.sql
-@@SCHEMA/TABLES/RELIEF/RASTER_RELIEF_IMP_RDT.sql
-@@SCHEMA/TABLES/RELIEF/RASTER_RELIEF_RDT.sql
-@@SCHEMA/TABLES/RELIEF/RELIEF.sql
+@@SCHEMA/TABLES/RELIEF/RASTER_RELIEF_GEORASTER.sql
+@@SCHEMA/TABLES/RELIEF/RASTER_REL_GEORASTER_RDT.sql
 @@SCHEMA/TABLES/RELIEF/RELIEF_COMPONENT.sql
 @@SCHEMA/TABLES/RELIEF/RELIEF_FEAT_TO_REL_COMP.sql
 @@SCHEMA/TABLES/RELIEF/RELIEF_FEATURE.sql
 @@SCHEMA/TABLES/RELIEF/TIN_RELIEF.sql
-@@SCHEMA/TABLES/ORTHOPHOTO/ORTHOPHOTO_RDT.sql;
-@@SCHEMA/TABLES/ORTHOPHOTO/ORTHOPHOTO.sql;
-@@SCHEMA/TABLES/ORTHOPHOTO/ORTHOPHOTO_RDT_IMP.sql;
-@@SCHEMA/TABLES/ORTHOPHOTO/ORTHOPHOTO_IMP.sql;
 @@SCHEMA/TABLES/TRANSPORTATION/TRANSPORTATION_COMPLEX.sql
 @@SCHEMA/TABLES/TRANSPORTATION/TRAFFIC_AREA.sql
 @@SCHEMA/TABLES/LANDUSE/LAND_USE.sql
@@ -95,6 +101,22 @@ COMMIT;
 @@SCHEMA/TABLES/WATERBODY/WATERBODY.sql
 @@SCHEMA/TABLES/WATERBODY/WATERBOD_TO_WATERBND_SRF.sql
 @@SCHEMA/TABLES/WATERBODY/WATERBOUNDARY_SURFACE.sql
+@@SCHEMA/TABLES/BRIDGE/ADDRESS_TO_BRIDGE.sql
+@@SCHEMA/TABLES/BRIDGE/BRD_CONSTR_ELEMENT.sql
+@@SCHEMA/TABLES/BRIDGE/BRD_OPEN_TO_THEM_SURFACE.sql
+@@SCHEMA/TABLES/BRIDGE/BRD_THEMATIC_SURFACE.sql
+@@SCHEMA/TABLES/BRIDGE/BRIDGE_FURNITURE.sql
+@@SCHEMA/TABLES/BRIDGE/BRIDGE_INSTALLATION.sql
+@@SCHEMA/TABLES/BRIDGE/BRIDGE_OPENING.sql
+@@SCHEMA/TABLES/BRIDGE/BRIDGE_ROOM.sql
+@@SCHEMA/TABLES/BRIDGE/BRIDGE.sql
+@@SCHEMA/TABLES/TUNNEL/TUNNEL_FURNITURE.sql
+@@SCHEMA/TABLES/TUNNEL/TUNNEL_HOLLOWSPACE.sql
+@@SCHEMA/TABLES/TUNNEL/TUNNEL_INSTALLATION.sql
+@@SCHEMA/TABLES/TUNNEL/TUNNEL_OPEN_TO_THEM_SURF.sql
+@@SCHEMA/TABLES/TUNNEL/TUNNEL_OPENING.sql
+@@SCHEMA/TABLES/TUNNEL/TUNNEL_THEMATIC_SURFACE.sql
+@@SCHEMA/TABLES/TUNNEL/TUNNEL.sql
 
 --// create sequences
 @@SCHEMA/SEQUENCES/CITYMODEL_SEQ.sql
@@ -102,12 +124,13 @@ COMMIT;
 @@SCHEMA/SEQUENCES/EXTERNAL_REF_SEQ.sql
 @@SCHEMA/SEQUENCES/IMPLICIT_GEOMETRY_SEQ.sql
 @@SCHEMA/SEQUENCES/SURFACE_GEOMETRY_SEQ.sql
+@@SCHEMA/SEQUENCES/RASTER_REL_GEORASTER_SEQ.sql
+@@SCHEMA/SEQUENCES/RASTER_REL_GEORST_RDT_SEQ.sql
 @@SCHEMA/SEQUENCES/CITYOBJECT_GENERICATT_SEQ.sql
 @@SCHEMA/SEQUENCES/ADDRESS_SEQ.sql
 @@SCHEMA/SEQUENCES/APPEARANCE_SEQ.sql
 @@SCHEMA/SEQUENCES/SURFACE_DATA_SEQ.sql
-@@SCHEMA/SEQUENCES/DTM_SEQ.sql
-@@SCHEMA/SEQUENCES/ORTHOPHOTO_SEQ.sql
+@@SCHEMA/SEQUENCES/TEX_IMAGE_SEQ.sql
 
 --// activate constraints
 @@SCHEMA/CONSTRAINTS/CONSTRAINTS.sql
@@ -117,8 +140,6 @@ COMMIT;
 @@SCHEMA/INDEXES/SPATIAL_INDEX.sql
 
 @@UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
-@@UTIL/CREATE_DB/IMPORT_PROCEDURES.sql
-@@UTIL/CREATE_DB/DUMMY_IMPORT.sql
 
 --// (possibly) activate versioning
 BEGIN
@@ -136,15 +157,13 @@ column mc2 new_value VERSIONBATCHFILE2 print
 select :VERSIONBATCHFILE mc2 from dual;
 @@&VERSIONBATCHFILE2
 
---// DML TRIGGER FOR RASTER TABLES
-@@SCHEMA/TRIGGER/RASTER_ORTHOPHOTO/TRIGGER.sql;
-
 --// CREATE TABLES & PROCEDURES OF THE PLANNINGMANAGER
-@@PL_SQL/MOSAIC/MOSAIC.sql;
-@@CREATE_PLANNING_MANAGER.sql
+
+--@@CREATE_PLANNING_MANAGER.sql
 
 --// geodb packages
-@@CREATE_GEODB_PKG.sql
+
+--@@CREATE_GEODB_PKG.sql
 
 SHOW ERRORS;
 COMMIT;
