@@ -1967,6 +1967,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 			<column name="gmlid"/>
 		</idxelement>
 	</index>
+	<index name="appearance_theme_inx" table="public.appearance"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="theme"/>
+		</idxelement>
+	</index>
 	<index name="appearance_citymodel_fkx" table="public.appearance"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
@@ -3433,6 +3440,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="tunnel_thematic_surface_pk" type="pk-constr" factor="100" table="public.tunnel_thematic_surface">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+	<index name="tun_them_surf_objclass_fkx" table="public.tunnel_thematic_surface"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="objectclass_id"/>
+		</idxelement>
+	</index>
 	<index name="tun_them_srf_tunnel_fkx" table="public.tunnel_thematic_surface"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
@@ -5811,6 +5825,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
+<constraint name="tun_them_surf_objclass_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.objectclass" table="public.tunnel_thematic_surface">
+	<columns names="objectclass_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
 <constraint name="tun_them_srf_tunnel_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.tunnel" table="public.tunnel_thematic_surface">
 	<columns names="tunnel_id" ref-type="src-columns"/>
@@ -6692,9 +6711,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.cityobject_genericattrib"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="2677" y="506.88"/>
-	<position x="2677" y="374"/>
-	<position x="2542.67" y="374"/>
+		<position x="2712" y="506.88"/>
+	<position x="2712" y="374"/>
+	<position x="2566" y="374"/>
 	</line>
 </relationship>
 
@@ -7042,6 +7061,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_raster_relief_raster_relief_raster" type="relfk"
 	 src-table="public.raster_relief"
 	 dst-table="public.raster_relief_raster"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_tunnel_thematic_surface_objectclass" type="relfk"
+	 src-table="public.tunnel_thematic_surface"
+	 dst-table="public.objectclass"
 	 src-required="true" dst-required="true"/>
 
 </dbmodel>

@@ -1,13 +1,7 @@
 -- Database generated with pgModeler (PostgreSQL Database Modeler).
 -- PostgreSQL version: 9.3
 -- Project Site: pgmodeler.com.br
--- Model Author: Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---               Zhihang Yao <zhihang.yao@tum.de>
---               Claus Nagel <cnagel@virtualcitysystems.de>
---               Felix Kunde <fkunde@virtualcitysystems.de>
---               Philipp Willkomm <pwillkomm@moss.de>
---               Gerhard König <gerhard.koenig@tu-berlin.de>
---               Alexandra Lorenz <di.alex.lorenz@googlemail.com>
+-- Model Author: ---
 
 SET check_function_bodies = false;
 -- ddl-end --
@@ -1526,6 +1520,14 @@ CREATE INDEX appearance_inx ON public.appearance
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
+-- object: appearance_theme_inx | type: INDEX --
+CREATE INDEX appearance_theme_inx ON public.appearance
+	USING btree
+	(
+	  theme ASC NULLS LAST
+	);
+-- ddl-end --
+
 -- object: appearance_citymodel_fkx | type: INDEX --
 CREATE INDEX appearance_citymodel_fkx ON public.appearance
 	USING btree
@@ -2635,6 +2637,14 @@ CREATE TABLE public.tunnel_thematic_surface(
 
 );
 -- ddl-end --
+-- object: tun_them_surf_objclass_fkx | type: INDEX --
+CREATE INDEX tun_them_surf_objclass_fkx ON public.tunnel_thematic_surface
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	);
+-- ddl-end --
+
 -- object: tun_them_srf_tunnel_fkx | type: INDEX --
 CREATE INDEX tun_them_srf_tunnel_fkx ON public.tunnel_thematic_surface
 	USING btree
@@ -3782,7 +3792,7 @@ CREATE INDEX address_to_bridge_fkx1 ON public.address_to_bridge
 -- object: public.raster_relief_raster | type: TABLE --
 CREATE TABLE public.raster_relief_raster(
 	id integer DEFAULT nextval('raster_relief_raster_seq'::regclass),
-	rasterproperty raster,
+	rasterproperty bytea,
 	CONSTRAINT raster_relief_raster_pk PRIMARY KEY (id)
 
 );
@@ -5129,6 +5139,13 @@ ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
 -- object: tun_them_srf_cityobj_fk | type: CONSTRAINT --
 ALTER TABLE public.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_cityobj_fk FOREIGN KEY (id)
 REFERENCES public.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ddl-end --
+
+
+-- object: tun_them_surf_objclass_fk | type: CONSTRAINT --
+ALTER TABLE public.tunnel_thematic_surface ADD CONSTRAINT tun_them_surf_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES public.objectclass (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
