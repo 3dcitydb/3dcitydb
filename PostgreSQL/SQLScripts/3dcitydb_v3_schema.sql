@@ -1,7 +1,13 @@
 -- Database generated with pgModeler (PostgreSQL Database Modeler).
 -- PostgreSQL version: 9.3
 -- Project Site: pgmodeler.com.br
--- Model Author: ---
+-- Model Authors: Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
+--                Zhihang Yao <zhihang.yao@tum.de>
+--                Claus Nagel <cnagel@virtualcitysystems.de>
+--                Felix Kunde <fkunde@virtualcitysystems.de>
+--                Philipp Willkomm <pwillkomm@moss.de>
+--                Gerhard König <gerhard.koenig@tu-berlin.de>
+--                Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 
 SET check_function_bodies = false;
 -- ddl-end --
@@ -3792,7 +3798,7 @@ CREATE INDEX address_to_bridge_fkx1 ON public.address_to_bridge
 -- object: public.raster_relief_raster | type: TABLE --
 CREATE TABLE public.raster_relief_raster(
 	id integer DEFAULT nextval('raster_relief_raster_seq'::regclass),
-	rasterproperty bytea,
+	rasterproperty raster,
 	CONSTRAINT raster_relief_raster_pk PRIMARY KEY (id)
 
 );
