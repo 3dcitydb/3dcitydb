@@ -1,11 +1,9 @@
 -- GENERALIZATION.sql
 --
--- Authors:     Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---              Zhihang Yao <zhihang.yao@tum.de>
---              Claus Nagel <cnagel@virtualcitysystems.de>
---              Philipp Willkomm <pwillkomm@moss.de>
+-- Authors:     Prof. Dr. Thomas H. Kolbe <kolbe@igg.tu-berlin.de>
 --              Gerhard König <gerhard.koenig@tu-berlin.de>
---              Alexandra Lorenz <di.alex.lorenz@googlemail.com>
+--              Claus Nagel <nagel@igg.tu-berlin.de>
+--              Alexandra Stadler <stadler@igg.tu-berlin.de>
 --
 -- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
@@ -28,14 +26,10 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
---                                                                    TKol
---                                                                    CNag
---                                                                    PWil
 -- 2.0.0     2007-11-23   release version                             TKol
 --                                                                    GKoe
---                                                                    CNag
---                                                                    ALor
+--                                                                    CNag   
+--                                                                    ASta
 --
 CREATE TABLE GENERALIZATION
 (

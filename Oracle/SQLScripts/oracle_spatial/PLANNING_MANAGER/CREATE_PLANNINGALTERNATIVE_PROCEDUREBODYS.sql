@@ -1,7 +1,7 @@
 -- CREATE_PLANNINGALTERNATIVE_PROCEDUREBODYS.sql
 --
 -- Authors:     Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---              Gerhard KÃ¶nig <gerhard.koenig@tu-berlin.de>
+--              Gerhard König <gerhard.koenig@tu-berlin.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
 --              Alexandra Stadler <stadler@igg.tu-berlin.de>
 --
@@ -10,11 +10,16 @@
 --              Joerg Schmittwilken <schmittwilken@ikg.uni-bonn.de>
 --              Viktor Stroh <stroh@ikg.uni-bonn.de>
 --
--- Copyright:   (c) 2007-2008  Institute for Geodesy and Geoinformation Science,
---                             Technische Universitï¿½t Berlin, Germany
+-- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+--                             Technische Universität München, Germany
+--                             http://www.gis.bv.tum.de
+--
+--              (c) 2007-2012  Institute for Geodesy and Geoinformation Science,
+--                             Technische Universität Berlin, Germany
 --                             http://www.igg.tu-berlin.de
---  		(c) 2004-2006, Institute for Cartography and Geoinformation,
---                             Universitï¿½t Bonn, Germany
+
+--  		    (c) 2004-2006, Institute for Cartography and Geoinformation,
+--                             Universität Bonn, Germany
 --                             http://www.ikg.uni-bonn.de
 --
 --              This skript is free software under the LGPL Version 2.1.

@@ -4,11 +4,11 @@
 --              Felix Kunde <fkunde@virtualcitysystems.de>
 --              György Hudra <ghudra@moss.de>
 --
--- Copyright:   (c) 2013       Faculty of Civil, Geo and Environmental Engineering, 
---                             Chair of Geoinformatics,
+-- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
---                             http://www.gis.bv.tum.de/
---              (c) 2007-2013  Institute for Geodesy and Geoinformation Science,
+--                             http://www.gis.bv.tum.de
+--
+--              (c) 2007-2012  Institute for Geodesy and Geoinformation Science,
 --                             Technische Universität Berlin, Germany
 --                             http://www.igg.tu-berlin.de
 --
