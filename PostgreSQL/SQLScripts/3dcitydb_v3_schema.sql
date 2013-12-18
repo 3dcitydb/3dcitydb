@@ -6,7 +6,7 @@
 --                Claus Nagel <cnagel@virtualcitysystems.de>
 --                Felix Kunde <fkunde@virtualcitysystems.de>
 --                Philipp Willkomm <pwillkomm@moss.de>
---                Gerhard KÃ¶nig <gerhard.koenig@tu-berlin.de>
+--                Gerhard König <gerhard.koenig@tu-berlin.de>
 --                Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 
 SET check_function_bodies = false;
@@ -1531,7 +1531,7 @@ CREATE INDEX appearance_theme_inx ON public.appearance
 	USING btree
 	(
 	  theme ASC NULLS LAST
-	);
+	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
 -- object: appearance_citymodel_fkx | type: INDEX --
@@ -2643,8 +2643,8 @@ CREATE TABLE public.tunnel_thematic_surface(
 
 );
 -- ddl-end --
--- object: tun_them_surf_objclass_fkx | type: INDEX --
-CREATE INDEX tun_them_surf_objclass_fkx ON public.tunnel_thematic_surface
+-- object: tun_them_srf_objclass_fkx | type: INDEX --
+CREATE INDEX tun_them_srf_objclass_fkx ON public.tunnel_thematic_surface
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -3600,7 +3600,6 @@ CREATE TABLE public.bridge_constr_element(
 	usage character varying(1000),
 	usage_codespace character varying(4000),
 	bridge_id integer,
-	bridge_room_id integer,
 	lod1_brep_id integer,
 	lod2_brep_id integer,
 	lod3_brep_id integer,
@@ -3630,14 +3629,6 @@ CREATE INDEX bridge_constr_bridge_fkx ON public.bridge_constr_element
 	USING btree
 	(
 	  bridge_id ASC NULLS LAST
-	)	WITH (FILLFACTOR = 90);
--- ddl-end --
-
--- object: bridge_constr_brd_room_fkx | type: INDEX --
-CREATE INDEX bridge_constr_brd_room_fkx ON public.bridge_constr_element
-	USING btree
-	(
-	  bridge_room_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -5149,8 +5140,8 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: tun_them_surf_objclass_fk | type: CONSTRAINT --
-ALTER TABLE public.tunnel_thematic_surface ADD CONSTRAINT tun_them_surf_objclass_fk FOREIGN KEY (objectclass_id)
+-- object: tun_them_srf_objclass_fk | type: CONSTRAINT --
+ALTER TABLE public.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_objclass_fk FOREIGN KEY (objectclass_id)
 REFERENCES public.objectclass (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
@@ -5649,13 +5640,6 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- object: bridge_constr_bridge_fk | type: CONSTRAINT --
 ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_bridge_fk FOREIGN KEY (bridge_id)
 REFERENCES public.bridge (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
--- ddl-end --
-
-
--- object: bridge_constr_brd_room_fk | type: CONSTRAINT --
-ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_brd_room_fk FOREIGN KEY (bridge_room_id)
-REFERENCES public.bridge_room (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 

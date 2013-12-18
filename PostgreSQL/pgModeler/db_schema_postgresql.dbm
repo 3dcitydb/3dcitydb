@@ -70,7 +70,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="cityobject">
 	<schema name="public"/>
-	<position x="2594.35" y="2227.24"/>
+	<position x="2649.35" y="2142.24"/>
 	<column name="id" not-null="true" default-value="nextval('cityobject_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -147,7 +147,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="cityobject_member">
 	<schema name="public"/>
-	<position x="3320.56" y="549.445"/>
+	<position x="3320.56" y="567.778"/>
 	<column name="citymodel_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -205,7 +205,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="generalization">
 	<schema name="public"/>
-	<position x="2991.72" y="696.167"/>
+	<position x="3033.39" y="724.5"/>
 	<column name="cityobject_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -233,7 +233,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="surface_geometry">
 	<schema name="public"/>
-	<position x="3907.58" y="1519.2"/>
+	<position x="3862.58" y="1464.2"/>
 	<column name="id" not-null="true" default-value="nextval('surface_geometry_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -1089,7 +1089,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="address">
 	<schema name="public"/>
-	<position x="4208.14" y="5027.3"/>
+	<position x="4126.14" y="5039.3"/>
 	<column name="id" not-null="true" default-value="nextval('address_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -1969,7 +1969,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</index>
 	<index name="appearance_theme_inx" table="public.appearance"
 		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="0">
+		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
 			<column name="theme"/>
 		</idxelement>
@@ -3440,7 +3440,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="tunnel_thematic_surface_pk" type="pk-constr" factor="100" table="public.tunnel_thematic_surface">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
-	<index name="tun_them_surf_objclass_fkx" table="public.tunnel_thematic_surface"
+	<index name="tun_them_srf_objclass_fkx" table="public.tunnel_thematic_surface"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="0">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
@@ -4637,9 +4637,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="bridge_id">
 		<type name="integer"/>
 	</column>
-	<column name="bridge_room_id">
-		<type name="integer"/>
-	</column>
 	<column name="lod1_brep_id">
 		<type name="integer"/>
 	</column>
@@ -4708,13 +4705,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
 			<column name="bridge_id"/>
-		</idxelement>
-	</index>
-	<index name="bridge_constr_brd_room_fkx" table="public.bridge_constr_element"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="bridge_room_id"/>
 		</idxelement>
 	</index>
 	<index name="bridge_constr_lod1brep_fkx" table="public.bridge_constr_element"
@@ -4833,7 +4823,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="address_to_bridge">
 	<schema name="public"/>
-	<position x="4477" y="4790"/>
+	<position x="4477" y="4772"/>
 	<column name="bridge_id">
 		<type name="integer"/>
 	</column>
@@ -5825,7 +5815,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="tun_them_surf_objclass_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+<constraint name="tun_them_srf_objclass_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.objectclass" table="public.tunnel_thematic_surface">
 	<columns names="objectclass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
@@ -6185,11 +6175,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="bridge_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="bridge_constr_brd_room_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.bridge_room" table="public.bridge_constr_element">
-	<columns names="bridge_room_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
 <constraint name="bridge_constr_lod1brep_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.bridge_constr_element">
 	<columns names="lod1_brep_id" ref-type="src-columns"/>
@@ -6306,9 +6291,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.surface_geometry"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="4267.58" y="1619.68"/>
-	<position x="4267.58" y="1509.2"/>
-	<position x="4140.91" y="1509.2"/>
+		<position x="4222.58" y="1564.68"/>
+	<position x="4222.58" y="1454.2"/>
+	<position x="4095.91" y="1454.2"/>
 	</line>
 </relationship>
 
@@ -7030,11 +7015,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_bridge_constr_element_bridge" type="relfk"
 	 src-table="public.bridge_constr_element"
 	 dst-table="public.bridge"
-	 src-required="true" dst-required="true"/>
-
-<relationship name="rel_bridge_constr_element_bridge_room" type="relfk"
-	 src-table="public.bridge_constr_element"
-	 dst-table="public.bridge_room"
 	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_constr_element_surface_geometry" type="relfk"
