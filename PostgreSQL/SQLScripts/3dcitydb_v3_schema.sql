@@ -6,7 +6,7 @@
 --               Claus Nagel <cnagel@virtualcitysystems.de>
 --               Felix Kunde <fkunde@virtualcitysystems.de>
 --               Philipp Willkomm <pwillkomm@moss.de>
---               Gerhard KÃ¶nig <gerhard.koenig@tu-berlin.de>
+--               Gerhard König <gerhard.koenig@tu-berlin.de>
 --               Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 
 SET check_function_bodies = false;
@@ -226,6 +226,22 @@ CREATE INDEX surface_geom_spx ON public.surface_geometry
 	);
 -- ddl-end --
 
+-- object: surface_geom_solid_spx | type: INDEX --
+CREATE INDEX surface_geom_solid_spx ON public.surface_geometry
+	USING gist
+	(
+	  solid_geometry
+	);
+-- ddl-end --
+
+-- object: surface_geom_cityobj_fkx | type: INDEX --
+CREATE INDEX surface_geom_cityobj_fkx ON public.surface_geometry
+	USING btree
+	(
+	  cityobject_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
 
 -- object: public.cityobjectgroup | type: TABLE --
 CREATE TABLE public.cityobjectgroup(
@@ -236,19 +252,27 @@ CREATE TABLE public.cityobjectgroup(
 	class character varying(256),
 	function character varying(1000),
 	usage character varying(1000),
-	geometry geometry(POLYGONZ),
-	surface_geometry_id integer,
+	brep_id integer,
+	other_geom geometry,
 	parent_cityobject_id integer,
 	CONSTRAINT cityobjectgroup_pk PRIMARY KEY (id)
 
 );
 -- ddl-end --
--- object: group_geom_fkx | type: INDEX --
-CREATE INDEX group_geom_fkx ON public.cityobjectgroup
+-- object: group_brep_fkx | type: INDEX --
+CREATE INDEX group_brep_fkx ON public.cityobjectgroup
 	USING btree
 	(
-	  surface_geometry_id ASC NULLS LAST
+	  brep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: group_xgeom_spx | type: INDEX --
+CREATE INDEX group_xgeom_spx ON public.cityobjectgroup
+	USING gist
+	(
+	  other_geom
+	);
 -- ddl-end --
 
 -- object: group_parent_cityobj_fkx | type: INDEX --
@@ -257,14 +281,6 @@ CREATE INDEX group_parent_cityobj_fkx ON public.cityobjectgroup
 	(
 	  parent_cityobject_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
--- ddl-end --
-
--- object: group_geom_spx | type: INDEX --
-CREATE INDEX group_geom_spx ON public.cityobjectgroup
-	USING gist
-	(
-	  geometry
-	);
 -- ddl-end --
 
 
@@ -326,25 +342,34 @@ CREATE TABLE public.implicit_geometry(
 	mime_type character varying(256),
 	reference_to_library character varying(4000),
 	library_object bytea,
-	relative_geometry_id integer,
+	relative_brep_id integer,
+	relative_other_geom geometry,
 	CONSTRAINT implicit_geometry_pk PRIMARY KEY (id)
 
 );
 -- ddl-end --
--- object: implicit_geometry_fkx | type: INDEX --
-CREATE INDEX implicit_geometry_fkx ON public.implicit_geometry
+-- object: implicit_geom_ref2lib_inx | type: INDEX --
+CREATE INDEX implicit_geom_ref2lib_inx ON public.implicit_geometry
 	USING btree
 	(
-	  relative_geometry_id
+	  reference_to_library ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
--- object: implicit_geometry_inx | type: INDEX --
-CREATE INDEX implicit_geometry_inx ON public.implicit_geometry
+-- object: implicit_geom_brep_fkx | type: INDEX --
+CREATE INDEX implicit_geom_brep_fkx ON public.implicit_geometry
 	USING btree
 	(
-	  reference_to_library
+	  relative_brep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: implicit_geom_xgeom_skx | type: INDEX --
+CREATE INDEX implicit_geom_xgeom_skx ON public.implicit_geometry
+	USING gist
+	(
+	  relative_other_geom
+	);
 -- ddl-end --
 
 
@@ -385,6 +410,38 @@ CREATE TABLE public.city_furniture(
 
 );
 -- ddl-end --
+-- object: city_furn_lod1terr_spx | type: INDEX --
+CREATE INDEX city_furn_lod1terr_spx ON public.city_furniture
+	USING gist
+	(
+	  lod1_terrain_intersection
+	);
+-- ddl-end --
+
+-- object: city_furn_lod2terr_spx | type: INDEX --
+CREATE INDEX city_furn_lod2terr_spx ON public.city_furniture
+	USING gist
+	(
+	  lod2_terrain_intersection
+	);
+-- ddl-end --
+
+-- object: city_furn_lod3terr_spx | type: INDEX --
+CREATE INDEX city_furn_lod3terr_spx ON public.city_furniture
+	USING gist
+	(
+	  lod3_terrain_intersection
+	);
+-- ddl-end --
+
+-- object: city_furn_lod4terr_spx | type: INDEX --
+CREATE INDEX city_furn_lod4terr_spx ON public.city_furniture
+	USING gist
+	(
+	  lod4_terrain_intersection
+	);
+-- ddl-end --
+
 -- object: city_furn_lod1brep_fkx | type: INDEX --
 CREATE INDEX city_furn_lod1brep_fkx ON public.city_furniture
 	USING btree
@@ -481,38 +538,6 @@ CREATE INDEX city_furn_lod4impl_fkx ON public.city_furniture
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
--- object: city_furn_lod1terr_spx | type: INDEX --
-CREATE INDEX city_furn_lod1terr_spx ON public.city_furniture
-	USING gist
-	(
-	  lod1_terrain_intersection
-	);
--- ddl-end --
-
--- object: city_furn_lod2terr_spx | type: INDEX --
-CREATE INDEX city_furn_lod2terr_spx ON public.city_furniture
-	USING gist
-	(
-	  lod2_terrain_intersection
-	);
--- ddl-end --
-
--- object: city_furn_lod3terr_spx | type: INDEX --
-CREATE INDEX city_furn_lod3terr_spx ON public.city_furniture
-	USING gist
-	(
-	  lod3_terrain_intersection
-	);
--- ddl-end --
-
--- object: city_furn_lod4terr_spx | type: INDEX --
-CREATE INDEX city_furn_lod4terr_spx ON public.city_furniture
-	USING gist
-	(
-	  lod4_terrain_intersection
-	);
--- ddl-end --
-
 -- object: city_furn_lod1refpnt_spx | type: INDEX --
 CREATE INDEX city_furn_lod1refpnt_spx ON public.city_furniture
 	USING gist
@@ -562,8 +587,8 @@ CREATE TABLE public.cityobject_genericattrib(
 	blobval bytea,
 	unit character varying(4000),
 	genattribset_codespace character varying(4000),
-	cityobject_id integer NOT NULL,
 	surface_geometry_id integer,
+	cityobject_id integer NOT NULL,
 	CONSTRAINT cityobj_genericattrib_pk PRIMARY KEY (id)
 
 );
@@ -584,19 +609,19 @@ CREATE INDEX genericattrib_root_fkx ON public.cityobject_genericattrib
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
--- object: genericattrib_cityobj_fkx | type: INDEX --
-CREATE INDEX genericattrib_cityobj_fkx ON public.cityobject_genericattrib
-	USING btree
-	(
-	  cityobject_id
-	)	WITH (FILLFACTOR = 90);
--- ddl-end --
-
 -- object: genericattrib_geom_fkx | type: INDEX --
 CREATE INDEX genericattrib_geom_fkx ON public.cityobject_genericattrib
 	USING btree
 	(
 	  surface_geometry_id
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: genericattrib_cityobj_fkx | type: INDEX --
+CREATE INDEX genericattrib_cityobj_fkx ON public.cityobject_genericattrib
+	USING btree
+	(
+	  cityobject_id
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -1727,6 +1752,23 @@ CREATE TABLE public.relief_feat_to_rel_comp(
 
 );
 -- ddl-end --
+-- object: rel_feat_to_rel_comp_fkx | type: INDEX --
+CREATE INDEX rel_feat_to_rel_comp_fkx ON public.relief_feat_to_rel_comp
+	USING btree
+	(
+	  relief_component_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: rel_feat_to_rel_comp_fkx1 | type: INDEX --
+CREATE INDEX rel_feat_to_rel_comp_fkx1 ON public.relief_feat_to_rel_comp
+	USING btree
+	(
+	  relief_feature_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+
 -- object: public.relief_feature | type: TABLE --
 CREATE TABLE public.relief_feature(
 	id integer NOT NULL,
@@ -3600,6 +3642,10 @@ CREATE TABLE public.bridge_constr_element(
 	usage character varying(1000),
 	usage_codespace character varying(4000),
 	bridge_id integer,
+	lod1_terrain_intersection geometry(MULTILINESTRINGZ),
+	lod2_terrain_intersection geometry(MULTILINESTRINGZ),
+	lod3_terrain_intersection geometry(MULTILINESTRINGZ),
+	lod4_terrain_intersection geometry(MULTILINESTRINGZ),
 	lod1_brep_id integer,
 	lod2_brep_id integer,
 	lod3_brep_id integer,
@@ -3630,6 +3676,38 @@ CREATE INDEX bridge_constr_bridge_fkx ON public.bridge_constr_element
 	(
 	  bridge_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: bridge_constr_lod1terr_spx | type: INDEX --
+CREATE INDEX bridge_constr_lod1terr_spx ON public.bridge_constr_element
+	USING gist
+	(
+	  lod1_terrain_intersection
+	);
+-- ddl-end --
+
+-- object: bridge_constr_lod2terr_spx | type: INDEX --
+CREATE INDEX bridge_constr_lod2terr_spx ON public.bridge_constr_element
+	USING gist
+	(
+	  lod2_terrain_intersection
+	);
+-- ddl-end --
+
+-- object: bridge_constr_lod3terr_spx | type: INDEX --
+CREATE INDEX bridge_constr_lod3terr_spx ON public.bridge_constr_element
+	USING gist
+	(
+	  lod3_terrain_intersection
+	);
+-- ddl-end --
+
+-- object: bridge_constr_lod4terr_spx | type: INDEX --
+CREATE INDEX bridge_constr_lod4terr_spx ON public.bridge_constr_element
+	USING gist
+	(
+	  lod4_terrain_intersection
+	);
 -- ddl-end --
 
 -- object: bridge_constr_lod1brep_fkx | type: INDEX --
@@ -3971,16 +4049,9 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: surface_geom_cityobject_fk | type: CONSTRAINT --
-ALTER TABLE public.surface_geometry ADD CONSTRAINT surface_geom_cityobject_fk FOREIGN KEY (cityobject_id)
+-- object: surface_geom_cityobj_fk | type: CONSTRAINT --
+ALTER TABLE public.surface_geometry ADD CONSTRAINT surface_geom_cityobj_fk FOREIGN KEY (cityobject_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
--- ddl-end --
-
-
--- object: group_geom_fk | type: CONSTRAINT --
-ALTER TABLE public.cityobjectgroup ADD CONSTRAINT group_geom_fk FOREIGN KEY (surface_geometry_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
@@ -3992,8 +4063,15 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: group_parent_cityobject_fk | type: CONSTRAINT --
-ALTER TABLE public.cityobjectgroup ADD CONSTRAINT group_parent_cityobject_fk FOREIGN KEY (parent_cityobject_id)
+-- object: group_brep_fk | type: CONSTRAINT --
+ALTER TABLE public.cityobjectgroup ADD CONSTRAINT group_brep_fk FOREIGN KEY (brep_id)
+REFERENCES public.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ddl-end --
+
+
+-- object: group_parent_cityobj_fk | type: CONSTRAINT --
+ALTER TABLE public.cityobjectgroup ADD CONSTRAINT group_parent_cityobj_fk FOREIGN KEY (parent_cityobject_id)
 REFERENCES public.cityobject (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
@@ -4020,8 +4098,8 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: implicit_geometry_geom_fk | type: CONSTRAINT --
-ALTER TABLE public.implicit_geometry ADD CONSTRAINT implicit_geometry_geom_fk FOREIGN KEY (relative_geometry_id)
+-- object: implicit_geom_brep_fk | type: CONSTRAINT --
+ALTER TABLE public.implicit_geometry ADD CONSTRAINT implicit_geom_brep_fk FOREIGN KEY (relative_brep_id)
 REFERENCES public.surface_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
@@ -4104,16 +4182,16 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: genericattrib_cityobj_fk | type: CONSTRAINT --
-ALTER TABLE public.cityobject_genericattrib ADD CONSTRAINT genericattrib_cityobj_fk FOREIGN KEY (cityobject_id)
-REFERENCES public.cityobject (id) MATCH FULL
+-- object: genericattrib_geom_fk | type: CONSTRAINT --
+ALTER TABLE public.cityobject_genericattrib ADD CONSTRAINT genericattrib_geom_fk FOREIGN KEY (surface_geometry_id)
+REFERENCES public.surface_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: genericattrib_geom_fk | type: CONSTRAINT --
-ALTER TABLE public.cityobject_genericattrib ADD CONSTRAINT genericattrib_geom_fk FOREIGN KEY (surface_geometry_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
+-- object: genericattrib_cityobj_fk | type: CONSTRAINT --
+ALTER TABLE public.cityobject_genericattrib ADD CONSTRAINT genericattrib_cityobj_fk FOREIGN KEY (cityobject_id)
+REFERENCES public.cityobject (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
@@ -5479,6 +5557,13 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- object: bridge_inst_lod4impl_fk | type: CONSTRAINT --
 ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_lod4impl_fk FOREIGN KEY (lod4_implcity_rep_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ddl-end --
+
+
+-- object: bridge_open_cityobject_fk | type: CONSTRAINT --
+ALTER TABLE public.bridge_opening ADD CONSTRAINT bridge_open_cityobject_fk FOREIGN KEY (id)
+REFERENCES public.cityobject (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 

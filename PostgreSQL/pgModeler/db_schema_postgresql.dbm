@@ -3,13 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel author="Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---               Zhihang Yao <zhihang.yao@tum.de>
---               Claus Nagel <cnagel@virtualcitysystems.de>
---               Felix Kunde <fkunde@virtualcitysystems.de>
---               Philipp Willkomm <pwillkomm@moss.de>
---               Gerhard König <gerhard.koenig@tu-berlin.de>
---               Alexandra Lorenz <di.alex.lorenz@googlemail.com>">
+<dbmodel>
 <schema name="public" protected="true" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
@@ -307,6 +301,20 @@ CAUTION: Do not modify this file unless you know what you are doing.
 			<column name="geometry"/>
 		</idxelement>
 	</index>
+	<index name="surface_geom_solid_spx" table="public.surface_geometry"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="solid_geometry"/>
+		</idxelement>
+	</index>
+	<index name="surface_geom_cityobj_fkx" table="public.surface_geometry"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="cityobject_id"/>
+		</idxelement>
+	</index>
 </table>
 
 <table name="cityobjectgroup">
@@ -333,11 +341,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="usage">
 		<type name="character varying" length="1000"/>
 	</column>
-	<column name="geometry">
-		<type name="geometry" spatial-type="POLYGON" variation="1" srid="0"/>
-	</column>
-	<column name="surface_geometry_id">
+	<column name="brep_id">
 		<type name="integer"/>
+	</column>
+	<column name="other_geom">
+		<type name="geometry"/>
 	</column>
 	<column name="parent_cityobject_id">
 		<type name="integer"/>
@@ -345,11 +353,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="cityobjectgroup_pk" type="pk-constr" factor="100" table="public.cityobjectgroup">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
-	<index name="group_geom_fkx" table="public.cityobjectgroup"
+	<index name="group_brep_fkx" table="public.cityobjectgroup"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="surface_geometry_id"/>
+			<column name="brep_id"/>
+		</idxelement>
+	</index>
+	<index name="group_xgeom_spx" table="public.cityobjectgroup"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="other_geom"/>
 		</idxelement>
 	</index>
 	<index name="group_parent_cityobj_fkx" table="public.cityobjectgroup"
@@ -357,13 +372,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
 			<column name="parent_cityobject_id"/>
-		</idxelement>
-	</index>
-	<index name="group_geom_spx" table="public.cityobjectgroup"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="gist" factor="0">
-		<idxelement use-sorting="false">
-			<column name="geometry"/>
 		</idxelement>
 	</index>
 </table>
@@ -452,24 +460,34 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="library_object">
 		<type name="bytea"/>
 	</column>
-	<column name="relative_geometry_id">
+	<column name="relative_brep_id">
 		<type name="integer"/>
+	</column>
+	<column name="relative_other_geom">
+		<type name="geometry"/>
 	</column>
 	<constraint name="implicit_geometry_pk" type="pk-constr" factor="100" table="public.implicit_geometry">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
-	<index name="implicit_geometry_fkx" table="public.implicit_geometry"
+	<index name="implicit_geom_ref2lib_inx" table="public.implicit_geometry"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
-		<idxelement use-sorting="false">
-			<column name="relative_geometry_id"/>
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="reference_to_library"/>
 		</idxelement>
 	</index>
-	<index name="implicit_geometry_inx" table="public.implicit_geometry"
+	<index name="implicit_geom_brep_fkx" table="public.implicit_geometry"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="relative_brep_id"/>
+		</idxelement>
+	</index>
+	<index name="implicit_geom_xgeom_skx" table="public.implicit_geometry"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
 		<idxelement use-sorting="false">
-			<column name="reference_to_library"/>
+			<column name="relative_other_geom"/>
 		</idxelement>
 	</index>
 </table>
@@ -573,6 +591,34 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="city_furniture_pk" type="pk-constr" factor="100" table="public.city_furniture">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+	<index name="city_furn_lod1terr_spx" table="public.city_furniture"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="lod1_terrain_intersection"/>
+		</idxelement>
+	</index>
+	<index name="city_furn_lod2terr_spx" table="public.city_furniture"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="lod2_terrain_intersection"/>
+		</idxelement>
+	</index>
+	<index name="city_furn_lod3terr_spx" table="public.city_furniture"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="lod3_terrain_intersection"/>
+		</idxelement>
+	</index>
+	<index name="city_furn_lod4terr_spx" table="public.city_furniture"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="lod4_terrain_intersection"/>
+		</idxelement>
+	</index>
 	<index name="city_furn_lod1brep_fkx" table="public.city_furniture"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
@@ -657,34 +703,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 			<column name="lod4_implicit_rep_id"/>
 		</idxelement>
 	</index>
-	<index name="city_furn_lod1terr_spx" table="public.city_furniture"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="gist" factor="0">
-		<idxelement use-sorting="false">
-			<column name="lod1_terrain_intersection"/>
-		</idxelement>
-	</index>
-	<index name="city_furn_lod2terr_spx" table="public.city_furniture"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="gist" factor="0">
-		<idxelement use-sorting="false">
-			<column name="lod2_terrain_intersection"/>
-		</idxelement>
-	</index>
-	<index name="city_furn_lod3terr_spx" table="public.city_furniture"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="gist" factor="0">
-		<idxelement use-sorting="false">
-			<column name="lod3_terrain_intersection"/>
-		</idxelement>
-	</index>
-	<index name="city_furn_lod4terr_spx" table="public.city_furniture"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="gist" factor="0">
-		<idxelement use-sorting="false">
-			<column name="lod4_terrain_intersection"/>
-		</idxelement>
-	</index>
 	<index name="city_furn_lod1refpnt_spx" table="public.city_furniture"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="gist" factor="0">
@@ -760,10 +778,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="genattribset_codespace">
 		<type name="character varying" length="4000"/>
 	</column>
-	<column name="cityobject_id" not-null="true">
+	<column name="surface_geometry_id">
 		<type name="integer"/>
 	</column>
-	<column name="surface_geometry_id">
+	<column name="cityobject_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<constraint name="cityobj_genericattrib_pk" type="pk-constr" factor="100" table="public.cityobject_genericattrib">
@@ -783,18 +801,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 			<column name="root_genattrib_id"/>
 		</idxelement>
 	</index>
-	<index name="genericattrib_cityobj_fkx" table="public.cityobject_genericattrib"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="false">
-			<column name="cityobject_id"/>
-		</idxelement>
-	</index>
 	<index name="genericattrib_geom_fkx" table="public.cityobject_genericattrib"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
 		<idxelement use-sorting="false">
 			<column name="surface_geometry_id"/>
+		</idxelement>
+	</index>
+	<index name="genericattrib_cityobj_fkx" table="public.cityobject_genericattrib"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="cityobject_id"/>
 		</idxelement>
 	</index>
 </table>
@@ -2247,6 +2265,20 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="relief_feat_to_rel_comp_pk" type="pk-constr" factor="100" table="public.relief_feat_to_rel_comp">
 		<columns names="relief_component_id,relief_feature_id" ref-type="src-columns"/>
 	</constraint>
+	<index name="rel_feat_to_rel_comp_fkx" table="public.relief_feat_to_rel_comp"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="relief_component_id"/>
+		</idxelement>
+	</index>
+	<index name="rel_feat_to_rel_comp_fkx1" table="public.relief_feat_to_rel_comp"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="relief_feature_id"/>
+		</idxelement>
+	</index>
 </table>
 
 <table name="relief_feature">
@@ -4080,7 +4112,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="bridge_furniture">
 	<schema name="public"/>
-	<position x="5982.11" y="4397.29"/>
+	<position x="5783.54" y="4764.43"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -4468,7 +4500,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="bridge_room">
 	<schema name="public"/>
-	<position x="5610.43" y="4790.23"/>
+	<position x="5944.72" y="4327.37"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -4527,7 +4559,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="bridge_thematic_surface">
 	<schema name="public"/>
-	<position x="5052.64" y="4536.96"/>
+	<position x="5122.64" y="4544.1"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -4618,7 +4650,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="bridge_constr_element">
 	<schema name="public"/>
-	<position x="5440.15" y="3101.28"/>
+	<position x="5435.15" y="3071.28"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -4642,6 +4674,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="bridge_id">
 		<type name="integer"/>
+	</column>
+	<column name="lod1_terrain_intersection">
+		<type name="geometry" spatial-type="MULTILINESTRING" variation="1" srid="0"/>
+	</column>
+	<column name="lod2_terrain_intersection">
+		<type name="geometry" spatial-type="MULTILINESTRING" variation="1" srid="0"/>
+	</column>
+	<column name="lod3_terrain_intersection">
+		<type name="geometry" spatial-type="MULTILINESTRING" variation="1" srid="0"/>
+	</column>
+	<column name="lod4_terrain_intersection">
+		<type name="geometry" spatial-type="MULTILINESTRING" variation="1" srid="0"/>
 	</column>
 	<column name="lod1_brep_id">
 		<type name="integer"/>
@@ -4711,6 +4755,34 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
 			<column name="bridge_id"/>
+		</idxelement>
+	</index>
+	<index name="bridge_constr_lod1terr_spx" table="public.bridge_constr_element"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="lod1_terrain_intersection"/>
+		</idxelement>
+	</index>
+	<index name="bridge_constr_lod2terr_spx" table="public.bridge_constr_element"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="lod2_terrain_intersection"/>
+		</idxelement>
+	</index>
+	<index name="bridge_constr_lod3terr_spx" table="public.bridge_constr_element"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="lod3_terrain_intersection"/>
+		</idxelement>
+	</index>
+	<index name="bridge_constr_lod4terr_spx" table="public.bridge_constr_element"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="lod4_terrain_intersection"/>
 		</idxelement>
 	</index>
 	<index name="bridge_constr_lod1brep_fkx" table="public.bridge_constr_element"
@@ -4986,14 +5058,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="src-columns"/>
 	<columns names="root_id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="surface_geom_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+<constraint name="surface_geom_cityobj_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.implicit_geometry" table="public.surface_geometry">
 	<columns names="cityobject_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-<constraint name="group_geom_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.cityobjectgroup">
-	<columns names="surface_geometry_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="group_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
@@ -5001,7 +5068,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="group_parent_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+<constraint name="group_brep_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.cityobjectgroup">
+	<columns names="brep_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="group_parent_cityobj_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.cityobjectgroup">
 	<columns names="parent_cityobject_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
@@ -5021,9 +5093,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="superclass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="implicit_geometry_geom_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+<constraint name="implicit_geom_brep_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.implicit_geometry">
-	<columns names="relative_geometry_id" ref-type="src-columns"/>
+	<columns names="relative_brep_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="city_furn_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
@@ -5081,14 +5153,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="root_genattrib_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="genericattrib_cityobj_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.cityobject_genericattrib">
-	<columns names="cityobject_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
 <constraint name="genericattrib_geom_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.cityobject_genericattrib">
 	<columns names="surface_geometry_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="genericattrib_cityobj_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.cityobject_genericattrib">
+	<columns names="cityobject_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="gen_object_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
@@ -6066,6 +6138,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="lod4_implcity_rep_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
+<constraint name="bridge_open_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.bridge_opening">
+	<columns names="id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
 <constraint name="bridge_open_objclass_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.objectclass" table="public.bridge_opening">
 	<columns names="objectclass_id" ref-type="src-columns"/>
@@ -6702,9 +6779,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.cityobject_genericattrib"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="2712" y="506.88"/>
-	<position x="2712" y="374"/>
-	<position x="2566" y="374"/>
+		<position x="2706" y="506.88"/>
+	<position x="2706" y="374"/>
+	<position x="2562" y="374"/>
 	</line>
 </relationship>
 
@@ -7052,6 +7129,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_tunnel_thematic_surface_objectclass" type="relfk"
 	 src-table="public.tunnel_thematic_surface"
 	 dst-table="public.objectclass"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_bridge_opening_cityobject" type="relfk"
+	 src-table="public.bridge_opening"
+	 dst-table="public.cityobject"
 	 src-required="true" dst-required="true"/>
 
 </dbmodel>
