@@ -3,7 +3,13 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel>
+<dbmodel author="Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
+--               Zhihang Yao <zhihang.yao@tum.de>
+--               Claus Nagel <cnagel@virtualcitysystems.de>
+--               Felix Kunde <fkunde@virtualcitysystems.de>
+--               Philipp Willkomm <pwillkomm@moss.de>
+--               Gerhard König <gerhard.koenig@tu-berlin.de>
+--               Alexandra Lorenz <di.alex.lorenz@googlemail.com>">
 <schema name="public" protected="true" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
@@ -751,7 +757,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="unit">
 		<type name="character varying" length="4000"/>
 	</column>
-	<column name="genattrib_set_codespace">
+	<column name="genattribset_codespace">
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="cityobject_id" not-null="true">
@@ -3109,7 +3115,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="raster_relief_pk" type="pk-constr" factor="100" table="public.raster_relief">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
-	<index name="raster_relief_raster_fkx" table="public.raster_relief"
+	<index name="raster_relief_georast_fkx" table="public.raster_relief"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
@@ -4849,7 +4855,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</index>
 </table>
 
-<table name="raster_relief_raster">
+<table name="raster_relief_georaster">
 	<schema name="public"/>
 	<position x="6193.75" y="2392.5"/>
 	<column name="id" default-value="nextval('raster_relief_raster_seq'::regclass)">
@@ -4858,7 +4864,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="rasterproperty">
 		<type name="bytea"/>
 	</column>
-	<constraint name="raster_relief_raster_pk" type="pk-constr" factor="100" table="public.raster_relief_raster">
+	<constraint name="raster_relief_georaster_pk" type="pk-constr" factor="100" table="public.raster_relief_georaster">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
@@ -5720,8 +5726,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="raster_relief_raster_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.raster_relief_raster" table="public.raster_relief">
+<constraint name="raster_relief_georast_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.raster_relief_georaster" table="public.raster_relief">
 	<columns names="raster_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -7040,7 +7046,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_raster_relief_raster_relief_raster" type="relfk"
 	 src-table="public.raster_relief"
-	 dst-table="public.raster_relief_raster"
+	 dst-table="public.raster_relief_georaster"
 	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_thematic_surface_objectclass" type="relfk"

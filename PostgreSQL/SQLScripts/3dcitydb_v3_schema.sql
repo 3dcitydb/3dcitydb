@@ -1,13 +1,13 @@
 -- Database generated with pgModeler (PostgreSQL Database Modeler).
 -- PostgreSQL version: 9.3
 -- Project Site: pgmodeler.com.br
--- Model Authors: Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---                Zhihang Yao <zhihang.yao@tum.de>
---                Claus Nagel <cnagel@virtualcitysystems.de>
---                Felix Kunde <fkunde@virtualcitysystems.de>
---                Philipp Willkomm <pwillkomm@moss.de>
---                Gerhard König <gerhard.koenig@tu-berlin.de>
---                Alexandra Lorenz <di.alex.lorenz@googlemail.com>
+-- Model Author: Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
+--               Zhihang Yao <zhihang.yao@tum.de>
+--               Claus Nagel <cnagel@virtualcitysystems.de>
+--               Felix Kunde <fkunde@virtualcitysystems.de>
+--               Philipp Willkomm <pwillkomm@moss.de>
+--               Gerhard KÃ¶nig <gerhard.koenig@tu-berlin.de>
+--               Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 
 SET check_function_bodies = false;
 -- ddl-end --
@@ -561,7 +561,7 @@ CREATE TABLE public.cityobject_genericattrib(
 	geomval geometry,
 	blobval bytea,
 	unit character varying(4000),
-	genattrib_set_codespace character varying(4000),
+	genattribset_codespace character varying(4000),
 	cityobject_id integer NOT NULL,
 	surface_geometry_id integer,
 	CONSTRAINT cityobj_genericattrib_pk PRIMARY KEY (id)
@@ -2385,8 +2385,8 @@ CREATE TABLE public.raster_relief(
 
 );
 -- ddl-end --
--- object: raster_relief_raster_fkx | type: INDEX --
-CREATE INDEX raster_relief_raster_fkx ON public.raster_relief
+-- object: raster_relief_georast_fkx | type: INDEX --
+CREATE INDEX raster_relief_georast_fkx ON public.raster_relief
 	USING btree
 	(
 	  raster_id ASC NULLS LAST
@@ -3786,11 +3786,11 @@ CREATE INDEX address_to_bridge_fkx1 ON public.address_to_bridge
 -- ddl-end --
 
 
--- object: public.raster_relief_raster | type: TABLE --
-CREATE TABLE public.raster_relief_raster(
+-- object: public.raster_relief_georaster | type: TABLE --
+CREATE TABLE public.raster_relief_georaster(
 	id integer DEFAULT nextval('raster_relief_raster_seq'::regclass),
 	rasterproperty raster,
-	CONSTRAINT raster_relief_raster_pk PRIMARY KEY (id)
+	CONSTRAINT raster_relief_georaster_pk PRIMARY KEY (id)
 
 );
 -- ddl-end --
@@ -5007,9 +5007,9 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: raster_relief_raster_fk | type: CONSTRAINT --
-ALTER TABLE public.raster_relief ADD CONSTRAINT raster_relief_raster_fk FOREIGN KEY (raster_id)
-REFERENCES public.raster_relief_raster (id) MATCH FULL
+-- object: raster_relief_georast_fk | type: CONSTRAINT --
+ALTER TABLE public.raster_relief ADD CONSTRAINT raster_relief_georast_fk FOREIGN KEY (raster_id)
+REFERENCES public.raster_relief_georaster (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
