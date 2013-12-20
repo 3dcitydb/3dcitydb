@@ -6,7 +6,7 @@
 --               Claus Nagel <cnagel@virtualcitysystems.de>
 --               Felix Kunde <fkunde@virtualcitysystems.de>
 --               Philipp Willkomm <pwillkomm@moss.de>
---               Gerhard König <gerhard.koenig@tu-berlin.de>
+--               Gerhard KÃ¶nig <gerhard.koenig@tu-berlin.de>
 --               Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 
 SET check_function_bodies = false;
@@ -30,6 +30,126 @@ CREATE EXTENSION postgis
       VERSION '2.1.1';
 COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial types and functions';
 -- ddl-end --
+
+-- object: public.cityobject_seq | type: SEQUENCE --
+CREATE SEQUENCE public.cityobject_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 10000
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+
+-- object: public.appearance_seq | type: SEQUENCE --
+CREATE SEQUENCE public.appearance_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 10000
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+
+-- object: public.implicit_geometry_seq | type: SEQUENCE --
+CREATE SEQUENCE public.implicit_geometry_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 10000
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+
+-- object: public.surface_geometry_seq | type: SEQUENCE --
+CREATE SEQUENCE public.surface_geometry_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 10000
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+
+-- object: public.address_seq | type: SEQUENCE --
+CREATE SEQUENCE public.address_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 10000
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+
+-- object: public.surface_data_seq | type: SEQUENCE --
+CREATE SEQUENCE public.surface_data_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 10000
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+
+-- object: public.citymodel_seq | type: SEQUENCE --
+CREATE SEQUENCE public.citymodel_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 10000
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+
+-- object: public.cityobject_genericatt_seq | type: SEQUENCE --
+CREATE SEQUENCE public.cityobject_genericatt_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 10000
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+
+-- object: public.external_ref_seq | type: SEQUENCE --
+CREATE SEQUENCE public.external_ref_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 10000
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+
+-- object: public.tex_image_seq | type: SEQUENCE --
+CREATE SEQUENCE public.tex_image_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 10000
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+
+-- object: public.raster_relief_georast_seq | type: SEQUENCE --
+CREATE SEQUENCE public.raster_relief_georast_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 10000
+	NO CYCLE
+	OWNED BY NONE;
 -- ddl-end --
 
 -- object: public.citymodel | type: TABLE --
@@ -286,7 +406,7 @@ CREATE INDEX group_parent_cityobj_fkx ON public.cityobjectgroup
 
 -- object: public.group_to_cityobject | type: TABLE --
 CREATE TABLE public.group_to_cityobject(
-	cityobject_id integer NOT NULL DEFAULT nextval('group_to_cityobject_cityobject_id_seq'::regclass),
+	cityobject_id integer NOT NULL,
 	cityobjectgroup_id integer NOT NULL,
 	role character varying(256),
 	CONSTRAINT group_to_cityobject_pk PRIMARY KEY (cityobject_id,cityobjectgroup_id)
@@ -769,7 +889,7 @@ CREATE INDEX gen_object_lod1xgeom_spx ON public.generic_cityobject
 CREATE INDEX gen_object_lod2xgeom_spx ON public.generic_cityobject
 	USING gist
 	(
-	  lod2_other_geom ASC NULLS LAST
+	  lod2_other_geom
 	);
 -- ddl-end --
 
@@ -1143,10 +1263,10 @@ CREATE INDEX bldg_furn_lod4brep_fkx ON public.building_furniture
 
 -- object: bldg_furn_lod4xgeom_spx | type: INDEX --
 CREATE INDEX bldg_furn_lod4xgeom_spx ON public.building_furniture
-	USING btree
+	USING gist
 	(
-	  lod4_other_geom ASC NULLS LAST
-	)	WITH (FILLFACTOR = 90);
+	  lod4_other_geom
+	);
 -- ddl-end --
 
 -- object: bldg_furn_lod4impl_fkx | type: INDEX --
@@ -1257,7 +1377,7 @@ CREATE INDEX bldg_inst_lod3xgeom_spx ON public.building_installation
 CREATE INDEX bldg_inst_lod4xgeom_spx ON public.building_installation
 	USING gist
 	(
-	  lod4_other_geom ASC NULLS LAST
+	  lod4_other_geom
 	);
 -- ddl-end --
 
@@ -1732,7 +1852,7 @@ CREATE INDEX relief_comp_objclass_fkx ON public.relief_component
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
-	);
+	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
 -- object: relief_comp_extent_spx | type: INDEX --
@@ -2690,7 +2810,7 @@ CREATE INDEX tun_them_srf_objclass_fkx ON public.tunnel_thematic_surface
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
-	);
+	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
 -- object: tun_them_srf_tunnel_fkx | type: INDEX --
@@ -2917,7 +3037,7 @@ CREATE INDEX tunnel_inst_lod3xgeom_spx ON public.tunnel_installation
 CREATE INDEX tunnel_inst_lod4xgeom_spx ON public.tunnel_installation
 	USING gist
 	(
-	  lod4_other_geom ASC NULLS LAST
+	  lod4_other_geom
 	);
 -- ddl-end --
 
@@ -2989,8 +3109,8 @@ CREATE TABLE public.tunnel_furniture(
 
 );
 -- ddl-end --
--- object: tunnel_furn_room_fkx | type: INDEX --
-CREATE INDEX tunnel_furn_room_fkx ON public.tunnel_furniture
+-- object: tunnel_furn_hspace_fkx | type: INDEX --
+CREATE INDEX tunnel_furn_hspace_fkx ON public.tunnel_furniture
 	USING btree
 	(
 	  tunnel_hollow_space_id ASC NULLS LAST
@@ -3237,10 +3357,10 @@ CREATE INDEX bridge_furn_lod4brep_fkx ON public.bridge_furniture
 
 -- object: bridge_furn_lod4xgeom_spx | type: INDEX --
 CREATE INDEX bridge_furn_lod4xgeom_spx ON public.bridge_furniture
-	USING btree
+	USING gist
 	(
-	  lod4_other_geom ASC NULLS LAST
-	)	WITH (FILLFACTOR = 90);
+	  lod4_other_geom
+	);
 -- ddl-end --
 
 -- object: bridge_furn_lod4impl_fkx | type: INDEX --
@@ -3351,7 +3471,7 @@ CREATE INDEX bridge_inst_lod3xgeom_spx ON public.bridge_installation
 CREATE INDEX bridge_inst_lod4xgeom_spx ON public.bridge_installation
 	USING gist
 	(
-	  lod4_other_geom ASC NULLS LAST
+	  lod4_other_geom
 	);
 -- ddl-end --
 
@@ -3715,7 +3835,7 @@ CREATE INDEX bridge_constr_lod1brep_fkx ON public.bridge_constr_element
 	USING btree
 	(
 	  lod1_brep_id ASC NULLS LAST
-	);
+	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
 -- object: bridge_constr_lod2brep_fkx | type: INDEX --
@@ -3770,7 +3890,7 @@ CREATE INDEX bridge_const_lod3xgeom_spx ON public.bridge_constr_element
 CREATE INDEX bridge_const_lod4xgeom_spx ON public.bridge_constr_element
 	USING gist
 	(
-	  lod4_other_geom ASC NULLS LAST
+	  lod4_other_geom
 	);
 -- ddl-end --
 
@@ -3852,7 +3972,7 @@ CREATE INDEX address_to_bridge_fkx ON public.address_to_bridge
 	USING btree
 	(
 	  address_id ASC NULLS LAST
-	);
+	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
 -- object: address_to_bridge_fkx1 | type: INDEX --
@@ -3860,137 +3980,17 @@ CREATE INDEX address_to_bridge_fkx1 ON public.address_to_bridge
 	USING btree
 	(
 	  bridge_id ASC NULLS LAST
-	);
+	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
 
 -- object: public.raster_relief_georaster | type: TABLE --
 CREATE TABLE public.raster_relief_georaster(
-	id integer DEFAULT nextval('raster_relief_raster_seq'::regclass),
+	id integer DEFAULT nextval('raster_relief_georast_seq'::regclass),
 	rasterproperty raster,
 	CONSTRAINT raster_relief_georaster_pk PRIMARY KEY (id)
 
 );
--- ddl-end --
--- object: public.cityobject_seq | type: SEQUENCE --
-CREATE SEQUENCE public.cityobject_seq
-	INCREMENT BY 1
-	MINVALUE 0
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 10000
-	NO CYCLE
-	OWNED BY NONE;
--- ddl-end --
-
--- object: public.appearance_seq | type: SEQUENCE --
-CREATE SEQUENCE public.appearance_seq
-	INCREMENT BY 1
-	MINVALUE 0
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 10000
-	NO CYCLE
-	OWNED BY NONE;
--- ddl-end --
-
--- object: public.implicit_geometry_seq | type: SEQUENCE --
-CREATE SEQUENCE public.implicit_geometry_seq
-	INCREMENT BY 1
-	MINVALUE 0
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 10000
-	NO CYCLE
-	OWNED BY NONE;
--- ddl-end --
-
--- object: public.surface_geometry_seq | type: SEQUENCE --
-CREATE SEQUENCE public.surface_geometry_seq
-	INCREMENT BY 1
-	MINVALUE 0
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 10000
-	NO CYCLE
-	OWNED BY NONE;
--- ddl-end --
-
--- object: public.address_seq | type: SEQUENCE --
-CREATE SEQUENCE public.address_seq
-	INCREMENT BY 1
-	MINVALUE 0
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 10000
-	NO CYCLE
-	OWNED BY NONE;
--- ddl-end --
-
--- object: public.surface_data_seq | type: SEQUENCE --
-CREATE SEQUENCE public.surface_data_seq
-	INCREMENT BY 1
-	MINVALUE 0
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 10000
-	NO CYCLE
-	OWNED BY NONE;
--- ddl-end --
-
--- object: public.citymodel_seq | type: SEQUENCE --
-CREATE SEQUENCE public.citymodel_seq
-	INCREMENT BY 1
-	MINVALUE 0
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 10000
-	NO CYCLE
-	OWNED BY NONE;
--- ddl-end --
-
--- object: public.cityobject_genericatt_seq | type: SEQUENCE --
-CREATE SEQUENCE public.cityobject_genericatt_seq
-	INCREMENT BY 1
-	MINVALUE 0
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 10000
-	NO CYCLE
-	OWNED BY NONE;
--- ddl-end --
-
--- object: public.external_ref_seq | type: SEQUENCE --
-CREATE SEQUENCE public.external_ref_seq
-	INCREMENT BY 1
-	MINVALUE 0
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 10000
-	NO CYCLE
-	OWNED BY NONE;
--- ddl-end --
-
--- object: public.tex_image_seq | type: SEQUENCE --
-CREATE SEQUENCE public.tex_image_seq
-	INCREMENT BY 1
-	MINVALUE 0
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 10000
-	NO CYCLE
-	OWNED BY NONE;
--- ddl-end --
-
--- object: public.raster_relief_raster_seq | type: SEQUENCE --
-CREATE SEQUENCE public.raster_relief_raster_seq
-	INCREMENT BY 1
-	MINVALUE 0
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 10000
-	NO CYCLE
-	OWNED BY NONE;
 -- ddl-end --
 
 -- object: cityobject_objectclass_fk | type: CONSTRAINT --
@@ -4036,15 +4036,15 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 
 
 -- object: surface_geom_parent_fk | type: CONSTRAINT --
-ALTER TABLE public.surface_geometry ADD CONSTRAINT surface_geom_parent_fk FOREIGN KEY (id)
-REFERENCES public.surface_geometry (parent_id) MATCH FULL
+ALTER TABLE public.surface_geometry ADD CONSTRAINT surface_geom_parent_fk FOREIGN KEY (parent_id)
+REFERENCES public.surface_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
 -- object: surface_geom_root_fk | type: CONSTRAINT --
-ALTER TABLE public.surface_geometry ADD CONSTRAINT surface_geom_root_fk FOREIGN KEY (id)
-REFERENCES public.surface_geometry (root_id) MATCH FULL
+ALTER TABLE public.surface_geometry ADD CONSTRAINT surface_geom_root_fk FOREIGN KEY (root_id)
+REFERENCES public.surface_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
@@ -4378,29 +4378,29 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: bldg_furn_cityobject_fk_cp1 | type: CONSTRAINT --
-ALTER TABLE public.building_furniture ADD CONSTRAINT bldg_furn_cityobject_fk_cp1 FOREIGN KEY (id)
+-- object: bldg_furn_cityobject_fk | type: CONSTRAINT --
+ALTER TABLE public.building_furniture ADD CONSTRAINT bldg_furn_cityobject_fk FOREIGN KEY (id)
 REFERENCES public.cityobject (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: bldg_furn_room_fk_cp1 | type: CONSTRAINT --
-ALTER TABLE public.building_furniture ADD CONSTRAINT bldg_furn_room_fk_cp1 FOREIGN KEY (room_id)
+-- object: bldg_furn_room_fk | type: CONSTRAINT --
+ALTER TABLE public.building_furniture ADD CONSTRAINT bldg_furn_room_fk FOREIGN KEY (room_id)
 REFERENCES public.room (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: bldg_furn_lod4brep_fk_cp1 | type: CONSTRAINT --
-ALTER TABLE public.building_furniture ADD CONSTRAINT bldg_furn_lod4brep_fk_cp1 FOREIGN KEY (lod4_brep_id)
+-- object: bldg_furn_lod4brep_fk | type: CONSTRAINT --
+ALTER TABLE public.building_furniture ADD CONSTRAINT bldg_furn_lod4brep_fk FOREIGN KEY (lod4_brep_id)
 REFERENCES public.surface_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: bldg_furn_lod4impl_fk_cp1 | type: CONSTRAINT --
-ALTER TABLE public.building_furniture ADD CONSTRAINT bldg_furn_lod4impl_fk_cp1 FOREIGN KEY (lod4_implicit_rep_id)
+-- object: bldg_furn_lod4impl_fk | type: CONSTRAINT --
+ALTER TABLE public.building_furniture ADD CONSTRAINT bldg_furn_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
@@ -5797,6 +5797,3 @@ ALTER TABLE public.address_to_bridge ADD CONSTRAINT address_to_bridge_fk1 FOREIG
 REFERENCES public.bridge (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
-
-
-

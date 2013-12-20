@@ -379,7 +379,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="group_to_cityobject">
 	<schema name="public"/>
 	<position x="3404.78" y="844.811"/>
-	<column name="cityobject_id" not-null="true" default-value="nextval('group_to_cityobject_cityobject_id_seq'::regclass)">
+	<column name="cityobject_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="cityobjectgroup_id" not-null="true">
@@ -1021,7 +1021,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<index name="gen_object_lod2xgeom_spx" table="public.generic_cityobject"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="gist" factor="0">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+		<idxelement use-sorting="false">
 			<column name="lod2_other_geom"/>
 		</idxelement>
 	</index>
@@ -1487,8 +1487,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</index>
 	<index name="bldg_furn_lod4xgeom_spx" table="public.building_furniture"
 		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
 			<column name="lod4_other_geom"/>
 		</idxelement>
 	</index>
@@ -1641,7 +1641,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<index name="bldg_inst_lod4xgeom_spx" table="public.building_installation"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="gist" factor="0">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+		<idxelement use-sorting="false">
 			<column name="lod4_other_geom"/>
 		</idxelement>
 	</index>
@@ -2239,7 +2239,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 	<index name="relief_comp_objclass_fkx" table="public.relief_component"
 		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="0">
+		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
 			<column name="objectclass_id"/>
 		</idxelement>
@@ -3480,7 +3480,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 	<index name="tun_them_srf_objclass_fkx" table="public.tunnel_thematic_surface"
 		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="0">
+		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
 			<column name="objectclass_id"/>
 		</idxelement>
@@ -3772,7 +3772,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<index name="tunnel_inst_lod4xgeom_spx" table="public.tunnel_installation"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="gist" factor="0">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+		<idxelement use-sorting="false">
 			<column name="lod4_other_geom"/>
 		</idxelement>
 	</index>
@@ -3865,7 +3865,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="tunnel_furniture_pk" type="pk-constr" factor="100" table="public.tunnel_furniture">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
-	<index name="tunnel_furn_room_fkx" table="public.tunnel_furniture"
+	<index name="tunnel_furn_hspace_fkx" table="public.tunnel_furniture"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
@@ -4171,8 +4171,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</index>
 	<index name="bridge_furn_lod4xgeom_spx" table="public.bridge_furniture"
 		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
 			<column name="lod4_other_geom"/>
 		</idxelement>
 	</index>
@@ -4325,7 +4325,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<index name="bridge_inst_lod4xgeom_spx" table="public.bridge_installation"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="gist" factor="0">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+		<idxelement use-sorting="false">
 			<column name="lod4_other_geom"/>
 		</idxelement>
 	</index>
@@ -4787,7 +4787,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</index>
 	<index name="bridge_constr_lod1brep_fkx" table="public.bridge_constr_element"
 		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="0">
+		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
 			<column name="lod1_brep_id"/>
 		</idxelement>
@@ -4837,7 +4837,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<index name="bridge_const_lod4xgeom_spx" table="public.bridge_constr_element"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="gist" factor="0">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+		<idxelement use-sorting="false">
 			<column name="lod4_other_geom"/>
 		</idxelement>
 	</index>
@@ -4913,14 +4913,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 	<index name="address_to_bridge_fkx" table="public.address_to_bridge"
 		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="0">
+		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
 			<column name="address_id"/>
 		</idxelement>
 	</index>
 	<index name="address_to_bridge_fkx1" table="public.address_to_bridge"
 		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="0">
+		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
 			<column name="bridge_id"/>
 		</idxelement>
@@ -4930,7 +4930,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="raster_relief_georaster">
 	<schema name="public"/>
 	<position x="6193.75" y="2392.5"/>
-	<column name="id" default-value="nextval('raster_relief_raster_seq'::regclass)">
+	<column name="id" default-value="nextval('raster_relief_georast_seq'::regclass)">
 		<type name="integer"/>
 	</column>
 	<column name="rasterproperty">
@@ -5011,7 +5011,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 </sequence>
 
-<sequence name="raster_relief_raster_seq"
+<sequence name="raster_relief_georast_seq"
 	 start="1" increment="1"
 	 min-value="0" max-value="2147483647"
 	 cache="10000" cycle="false">
@@ -5050,13 +5050,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 <constraint name="surface_geom_parent_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.surface_geometry">
-	<columns names="id" ref-type="src-columns"/>
-	<columns names="parent_id" ref-type="dst-columns"/>
+	<columns names="parent_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="surface_geom_root_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.surface_geometry">
-	<columns names="id" ref-type="src-columns"/>
-	<columns names="root_id" ref-type="dst-columns"/>
+	<columns names="root_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="surface_geom_cityobj_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.implicit_geometry" table="public.surface_geometry">
@@ -5293,22 +5293,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="lod4_solid_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="bldg_furn_cityobject_fk_cp1" type="fk-constr"	 comparison-type="MATCH FULL"
+<constraint name="bldg_furn_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.building_furniture">
 	<columns names="id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="bldg_furn_room_fk_cp1" type="fk-constr"	 comparison-type="MATCH FULL"
+<constraint name="bldg_furn_room_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.room" table="public.building_furniture">
 	<columns names="room_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="bldg_furn_lod4brep_fk_cp1" type="fk-constr"	 comparison-type="MATCH FULL"
+<constraint name="bldg_furn_lod4brep_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.building_furniture">
 	<columns names="lod4_brep_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="bldg_furn_lod4impl_fk_cp1" type="fk-constr"	 comparison-type="MATCH FULL"
+<constraint name="bldg_furn_lod4impl_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.implicit_geometry" table="public.building_furniture">
 	<columns names="lod4_implicit_rep_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
@@ -6374,7 +6374,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.surface_geometry"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="4222.58" y="1564.68"/>
+		<position x="4222.58" y="1575.88"/>
 	<position x="4222.58" y="1454.2"/>
 	<position x="4095.91" y="1454.2"/>
 	</line>
