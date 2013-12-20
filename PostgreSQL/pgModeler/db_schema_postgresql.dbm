@@ -17,133 +17,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<comment><![CDATA[PostGIS geometry, geography, and raster spatial types and functions]]></comment>
 </extension>
 
-<table name="citymodel">
+<sequence name="citymodel_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="10000" cycle="false">
 	<schema name="public"/>
-	<position x="2862.33" y="271.833"/>
-	<column name="id" not-null="true" default-value="nextval('citymodel_seq'::regclass)">
-		<type name="integer"/>
-	</column>
-	<column name="gmlid">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="name">
-		<type name="character varying" length="1000"/>
-	</column>
-	<column name="name_codespace">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="description">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="envelope">
-		<type name="geometry" spatial-type="POLYGON" variation="1" srid="0"/>
-	</column>
-	<column name="creation_date">
-		<type name="timestamp"/>
-	</column>
-	<column name="termination_date">
-		<type name="timestamp"/>
-	</column>
-	<column name="last_modification_date">
-		<type name="timestamp"/>
-	</column>
-	<column name="updating_person">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="reason_for_update">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="lineage">
-		<type name="character varying" length="256"/>
-	</column>
-	<constraint name="citymodel_pk" type="pk-constr" factor="100" table="public.citymodel">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-	<index name="citymodel_envelope_spx" table="public.citymodel"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="gist" factor="0">
-		<idxelement use-sorting="false">
-			<column name="envelope"/>
-		</idxelement>
-	</index>
-</table>
+</sequence>
 
-<table name="cityobject">
+<sequence name="cityobject_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="10000" cycle="false">
 	<schema name="public"/>
-	<position x="2649.35" y="2142.24"/>
-	<column name="id" not-null="true" default-value="nextval('cityobject_seq'::regclass)">
-		<type name="integer"/>
-	</column>
-	<column name="objectclass_id" not-null="true">
-		<type name="integer"/>
-	</column>
-	<column name="gmlid">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="name">
-		<type name="character varying" length="1000"/>
-	</column>
-	<column name="name_codespace">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="description">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="envelope">
-		<type name="geometry" spatial-type="POLYGON" variation="1" srid="0"/>
-	</column>
-	<column name="creation_date" not-null="true">
-		<type name="timestamp"/>
-	</column>
-	<column name="termination_date">
-		<type name="timestamp"/>
-	</column>
-	<column name="last_modification_date">
-		<type name="timestamp"/>
-	</column>
-	<column name="updating_person">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="reason_for_update">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="lineage">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="relative_to_terrain">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="relative_to_water">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="xml_source">
-		<type name="text"/>
-	</column>
-	<constraint name="cityobject_pk" type="pk-constr" factor="100" table="public.cityobject">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-	<index name="cityobject_inx" table="public.cityobject"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="false">
-			<column name="gmlid"/>
-		</idxelement>
-	</index>
-	<index name="cityobject_objectclass_fkx" table="public.cityobject"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="false">
-			<column name="objectclass_id"/>
-		</idxelement>
-	</index>
-	<index name="cityobject_envelope_spx" table="public.cityobject"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="gist" factor="0">
-		<idxelement use-sorting="false">
-			<column name="envelope"/>
-		</idxelement>
-	</index>
-</table>
+</sequence>
 
 <table name="cityobject_member">
 	<schema name="public"/>
@@ -173,35 +59,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</index>
 </table>
 
-<table name="external_reference">
+<sequence name="external_ref_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="10000" cycle="false">
 	<schema name="public"/>
-	<position x="2752.72" y="554.167"/>
-	<column name="id" not-null="true" default-value="nextval('external_ref_seq'::regclass)">
-		<type name="integer"/>
-	</column>
-	<column name="infosys">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="name">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="uri">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="cityobject_id" not-null="true">
-		<type name="integer"/>
-	</column>
-	<constraint name="external_reference_pk" type="pk-constr" factor="100" table="public.external_reference">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-	<index name="ext_ref_cityobject_fkx" table="public.external_reference"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="cityobject_id"/>
-		</idxelement>
-	</index>
-</table>
+</sequence>
 
 <table name="generalization">
 	<schema name="public"/>
@@ -231,91 +94,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</index>
 </table>
 
-<table name="surface_geometry">
+<sequence name="surface_geometry_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="10000" cycle="false">
 	<schema name="public"/>
-	<position x="3862.58" y="1464.2"/>
-	<column name="id" not-null="true" default-value="nextval('surface_geometry_seq'::regclass)">
-		<type name="integer"/>
-	</column>
-	<column name="gmlid">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="parent_id">
-		<type name="integer"/>
-	</column>
-	<column name="root_id">
-		<type name="integer"/>
-	</column>
-	<column name="is_solid">
-		<type name="numeric" precision="0"/>
-	</column>
-	<column name="is_composite">
-		<type name="numeric" precision="0"/>
-	</column>
-	<column name="is_triangulated">
-		<type name="numeric" precision="0"/>
-	</column>
-	<column name="is_xlink">
-		<type name="numeric" precision="0"/>
-	</column>
-	<column name="is_reverse">
-		<type name="numeric" precision="0"/>
-	</column>
-	<column name="geometry">
-		<type name="geometry" spatial-type="POLYGON" variation="1" srid="0"/>
-	</column>
-	<column name="solid_geometry">
-		<type name="geometry"/>
-	</column>
-	<column name="cityobject_id">
-		<type name="integer"/>
-	</column>
-	<constraint name="surface_geometry_pk" type="pk-constr" factor="100" table="public.surface_geometry">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-	<index name="surface_geom_inx" table="public.surface_geometry"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="false">
-			<column name="gmlid"/>
-		</idxelement>
-	</index>
-	<index name="surface_geom_parent_fkx" table="public.surface_geometry"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="parent_id"/>
-		</idxelement>
-	</index>
-	<index name="surface_geom_root_fkx" table="public.surface_geometry"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="root_id"/>
-		</idxelement>
-	</index>
-	<index name="surface_geom_spx" table="public.surface_geometry"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="gist" factor="0">
-		<idxelement use-sorting="false">
-			<column name="geometry"/>
-		</idxelement>
-	</index>
-	<index name="surface_geom_solid_spx" table="public.surface_geometry"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="gist" factor="0">
-		<idxelement use-sorting="false">
-			<column name="solid_geometry"/>
-		</idxelement>
-	</index>
-	<index name="surface_geom_cityobj_fkx" table="public.surface_geometry"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="cityobject_id"/>
-		</idxelement>
-	</index>
-</table>
+</sequence>
 
 <table name="cityobjectgroup">
 	<schema name="public"/>
@@ -445,52 +229,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</index>
 </table>
 
-<table name="implicit_geometry">
+<sequence name="implicit_geometry_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="10000" cycle="false">
 	<schema name="public"/>
-	<position x="4561.1" y="1577.5"/>
-	<column name="id" not-null="true" default-value="nextval('implicit_geometry_seq'::regclass)">
-		<type name="integer"/>
-	</column>
-	<column name="mime_type">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="reference_to_library">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="library_object">
-		<type name="bytea"/>
-	</column>
-	<column name="relative_brep_id">
-		<type name="integer"/>
-	</column>
-	<column name="relative_other_geom">
-		<type name="geometry"/>
-	</column>
-	<constraint name="implicit_geometry_pk" type="pk-constr" factor="100" table="public.implicit_geometry">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-	<index name="implicit_geom_ref2lib_inx" table="public.implicit_geometry"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="reference_to_library"/>
-		</idxelement>
-	</index>
-	<index name="implicit_geom_brep_fkx" table="public.implicit_geometry"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="relative_brep_id"/>
-		</idxelement>
-	</index>
-	<index name="implicit_geom_xgeom_skx" table="public.implicit_geometry"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="gist" factor="0">
-		<idxelement use-sorting="false">
-			<column name="relative_other_geom"/>
-		</idxelement>
-	</index>
-</table>
+</sequence>
 
 <table name="city_furniture">
 	<schema name="public"/>
@@ -733,89 +477,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</index>
 </table>
 
-<table name="cityobject_genericattrib">
+<sequence name="cityobject_genericatt_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="10000" cycle="false">
 	<schema name="public"/>
-	<position x="2294" y="384"/>
-	<column name="id" not-null="true" default-value="nextval('cityobject_genericatt_seq'::regclass)">
-		<type name="integer"/>
-	</column>
-	<column name="parent_genattrib_id">
-		<type name="integer"/>
-	</column>
-	<column name="root_genattrib_id">
-		<type name="integer"/>
-	</column>
-	<column name="attrname" not-null="true">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="datatype">
-		<type name="numeric" precision="0"/>
-	</column>
-	<column name="strval">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="intval">
-		<type name="integer"/>
-	</column>
-	<column name="realval">
-		<type name="real"/>
-	</column>
-	<column name="urival">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="dateval">
-		<type name="date"/>
-	</column>
-	<column name="geomval">
-		<type name="geometry"/>
-	</column>
-	<column name="blobval">
-		<type name="bytea"/>
-	</column>
-	<column name="unit">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="genattribset_codespace">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="surface_geometry_id">
-		<type name="integer"/>
-	</column>
-	<column name="cityobject_id" not-null="true">
-		<type name="integer"/>
-	</column>
-	<constraint name="cityobj_genericattrib_pk" type="pk-constr" factor="100" table="public.cityobject_genericattrib">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-	<index name="genericattrib_parent_fkx" table="public.cityobject_genericattrib"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="parent_genattrib_id"/>
-		</idxelement>
-	</index>
-	<index name="genericattrib_root_fkx" table="public.cityobject_genericattrib"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="root_genattrib_id"/>
-		</idxelement>
-	</index>
-	<index name="genericattrib_geom_fkx" table="public.cityobject_genericattrib"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="false">
-			<column name="surface_geometry_id"/>
-		</idxelement>
-	</index>
-	<index name="genericattrib_cityobj_fkx" table="public.cityobject_genericattrib"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="false">
-			<column name="cityobject_id"/>
-		</idxelement>
-	</index>
-</table>
+</sequence>
 
 <table name="generic_cityobject">
 	<schema name="public"/>
@@ -1111,43 +778,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</index>
 </table>
 
-<table name="address">
+<sequence name="address_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="10000" cycle="false">
 	<schema name="public"/>
-	<position x="4126.14" y="5039.3"/>
-	<column name="id" not-null="true" default-value="nextval('address_seq'::regclass)">
-		<type name="integer"/>
-	</column>
-	<column name="street">
-		<type name="character varying" length="1000"/>
-	</column>
-	<column name="house_number">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="po_box">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="zip_code">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="city">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="state">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="country">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="multi_point">
-		<type name="geometry" spatial-type="MULTIPOINT" variation="1" srid="0"/>
-	</column>
-	<column name="xal_source">
-		<type name="text"/>
-	</column>
-	<constraint name="address_pk" type="pk-constr" factor="100" table="public.address">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-</table>
+</sequence>
 
 <table name="address_to_building">
 	<schema name="public"/>
@@ -1954,150 +1590,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</index>
 </table>
 
-<table name="appearance">
+<sequence name="appearance_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="10000" cycle="false">
 	<schema name="public"/>
-	<position x="4561.67" y="310.433"/>
-	<column name="id" not-null="true" default-value="nextval('appearance_seq'::regclass)">
-		<type name="integer"/>
-	</column>
-	<column name="gmlid">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="name">
-		<type name="character varying" length="1000"/>
-	</column>
-	<column name="name_codespace">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="description">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="theme">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="citymodel_id">
-		<type name="integer"/>
-	</column>
-	<column name="cityobject_id">
-		<type name="integer"/>
-	</column>
-	<constraint name="appearance_pk" type="pk-constr" factor="100" table="public.appearance">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-	<index name="appearance_inx" table="public.appearance"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="false">
-			<column name="gmlid"/>
-		</idxelement>
-	</index>
-	<index name="appearance_theme_inx" table="public.appearance"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="theme"/>
-		</idxelement>
-	</index>
-	<index name="appearance_citymodel_fkx" table="public.appearance"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="citymodel_id"/>
-		</idxelement>
-	</index>
-	<index name="appearance_cityobject_fkx" table="public.appearance"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="cityobject_id"/>
-		</idxelement>
-	</index>
-</table>
+</sequence>
 
-<table name="surface_data">
+<sequence name="surface_data_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="10000" cycle="false">
 	<schema name="public"/>
-	<position x="4543.17" y="832.933"/>
-	<column name="id" not-null="true" default-value="nextval('surface_data_seq'::regclass)">
-		<type name="integer"/>
-	</column>
-	<column name="gmlid">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="name">
-		<type name="character varying" length="1000"/>
-	</column>
-	<column name="name_codespace">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="description">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="is_front">
-		<type name="numeric" precision="0"/>
-	</column>
-	<column name="objectclass_id">
-		<type name="integer" length="30"/>
-	</column>
-	<column name="x3d_shininess">
-		<type name="double precision"/>
-	</column>
-	<column name="x3d_transparency">
-		<type name="double precision"/>
-	</column>
-	<column name="x3d_ambient_intensity">
-		<type name="double precision"/>
-	</column>
-	<column name="x3d_specular_color">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="x3d_diffuse_color">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="x3d_emissive_color">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="x3d_is_smooth">
-		<type name="numeric" precision="0"/>
-	</column>
-	<column name="tex_image_id">
-		<type name="integer" length="4000"/>
-	</column>
-	<column name="tex_texture_type">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="tex_wrap_mode">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="tex_border_color">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="gt_prefer_worldfile">
-		<type name="numeric" precision="0"/>
-	</column>
-	<column name="gt_orientation">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="gt_reference_point">
-		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
-	</column>
-	<constraint name="surface_data_pk" type="pk-constr" factor="100" table="public.surface_data">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-	<index name="surface_data_inx" table="public.surface_data"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="btree" factor="90">
-		<idxelement use-sorting="false">
-			<column name="gmlid"/>
-		</idxelement>
-	</index>
-	<index name="surface_data_spx" table="public.surface_data"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="gist" factor="0">
-		<idxelement use-sorting="false">
-			<column name="gt_reference_point"/>
-		</idxelement>
-	</index>
-</table>
+</sequence>
 
 <table name="textureparam">
 	<schema name="public"/>
@@ -3529,28 +3034,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</index>
 </table>
 
-<table name="tex_image">
+<sequence name="tex_image_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="10000" cycle="false">
 	<schema name="public"/>
-	<position x="5111" y="962"/>
-	<column name="id" not-null="true" default-value="nextval('tex_image_seq'::regclass)">
-		<type name="integer"/>
-	</column>
-	<column name="tey_image_uri">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="tey_image">
-		<type name="bytea"/>
-	</column>
-	<column name="tex_mime_type">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="tex_mime_type_codespace">
-		<type name="character varying" length="4000"/>
-	</column>
-	<constraint name="tex_image_pk" type="pk-constr" factor="10" table="public.tex_image">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-</table>
+</sequence>
 
 <table name="tunnel_opening">
 	<schema name="public"/>
@@ -4927,6 +4416,594 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</index>
 </table>
 
+<sequence name="raster_relief_georast_seq"
+	 start="1" increment="1"
+	 min-value="0" max-value="2147483647"
+	 cache="10000" cycle="false">
+	<schema name="public"/>
+</sequence>
+
+<table name="cityobject">
+	<schema name="public"/>
+	<position x="2649.35" y="2142.24"/>
+	<column name="id" not-null="true" default-value="nextval('cityobject_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="objectclass_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="gmlid">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="name">
+		<type name="character varying" length="1000"/>
+	</column>
+	<column name="name_codespace">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="description">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="envelope">
+		<type name="geometry" spatial-type="POLYGON" variation="1" srid="0"/>
+	</column>
+	<column name="creation_date" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="termination_date">
+		<type name="timestamp"/>
+	</column>
+	<column name="last_modification_date">
+		<type name="timestamp"/>
+	</column>
+	<column name="updating_person">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="reason_for_update">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="lineage">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="relative_to_terrain">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="relative_to_water">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="xml_source">
+		<type name="text"/>
+	</column>
+	<constraint name="cityobject_pk" type="pk-constr" factor="100" table="public.cityobject">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<index name="cityobject_inx" table="public.cityobject"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="gmlid"/>
+		</idxelement>
+	</index>
+	<index name="cityobject_objectclass_fkx" table="public.cityobject"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="objectclass_id"/>
+		</idxelement>
+	</index>
+	<index name="cityobject_envelope_spx" table="public.cityobject"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="envelope"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="appearance">
+	<schema name="public"/>
+	<position x="4561.67" y="310.433"/>
+	<column name="id" not-null="true" default-value="nextval('appearance_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="gmlid">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="name">
+		<type name="character varying" length="1000"/>
+	</column>
+	<column name="name_codespace">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="description">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="theme">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="citymodel_id">
+		<type name="integer"/>
+	</column>
+	<column name="cityobject_id">
+		<type name="integer"/>
+	</column>
+	<constraint name="appearance_pk" type="pk-constr" factor="100" table="public.appearance">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<index name="appearance_inx" table="public.appearance"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="gmlid"/>
+		</idxelement>
+	</index>
+	<index name="appearance_theme_inx" table="public.appearance"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="theme"/>
+		</idxelement>
+	</index>
+	<index name="appearance_citymodel_fkx" table="public.appearance"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="citymodel_id"/>
+		</idxelement>
+	</index>
+	<index name="appearance_cityobject_fkx" table="public.appearance"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="cityobject_id"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="implicit_geometry">
+	<schema name="public"/>
+	<position x="4561.1" y="1577.5"/>
+	<column name="id" not-null="true" default-value="nextval('implicit_geometry_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="mime_type">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="reference_to_library">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="library_object">
+		<type name="bytea"/>
+	</column>
+	<column name="relative_brep_id">
+		<type name="integer"/>
+	</column>
+	<column name="relative_other_geom">
+		<type name="geometry"/>
+	</column>
+	<constraint name="implicit_geometry_pk" type="pk-constr" factor="100" table="public.implicit_geometry">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<index name="implicit_geom_ref2lib_inx" table="public.implicit_geometry"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="reference_to_library"/>
+		</idxelement>
+	</index>
+	<index name="implicit_geom_brep_fkx" table="public.implicit_geometry"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="relative_brep_id"/>
+		</idxelement>
+	</index>
+	<index name="implicit_geom_xgeom_skx" table="public.implicit_geometry"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="relative_other_geom"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="surface_geometry">
+	<schema name="public"/>
+	<position x="3862.58" y="1464.2"/>
+	<column name="id" not-null="true" default-value="nextval('surface_geometry_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="gmlid">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="parent_id">
+		<type name="integer"/>
+	</column>
+	<column name="root_id">
+		<type name="integer"/>
+	</column>
+	<column name="is_solid">
+		<type name="numeric" precision="0"/>
+	</column>
+	<column name="is_composite">
+		<type name="numeric" precision="0"/>
+	</column>
+	<column name="is_triangulated">
+		<type name="numeric" precision="0"/>
+	</column>
+	<column name="is_xlink">
+		<type name="numeric" precision="0"/>
+	</column>
+	<column name="is_reverse">
+		<type name="numeric" precision="0"/>
+	</column>
+	<column name="geometry">
+		<type name="geometry" spatial-type="POLYGON" variation="1" srid="0"/>
+	</column>
+	<column name="solid_geometry">
+		<type name="geometry"/>
+	</column>
+	<column name="cityobject_id">
+		<type name="integer"/>
+	</column>
+	<constraint name="surface_geometry_pk" type="pk-constr" factor="100" table="public.surface_geometry">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<index name="surface_geom_inx" table="public.surface_geometry"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="gmlid"/>
+		</idxelement>
+	</index>
+	<index name="surface_geom_parent_fkx" table="public.surface_geometry"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="parent_id"/>
+		</idxelement>
+	</index>
+	<index name="surface_geom_root_fkx" table="public.surface_geometry"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="root_id"/>
+		</idxelement>
+	</index>
+	<index name="surface_geom_spx" table="public.surface_geometry"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="geometry"/>
+		</idxelement>
+	</index>
+	<index name="surface_geom_solid_spx" table="public.surface_geometry"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="solid_geometry"/>
+		</idxelement>
+	</index>
+	<index name="surface_geom_cityobj_fkx" table="public.surface_geometry"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="cityobject_id"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="address">
+	<schema name="public"/>
+	<position x="4126.14" y="5039.3"/>
+	<column name="id" not-null="true" default-value="nextval('address_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="street">
+		<type name="character varying" length="1000"/>
+	</column>
+	<column name="house_number">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="po_box">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="zip_code">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="city">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="state">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="country">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="multi_point">
+		<type name="geometry" spatial-type="MULTIPOINT" variation="1" srid="0"/>
+	</column>
+	<column name="xal_source">
+		<type name="text"/>
+	</column>
+	<constraint name="address_pk" type="pk-constr" factor="100" table="public.address">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="surface_data">
+	<schema name="public"/>
+	<position x="4543.17" y="832.933"/>
+	<column name="id" not-null="true" default-value="nextval('surface_data_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="gmlid">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="name">
+		<type name="character varying" length="1000"/>
+	</column>
+	<column name="name_codespace">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="description">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="is_front">
+		<type name="numeric" precision="0"/>
+	</column>
+	<column name="objectclass_id">
+		<type name="integer" length="30"/>
+	</column>
+	<column name="x3d_shininess">
+		<type name="double precision"/>
+	</column>
+	<column name="x3d_transparency">
+		<type name="double precision"/>
+	</column>
+	<column name="x3d_ambient_intensity">
+		<type name="double precision"/>
+	</column>
+	<column name="x3d_specular_color">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="x3d_diffuse_color">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="x3d_emissive_color">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="x3d_is_smooth">
+		<type name="numeric" precision="0"/>
+	</column>
+	<column name="tex_image_id">
+		<type name="integer" length="4000"/>
+	</column>
+	<column name="tex_texture_type">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="tex_wrap_mode">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="tex_border_color">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="gt_prefer_worldfile">
+		<type name="numeric" precision="0"/>
+	</column>
+	<column name="gt_orientation">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="gt_reference_point">
+		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
+	</column>
+	<constraint name="surface_data_pk" type="pk-constr" factor="100" table="public.surface_data">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<index name="surface_data_inx" table="public.surface_data"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="gmlid"/>
+		</idxelement>
+	</index>
+	<index name="surface_data_spx" table="public.surface_data"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="gt_reference_point"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="citymodel">
+	<schema name="public"/>
+	<position x="2862.33" y="271.833"/>
+	<column name="id" not-null="true" default-value="nextval('citymodel_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="gmlid">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="name">
+		<type name="character varying" length="1000"/>
+	</column>
+	<column name="name_codespace">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="description">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="envelope">
+		<type name="geometry" spatial-type="POLYGON" variation="1" srid="0"/>
+	</column>
+	<column name="creation_date">
+		<type name="timestamp"/>
+	</column>
+	<column name="termination_date">
+		<type name="timestamp"/>
+	</column>
+	<column name="last_modification_date">
+		<type name="timestamp"/>
+	</column>
+	<column name="updating_person">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="reason_for_update">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="lineage">
+		<type name="character varying" length="256"/>
+	</column>
+	<constraint name="citymodel_pk" type="pk-constr" factor="100" table="public.citymodel">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<index name="citymodel_envelope_spx" table="public.citymodel"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
+			<column name="envelope"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="cityobject_genericattrib">
+	<schema name="public"/>
+	<position x="2294" y="384"/>
+	<column name="id" not-null="true" default-value="nextval('cityobject_genericatt_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="parent_genattrib_id">
+		<type name="integer"/>
+	</column>
+	<column name="root_genattrib_id">
+		<type name="integer"/>
+	</column>
+	<column name="attrname" not-null="true">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="datatype">
+		<type name="numeric" precision="0"/>
+	</column>
+	<column name="strval">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="intval">
+		<type name="integer"/>
+	</column>
+	<column name="realval">
+		<type name="real"/>
+	</column>
+	<column name="urival">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="dateval">
+		<type name="date"/>
+	</column>
+	<column name="geomval">
+		<type name="geometry"/>
+	</column>
+	<column name="blobval">
+		<type name="bytea"/>
+	</column>
+	<column name="unit">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="genattribset_codespace">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="surface_geometry_id">
+		<type name="integer"/>
+	</column>
+	<column name="cityobject_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<constraint name="cityobj_genericattrib_pk" type="pk-constr" factor="100" table="public.cityobject_genericattrib">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<index name="genericattrib_parent_fkx" table="public.cityobject_genericattrib"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="parent_genattrib_id"/>
+		</idxelement>
+	</index>
+	<index name="genericattrib_root_fkx" table="public.cityobject_genericattrib"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="root_genattrib_id"/>
+		</idxelement>
+	</index>
+	<index name="genericattrib_geom_fkx" table="public.cityobject_genericattrib"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="surface_geometry_id"/>
+		</idxelement>
+	</index>
+	<index name="genericattrib_cityobj_fkx" table="public.cityobject_genericattrib"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="cityobject_id"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="external_reference">
+	<schema name="public"/>
+	<position x="2752.72" y="554.167"/>
+	<column name="id" not-null="true" default-value="nextval('external_ref_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="infosys">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="name">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="uri">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="cityobject_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<constraint name="external_reference_pk" type="pk-constr" factor="100" table="public.external_reference">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<index name="ext_ref_cityobject_fkx" table="public.external_reference"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="cityobject_id"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="tex_image">
+	<schema name="public"/>
+	<position x="5111" y="962"/>
+	<column name="id" not-null="true" default-value="nextval('tex_image_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="tey_image_uri">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="tey_image">
+		<type name="bytea"/>
+	</column>
+	<column name="tex_mime_type">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="tex_mime_type_codespace">
+		<type name="character varying" length="4000"/>
+	</column>
+	<constraint name="tex_image_pk" type="pk-constr" factor="10" table="public.tex_image">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
 <table name="raster_relief_georaster">
 	<schema name="public"/>
 	<position x="6193.75" y="2392.5"/>
@@ -4940,83 +5017,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
-
-<sequence name="cityobject_seq"
-	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
-	 cache="10000" cycle="false">
-	<schema name="public"/>
-</sequence>
-
-<sequence name="appearance_seq"
-	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
-	 cache="10000" cycle="false">
-	<schema name="public"/>
-</sequence>
-
-<sequence name="implicit_geometry_seq"
-	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
-	 cache="10000" cycle="false">
-	<schema name="public"/>
-</sequence>
-
-<sequence name="surface_geometry_seq"
-	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
-	 cache="10000" cycle="false">
-	<schema name="public"/>
-</sequence>
-
-<sequence name="address_seq"
-	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
-	 cache="10000" cycle="false">
-	<schema name="public"/>
-</sequence>
-
-<sequence name="surface_data_seq"
-	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
-	 cache="10000" cycle="false">
-	<schema name="public"/>
-</sequence>
-
-<sequence name="citymodel_seq"
-	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
-	 cache="10000" cycle="false">
-	<schema name="public"/>
-</sequence>
-
-<sequence name="cityobject_genericatt_seq"
-	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
-	 cache="10000" cycle="false">
-	<schema name="public"/>
-</sequence>
-
-<sequence name="external_ref_seq"
-	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
-	 cache="10000" cycle="false">
-	<schema name="public"/>
-</sequence>
-
-<sequence name="tex_image_seq"
-	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
-	 cache="10000" cycle="false">
-	<schema name="public"/>
-</sequence>
-
-<sequence name="raster_relief_georast_seq"
-	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
-	 cache="10000" cycle="false">
-	<schema name="public"/>
-</sequence>
 
 <constraint name="cityobject_objectclass_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.objectclass" table="public.cityobject">
@@ -6374,9 +6374,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.surface_geometry"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="4222.58" y="1575.88"/>
-	<position x="4222.58" y="1454.2"/>
-	<position x="4095.91" y="1454.2"/>
+		<position x="4207.58" y="1575.88"/>
+	<position x="4207.58" y="1454.2"/>
+	<position x="4085.91" y="1454.2"/>
 	</line>
 </relationship>
 
