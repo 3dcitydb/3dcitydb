@@ -665,7 +665,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">645c0217-a6be-4ae2-a559-ea24908efa90</identifier>
       </ID>
-      <name>TRAFFIC_AREA_FK</name>
+      <name>TRAFFIC_AREA_LOD2MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD2_MULTI_SURFACE_ID</name>
@@ -717,7 +717,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">978f39c2-761c-4f40-b3b6-3843733b376e</identifier>
       </ID>
-      <name>TRAFFIC_AREA_FK1</name>
+      <name>TRAFFIC_AREA_LOD3MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD3_MULTI_SURFACE_ID</name>
@@ -769,7 +769,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">ea83edb4-6eb3-4d41-b690-e6fd6059e7c8</identifier>
       </ID>
-      <name>TRAFFIC_AREA_FK2</name>
+      <name>TRAFFIC_AREA_LOD4MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD4_MULTI_SURFACE_ID</name>
@@ -821,7 +821,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">2b5523d2-b49d-41f1-840d-9e0bfc9d9c57</identifier>
       </ID>
-      <name>TRAFFIC_AREA_FK3</name>
+      <name>TRAFFIC_AREA_TRANCMPLX_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>TRANSPORTATION_COMPLEX_ID</name>
@@ -926,7 +926,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">08df224a-24ff-41b3-b211-07299c41f5bf</identifier>
       </ID>
-      <name>TRAFFIC_AREA_FKX</name>
+      <name>TRAFFIC_AREA_LOD2MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1061,7 +1061,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">85ad1b72-2d0c-4c7a-a14e-fc5db83fd680</identifier>
       </ID>
-      <name>TRAFFIC_AREA_FKX1</name>
+      <name>TRAFFIC_AREA_LOD3MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1196,7 +1196,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">bf109cd7-88a7-4c33-8672-8232dc17f4d5</identifier>
       </ID>
-      <name>TRAFFIC_AREA_FKX2</name>
+      <name>TRAFFIC_AREA_LOD4MSRF_FK</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1301,141 +1301,6 @@
                   <parent class="oracle.javatools.db.ReferenceID">
                     <name>TRAFFIC_AREA_FKX2</name>
                     <identifier class="java.math.BigDecimal">115987</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>TRAFFIC_AREA</name>
-                      <identifier class="java.math.BigDecimal">115849</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">e14f71f6-a177-4391-b29c-b0ceda817637</identifier>
-      </ID>
-      <name>TRAFFIC_AREA_FKX3</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">06040964-110e-47c2-b354-27c459b50fdc</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">ef010c53-37ff-4db6-942e-bc7623ab33f8</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>TRANSPORTATION_COMPLEX_ID</name>
-              <identifier class="java.lang.String">a01b1284-08d7-48bc-87be-836935d443ec</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>TRAFFIC_AREA</name>
-                <identifier class="java.lang.String">a5ad18c9-cdfb-4ea4-b16c-bcfc49305e1a</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>TRAFFIC_AREA_FKX3</name>
-                      <identifier class="java.math.BigDecimal">115988</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>TRAFFIC_AREA</name>
-                        <identifier class="java.math.BigDecimal">115849</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>TRAFFIC_AREA_FKX3</name>
-                  <identifier class="java.math.BigDecimal">115988</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>TRAFFIC_AREA</name>
-                    <identifier class="java.math.BigDecimal">115849</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>TRAFFIC_AREA_FKX3</name>
-            <identifier class="java.math.BigDecimal">115988</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>TRAFFIC_AREA</name>
-              <identifier class="java.math.BigDecimal">115849</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">a02891d1-8796-4699-beb4-7d4a02a6216b</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>TRAFFIC_AREA_FKX3</name>
-                    <identifier class="java.math.BigDecimal">115988</identifier>
                     <parent class="oracle.javatools.db.ReferenceID">
                       <name>TRAFFIC_AREA</name>
                       <identifier class="java.math.BigDecimal">115849</identifier>
@@ -1596,6 +1461,141 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">e14f71f6-a177-4391-b29c-b0ceda817637</identifier>
+      </ID>
+      <name>TRAFFIC_AREA_TRANCMPLX_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">06040964-110e-47c2-b354-27c459b50fdc</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">ef010c53-37ff-4db6-942e-bc7623ab33f8</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>TRANSPORTATION_COMPLEX_ID</name>
+              <identifier class="java.lang.String">a01b1284-08d7-48bc-87be-836935d443ec</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>TRAFFIC_AREA</name>
+                <identifier class="java.lang.String">a5ad18c9-cdfb-4ea4-b16c-bcfc49305e1a</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>TRAFFIC_AREA_FKX3</name>
+                      <identifier class="java.math.BigDecimal">115988</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>TRAFFIC_AREA</name>
+                        <identifier class="java.math.BigDecimal">115849</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>TRAFFIC_AREA_FKX3</name>
+                  <identifier class="java.math.BigDecimal">115988</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>TRAFFIC_AREA</name>
+                    <identifier class="java.math.BigDecimal">115849</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>TRAFFIC_AREA_FKX3</name>
+            <identifier class="java.math.BigDecimal">115988</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>TRAFFIC_AREA</name>
+              <identifier class="java.math.BigDecimal">115849</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">a02891d1-8796-4699-beb4-7d4a02a6216b</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>TRAFFIC_AREA_FKX3</name>
+                    <identifier class="java.math.BigDecimal">115988</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>TRAFFIC_AREA</name>
+                      <identifier class="java.math.BigDecimal">115849</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
     </indexe>
   </indexes>
   <properties>

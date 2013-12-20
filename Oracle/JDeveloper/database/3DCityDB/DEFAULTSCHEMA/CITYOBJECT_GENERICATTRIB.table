@@ -58,7 +58,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">2ada26e0-d0c0-4934-8c39-d7a63101d58e</identifier>
       </ID>
-      <name>PARENT_GENATT_ID</name>
+      <name>PARENT_GENATTRIB_ID</name>
       <dataTypeUsage>
         <ID class="oracle.javatools.db.IdentifierBasedID">
           <identifier class="java.lang.String">bd98713c-1ab8-44eb-ba01-fcfe14ccc76c</identifier>
@@ -79,7 +79,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">8b2affe7-394a-44d8-b8d1-af890e8dd0fa</identifier>
       </ID>
-      <name>ROOT_GENATT_ID</name>
+      <name>ROOT_GENATTRIB_ID</name>
       <dataTypeUsage>
         <ID class="oracle.javatools.db.IdentifierBasedID">
           <identifier class="java.lang.String">e2aafd68-838d-411b-8e49-94acf7723b6f</identifier>
@@ -327,24 +327,6 @@
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
-        <properties>
-          <entry>
-            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-            <value class="oracle.javatools.db.ReferenceID">
-              <parent class="oracle.javatools.db.ReferenceID">
-                <name>REALVAL</name>
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>CITYOBJECT_GENERICATTRIB</name>
-                  <identifier class="java.math.BigDecimal">115593</identifier>
-                  <schemaName>YAO</schemaName>
-                  <type>TABLE</type>
-                </parent>
-                <type>COLUMN</type>
-              </parent>
-              <type>DataTypeUsage</type>
-            </value>
-          </entry>
-        </properties>
       </dataTypeUsage>
       <notNull>false</notNull>
       <properties>
@@ -694,52 +676,28 @@
     </column>
     <column>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">8b391843-ce7b-4a8e-958d-3bf8026eaf3d</identifier>
+        <identifier class="java.lang.String">8fc66a52-1a35-4f7d-a441-da26e713b05c</identifier>
       </ID>
-      <name>CITYOBJECT_ID</name>
+      <name>GENATTRIBSET_CODESPACE</name>
       <dataTypeUsage>
         <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">e44f5fcd-6547-4bb8-bc28-9a4e6b12ca32</identifier>
+          <identifier class="java.lang.String">a8c532f3-684c-4f89-bf9c-4abbf9327f3a</identifier>
         </ID>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
-          <typeName>NUMBER</typeName>
-        </dataTypeID>
-        <properties>
+        <attributeValues>
           <entry>
-            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-            <value class="oracle.javatools.db.ReferenceID">
-              <parent class="oracle.javatools.db.ReferenceID">
-                <name>CITYOBJECT_ID</name>
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>CITYOBJECT_GENERICATTRIB</name>
-                  <identifier class="java.math.BigDecimal">115593</identifier>
-                  <schemaName>YAO</schemaName>
-                  <type>TABLE</type>
-                </parent>
-                <type>COLUMN</type>
-              </parent>
-              <type>DataTypeUsage</type>
-            </value>
+            <key>size</key>
+            <value class="java.lang.Long">4000</value>
           </entry>
-        </properties>
+          <entry>
+            <key>unit</key>
+          </entry>
+        </attributeValues>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
+          <typeName>VARCHAR2</typeName>
+        </dataTypeID>
       </dataTypeUsage>
-      <notNull>true</notNull>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>CITYOBJECT_ID</name>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>CITYOBJECT_GENERICATTRIB</name>
-              <identifier class="java.math.BigDecimal">115593</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <type>COLUMN</type>
-          </value>
-        </entry>
-      </properties>
+      <notNull>false</notNull>
     </column>
     <column>
       <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -792,28 +750,52 @@
     </column>
     <column>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">8fc66a52-1a35-4f7d-a441-da26e713b05c</identifier>
+        <identifier class="java.lang.String">8b391843-ce7b-4a8e-958d-3bf8026eaf3d</identifier>
       </ID>
-      <name>GRP_CODESPACE</name>
+      <name>CITYOBJECT_ID</name>
       <dataTypeUsage>
         <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">a8c532f3-684c-4f89-bf9c-4abbf9327f3a</identifier>
+          <identifier class="java.lang.String">e44f5fcd-6547-4bb8-bc28-9a4e6b12ca32</identifier>
         </ID>
-        <attributeValues>
-          <entry>
-            <key>size</key>
-            <value class="java.lang.Long">4000</value>
-          </entry>
-          <entry>
-            <key>unit</key>
-          </entry>
-        </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
-          <typeName>VARCHAR2</typeName>
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
         </dataTypeID>
+        <properties>
+          <entry>
+            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+            <value class="oracle.javatools.db.ReferenceID">
+              <parent class="oracle.javatools.db.ReferenceID">
+                <name>CITYOBJECT_ID</name>
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>CITYOBJECT_GENERICATTRIB</name>
+                  <identifier class="java.math.BigDecimal">115593</identifier>
+                  <schemaName>YAO</schemaName>
+                  <type>TABLE</type>
+                </parent>
+                <type>COLUMN</type>
+              </parent>
+              <type>DataTypeUsage</type>
+            </value>
+          </entry>
+        </properties>
       </dataTypeUsage>
-      <notNull>false</notNull>
+      <notNull>true</notNull>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>CITYOBJECT_ID</name>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>CITYOBJECT_GENERICATTRIB</name>
+              <identifier class="java.math.BigDecimal">115593</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <type>COLUMN</type>
+          </value>
+        </entry>
+      </properties>
     </column>
   </columns>
   <constraints>
@@ -821,7 +803,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">9eefc717-d771-45ad-90cd-66aed7d582e2</identifier>
       </ID>
-      <name>CITYOBJECT_GENERICATTRIB_FK</name>
+      <name>GENERICATTRIB_CITYOBJ_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>CITYOBJECT_ID</name>
@@ -873,7 +855,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">ad8b7ac6-8396-4824-9955-4d408d4ca62d</identifier>
       </ID>
-      <name>CITYOBJECT_GENERICATTRIB_FK1</name>
+      <name>GENERICATTRIB_GEOM_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>SURFACE_GEOMETRY_ID</name>
@@ -925,10 +907,10 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">2839966c-a4fc-4a9f-b2e6-fd8938c179fb</identifier>
       </ID>
-      <name>CITYOBJECT_GENERICATTRIB_FK2</name>
+      <name>GENERICATTRIB_PARENT_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>PARENT_GENATT_ID</name>
+          <name>PARENT_GENATTRIB_ID</name>
           <identifier class="java.lang.String">2ada26e0-d0c0-4934-8c39-d7a63101d58e</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>CITYOBJECT_GENERICATTRIB</name>
@@ -957,10 +939,10 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">cdd6852c-dafc-4244-b942-2dbffdfbb652</identifier>
       </ID>
-      <name>CITYOBJECT_GENERICATTRIB_FK3</name>
+      <name>GENERICATTRIB_ROOT_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>ROOT_GENATT_ID</name>
+          <name>ROOT_GENATTRIB_ID</name>
           <identifier class="java.lang.String">8b2affe7-394a-44d8-b8d1-af890e8dd0fa</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>CITYOBJECT_GENERICATTRIB</name>
@@ -1038,359 +1020,6 @@
     </constraint>
   </constraints>
   <indexes>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">865d7a38-e422-45b7-8bf7-3e444e923834</identifier>
-      </ID>
-      <name>CITYOBJ_GENERICATTRIB_FKX</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">34991f40-c0f7-4d1b-a122-712cf2dbe58c</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">25a11ff8-d709-4858-9d0e-3853cc3553e4</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>CITYOBJECT_ID</name>
-              <identifier class="java.lang.String">8b391843-ce7b-4a8e-958d-3bf8026eaf3d</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>CITYOBJECT_GENERICATTRIB</name>
-                <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>CITYOBJ_GENERICATTRIB_FKX</name>
-                      <identifier class="java.math.BigDecimal">115925</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>CITYOBJECT_GENERICATTRIB</name>
-                        <identifier class="java.math.BigDecimal">115593</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>CITYOBJ_GENERICATTRIB_FKX</name>
-                  <identifier class="java.math.BigDecimal">115925</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>CITYOBJECT_GENERICATTRIB</name>
-                    <identifier class="java.math.BigDecimal">115593</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>CITYOBJ_GENERICATTRIB_FKX</name>
-            <identifier class="java.math.BigDecimal">115925</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>CITYOBJECT_GENERICATTRIB</name>
-              <identifier class="java.math.BigDecimal">115593</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">49ada7d3-28a5-4b59-8628-3a0e8803ce86</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>CITYOBJ_GENERICATTRIB_FKX</name>
-                    <identifier class="java.math.BigDecimal">115925</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>CITYOBJECT_GENERICATTRIB</name>
-                      <identifier class="java.math.BigDecimal">115593</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">4361d396-43c7-4c4f-8848-a0267d9fe9fe</identifier>
-      </ID>
-      <name>CITYOBJ_GENERICATTRIB_FKX1</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">a3f10b2a-04dd-49fc-970a-d71fce117ace</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">e0d78b3e-432b-4ccc-b1ca-79c3bb7faa8e</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>SURFACE_GEOMETRY_ID</name>
-              <identifier class="java.lang.String">efeeee83-037c-40c9-b1ec-728d6bab41ab</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>CITYOBJECT_GENERICATTRIB</name>
-                <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>CITYOBJ_GENERICATTRIB_FKX1</name>
-                      <identifier class="java.math.BigDecimal">115926</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>CITYOBJECT_GENERICATTRIB</name>
-                        <identifier class="java.math.BigDecimal">115593</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>CITYOBJ_GENERICATTRIB_FKX1</name>
-                  <identifier class="java.math.BigDecimal">115926</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>CITYOBJECT_GENERICATTRIB</name>
-                    <identifier class="java.math.BigDecimal">115593</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>CITYOBJ_GENERICATTRIB_FKX1</name>
-            <identifier class="java.math.BigDecimal">115926</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>CITYOBJECT_GENERICATTRIB</name>
-              <identifier class="java.math.BigDecimal">115593</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">9f894bfd-620d-44e5-8a8c-dd950404bfd1</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>CITYOBJ_GENERICATTRIB_FKX1</name>
-                    <identifier class="java.math.BigDecimal">115926</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>CITYOBJECT_GENERICATTRIB</name>
-                      <identifier class="java.math.BigDecimal">115593</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">24259f6c-3f1a-4c17-b723-d0e73272b11c</identifier>
-      </ID>
-      <name>CITYOBJ_GENERICATTRIB_FKX2</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">592965a8-1db0-42d8-8985-b16362a9066c</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">06d1c8a6-0e51-4eda-a974-7dac7fa92fc2</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>PARENT_GENATT_ID</name>
-              <identifier class="java.lang.String">2ada26e0-d0c0-4934-8c39-d7a63101d58e</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>CITYOBJECT_GENERICATTRIB</name>
-                <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">05cdc473-e55c-483a-82ab-025839660177</identifier>
-      </ID>
-      <name>CITYOBJ_GENERICATTRIB_FKX3</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">6ff9c33a-d742-4341-9250-a1a23505bcb1</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">40641070-11b0-4d3d-aed1-c4efb2a51af3</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>ROOT_GENATT_ID</name>
-              <identifier class="java.lang.String">8b2affe7-394a-44d8-b8d1-af890e8dd0fa</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>CITYOBJECT_GENERICATTRIB</name>
-                <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">a527cf93-a5b3-44fe-b479-781da38f9d05</identifier>
@@ -1529,6 +1158,359 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">865d7a38-e422-45b7-8bf7-3e444e923834</identifier>
+      </ID>
+      <name>GENERICATTRIB_CITYOBJ_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">34991f40-c0f7-4d1b-a122-712cf2dbe58c</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">25a11ff8-d709-4858-9d0e-3853cc3553e4</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>CITYOBJECT_ID</name>
+              <identifier class="java.lang.String">8b391843-ce7b-4a8e-958d-3bf8026eaf3d</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>CITYOBJECT_GENERICATTRIB</name>
+                <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>CITYOBJ_GENERICATTRIB_FKX</name>
+                      <identifier class="java.math.BigDecimal">115925</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>CITYOBJECT_GENERICATTRIB</name>
+                        <identifier class="java.math.BigDecimal">115593</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>CITYOBJ_GENERICATTRIB_FKX</name>
+                  <identifier class="java.math.BigDecimal">115925</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>CITYOBJECT_GENERICATTRIB</name>
+                    <identifier class="java.math.BigDecimal">115593</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>CITYOBJ_GENERICATTRIB_FKX</name>
+            <identifier class="java.math.BigDecimal">115925</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>CITYOBJECT_GENERICATTRIB</name>
+              <identifier class="java.math.BigDecimal">115593</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">49ada7d3-28a5-4b59-8628-3a0e8803ce86</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initialExtent>65536</initialExtent>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <maxExtent>2147483645</maxExtent>
+            <minExtent>1</minExtent>
+            <nextExtent>1048576</nextExtent>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>CITYOBJ_GENERICATTRIB_FKX</name>
+                    <identifier class="java.math.BigDecimal">115925</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>CITYOBJECT_GENERICATTRIB</name>
+                      <identifier class="java.math.BigDecimal">115593</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">4361d396-43c7-4c4f-8848-a0267d9fe9fe</identifier>
+      </ID>
+      <name>GENERICATTRIB_GEOM_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">a3f10b2a-04dd-49fc-970a-d71fce117ace</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">e0d78b3e-432b-4ccc-b1ca-79c3bb7faa8e</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>SURFACE_GEOMETRY_ID</name>
+              <identifier class="java.lang.String">efeeee83-037c-40c9-b1ec-728d6bab41ab</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>CITYOBJECT_GENERICATTRIB</name>
+                <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>CITYOBJ_GENERICATTRIB_FKX1</name>
+                      <identifier class="java.math.BigDecimal">115926</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>CITYOBJECT_GENERICATTRIB</name>
+                        <identifier class="java.math.BigDecimal">115593</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>CITYOBJ_GENERICATTRIB_FKX1</name>
+                  <identifier class="java.math.BigDecimal">115926</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>CITYOBJECT_GENERICATTRIB</name>
+                    <identifier class="java.math.BigDecimal">115593</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>CITYOBJ_GENERICATTRIB_FKX1</name>
+            <identifier class="java.math.BigDecimal">115926</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>CITYOBJECT_GENERICATTRIB</name>
+              <identifier class="java.math.BigDecimal">115593</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">9f894bfd-620d-44e5-8a8c-dd950404bfd1</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initialExtent>65536</initialExtent>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <maxExtent>2147483645</maxExtent>
+            <minExtent>1</minExtent>
+            <nextExtent>1048576</nextExtent>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>CITYOBJ_GENERICATTRIB_FKX1</name>
+                    <identifier class="java.math.BigDecimal">115926</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>CITYOBJECT_GENERICATTRIB</name>
+                      <identifier class="java.math.BigDecimal">115593</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">24259f6c-3f1a-4c17-b723-d0e73272b11c</identifier>
+      </ID>
+      <name>GENERICATTRIB_PARENT_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">592965a8-1db0-42d8-8985-b16362a9066c</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">06d1c8a6-0e51-4eda-a974-7dac7fa92fc2</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>PARENT_GENATTRIB_ID</name>
+              <identifier class="java.lang.String">2ada26e0-d0c0-4934-8c39-d7a63101d58e</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>CITYOBJECT_GENERICATTRIB</name>
+                <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">05cdc473-e55c-483a-82ab-025839660177</identifier>
+      </ID>
+      <name>GENERICATTRIB_ROOT_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">6ff9c33a-d742-4341-9250-a1a23505bcb1</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">40641070-11b0-4d3d-aed1-c4efb2a51af3</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>ROOT_GENATTRIB_ID</name>
+              <identifier class="java.lang.String">8b2affe7-394a-44d8-b8d1-af890e8dd0fa</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>CITYOBJECT_GENERICATTRIB</name>
+                <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
     </indexe>
   </indexes>
   <properties>

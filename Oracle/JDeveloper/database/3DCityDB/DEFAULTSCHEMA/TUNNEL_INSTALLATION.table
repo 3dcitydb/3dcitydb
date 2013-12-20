@@ -217,7 +217,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">eeb429e8-9db1-4dab-a6ba-600bba53c8ed</identifier>
       </ID>
-      <name>TUNNEL_HOLLOWSPACE_ID</name>
+      <name>TUNNEL_HOLLOW_SPACE_ID</name>
       <dataTypeUsage>
         <ID class="oracle.javatools.db.IdentifierBasedID">
           <identifier class="java.lang.String">9cba1d9f-990a-474f-b1fe-7ca253013138</identifier>
@@ -225,180 +225,6 @@
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">188c9251-eae3-46fd-a073-a4041cd279de</identifier>
-      </ID>
-      <name>LOD2_IMPLICIT_REP_ID</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">76bc3fa8-3cc5-48d2-9255-56ab435eeb4d</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
-          <typeName>NUMBER</typeName>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">e4d92101-8428-4d78-9d49-64ef9ad3baaf</identifier>
-      </ID>
-      <name>LOD2_IMPLICIT_REF_POINT</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">5045272f-3a0f-4d24-85f1-704097bb3d2d</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.NameBasedID">
-          <name>SDO_GEOMETRY</name>
-          <schemaName>MDSYS</schemaName>
-          <type>TYPE</type>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">730e797d-a7d3-4d86-b855-9290638035c7</identifier>
-      </ID>
-      <name>LOD2_IMPLICIT_TRANSFORMATION</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">3086609f-d0f4-4d6c-a185-aeea05570e96</identifier>
-        </ID>
-        <attributeValues>
-          <entry>
-            <key>size</key>
-            <value class="java.lang.Long">1000</value>
-          </entry>
-          <entry>
-            <key>unit</key>
-          </entry>
-        </attributeValues>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
-          <typeName>VARCHAR2</typeName>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">4e907f7b-295e-475b-8b00-daa33d107f94</identifier>
-      </ID>
-      <name>LOD3_IMPLICIT_REP_ID</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">23af6dc1-7ead-407c-ab93-c666c6b49612</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
-          <typeName>NUMBER</typeName>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">a1b2d0ee-c85e-49ab-a11b-b29360a9b6e1</identifier>
-      </ID>
-      <name>LOD3_IMPLICIT_REF_POINT</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">1c9c110d-0796-4265-8f3a-7c0ffa004fa8</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.NameBasedID">
-          <name>SDO_GEOMETRY</name>
-          <schemaName>MDSYS</schemaName>
-          <type>TYPE</type>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">93ca415b-7e3b-4a50-8a30-fddee286c976</identifier>
-      </ID>
-      <name>LOD3_IMPLICIT_TRANSFORMATION</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">aa3dc93f-4108-4aac-8fec-1511930563d5</identifier>
-        </ID>
-        <attributeValues>
-          <entry>
-            <key>size</key>
-            <value class="java.lang.Long">1000</value>
-          </entry>
-          <entry>
-            <key>unit</key>
-          </entry>
-        </attributeValues>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
-          <typeName>VARCHAR2</typeName>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">727414dc-f045-4069-bbf0-5675028f0714</identifier>
-      </ID>
-      <name>LOD4_IMPLICIT_REP_ID</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">a05ebe7c-0c73-462b-a0c7-35238755ed0c</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
-          <typeName>NUMBER</typeName>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">2e714cee-a165-4997-9528-b53ce94757ea</identifier>
-      </ID>
-      <name>LOD4_IMPLICIT_REF_POINT</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">760b4547-a992-4f8d-8d43-c64f3e8f196d</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.NameBasedID">
-          <name>SDO_GEOMETRY</name>
-          <schemaName>MDSYS</schemaName>
-          <type>TYPE</type>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">7704bbdb-0da1-4cde-8845-7ece863f9785</identifier>
-      </ID>
-      <name>LOD4_IMPLICIT_TRANSFORMATION</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">264dca09-fd7b-4bf5-9a17-88a7a40be82d</identifier>
-        </ID>
-        <attributeValues>
-          <entry>
-            <key>size</key>
-            <value class="java.lang.Long">1000</value>
-          </entry>
-          <entry>
-            <key>unit</key>
-          </entry>
-        </attributeValues>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
-          <typeName>VARCHAR2</typeName>
         </dataTypeID>
       </dataTypeUsage>
       <notNull>false</notNull>
@@ -502,13 +328,187 @@
       </dataTypeUsage>
       <notNull>false</notNull>
     </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">188c9251-eae3-46fd-a073-a4041cd279de</identifier>
+      </ID>
+      <name>LOD2_IMPLICIT_REP_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">76bc3fa8-3cc5-48d2-9255-56ab435eeb4d</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">4e907f7b-295e-475b-8b00-daa33d107f94</identifier>
+      </ID>
+      <name>LOD3_IMPLICIT_REP_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">23af6dc1-7ead-407c-ab93-c666c6b49612</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">727414dc-f045-4069-bbf0-5675028f0714</identifier>
+      </ID>
+      <name>LOD4_IMPLICIT_REP_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">a05ebe7c-0c73-462b-a0c7-35238755ed0c</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">e4d92101-8428-4d78-9d49-64ef9ad3baaf</identifier>
+      </ID>
+      <name>LOD2_IMPLICIT_REF_POINT</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">5045272f-3a0f-4d24-85f1-704097bb3d2d</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.NameBasedID">
+          <name>SDO_GEOMETRY</name>
+          <schemaName>MDSYS</schemaName>
+          <type>TYPE</type>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">a1b2d0ee-c85e-49ab-a11b-b29360a9b6e1</identifier>
+      </ID>
+      <name>LOD3_IMPLICIT_REF_POINT</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">1c9c110d-0796-4265-8f3a-7c0ffa004fa8</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.NameBasedID">
+          <name>SDO_GEOMETRY</name>
+          <schemaName>MDSYS</schemaName>
+          <type>TYPE</type>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">2e714cee-a165-4997-9528-b53ce94757ea</identifier>
+      </ID>
+      <name>LOD4_IMPLICIT_REF_POINT</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">760b4547-a992-4f8d-8d43-c64f3e8f196d</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.NameBasedID">
+          <name>SDO_GEOMETRY</name>
+          <schemaName>MDSYS</schemaName>
+          <type>TYPE</type>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">730e797d-a7d3-4d86-b855-9290638035c7</identifier>
+      </ID>
+      <name>LOD2_IMPLICIT_TRANSFORMATION</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">3086609f-d0f4-4d6c-a185-aeea05570e96</identifier>
+        </ID>
+        <attributeValues>
+          <entry>
+            <key>size</key>
+            <value class="java.lang.Long">1000</value>
+          </entry>
+          <entry>
+            <key>unit</key>
+          </entry>
+        </attributeValues>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
+          <typeName>VARCHAR2</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">93ca415b-7e3b-4a50-8a30-fddee286c976</identifier>
+      </ID>
+      <name>LOD3_IMPLICIT_TRANSFORMATION</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">aa3dc93f-4108-4aac-8fec-1511930563d5</identifier>
+        </ID>
+        <attributeValues>
+          <entry>
+            <key>size</key>
+            <value class="java.lang.Long">1000</value>
+          </entry>
+          <entry>
+            <key>unit</key>
+          </entry>
+        </attributeValues>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
+          <typeName>VARCHAR2</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">7704bbdb-0da1-4cde-8845-7ece863f9785</identifier>
+      </ID>
+      <name>LOD4_IMPLICIT_TRANSFORMATION</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">264dca09-fd7b-4bf5-9a17-88a7a40be82d</identifier>
+        </ID>
+        <attributeValues>
+          <entry>
+            <key>size</key>
+            <value class="java.lang.Long">1000</value>
+          </entry>
+          <entry>
+            <key>unit</key>
+          </entry>
+        </attributeValues>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
+          <typeName>VARCHAR2</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">01b7479a-4ce6-4c96-b9d9-3d05a992677e</identifier>
       </ID>
-      <name>TUNNEL_INSTALLATION_FK</name>
+      <name>TUNNEL_INST_CITYOBJECT_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>ID</name>
@@ -539,13 +539,13 @@
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">3926fb68-4f32-4d5c-bdfd-08342703a34f</identifier>
+        <identifier class="java.lang.String">340da1bc-5d05-45e4-91cd-1961f80c1a85</identifier>
       </ID>
-      <name>TUNNEL_INSTALLATION_FK1</name>
+      <name>TUNNEL_INST_HAPACE_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>TUNNEL_ID</name>
-          <identifier class="java.lang.String">5fac5cc1-6967-4746-9347-520115427c09</identifier>
+          <name>ID</name>
+          <identifier class="java.lang.String">77f1e9b2-a088-4dd4-888c-1f13e0aec6cd</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>TUNNEL_INSTALLATION</name>
             <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
@@ -558,15 +558,14 @@
       <deleteMode>0</deleteMode>
       <enabled>true</enabled>
       <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>TUNNEL_PK</name>
-        <identifier class="java.lang.String">b6f40414-9b27-4182-a9c5-96f744832cdb</identifier>
+        <name>TUNNEL_HOLLOWSPACE_PK</name>
+        <identifier class="java.lang.String">0a2ac520-b25b-4501-ad62-208c80ab667e</identifier>
         <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>TUNNEL</name>
-          <identifier class="java.lang.String">8ba1145e-fe5d-4b9f-b4e0-67f0a26bc67b</identifier>
-          <schemaName>YAO</schemaName>
+          <name>TUNNEL_HOLLOW_SPACE</name>
+          <identifier class="java.lang.String">1fae4862-3a04-418f-bbe0-8fbf0d3f0bf2</identifier>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
@@ -574,7 +573,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">92c5b166-1024-4113-9e67-ee82e69f3761</identifier>
       </ID>
-      <name>TUNNEL_INSTALLATION_FK2</name>
+      <name>TUNNEL_INST_LOD2BREP_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD2_BREP_ID</name>
@@ -605,9 +604,41 @@
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">80e9a0d5-a406-4fa2-95dd-b341eec1b8a1</identifier>
+      </ID>
+      <name>TUNNEL_INST_LOD2IMPL_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>LOD2_IMPLICIT_REP_ID</name>
+          <identifier class="java.lang.String">188c9251-eae3-46fd-a073-a4041cd279de</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>TUNNEL_INSTALLATION</name>
+            <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>IMPLICIT_GEOMETRY_PK</name>
+        <identifier class="java.lang.String">7e7568f0-65be-44e4-8a7e-2e037c453ab7</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>IMPLICIT_GEOMETRY</name>
+          <identifier class="java.lang.String">cfe1b5b1-9b4b-435b-ae27-af590065bf83</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">6ae6fa3e-71e0-47fe-a3d0-b2adb8d895a7</identifier>
       </ID>
-      <name>TUNNEL_INSTALLATION_FK3</name>
+      <name>TUNNEL_INST_LOD3BREP_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD3_BREP_ID</name>
@@ -638,9 +669,41 @@
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">d552f1a9-d60e-400a-a682-350ff7434c22</identifier>
+      </ID>
+      <name>TUNNEL_INST_LOD3IMPL_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>LOD3_IMPLICIT_REP_ID</name>
+          <identifier class="java.lang.String">4e907f7b-295e-475b-8b00-daa33d107f94</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>TUNNEL_INSTALLATION</name>
+            <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>IMPLICIT_GEOMETRY_PK</name>
+        <identifier class="java.lang.String">7e7568f0-65be-44e4-8a7e-2e037c453ab7</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>IMPLICIT_GEOMETRY</name>
+          <identifier class="java.lang.String">cfe1b5b1-9b4b-435b-ae27-af590065bf83</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">3cc45f6e-dcde-4560-9c0a-2c6bcb9bc76d</identifier>
       </ID>
-      <name>TUNNEL_INSTALLATION_FK4</name>
+      <name>TUNNEL_INST_LOD4BREP_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD4_BREP_ID</name>
@@ -671,73 +734,9 @@
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">80e9a0d5-a406-4fa2-95dd-b341eec1b8a1</identifier>
-      </ID>
-      <name>TUNNEL_INSTALLATION_FK5</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>LOD2_IMPLICIT_REP_ID</name>
-          <identifier class="java.lang.String">188c9251-eae3-46fd-a073-a4041cd279de</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>TUNNEL_INSTALLATION</name>
-            <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>IMPLICIT_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">7e7568f0-65be-44e4-8a7e-2e037c453ab7</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>IMPLICIT_GEOMETRY</name>
-          <identifier class="java.lang.String">cfe1b5b1-9b4b-435b-ae27-af590065bf83</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d552f1a9-d60e-400a-a682-350ff7434c22</identifier>
-      </ID>
-      <name>TUNNEL_INSTALLATION_FK6</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>LOD3_IMPLICIT_REP_ID</name>
-          <identifier class="java.lang.String">4e907f7b-295e-475b-8b00-daa33d107f94</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>TUNNEL_INSTALLATION</name>
-            <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>IMPLICIT_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">7e7568f0-65be-44e4-8a7e-2e037c453ab7</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>IMPLICIT_GEOMETRY</name>
-          <identifier class="java.lang.String">cfe1b5b1-9b4b-435b-ae27-af590065bf83</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">b5b7c3d3-9f71-4175-a8bc-3a0ca5cb22d4</identifier>
       </ID>
-      <name>TUNNEL_INSTALLATION_FK7</name>
+      <name>TUNNEL_INST_LOD4IMPL_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD4_IMPLICIT_REP_ID</name>
@@ -767,13 +766,13 @@
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">bba357cc-0448-427b-9754-3e8ae7d3fcc8</identifier>
+        <identifier class="java.lang.String">3926fb68-4f32-4d5c-bdfd-08342703a34f</identifier>
       </ID>
-      <name>TUNNEL_INSTALLATION_HOLL_FK</name>
+      <name>TUNNEL_INST_TUNNEL_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>TUNNEL_HOLLOWSPACE_ID</name>
-          <identifier class="java.lang.String">eeb429e8-9db1-4dab-a6ba-600bba53c8ed</identifier>
+          <name>TUNNEL_ID</name>
+          <identifier class="java.lang.String">5fac5cc1-6967-4746-9347-520115427c09</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>TUNNEL_INSTALLATION</name>
             <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
@@ -786,11 +785,11 @@
       <deleteMode>0</deleteMode>
       <enabled>true</enabled>
       <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>TUNNEL_HOLLOWSPACE_PK</name>
-        <identifier class="java.lang.String">0a2ac520-b25b-4501-ad62-208c80ab667e</identifier>
+        <name>TUNNEL_PK</name>
+        <identifier class="java.lang.String">b6f40414-9b27-4182-a9c5-96f744832cdb</identifier>
         <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>TUNNEL_HOLLOWSPACE</name>
-          <identifier class="java.lang.String">1fae4862-3a04-418f-bbe0-8fbf0d3f0bf2</identifier>
+          <name>TUNNEL</name>
+          <identifier class="java.lang.String">8ba1145e-fe5d-4b9f-b4e0-67f0a26bc67b</identifier>
           <schemaName>YAO</schemaName>
           <type>TABLE</type>
         </parent>
@@ -832,405 +831,6 @@
     </constraint>
   </constraints>
   <indexes>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">2fc32cd8-d5fd-4398-aeb6-44c801e840ad</identifier>
-      </ID>
-      <name>TUNNEL_INSTALLATION_FKX</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">0975bb3a-c6c3-4eaf-8e78-d422dfae4724</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">f9cc74f9-a955-4526-bb55-939a0acb1d9e</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD3_BREP_ID</name>
-              <identifier class="java.lang.String">e82fa9b1-0c88-4152-979a-76327913812e</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>TUNNEL_INSTALLATION</name>
-                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">c10d3ad8-2e37-46b8-8562-48631bf853cd</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">c31a2a23-62c6-4da4-999b-9ef09df7929c</identifier>
-      </ID>
-      <name>TUNNEL_INSTALLATION_FKX1</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">9e522a2d-d44e-402d-9218-cb65b9f5e65d</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">80b9cd1a-6f2b-4391-bc80-fa48cba924dd</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>TUNNEL_HOLLOWSPACE_ID</name>
-              <identifier class="java.lang.String">eeb429e8-9db1-4dab-a6ba-600bba53c8ed</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>TUNNEL_INSTALLATION</name>
-                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">d3ae27c8-9292-4d5d-8b97-346edc8f185d</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">b0a8e388-eaca-47ce-9912-98e2418c4174</identifier>
-      </ID>
-      <name>TUNNEL_INSTALLATION_FKX2</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">61bd37cb-34da-4688-9d54-7d7b01fdce6a</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">523629ed-413b-4adf-942d-52577789ae73</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD4_BREP_ID</name>
-              <identifier class="java.lang.String">f210afeb-152d-42bf-b5fd-fc1cb8b042e0</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>TUNNEL_INSTALLATION</name>
-                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">0beab3dd-a8d9-40da-bade-9e3dbd269b5f</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">62c4bf52-350c-4f68-9eb1-516de557c247</identifier>
-      </ID>
-      <name>TUNNEL_INSTALLATION_FKX3</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">c14b1737-622d-46d9-a2ad-de62e6b2fbc3</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">cb25658c-34de-4a86-93ca-eb0a3c95e06e</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD2_BREP_ID</name>
-              <identifier class="java.lang.String">0d6c94f2-1dbe-480d-9a94-f06eeb621a49</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>TUNNEL_INSTALLATION</name>
-                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">f3f310ae-374a-4f34-8d07-3b30a4571b82</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">58b9a22e-832f-4519-91cb-623b9e402ee9</identifier>
-      </ID>
-      <name>TUNNEL_INSTALLATION_FKX4</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">72810241-e8c1-49fb-9e89-0407381ce2cd</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">5a51d583-8043-4153-aba7-0afa5a93c753</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>TUNNEL_ID</name>
-              <identifier class="java.lang.String">5fac5cc1-6967-4746-9347-520115427c09</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>TUNNEL_INSTALLATION</name>
-                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">bb1cf250-0885-4268-bc16-19be2d671fe4</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">802d9bf9-17e1-4456-a8e6-32364803b9a3</identifier>
-      </ID>
-      <name>TUNNEL_INSTALLATION_FKX5</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">fbf43367-f950-48ef-9d49-e84cf19b5c9b</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">49104b61-f65c-4e5e-a570-9e9de86a955f</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD2_IMPLICIT_REP_ID</name>
-              <identifier class="java.lang.String">188c9251-eae3-46fd-a073-a4041cd279de</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>TUNNEL_INSTALLATION</name>
-                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">47e35ac6-af6e-4193-8a37-de98de941ae8</identifier>
-      </ID>
-      <name>TUNNEL_INSTALLATION_FKX6</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">c3f4907e-bac9-4449-8e4a-8222b810532d</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">8b5d59ef-18ee-4703-a443-d86c2d03c07f</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD3_IMPLICIT_REP_ID</name>
-              <identifier class="java.lang.String">4e907f7b-295e-475b-8b00-daa33d107f94</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>TUNNEL_INSTALLATION</name>
-                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">a4f08d53-db88-4e30-8902-9a5fdbb820a2</identifier>
-      </ID>
-      <name>TUNNEL_INSTALLATION_FKX7</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">a089ade5-72aa-459f-adfb-2d75569162a0</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">53bb2318-518a-4555-83ca-aaf9d6437531</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD4_IMPLICIT_REP_ID</name>
-              <identifier class="java.lang.String">727414dc-f045-4069-bbf0-5675028f0714</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>TUNNEL_INSTALLATION</name>
-                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">1bfeb55b-e0a8-4f8e-b0e8-388d1ea88a48</identifier>
@@ -1290,28 +890,150 @@
     </indexe>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">3e5dec6f-b3be-4a69-9b91-5a6478c512dc</identifier>
+        <identifier class="java.lang.String">c31a2a23-62c6-4da4-999b-9ef09df7929c</identifier>
       </ID>
-      <name>TUNNEL_INST_LOD2OTHER_SPX</name>
+      <name>TUNNEL_INST_HSPACE_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">0c8fe43e-5d85-4c1c-a3d8-19eeeaed72f6</identifier>
+            <identifier class="java.lang.String">9e522a2d-d44e-402d-9218-cb65b9f5e65d</identifier>
           </ID>
-          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
             <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">21e2d218-63dd-4775-9715-7a4070f44508</identifier>
+              <identifier class="java.lang.String">80b9cd1a-6f2b-4391-bc80-fa48cba924dd</identifier>
             </ID>
-            <SQLText>LOD2_OTHER_GEOM</SQLText>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>TUNNEL_HOLLOW_SPACE_ID</name>
+              <identifier class="java.lang.String">eeb429e8-9db1-4dab-a6ba-600bba53c8ed</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>TUNNEL_INSTALLATION</name>
+                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
           </expression>
+          <order>ASC</order>
         </columnExpression>
       </columnExpressions>
-      <domainIndextype class="oracle.javatools.db.ReferenceID">
-        <name>SPATIAL_INDEX</name>
-        <schemaName>MDSYS</schemaName>
-        <type>INDEXTYPE</type>
-      </domainIndextype>
-      <indexType>DOMAIN</indexType>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">d3ae27c8-9292-4d5d-8b97-346edc8f185d</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <percentFree>10</percentFree>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">62c4bf52-350c-4f68-9eb1-516de557c247</identifier>
+      </ID>
+      <name>TUNNEL_INST_LOD2BREP_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">c14b1737-622d-46d9-a2ad-de62e6b2fbc3</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">cb25658c-34de-4a86-93ca-eb0a3c95e06e</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD2_BREP_ID</name>
+              <identifier class="java.lang.String">0d6c94f2-1dbe-480d-9a94-f06eeb621a49</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>TUNNEL_INSTALLATION</name>
+                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">f3f310ae-374a-4f34-8d07-3b30a4571b82</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <percentFree>10</percentFree>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">802d9bf9-17e1-4456-a8e6-32364803b9a3</identifier>
+      </ID>
+      <name>TUNNEL_INST_LOD2IMPL_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">fbf43367-f950-48ef-9d49-e84cf19b5c9b</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">49104b61-f65c-4e5e-a570-9e9de86a955f</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD2_IMPLICIT_REP_ID</name>
+              <identifier class="java.lang.String">188c9251-eae3-46fd-a073-a4041cd279de</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>TUNNEL_INSTALLATION</name>
+                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
       <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -1350,19 +1072,19 @@
     </indexe>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">cb049cad-4b10-457c-a454-9ccdc11c56f2</identifier>
+        <identifier class="java.lang.String">3e5dec6f-b3be-4a69-9b91-5a6478c512dc</identifier>
       </ID>
-      <name>TUNNEL_INST_LOD3OTHER_SPX</name>
+      <name>TUNNEL_INST_LOD2XGEOM_SPX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">4579f961-1ae3-41bb-a06d-59ed3d9d2038</identifier>
+            <identifier class="java.lang.String">0c8fe43e-5d85-4c1c-a3d8-19eeeaed72f6</identifier>
           </ID>
           <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
             <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">b239b1c9-1357-4cd1-8e13-91fb23ec805c</identifier>
+              <identifier class="java.lang.String">21e2d218-63dd-4775-9715-7a4070f44508</identifier>
             </ID>
-            <SQLText>LOD3_OTHER_GEOM</SQLText>
+            <SQLText>LOD2_OTHER_GEOM</SQLText>
           </expression>
         </columnExpression>
       </columnExpressions>
@@ -1372,6 +1094,101 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">2fc32cd8-d5fd-4398-aeb6-44c801e840ad</identifier>
+      </ID>
+      <name>TUNNEL_INST_LOD3BREP_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">0975bb3a-c6c3-4eaf-8e78-d422dfae4724</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">f9cc74f9-a955-4526-bb55-939a0acb1d9e</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD3_BREP_ID</name>
+              <identifier class="java.lang.String">e82fa9b1-0c88-4152-979a-76327913812e</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>TUNNEL_INSTALLATION</name>
+                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">c10d3ad8-2e37-46b8-8562-48631bf853cd</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <percentFree>10</percentFree>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">47e35ac6-af6e-4193-8a37-de98de941ae8</identifier>
+      </ID>
+      <name>TUNNEL_INST_LOD3IMPL_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">c3f4907e-bac9-4449-8e4a-8222b810532d</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">8b5d59ef-18ee-4703-a443-d86c2d03c07f</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD3_IMPLICIT_REP_ID</name>
+              <identifier class="java.lang.String">4e907f7b-295e-475b-8b00-daa33d107f94</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>TUNNEL_INSTALLATION</name>
+                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
       <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -1410,19 +1227,19 @@
     </indexe>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">b095f4af-ae36-430d-9e6d-ef5d0625ba27</identifier>
+        <identifier class="java.lang.String">cb049cad-4b10-457c-a454-9ccdc11c56f2</identifier>
       </ID>
-      <name>TUNNEL_INST_LOD4OTHER_SPX</name>
+      <name>TUNNEL_INST_LOD3XGEOM_SPX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">465c6da2-2239-4b6d-bf6c-1722aa49c045</identifier>
+            <identifier class="java.lang.String">4579f961-1ae3-41bb-a06d-59ed3d9d2038</identifier>
           </ID>
           <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
             <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">4b2b292d-35e8-486f-86ae-6c676f6d0580</identifier>
+              <identifier class="java.lang.String">b239b1c9-1357-4cd1-8e13-91fb23ec805c</identifier>
             </ID>
-            <SQLText>LOD4_OTHER_GEOM</SQLText>
+            <SQLText>LOD3_OTHER_GEOM</SQLText>
           </expression>
         </columnExpression>
       </columnExpressions>
@@ -1432,6 +1249,101 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">b0a8e388-eaca-47ce-9912-98e2418c4174</identifier>
+      </ID>
+      <name>TUNNEL_INST_LOD4BREP_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">61bd37cb-34da-4688-9d54-7d7b01fdce6a</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">523629ed-413b-4adf-942d-52577789ae73</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD4_BREP_ID</name>
+              <identifier class="java.lang.String">f210afeb-152d-42bf-b5fd-fc1cb8b042e0</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>TUNNEL_INSTALLATION</name>
+                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">0beab3dd-a8d9-40da-bade-9e3dbd269b5f</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <percentFree>10</percentFree>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">a4f08d53-db88-4e30-8902-9a5fdbb820a2</identifier>
+      </ID>
+      <name>TUNNEL_INST_LOD4IMPL_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">a089ade5-72aa-459f-adfb-2d75569162a0</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">53bb2318-518a-4555-83ca-aaf9d6437531</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD4_IMPLICIT_REP_ID</name>
+              <identifier class="java.lang.String">727414dc-f045-4069-bbf0-5675028f0714</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>TUNNEL_INSTALLATION</name>
+                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
       <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -1463,6 +1375,93 @@
       </domainIndextype>
       <indexType>DOMAIN</indexType>
       <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">b095f4af-ae36-430d-9e6d-ef5d0625ba27</identifier>
+      </ID>
+      <name>TUNNEL_INST_LOD4XGEOM_SPX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">465c6da2-2239-4b6d-bf6c-1722aa49c045</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">4b2b292d-35e8-486f-86ae-6c676f6d0580</identifier>
+            </ID>
+            <SQLText>LOD4_OTHER_GEOM</SQLText>
+          </expression>
+        </columnExpression>
+      </columnExpressions>
+      <domainIndextype class="oracle.javatools.db.ReferenceID">
+        <name>SPATIAL_INDEX</name>
+        <schemaName>MDSYS</schemaName>
+        <type>INDEXTYPE</type>
+      </domainIndextype>
+      <indexType>DOMAIN</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">58b9a22e-832f-4519-91cb-623b9e402ee9</identifier>
+      </ID>
+      <name>TUNNEL_INST_TUNNEL_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">72810241-e8c1-49fb-9e89-0407381ce2cd</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">5a51d583-8043-4153-aba7-0afa5a93c753</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>TUNNEL_ID</name>
+              <identifier class="java.lang.String">5fac5cc1-6967-4746-9347-520115427c09</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>TUNNEL_INSTALLATION</name>
+                <identifier class="java.lang.String">98aa244b-96b6-43fd-b569-a3f1cb708dd2</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">bb1cf250-0885-4268-bc16-19be2d671fe4</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <percentFree>10</percentFree>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>

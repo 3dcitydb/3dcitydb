@@ -264,61 +264,9 @@
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">65e587b5-2c7c-4c6d-9557-2b710dc1ac95</identifier>
-      </ID>
-      <name>TEXTUREPARAM_SURFACE_DATA_FK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>SURFACE_DATA_ID</name>
-          <identifier class="java.lang.String">9cf75d45-801c-4e17-bd44-10919b523606</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>TEXTUREPARAM</name>
-            <identifier class="java.lang.String">0f8d74a0-d817-4e62-8e3f-05148051d29c</identifier>
-            <schemaName>YAO</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>TEXTUREPARAM_SURFACE_DATA_FK</name>
-            <childObjectNames>
-              <childObjectName>SURFACE_DATA_ID</childObjectName>
-            </childObjectNames>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>TEXTUREPARAM</name>
-              <identifier class="java.math.BigDecimal">115717</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <subType>FKConstraint</subType>
-            <type>CONSTRAINT</type>
-          </value>
-        </entry>
-      </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>SURFACE_DATA_PK</name>
-        <identifier class="java.lang.String">f87e5dfd-62f3-46e1-bd88-a6e501e6d349</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>SURFACE_DATA</name>
-          <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>YAO</schemaName>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">cc624118-1884-452d-912e-a7753e583999</identifier>
       </ID>
-      <name>TEXTUREPARAM_SURFACE_GEOM_FK</name>
+      <name>TEXPARAM_GEOM_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>SURFACE_GEOMETRY_ID</name>
@@ -326,7 +274,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>TEXTUREPARAM</name>
             <identifier class="java.lang.String">0f8d74a0-d817-4e62-8e3f-05148051d29c</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -366,6 +314,58 @@
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">65e587b5-2c7c-4c6d-9557-2b710dc1ac95</identifier>
+      </ID>
+      <name>TEXPARAM_SURFACE_DATA_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>SURFACE_DATA_ID</name>
+          <identifier class="java.lang.String">9cf75d45-801c-4e17-bd44-10919b523606</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>TEXTUREPARAM</name>
+            <identifier class="java.lang.String">0f8d74a0-d817-4e62-8e3f-05148051d29c</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>TEXTUREPARAM_SURFACE_DATA_FK</name>
+            <childObjectNames>
+              <childObjectName>SURFACE_DATA_ID</childObjectName>
+            </childObjectNames>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>TEXTUREPARAM</name>
+              <identifier class="java.math.BigDecimal">115717</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <subType>FKConstraint</subType>
+            <type>CONSTRAINT</type>
+          </value>
+        </entry>
+      </properties>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>SURFACE_DATA_PK</name>
+        <identifier class="java.lang.String">f87e5dfd-62f3-46e1-bd88-a6e501e6d349</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>SURFACE_DATA</name>
+          <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">3085f554-ed65-4fe4-bc43-2a892766fd73</identifier>
@@ -378,7 +378,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>TEXTUREPARAM</name>
             <identifier class="java.lang.String">0f8d74a0-d817-4e62-8e3f-05148051d29c</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -389,7 +389,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>TEXTUREPARAM</name>
             <identifier class="java.lang.String">0f8d74a0-d817-4e62-8e3f-05148051d29c</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -402,10 +402,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>TEXTUREPARAM</name>
           <identifier class="java.lang.String">0f8d74a0-d817-4e62-8e3f-05148051d29c</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
       <properties>
@@ -435,7 +435,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">04261104-16dc-4b00-946f-dddc43b1583f</identifier>
       </ID>
-      <name>TEXTUREPARAM_FKX</name>
+      <name>TEXPARAM_GEOM_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -451,7 +451,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>TEXTUREPARAM</name>
                 <identifier class="java.lang.String">0f8d74a0-d817-4e62-8e3f-05148051d29c</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -562,7 +562,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -570,7 +570,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">ed97a611-6cdf-4e42-ad29-583837d0b616</identifier>
       </ID>
-      <name>TEXTUREPARAM_FKX1</name>
+      <name>TEXPARAM_SURFACE_DATA_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -586,7 +586,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>TEXTUREPARAM</name>
                 <identifier class="java.lang.String">0f8d74a0-d817-4e62-8e3f-05148051d29c</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -697,7 +697,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -721,7 +721,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>TEXTUREPARAM</name>
                 <identifier class="java.lang.String">0f8d74a0-d817-4e62-8e3f-05148051d29c</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -788,7 +788,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>TEXTUREPARAM</name>
                 <identifier class="java.lang.String">0f8d74a0-d817-4e62-8e3f-05148051d29c</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -899,7 +899,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
@@ -955,6 +955,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

@@ -167,7 +167,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">089d9040-3177-4891-8e7b-a4cb4afe60c4</identifier>
       </ID>
-      <name>OBJECTCLASS_OBJECTCLASS_FK</name>
+      <name>OBJECTCLASS_SUPERCLASS_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>SUPERCLASS_ID</name>
@@ -175,7 +175,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>OBJECTCLASS</name>
             <identifier class="java.lang.String">5ee8487b-fadf-4247-a64b-5d70b11bd4a9</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -208,7 +208,7 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>OBJECTCLASS</name>
           <identifier class="java.lang.String">5ee8487b-fadf-4247-a64b-5d70b11bd4a9</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
         <type>CONSTRAINT</type>
@@ -226,7 +226,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>OBJECTCLASS</name>
             <identifier class="java.lang.String">5ee8487b-fadf-4247-a64b-5d70b11bd4a9</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -239,10 +239,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>OBJECTCLASS</name>
           <identifier class="java.lang.String">5ee8487b-fadf-4247-a64b-5d70b11bd4a9</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
       <properties>
@@ -269,145 +269,6 @@
   <indexes>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">4ab3588b-7a70-4cdc-94bc-b75928fab2f0</identifier>
-      </ID>
-      <name>OBJECTCLASS_FKX</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">8adbe625-d4b1-438a-8d21-af5fabffc036</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">464c8070-d7ee-433a-8681-33408eda5920</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>SUPERCLASS_ID</name>
-              <identifier class="java.lang.String">68ceb423-1852-4580-95a3-16b7d23ea8ce</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>OBJECTCLASS</name>
-                <identifier class="java.lang.String">5ee8487b-fadf-4247-a64b-5d70b11bd4a9</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>OBJECTCLASS_FKX</name>
-                      <identifier class="java.math.BigDecimal">115953</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>OBJECTCLASS</name>
-                        <identifier class="java.math.BigDecimal">115527</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>OBJECTCLASS_FKX</name>
-                  <identifier class="java.math.BigDecimal">115953</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>OBJECTCLASS</name>
-                    <identifier class="java.math.BigDecimal">115527</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>OBJECTCLASS_FKX</name>
-            <identifier class="java.math.BigDecimal">115953</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>OBJECTCLASS</name>
-              <identifier class="java.math.BigDecimal">115527</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">dbd6d95c-4e48-489d-868d-a23755918894</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>OBJECTCLASS_FKX</name>
-                    <identifier class="java.math.BigDecimal">115953</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>OBJECTCLASS</name>
-                      <identifier class="java.math.BigDecimal">115527</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">d1021948-bcee-437b-9968-1b6e0542fb7c</identifier>
       </ID>
       <name>OBJECTCLASS_PK</name>
@@ -426,7 +287,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>OBJECTCLASS</name>
                 <identifier class="java.lang.String">5ee8487b-fadf-4247-a64b-5d70b11bd4a9</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -541,9 +402,148 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">4ab3588b-7a70-4cdc-94bc-b75928fab2f0</identifier>
+      </ID>
+      <name>OBJECTCLASS_SUPERCLASS_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">8adbe625-d4b1-438a-8d21-af5fabffc036</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">464c8070-d7ee-433a-8681-33408eda5920</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>SUPERCLASS_ID</name>
+              <identifier class="java.lang.String">68ceb423-1852-4580-95a3-16b7d23ea8ce</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>OBJECTCLASS</name>
+                <identifier class="java.lang.String">5ee8487b-fadf-4247-a64b-5d70b11bd4a9</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>OBJECTCLASS_FKX</name>
+                      <identifier class="java.math.BigDecimal">115953</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>OBJECTCLASS</name>
+                        <identifier class="java.math.BigDecimal">115527</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>OBJECTCLASS_FKX</name>
+                  <identifier class="java.math.BigDecimal">115953</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>OBJECTCLASS</name>
+                    <identifier class="java.math.BigDecimal">115527</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>OBJECTCLASS_FKX</name>
+            <identifier class="java.math.BigDecimal">115953</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>OBJECTCLASS</name>
+              <identifier class="java.math.BigDecimal">115527</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">dbd6d95c-4e48-489d-868d-a23755918894</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initialExtent>65536</initialExtent>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <maxExtent>2147483645</maxExtent>
+            <minExtent>1</minExtent>
+            <nextExtent>1048576</nextExtent>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>OBJECTCLASS_FKX</name>
+                    <identifier class="java.math.BigDecimal">115953</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>OBJECTCLASS</name>
+                      <identifier class="java.math.BigDecimal">115527</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
     </indexe>
   </indexes>
   <properties>
@@ -601,6 +601,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

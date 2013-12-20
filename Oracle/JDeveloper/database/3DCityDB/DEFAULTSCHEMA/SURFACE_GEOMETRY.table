@@ -212,22 +212,6 @@
     </column>
     <column>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">474d6fe8-82b4-420c-b52a-b1160cf7ebe2</identifier>
-      </ID>
-      <name>CITYOBJECT_ID</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">a35c1fbf-d5b4-48dc-8c29-64361ff4e4db</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
-          <typeName>NUMBER</typeName>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">54ca656e-767c-4c44-afea-560ec4613731</identifier>
       </ID>
       <name>IS_SOLID</name>
@@ -588,13 +572,29 @@
       </dataTypeUsage>
       <notNull>false</notNull>
     </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">474d6fe8-82b4-420c-b52a-b1160cf7ebe2</identifier>
+      </ID>
+      <name>CITYOBJECT_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">a35c1fbf-d5b4-48dc-8c29-64361ff4e4db</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">a89dc0ac-0df1-46d8-b4f3-5382fbbc9c2c</identifier>
       </ID>
-      <name>SURFACE_GEOMETRY_CITYOBJECT_FK</name>
+      <name>SURFACE_GEOM_CITYOBJ_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>CITYOBJECT_ID</name>
@@ -602,7 +602,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>SURFACE_GEOMETRY</name>
             <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -626,7 +626,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">347977b5-1e88-44be-9bdf-423463e50a40</identifier>
       </ID>
-      <name>SURFACE_GEOMETRY_FK</name>
+      <name>SURFACE_GEOM_PARENT_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>PARENT_ID</name>
@@ -634,7 +634,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>SURFACE_GEOMETRY</name>
             <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -667,7 +667,7 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>SURFACE_GEOMETRY</name>
           <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
         <type>CONSTRAINT</type>
@@ -677,7 +677,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">a2556135-9fe0-4d65-863d-ce9152cdc0a4</identifier>
       </ID>
-      <name>SURFACE_GEOMETRY_FK1</name>
+      <name>SURFACE_GEOM_ROOT_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>ROOT_ID</name>
@@ -685,7 +685,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>SURFACE_GEOMETRY</name>
             <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -718,7 +718,7 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>SURFACE_GEOMETRY</name>
           <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
         <type>CONSTRAINT</type>
@@ -736,7 +736,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>SURFACE_GEOMETRY</name>
             <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -749,10 +749,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>SURFACE_GEOMETRY</name>
           <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
       <properties>
@@ -779,322 +779,6 @@
   <indexes>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">a3c6a271-5e07-4609-b942-9a310c5c0795</identifier>
-      </ID>
-      <name>SURFACE_GEOMETRY_FKX</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">b16f6fa6-1055-43c4-bd91-476d873d09b4</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">bf1194c2-f046-42a3-b101-878a86a91b4a</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>PARENT_ID</name>
-              <identifier class="java.lang.String">b099cd9b-2dc9-403f-98cb-5f9c468d063a</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SURFACE_GEOMETRY</name>
-                <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SURFACE_GEOMETRY_FKX</name>
-                      <identifier class="java.math.BigDecimal">115974</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>SURFACE_GEOMETRY</name>
-                        <identifier class="java.math.BigDecimal">115553</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SURFACE_GEOMETRY_FKX</name>
-                  <identifier class="java.math.BigDecimal">115974</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SURFACE_GEOMETRY</name>
-                    <identifier class="java.math.BigDecimal">115553</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>SURFACE_GEOMETRY_FKX</name>
-            <identifier class="java.math.BigDecimal">115974</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SURFACE_GEOMETRY</name>
-              <identifier class="java.math.BigDecimal">115553</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">b41ce581-a1aa-4190-a79e-3af3b243a6b6</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SURFACE_GEOMETRY_FKX</name>
-                    <identifier class="java.math.BigDecimal">115974</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SURFACE_GEOMETRY</name>
-                      <identifier class="java.math.BigDecimal">115553</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">da9a7c8c-a222-4684-ae4d-4f35b18b4a88</identifier>
-      </ID>
-      <name>SURFACE_GEOMETRY_FKX1</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">58413afd-d063-48b9-a367-273235c26616</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">59e96ae1-4045-49a1-91ec-2e2066f8051b</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>ROOT_ID</name>
-              <identifier class="java.lang.String">e5fade1d-8c32-43fa-9831-b06c629426ee</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SURFACE_GEOMETRY</name>
-                <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SURFACE_GEOMETRY_FKX1</name>
-                      <identifier class="java.math.BigDecimal">115975</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>SURFACE_GEOMETRY</name>
-                        <identifier class="java.math.BigDecimal">115553</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SURFACE_GEOMETRY_FKX1</name>
-                  <identifier class="java.math.BigDecimal">115975</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SURFACE_GEOMETRY</name>
-                    <identifier class="java.math.BigDecimal">115553</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>SURFACE_GEOMETRY_FKX1</name>
-            <identifier class="java.math.BigDecimal">115975</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SURFACE_GEOMETRY</name>
-              <identifier class="java.math.BigDecimal">115553</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">e4dccc32-17d2-47ba-9dde-6dc47a8a64f3</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SURFACE_GEOMETRY_FKX1</name>
-                    <identifier class="java.math.BigDecimal">115975</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SURFACE_GEOMETRY</name>
-                      <identifier class="java.math.BigDecimal">115553</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">fc776c88-a91a-42be-9d1f-2405bc7e4b37</identifier>
-      </ID>
-      <name>SURFACE_GEOMETRY_FKX2</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">116b476f-aee5-4759-9397-eee55e9939a6</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">c03ad76c-6083-482e-a9dd-f2b28328f0d9</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>CITYOBJECT_ID</name>
-              <identifier class="java.lang.String">474d6fe8-82b4-420c-b52a-b1160cf7ebe2</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SURFACE_GEOMETRY</name>
-                <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">a35fe28a-c8e1-4c4b-9ef7-aeef8cb1d554</identifier>
       </ID>
       <name>SURFACE_GEOMETRY_INX</name>
@@ -1113,7 +797,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>SURFACE_GEOMETRY</name>
                 <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -1228,7 +912,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -1252,7 +936,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>SURFACE_GEOMETRY</name>
                 <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -1367,15 +1051,361 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">fc776c88-a91a-42be-9d1f-2405bc7e4b37</identifier>
+      </ID>
+      <name>SURFACE_GEOM_CITYOBJ_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">116b476f-aee5-4759-9397-eee55e9939a6</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">c03ad76c-6083-482e-a9dd-f2b28328f0d9</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>CITYOBJECT_ID</name>
+              <identifier class="java.lang.String">474d6fe8-82b4-420c-b52a-b1160cf7ebe2</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>SURFACE_GEOMETRY</name>
+                <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">a3c6a271-5e07-4609-b942-9a310c5c0795</identifier>
+      </ID>
+      <name>SURFACE_GEOM_PARENT_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">b16f6fa6-1055-43c4-bd91-476d873d09b4</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">bf1194c2-f046-42a3-b101-878a86a91b4a</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>PARENT_ID</name>
+              <identifier class="java.lang.String">b099cd9b-2dc9-403f-98cb-5f9c468d063a</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>SURFACE_GEOMETRY</name>
+                <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SURFACE_GEOMETRY_FKX</name>
+                      <identifier class="java.math.BigDecimal">115974</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>SURFACE_GEOMETRY</name>
+                        <identifier class="java.math.BigDecimal">115553</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>SURFACE_GEOMETRY_FKX</name>
+                  <identifier class="java.math.BigDecimal">115974</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SURFACE_GEOMETRY</name>
+                    <identifier class="java.math.BigDecimal">115553</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>SURFACE_GEOMETRY_FKX</name>
+            <identifier class="java.math.BigDecimal">115974</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SURFACE_GEOMETRY</name>
+              <identifier class="java.math.BigDecimal">115553</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">b41ce581-a1aa-4190-a79e-3af3b243a6b6</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initialExtent>65536</initialExtent>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <maxExtent>2147483645</maxExtent>
+            <minExtent>1</minExtent>
+            <nextExtent>1048576</nextExtent>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SURFACE_GEOMETRY_FKX</name>
+                    <identifier class="java.math.BigDecimal">115974</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SURFACE_GEOMETRY</name>
+                      <identifier class="java.math.BigDecimal">115553</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">da9a7c8c-a222-4684-ae4d-4f35b18b4a88</identifier>
+      </ID>
+      <name>SURFACE_GEOM_ROOT_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">58413afd-d063-48b9-a367-273235c26616</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">59e96ae1-4045-49a1-91ec-2e2066f8051b</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>ROOT_ID</name>
+              <identifier class="java.lang.String">e5fade1d-8c32-43fa-9831-b06c629426ee</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>SURFACE_GEOMETRY</name>
+                <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SURFACE_GEOMETRY_FKX1</name>
+                      <identifier class="java.math.BigDecimal">115975</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>SURFACE_GEOMETRY</name>
+                        <identifier class="java.math.BigDecimal">115553</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>SURFACE_GEOMETRY_FKX1</name>
+                  <identifier class="java.math.BigDecimal">115975</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SURFACE_GEOMETRY</name>
+                    <identifier class="java.math.BigDecimal">115553</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>SURFACE_GEOMETRY_FKX1</name>
+            <identifier class="java.math.BigDecimal">115975</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SURFACE_GEOMETRY</name>
+              <identifier class="java.math.BigDecimal">115553</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">e4dccc32-17d2-47ba-9dde-6dc47a8a64f3</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initialExtent>65536</initialExtent>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <maxExtent>2147483645</maxExtent>
+            <minExtent>1</minExtent>
+            <nextExtent>1048576</nextExtent>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SURFACE_GEOMETRY_FKX1</name>
+                    <identifier class="java.math.BigDecimal">115975</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SURFACE_GEOMETRY</name>
+                      <identifier class="java.math.BigDecimal">115553</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">7009e323-69ba-4d79-ab0c-53f3e7c26c8c</identifier>
+      </ID>
+      <name>SURFACE_GEOM_SOLID_SPX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">0941a609-641c-4f14-9817-0e3471053f9c</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">8ac82184-0909-4edb-b2ad-0367041bf72a</identifier>
+            </ID>
+            <SQLText>SOLID_GEOMETRY</SQLText>
+          </expression>
+        </columnExpression>
+      </columnExpressions>
+      <domainIndextype class="oracle.javatools.db.ReferenceID">
+        <name>SPATIAL_INDEX</name>
+        <schemaName>MDSYS</schemaName>
+        <type>INDEXTYPE</type>
+      </domainIndextype>
+      <indexType>DOMAIN</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">ccf0b611-5ed5-42bf-b01a-126387519e27</identifier>
       </ID>
-      <name>SURFACE_GEOMETRY_SPX</name>
+      <name>SURFACE_GEOM_SPX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1446,37 +1476,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">7009e323-69ba-4d79-ab0c-53f3e7c26c8c</identifier>
-      </ID>
-      <name>SURFACE_GEOMETRY_SPX2</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">0941a609-641c-4f14-9817-0e3471053f9c</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">8ac82184-0909-4edb-b2ad-0367041bf72a</identifier>
-            </ID>
-            <SQLText>SOLID_GEOMETRY</SQLText>
-          </expression>
-        </columnExpression>
-      </columnExpressions>
-      <domainIndextype class="oracle.javatools.db.ReferenceID">
-        <name>SPATIAL_INDEX</name>
-        <schemaName>MDSYS</schemaName>
-        <type>INDEXTYPE</type>
-      </domainIndextype>
-      <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -1536,6 +1536,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

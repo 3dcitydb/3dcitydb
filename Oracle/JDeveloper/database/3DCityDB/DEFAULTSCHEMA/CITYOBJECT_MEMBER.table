@@ -107,59 +107,6 @@
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">bf1594dc-5d67-4d37-9a9f-6087f9a53e87</identifier>
-      </ID>
-      <name>CITYOBJECT_MEMBER_CITYMODEL_FK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>CITYMODEL_ID</name>
-          <identifier class="java.lang.String">80e6765d-4052-48fe-b5d1-6a10266b83bb</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>CITYOBJECT_MEMBER</name>
-            <identifier class="java.lang.String">f24e5ca8-dcb6-4454-88c3-4223f3515df1</identifier>
-            <schemaName>YAO</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>YAO</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>CITYOBJECT_MEMBER_CITYMODEL_FK</name>
-            <childObjectNames>
-              <childObjectName>CITYMODEL_ID</childObjectName>
-            </childObjectNames>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>CITYOBJECT_MEMBER</name>
-              <identifier class="java.math.BigDecimal">115543</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <subType>FKConstraint</subType>
-            <type>CONSTRAINT</type>
-          </value>
-        </entry>
-      </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>CITYMODEL_PK</name>
-        <identifier class="java.lang.String">37636edf-ee4a-408f-b9d9-e69edb42f167</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>CITYMODEL</name>
-          <identifier class="java.lang.String">3422458e-9740-4ad6-9607-443eb8c04142</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>YAO</schemaName>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">6e171ea1-f954-46f4-9d4d-4fc2b8437020</identifier>
       </ID>
       <name>CITYOBJECT_MEMBER_FK</name>
@@ -170,10 +117,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>CITYOBJECT_MEMBER</name>
             <identifier class="java.lang.String">f24e5ca8-dcb6-4454-88c3-4223f3515df1</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -211,6 +157,58 @@
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">bf1594dc-5d67-4d37-9a9f-6087f9a53e87</identifier>
+      </ID>
+      <name>CITYOBJECT_MEMBER_FK1</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>CITYMODEL_ID</name>
+          <identifier class="java.lang.String">80e6765d-4052-48fe-b5d1-6a10266b83bb</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>CITYOBJECT_MEMBER</name>
+            <identifier class="java.lang.String">f24e5ca8-dcb6-4454-88c3-4223f3515df1</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>CITYOBJECT_MEMBER_CITYMODEL_FK</name>
+            <childObjectNames>
+              <childObjectName>CITYMODEL_ID</childObjectName>
+            </childObjectNames>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>CITYOBJECT_MEMBER</name>
+              <identifier class="java.math.BigDecimal">115543</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <subType>FKConstraint</subType>
+            <type>CONSTRAINT</type>
+          </value>
+        </entry>
+      </properties>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>CITYMODEL_PK</name>
+        <identifier class="java.lang.String">37636edf-ee4a-408f-b9d9-e69edb42f167</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>CITYMODEL</name>
+          <identifier class="java.lang.String">3422458e-9740-4ad6-9607-443eb8c04142</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">e5ee95bb-0fb2-4126-a797-819065500770</identifier>
@@ -223,10 +221,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>CITYOBJECT_MEMBER</name>
             <identifier class="java.lang.String">f24e5ca8-dcb6-4454-88c3-4223f3515df1</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
@@ -235,10 +232,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>CITYOBJECT_MEMBER</name>
             <identifier class="java.lang.String">f24e5ca8-dcb6-4454-88c3-4223f3515df1</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -249,10 +245,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>CITYOBJECT_MEMBER</name>
           <identifier class="java.lang.String">f24e5ca8-dcb6-4454-88c3-4223f3515df1</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
       <properties>
@@ -280,6 +276,82 @@
   <indexes>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">b661c0ad-f77b-4a53-893e-a97cf14d69ae</identifier>
+      </ID>
+      <name>CITYOBJECT_MEMBER_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">cf42bca1-2176-4758-9209-95437659c172</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">b9742de5-9a6a-4f2e-9bdd-fc1389647eec</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>CITYOBJECT_ID</name>
+              <identifier class="java.lang.String">b5c97c98-9a5f-4978-bccf-7ce596a0cbc2</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>CITYOBJECT_MEMBER</name>
+                <identifier class="java.lang.String">f24e5ca8-dcb6-4454-88c3-4223f3515df1</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">89b6d7a7-406a-447e-a568-6af103ad533c</identifier>
+      </ID>
+      <name>CITYOBJECT_MEMBER_FKX1</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">dc8a28ea-0a10-46c7-a68a-1cac0b2674d6</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">047ff580-64f6-49c5-8290-8471e8d83402</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>CITYMODEL_ID</name>
+              <identifier class="java.lang.String">80e6765d-4052-48fe-b5d1-6a10266b83bb</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>CITYOBJECT_MEMBER</name>
+                <identifier class="java.lang.String">f24e5ca8-dcb6-4454-88c3-4223f3515df1</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">4bfed712-8572-432e-9e26-1371a8d8d5ce</identifier>
       </ID>
       <name>CITYOBJECT_MEMBER_PK</name>
@@ -298,10 +370,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>CITYOBJECT_MEMBER</name>
                 <identifier class="java.lang.String">f24e5ca8-dcb6-4454-88c3-4223f3515df1</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -366,10 +437,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>CITYOBJECT_MEMBER</name>
                 <identifier class="java.lang.String">f24e5ca8-dcb6-4454-88c3-4223f3515df1</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -478,7 +548,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
@@ -534,6 +604,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

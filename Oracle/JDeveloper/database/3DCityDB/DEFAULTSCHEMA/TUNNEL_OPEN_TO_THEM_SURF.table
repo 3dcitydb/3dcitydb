@@ -3,13 +3,13 @@
   <ID class="oracle.javatools.db.IdentifierBasedID">
     <identifier class="java.lang.String">5ce0cabf-028a-413a-b2f5-4bd39595665f</identifier>
   </ID>
-  <name>TUNNEL_OPEN_TO_THEM_SURF</name>
+  <name>TUNNEL_OPEN_TO_THEM_SRF</name>
   <columns>
     <column>
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">13ff3c11-3454-415c-a9a1-92a288d00909</identifier>
       </ID>
-      <name>OPENING_ID</name>
+      <name>TUNNEL_OPENING_ID</name>
       <dataTypeUsage>
         <ID class="oracle.javatools.db.IdentifierBasedID">
           <identifier class="java.lang.String">9e300e4a-d08c-4de5-8517-d59afcdaad5d</identifier>
@@ -25,7 +25,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">1c06c6bc-26bb-4fac-bdb9-f0990e8780dc</identifier>
       </ID>
-      <name>THEMATIC_SURFACE_ID</name>
+      <name>TUNNEL_THEMATIC_SURFACE_ID</name>
       <dataTypeUsage>
         <ID class="oracle.javatools.db.IdentifierBasedID">
           <identifier class="java.lang.String">56037269-2a2d-4601-ae0e-a78c0b6f98fb</identifier>
@@ -43,15 +43,15 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">1b4629e7-a995-4c2f-a2b8-bfa9e197cecd</identifier>
       </ID>
-      <name>TUNNEL_OPEN_TO_THEM_SURF_FK</name>
+      <name>TUN_OPEN_TO_THEM_SRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>OPENING_ID</name>
+          <name>TUNNEL_OPENING_ID</name>
           <identifier class="java.lang.String">13ff3c11-3454-415c-a9a1-92a288d00909</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>TUNNEL_OPEN_TO_THEM_SURF</name>
+            <name>TUNNEL_OPEN_TO_THEM_SRF</name>
             <identifier class="java.lang.String">5ce0cabf-028a-413a-b2f5-4bd39595665f</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -76,15 +76,15 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">cff71835-a16a-4313-966e-bba6b4173d87</identifier>
       </ID>
-      <name>TUNNEL_OPEN_TO_THEM_SURF_FK1</name>
+      <name>TUN_OPEN_TO_THEM_SRF_FK1</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>OPENING_ID</name>
+          <name>TUNNEL_OPENING_ID</name>
           <identifier class="java.lang.String">13ff3c11-3454-415c-a9a1-92a288d00909</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>TUNNEL_OPEN_TO_THEM_SURF</name>
+            <name>TUNNEL_OPEN_TO_THEM_SRF</name>
             <identifier class="java.lang.String">5ce0cabf-028a-413a-b2f5-4bd39595665f</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -112,23 +112,23 @@
       <name>TUNNEL_OPEN_TO_THEM_SURF_PK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>OPENING_ID</name>
+          <name>TUNNEL_OPENING_ID</name>
           <identifier class="java.lang.String">13ff3c11-3454-415c-a9a1-92a288d00909</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>TUNNEL_OPEN_TO_THEM_SURF</name>
+            <name>TUNNEL_OPEN_TO_THEM_SRF</name>
             <identifier class="java.lang.String">5ce0cabf-028a-413a-b2f5-4bd39595665f</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>THEMATIC_SURFACE_ID</name>
+          <name>TUNNEL_THEMATIC_SURFACE_ID</name>
           <identifier class="java.lang.String">1c06c6bc-26bb-4fac-bdb9-f0990e8780dc</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>TUNNEL_OPEN_TO_THEM_SURF</name>
+            <name>TUNNEL_OPEN_TO_THEM_SRF</name>
             <identifier class="java.lang.String">5ce0cabf-028a-413a-b2f5-4bd39595665f</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -136,15 +136,15 @@
       </columnIDs>
       <enabled>true</enabled>
       <indexID class="oracle.javatools.db.IdentifierBasedID">
-        <name>BRIDGE_OPENING_TO_THEM_SURFAC2</name>
+        <name>TUNNEL_OPEN_TO_THEM_SRF</name>
         <identifier class="java.lang.String">1ca7697c-52ef-4b9d-9ba9-472726ca61d4</identifier>
         <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>TUNNEL_OPEN_TO_THEM_SURF</name>
+          <name>TUNNEL_OPEN_TO_THEM_SRF</name>
           <identifier class="java.lang.String">5ce0cabf-028a-413a-b2f5-4bd39595665f</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
     </constraint>
@@ -154,7 +154,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">1ca7697c-52ef-4b9d-9ba9-472726ca61d4</identifier>
       </ID>
-      <name>BRIDGE_OPENING_TO_THEM_SURFAC2</name>
+      <name>TUNNEL_OPEN_TO_THEM_SRF</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -165,12 +165,12 @@
               <identifier class="java.lang.String">7f75ddf1-ac62-44e9-9e6a-7db24a510e06</identifier>
             </ID>
             <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>OPENING_ID</name>
+              <name>TUNNEL_OPENING_ID</name>
               <identifier class="java.lang.String">13ff3c11-3454-415c-a9a1-92a288d00909</identifier>
               <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>TUNNEL_OPEN_TO_THEM_SURF</name>
+                <name>TUNNEL_OPEN_TO_THEM_SRF</name>
                 <identifier class="java.lang.String">5ce0cabf-028a-413a-b2f5-4bd39595665f</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -189,12 +189,12 @@
               <identifier class="java.lang.String">24b1858f-9b89-45dc-8af8-9e74ab94eb38</identifier>
             </ID>
             <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>THEMATIC_SURFACE_ID</name>
+              <name>TUNNEL_THEMATIC_SURFACE_ID</name>
               <identifier class="java.lang.String">1c06c6bc-26bb-4fac-bdb9-f0990e8780dc</identifier>
               <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>TUNNEL_OPEN_TO_THEM_SURF</name>
+                <name>TUNNEL_OPEN_TO_THEM_SRF</name>
                 <identifier class="java.lang.String">5ce0cabf-028a-413a-b2f5-4bd39595665f</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -227,9 +227,85 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">5355dba2-fa1b-496f-944b-a9a3f934aa8f</identifier>
+      </ID>
+      <name>TUN_OPEN_TO_THEM_SRF_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">342eb9ba-32f1-4b8f-9e9e-bf712ad1de1f</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">c4e68600-9ad8-4425-809b-8deb19ffdf15</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>TUNNEL_OPENING_ID</name>
+              <identifier class="java.lang.String">13ff3c11-3454-415c-a9a1-92a288d00909</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>TUNNEL_OPEN_TO_THEM_SRF</name>
+                <identifier class="java.lang.String">5ce0cabf-028a-413a-b2f5-4bd39595665f</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">bd74e4e6-0e05-4312-91ef-652a9374e7a6</identifier>
+      </ID>
+      <name>TUN_OPEN_TO_THEM_SRF_FKX1</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">b3f9841c-a849-4521-bed8-740ca59f5511</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">513ef39c-5cda-4ad1-b9fd-f4abbad4517e</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>TUNNEL_THEMATIC_SURFACE_ID</name>
+              <identifier class="java.lang.String">1c06c6bc-26bb-4fac-bdb9-f0990e8780dc</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>TUNNEL_OPEN_TO_THEM_SRF</name>
+                <identifier class="java.lang.String">5ce0cabf-028a-413a-b2f5-4bd39595665f</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
     </indexe>
   </indexes>
   <properties>
@@ -256,6 +332,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

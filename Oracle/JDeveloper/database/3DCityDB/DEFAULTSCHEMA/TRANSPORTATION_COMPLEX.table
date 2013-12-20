@@ -561,7 +561,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">5ea0170b-6e60-4d74-9931-52080665508d</identifier>
       </ID>
-      <name>TRANSPORTATION_COMPLEX_FK</name>
+      <name>TRAN_COMPLEX_CITYOBJECT_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>ID</name>
@@ -613,7 +613,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">b1526bd8-bc16-4a32-ac6a-9384487314ca</identifier>
       </ID>
-      <name>TRANSPORTATION_COMPLEX_FK1</name>
+      <name>TRAN_COMPLEX_LOD1MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD1_MULTI_SURFACE_ID</name>
@@ -665,7 +665,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">f3665f7c-dde5-4c5e-b418-247cec6c1ed1</identifier>
       </ID>
-      <name>TRANSPORTATION_COMPLEX_FK2</name>
+      <name>TRAN_COMPLEX_LOD2MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD2_MULTI_SURFACE_ID</name>
@@ -717,7 +717,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">01262e7a-0f7a-48ca-af66-303feb841892</identifier>
       </ID>
-      <name>TRANSPORTATION_COMPLEX_FK3</name>
+      <name>TRAN_COMPLEX_LOD3MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD3_MULTI_SURFACE_ID</name>
@@ -769,7 +769,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">ad18477d-820a-451b-bfee-0f39582d54c3</identifier>
       </ID>
-      <name>TRANSPORTATION_COMPLEX_FK4</name>
+      <name>TRAN_COMPLEX_LOD4MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD4_MULTI_SURFACE_ID</name>
@@ -821,7 +821,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">9a5d94f3-ce6e-4b83-a91d-8a8f81eac900</identifier>
       </ID>
-      <name>TRANSPORTATION_COMPLEX_FK5</name>
+      <name>TRAN_COMPLEX_OBJCLASS_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>OBJECTCLASS_ID</name>
@@ -1045,73 +1045,18 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">70527757-cc52-462d-9d03-df457cda66da</identifier>
       </ID>
-      <name>TRANSPORTATION_COMPLEX_SPX</name>
+      <name>TRAN_COMPLEX_LOD0NET_SPX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
             <identifier class="java.lang.String">41ab0aa7-b4c1-4ccf-90a6-92df1bbf7436</identifier>
           </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
             <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">f4ff43a0-c3ed-45ed-8b51-a25dcc9ca68e</identifier>
+              <identifier class="java.lang.String">dadef1e1-e19d-4507-b77e-86b18a87bcc2</identifier>
             </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD0_NETWORK</name>
-              <identifier class="java.lang.String">94e8cc93-4e01-41dc-8015-3e9296da6aef</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>TRANSPORTATION_COMPLEX</name>
-                <identifier class="java.lang.String">8e7190ba-8a95-45c3-acc9-fb82dc198c12</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>TRANSPORTATION_COMPLEX_SPX</name>
-                      <identifier class="java.math.BigDecimal">116296</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>TRANSPORTATION_COMPLEX</name>
-                        <identifier class="java.math.BigDecimal">115843</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
+            <SQLText>LOD0_NETWORK</SQLText>
           </expression>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>TRANSPORTATION_COMPLEX_SPX</name>
-                  <identifier class="java.math.BigDecimal">116296</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>TRANSPORTATION_COMPLEX</name>
-                    <identifier class="java.math.BigDecimal">115843</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
         </columnExpression>
       </columnExpressions>
       <domainIndextype class="oracle.javatools.db.ReferenceID">
@@ -1179,7 +1124,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">591e506d-92ac-427e-8409-ea6810630cbb</identifier>
       </ID>
-      <name>TRAN_COMPLEX_FKX1</name>
+      <name>TRAN_COMPLEX_LOD1MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1318,7 +1263,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">5dc2164a-eb81-4059-9144-31bbb447876f</identifier>
       </ID>
-      <name>TRAN_COMPLEX_FKX2</name>
+      <name>TRAN_COMPLEX_LOD2MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1457,7 +1402,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">01fae0c7-0385-4739-9bb3-d050466f3e4f</identifier>
       </ID>
-      <name>TRAN_COMPLEX_FKX3</name>
+      <name>TRAN_COMPLEX_LOD3MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1596,7 +1541,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">e263f1b9-2297-4879-854a-fcf51176cadd</identifier>
       </ID>
-      <name>TRAN_COMPLEX_FKX4</name>
+      <name>TRAN_COMPLEX_LOD4MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">

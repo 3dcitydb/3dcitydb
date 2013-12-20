@@ -109,7 +109,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">680e111a-dac1-4217-8af0-c51b52d29eed</identifier>
       </ID>
-      <name>RELIEF_FEAT_TO_REL_COMP_FK</name>
+      <name>REL_FEAT_TO_REL_COMP_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>RELIEF_COMPONENT_ID</name>
@@ -117,10 +117,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>RELIEF_FEAT_TO_REL_COMP</name>
             <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -162,7 +161,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">06abf5ac-b64d-4ff5-9c42-b2ddc5e78f9b</identifier>
       </ID>
-      <name>RELIEF_FEAT_TO_REL_COMP_FK1</name>
+      <name>REL_FEAT_TO_REL_COMP_FK1</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>RELIEF_FEATURE_ID</name>
@@ -170,10 +169,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>RELIEF_FEAT_TO_REL_COMP</name>
             <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -223,10 +221,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>RELIEF_FEAT_TO_REL_COMP</name>
             <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
@@ -235,10 +232,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>RELIEF_FEAT_TO_REL_COMP</name>
             <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -249,10 +245,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>RELIEF_FEAT_TO_REL_COMP</name>
           <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
       <properties>
@@ -298,10 +294,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>RELIEF_FEAT_TO_REL_COMP</name>
                 <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -366,10 +361,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>RELIEF_FEAT_TO_REL_COMP</name>
                 <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -478,9 +472,85 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">e8803dca-4853-4af3-9aca-4f48cc8eee0e</identifier>
+      </ID>
+      <name>REL_FEAT_TO_REL_COMP_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">d73b954a-4a79-4e51-8a1c-9f77daa97d8d</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">3cdfb337-5b5b-477e-a3e7-613b26032d40</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>RELIEF_COMPONENT_ID</name>
+              <identifier class="java.lang.String">534c490a-77a7-4507-8df7-80d177c59424</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>RELIEF_FEAT_TO_REL_COMP</name>
+                <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">1ee460bc-b1b8-4c30-9b42-34ad3c9ff435</identifier>
+      </ID>
+      <name>REL_FEAT_TO_REL_COMP_FKX1</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">c3a21c93-8304-41a6-9659-d8491a867249</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">384e06ea-7221-4e47-8946-2d9ccf0c0ca9</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>RELIEF_FEATURE_ID</name>
+              <identifier class="java.lang.String">a8700ce1-9fdc-432e-985c-b39f1f7392ee</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>RELIEF_FEAT_TO_REL_COMP</name>
+                <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
     </indexe>
   </indexes>
   <properties>
@@ -534,6 +604,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

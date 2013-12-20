@@ -113,7 +113,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">4cf52164-8527-4545-9153-49d41ea3c205</identifier>
       </ID>
-      <name>RASTER_RELIEF_FK</name>
+      <name>RASTER_RELIEF_COMP_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>ID</name>
@@ -145,7 +145,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">7105ff3c-561b-4e25-b7f9-24b0048f51fc</identifier>
       </ID>
-      <name>RASTER_RELIEF_FK1</name>
+      <name>RASTER_RELIEF_GEORAST_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>GEORASTER_ID</name>
@@ -178,7 +178,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">cfebf6ce-4386-49c1-b1a1-b827bbb889c7</identifier>
       </ID>
-      <name>RASTER_RLF_PK</name>
+      <name>RASTER_RELIEF_PK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>ID</name>
@@ -194,7 +194,7 @@
       </columnIDs>
       <enabled>true</enabled>
       <indexID class="oracle.javatools.db.IdentifierBasedID">
-        <name>RASTER_RLF_PK</name>
+        <name>RASTER_RELIEF_PK</name>
         <identifier class="java.lang.String">775f2480-cde2-4a06-8dc1-4b146accd204</identifier>
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>RASTER_RELIEF</name>
@@ -231,7 +231,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">4e0b058e-3af8-4d84-90b7-453ce5ea1f48</identifier>
       </ID>
-      <name>RASTER_RELIEF_FKX1</name>
+      <name>RASTER_RELIEF_GEORAST_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -268,7 +268,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">775f2480-cde2-4a06-8dc1-4b146accd204</identifier>
       </ID>
-      <name>RASTER_RLF_PK</name>
+      <name>RASTER_RELIEF_PK</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">

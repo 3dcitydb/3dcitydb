@@ -3,7 +3,7 @@
   <ID class="oracle.javatools.db.IdentifierBasedID">
     <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
   </ID>
-  <name>BRD_THEMATIC_SURFACE</name>
+  <name>BRIDGE_THEMATIC_SURFACE</name>
   <columns>
     <column>
       <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -102,7 +102,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">aa40919a-2e0d-4363-ae59-6d1eaff033af</identifier>
       </ID>
-      <name>BRIDGE_CONSTR_ELEM_ID</name>
+      <name>BRIDGE_CONSTR_ELEMENT_ID</name>
       <dataTypeUsage>
         <ID class="oracle.javatools.db.IdentifierBasedID">
           <identifier class="java.lang.String">6e5fb423-e6ea-4c7f-a7ef-620e620bc45c</identifier>
@@ -166,82 +166,17 @@
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">3f123aa0-171f-485c-9b9f-e6abf3bafe52</identifier>
-      </ID>
-      <name>BRD_THEMATIC_SURFACE_CLASS_FK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>OBJECTCLASS_ID</name>
-          <identifier class="java.lang.String">107823db-2eac-4385-ba34-265e368ccb59</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRD_THEMATIC_SURFACE</name>
-            <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-            <schemaName>YAO</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>OBJECTCLASS_PK</name>
-        <identifier class="java.lang.String">31dcfacc-1b98-4a31-8978-b0ea7c247f84</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>OBJECTCLASS</name>
-          <identifier class="java.lang.String">5ee8487b-fadf-4247-a64b-5d70b11bd4a9</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">2d68899f-51ff-4d40-9f10-9a9f67ee5073</identifier>
-      </ID>
-      <name>BRD_THEMATIC_SURFACE_FK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>BRIDGE_ID</name>
-          <identifier class="java.lang.String">8473d423-9664-45f2-9acc-a1f9d835ff40</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRD_THEMATIC_SURFACE</name>
-            <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-            <schemaName>YAO</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>BRIDGE_PK</name>
-        <identifier class="java.lang.String">464f2eea-de28-4f5f-b6b4-90f218684b82</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>BRIDGE</name>
-          <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>YAO</schemaName>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">f188e254-f8af-41e8-96f1-d977080ed512</identifier>
       </ID>
-      <name>BRD_THEMATIC_SURFACE_FK2</name>
+      <name>BRD_THEM_SRF_BRD_CONST_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>BRIDGE_CONSTR_ELEM_ID</name>
-          <identifier class="java.lang.String">aa40919a-2e0d-4363-ae59-6d1eaff033af</identifier>
+          <name>ID</name>
+          <identifier class="java.lang.String">1d5175fd-c4e7-4f27-9658-2498b7621cb0</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRD_THEMATIC_SURFACE</name>
+            <name>BRIDGE_THEMATIC_SURFACE</name>
             <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -253,12 +188,11 @@
         <name>BRIDGE_CONSTRUCTIONELEMENT_PK</name>
         <identifier class="java.lang.String">8f1c1aef-bbc7-4fc2-a6c0-fcb17d646f91</identifier>
         <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>BRIDGE_CONSTRUCTIONELEMENT</name>
+          <name>BRIDGE_CONSTR_ELEMENT</name>
           <identifier class="java.lang.String">365a4a0f-fd88-450b-887e-690a53453e4a</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
@@ -266,15 +200,15 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">dbc9e6d7-9e26-4b9d-b201-58003e5d0458</identifier>
       </ID>
-      <name>BRD_THEMATIC_SURFACE_FK3</name>
+      <name>BRD_THEM_SRF_BRD_INST_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>BRIDGE_INSTALLATION_ID</name>
           <identifier class="java.lang.String">4ac03550-1e4b-4b38-813b-378cd77b4a87</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRD_THEMATIC_SURFACE</name>
+            <name>BRIDGE_THEMATIC_SURFACE</name>
             <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -299,15 +233,15 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">2565f519-aa3f-499e-8401-032a858ed030</identifier>
       </ID>
-      <name>BRD_THEMATIC_SURFACE_FK4</name>
+      <name>BRD_THEM_SRF_BRD_ROOM_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>BRIDGE_ROOM_ID</name>
           <identifier class="java.lang.String">5e08c074-4367-43ad-9dc6-b2544c8cbc10</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRD_THEMATIC_SURFACE</name>
+            <name>BRIDGE_THEMATIC_SURFACE</name>
             <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -330,17 +264,50 @@
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">2d68899f-51ff-4d40-9f10-9a9f67ee5073</identifier>
+      </ID>
+      <name>BRD_THEM_SRF_BRIDGE_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>BRIDGE_ID</name>
+          <identifier class="java.lang.String">8473d423-9664-45f2-9acc-a1f9d835ff40</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>BRIDGE_THEMATIC_SURFACE</name>
+            <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>BRIDGE_PK</name>
+        <identifier class="java.lang.String">464f2eea-de28-4f5f-b6b4-90f218684b82</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>BRIDGE</name>
+          <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">95a32de4-7525-47ae-b6df-14c133753bab</identifier>
       </ID>
-      <name>BRD_THEMATIC_SURFACE_FK5</name>
+      <name>BRD_THEM_SRF_CITYOBJ_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>ID</name>
           <identifier class="java.lang.String">1d5175fd-c4e7-4f27-9658-2498b7621cb0</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRD_THEMATIC_SURFACE</name>
+            <name>BRIDGE_THEMATIC_SURFACE</name>
             <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -365,15 +332,15 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">33e9c2b0-14f9-4558-b4ff-e5a0a1c26373</identifier>
       </ID>
-      <name>BRD_THEMATIC_SURFACE_FK6</name>
+      <name>BRD_THEM_SRF_LOD2MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD2_MULTI_SURFACE_ID</name>
           <identifier class="java.lang.String">bb65d950-da27-453d-b345-619617fe35a1</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRD_THEMATIC_SURFACE</name>
+            <name>BRIDGE_THEMATIC_SURFACE</name>
             <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -398,15 +365,15 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">c10175c1-3fe6-4df7-8667-79cab5dadaf3</identifier>
       </ID>
-      <name>BRD_THEMATIC_SURFACE_FK7</name>
+      <name>BRD_THEM_SRF_LOD3MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD3_MULTI_SURFACE_ID</name>
           <identifier class="java.lang.String">6e8823d7-3497-4c56-b3ac-08705de75b02</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRD_THEMATIC_SURFACE</name>
+            <name>BRIDGE_THEMATIC_SURFACE</name>
             <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -431,15 +398,15 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">cacef4a1-ef06-4254-a7a6-a31668b1a969</identifier>
       </ID>
-      <name>BRD_THEMATIC_SURFACE_FK8</name>
+      <name>BRD_THEM_SRF_LOD4MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD4_MULTI_SURFACE_ID</name>
           <identifier class="java.lang.String">60d4a746-dd3d-490a-975f-b9e7a97d8cb3</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRD_THEMATIC_SURFACE</name>
+            <name>BRIDGE_THEMATIC_SURFACE</name>
             <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -460,6 +427,38 @@
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">3f123aa0-171f-485c-9b9f-e6abf3bafe52</identifier>
+      </ID>
+      <name>BRD_THEM_SRF_OBJCLASS_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>OBJECTCLASS_ID</name>
+          <identifier class="java.lang.String">107823db-2eac-4385-ba34-265e368ccb59</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>BRIDGE_THEMATIC_SURFACE</name>
+            <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>OBJECTCLASS_PK</name>
+        <identifier class="java.lang.String">31dcfacc-1b98-4a31-8978-b0ea7c247f84</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>OBJECTCLASS</name>
+          <identifier class="java.lang.String">5ee8487b-fadf-4247-a64b-5d70b11bd4a9</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">e970ac7a-530e-4f53-9667-11a29f136a78</identifier>
@@ -470,9 +469,9 @@
           <name>ID</name>
           <identifier class="java.lang.String">1d5175fd-c4e7-4f27-9658-2498b7621cb0</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRD_THEMATIC_SURFACE</name>
+            <name>BRIDGE_THEMATIC_SURFACE</name>
             <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -480,15 +479,15 @@
       </columnIDs>
       <enabled>true</enabled>
       <indexID class="oracle.javatools.db.IdentifierBasedID">
-        <name>BRD_THEMATIC_SURFACE_PK</name>
+        <name>BRIDGE_THEMATIC_SURFACE_PK</name>
         <identifier class="java.lang.String">45697d95-4252-43ac-b8b6-6b844a1624de</identifier>
         <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>BRD_THEMATIC_SURFACE</name>
+          <name>BRIDGE_THEMATIC_SURFACE</name>
           <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
     </constraint>
@@ -496,9 +495,85 @@
   <indexes>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">04ac95c7-3cdb-4bad-a1f3-a3c93ff4a5fa</identifier>
+      </ID>
+      <name>BRD_THEM_SRF_BRD_CONST_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">273474a7-1604-465d-8717-269d026ed936</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">2400f364-4f66-4c87-8ff2-a16ba1b5ab09</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>BRIDGE_CONSTR_ELEMENT_ID</name>
+              <identifier class="java.lang.String">aa40919a-2e0d-4363-ae59-6d1eaff033af</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>BRIDGE_THEMATIC_SURFACE</name>
+                <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">b3585d89-9e87-4e27-80f7-dc08630b6278</identifier>
+      </ID>
+      <name>BRD_THEM_SRF_BRD_INST_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">61bbab55-7b48-4713-8e40-e5f27d028054</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">e53a9f61-0c78-4409-adaa-ac4fa65a4bdc</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>BRIDGE_INSTALLATION_ID</name>
+              <identifier class="java.lang.String">4ac03550-1e4b-4b38-813b-378cd77b4a87</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>BRIDGE_THEMATIC_SURFACE</name>
+                <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">9275120d-0d01-40c3-a5be-64b553054823</identifier>
       </ID>
-      <name>BRD_THEMATIC_SURFACE_FKX</name>
+      <name>BRD_THEM_SRF_BRD_ROOM_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -512,9 +587,9 @@
               <name>BRIDGE_ROOM_ID</name>
               <identifier class="java.lang.String">5e08c074-4367-43ad-9dc6-b2544c8cbc10</identifier>
               <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRD_THEMATIC_SURFACE</name>
+                <name>BRIDGE_THEMATIC_SURFACE</name>
                 <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -546,7 +621,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -554,7 +629,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">07fcc345-e91a-4389-a4bb-be107ff719d6</identifier>
       </ID>
-      <name>BRD_THEMATIC_SURFACE_FKX1</name>
+      <name>BRD_THEM_SRF_BRIDGE_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -568,9 +643,9 @@
               <name>BRIDGE_ID</name>
               <identifier class="java.lang.String">8473d423-9664-45f2-9acc-a1f9d835ff40</identifier>
               <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRD_THEMATIC_SURFACE</name>
+                <name>BRIDGE_THEMATIC_SURFACE</name>
                 <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -603,7 +678,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -611,7 +686,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">83e47ca9-9269-4eab-b5de-42c39cd60c41</identifier>
       </ID>
-      <name>BRD_THEMATIC_SURFACE_FKX2</name>
+      <name>BRD_THEM_SRF_LOD2MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -625,9 +700,9 @@
               <name>LOD2_MULTI_SURFACE_ID</name>
               <identifier class="java.lang.String">bb65d950-da27-453d-b345-619617fe35a1</identifier>
               <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRD_THEMATIC_SURFACE</name>
+                <name>BRIDGE_THEMATIC_SURFACE</name>
                 <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -660,7 +735,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -668,7 +743,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">e1be5763-a295-45d8-8969-ad62a3eae037</identifier>
       </ID>
-      <name>BRD_THEMATIC_SURFACE_FKX3</name>
+      <name>BRD_THEM_SRF_LOD3MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -682,9 +757,9 @@
               <name>LOD3_MULTI_SURFACE_ID</name>
               <identifier class="java.lang.String">6e8823d7-3497-4c56-b3ac-08705de75b02</identifier>
               <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRD_THEMATIC_SURFACE</name>
+                <name>BRIDGE_THEMATIC_SURFACE</name>
                 <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -717,7 +792,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -725,7 +800,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">2e105197-f2db-4396-a924-f90b07ae5982</identifier>
       </ID>
-      <name>BRD_THEMATIC_SURFACE_FKX4</name>
+      <name>BRD_THEM_SRF_LOD4MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -739,9 +814,9 @@
               <name>LOD4_MULTI_SURFACE_ID</name>
               <identifier class="java.lang.String">60d4a746-dd3d-490a-975f-b9e7a97d8cb3</identifier>
               <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRD_THEMATIC_SURFACE</name>
+                <name>BRIDGE_THEMATIC_SURFACE</name>
                 <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -774,83 +849,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">b3585d89-9e87-4e27-80f7-dc08630b6278</identifier>
-      </ID>
-      <name>BRD_THEMATIC_SURFACE_FKX5</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">61bbab55-7b48-4713-8e40-e5f27d028054</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">e53a9f61-0c78-4409-adaa-ac4fa65a4bdc</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>BRIDGE_INSTALLATION_ID</name>
-              <identifier class="java.lang.String">4ac03550-1e4b-4b38-813b-378cd77b4a87</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRD_THEMATIC_SURFACE</name>
-                <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">04ac95c7-3cdb-4bad-a1f3-a3c93ff4a5fa</identifier>
-      </ID>
-      <name>BRD_THEMATIC_SURFACE_FKX6</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">273474a7-1604-465d-8717-269d026ed936</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">2400f364-4f66-4c87-8ff2-a16ba1b5ab09</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>BRIDGE_CONSTR_ELEM_ID</name>
-              <identifier class="java.lang.String">aa40919a-2e0d-4363-ae59-6d1eaff033af</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRD_THEMATIC_SURFACE</name>
-                <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -858,7 +857,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">92c53c74-f75f-4941-822c-93839d1bcd82</identifier>
       </ID>
-      <name>BRD_THEMATIC_SURFACE_FKX7</name>
+      <name>BRD_THEM_SRF_OBJCLASS_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -872,9 +871,9 @@
               <name>OBJECTCLASS_ID</name>
               <identifier class="java.lang.String">107823db-2eac-4385-ba34-265e368ccb59</identifier>
               <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRD_THEMATIC_SURFACE</name>
+                <name>BRIDGE_THEMATIC_SURFACE</name>
                 <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -888,7 +887,7 @@
       <indexType>NORMAL</indexType>
       <parallelDegree>1</parallelDegree>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -896,7 +895,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">45697d95-4252-43ac-b8b6-6b844a1624de</identifier>
       </ID>
-      <name>BRD_THEMATIC_SURFACE_PK</name>
+      <name>BRIDGE_THEMATIC_SURFACE_PK</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -910,9 +909,9 @@
               <name>ID</name>
               <identifier class="java.lang.String">1d5175fd-c4e7-4f27-9658-2498b7621cb0</identifier>
               <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRD_THEMATIC_SURFACE</name>
+                <name>BRIDGE_THEMATIC_SURFACE</name>
                 <identifier class="java.lang.String">bbaa872b-3b4a-46db-b242-b25237de13c9</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -945,7 +944,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
@@ -974,6 +973,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

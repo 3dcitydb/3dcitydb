@@ -55,13 +55,12 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
       <indexID class="oracle.javatools.db.IdentifierBasedID">
-        <name>RASTER_RLF_GEORASTER_PK</name>
+        <name>RASTER_RELIEF_GEORASTER_PK</name>
         <identifier class="java.lang.String">4921d005-371a-4943-acfa-81ccf7950852</identifier>
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>RASTER_RELIEF_GEORASTER</name>
@@ -79,7 +78,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">4921d005-371a-4943-acfa-81ccf7950852</identifier>
       </ID>
-      <name>RASTER_RLF_GEORASTER_PK</name>
+      <name>RASTER_RELIEF_GEORASTER_PK</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -98,7 +97,6 @@
                 <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>DEFAULTSCHEMA</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>

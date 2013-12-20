@@ -56,6 +56,22 @@
     </column>
     <column>
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">f238faa3-305b-47c4-8e46-78d0e0d344cd</identifier>
+      </ID>
+      <name>OBJECTCLASS_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">768701b4-afc8-43f4-ab4b-12d0f93cd0e7</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">68f8b54e-b321-4a13-a448-5fa328507480</identifier>
       </ID>
       <name>LOD</name>
@@ -162,29 +178,13 @@
         </entry>
       </properties>
     </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">f238faa3-305b-47c4-8e46-78d0e0d344cd</identifier>
-      </ID>
-      <name>OBJECTCLASS_ID</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">768701b4-afc8-43f4-ab4b-12d0f93cd0e7</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
-          <typeName>NUMBER</typeName>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.CheckConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">56198edc-7ac0-4e79-8102-dfe99d289f3e</identifier>
       </ID>
-      <name>RELIEF_COMPONENT_CHK1</name>
+      <name>RELIEF_COMP_LOD_CHK</name>
       <checkConditionFragment class="oracle.javatools.db.sql.WhereObject">
         <ID class="oracle.javatools.db.IdentifierBasedID">
           <identifier class="java.lang.String">b2c1acd2-f0c6-4a59-97a7-ed1812ae76ae</identifier>
@@ -490,7 +490,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">62d003e9-41c3-4d30-855e-bdcfe2c70c30</identifier>
       </ID>
-      <name>RELIEF_COMPONENT_CITYOBJECT_FK</name>
+      <name>RELIEF_COMP_CITYOBJECT_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>ID</name>
@@ -542,7 +542,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">67773538-f278-4a50-aa2c-2e16a01721a5</identifier>
       </ID>
-      <name>RELIEF_COMPONENT_OBJCLASS_FK</name>
+      <name>RELIEF_COMP_OBJCLASS_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>OBJECTCLASS_ID</name>
@@ -553,7 +553,6 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -624,44 +623,6 @@
     </constraint>
   </constraints>
   <indexes>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">e1e3b379-0a44-4814-b756-1b671088dc8a</identifier>
-      </ID>
-      <name>RELIEF_COMPONENT_FK1</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">31c90213-eb97-4aa9-bdc2-168444371939</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">b7aa27ce-a0a7-4de7-ab81-f066fd8b226f</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>OBJECTCLASS_ID</name>
-              <identifier class="java.lang.String">f238faa3-305b-47c4-8e46-78d0e0d344cd</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>RELIEF_COMPONENT</name>
-                <identifier class="java.lang.String">f0da539f-f6eb-47c2-af39-3abd6c98ad1a</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <schemaName>DEFAULTSCHEMA</schemaName>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">29ed39d5-4643-4f67-9e5a-4e6e5ea225fb</identifier>
@@ -805,7 +766,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">e1881a0f-b0b0-4575-bf44-d9c8c5d7741e</identifier>
       </ID>
-      <name>RELIEF_COMPONENT_SPX</name>
+      <name>RELIEF_COMP_EXTENT_SPX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -875,6 +836,43 @@
           </value>
         </entry>
       </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">e1e3b379-0a44-4814-b756-1b671088dc8a</identifier>
+      </ID>
+      <name>RELIEF_COMP_OBJCLASS_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">31c90213-eb97-4aa9-bdc2-168444371939</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">b7aa27ce-a0a7-4de7-ab81-f066fd8b226f</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>OBJECTCLASS_ID</name>
+              <identifier class="java.lang.String">f238faa3-305b-47c4-8e46-78d0e0d344cd</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>RELIEF_COMPONENT</name>
+                <identifier class="java.lang.String">f0da539f-f6eb-47c2-af39-3abd6c98ad1a</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>

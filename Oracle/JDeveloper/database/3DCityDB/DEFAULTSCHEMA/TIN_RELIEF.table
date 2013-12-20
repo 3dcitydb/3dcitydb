@@ -308,7 +308,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">00e76c12-eebe-4fb2-8a31-04147343f65c</identifier>
       </ID>
-      <name>TIN_RELIEF_RELIEF_COMPONENT_FK</name>
+      <name>TIN_RELIEF_COMP_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>ID</name>
@@ -316,10 +316,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>TIN_RELIEF</name>
             <identifier class="java.lang.String">b41e1336-ac56-4683-8cbc-8f7571caf730</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -361,7 +360,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">b5350c89-9204-4991-a622-ec03de563fb9</identifier>
       </ID>
-      <name>TIN_RELIEF_SURFACE_GEOMETRY_FK</name>
+      <name>TIN_RELIEF_GEOM_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>SURFACE_GEOMETRY_ID</name>
@@ -369,10 +368,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>TIN_RELIEF</name>
             <identifier class="java.lang.String">b41e1336-ac56-4683-8cbc-8f7571caf730</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -422,10 +420,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>TIN_RELIEF</name>
             <identifier class="java.lang.String">b41e1336-ac56-4683-8cbc-8f7571caf730</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -436,10 +433,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>TIN_RELIEF</name>
           <identifier class="java.lang.String">b41e1336-ac56-4683-8cbc-8f7571caf730</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
       <properties>
@@ -474,68 +471,12 @@
           <ID class="oracle.javatools.db.IdentifierBasedID">
             <identifier class="java.lang.String">8b430b38-1dfc-4ed4-ac43-07bbe317af52</identifier>
           </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
             <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">9a803b91-84b0-4cd7-bd95-c56c6462fc74</identifier>
+              <identifier class="java.lang.String">6cd705e5-3d2a-4443-a944-66c60408cb31</identifier>
             </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>BREAK_LINES</name>
-              <identifier class="java.lang.String">927d47ba-7f16-4e75-97b6-70e759b889d1</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>TIN_RELIEF</name>
-                <identifier class="java.lang.String">b41e1336-ac56-4683-8cbc-8f7571caf730</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <schemaName>YAO</schemaName>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>TIN_RELF_BREAK_SPX</name>
-                      <identifier class="java.math.BigDecimal">116051</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>TIN_RELIEF</name>
-                        <identifier class="java.math.BigDecimal">115789</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
+            <SQLText>BREAK_LINES</SQLText>
           </expression>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>TIN_RELF_BREAK_SPX</name>
-                  <identifier class="java.math.BigDecimal">116051</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>TIN_RELIEF</name>
-                    <identifier class="java.math.BigDecimal">115789</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
         </columnExpression>
       </columnExpressions>
       <domainIndextype class="oracle.javatools.db.ReferenceID">
@@ -595,7 +536,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -619,10 +560,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>TIN_RELIEF</name>
                 <identifier class="java.lang.String">b41e1336-ac56-4683-8cbc-8f7571caf730</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -730,7 +670,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -744,68 +684,12 @@
           <ID class="oracle.javatools.db.IdentifierBasedID">
             <identifier class="java.lang.String">ce85dc30-5b1e-416a-a543-91e3673165a6</identifier>
           </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
             <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">0f6fa3ab-8297-4137-8e4e-c33f3a26de4a</identifier>
+              <identifier class="java.lang.String">f0cfd05e-3727-4394-8ac0-52dcfa33f89a</identifier>
             </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>STOP_LINES</name>
-              <identifier class="java.lang.String">0933df3d-af07-48c3-afce-0a79a8822ce4</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>TIN_RELIEF</name>
-                <identifier class="java.lang.String">b41e1336-ac56-4683-8cbc-8f7571caf730</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <schemaName>YAO</schemaName>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>TIN_RELF_STOP_SPX</name>
-                      <identifier class="java.math.BigDecimal">116044</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>TIN_RELIEF</name>
-                        <identifier class="java.math.BigDecimal">115789</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
+            <SQLText>STOP_LINES</SQLText>
           </expression>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>TIN_RELF_STOP_SPX</name>
-                  <identifier class="java.math.BigDecimal">116044</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>TIN_RELIEF</name>
-                    <identifier class="java.math.BigDecimal">115789</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
         </columnExpression>
       </columnExpressions>
       <domainIndextype class="oracle.javatools.db.ReferenceID">
@@ -865,7 +749,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -873,7 +757,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">a5c88267-8974-453f-8251-487439aac902</identifier>
       </ID>
-      <name>TIN_RELIEF_FKX</name>
+      <name>TIN_RELIEF_GEOM_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -889,10 +773,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>TIN_RELIEF</name>
                 <identifier class="java.lang.String">b41e1336-ac56-4683-8cbc-8f7571caf730</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -1005,7 +888,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -1029,10 +912,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>TIN_RELIEF</name>
                 <identifier class="java.lang.String">b41e1336-ac56-4683-8cbc-8f7571caf730</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -1145,7 +1027,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
@@ -1205,6 +1087,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

@@ -605,7 +605,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">409ceed8-8c91-4645-9c33-d5b490e14186</identifier>
       </ID>
-      <name>APPEARANCE_FKX</name>
+      <name>APPEARANCE_CITYMODEL_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -740,7 +740,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">f04f77e6-c4a0-40ed-83e3-ef5280d9ddd1</identifier>
       </ID>
-      <name>APPEARANCE_FKX1</name>
+      <name>APPEARANCE_CITYOBJECT_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1140,6 +1140,44 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">d84bb1cf-28c2-438f-913f-125c96b49add</identifier>
+      </ID>
+      <name>APPEARANCE_THEME_INX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">cd8913b4-e6c2-4fb2-bfa7-52a5749fdb98</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">8f97c5fd-b806-431d-9908-0a960fa65609</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>THEME</name>
+              <identifier class="java.lang.String">1cde22d8-5ae3-4634-a943-19e533cf69c9</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>APPEARANCE</name>
+                <identifier class="java.lang.String">d1f87363-5ec8-4e09-8fd0-9c2932fd89d5</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
     </indexe>
   </indexes>
   <properties>

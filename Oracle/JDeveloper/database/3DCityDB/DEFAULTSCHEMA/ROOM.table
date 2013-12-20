@@ -398,7 +398,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>ROOM</name>
             <identifier class="java.lang.String">6927f86b-4ea4-4308-ab37-5fd9536a4ca8</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -450,7 +450,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>ROOM</name>
             <identifier class="java.lang.String">6927f86b-4ea4-4308-ab37-5fd9536a4ca8</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -492,9 +492,41 @@
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">1970a1b1-0b4a-4696-98ed-258fe5e7a454</identifier>
+      </ID>
+      <name>ROOM_LOD4MSRF_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>LOD4_MULTI_SURFACE_ID</name>
+          <identifier class="java.lang.String">5c2a5961-e0ca-4612-b2b1-8d0829ac0a36</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>ROOM</name>
+            <identifier class="java.lang.String">6927f86b-4ea4-4308-ab37-5fd9536a4ca8</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>SURFACE_GEOMETRY_PK</name>
+        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>SURFACE_GEOMETRY</name>
+          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">c18d4389-794c-4dd2-8899-67dd7ce49a56</identifier>
       </ID>
-      <name>ROOM_SURFACE_GEOMETRY_FK</name>
+      <name>ROOM_LOD4SOLID_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD4_SOLID_ID</name>
@@ -502,7 +534,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>ROOM</name>
             <identifier class="java.lang.String">6927f86b-4ea4-4308-ab37-5fd9536a4ca8</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -542,38 +574,6 @@
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">1970a1b1-0b4a-4696-98ed-258fe5e7a454</identifier>
-      </ID>
-      <name>ROOM_SURFACE_GEOMETRY_FK1</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>LOD4_MULTI_SURFACE_ID</name>
-          <identifier class="java.lang.String">5c2a5961-e0ca-4612-b2b1-8d0829ac0a36</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>ROOM</name>
-            <identifier class="java.lang.String">6927f86b-4ea4-4308-ab37-5fd9536a4ca8</identifier>
-            <schemaName>YAO</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>SURFACE_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>SURFACE_GEOMETRY</name>
-          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">dbac62a9-0d5e-4da8-940e-49fead46b151</identifier>
@@ -586,7 +586,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>ROOM</name>
             <identifier class="java.lang.String">6927f86b-4ea4-4308-ab37-5fd9536a4ca8</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -599,10 +599,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>ROOM</name>
           <identifier class="java.lang.String">6927f86b-4ea4-4308-ab37-5fd9536a4ca8</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
       <properties>
@@ -631,7 +631,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">49e63229-4606-4ca6-8c87-8cdb3afad9e1</identifier>
       </ID>
-      <name>ROOM_FKX</name>
+      <name>ROOM_BUILDING_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -647,7 +647,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>ROOM</name>
                 <identifier class="java.lang.String">6927f86b-4ea4-4308-ab37-5fd9536a4ca8</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -758,7 +758,45 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">bd45a5cf-dd67-4eea-91fa-c460059c6119</identifier>
+      </ID>
+      <name>ROOM_LOD4MSRF_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">018c97fd-b5cf-444a-8471-a0f408b0e16b</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">1456ff2d-16e9-4b42-87fa-7e2529508b40</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD4_MULTI_SURFACE_ID</name>
+              <identifier class="java.lang.String">5c2a5961-e0ca-4612-b2b1-8d0829ac0a36</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>ROOM</name>
+                <identifier class="java.lang.String">6927f86b-4ea4-4308-ab37-5fd9536a4ca8</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -766,7 +804,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">1533ad4d-1921-4c1d-a038-d2aed2b4d3bb</identifier>
       </ID>
-      <name>ROOM_FKX1</name>
+      <name>ROOM_LOD4SOLID_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -782,7 +820,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>ROOM</name>
                 <identifier class="java.lang.String">6927f86b-4ea4-4308-ab37-5fd9536a4ca8</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -850,45 +888,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">bd45a5cf-dd67-4eea-91fa-c460059c6119</identifier>
-      </ID>
-      <name>ROOM_FKX2</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">018c97fd-b5cf-444a-8471-a0f408b0e16b</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">1456ff2d-16e9-4b42-87fa-7e2529508b40</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD4_MULTI_SURFACE_ID</name>
-              <identifier class="java.lang.String">5c2a5961-e0ca-4612-b2b1-8d0829ac0a36</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>ROOM</name>
-                <identifier class="java.lang.String">6927f86b-4ea4-4308-ab37-5fd9536a4ca8</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -912,7 +912,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>ROOM</name>
                 <identifier class="java.lang.String">6927f86b-4ea4-4308-ab37-5fd9536a4ca8</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -980,7 +980,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
@@ -1036,6 +1036,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

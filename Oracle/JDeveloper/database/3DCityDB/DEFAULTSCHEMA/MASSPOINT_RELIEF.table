@@ -110,7 +110,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">336d914b-ef1c-4363-a697-7925888da444</identifier>
       </ID>
-      <name>MASSPOINT_RELIEF_FK</name>
+      <name>MASSPOINT_RELIEF_COMP_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>ID</name>
@@ -118,10 +118,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>MASSPOINT_RELIEF</name>
             <identifier class="java.lang.String">179b9fb7-98b3-45fe-9e33-22c24b9d3acf</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -171,10 +170,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>MASSPOINT_RELIEF</name>
             <identifier class="java.lang.String">179b9fb7-98b3-45fe-9e33-22c24b9d3acf</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -185,10 +183,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>MASSPOINT_RELIEF</name>
           <identifier class="java.lang.String">179b9fb7-98b3-45fe-9e33-22c24b9d3acf</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
       <properties>
@@ -233,10 +231,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>MASSPOINT_RELIEF</name>
                 <identifier class="java.lang.String">179b9fb7-98b3-45fe-9e33-22c24b9d3acf</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -349,7 +346,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
@@ -357,74 +354,18 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">1a372aa6-79ee-44ec-98be-0de1fc506ef4</identifier>
       </ID>
-      <name>MASSPOINT_REL_SPX</name>
+      <name>MASSPOINT_RELIEF_SPX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
             <identifier class="java.lang.String">543c6ff5-ad4f-4b26-a1ee-0a2780e5dc9d</identifier>
           </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
             <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">fe2f712f-a42f-4151-8a83-a481bf18eeb8</identifier>
+              <identifier class="java.lang.String">dfcaa90b-4605-42ac-84de-ad67f8acf4e2</identifier>
             </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>RELIEF_POINTS</name>
-              <identifier class="java.lang.String">9e6166f7-9ad0-4e3b-b98f-fb24c52eb4bd</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>MASSPOINT_RELIEF</name>
-                <identifier class="java.lang.String">179b9fb7-98b3-45fe-9e33-22c24b9d3acf</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <schemaName>YAO</schemaName>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>MASSPOINT_REL_SPX</name>
-                      <identifier class="java.math.BigDecimal">116030</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>MASSPOINT_RELIEF</name>
-                        <identifier class="java.math.BigDecimal">115731</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
+            <SQLText>RELIEF_POINTS</SQLText>
           </expression>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>MASSPOINT_REL_SPX</name>
-                  <identifier class="java.math.BigDecimal">116030</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>MASSPOINT_RELIEF</name>
-                    <identifier class="java.math.BigDecimal">115731</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
         </columnExpression>
       </columnExpressions>
       <domainIndextype class="oracle.javatools.db.ReferenceID">
@@ -484,7 +425,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -544,6 +485,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

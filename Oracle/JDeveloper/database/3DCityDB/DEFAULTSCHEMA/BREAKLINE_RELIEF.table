@@ -160,7 +160,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">210e858d-6168-412e-8ea6-e0e747fe93b3</identifier>
       </ID>
-      <name>BREAKLINE_RELIEF_FK</name>
+      <name>BREAKLINE_RELIEF_COMP_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>ID</name>
@@ -168,10 +168,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BREAKLINE_RELIEF</name>
             <identifier class="java.lang.String">7915d8d7-50c1-4c2d-9073-b6c9106890dd</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -221,10 +220,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BREAKLINE_RELIEF</name>
             <identifier class="java.lang.String">7915d8d7-50c1-4c2d-9073-b6c9106890dd</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -235,10 +233,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>BREAKLINE_RELIEF</name>
           <identifier class="java.lang.String">7915d8d7-50c1-4c2d-9073-b6c9106890dd</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
       <properties>
@@ -273,68 +271,12 @@
           <ID class="oracle.javatools.db.IdentifierBasedID">
             <identifier class="java.lang.String">6bc248ab-3761-4933-9ff9-c08ce64a4948</identifier>
           </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
             <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">6c965163-d303-4937-9e7b-c9ffb7ddb8e0</identifier>
+              <identifier class="java.lang.String">f0b95b7d-15b1-4d47-ac2a-895edaac9708</identifier>
             </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>BREAK_LINES</name>
-              <identifier class="java.lang.String">1f0963ec-8444-4ffe-be66-e98c8e222542</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BREAKLINE_RELIEF</name>
-                <identifier class="java.lang.String">7915d8d7-50c1-4c2d-9073-b6c9106890dd</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <schemaName>YAO</schemaName>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>BREAKLINE_BREAK_SPX</name>
-                      <identifier class="java.math.BigDecimal">116023</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>BREAKLINE_RELIEF</name>
-                        <identifier class="java.math.BigDecimal">115721</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
+            <SQLText>BREAK_LINES</SQLText>
           </expression>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>BREAKLINE_BREAK_SPX</name>
-                  <identifier class="java.math.BigDecimal">116023</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>BREAKLINE_RELIEF</name>
-                    <identifier class="java.math.BigDecimal">115721</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
         </columnExpression>
       </columnExpressions>
       <domainIndextype class="oracle.javatools.db.ReferenceID">
@@ -394,7 +336,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -418,10 +360,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>BREAKLINE_RELIEF</name>
                 <identifier class="java.lang.String">7915d8d7-50c1-4c2d-9073-b6c9106890dd</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -534,7 +475,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
@@ -542,74 +483,18 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">d2c271a4-1e5a-4825-b349-00891d5ab678</identifier>
       </ID>
-      <name>BREAKLINE_RID_SPX</name>
+      <name>BREAKLINE_RIDGE_SPX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
             <identifier class="java.lang.String">6c5086fb-32f6-4461-96ce-1a39cf3b239c</identifier>
           </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
             <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">e8423e7a-01cb-4b63-96b0-ec68f0bf98e3</identifier>
+              <identifier class="java.lang.String">076d6a78-52cc-4e7b-9a62-8f31585f9203</identifier>
             </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>RIDGE_OR_VALLEY_LINES</name>
-              <identifier class="java.lang.String">989664e7-3a3f-4213-bf47-822036e23199</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BREAKLINE_RELIEF</name>
-                <identifier class="java.lang.String">7915d8d7-50c1-4c2d-9073-b6c9106890dd</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <schemaName>YAO</schemaName>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>BREAKLINE_RID_SPX</name>
-                      <identifier class="java.math.BigDecimal">116016</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>BREAKLINE_RELIEF</name>
-                        <identifier class="java.math.BigDecimal">115721</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
+            <SQLText>RIDGE_OR_VALLEY_LINES</SQLText>
           </expression>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>BREAKLINE_RID_SPX</name>
-                  <identifier class="java.math.BigDecimal">116016</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>BREAKLINE_RELIEF</name>
-                    <identifier class="java.math.BigDecimal">115721</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
         </columnExpression>
       </columnExpressions>
       <domainIndextype class="oracle.javatools.db.ReferenceID">
@@ -669,7 +554,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -729,6 +614,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

@@ -161,7 +161,6 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
@@ -173,7 +172,6 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
@@ -185,7 +183,6 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
@@ -197,7 +194,6 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
@@ -209,13 +205,12 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
       <indexID class="oracle.javatools.db.IdentifierBasedID">
-        <name>RASTER_REL_GEORASTER_RDT_PK</name>
+        <name>RASTER_REL_GEORAST_RDT_PK</name>
         <identifier class="java.lang.String">d82223ba-9e07-4c29-a346-528d898b3e55</identifier>
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>RASTER_REL_GEORASTER_RDT</name>
@@ -233,7 +228,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">d82223ba-9e07-4c29-a346-528d898b3e55</identifier>
       </ID>
-      <name>RASTER_REL_GEORASTER_RDT_PK</name>
+      <name>RASTER_REL_GEORAST_RDT_PK</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -252,7 +247,6 @@
                 <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>DEFAULTSCHEMA</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -277,7 +271,6 @@
                 <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>DEFAULTSCHEMA</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -302,7 +295,6 @@
                 <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>DEFAULTSCHEMA</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -327,7 +319,6 @@
                 <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>DEFAULTSCHEMA</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -352,7 +343,6 @@
                 <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>DEFAULTSCHEMA</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>

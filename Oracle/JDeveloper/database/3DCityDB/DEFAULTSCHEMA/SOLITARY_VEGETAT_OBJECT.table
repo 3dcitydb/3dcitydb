@@ -404,6 +404,28 @@
     </column>
     <column>
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">48e1d593-a7e3-4d90-9692-91f168d894e7</identifier>
+      </ID>
+      <name>HEIGHT_UNIT</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">1b38cdf9-f444-4e6d-8861-7f76fa377446</identifier>
+        </ID>
+        <attributeValues>
+          <entry>
+            <key>size</key>
+            <value class="java.lang.Long">4000</value>
+          </entry>
+        </attributeValues>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
+          <typeName>VARCHAR2</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">5590170d-4563-49b1-b943-b7954a95bfeb</identifier>
       </ID>
       <name>TRUNC_DIAMETER</name>
@@ -453,6 +475,28 @@
     </column>
     <column>
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">434a42c5-b126-47d1-94f6-c8bae4c539fd</identifier>
+      </ID>
+      <name>TRUNC_DIAMETER_UNIT</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">97ed33e0-fda1-4e59-a2d0-93d746d91788</identifier>
+        </ID>
+        <attributeValues>
+          <entry>
+            <key>size</key>
+            <value class="java.lang.Long">4000</value>
+          </entry>
+        </attributeValues>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
+          <typeName>VARCHAR2</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">6c60c39e-0af8-4272-a192-396202ab5044</identifier>
       </ID>
       <name>CROWN_DIAMETER</name>
@@ -499,6 +543,292 @@
           </value>
         </entry>
       </properties>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">db499b13-5fb7-4bda-b864-73a548da2af7</identifier>
+      </ID>
+      <name>CROWN_DIAMETER_UNIT</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">aa382632-1a34-422e-b17a-00a2f9f46171</identifier>
+        </ID>
+        <attributeValues>
+          <entry>
+            <key>size</key>
+            <value class="java.lang.Long">4000</value>
+          </entry>
+        </attributeValues>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
+          <typeName>VARCHAR2</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">767e7454-56ca-4f8d-ae0d-f763bfa37bb4</identifier>
+      </ID>
+      <name>LOD1_BREP_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">5d8ae504-651b-4129-8d5e-ee31e5822847</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+        <properties>
+          <entry>
+            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+            <value class="oracle.javatools.db.ReferenceID">
+              <parent class="oracle.javatools.db.ReferenceID">
+                <name>LOD1_GEOMETRY_ID</name>
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>SOLITARY_VEGETAT_OBJECT</name>
+                  <identifier class="java.math.BigDecimal">115855</identifier>
+                  <schemaName>YAO</schemaName>
+                  <type>TABLE</type>
+                </parent>
+                <type>COLUMN</type>
+              </parent>
+              <type>DataTypeUsage</type>
+            </value>
+          </entry>
+        </properties>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>LOD1_GEOMETRY_ID</name>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <type>COLUMN</type>
+          </value>
+        </entry>
+      </properties>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">a9a37ed9-6615-4f67-a723-3e20908befc8</identifier>
+      </ID>
+      <name>LOD2_BREP_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">00acd91b-62c3-4f59-a4ed-dad14b8b915f</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+        <properties>
+          <entry>
+            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+            <value class="oracle.javatools.db.ReferenceID">
+              <parent class="oracle.javatools.db.ReferenceID">
+                <name>LOD2_GEOMETRY_ID</name>
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>SOLITARY_VEGETAT_OBJECT</name>
+                  <identifier class="java.math.BigDecimal">115855</identifier>
+                  <schemaName>YAO</schemaName>
+                  <type>TABLE</type>
+                </parent>
+                <type>COLUMN</type>
+              </parent>
+              <type>DataTypeUsage</type>
+            </value>
+          </entry>
+        </properties>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>LOD2_GEOMETRY_ID</name>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <type>COLUMN</type>
+          </value>
+        </entry>
+      </properties>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">d0b53119-0e2a-4f0d-9538-3ce5a7713c07</identifier>
+      </ID>
+      <name>LOD3_BREP_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">ff596ae8-868f-4086-9f80-eda2ce75ac88</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+        <properties>
+          <entry>
+            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+            <value class="oracle.javatools.db.ReferenceID">
+              <parent class="oracle.javatools.db.ReferenceID">
+                <name>LOD3_GEOMETRY_ID</name>
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>SOLITARY_VEGETAT_OBJECT</name>
+                  <identifier class="java.math.BigDecimal">115855</identifier>
+                  <schemaName>YAO</schemaName>
+                  <type>TABLE</type>
+                </parent>
+                <type>COLUMN</type>
+              </parent>
+              <type>DataTypeUsage</type>
+            </value>
+          </entry>
+        </properties>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>LOD3_GEOMETRY_ID</name>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <type>COLUMN</type>
+          </value>
+        </entry>
+      </properties>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">dc537c39-0b4d-432a-824b-389863cdccff</identifier>
+      </ID>
+      <name>LOD4_BREP_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">9fc02ce1-2d2a-40cd-8793-eac19ce0a47a</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+        <properties>
+          <entry>
+            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+            <value class="oracle.javatools.db.ReferenceID">
+              <parent class="oracle.javatools.db.ReferenceID">
+                <name>LOD4_GEOMETRY_ID</name>
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>SOLITARY_VEGETAT_OBJECT</name>
+                  <identifier class="java.math.BigDecimal">115855</identifier>
+                  <schemaName>YAO</schemaName>
+                  <type>TABLE</type>
+                </parent>
+                <type>COLUMN</type>
+              </parent>
+              <type>DataTypeUsage</type>
+            </value>
+          </entry>
+        </properties>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>LOD4_GEOMETRY_ID</name>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <type>COLUMN</type>
+          </value>
+        </entry>
+      </properties>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">7887d8b2-b3ec-4918-87d7-4896cc09ee16</identifier>
+      </ID>
+      <name>LOD1_OTHER_GEOM</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">2f0645f0-aaa0-4cba-ad88-4df5c00cdc69</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.NameBasedID">
+          <name>SDO_GEOMETRY</name>
+          <schemaName>MDSYS</schemaName>
+          <type>TYPE</type>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">7534cc79-a7b5-49a9-b17a-af60c14a3522</identifier>
+      </ID>
+      <name>LOD2_OTHER_GEOM</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">faf5773c-c477-4cfb-b1b1-4c688c326338</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.NameBasedID">
+          <name>SDO_GEOMETRY</name>
+          <schemaName>MDSYS</schemaName>
+          <type>TYPE</type>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">2d01837d-9b0f-40dd-a7d1-75b06c37e1de</identifier>
+      </ID>
+      <name>LOD3_OTHER_GEOM</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">4fdb557a-ec19-45e3-8d3e-d4c106982bcd</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.NameBasedID">
+          <name>SDO_GEOMETRY</name>
+          <schemaName>MDSYS</schemaName>
+          <type>TYPE</type>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">e760ed56-f24f-4e93-bbd6-2e20070b51a2</identifier>
+      </ID>
+      <name>LOD4_OTHER_GEOM</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">4fc42cd2-f9f4-4610-ae52-5ce0b0faa6eb</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.NameBasedID">
+          <name>SDO_GEOMETRY</name>
+          <schemaName>MDSYS</schemaName>
+          <type>TYPE</type>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
     </column>
     <column>
       <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1128,277 +1458,13 @@
         </entry>
       </properties>
     </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">767e7454-56ca-4f8d-ae0d-f763bfa37bb4</identifier>
-      </ID>
-      <name>LOD1_BREP_ID</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">5d8ae504-651b-4129-8d5e-ee31e5822847</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
-          <typeName>NUMBER</typeName>
-        </dataTypeID>
-        <properties>
-          <entry>
-            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-            <value class="oracle.javatools.db.ReferenceID">
-              <parent class="oracle.javatools.db.ReferenceID">
-                <name>LOD1_GEOMETRY_ID</name>
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SOLITARY_VEGETAT_OBJECT</name>
-                  <identifier class="java.math.BigDecimal">115855</identifier>
-                  <schemaName>YAO</schemaName>
-                  <type>TABLE</type>
-                </parent>
-                <type>COLUMN</type>
-              </parent>
-              <type>DataTypeUsage</type>
-            </value>
-          </entry>
-        </properties>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>LOD1_GEOMETRY_ID</name>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <type>COLUMN</type>
-          </value>
-        </entry>
-      </properties>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">a9a37ed9-6615-4f67-a723-3e20908befc8</identifier>
-      </ID>
-      <name>LOD2_BREP_ID</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">00acd91b-62c3-4f59-a4ed-dad14b8b915f</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
-          <typeName>NUMBER</typeName>
-        </dataTypeID>
-        <properties>
-          <entry>
-            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-            <value class="oracle.javatools.db.ReferenceID">
-              <parent class="oracle.javatools.db.ReferenceID">
-                <name>LOD2_GEOMETRY_ID</name>
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SOLITARY_VEGETAT_OBJECT</name>
-                  <identifier class="java.math.BigDecimal">115855</identifier>
-                  <schemaName>YAO</schemaName>
-                  <type>TABLE</type>
-                </parent>
-                <type>COLUMN</type>
-              </parent>
-              <type>DataTypeUsage</type>
-            </value>
-          </entry>
-        </properties>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>LOD2_GEOMETRY_ID</name>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <type>COLUMN</type>
-          </value>
-        </entry>
-      </properties>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d0b53119-0e2a-4f0d-9538-3ce5a7713c07</identifier>
-      </ID>
-      <name>LOD3_BREP_ID</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">ff596ae8-868f-4086-9f80-eda2ce75ac88</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
-          <typeName>NUMBER</typeName>
-        </dataTypeID>
-        <properties>
-          <entry>
-            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-            <value class="oracle.javatools.db.ReferenceID">
-              <parent class="oracle.javatools.db.ReferenceID">
-                <name>LOD3_GEOMETRY_ID</name>
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SOLITARY_VEGETAT_OBJECT</name>
-                  <identifier class="java.math.BigDecimal">115855</identifier>
-                  <schemaName>YAO</schemaName>
-                  <type>TABLE</type>
-                </parent>
-                <type>COLUMN</type>
-              </parent>
-              <type>DataTypeUsage</type>
-            </value>
-          </entry>
-        </properties>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>LOD3_GEOMETRY_ID</name>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <type>COLUMN</type>
-          </value>
-        </entry>
-      </properties>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">dc537c39-0b4d-432a-824b-389863cdccff</identifier>
-      </ID>
-      <name>LOD4_BREP_ID</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">9fc02ce1-2d2a-40cd-8793-eac19ce0a47a</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
-          <typeName>NUMBER</typeName>
-        </dataTypeID>
-        <properties>
-          <entry>
-            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-            <value class="oracle.javatools.db.ReferenceID">
-              <parent class="oracle.javatools.db.ReferenceID">
-                <name>LOD4_GEOMETRY_ID</name>
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SOLITARY_VEGETAT_OBJECT</name>
-                  <identifier class="java.math.BigDecimal">115855</identifier>
-                  <schemaName>YAO</schemaName>
-                  <type>TABLE</type>
-                </parent>
-                <type>COLUMN</type>
-              </parent>
-              <type>DataTypeUsage</type>
-            </value>
-          </entry>
-        </properties>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>LOD4_GEOMETRY_ID</name>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <type>COLUMN</type>
-          </value>
-        </entry>
-      </properties>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">7887d8b2-b3ec-4918-87d7-4896cc09ee16</identifier>
-      </ID>
-      <name>LOD1_OTHER_GEOM</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">2f0645f0-aaa0-4cba-ad88-4df5c00cdc69</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.NameBasedID">
-          <name>SDO_GEOMETRY</name>
-          <schemaName>MDSYS</schemaName>
-          <type>TYPE</type>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">7534cc79-a7b5-49a9-b17a-af60c14a3522</identifier>
-      </ID>
-      <name>LOD2_OTHER_GEOM</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">faf5773c-c477-4cfb-b1b1-4c688c326338</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.NameBasedID">
-          <name>SDO_GEOMETRY</name>
-          <schemaName>MDSYS</schemaName>
-          <type>TYPE</type>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">2d01837d-9b0f-40dd-a7d1-75b06c37e1de</identifier>
-      </ID>
-      <name>LOD3_OTHER_GEOM</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">4fdb557a-ec19-45e3-8d3e-d4c106982bcd</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.NameBasedID">
-          <name>SDO_GEOMETRY</name>
-          <schemaName>MDSYS</schemaName>
-          <type>TYPE</type>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">e760ed56-f24f-4e93-bbd6-2e20070b51a2</identifier>
-      </ID>
-      <name>LOD4_OTHER_GEOM</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">4fc42cd2-f9f4-4610-ae52-5ce0b0faa6eb</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.NameBasedID">
-          <name>SDO_GEOMETRY</name>
-          <schemaName>MDSYS</schemaName>
-          <type>TYPE</type>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">cd3ee99d-ec45-4ed7-8341-aa6d7da294b2</identifier>
       </ID>
-      <name>SOLITARY_VEGETAT_OBJECT_FK</name>
+      <name>SOL_VEG_OBJ_CITYOBJECT_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>ID</name>
@@ -1450,7 +1516,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">0c943d77-a977-4a80-816a-7c262dc87709</identifier>
       </ID>
-      <name>SOLITARY_VEGETAT_OBJECT_FK1</name>
+      <name>SOL_VEG_OBJ_LOD1BREP_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD1_BREP_ID</name>
@@ -1500,165 +1566,9 @@
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">61db1195-e911-463c-b016-e0efebe5f71a</identifier>
-      </ID>
-      <name>SOLITARY_VEGETAT_OBJECT_FK2</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>LOD2_BREP_ID</name>
-          <identifier class="java.lang.String">a9a37ed9-6615-4f67-a723-3e20908befc8</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>SOLITARY_VEGETAT_OBJECT</name>
-            <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>SOLITARY_VEGETAT_OBJECT_FK2</name>
-            <childObjectNames>
-              <childObjectName>LOD2_GEOMETRY_ID</childObjectName>
-            </childObjectNames>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <subType>FKConstraint</subType>
-            <type>CONSTRAINT</type>
-          </value>
-        </entry>
-      </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>SURFACE_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>SURFACE_GEOMETRY</name>
-          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>YAO</schemaName>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">98e1d084-5ced-4694-a39d-a8503d1ed456</identifier>
-      </ID>
-      <name>SOLITARY_VEGETAT_OBJECT_FK3</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>LOD3_BREP_ID</name>
-          <identifier class="java.lang.String">d0b53119-0e2a-4f0d-9538-3ce5a7713c07</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>SOLITARY_VEGETAT_OBJECT</name>
-            <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>SOLITARY_VEGETAT_OBJECT_FK3</name>
-            <childObjectNames>
-              <childObjectName>LOD3_GEOMETRY_ID</childObjectName>
-            </childObjectNames>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <subType>FKConstraint</subType>
-            <type>CONSTRAINT</type>
-          </value>
-        </entry>
-      </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>SURFACE_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>SURFACE_GEOMETRY</name>
-          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>YAO</schemaName>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">28f68f91-8e07-4195-b5e0-57ab08e7cc1c</identifier>
-      </ID>
-      <name>SOLITARY_VEGETAT_OBJECT_FK4</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>LOD4_BREP_ID</name>
-          <identifier class="java.lang.String">dc537c39-0b4d-432a-824b-389863cdccff</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>SOLITARY_VEGETAT_OBJECT</name>
-            <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>SOLITARY_VEGETAT_OBJECT_FK4</name>
-            <childObjectNames>
-              <childObjectName>LOD4_GEOMETRY_ID</childObjectName>
-            </childObjectNames>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <subType>FKConstraint</subType>
-            <type>CONSTRAINT</type>
-          </value>
-        </entry>
-      </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>SURFACE_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>SURFACE_GEOMETRY</name>
-          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>YAO</schemaName>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">32b255c4-606e-4c1a-99d4-c0877c3671df</identifier>
       </ID>
-      <name>SOLITARY_VEGETAT_OBJECT_FK5</name>
+      <name>SOL_VEG_OBJ_LOD1IMPL_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD1_IMPLICIT_REP_ID</name>
@@ -1708,9 +1618,61 @@
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">61db1195-e911-463c-b016-e0efebe5f71a</identifier>
+      </ID>
+      <name>SOL_VEG_OBJ_LOD2BREP_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>LOD2_BREP_ID</name>
+          <identifier class="java.lang.String">a9a37ed9-6615-4f67-a723-3e20908befc8</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>SOLITARY_VEGETAT_OBJECT</name>
+            <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>SOLITARY_VEGETAT_OBJECT_FK2</name>
+            <childObjectNames>
+              <childObjectName>LOD2_GEOMETRY_ID</childObjectName>
+            </childObjectNames>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <subType>FKConstraint</subType>
+            <type>CONSTRAINT</type>
+          </value>
+        </entry>
+      </properties>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>SURFACE_GEOMETRY_PK</name>
+        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>SURFACE_GEOMETRY</name>
+          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">40047695-44f6-4242-9b6a-b5c3fd93e2a4</identifier>
       </ID>
-      <name>SOLITARY_VEGETAT_OBJECT_FK6</name>
+      <name>SOL_VEG_OBJ_LOD2IMPL_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD2_IMPLICIT_REP_ID</name>
@@ -1760,9 +1722,61 @@
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">98e1d084-5ced-4694-a39d-a8503d1ed456</identifier>
+      </ID>
+      <name>SOL_VEG_OBJ_LOD3BREP_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>LOD3_BREP_ID</name>
+          <identifier class="java.lang.String">d0b53119-0e2a-4f0d-9538-3ce5a7713c07</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>SOLITARY_VEGETAT_OBJECT</name>
+            <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>SOLITARY_VEGETAT_OBJECT_FK3</name>
+            <childObjectNames>
+              <childObjectName>LOD3_GEOMETRY_ID</childObjectName>
+            </childObjectNames>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <subType>FKConstraint</subType>
+            <type>CONSTRAINT</type>
+          </value>
+        </entry>
+      </properties>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>SURFACE_GEOMETRY_PK</name>
+        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>SURFACE_GEOMETRY</name>
+          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">3c9fbee7-b2f9-4430-b2e3-32d5be3bbb8b</identifier>
       </ID>
-      <name>SOLITARY_VEGETAT_OBJECT_FK7</name>
+      <name>SOL_VEG_OBJ_LOD3IMPL_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD3_IMPLICIT_REP_ID</name>
@@ -1812,9 +1826,61 @@
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">28f68f91-8e07-4195-b5e0-57ab08e7cc1c</identifier>
+      </ID>
+      <name>SOL_VEG_OBJ_LOD4BREP_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>LOD4_BREP_ID</name>
+          <identifier class="java.lang.String">dc537c39-0b4d-432a-824b-389863cdccff</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>SOLITARY_VEGETAT_OBJECT</name>
+            <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>SOLITARY_VEGETAT_OBJECT_FK4</name>
+            <childObjectNames>
+              <childObjectName>LOD4_GEOMETRY_ID</childObjectName>
+            </childObjectNames>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <subType>FKConstraint</subType>
+            <type>CONSTRAINT</type>
+          </value>
+        </entry>
+      </properties>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>SURFACE_GEOMETRY_PK</name>
+        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>SURFACE_GEOMETRY</name>
+          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">01112ebe-d0fe-48b2-8198-4f6f1252570e</identifier>
       </ID>
-      <name>SOLITARY_VEGETAT_OBJECT_FK8</name>
+      <name>SOL_VEG_OBJ_LOD4IMPL_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD4_IMPLICIT_REP_ID</name>
@@ -1915,1118 +1981,6 @@
     </constraint>
   </constraints>
   <indexes>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">1f764b8f-2562-418e-b7f6-f589f5ad215f</identifier>
-      </ID>
-      <name>SOLITARY_VEGETAT_OBJ_FKX1</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">64a341ba-9604-4749-afb9-45be0bebbf92</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">604d3a84-90d0-4fac-97d6-6f7d6398c67b</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD1_BREP_ID</name>
-              <identifier class="java.lang.String">767e7454-56ca-4f8d-ae0d-f763bfa37bb4</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SOLITARY_VEGETAT_OBJECT</name>
-                <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJ_FKX1</name>
-                      <identifier class="java.math.BigDecimal">115963</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>SOLITARY_VEGETAT_OBJECT</name>
-                        <identifier class="java.math.BigDecimal">115855</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SOLITARY_VEGETAT_OBJ_FKX1</name>
-                  <identifier class="java.math.BigDecimal">115963</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJECT</name>
-                    <identifier class="java.math.BigDecimal">115855</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>SOLITARY_VEGETAT_OBJ_FKX1</name>
-            <identifier class="java.math.BigDecimal">115963</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">18276e2e-b759-4622-b107-27bfcceda9da</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX1</name>
-                    <identifier class="java.math.BigDecimal">115963</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d3c68b69-acf4-4ab3-a920-5b85c2cfa484</identifier>
-      </ID>
-      <name>SOLITARY_VEGETAT_OBJ_FKX2</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">ab2f9ca6-1303-4924-b1f7-f0e020a672f3</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">c2568acb-4968-4bb9-846f-973f9a0e85bb</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD2_BREP_ID</name>
-              <identifier class="java.lang.String">a9a37ed9-6615-4f67-a723-3e20908befc8</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SOLITARY_VEGETAT_OBJECT</name>
-                <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJ_FKX2</name>
-                      <identifier class="java.math.BigDecimal">115964</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>SOLITARY_VEGETAT_OBJECT</name>
-                        <identifier class="java.math.BigDecimal">115855</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SOLITARY_VEGETAT_OBJ_FKX2</name>
-                  <identifier class="java.math.BigDecimal">115964</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJECT</name>
-                    <identifier class="java.math.BigDecimal">115855</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>SOLITARY_VEGETAT_OBJ_FKX2</name>
-            <identifier class="java.math.BigDecimal">115964</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">83eb559e-fdd4-45f9-95a7-54888f17c460</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX2</name>
-                    <identifier class="java.math.BigDecimal">115964</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">5705050a-97c5-4051-9131-4674c4a75fde</identifier>
-      </ID>
-      <name>SOLITARY_VEGETAT_OBJ_FKX3</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">271d486a-4776-44b6-868c-2d419fc8f10e</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">73eaa105-40d3-4a34-875b-bdd13fc4db3e</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD3_BREP_ID</name>
-              <identifier class="java.lang.String">d0b53119-0e2a-4f0d-9538-3ce5a7713c07</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SOLITARY_VEGETAT_OBJECT</name>
-                <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJ_FKX3</name>
-                      <identifier class="java.math.BigDecimal">115965</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>SOLITARY_VEGETAT_OBJECT</name>
-                        <identifier class="java.math.BigDecimal">115855</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SOLITARY_VEGETAT_OBJ_FKX3</name>
-                  <identifier class="java.math.BigDecimal">115965</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJECT</name>
-                    <identifier class="java.math.BigDecimal">115855</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>SOLITARY_VEGETAT_OBJ_FKX3</name>
-            <identifier class="java.math.BigDecimal">115965</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">82fc1622-873f-4be4-916e-b16b92f1b787</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX3</name>
-                    <identifier class="java.math.BigDecimal">115965</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">5c1bfc40-8f3c-4293-be64-d46d517da015</identifier>
-      </ID>
-      <name>SOLITARY_VEGETAT_OBJ_FKX4</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">f1ad7c30-d9dc-477c-9fe3-2e3e0fc90b8f</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">e13ec302-d45e-476b-af35-f1adfa38af6a</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD4_BREP_ID</name>
-              <identifier class="java.lang.String">dc537c39-0b4d-432a-824b-389863cdccff</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SOLITARY_VEGETAT_OBJECT</name>
-                <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJ_FKX4</name>
-                      <identifier class="java.math.BigDecimal">115966</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>SOLITARY_VEGETAT_OBJECT</name>
-                        <identifier class="java.math.BigDecimal">115855</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SOLITARY_VEGETAT_OBJ_FKX4</name>
-                  <identifier class="java.math.BigDecimal">115966</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJECT</name>
-                    <identifier class="java.math.BigDecimal">115855</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>SOLITARY_VEGETAT_OBJ_FKX4</name>
-            <identifier class="java.math.BigDecimal">115966</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">bfdc09e0-245d-4cb2-9f78-ee0b016832a4</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX4</name>
-                    <identifier class="java.math.BigDecimal">115966</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">5bad7c5f-089d-49e7-ad1e-a9ca0588fb2c</identifier>
-      </ID>
-      <name>SOLITARY_VEGETAT_OBJ_FKX5</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">cdf4f43d-6f23-4fe6-b242-9a5dc64e23a2</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">f9e0c4fd-6875-4061-93a5-4c39bbe764ea</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD1_IMPLICIT_REP_ID</name>
-              <identifier class="java.lang.String">7194d542-031f-4a5a-93f0-920a37828769</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SOLITARY_VEGETAT_OBJECT</name>
-                <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJ_FKX5</name>
-                      <identifier class="java.math.BigDecimal">115967</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>SOLITARY_VEGETAT_OBJECT</name>
-                        <identifier class="java.math.BigDecimal">115855</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SOLITARY_VEGETAT_OBJ_FKX5</name>
-                  <identifier class="java.math.BigDecimal">115967</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJECT</name>
-                    <identifier class="java.math.BigDecimal">115855</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>SOLITARY_VEGETAT_OBJ_FKX5</name>
-            <identifier class="java.math.BigDecimal">115967</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">dd2b2a08-230a-4d9d-a531-5b0a4715b9ad</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX5</name>
-                    <identifier class="java.math.BigDecimal">115967</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d9fc651b-7bb8-4f1c-804f-daa7d86ac3d4</identifier>
-      </ID>
-      <name>SOLITARY_VEGETAT_OBJ_FKX6</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">e2f893a9-2646-4cb1-952e-ad9cc5fb387c</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">f4712dc8-7f97-4fc0-b3ae-8da391303c11</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD2_IMPLICIT_REP_ID</name>
-              <identifier class="java.lang.String">756691b4-567b-48cb-af48-06809b36b840</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SOLITARY_VEGETAT_OBJECT</name>
-                <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJ_FKX6</name>
-                      <identifier class="java.math.BigDecimal">115968</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>SOLITARY_VEGETAT_OBJECT</name>
-                        <identifier class="java.math.BigDecimal">115855</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SOLITARY_VEGETAT_OBJ_FKX6</name>
-                  <identifier class="java.math.BigDecimal">115968</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJECT</name>
-                    <identifier class="java.math.BigDecimal">115855</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>SOLITARY_VEGETAT_OBJ_FKX6</name>
-            <identifier class="java.math.BigDecimal">115968</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">75da0a2e-92c3-4eaf-b946-1ef373ca3ba6</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX6</name>
-                    <identifier class="java.math.BigDecimal">115968</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">a3ef1e73-ac53-4a96-a614-4689cc14c84d</identifier>
-      </ID>
-      <name>SOLITARY_VEGETAT_OBJ_FKX7</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">91f4a28f-dfe9-4b33-8250-5b5a22365545</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">89bcba21-e1eb-4088-8115-8df9d95b57fd</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD3_IMPLICIT_REP_ID</name>
-              <identifier class="java.lang.String">1a073263-e5e5-47b5-b1d2-77b254e8649e</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SOLITARY_VEGETAT_OBJECT</name>
-                <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJ_FKX7</name>
-                      <identifier class="java.math.BigDecimal">115969</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>SOLITARY_VEGETAT_OBJECT</name>
-                        <identifier class="java.math.BigDecimal">115855</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SOLITARY_VEGETAT_OBJ_FKX7</name>
-                  <identifier class="java.math.BigDecimal">115969</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJECT</name>
-                    <identifier class="java.math.BigDecimal">115855</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>SOLITARY_VEGETAT_OBJ_FKX7</name>
-            <identifier class="java.math.BigDecimal">115969</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">564ffabb-2510-4452-80f8-817bb2799269</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX7</name>
-                    <identifier class="java.math.BigDecimal">115969</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">15d1ff60-2bff-4878-a10d-157d25e0c498</identifier>
-      </ID>
-      <name>SOLITARY_VEGETAT_OBJ_FKX8</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">dc2c88cf-803a-4f10-90fe-9ca4f5f86a7c</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">6d22288b-7169-4e7a-ab0e-8cf00b08285c</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD4_IMPLICIT_REP_ID</name>
-              <identifier class="java.lang.String">79ea7b32-64e4-458b-a28d-c77bf048afcf</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SOLITARY_VEGETAT_OBJECT</name>
-                <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJ_FKX8</name>
-                      <identifier class="java.math.BigDecimal">115970</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>SOLITARY_VEGETAT_OBJECT</name>
-                        <identifier class="java.math.BigDecimal">115855</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SOLITARY_VEGETAT_OBJ_FKX8</name>
-                  <identifier class="java.math.BigDecimal">115970</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJECT</name>
-                    <identifier class="java.math.BigDecimal">115855</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>SOLITARY_VEGETAT_OBJ_FKX8</name>
-            <identifier class="java.math.BigDecimal">115970</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">9e7d7e20-6a07-46ee-9642-e923f313bf99</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX8</name>
-                    <identifier class="java.math.BigDecimal">115970</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">5b05069c-181d-444c-ba22-efed88cccefb</identifier>
@@ -3168,51 +2122,21 @@
     </indexe>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">f4f0c77a-a670-425b-afdf-831e3954a8f2</identifier>
+        <identifier class="java.lang.String">1f764b8f-2562-418e-b7f6-f589f5ad215f</identifier>
       </ID>
-      <name>SOL_VEG_OBJ_LOD1OTHER_SPX</name>
+      <name>SOL_VEG_OBJ_LOD1BREP_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">f61a5f2f-07ee-4abc-9780-2fe2715ce2f3</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">0822afc2-12e5-4b94-85a6-cb0a9cf6b638</identifier>
-            </ID>
-            <SQLText>LOD1_OTHER_GEOM</SQLText>
-          </expression>
-        </columnExpression>
-      </columnExpressions>
-      <domainIndextype class="oracle.javatools.db.ReferenceID">
-        <name>SPATIAL_INDEX</name>
-        <schemaName>MDSYS</schemaName>
-        <type>INDEXTYPE</type>
-      </domainIndextype>
-      <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d9e1220b-8a83-447b-a377-b610b03c9dae</identifier>
-      </ID>
-      <name>SOL_VEG_OBJ_LOD1REFPT_SPX</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">36da386b-d87f-4c8f-bfc7-7a896e2a3470</identifier>
+            <identifier class="java.lang.String">64a341ba-9604-4749-afb9-45be0bebbf92</identifier>
           </ID>
           <expression class="oracle.javatools.db.sql.ColumnUsage">
             <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">47602c2d-2bb1-4a22-b40e-a9678b2e49e0</identifier>
+              <identifier class="java.lang.String">604d3a84-90d0-4fac-97d6-6f7d6398c67b</identifier>
             </ID>
             <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD1_IMPLICIT_REF_POINT</name>
-              <identifier class="java.lang.String">ec39a468-2873-495c-9a1f-7b36a7c3909a</identifier>
+              <name>LOD1_BREP_ID</name>
+              <identifier class="java.lang.String">767e7454-56ca-4f8d-ae0d-f763bfa37bb4</identifier>
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>SOLITARY_VEGETAT_OBJECT</name>
                 <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
@@ -3228,8 +2152,8 @@
                 <value class="oracle.javatools.db.ReferenceID">
                   <parent class="oracle.javatools.db.ReferenceID">
                     <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOL_VEG_OBJ_LOD1REFPT_SPX</name>
-                      <identifier class="java.math.BigDecimal">116261</identifier>
+                      <name>SOLITARY_VEGETAT_OBJ_FKX1</name>
+                      <identifier class="java.math.BigDecimal">115963</identifier>
                       <parent class="oracle.javatools.db.ReferenceID">
                         <name>SOLITARY_VEGETAT_OBJECT</name>
                         <identifier class="java.math.BigDecimal">115855</identifier>
@@ -3247,13 +2171,14 @@
             </properties>
             <qualified>true</qualified>
           </expression>
+          <order>ASC</order>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
               <value class="oracle.javatools.db.ReferenceID">
                 <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SOL_VEG_OBJ_LOD1REFPT_SPX</name>
-                  <identifier class="java.math.BigDecimal">116261</identifier>
+                  <name>SOLITARY_VEGETAT_OBJ_FKX1</name>
+                  <identifier class="java.math.BigDecimal">115963</identifier>
                   <parent class="oracle.javatools.db.ReferenceID">
                     <name>SOLITARY_VEGETAT_OBJECT</name>
                     <identifier class="java.math.BigDecimal">115855</identifier>
@@ -3267,6 +2192,228 @@
               </value>
             </entry>
           </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>SOLITARY_VEGETAT_OBJ_FKX1</name>
+            <identifier class="java.math.BigDecimal">115963</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">18276e2e-b759-4622-b107-27bfcceda9da</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initialExtent>65536</initialExtent>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <maxExtent>2147483645</maxExtent>
+            <minExtent>1</minExtent>
+            <nextExtent>1048576</nextExtent>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SOLITARY_VEGETAT_OBJ_FKX1</name>
+                    <identifier class="java.math.BigDecimal">115963</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SOLITARY_VEGETAT_OBJECT</name>
+                      <identifier class="java.math.BigDecimal">115855</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">5bad7c5f-089d-49e7-ad1e-a9ca0588fb2c</identifier>
+      </ID>
+      <name>SOL_VEG_OBJ_LOD1IMPL_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">cdf4f43d-6f23-4fe6-b242-9a5dc64e23a2</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">f9e0c4fd-6875-4061-93a5-4c39bbe764ea</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD1_IMPLICIT_REP_ID</name>
+              <identifier class="java.lang.String">7194d542-031f-4a5a-93f0-920a37828769</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>SOLITARY_VEGETAT_OBJECT</name>
+                <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SOLITARY_VEGETAT_OBJ_FKX5</name>
+                      <identifier class="java.math.BigDecimal">115967</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>SOLITARY_VEGETAT_OBJECT</name>
+                        <identifier class="java.math.BigDecimal">115855</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>SOLITARY_VEGETAT_OBJ_FKX5</name>
+                  <identifier class="java.math.BigDecimal">115967</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SOLITARY_VEGETAT_OBJECT</name>
+                    <identifier class="java.math.BigDecimal">115855</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>SOLITARY_VEGETAT_OBJ_FKX5</name>
+            <identifier class="java.math.BigDecimal">115967</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">dd2b2a08-230a-4d9d-a531-5b0a4715b9ad</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initialExtent>65536</initialExtent>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <maxExtent>2147483645</maxExtent>
+            <minExtent>1</minExtent>
+            <nextExtent>1048576</nextExtent>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SOLITARY_VEGETAT_OBJ_FKX5</name>
+                    <identifier class="java.math.BigDecimal">115967</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SOLITARY_VEGETAT_OBJECT</name>
+                      <identifier class="java.math.BigDecimal">115855</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">d9e1220b-8a83-447b-a377-b610b03c9dae</identifier>
+      </ID>
+      <name>SOL_VEG_OBJ_LOD1REFPT_SPX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">36da386b-d87f-4c8f-bfc7-7a896e2a3470</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">d9384ad4-b736-45a5-8479-4493f0bf253a</identifier>
+            </ID>
+            <SQLText>LOD1_IMPLICIT_REF_POINT</SQLText>
+          </expression>
         </columnExpression>
       </columnExpressions>
       <domainIndextype class="oracle.javatools.db.ReferenceID">
@@ -3332,19 +2479,19 @@
     </indexe>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">690edf08-a570-4b86-a9fb-686a37837bf5</identifier>
+        <identifier class="java.lang.String">f4f0c77a-a670-425b-afdf-831e3954a8f2</identifier>
       </ID>
-      <name>SOL_VEG_OBJ_LOD2OTHER_SPX</name>
+      <name>SOL_VEG_OBJ_LOD1XGEOM_SPX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">e9ddea3e-5c60-41c7-b5ac-a4b1074266c5</identifier>
+            <identifier class="java.lang.String">f61a5f2f-07ee-4abc-9780-2fe2715ce2f3</identifier>
           </ID>
           <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
             <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">02c736a8-5f0a-4172-a14b-46ca8cd6d79f</identifier>
+              <identifier class="java.lang.String">0822afc2-12e5-4b94-85a6-cb0a9cf6b638</identifier>
             </ID>
-            <SQLText>LOD2_OTHER_GEOM</SQLText>
+            <SQLText>LOD1_OTHER_GEOM</SQLText>
           </expression>
         </columnExpression>
       </columnExpressions>
@@ -3355,6 +2502,284 @@
       </domainIndextype>
       <indexType>DOMAIN</indexType>
       <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">d3c68b69-acf4-4ab3-a920-5b85c2cfa484</identifier>
+      </ID>
+      <name>SOL_VEG_OBJ_LOD2BREP_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">ab2f9ca6-1303-4924-b1f7-f0e020a672f3</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">c2568acb-4968-4bb9-846f-973f9a0e85bb</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD2_BREP_ID</name>
+              <identifier class="java.lang.String">a9a37ed9-6615-4f67-a723-3e20908befc8</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>SOLITARY_VEGETAT_OBJECT</name>
+                <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SOLITARY_VEGETAT_OBJ_FKX2</name>
+                      <identifier class="java.math.BigDecimal">115964</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>SOLITARY_VEGETAT_OBJECT</name>
+                        <identifier class="java.math.BigDecimal">115855</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>SOLITARY_VEGETAT_OBJ_FKX2</name>
+                  <identifier class="java.math.BigDecimal">115964</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SOLITARY_VEGETAT_OBJECT</name>
+                    <identifier class="java.math.BigDecimal">115855</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>SOLITARY_VEGETAT_OBJ_FKX2</name>
+            <identifier class="java.math.BigDecimal">115964</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">83eb559e-fdd4-45f9-95a7-54888f17c460</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initialExtent>65536</initialExtent>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <maxExtent>2147483645</maxExtent>
+            <minExtent>1</minExtent>
+            <nextExtent>1048576</nextExtent>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SOLITARY_VEGETAT_OBJ_FKX2</name>
+                    <identifier class="java.math.BigDecimal">115964</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SOLITARY_VEGETAT_OBJECT</name>
+                      <identifier class="java.math.BigDecimal">115855</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">d9fc651b-7bb8-4f1c-804f-daa7d86ac3d4</identifier>
+      </ID>
+      <name>SOL_VEG_OBJ_LOD2IMPL_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">e2f893a9-2646-4cb1-952e-ad9cc5fb387c</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">f4712dc8-7f97-4fc0-b3ae-8da391303c11</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD2_IMPLICIT_REP_ID</name>
+              <identifier class="java.lang.String">756691b4-567b-48cb-af48-06809b36b840</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>SOLITARY_VEGETAT_OBJECT</name>
+                <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SOLITARY_VEGETAT_OBJ_FKX6</name>
+                      <identifier class="java.math.BigDecimal">115968</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>SOLITARY_VEGETAT_OBJECT</name>
+                        <identifier class="java.math.BigDecimal">115855</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>SOLITARY_VEGETAT_OBJ_FKX6</name>
+                  <identifier class="java.math.BigDecimal">115968</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SOLITARY_VEGETAT_OBJECT</name>
+                    <identifier class="java.math.BigDecimal">115855</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>SOLITARY_VEGETAT_OBJ_FKX6</name>
+            <identifier class="java.math.BigDecimal">115968</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">75da0a2e-92c3-4eaf-b946-1ef373ca3ba6</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initialExtent>65536</initialExtent>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <maxExtent>2147483645</maxExtent>
+            <minExtent>1</minExtent>
+            <nextExtent>1048576</nextExtent>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SOLITARY_VEGETAT_OBJ_FKX6</name>
+                    <identifier class="java.math.BigDecimal">115968</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SOLITARY_VEGETAT_OBJECT</name>
+                      <identifier class="java.math.BigDecimal">115855</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -3496,19 +2921,19 @@
     </indexe>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">a4b22780-42f4-406c-b1f5-08d551a20c40</identifier>
+        <identifier class="java.lang.String">690edf08-a570-4b86-a9fb-686a37837bf5</identifier>
       </ID>
-      <name>SOL_VEG_OBJ_LOD3OTHER_SPX</name>
+      <name>SOL_VEG_OBJ_LOD2XGEOM_SPX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">68d1bb21-d153-4e8e-a47c-73eb23d1397f</identifier>
+            <identifier class="java.lang.String">e9ddea3e-5c60-41c7-b5ac-a4b1074266c5</identifier>
           </ID>
           <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
             <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">21e2fe2c-c1d4-4906-bf0b-f7d3c43d72aa</identifier>
+              <identifier class="java.lang.String">02c736a8-5f0a-4172-a14b-46ca8cd6d79f</identifier>
             </ID>
-            <SQLText>LOD3_OTHER_GEOM</SQLText>
+            <SQLText>LOD2_OTHER_GEOM</SQLText>
           </expression>
         </columnExpression>
       </columnExpressions>
@@ -3519,6 +2944,284 @@
       </domainIndextype>
       <indexType>DOMAIN</indexType>
       <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">5705050a-97c5-4051-9131-4674c4a75fde</identifier>
+      </ID>
+      <name>SOL_VEG_OBJ_LOD3BREP_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">271d486a-4776-44b6-868c-2d419fc8f10e</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">73eaa105-40d3-4a34-875b-bdd13fc4db3e</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD3_BREP_ID</name>
+              <identifier class="java.lang.String">d0b53119-0e2a-4f0d-9538-3ce5a7713c07</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>SOLITARY_VEGETAT_OBJECT</name>
+                <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SOLITARY_VEGETAT_OBJ_FKX3</name>
+                      <identifier class="java.math.BigDecimal">115965</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>SOLITARY_VEGETAT_OBJECT</name>
+                        <identifier class="java.math.BigDecimal">115855</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>SOLITARY_VEGETAT_OBJ_FKX3</name>
+                  <identifier class="java.math.BigDecimal">115965</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SOLITARY_VEGETAT_OBJECT</name>
+                    <identifier class="java.math.BigDecimal">115855</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>SOLITARY_VEGETAT_OBJ_FKX3</name>
+            <identifier class="java.math.BigDecimal">115965</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">82fc1622-873f-4be4-916e-b16b92f1b787</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initialExtent>65536</initialExtent>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <maxExtent>2147483645</maxExtent>
+            <minExtent>1</minExtent>
+            <nextExtent>1048576</nextExtent>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SOLITARY_VEGETAT_OBJ_FKX3</name>
+                    <identifier class="java.math.BigDecimal">115965</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SOLITARY_VEGETAT_OBJECT</name>
+                      <identifier class="java.math.BigDecimal">115855</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">a3ef1e73-ac53-4a96-a614-4689cc14c84d</identifier>
+      </ID>
+      <name>SOL_VEG_OBJ_LOD3IMPL_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">91f4a28f-dfe9-4b33-8250-5b5a22365545</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">89bcba21-e1eb-4088-8115-8df9d95b57fd</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD3_IMPLICIT_REP_ID</name>
+              <identifier class="java.lang.String">1a073263-e5e5-47b5-b1d2-77b254e8649e</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>SOLITARY_VEGETAT_OBJECT</name>
+                <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SOLITARY_VEGETAT_OBJ_FKX7</name>
+                      <identifier class="java.math.BigDecimal">115969</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>SOLITARY_VEGETAT_OBJECT</name>
+                        <identifier class="java.math.BigDecimal">115855</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>SOLITARY_VEGETAT_OBJ_FKX7</name>
+                  <identifier class="java.math.BigDecimal">115969</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SOLITARY_VEGETAT_OBJECT</name>
+                    <identifier class="java.math.BigDecimal">115855</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>SOLITARY_VEGETAT_OBJ_FKX7</name>
+            <identifier class="java.math.BigDecimal">115969</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">564ffabb-2510-4452-80f8-817bb2799269</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initialExtent>65536</initialExtent>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <maxExtent>2147483645</maxExtent>
+            <minExtent>1</minExtent>
+            <nextExtent>1048576</nextExtent>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SOLITARY_VEGETAT_OBJ_FKX7</name>
+                    <identifier class="java.math.BigDecimal">115969</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SOLITARY_VEGETAT_OBJECT</name>
+                      <identifier class="java.math.BigDecimal">115855</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -3660,19 +3363,19 @@
     </indexe>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">9f6e4c36-217a-4712-a151-84af4ab72d92</identifier>
+        <identifier class="java.lang.String">a4b22780-42f4-406c-b1f5-08d551a20c40</identifier>
       </ID>
-      <name>SOL_VEG_OBJ_LOD4OTHER_SPX</name>
+      <name>SOL_VEG_OBJ_LOD3XGEOM_SPX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">814ca362-5248-4b29-b64b-74490fb89f73</identifier>
+            <identifier class="java.lang.String">68d1bb21-d153-4e8e-a47c-73eb23d1397f</identifier>
           </ID>
           <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
             <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">6ddf4004-838f-4658-a4a6-9986e16eb37f</identifier>
+              <identifier class="java.lang.String">21e2fe2c-c1d4-4906-bf0b-f7d3c43d72aa</identifier>
             </ID>
-            <SQLText>LOD4_OTHER_GEOM</SQLText>
+            <SQLText>LOD3_OTHER_GEOM</SQLText>
           </expression>
         </columnExpression>
       </columnExpressions>
@@ -3683,6 +3386,284 @@
       </domainIndextype>
       <indexType>DOMAIN</indexType>
       <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">5c1bfc40-8f3c-4293-be64-d46d517da015</identifier>
+      </ID>
+      <name>SOL_VEG_OBJ_LOD4BREP_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">f1ad7c30-d9dc-477c-9fe3-2e3e0fc90b8f</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">e13ec302-d45e-476b-af35-f1adfa38af6a</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD4_BREP_ID</name>
+              <identifier class="java.lang.String">dc537c39-0b4d-432a-824b-389863cdccff</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>SOLITARY_VEGETAT_OBJECT</name>
+                <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SOLITARY_VEGETAT_OBJ_FKX4</name>
+                      <identifier class="java.math.BigDecimal">115966</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>SOLITARY_VEGETAT_OBJECT</name>
+                        <identifier class="java.math.BigDecimal">115855</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>SOLITARY_VEGETAT_OBJ_FKX4</name>
+                  <identifier class="java.math.BigDecimal">115966</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SOLITARY_VEGETAT_OBJECT</name>
+                    <identifier class="java.math.BigDecimal">115855</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>SOLITARY_VEGETAT_OBJ_FKX4</name>
+            <identifier class="java.math.BigDecimal">115966</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">bfdc09e0-245d-4cb2-9f78-ee0b016832a4</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initialExtent>65536</initialExtent>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <maxExtent>2147483645</maxExtent>
+            <minExtent>1</minExtent>
+            <nextExtent>1048576</nextExtent>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SOLITARY_VEGETAT_OBJ_FKX4</name>
+                    <identifier class="java.math.BigDecimal">115966</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SOLITARY_VEGETAT_OBJECT</name>
+                      <identifier class="java.math.BigDecimal">115855</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">15d1ff60-2bff-4878-a10d-157d25e0c498</identifier>
+      </ID>
+      <name>SOL_VEG_OBJ_LOD4IMPL_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">dc2c88cf-803a-4f10-90fe-9ca4f5f86a7c</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">6d22288b-7169-4e7a-ab0e-8cf00b08285c</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD4_IMPLICIT_REP_ID</name>
+              <identifier class="java.lang.String">79ea7b32-64e4-458b-a28d-c77bf048afcf</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>SOLITARY_VEGETAT_OBJECT</name>
+                <identifier class="java.lang.String">86890007-ad76-416b-a1f8-17043c871804</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SOLITARY_VEGETAT_OBJ_FKX8</name>
+                      <identifier class="java.math.BigDecimal">115970</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>SOLITARY_VEGETAT_OBJECT</name>
+                        <identifier class="java.math.BigDecimal">115855</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>SOLITARY_VEGETAT_OBJ_FKX8</name>
+                  <identifier class="java.math.BigDecimal">115970</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SOLITARY_VEGETAT_OBJECT</name>
+                    <identifier class="java.math.BigDecimal">115855</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>SOLITARY_VEGETAT_OBJ_FKX8</name>
+            <identifier class="java.math.BigDecimal">115970</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">9e7d7e20-6a07-46ee-9642-e923f313bf99</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initialExtent>65536</initialExtent>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <maxExtent>2147483645</maxExtent>
+            <minExtent>1</minExtent>
+            <nextExtent>1048576</nextExtent>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>SOLITARY_VEGETAT_OBJ_FKX8</name>
+                    <identifier class="java.math.BigDecimal">115970</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>SOLITARY_VEGETAT_OBJECT</name>
+                      <identifier class="java.math.BigDecimal">115855</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -3762,6 +3743,36 @@
           </value>
         </entry>
       </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">9f6e4c36-217a-4712-a151-84af4ab72d92</identifier>
+      </ID>
+      <name>SOL_VEG_OBJ_LOD4XGEOM_SPX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">814ca362-5248-4b29-b64b-74490fb89f73</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">6ddf4004-838f-4658-a4a6-9986e16eb37f</identifier>
+            </ID>
+            <SQLText>LOD4_OTHER_GEOM</SQLText>
+          </expression>
+        </columnExpression>
+      </columnExpressions>
+      <domainIndextype class="oracle.javatools.db.ReferenceID">
+        <name>SPATIAL_INDEX</name>
+        <schemaName>MDSYS</schemaName>
+        <type>INDEXTYPE</type>
+      </domainIndextype>
+      <indexType>DOMAIN</indexType>
+      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>

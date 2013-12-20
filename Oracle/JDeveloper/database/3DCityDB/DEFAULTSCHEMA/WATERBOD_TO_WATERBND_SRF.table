@@ -117,10 +117,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>WATERBOD_TO_WATERBND_SRF</name>
             <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -170,10 +169,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>WATERBOD_TO_WATERBND_SRF</name>
             <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -223,10 +221,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>WATERBOD_TO_WATERBND_SRF</name>
             <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
@@ -235,10 +232,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>WATERBOD_TO_WATERBND_SRF</name>
             <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -249,10 +245,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>WATERBOD_TO_WATERBND_SRF</name>
           <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
       <properties>
@@ -280,6 +276,82 @@
   <indexes>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">e4e946ce-352c-42eb-85ec-e79cd6d4d242</identifier>
+      </ID>
+      <name>WATERBOD_TO_WATERBND_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">5eb38f88-790a-4c3a-ba8e-77c4142e0855</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">bd67ef98-3f75-4e0d-aa52-1cd043c153ee</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>WATERBOUNDARY_SURFACE_ID</name>
+              <identifier class="java.lang.String">ac0d393c-2e39-40a4-ab3e-246370b9fb4e</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>WATERBOD_TO_WATERBND_SRF</name>
+                <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">d3fb7f5c-dd8c-47f7-9b12-cb8617b0a12d</identifier>
+      </ID>
+      <name>WATERBOD_TO_WATERBND_FKX1</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">d4726a06-2f69-4fdc-bcfe-920ce3e7253d</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">b8382649-02b9-4268-9011-da3c275080dc</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>WATERBODY_ID</name>
+              <identifier class="java.lang.String">8dfda1ef-3ea3-464b-b26b-1eac64233c06</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>WATERBOD_TO_WATERBND_SRF</name>
+                <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">33124678-8969-4368-a240-f0be68b11161</identifier>
       </ID>
       <name>WATERBOD_TO_WATERBND_PK</name>
@@ -298,10 +370,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>WATERBOD_TO_WATERBND_SRF</name>
                 <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -366,10 +437,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>WATERBOD_TO_WATERBND_SRF</name>
                 <identifier class="java.lang.String">4c9aa19c-7d9b-420d-84b4-b9ae5dc166a1</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -478,7 +548,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
@@ -534,6 +604,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

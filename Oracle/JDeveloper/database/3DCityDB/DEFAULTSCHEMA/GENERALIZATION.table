@@ -109,7 +109,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">26f15792-3d40-4d70-879b-ee62be306b0f</identifier>
       </ID>
-      <name>GENERALIZATION_FK</name>
+      <name>GENERAL_CITYOBJECT_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>CITYOBJECT_ID</name>
@@ -117,10 +117,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>GENERALIZATION</name>
             <identifier class="java.lang.String">f35f4992-5a9d-4370-8c36-f00a336b7a30</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -162,7 +161,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">bf5fc758-07a8-4414-863f-aadc32563d0a</identifier>
       </ID>
-      <name>GENERALIZATION_FK1</name>
+      <name>GENERAL_GENERALIZES_TO_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>GENERALIZES_TO_ID</name>
@@ -170,10 +169,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>GENERALIZATION</name>
             <identifier class="java.lang.String">f35f4992-5a9d-4370-8c36-f00a336b7a30</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -223,10 +221,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>GENERALIZATION</name>
             <identifier class="java.lang.String">f35f4992-5a9d-4370-8c36-f00a336b7a30</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
@@ -235,10 +232,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>GENERALIZATION</name>
             <identifier class="java.lang.String">f35f4992-5a9d-4370-8c36-f00a336b7a30</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -249,10 +245,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>GENERALIZATION</name>
           <identifier class="java.lang.String">f35f4992-5a9d-4370-8c36-f00a336b7a30</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
       <properties>
@@ -298,10 +294,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>GENERALIZATION</name>
                 <identifier class="java.lang.String">f35f4992-5a9d-4370-8c36-f00a336b7a30</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -366,10 +361,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>GENERALIZATION</name>
                 <identifier class="java.lang.String">f35f4992-5a9d-4370-8c36-f00a336b7a30</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -478,9 +472,83 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">1e8f6a5c-03f2-4c09-971e-8868257c7bae</identifier>
+      </ID>
+      <name>GENERAL_CITYOBJECT_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">9b2cbf46-ea96-45dd-97db-177e0308ff47</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">8a7493f5-12e0-4e6e-8de9-beefe2e24433</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>CITYOBJECT_ID</name>
+              <identifier class="java.lang.String">0e88e483-d4d1-4db4-93b8-0c31823946c1</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>GENERALIZATION</name>
+                <identifier class="java.lang.String">f35f4992-5a9d-4370-8c36-f00a336b7a30</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">f732f51f-d66b-4309-8749-ea5c9afe6e9b</identifier>
+      </ID>
+      <name>GENERAL_GENERALIZES_TO_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">f698b48f-0bc2-45b6-ac6b-b0410da05fda</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">8a5dc1ee-5647-452b-8bc4-096315d71b57</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>GENERALIZES_TO_ID</name>
+              <identifier class="java.lang.String">f3176ef0-a16e-4bf3-b5cd-02f78e14423b</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>GENERALIZATION</name>
+                <identifier class="java.lang.String">f35f4992-5a9d-4370-8c36-f00a336b7a30</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
     </indexe>
   </indexes>
   <properties>
@@ -534,6 +602,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

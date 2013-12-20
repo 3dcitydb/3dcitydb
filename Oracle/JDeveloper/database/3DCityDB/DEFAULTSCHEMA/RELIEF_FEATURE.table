@@ -118,7 +118,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">1f8ed9fc-ff76-471f-93df-4026079f58c7</identifier>
       </ID>
-      <name>RELIEF_FEATURE_CHK1</name>
+      <name>RELIEF_FEAT_LOD_CHK</name>
       <checkConditionFragment class="oracle.javatools.db.sql.WhereObject">
         <ID class="oracle.javatools.db.IdentifierBasedID">
           <identifier class="java.lang.String">883a9e4f-f26e-41a0-b52e-ba243cf480f3</identifier>
@@ -424,7 +424,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">33442618-94f4-41d7-82b1-01d9e3b72e37</identifier>
       </ID>
-      <name>RELIEF_FEATURE_CITYOBJECT_FK</name>
+      <name>RELIEF_FEAT_CITYOBJECT_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>ID</name>

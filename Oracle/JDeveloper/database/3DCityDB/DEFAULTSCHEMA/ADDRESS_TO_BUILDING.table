@@ -109,7 +109,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">bf1b3150-df4e-4c04-9fd9-11c9e85a2680</identifier>
       </ID>
-      <name>ADDRESS_TO_BUILDING_ADDRESS_FK</name>
+      <name>ADDRESS_TO_BUILDING_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>ADDRESS_ID</name>
@@ -117,10 +117,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>ADDRESS_TO_BUILDING</name>
             <identifier class="java.lang.String">d552f4d0-16af-442a-9be1-818c1752ab80</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -162,7 +161,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">243d60cf-60ab-4c02-aa28-2f392b59fdf4</identifier>
       </ID>
-      <name>ADDRESS_TO_BUILDING_FK</name>
+      <name>ADDRESS_TO_BUILDING_FK1</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>BUILDING_ID</name>
@@ -170,10 +169,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>ADDRESS_TO_BUILDING</name>
             <identifier class="java.lang.String">d552f4d0-16af-442a-9be1-818c1752ab80</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -223,10 +221,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>ADDRESS_TO_BUILDING</name>
             <identifier class="java.lang.String">d552f4d0-16af-442a-9be1-818c1752ab80</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
@@ -235,10 +232,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>ADDRESS_TO_BUILDING</name>
             <identifier class="java.lang.String">d552f4d0-16af-442a-9be1-818c1752ab80</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -249,10 +245,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>ADDRESS_TO_BUILDING</name>
           <identifier class="java.lang.String">d552f4d0-16af-442a-9be1-818c1752ab80</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
       <properties>
@@ -280,145 +276,9 @@
   <indexes>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">e1364a4b-7519-48cc-98e7-439971e9b6d8</identifier>
-      </ID>
-      <name>ADDRESS_TO_BUILDING_FKX</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">8126c1ef-5b12-469f-bd6c-129bdb582b12</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">4b36f3ab-d86e-4261-a36e-a92562aba81c</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>BUILDING_ID</name>
-              <identifier class="java.lang.String">fb8b52e9-2598-478a-9783-ec6c612efa0a</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>ADDRESS_TO_BUILDING</name>
-                <identifier class="java.lang.String">d552f4d0-16af-442a-9be1-818c1752ab80</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <schemaName>YAO</schemaName>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>ADDRESS_TO_BUILDING_FKX</name>
-                      <identifier class="java.math.BigDecimal">115902</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>ADDRESS_TO_BUILDING</name>
-                        <identifier class="java.math.BigDecimal">115659</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>ADDRESS_TO_BUILDING_FKX</name>
-                  <identifier class="java.math.BigDecimal">115902</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>ADDRESS_TO_BUILDING</name>
-                    <identifier class="java.math.BigDecimal">115659</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>ADDRESS_TO_BUILDING_FKX</name>
-            <identifier class="java.math.BigDecimal">115902</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>ADDRESS_TO_BUILDING</name>
-              <identifier class="java.math.BigDecimal">115659</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">bc8ad204-8fdc-4a8a-ad0a-5099546223c2</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>ADDRESS_TO_BUILDING_FKX</name>
-                    <identifier class="java.math.BigDecimal">115902</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>ADDRESS_TO_BUILDING</name>
-                      <identifier class="java.math.BigDecimal">115659</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">48e46e49-2b56-419d-8c97-737efe9d384f</identifier>
       </ID>
-      <name>ADDRESS_TO_BUILDING_FKX1</name>
+      <name>ADDRESS_TO_BUILDING_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -434,10 +294,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>ADDRESS_TO_BUILDING</name>
                 <identifier class="java.lang.String">d552f4d0-16af-442a-9be1-818c1752ab80</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -546,7 +405,142 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">e1364a4b-7519-48cc-98e7-439971e9b6d8</identifier>
+      </ID>
+      <name>ADDRESS_TO_BUILDING_FKX1</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">8126c1ef-5b12-469f-bd6c-129bdb582b12</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">4b36f3ab-d86e-4261-a36e-a92562aba81c</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>BUILDING_ID</name>
+              <identifier class="java.lang.String">fb8b52e9-2598-478a-9783-ec6c612efa0a</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>ADDRESS_TO_BUILDING</name>
+                <identifier class="java.lang.String">d552f4d0-16af-442a-9be1-818c1752ab80</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>ADDRESS_TO_BUILDING_FKX</name>
+                      <identifier class="java.math.BigDecimal">115902</identifier>
+                      <parent class="oracle.javatools.db.ReferenceID">
+                        <name>ADDRESS_TO_BUILDING</name>
+                        <identifier class="java.math.BigDecimal">115659</identifier>
+                        <schemaName>YAO</schemaName>
+                        <type>TABLE</type>
+                      </parent>
+                      <schemaName>YAO</schemaName>
+                      <type>INDEX</type>
+                    </parent>
+                    <type>IndexObject</type>
+                  </parent>
+                  <type>SQLFragment</type>
+                </value>
+              </entry>
+            </properties>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+          <properties>
+            <entry>
+              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+              <value class="oracle.javatools.db.ReferenceID">
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>ADDRESS_TO_BUILDING_FKX</name>
+                  <identifier class="java.math.BigDecimal">115902</identifier>
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>ADDRESS_TO_BUILDING</name>
+                    <identifier class="java.math.BigDecimal">115659</identifier>
+                    <schemaName>YAO</schemaName>
+                    <type>TABLE</type>
+                  </parent>
+                  <schemaName>YAO</schemaName>
+                  <type>INDEX</type>
+                </parent>
+                <type>IndexObject</type>
+              </value>
+            </entry>
+          </properties>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>ADDRESS_TO_BUILDING_FKX</name>
+            <identifier class="java.math.BigDecimal">115902</identifier>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>ADDRESS_TO_BUILDING</name>
+              <identifier class="java.math.BigDecimal">115659</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <schemaName>YAO</schemaName>
+            <type>INDEX</type>
+          </value>
+        </entry>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">bc8ad204-8fdc-4a8a-ad0a-5099546223c2</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <percentFree>10</percentFree>
+            <properties>
+              <entry>
+                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+                <value class="oracle.javatools.db.ReferenceID">
+                  <parent class="oracle.javatools.db.ReferenceID">
+                    <name>ADDRESS_TO_BUILDING_FKX</name>
+                    <identifier class="java.math.BigDecimal">115902</identifier>
+                    <parent class="oracle.javatools.db.ReferenceID">
+                      <name>ADDRESS_TO_BUILDING</name>
+                      <identifier class="java.math.BigDecimal">115659</identifier>
+                      <schemaName>YAO</schemaName>
+                      <type>TABLE</type>
+                    </parent>
+                    <schemaName>YAO</schemaName>
+                    <type>INDEX</type>
+                  </parent>
+                  <type>OracleStorageProperties</type>
+                </value>
+              </entry>
+            </properties>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -570,10 +564,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>ADDRESS_TO_BUILDING</name>
                 <identifier class="java.lang.String">d552f4d0-16af-442a-9be1-818c1752ab80</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -638,10 +631,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>ADDRESS_TO_BUILDING</name>
                 <identifier class="java.lang.String">d552f4d0-16af-442a-9be1-818c1752ab80</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -750,7 +742,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
@@ -806,6 +798,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

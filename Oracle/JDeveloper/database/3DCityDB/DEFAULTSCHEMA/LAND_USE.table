@@ -606,7 +606,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">c0c2ee45-b5d2-4ae9-a11f-ea84ad9e70c6</identifier>
       </ID>
-      <name>LAND_USE_SURFACE_GEOMETRY_FK</name>
+      <name>LAND_USE_LOD0MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD0_MULTI_SURFACE_ID</name>
@@ -658,7 +658,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">87c1db70-9ebe-4a22-9b78-c533ac7d5d0d</identifier>
       </ID>
-      <name>LAND_USE_SURFACE_GEOMETRY_FK1</name>
+      <name>LAND_USE_LOD1MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD1_MULTI_SURFACE_ID</name>
@@ -710,7 +710,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">2e3a3ff2-70e9-48af-b1eb-b7d047e15a92</identifier>
       </ID>
-      <name>LAND_USE_SURFACE_GEOMETRY_FK2</name>
+      <name>LAND_USE_LOD2MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD2_MULTI_SURFACE_ID</name>
@@ -762,7 +762,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">c39e657d-8f4b-4953-8966-4d9fcb8a7d88</identifier>
       </ID>
-      <name>LAND_USE_SURFACE_GEOMETRY_FK3</name>
+      <name>LAND_USE_LOD3MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD3_MULTI_SURFACE_ID</name>
@@ -814,7 +814,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">8f400361-ca0e-4449-8545-4b6596d7f494</identifier>
       </ID>
-      <name>LAND_USE_SURFACE_GEOMETRY_FK4</name>
+      <name>LAND_USE_LOD4MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD4_MULTI_SURFACE_ID</name>
@@ -919,7 +919,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">5c6feb08-98f0-4e60-a728-2b8b7e7c5d96</identifier>
       </ID>
-      <name>LAND_USE_FKX</name>
+      <name>LAND_USE_LOD0MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1054,7 +1054,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">9fbf78ff-9e2d-4216-9efc-bffeaff17989</identifier>
       </ID>
-      <name>LAND_USE_FKX1</name>
+      <name>LAND_USE_LOD1MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1189,7 +1189,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">44b23adf-0868-491d-bbf3-a27cc68098bb</identifier>
       </ID>
-      <name>LAND_USE_FKX2</name>
+      <name>LAND_USE_LOD2MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1324,7 +1324,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">1ecabc1a-9738-4ccf-bd06-61ac99af15c1</identifier>
       </ID>
-      <name>LAND_USE_FKX3</name>
+      <name>LAND_USE_LOD3MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1459,7 +1459,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">5f15da2e-623d-4e1e-a391-54f9d1aac933</identifier>
       </ID>
-      <name>LAND_USE_FKX4</name>
+      <name>LAND_USE_LOD4MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">

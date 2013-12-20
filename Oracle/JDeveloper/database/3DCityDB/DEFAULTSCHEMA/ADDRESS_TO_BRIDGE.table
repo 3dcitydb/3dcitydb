@@ -43,7 +43,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">1d431cd5-4c5e-4998-91fc-dbcd68aa1243</identifier>
       </ID>
-      <name>ADDRESS_TO_BRIDGE_ADDRESS_FK</name>
+      <name>ADDRESS_TO_BRIDGE_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>ADDRESS_ID</name>
@@ -51,10 +51,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>ADDRESS_TO_BRIDGE</name>
             <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -77,7 +76,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">8b949586-9eb9-4691-850e-a5dd362f3a4e</identifier>
       </ID>
-      <name>ADDRESS_TO_BRIDGE_FK</name>
+      <name>ADDRESS_TO_BRIDGE_FK1</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>BIRDGE_ID</name>
@@ -85,10 +84,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>ADDRESS_TO_BRIDGE</name>
             <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -119,10 +117,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>ADDRESS_TO_BRIDGE</name>
             <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
@@ -131,10 +128,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>ADDRESS_TO_BRIDGE</name>
             <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -145,10 +141,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>ADDRESS_TO_BRIDGE</name>
           <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
     </constraint>
@@ -156,67 +152,9 @@
   <indexes>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">2183e25d-2a11-4614-b462-7a00d7a9d858</identifier>
-      </ID>
-      <name>ADDRESS_TO_BRIDGE_FKX</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">a548523f-eb08-44f4-b8dd-56dda795b248</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">76be8e74-fd12-4e43-95f3-6cc1f80400b2</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>BIRDGE_ID</name>
-              <identifier class="java.lang.String">809290fd-d236-482c-b21a-18792e86727b</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>ADDRESS_TO_BRIDGE</name>
-                <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <schemaName>YAO</schemaName>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">d8acbd78-463a-45d4-a7aa-2647c0aee307</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">c9bf4fd3-d5de-4dfc-9f96-fcca7cdcb02b</identifier>
       </ID>
-      <name>ADDRESS_TO_BRIDGE_FKX1</name>
+      <name>ADDRESS_TO_BRIDGE_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -232,10 +170,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>ADDRESS_TO_BRIDGE</name>
                 <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -266,7 +203,64 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">2183e25d-2a11-4614-b462-7a00d7a9d858</identifier>
+      </ID>
+      <name>ADDRESS_TO_BRIDGE_FKX1</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">a548523f-eb08-44f4-b8dd-56dda795b248</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">76be8e74-fd12-4e43-95f3-6cc1f80400b2</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>BIRDGE_ID</name>
+              <identifier class="java.lang.String">809290fd-d236-482c-b21a-18792e86727b</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>ADDRESS_TO_BRIDGE</name>
+                <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">d8acbd78-463a-45d4-a7aa-2647c0aee307</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <percentFree>10</percentFree>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -290,10 +284,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>ADDRESS_TO_BRIDGE</name>
                 <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -315,10 +308,9 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>ADDRESS_TO_BRIDGE</name>
                 <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
-              <schemaName>YAO</schemaName>
               <type>COLUMN</type>
             </objectID>
             <outerJoin>false</outerJoin>
@@ -349,7 +341,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
@@ -378,6 +370,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

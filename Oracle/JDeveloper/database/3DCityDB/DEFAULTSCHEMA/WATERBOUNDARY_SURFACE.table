@@ -329,7 +329,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">f408ea9e-fe8f-48fc-89ad-dd4fb4a0ec60</identifier>
       </ID>
-      <name>WATERBOUNDARY_SRF_CITYOBJ_FK</name>
+      <name>WATERBND_SRF_CITYOBJECT_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>ID</name>
@@ -337,7 +337,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>WATERBOUNDARY_SURFACE</name>
             <identifier class="java.lang.String">85b6cb4f-89cb-4cd9-b7bc-fd94e4c4fad7</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -381,7 +381,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">bfea6040-ba1b-494d-81b8-986c6c926fac</identifier>
       </ID>
-      <name>WATERBOUNDARY_SURFACE_FK</name>
+      <name>WATERBND_SRF_LOD2SRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD2_SURFACE_ID</name>
@@ -389,7 +389,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>WATERBOUNDARY_SURFACE</name>
             <identifier class="java.lang.String">85b6cb4f-89cb-4cd9-b7bc-fd94e4c4fad7</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -433,7 +433,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">68bc365b-4b97-42e0-bfae-40334f918b29</identifier>
       </ID>
-      <name>WATERBOUNDARY_SURFACE_FK1</name>
+      <name>WATERBND_SRF_LOD3SRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD3_SURFACE_ID</name>
@@ -441,7 +441,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>WATERBOUNDARY_SURFACE</name>
             <identifier class="java.lang.String">85b6cb4f-89cb-4cd9-b7bc-fd94e4c4fad7</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -485,7 +485,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">97f8c1a6-0222-4706-8732-074fabb7c98d</identifier>
       </ID>
-      <name>WATERBOUNDARY_SURFACE_FK2</name>
+      <name>WATERBND_SRF_LOD4SRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD4_SURFACE_ID</name>
@@ -493,7 +493,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>WATERBOUNDARY_SURFACE</name>
             <identifier class="java.lang.String">85b6cb4f-89cb-4cd9-b7bc-fd94e4c4fad7</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -537,7 +537,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">ecb552ac-c18a-461e-95ee-e575bcfd9b13</identifier>
       </ID>
-      <name>WATERBOUNDARY_SURFACE_FK3</name>
+      <name>WATERBND_SRF_OBJCLASS_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>OBJECTCLASS_ID</name>
@@ -545,7 +545,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>WATERBOUNDARY_SURFACE</name>
             <identifier class="java.lang.String">85b6cb4f-89cb-4cd9-b7bc-fd94e4c4fad7</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -577,7 +577,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>WATERBOUNDARY_SURFACE</name>
             <identifier class="java.lang.String">85b6cb4f-89cb-4cd9-b7bc-fd94e4c4fad7</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -590,10 +590,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>WATERBOUNDARY_SURFACE</name>
           <identifier class="java.lang.String">85b6cb4f-89cb-4cd9-b7bc-fd94e4c4fad7</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
       <properties>
@@ -622,7 +622,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">22d78793-7c83-46ed-8150-deb33e0907a7</identifier>
       </ID>
-      <name>WATERBOUNDARY_SURFACE_FKX</name>
+      <name>WATERBND_SRF_LOD2SRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -638,7 +638,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>WATERBOUNDARY_SURFACE</name>
                 <identifier class="java.lang.String">85b6cb4f-89cb-4cd9-b7bc-fd94e4c4fad7</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -749,7 +749,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -757,7 +757,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">5f661451-a8df-4fcb-ab65-ea624ceaec88</identifier>
       </ID>
-      <name>WATERBOUNDARY_SURFACE_FKX1</name>
+      <name>WATERBND_SRF_LOD3SRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -773,7 +773,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>WATERBOUNDARY_SURFACE</name>
                 <identifier class="java.lang.String">85b6cb4f-89cb-4cd9-b7bc-fd94e4c4fad7</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -884,7 +884,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -892,7 +892,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">ec62434c-61b5-4810-8ab0-e7f166b878f1</identifier>
       </ID>
-      <name>WATERBOUNDARY_SURFACE_FKX2</name>
+      <name>WATERBND_SRF_LOD4SRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -908,7 +908,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>WATERBOUNDARY_SURFACE</name>
                 <identifier class="java.lang.String">85b6cb4f-89cb-4cd9-b7bc-fd94e4c4fad7</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -1019,7 +1019,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -1027,7 +1027,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">f0636135-cb68-4b5c-bd48-a0bb04689991</identifier>
       </ID>
-      <name>WATERBOUNDARY_SURFACE_FKX3</name>
+      <name>WATERBND_SRF_OBJCLASS_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1043,7 +1043,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>WATERBOUNDARY_SURFACE</name>
                 <identifier class="java.lang.String">85b6cb4f-89cb-4cd9-b7bc-fd94e4c4fad7</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -1057,7 +1057,7 @@
       <indexType>NORMAL</indexType>
       <parallelDegree>1</parallelDegree>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -1081,7 +1081,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>WATERBOUNDARY_SURFACE</name>
                 <identifier class="java.lang.String">85b6cb4f-89cb-4cd9-b7bc-fd94e4c4fad7</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -1192,7 +1192,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
@@ -1248,6 +1248,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

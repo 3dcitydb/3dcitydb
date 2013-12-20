@@ -512,70 +512,6 @@
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d9fa9966-858d-41f0-a511-b6645e550cab</identifier>
-      </ID>
-      <name>BRIDGE_BRIDGE_FK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>BRIDGE_PARENT_ID</name>
-          <identifier class="java.lang.String">f7614047-a9f8-415a-a9d6-5b8de5c6d08b</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRIDGE</name>
-            <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-            <schemaName>YAO</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>BRIDGE_PK</name>
-        <identifier class="java.lang.String">464f2eea-de28-4f5f-b6b4-90f218684b82</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>BRIDGE</name>
-          <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">8e12a8b1-7a81-43fb-a80a-09b03e02f77d</identifier>
-      </ID>
-      <name>BRIDGE_BRIDGE_FK1</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>BRIDGE_ROOT_ID</name>
-          <identifier class="java.lang.String">07922726-066c-4d56-8f01-4dcec5792868</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRIDGE</name>
-            <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-            <schemaName>YAO</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>BRIDGE_PK</name>
-        <identifier class="java.lang.String">464f2eea-de28-4f5f-b6b4-90f218684b82</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>BRIDGE</name>
-          <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">25381552-06b1-4f9d-982a-a768ec60ddc6</identifier>
       </ID>
       <name>BRIDGE_CITYOBJECT_FK</name>
@@ -586,7 +522,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE</name>
             <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -611,7 +547,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">4379efe4-be67-4768-96f0-989ce6ccf7e7</identifier>
       </ID>
-      <name>BRIDGE_SURFACE_GEOMETRY_FK</name>
+      <name>BRIDGE_LOD1MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD1_MULTI_SURFACE_ID</name>
@@ -619,106 +555,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE</name>
             <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-            <schemaName>YAO</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>SURFACE_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>SURFACE_GEOMETRY</name>
-          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>YAO</schemaName>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">0115566f-dd31-4bc3-a111-34469fd00820</identifier>
-      </ID>
-      <name>BRIDGE_SURFACE_GEOMETRY_FK1</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>LOD2_MULTI_SURFACE_ID</name>
-          <identifier class="java.lang.String">c947906e-ca68-421e-a3a0-328d5b7330d4</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRIDGE</name>
-            <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-            <schemaName>YAO</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>SURFACE_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>SURFACE_GEOMETRY</name>
-          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>YAO</schemaName>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">4198d11b-8269-4096-b5a1-346135fdbf72</identifier>
-      </ID>
-      <name>BRIDGE_SURFACE_GEOMETRY_FK2</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>LOD3_MULTI_SURFACE_ID</name>
-          <identifier class="java.lang.String">0e7bdf4a-ac08-4b28-826d-63b0cd955106</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRIDGE</name>
-            <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-            <schemaName>YAO</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>SURFACE_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>SURFACE_GEOMETRY</name>
-          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>YAO</schemaName>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">ef0214e2-4f12-4a4a-982a-33431b057fb9</identifier>
-      </ID>
-      <name>BRIDGE_SURFACE_GEOMETRY_FK3</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>LOD4_MULTI_SURFACE_ID</name>
-          <identifier class="java.lang.String">c99c8b82-389d-4064-b747-72e4c41322ed</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRIDGE</name>
-            <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -743,7 +580,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">e7fa308b-0437-4ca9-81be-19e8940bf62e</identifier>
       </ID>
-      <name>BRIDGE_SURFACE_GEOMETRY_FK4</name>
+      <name>BRIDGE_LOD1SOLID_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD1_SOLID_ID</name>
@@ -751,10 +588,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE</name>
             <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -769,6 +605,39 @@
           <schemaName>YAO</schemaName>
           <type>TABLE</type>
         </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">0115566f-dd31-4bc3-a111-34469fd00820</identifier>
+      </ID>
+      <name>BRIDGE_LOD2MSRF_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>LOD2_MULTI_SURFACE_ID</name>
+          <identifier class="java.lang.String">c947906e-ca68-421e-a3a0-328d5b7330d4</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>BRIDGE</name>
+            <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>SURFACE_GEOMETRY_PK</name>
+        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>SURFACE_GEOMETRY</name>
+          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
@@ -776,7 +645,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">daa3acdb-d7af-45a2-93e3-39697673d680</identifier>
       </ID>
-      <name>BRIDGE_SURFACE_GEOMETRY_FK5</name>
+      <name>BRIDGE_LOD2SOLID_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD2_SOLID_ID</name>
@@ -784,10 +653,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE</name>
             <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -802,6 +670,39 @@
           <schemaName>YAO</schemaName>
           <type>TABLE</type>
         </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">4198d11b-8269-4096-b5a1-346135fdbf72</identifier>
+      </ID>
+      <name>BRIDGE_LOD3MSRF_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>LOD3_MULTI_SURFACE_ID</name>
+          <identifier class="java.lang.String">0e7bdf4a-ac08-4b28-826d-63b0cd955106</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>BRIDGE</name>
+            <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>SURFACE_GEOMETRY_PK</name>
+        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>SURFACE_GEOMETRY</name>
+          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
@@ -809,7 +710,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">240db35b-eb78-4c9a-9926-46c1a042e24b</identifier>
       </ID>
-      <name>BRIDGE_SURFACE_GEOMETRY_FK6</name>
+      <name>BRIDGE_LOD3SOLID_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD3_SOLID_ID</name>
@@ -817,10 +718,9 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE</name>
             <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -840,20 +740,19 @@
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">fa8425cf-5b25-40b4-a506-71ca298b488f</identifier>
+        <identifier class="java.lang.String">ef0214e2-4f12-4a4a-982a-33431b057fb9</identifier>
       </ID>
-      <name>BRIDGE_SURFACE_GEOMETRY_FK7</name>
+      <name>BRIDGE_LOD4MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>LOD4_SOLID_ID</name>
-          <identifier class="java.lang.String">8a2a4fa2-b3b6-4a63-9348-8309539f2dc6</identifier>
+          <name>LOD4_MULTI_SURFACE_ID</name>
+          <identifier class="java.lang.String">c99c8b82-389d-4064-b747-72e4c41322ed</identifier>
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE</name>
             <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -866,6 +765,103 @@
           <name>SURFACE_GEOMETRY</name>
           <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
           <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>YAO</schemaName>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">fa8425cf-5b25-40b4-a506-71ca298b488f</identifier>
+      </ID>
+      <name>BRIDGE_LOD4SOLID_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>LOD4_SOLID_ID</name>
+          <identifier class="java.lang.String">8a2a4fa2-b3b6-4a63-9348-8309539f2dc6</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>BRIDGE</name>
+            <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>SURFACE_GEOMETRY_PK</name>
+        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>SURFACE_GEOMETRY</name>
+          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">d9fa9966-858d-41f0-a511-b6645e550cab</identifier>
+      </ID>
+      <name>BRIDGE_PARENT_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>BRIDGE_PARENT_ID</name>
+          <identifier class="java.lang.String">f7614047-a9f8-415a-a9d6-5b8de5c6d08b</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>BRIDGE</name>
+            <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>BRIDGE_PK</name>
+        <identifier class="java.lang.String">464f2eea-de28-4f5f-b6b4-90f218684b82</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>BRIDGE</name>
+          <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">8e12a8b1-7a81-43fb-a80a-09b03e02f77d</identifier>
+      </ID>
+      <name>BRIDGE_ROOT_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>BRIDGE_ROOT_ID</name>
+          <identifier class="java.lang.String">07922726-066c-4d56-8f01-4dcec5792868</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>BRIDGE</name>
+            <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>BRIDGE_PK</name>
+        <identifier class="java.lang.String">464f2eea-de28-4f5f-b6b4-90f218684b82</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>BRIDGE</name>
+          <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
         <type>CONSTRAINT</type>
@@ -883,7 +879,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE</name>
             <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -896,10 +892,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>BRIDGE</name>
           <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
     </constraint>
@@ -909,7 +905,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">be704cd0-9feb-4095-85a7-5b4f9e4a9822</identifier>
       </ID>
-      <name>BRIDGE_FKX</name>
+      <name>BRIDGE_LOD1MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -925,7 +921,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>BRIDGE</name>
                 <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -962,7 +958,133 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">6a6abacf-98f5-46aa-b1a3-031d6fc8d9ea</identifier>
+      </ID>
+      <name>BRIDGE_LOD1SOLID_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">5e14013f-3415-496b-880b-7a78e765f4b0</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">9379508f-94b9-4d2d-b074-684a626c9895</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD1_SOLID_ID</name>
+              <identifier class="java.lang.String">61918a22-f115-4edf-a24f-22b51d8f6eba</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>BRIDGE</name>
+                <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">714b42a9-085b-478f-ac6c-95be9925336b</identifier>
+      </ID>
+      <name>BRIDGE_LOD1TERR_SPX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">ed94ea48-a388-462e-a013-1c233f13893c</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">dede646b-4cfb-424a-9687-cb38543a1e4d</identifier>
+            </ID>
+            <SQLText>LOD1_TERRAIN_INTERSECTION</SQLText>
+          </expression>
+        </columnExpression>
+      </columnExpressions>
+      <domainIndextype class="oracle.javatools.db.ReferenceID">
+        <name>SPATIAL_INDEX</name>
+        <schemaName>MDSYS</schemaName>
+        <type>INDEXTYPE</type>
+      </domainIndextype>
+      <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
+      <indexType>DOMAIN</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">0e42f7af-3fd7-4782-91c8-4b3ce28d6433</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <logging>true</logging>
+            <percentFree>0</percentFree>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">dd64368d-54f7-4f52-bf8d-0e6993946a74</identifier>
+      </ID>
+      <name>BRIDGE_LOD2CURVE_SPX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">b58e12b5-2655-4761-a200-6c9556e37fa3</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">57f6c0da-4428-4f7f-8dcf-354d00bfe28f</identifier>
+            </ID>
+            <SQLText>LOD2_MULTI_CURVE</SQLText>
+          </expression>
+        </columnExpression>
+      </columnExpressions>
+      <domainIndextype class="oracle.javatools.db.ReferenceID">
+        <name>SPATIAL_INDEX</name>
+        <schemaName>MDSYS</schemaName>
+        <type>INDEXTYPE</type>
+      </domainIndextype>
+      <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
+      <indexType>DOMAIN</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">b11cf44e-b20b-4f97-9316-30db4c39c1f2</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <logging>true</logging>
+            <percentFree>0</percentFree>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -970,7 +1092,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">4e1b212f-8d58-4213-a03d-e44c479ecca3</identifier>
       </ID>
-      <name>BRIDGE_FKX1</name>
+      <name>BRIDGE_LOD2MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -986,7 +1108,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>BRIDGE</name>
                 <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -1023,7 +1145,133 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">7ff689c1-f8fa-4d3f-81fa-ddde684fca43</identifier>
+      </ID>
+      <name>BRIDGE_LOD2SOLID_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">8e966269-a148-45c7-bfdc-920fa5854482</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">a539a67c-9e8d-4ccd-9dc3-6642a6718e61</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD2_SOLID_ID</name>
+              <identifier class="java.lang.String">e73306c3-52a2-48b9-8ed8-025ed2a6297a</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>BRIDGE</name>
+                <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">33978481-d0fa-4a51-93da-bfce5efbab97</identifier>
+      </ID>
+      <name>BRIDGE_LOD2TERR_SPX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">439167c2-b031-4877-b26c-a6b952c8b4e4</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">1215feb8-b8b4-4d3f-8083-cc0109e3c088</identifier>
+            </ID>
+            <SQLText>LOD2_TERRAIN_INTERSECTION</SQLText>
+          </expression>
+        </columnExpression>
+      </columnExpressions>
+      <domainIndextype class="oracle.javatools.db.ReferenceID">
+        <name>SPATIAL_INDEX</name>
+        <schemaName>MDSYS</schemaName>
+        <type>INDEXTYPE</type>
+      </domainIndextype>
+      <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
+      <indexType>DOMAIN</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">b4f0ef33-9e39-4955-94f4-60d0e1f2fba0</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <logging>true</logging>
+            <percentFree>0</percentFree>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">4d598b45-462c-41e5-af1d-5d743128bcb7</identifier>
+      </ID>
+      <name>BRIDGE_LOD3CURVE_SPX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">46721949-19fb-4bb8-878c-a60e282fd13c</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">cbda613b-8029-4b08-86ee-94bee9821268</identifier>
+            </ID>
+            <SQLText>LOD3_MULTI_CURVE</SQLText>
+          </expression>
+        </columnExpression>
+      </columnExpressions>
+      <domainIndextype class="oracle.javatools.db.ReferenceID">
+        <name>SPATIAL_INDEX</name>
+        <schemaName>MDSYS</schemaName>
+        <type>INDEXTYPE</type>
+      </domainIndextype>
+      <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
+      <indexType>DOMAIN</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">08daf42d-95bc-4456-bf82-f9ea2e390710</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <logging>true</logging>
+            <percentFree>0</percentFree>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -1031,7 +1279,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">fe68cfec-85a3-4703-995a-cd24e0acf119</identifier>
       </ID>
-      <name>BRIDGE_FKX2</name>
+      <name>BRIDGE_LOD3MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1047,7 +1295,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>BRIDGE</name>
                 <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -1084,7 +1332,133 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">0e179438-7d6a-4fc4-bac2-7fe3cb68d96e</identifier>
+      </ID>
+      <name>BRIDGE_LOD3SOLID_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">ea379118-0ba2-470f-8007-c98bbb757e9c</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">dc6fa541-fbbb-4447-b250-2a64d6ed63b7</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD3_SOLID_ID</name>
+              <identifier class="java.lang.String">1a50536b-8e83-467d-b2e2-5e91bcb1b519</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>BRIDGE</name>
+                <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">db138ddc-2c63-4f3e-aaa7-ce4497a4f902</identifier>
+      </ID>
+      <name>BRIDGE_LOD3TERR_SPX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">14fe5836-be39-4c4b-877a-6e9c6c6f5a1a</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">deb6cfd4-fc38-425c-a44e-091c555aa7b3</identifier>
+            </ID>
+            <SQLText>LOD3_TERRAIN_INTERSECTION</SQLText>
+          </expression>
+        </columnExpression>
+      </columnExpressions>
+      <domainIndextype class="oracle.javatools.db.ReferenceID">
+        <name>SPATIAL_INDEX</name>
+        <schemaName>MDSYS</schemaName>
+        <type>INDEXTYPE</type>
+      </domainIndextype>
+      <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
+      <indexType>DOMAIN</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">65a030f6-6e00-411d-8572-bde3fbd2357e</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <logging>true</logging>
+            <percentFree>0</percentFree>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">d9e3468a-7e9d-4b03-b18d-d159fb5161d2</identifier>
+      </ID>
+      <name>BRIDGE_LOD4CURVE_SPX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">0b8e4c14-901b-4f01-8d29-3cd89fe54ba1</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">137c9860-3af7-486e-8373-0bfc525e342c</identifier>
+            </ID>
+            <SQLText>LOD4_MULTI_CURVE</SQLText>
+          </expression>
+        </columnExpression>
+      </columnExpressions>
+      <domainIndextype class="oracle.javatools.db.ReferenceID">
+        <name>SPATIAL_INDEX</name>
+        <schemaName>MDSYS</schemaName>
+        <type>INDEXTYPE</type>
+      </domainIndextype>
+      <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
+      <indexType>DOMAIN</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">01c2cda6-f38b-41cb-ae20-3568c23f5513</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <logging>true</logging>
+            <percentFree>0</percentFree>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -1092,7 +1466,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">a313a174-aa0c-4e7b-9af7-a1e8b855d57b</identifier>
       </ID>
-      <name>BRIDGE_FKX3</name>
+      <name>BRIDGE_LOD4MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1108,7 +1482,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>BRIDGE</name>
                 <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -1145,31 +1519,31 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">96da384f-b587-422a-8ab8-d619409935db</identifier>
+        <identifier class="java.lang.String">85bd8124-ebf7-451c-b889-9072ec755158</identifier>
       </ID>
-      <name>BRIDGE_FKX4</name>
+      <name>BRIDGE_LOD4SOLID_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">10a3e2e1-492b-4c1b-9cc9-bee2bc83c200</identifier>
+            <identifier class="java.lang.String">947ef3f4-41f1-4039-9db6-44b7f7985ada</identifier>
           </ID>
           <expression class="oracle.javatools.db.sql.ColumnUsage">
             <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">2b244d96-b717-4b35-9f17-8be73b304501</identifier>
+              <identifier class="java.lang.String">69dd415d-4813-430e-8718-730fcedc98de</identifier>
             </ID>
             <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>BRIDGE_ROOT_ID</name>
-              <identifier class="java.lang.String">07922726-066c-4d56-8f01-4dcec5792868</identifier>
+              <name>LOD4_SOLID_ID</name>
+              <identifier class="java.lang.String">8a2a4fa2-b3b6-4a63-9348-8309539f2dc6</identifier>
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>BRIDGE</name>
                 <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -1182,31 +1556,52 @@
       </columnExpressions>
       <indexType>NORMAL</indexType>
       <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">2c2ed093-4200-4b82-8e10-39d1b167eab0</identifier>
+      </ID>
+      <name>BRIDGE_LOD4TERR_SPX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">4ee8e9c5-9bd1-4357-998f-3db5dd043013</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">53e1671b-ca6a-4b38-948d-dd8eab6d2194</identifier>
+            </ID>
+            <SQLText>LOD4_TERRAIN_INTERSECTION</SQLText>
+          </expression>
+        </columnExpression>
+      </columnExpressions>
+      <domainIndextype class="oracle.javatools.db.ReferenceID">
+        <name>SPATIAL_INDEX</name>
+        <schemaName>MDSYS</schemaName>
+        <type>INDEXTYPE</type>
+      </domainIndextype>
+      <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
+      <indexType>DOMAIN</indexType>
+      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
             <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">4120f900-4249-4ad6-a5a3-e1c125e14e77</identifier>
+              <identifier class="java.lang.String">64d2fbe2-716c-4528-a00f-309b62baafc6</identifier>
             </ID>
             <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
             <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
-              <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
-              <type>TABLESPACE</type>
-            </tablespaceID>
+            <percentFree>0</percentFree>
           </value>
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -1214,7 +1609,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">4048c1b0-1a71-45d6-9f28-5b29e8899554</identifier>
       </ID>
-      <name>BRIDGE_FKX5</name>
+      <name>BRIDGE_PARENT_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -1230,7 +1625,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>BRIDGE</name>
                 <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -1267,555 +1662,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">6a6abacf-98f5-46aa-b1a3-031d6fc8d9ea</identifier>
-      </ID>
-      <name>BRIDGE_FKX6</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">5e14013f-3415-496b-880b-7a78e765f4b0</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">9379508f-94b9-4d2d-b074-684a626c9895</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD1_SOLID_ID</name>
-              <identifier class="java.lang.String">61918a22-f115-4edf-a24f-22b51d8f6eba</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRIDGE</name>
-                <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <schemaName>YAO</schemaName>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">7ff689c1-f8fa-4d3f-81fa-ddde684fca43</identifier>
-      </ID>
-      <name>BRIDGE_FKX7</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">8e966269-a148-45c7-bfdc-920fa5854482</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">a539a67c-9e8d-4ccd-9dc3-6642a6718e61</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD2_SOLID_ID</name>
-              <identifier class="java.lang.String">e73306c3-52a2-48b9-8ed8-025ed2a6297a</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRIDGE</name>
-                <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <schemaName>YAO</schemaName>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">0e179438-7d6a-4fc4-bac2-7fe3cb68d96e</identifier>
-      </ID>
-      <name>BRIDGE_FKX8</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">ea379118-0ba2-470f-8007-c98bbb757e9c</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">dc6fa541-fbbb-4447-b250-2a64d6ed63b7</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD3_SOLID_ID</name>
-              <identifier class="java.lang.String">1a50536b-8e83-467d-b2e2-5e91bcb1b519</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRIDGE</name>
-                <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <schemaName>YAO</schemaName>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">85bd8124-ebf7-451c-b889-9072ec755158</identifier>
-      </ID>
-      <name>BRIDGE_FKX9</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">947ef3f4-41f1-4039-9db6-44b7f7985ada</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">69dd415d-4813-430e-8718-730fcedc98de</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD4_SOLID_ID</name>
-              <identifier class="java.lang.String">8a2a4fa2-b3b6-4a63-9348-8309539f2dc6</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRIDGE</name>
-                <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <schemaName>YAO</schemaName>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">714b42a9-085b-478f-ac6c-95be9925336b</identifier>
-      </ID>
-      <name>BRIDGE_LOD1TERR_SPX</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">ed94ea48-a388-462e-a013-1c233f13893c</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">834aa9f9-ce2a-4ad4-a162-61172279cf6e</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD1_TERRAIN_INTERSECTION</name>
-              <identifier class="java.lang.String">460918e4-a002-4b97-9a97-d4125eff29f9</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRIDGE</name>
-                <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-        </columnExpression>
-      </columnExpressions>
-      <domainIndextype class="oracle.javatools.db.ReferenceID">
-        <name>SPATIAL_INDEX</name>
-        <schemaName>MDSYS</schemaName>
-        <type>INDEXTYPE</type>
-      </domainIndextype>
-      <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
-      <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">0e42f7af-3fd7-4782-91c8-4b3ce28d6433</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">dd64368d-54f7-4f52-bf8d-0e6993946a74</identifier>
-      </ID>
-      <name>BRIDGE_LOD2MULTI_SPX</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">b58e12b5-2655-4761-a200-6c9556e37fa3</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">cc49a799-34f6-4cf0-9e58-255938df7e01</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD2_MULTI_CURVE</name>
-              <identifier class="java.lang.String">8a0488ac-0c0e-4f8d-bfb0-b928c1fe4c1d</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRIDGE</name>
-                <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-        </columnExpression>
-      </columnExpressions>
-      <domainIndextype class="oracle.javatools.db.ReferenceID">
-        <name>SPATIAL_INDEX</name>
-        <schemaName>MDSYS</schemaName>
-        <type>INDEXTYPE</type>
-      </domainIndextype>
-      <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
-      <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">b11cf44e-b20b-4f97-9316-30db4c39c1f2</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">33978481-d0fa-4a51-93da-bfce5efbab97</identifier>
-      </ID>
-      <name>BRIDGE_LOD2TERR_SPX</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">439167c2-b031-4877-b26c-a6b952c8b4e4</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">34570c1c-cd73-4e09-b052-c941b4fbe88c</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD2_TERRAIN_INTERSECTION</name>
-              <identifier class="java.lang.String">034c92fb-cf9d-47db-83db-f465bcf5051f</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRIDGE</name>
-                <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-        </columnExpression>
-      </columnExpressions>
-      <domainIndextype class="oracle.javatools.db.ReferenceID">
-        <name>SPATIAL_INDEX</name>
-        <schemaName>MDSYS</schemaName>
-        <type>INDEXTYPE</type>
-      </domainIndextype>
-      <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
-      <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">b4f0ef33-9e39-4955-94f4-60d0e1f2fba0</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">4d598b45-462c-41e5-af1d-5d743128bcb7</identifier>
-      </ID>
-      <name>BRIDGE_LOD3MULTI_SPX</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">46721949-19fb-4bb8-878c-a60e282fd13c</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">554d635d-aa52-4b80-b3b7-ff445fa2a6a5</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD3_MULTI_CURVE</name>
-              <identifier class="java.lang.String">f9faf680-6a42-4b5c-879d-afa01856287c</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRIDGE</name>
-                <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-        </columnExpression>
-      </columnExpressions>
-      <domainIndextype class="oracle.javatools.db.ReferenceID">
-        <name>SPATIAL_INDEX</name>
-        <schemaName>MDSYS</schemaName>
-        <type>INDEXTYPE</type>
-      </domainIndextype>
-      <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
-      <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">08daf42d-95bc-4456-bf82-f9ea2e390710</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">db138ddc-2c63-4f3e-aaa7-ce4497a4f902</identifier>
-      </ID>
-      <name>BRIDGE_LOD3TERR_SPX</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">14fe5836-be39-4c4b-877a-6e9c6c6f5a1a</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">f3a45c28-1875-4824-866e-cd23be397059</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD3_TERRAIN_INTERSECTION</name>
-              <identifier class="java.lang.String">df6dccdd-6719-4a8b-83e5-4a24c2b14fa0</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRIDGE</name>
-                <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-        </columnExpression>
-      </columnExpressions>
-      <domainIndextype class="oracle.javatools.db.ReferenceID">
-        <name>SPATIAL_INDEX</name>
-        <schemaName>MDSYS</schemaName>
-        <type>INDEXTYPE</type>
-      </domainIndextype>
-      <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
-      <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">65a030f6-6e00-411d-8572-bde3fbd2357e</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d9e3468a-7e9d-4b03-b18d-d159fb5161d2</identifier>
-      </ID>
-      <name>BRIDGE_LOD4MULTI_SPX</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">0b8e4c14-901b-4f01-8d29-3cd89fe54ba1</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">be6b7f07-3495-4814-abca-7849ad43250c</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD4_MULTI_CURVE</name>
-              <identifier class="java.lang.String">129e5ebc-7c22-4247-8b45-77bd80bd7152</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRIDGE</name>
-                <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-        </columnExpression>
-      </columnExpressions>
-      <domainIndextype class="oracle.javatools.db.ReferenceID">
-        <name>SPATIAL_INDEX</name>
-        <schemaName>MDSYS</schemaName>
-        <type>INDEXTYPE</type>
-      </domainIndextype>
-      <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
-      <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">01c2cda6-f38b-41cb-ae20-3568c23f5513</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">2c2ed093-4200-4b82-8e10-39d1b167eab0</identifier>
-      </ID>
-      <name>BRIDGE_LOD4TERR_SPX</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">4ee8e9c5-9bd1-4357-998f-3db5dd043013</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">fd9271a5-03cb-471e-9b69-927905b5dbac</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD4_TERRAIN_INTERSECTION</name>
-              <identifier class="java.lang.String">fa7f5f22-3149-4bd4-95bd-28c212db2f9e</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRIDGE</name>
-                <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-        </columnExpression>
-      </columnExpressions>
-      <domainIndextype class="oracle.javatools.db.ReferenceID">
-        <name>SPATIAL_INDEX</name>
-        <schemaName>MDSYS</schemaName>
-        <type>INDEXTYPE</type>
-      </domainIndextype>
-      <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
-      <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">64d2fbe2-716c-4528-a00f-309b62baafc6</identifier>
-            </ID>
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -1839,7 +1686,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>BRIDGE</name>
                 <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -1876,9 +1723,70 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">96da384f-b587-422a-8ab8-d619409935db</identifier>
+      </ID>
+      <name>BRIDGE_ROOT_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">10a3e2e1-492b-4c1b-9cc9-bee2bc83c200</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">2b244d96-b717-4b35-9f17-8be73b304501</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>BRIDGE_ROOT_ID</name>
+              <identifier class="java.lang.String">07922726-066c-4d56-8f01-4dcec5792868</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>BRIDGE</name>
+                <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <properties>
+        <entry>
+          <key>OracleStorageProperties</key>
+          <value class="oracle.javatools.db.ora.OracleStorageProperties">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">4120f900-4249-4ad6-a5a3-e1c125e14e77</identifier>
+            </ID>
+            <bufferMode>DEFAULT</bufferMode>
+            <initialExtent>65536</initialExtent>
+            <initrans>2</initrans>
+            <logging>true</logging>
+            <maxExtent>2147483645</maxExtent>
+            <minExtent>1</minExtent>
+            <nextExtent>1048576</nextExtent>
+            <percentFree>10</percentFree>
+            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+              <name>USERS</name>
+              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
+              <type>TABLESPACE</type>
+            </tablespaceID>
+          </value>
+        </entry>
+      </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
     </indexe>
   </indexes>
   <properties>
@@ -1909,6 +1817,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

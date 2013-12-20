@@ -189,6 +189,44 @@
     </column>
     <column>
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">3c17ad9a-db50-4290-b522-daf12bbacf0e</identifier>
+      </ID>
+      <name>LOD4_BREP_ID</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">59642376-970b-4e75-8acc-d43b68a75a58</identifier>
+        </ID>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">4e05d310-0bba-4684-9a80-c7606690da77</identifier>
+      </ID>
+      <name>LOD4_OTHER_GEOM</name>
+      <dataTypeUsage>
+        <ID class="oracle.javatools.db.IdentifierBasedID">
+          <identifier class="java.lang.String">72334a3a-f13d-4787-a375-f967d6eb2957</identifier>
+        </ID>
+        <attributeValues>
+          <entry>
+            <key>size</key>
+          </entry>
+        </attributeValues>
+        <dataTypeID class="oracle.javatools.db.NameBasedID">
+          <name>SDO_GEOMETRY</name>
+          <schemaName>MDSYS</schemaName>
+          <type>TYPE</type>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">6519bcde-6961-4888-ab24-42b53087cc68</identifier>
       </ID>
       <name>LOD4_IMPLICIT_REP_ID</name>
@@ -245,44 +283,6 @@
       </dataTypeUsage>
       <notNull>false</notNull>
     </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">3c17ad9a-db50-4290-b522-daf12bbacf0e</identifier>
-      </ID>
-      <name>LOD4_BREP_ID</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">59642376-970b-4e75-8acc-d43b68a75a58</identifier>
-        </ID>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
-          <typeName>NUMBER</typeName>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">4e05d310-0bba-4684-9a80-c7606690da77</identifier>
-      </ID>
-      <name>LOD4_OTHER_GEOM</name>
-      <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">72334a3a-f13d-4787-a375-f967d6eb2957</identifier>
-        </ID>
-        <attributeValues>
-          <entry>
-            <key>size</key>
-          </entry>
-        </attributeValues>
-        <dataTypeID class="oracle.javatools.db.NameBasedID">
-          <name>SDO_GEOMETRY</name>
-          <schemaName>MDSYS</schemaName>
-          <type>TYPE</type>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
@@ -297,7 +297,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE_FURNITURE</name>
             <identifier class="java.lang.String">04cdcf15-0bb2-45e6-af3b-7dd6e9973ea7</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -330,7 +330,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE_FURNITURE</name>
             <identifier class="java.lang.String">04cdcf15-0bb2-45e6-af3b-7dd6e9973ea7</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -363,7 +363,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE_FURNITURE</name>
             <identifier class="java.lang.String">04cdcf15-0bb2-45e6-af3b-7dd6e9973ea7</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -396,7 +396,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE_FURNITURE</name>
             <identifier class="java.lang.String">04cdcf15-0bb2-45e6-af3b-7dd6e9973ea7</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -429,7 +429,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE_FURNITURE</name>
             <identifier class="java.lang.String">04cdcf15-0bb2-45e6-af3b-7dd6e9973ea7</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -442,10 +442,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>BRIDGE_FURNITURE</name>
           <identifier class="java.lang.String">04cdcf15-0bb2-45e6-af3b-7dd6e9973ea7</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
     </constraint>
@@ -491,7 +491,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -515,7 +515,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>BRIDGE_FURNITURE</name>
                 <identifier class="java.lang.String">04cdcf15-0bb2-45e6-af3b-7dd6e9973ea7</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -552,7 +552,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -576,7 +576,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>BRIDGE_FURNITURE</name>
                 <identifier class="java.lang.String">04cdcf15-0bb2-45e6-af3b-7dd6e9973ea7</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -613,7 +613,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -637,7 +637,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>BRIDGE_FURNITURE</name>
                 <identifier class="java.lang.String">04cdcf15-0bb2-45e6-af3b-7dd6e9973ea7</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -674,7 +674,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -698,7 +698,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>BRIDGE_FURNITURE</name>
                 <identifier class="java.lang.String">04cdcf15-0bb2-45e6-af3b-7dd6e9973ea7</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -735,7 +735,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
@@ -765,7 +765,7 @@
       <indexType>DOMAIN</indexType>
       <parallelDegree>1</parallelDegree>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -798,6 +798,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

@@ -225,7 +225,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">1d62ee3a-ff34-4d2e-9bae-e22439304611</identifier>
       </ID>
-      <name>BRIDGE_ROOM_BUILDING_FK</name>
+      <name>BRIDGE_ROOM_BRIDGE_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>BRIDGE_ID</name>
@@ -233,7 +233,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE_ROOM</name>
             <identifier class="java.lang.String">d8693993-db23-4458-a9a3-b7929e1e91b5</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -266,7 +266,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE_ROOM</name>
             <identifier class="java.lang.String">d8693993-db23-4458-a9a3-b7929e1e91b5</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -289,9 +289,41 @@
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">c277b896-b74c-4549-81de-0d96182edfce</identifier>
+      </ID>
+      <name>BRIDGE_ROOM_LOD4MSRF_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.IdentifierBasedID">
+          <name>LOD4_MULTI_SURFACE_ID</name>
+          <identifier class="java.lang.String">f41203d2-ada4-40a6-80b9-83c0cfcab9e1</identifier>
+          <parent class="oracle.javatools.db.IdentifierBasedID">
+            <name>BRIDGE_ROOM</name>
+            <identifier class="java.lang.String">d8693993-db23-4458-a9a3-b7929e1e91b5</identifier>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <deleteMode>0</deleteMode>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+        <name>SURFACE_GEOMETRY_PK</name>
+        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
+        <parent class="oracle.javatools.db.IdentifierBasedID">
+          <name>SURFACE_GEOMETRY</name>
+          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
+          <schemaName>YAO</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">ed86f880-874b-44b3-bb54-371c1fb76331</identifier>
       </ID>
-      <name>BRIDGE_ROOM_GEOMETRY_FK</name>
+      <name>BRIDGE_ROOM_LOD4SOLID_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>LOD4_SOLID_ID</name>
@@ -299,7 +331,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE_ROOM</name>
             <identifier class="java.lang.String">d8693993-db23-4458-a9a3-b7929e1e91b5</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -317,38 +349,6 @@
           <type>TABLE</type>
         </parent>
         <schemaName>YAO</schemaName>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">c277b896-b74c-4549-81de-0d96182edfce</identifier>
-      </ID>
-      <name>BRIDGE_ROOM_GEOMETRY_FK1</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>LOD4_MULTI_SURFACE_ID</name>
-          <identifier class="java.lang.String">f41203d2-ada4-40a6-80b9-83c0cfcab9e1</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>BRIDGE_ROOM</name>
-            <identifier class="java.lang.String">d8693993-db23-4458-a9a3-b7929e1e91b5</identifier>
-            <schemaName>YAO</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>SURFACE_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>SURFACE_GEOMETRY</name>
-          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
@@ -364,7 +364,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>BRIDGE_ROOM</name>
             <identifier class="java.lang.String">d8693993-db23-4458-a9a3-b7929e1e91b5</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -377,10 +377,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>BRIDGE_ROOM</name>
           <identifier class="java.lang.String">d8693993-db23-4458-a9a3-b7929e1e91b5</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
     </constraint>
@@ -390,7 +390,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">e73bd029-986b-4c58-9f56-52660a0c6ba9</identifier>
       </ID>
-      <name>BRIDGE_ROOM_FKX</name>
+      <name>BRIDGE_ROOM_BRIDGE_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -406,7 +406,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>BRIDGE_ROOM</name>
                 <identifier class="java.lang.String">d8693993-db23-4458-a9a3-b7929e1e91b5</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -439,7 +439,45 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">83c0fbb6-919f-4cd8-b04f-fc9972fc56d7</identifier>
+      </ID>
+      <name>BRIDGE_ROOM_LOD4MSRF_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">58be8366-b06a-4896-b055-f1b332a27827</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">b12b7977-0c02-4b60-81a5-0cdc72417502</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>LOD4_MULTI_SURFACE_ID</name>
+              <identifier class="java.lang.String">f41203d2-ada4-40a6-80b9-83c0cfcab9e1</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>BRIDGE_ROOM</name>
+                <identifier class="java.lang.String">d8693993-db23-4458-a9a3-b7929e1e91b5</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -447,7 +485,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">d92e47bd-bb54-4b1c-96a3-8ab553b5dec1</identifier>
       </ID>
-      <name>BRIDGE_ROOM_FKX1</name>
+      <name>BRIDGE_ROOM_LOD4SOLID_FKX</name>
       <columnExpressions>
         <columnExpression>
           <ID class="oracle.javatools.db.IdentifierBasedID">
@@ -463,7 +501,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>BRIDGE_ROOM</name>
                 <identifier class="java.lang.String">d8693993-db23-4458-a9a3-b7929e1e91b5</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -496,45 +534,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">83c0fbb6-919f-4cd8-b04f-fc9972fc56d7</identifier>
-      </ID>
-      <name>BRIDGE_ROOM_FKX2</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">58be8366-b06a-4896-b055-f1b332a27827</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">b12b7977-0c02-4b60-81a5-0cdc72417502</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD4_MULTI_SURFACE_ID</name>
-              <identifier class="java.lang.String">f41203d2-ada4-40a6-80b9-83c0cfcab9e1</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>BRIDGE_ROOM</name>
-                <identifier class="java.lang.String">d8693993-db23-4458-a9a3-b7929e1e91b5</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -558,7 +558,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>BRIDGE_ROOM</name>
                 <identifier class="java.lang.String">d8693993-db23-4458-a9a3-b7929e1e91b5</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -591,7 +591,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
@@ -620,6 +620,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

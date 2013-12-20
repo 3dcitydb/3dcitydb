@@ -1127,7 +1127,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">16b0df5a-c68d-4fcd-9a28-fa6e9afb86b6</identifier>
       </ID>
-      <name>SURF_DATA_OBJCLASS_FK2</name>
+      <name>SURFACE_DATA_OBJCLASS_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>OBJECTCLASS_ID</name>
@@ -1135,7 +1135,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>SURFACE_DATA</name>
             <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -1159,7 +1159,7 @@
       <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">cfe6d567-cf3e-439b-a424-ad4e0bae645f</identifier>
       </ID>
-      <name>SURF_DATA_TEX_IMAGE_FK1</name>
+      <name>SURFACE_DATA_TEX_IMAGE_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.IdentifierBasedID">
           <name>TEX_IMAGE_ID</name>
@@ -1167,7 +1167,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>SURFACE_DATA</name>
             <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -1199,7 +1199,7 @@
           <parent class="oracle.javatools.db.IdentifierBasedID">
             <name>SURFACE_DATA</name>
             <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
@@ -1212,10 +1212,10 @@
         <parent class="oracle.javatools.db.IdentifierBasedID">
           <name>SURFACE_DATA</name>
           <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
       <properties>
@@ -1242,82 +1242,6 @@
   <indexes>
     <indexe>
       <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">9462f272-e0fd-4ea8-88bc-5c5b3b2c7891</identifier>
-      </ID>
-      <name>SURFACE_DATA_FKX1</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">aa69fbc0-1526-4379-b9db-d8e6c3a17677</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">55b99fb1-21aa-4246-98ec-f545c41d9177</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>TEX_IMAGE_ID</name>
-              <identifier class="java.lang.String">4b281c63-23cd-4552-a1b2-9fb002a49f38</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SURFACE_DATA</name>
-                <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">3f0d3e9e-bc57-44cf-9d0f-842c5be1e9b0</identifier>
-      </ID>
-      <name>SURFACE_DATA_FKX2</name>
-      <columnExpressions>
-        <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">48375baf-0418-4fb2-94da-12a94d543046</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">c5cf6067-0ae9-4118-a270-9f704d5f59d9</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>OBJECTCLASS_ID</name>
-              <identifier class="java.lang.String">da9d21e4-86d7-440c-b5e2-7c853d607010</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SURFACE_DATA</name>
-                <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <schema>
-        <name>YAO</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
         <identifier class="java.lang.String">1f7cd856-25e0-4343-a0ce-38f7781e407d</identifier>
       </ID>
       <name>SURFACE_DATA_INX</name>
@@ -1336,7 +1260,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>SURFACE_DATA</name>
                 <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -1451,7 +1375,45 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">3f0d3e9e-bc57-44cf-9d0f-842c5be1e9b0</identifier>
+      </ID>
+      <name>SURFACE_DATA_OBJCLASS_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">48375baf-0418-4fb2-94da-12a94d543046</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">c5cf6067-0ae9-4118-a270-9f704d5f59d9</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>OBJECTCLASS_ID</name>
+              <identifier class="java.lang.String">da9d21e4-86d7-440c-b5e2-7c853d607010</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>SURFACE_DATA</name>
+                <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -1475,7 +1437,7 @@
               <parent class="oracle.javatools.db.IdentifierBasedID">
                 <name>SURFACE_DATA</name>
                 <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
-                <schemaName>YAO</schemaName>
+                <schemaName>DEFAULTSCHEMA</schemaName>
                 <type>TABLE</type>
               </parent>
               <type>COLUMN</type>
@@ -1590,7 +1552,7 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
@@ -1669,7 +1631,45 @@
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <ID class="oracle.javatools.db.IdentifierBasedID">
+        <identifier class="java.lang.String">9462f272-e0fd-4ea8-88bc-5c5b3b2c7891</identifier>
+      </ID>
+      <name>SURFACE_DATA_TEX_IMAGE_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <ID class="oracle.javatools.db.IdentifierBasedID">
+            <identifier class="java.lang.String">aa69fbc0-1526-4379-b9db-d8e6c3a17677</identifier>
+          </ID>
+          <expression class="oracle.javatools.db.sql.ColumnUsage">
+            <ID class="oracle.javatools.db.IdentifierBasedID">
+              <identifier class="java.lang.String">55b99fb1-21aa-4246-98ec-f545c41d9177</identifier>
+            </ID>
+            <objectID class="oracle.javatools.db.IdentifierBasedID">
+              <name>TEX_IMAGE_ID</name>
+              <identifier class="java.lang.String">4b281c63-23cd-4552-a1b2-9fb002a49f38</identifier>
+              <parent class="oracle.javatools.db.IdentifierBasedID">
+                <name>SURFACE_DATA</name>
+                <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
+                <schemaName>DEFAULTSCHEMA</schemaName>
+                <type>TABLE</type>
+              </parent>
+              <type>COLUMN</type>
+            </objectID>
+            <outerJoin>false</outerJoin>
+            <qualified>true</qualified>
+          </expression>
+          <order>ASC</order>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
@@ -1729,6 +1729,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>
