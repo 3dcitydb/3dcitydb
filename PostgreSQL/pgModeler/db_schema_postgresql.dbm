@@ -1617,7 +1617,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="1000"/>
 	</column>
 	<column name="texture_coordinates">
-		<type name="character varying" length="4000"/>
+		<type name="geometry" length="4000" spatial-type="POLYGON" variation="0" srid="0"/>
 	</column>
 	<column name="surface_data_id" not-null="true">
 		<type name="integer"/>
@@ -4795,7 +4795,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="256"/>
 	</column>
 	<column name="gt_reference_point">
-		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
+		<type name="geometry" spatial-type="POINT" variation="0" srid="0"/>
 	</column>
 	<constraint name="surface_data_pk" type="pk-constr" factor="100" table="public.surface_data">
 		<columns names="id" ref-type="src-columns"/>
@@ -5011,18 +5011,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="rasterproperty">
-		<type name="bytea"/>
+		<type name="raster"/>
 	</column>
 	<constraint name="raster_relief_georaster_pk" type="pk-constr" factor="100" table="public.raster_relief_georaster">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<constraint name="cityobject_objectclass_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.objectclass" table="public.cityobject">
-	<columns names="objectclass_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
 <constraint name="cityobject_member_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.cityobject_member">
 	<columns names="cityobject_id" ref-type="src-columns"/>
@@ -5033,11 +5028,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="citymodel_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="ext_ref_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.external_reference">
-	<columns names="cityobject_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
 <constraint name="general_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.generalization">
 	<columns names="cityobject_id" ref-type="src-columns"/>
@@ -5046,21 +5036,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <constraint name="general_generalizes_to_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.generalization">
 	<columns names="generalizes_to_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-<constraint name="surface_geom_parent_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.surface_geometry">
-	<columns names="parent_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-<constraint name="surface_geom_root_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.surface_geometry">
-	<columns names="root_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-<constraint name="surface_geom_cityobj_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.implicit_geometry" table="public.surface_geometry">
-	<columns names="cityobject_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="group_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
@@ -5091,11 +5066,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <constraint name="objectclass_superclass_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.objectclass" table="public.objectclass">
 	<columns names="superclass_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-<constraint name="implicit_geom_brep_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.implicit_geometry">
-	<columns names="relative_brep_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="city_furn_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
@@ -5141,26 +5111,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <constraint name="city_furn_lod4impl_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.implicit_geometry" table="public.city_furniture">
 	<columns names="lod4_implicit_rep_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-<constraint name="genericattrib_parent_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject_genericattrib" table="public.cityobject_genericattrib">
-	<columns names="parent_genattrib_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-<constraint name="genericattrib_root_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject_genericattrib" table="public.cityobject_genericattrib">
-	<columns names="root_genattrib_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-<constraint name="genericattrib_geom_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.cityobject_genericattrib">
-	<columns names="surface_geometry_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-<constraint name="genericattrib_cityobj_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.cityobject_genericattrib">
-	<columns names="cityobject_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="gen_object_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
@@ -5461,26 +5411,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <constraint name="them_surface_lod4msrf_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.thematic_surface">
 	<columns names="lod4_multi_surface_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-<constraint name="appearance_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.appearance">
-	<columns names="cityobject_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-<constraint name="appearance_citymodel_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.citymodel" table="public.appearance">
-	<columns names="citymodel_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-<constraint name="surface_data_tex_image_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.tex_image" table="public.surface_data">
-	<columns names="tex_image_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-<constraint name="surface_data_objclass_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.objectclass" table="public.surface_data">
-	<columns names="objectclass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="texparam_geom_fk" type="fk-constr"	 comparison-type="MATCH FULL"
@@ -6306,6 +6236,76 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <constraint name="address_to_bridge_fk1" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.bridge" table="public.address_to_bridge">
 	<columns names="bridge_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="cityobject_objectclass_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.objectclass" table="public.cityobject">
+	<columns names="objectclass_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="appearance_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.appearance">
+	<columns names="cityobject_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="appearance_citymodel_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.citymodel" table="public.appearance">
+	<columns names="citymodel_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="implicit_geom_brep_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.implicit_geometry">
+	<columns names="relative_brep_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="surface_geom_parent_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.surface_geometry">
+	<columns names="parent_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="surface_geom_root_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.surface_geometry">
+	<columns names="root_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="surface_geom_cityobj_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.implicit_geometry" table="public.surface_geometry">
+	<columns names="cityobject_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="surface_data_tex_image_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.tex_image" table="public.surface_data">
+	<columns names="tex_image_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="surface_data_objclass_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.objectclass" table="public.surface_data">
+	<columns names="objectclass_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="genericattrib_parent_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject_genericattrib" table="public.cityobject_genericattrib">
+	<columns names="parent_genattrib_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="genericattrib_root_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject_genericattrib" table="public.cityobject_genericattrib">
+	<columns names="root_genattrib_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="genericattrib_geom_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.cityobject_genericattrib">
+	<columns names="surface_geometry_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="genericattrib_cityobj_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.cityobject_genericattrib">
+	<columns names="cityobject_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="ext_ref_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.external_reference">
+	<columns names="cityobject_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <relationship name="rel_group_to_cityobject_cityobject" type="relfk"
