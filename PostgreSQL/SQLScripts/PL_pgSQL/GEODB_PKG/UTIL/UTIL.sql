@@ -24,7 +24,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                                | Author
--- 2.0.0     2014-01-07   several improvements for 3DCityDB V3         FKun
+-- 2.0.0     2014-01-09   several improvements for 3DCityDB V3         FKun
 -- 1.2.0     2013-08-29   minor changes to change_db_srid function     FKun
 -- 1.1.0     2013-02-22   PostGIS version                              FKun
 --                                                                     CNag
@@ -35,7 +35,7 @@
 * CONTENT
 *
 * FUNCTIONS:
-*   change_column_srid(s_name VARCHAR, t_name VARCHAR, c_name VARCHAR, dim INTEGER, db_srid INTEGER, geom_type VARCHAR) RETURNS SETOF VOID
+*   change_column_srid(t_name VARCHAR, c_name VARCHAR, dim INTEGER, db_srid INTEGER, s_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   change_db_srid(db_srid INTEGER, db_gml_srs_name VARCHAR) RETURNS SETOF VOID
 *   db_metadata() RETURNS TABLE(
 *     srid INTEGER, 
@@ -215,7 +215,7 @@ BEGIN
   UPDATE DATABASE_SRS SET SRID=db_srid, GML_SRS_NAME=db_gml_srs_name;
 
   -- change srid of each spatially enabled table
-  EXECUTE 'SELECT geodb_pkg.change_column_srid(f_table_schema, f_table_name, f_geometry_column, coord_dimension, $1, type) 
+  EXECUTE 'SELECT geodb_pkg.change_column_srid(f_table_schema, f_table_name, f_geometry_column, coord_dimension, $1) 
              FROM geometry_columns WHERE srid != 0' USING db_srid;
 END;
 $$ 
@@ -225,20 +225,18 @@ LANGUAGE plpgsql;
 /*****************************************************************
 * change_column_srid
 *
-* @param s_name name of schema
 * @param t_name name of table
 * @param c_name name of spatial column
 * @param dim dimension of geometry
 * @param db_srid the SRID of the coordinate system to be further used in the database
-* @param geom_type type of geometry of spatial column
+* @param s_name name of schema
 ******************************************************************/
 CREATE OR REPLACE FUNCTION geodb_pkg.change_column_srid(
-  s_name VARCHAR,
   t_name VARCHAR, 
   c_name VARCHAR,
   dim INTEGER,
   db_srid INTEGER,
-  geom_type VARCHAR
+  s_name VARCHAR DEFAULT 'public'
   ) RETURNS SETOF VOID AS 
 $$
 DECLARE
@@ -287,12 +285,12 @@ LANGUAGE plpgsql;
 * Removes a contraint to add it again with parameters
 * ON UPDATE CASCADE ON DELETE CASCADE or RESTRICT
 *
-* @param table_name defines the table to which the constraint belongs to
 * @param fkey_name name of the foreign key that is updated 
+* @param table_name defines the table to which the constraint belongs to
 * @param column_name defines the column the constraint is relying on
-* @param ref_table 
-* @param ref_column
-* @param on_delete_param whether CASCADE (default) or RESTRICT
+* @param ref_table name of referenced table
+* @param ref_column name of referencing column of referenced table
+* @param on_delete_param whether CASCADE or RESTRICT
 * @param deferrable_param whether set or not
 ******************************************************************/
 CREATE OR REPLACE FUNCTION geodb_pkg.update_table_constraint(
@@ -321,7 +319,8 @@ LANGUAGE plpgsql;
 /******************************************************************
 * update_schema_constraints
 *
-* uses the FUNCTION on_delete_action for updating all the contraints
+* calls update_table_constraint for updating all the contraints
+* in the specified schema
 *
 * @param on_delete_param whether CASCADE (default) or RESTRICT
 * @param schema_name name of the schema
@@ -332,10 +331,11 @@ CREATE OR REPLACE FUNCTION geodb_pkg.update_schema_constraints(
   ) RETURNS SETOF VOID AS 
 $$
 DECLARE
-  deferrable_param VARCHAR;
+  delete_param VARCHAR(30);
+  deferrable_param VARCHAR(30);
 BEGIN
   IF on_delete_param <> 'CASCADE' THEN
-    on_delete_param := 'RESTRICT';
+    delete_param := 'RESTRICT';
 	deferrable_param := '';
     RAISE NOTICE 'Constraints are set to ON DELETE RESTRICT';
   ELSE
@@ -348,7 +348,7 @@ BEGIN
              JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
              JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
                WHERE constraint_type = ''FOREIGN KEY'' AND tc.table_schema = $1'
-               USING schema_name, on_delete_param, deferrable_param;
+               USING schema_name, delete_param, deferrable_param;
 END;
 $$
 LANGUAGE plpgsql;
