@@ -1,7 +1,7 @@
 -- DROP_GEODB_PKG.sql
 --
 -- Authors:     Claus Nagel <cnagel@virtualcitysystems.de>
---
+--              Felix Kunde <fkunde@virtualcitysystems.de>
 --
 -- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
@@ -23,11 +23,13 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 2.0.0     2014-01-09   minor updates for 3DCityDB V3               FKun
 -- 1.0.0     2008-09-10   release version                             CNag
 --
 SELECT 'Deleting packages ''geodb_util'', ''geodb_idx'', ''geodb_stat'', ''geodb_delete_by_lineage'', ''geodb_delete'' and corresponding types' as message from DUAL;
 --// drop global types
 DROP TYPE STRARRAY;
+DROP TYPE SEQ_TABLE;
 DROP TYPE INDEX_OBJ;
 DROP TYPE DB_INFO_TABLE;
 DROP TYPE DB_INFO_OBJ;
@@ -40,21 +42,3 @@ DROP PACKAGE geodb_delete_by_lineage;
 DROP PACKAGE geodb_delete;
 
 SELECT 'Packages ''geodb_util'', ''geodb_idx'', ''geodb_stat'', ''geodb_delete_by_lineage'', and ''geodb_delete'' deleted' as message from DUAL;
-
-SELECT 'Deleting matching tool packages ''geodb_match'', ''geodb_merge'', and corresponding types' as message from DUAL;
---// drop packages
-DROP PACKAGE geodb_match;
-DROP PACKAGE geodb_merge;
-
---// drop tables
-DROP TABLE match_overlap_all;
-DROP TABLE match_overlap_relevant;
-DROP TABLE match_master_projected;
-DROP TABLE match_cand_projected;
-DROP TABLE match_collect_geom;
-TRUNCATE TABLE match_tmp_building;
-DROP TABLE match_tmp_building;
-DROP TABLE merge_collect_geom;
-TRUNCATE TABLE merge_container_ids;
-DROP TABLE merge_container_ids;
-SELECT 'Packages ''geodb_match'', and ''geodb_merge'' deleted' as message from DUAL;
