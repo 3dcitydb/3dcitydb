@@ -89,7 +89,8 @@ AS
     EXECUTE IMMEDIATE 'SELECT CAST(COLLECT(tab.t) AS STRARRAY) FROM (
                          SELECT geodb_stat.table_label(table_name) || geodb_stat.table_content(owner, table_name) AS t
                            FROM all_tables WHERE owner = upper(:1) 
-                           AND table_name != ''database_srs''
+                           AND table_name != ''DATABASE_SRS''
+                           AND table_name != ''OBJECTCLASS''
                            AND table_name NOT LIKE ''%MDRT%''
                            AND length(table_name) <= 26
                            ORDER BY table_name ASC

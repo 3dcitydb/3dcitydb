@@ -78,7 +78,7 @@ AS
   PROCEDURE update_schema_constraints(on_delete_param VARCHAR2 := 'CASCADE');
   PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param VARCHAR2, deferrable_param VARCHAR2);
   PROCEDURE change_db_srid(db_srid NUMBER, db_gml_srs_name VARCHAR2);
-  FUNCTION get_dim(t_name VARCHAR, c_name VARCHAR) RETURN NUMBER
+  FUNCTION get_dim(t_name VARCHAR, c_name VARCHAR) RETURN NUMBER;
   PROCEDURE change_column_srid(t_name VARCHAR2, c_name VARCHAR2, dim NUMBER, db_srid NUMBER);
   FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER) RETURN SEQ_TABLE;
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
@@ -352,8 +352,8 @@ AS
     COMMIT;
 
     -- change srid of each spatially enabled table
-    FOR rec IN SELECT table_name AS t, column_name AS c, geodb_util.get_dim(table_name, column_name) AS dim
-                 FROM user_sdo_geom_metadata LOOP
+    FOR rec IN (SELECT table_name AS t, column_name AS c, geodb_util.get_dim(table_name, column_name) AS dim
+                 FROM user_sdo_geom_metadata) LOOP
       change_column_srid(rec.t, rec.c, rec.dim, db_srid);
     END LOOP;
   END;

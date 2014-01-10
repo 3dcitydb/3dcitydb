@@ -163,7 +163,7 @@ select :VERSIONBATCHFILE mc2 from dual;
 
 --// geodb packages
 
---@@CREATE_GEODB_PKG.sql
+@@CREATE_GEODB_PKG.sql
 
 SHOW ERRORS;
 COMMIT;

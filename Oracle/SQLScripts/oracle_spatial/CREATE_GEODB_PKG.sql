@@ -32,8 +32,3 @@ SELECT 'Creating packages ''geodb_util'', ''geodb_idx'', ''geodb_stat'', ''geodb
 @@PL_SQL/GEODB_PKG/DELETE/DELETE_BY_LINEAGE;
 SELECT 'Packages ''geodb_util'', ''geodb_idx'', ''geodb_stat'', ''geodb_delete_by_lineage'', and ''geodb_delete'' created' as message from DUAL;
 
-SELECT 'Creating matching tool packages ''geodb_match'', ''geodb_merge'', and corresponding types' as message from DUAL;
-@@PL_SQL/GEODB_PKG/MATCHING/MATCH.sql;
-@@PL_SQL/GEODB_PKG/MATCHING/MERGE.sql;
-SELECT 'Packages ''geodb_match'', and ''geodb_merge'' created' as message from DUAL;
-
