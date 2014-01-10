@@ -199,7 +199,7 @@ CREATE OR REPLACE FUNCTION geodb_pkg.delete_cityobject_cascade(
 $$
 BEGIN  
   -- first step: delete local appearance
-  EXECUTE format('SELECT geodb_pkg.delete_appearance(id) FROM %I.appearance WHERE cityobject_id = %L', schema_name, co_id);
+  EXECUTE format('SELECT geodb_pkg.delete_appearance(id, %L) FROM %I.appearance WHERE cityobject_id = %L', schema_name, schema_name, co_id);
   
   -- second step: delete geometries
   EXECUTE format('DELETE FROM %I.surface_geometry WHERE cityobject_id = %L AND parent_id IS NULL', schema_name, co_id);
@@ -278,7 +278,7 @@ BEGIN
   EXECUTE format('UPDATE %I.cityobjectgroup SET parent_cityobject_id=null WHERE parent_cityobject_id = %L', schema_name, co_id);
 
   -- delete local appearances of city object 
-  EXECUTE format('SELECT geodb_pkg.delete_appearance(id) FROM %I.appearance WHERE cityobject_id = %L', schema_name, co_id);
+  EXECUTE format('SELECT geodb_pkg.delete_appearance(id, %L) FROM %I.appearance WHERE cityobject_id = %L', schema_name, schema_name, co_id);
 
   --// DELETE CITY OBJECT //--
   EXECUTE format('DELETE FROM %I.cityobject WHERE id = %L', schema_name, co_id);
@@ -384,10 +384,10 @@ $$
 BEGIN
   --// PRE DELETE APPEARANCE //--
   -- delete surface data not being referenced by appearances any more
-  EXECUTE format('SELECT geodb_pkg.delete_surface_data(sd.id) FROM %I.surface_data sd, %I.appear_to_surface_data ats 
+  EXECUTE format('SELECT geodb_pkg.delete_surface_data(sd.id, %L) FROM %I.surface_data sd, %I.appear_to_surface_data ats 
                     WHERE sd.id = ats.surface_data_id AND ats.appearance_id = %L
                     AND geodb_pkg.is_not_referenced(%L, %L, sd.id, %L, %L, %L)', 
-                    schema_name, schema_name, app_id, 
+                    schema_name, schema_name, schema_name, app_id, 
                     'appear_to_surface_data', 'surface_data_id', 'appearance_id', app_id, schema_name);
 
   -- delete references to surface data
@@ -733,11 +733,11 @@ DECLARE
 BEGIN
   --// PRE DELETE WATERBODY //--
   -- delete water boundary surfaces being not referenced from waterbodies any more
-  EXECUTE format('SELECT geodb_pkg.delete_waterbnd_surface(wbs.id) 
+  EXECUTE format('SELECT geodb_pkg.delete_waterbnd_surface(wbs.id, %L) 
                     FROM %I.waterboundary_surface, %I.waterbod_to_waterbnd_srf wb2wbs
                     WHERE wbs.id = wb2wbs.waterboundary_surface_id AND wb2wbs.waterbody_id = %L
                     AND geodb_pkg.is_not_referenced(%L, %L, wbs.id, %L, %L, %L)', 
-                    schema_name, schema_name, wb_id, 
+                    schema_name, schema_name, schema_name, wb_id, 
                     'waterbod_to_waterbnd_srf', 'waterboundary_surface_id', 'waterbody_id', wb_id, schema_name);
 
   -- delete reference to water boundary surface 
@@ -845,10 +845,10 @@ DECLARE
 BEGIN
   --// PRE DELETE RELIEF FEATURE //--
   -- delete relief component(s) being not referenced from relief fetaures any more
-  EXECUTE format('SELECT geodb_pkg.delete_relief_component(rc.id) FROM %I.relief_component, %I.relief_feat_to_rel_comp rf2rc
+  EXECUTE format('SELECT geodb_pkg.delete_relief_component(rc.id, %L) FROM %I.relief_component rc, %I.relief_feat_to_rel_comp rf2rc
                     WHERE rc.id = rf2rc.relief_component_id AND relief_feature_id = %L
                     AND geodb_pkg.is_not_referenced(%L, %L, rc.id, %L, %L, %L)', 
-                    schema_name, schema_name, rf_id, 
+                    schema_name, schema_name, schema_name, rf_id, 
                     'relief_feat_to_rel_comp', 'relief_component_id', 'relief_feature_id', rf_id, schema_name);
 
   -- delete reference to relief_component
@@ -1122,22 +1122,26 @@ DECLARE
 BEGIN
   --// PRE DELETE BUILDING //--
   -- delete referenced building part(s)
-  EXECUTE format('SELECT geodb_pkg.delete_building(id) FROM %I.building WHERE id != %L AND building_parent_id = %L', schema_name, b_id, b_id);
+  EXECUTE format('SELECT geodb_pkg.delete_building(id, %L) FROM %I.building WHERE id != %L AND building_parent_id = %L', 
+                    schema_name, schema_name, b_id, b_id);
 
   -- delete referenced building installation(s)
-  EXECUTE format('SELECT geodb_pkg.delete_building_inst(id) FROM %I.building_installation WHERE building_id = %L', schema_name, b_id);
+  EXECUTE format('SELECT geodb_pkg.delete_building_inst(id, %L) FROM %I.building_installation WHERE building_id = %L', 
+                    schema_name, schema_name, b_id);
 
   -- delete referenced thematic surfaces
-  EXECUTE format('SELECT geodb_pkg.delete_thematic_surface(id) FROM %I.thematic_surface WHERE building_id = %L', schema_name, b_id);
+  EXECUTE format('SELECT geodb_pkg.delete_thematic_surface(id, %L) FROM %I.thematic_surface WHERE building_id = %L', 
+                    schema_name, schema_name, b_id);
 
   -- delete referenced room(s)
-  EXECUTE format('SELECT geodb_pkg.delete_room(id) FROM %I.room WHERE building_id = %L', schema_name, b_id);
+  EXECUTE format('SELECT geodb_pkg.delete_room(id, %L) FROM %I.room WHERE building_id = %L', 
+                    schema_name, schema_name, b_id);
 
   -- delete address(es) being not referenced from buildings any more
-  EXECUTE format('SELECT geodb_pkg.delete_address(ad_id) FROM %I.address ad, %I.address_to_building ad2b 
+  EXECUTE format('SELECT geodb_pkg.delete_address(ad_id, %L) FROM %I.address ad, %I.address_to_building ad2b 
                     WHERE ad.id = ad2b.address_id AND ad2b.building_id = %L
                     AND geodb_pkg.is_not_referenced(%L, %L, ad.id, %L, %L, %L)', 
-                    schema_name, schema_name, b_id, 
+                    schema_name, schema_name, schema_name, b_id, 
                     'address_to_building', 'address_id', 'building_id', b_id, schema_name);
 
   -- delete reference to address
@@ -1212,12 +1216,13 @@ DECLARE
 BEGIN
   --// PRE DELETE BUILDING INSTALLATION //--
   -- delete referenced thematic surfaces
-  EXECUTE format('SELECT geodb_pkg.delete_thematic_surface(id) FROM %I.thematic_surface WHERE building_installation_id = %L', schema_name, bi_id);
+  EXECUTE format('SELECT geodb_pkg.delete_thematic_surface(id, %L) FROM %I.thematic_surface WHERE building_installation_id = %L', 
+                    schema_name, schema_name, bi_id);
 
   -- get reference ids to surface_geometry table 
   EXECUTE format('SELECT lod2_brep_id, lod3_brep_id, lod4_brep_id 
-             FROM %I.building_installation WHERE id = %L', schema_name, bi_id)
-             INTO bi_lod2_id, bi_lod3_id, bi_lod4_id;
+                    FROM %I.building_installation WHERE id = %L', schema_name, bi_id)
+                    INTO bi_lod2_id, bi_lod3_id, bi_lod4_id;
 
   --// DELETE BUILDING INSTALLATION //--
   EXECUTE format('DELETE FROM %I.building_installation WHERE id = %L', schema_name, bi_id);
@@ -1270,10 +1275,10 @@ DECLARE
 BEGIN
   --// PRE DELETE THEMATIC SURFACE //--
   -- delete opening(s) not being referenced by a thematic surface any more
-  EXECUTE format('SELECT geodb_pkg.delete_opening(o.id) FROM %I.opening o, %I.opening_to_them_surface o2ts
+  EXECUTE format('SELECT geodb_pkg.delete_opening(o.id, %L) FROM %I.opening o, %I.opening_to_them_surface o2ts
                     WHERE o.id = o2ts.opening_id AND o2ts.thematic_surface_id = %L
                     AND geodb_pkg.is_not_referenced(%L, %L, o.id, %L, %L, %L)',
-                    schema_name, schema_name, ts_id, 
+                    schema_name, schema_name, schema_name, ts_id, 
                     'opening_to_them_surface', 'opening_id', 'thematic_surface_id', ts_id, schema_name);
 
   -- delete reference to opening
@@ -1334,11 +1339,11 @@ BEGIN
 
   -- delete addresses not being referenced from buildings and openings any more
   IF o_add_id IS NOT NULL THEN
-    EXECUTE format('SELECT geodb_pkg.delete_address(ad.id) FROM %I.address ad 
+    EXECUTE format('SELECT geodb_pkg.delete_address(ad.id, %L) FROM %I.address ad 
                       LEFT OUTER JOIN %I.address_to_building ad2b ON ad.id = ad2b.address_id 
                       WHERE ad.id = %L AND ad2b.address_id IS NULL
                         AND geodb_pkg.is_not_referenced(%L, %L, ad.id, %L, %L, %L)',
-                        schema_name, schema_name, o_add_id, 
+                        schema_name, schema_name, schema_name, o_add_id, 
                         'opening', 'address_id', 'id', o_id, schema_name);
   END IF;
 
@@ -1428,13 +1433,16 @@ DECLARE
 BEGIN
   --// PRE DELETE ROOM //--
   -- delete referenced building installation(s)
-  EXECUTE format('SELECT geodb_pkg.delete_building_inst(id) FROM %I.building_installation WHERE room_id = %L', schema_name, r_id);
+  EXECUTE format('SELECT geodb_pkg.delete_building_inst(id, %L) FROM %I.building_installation WHERE room_id = %L', 
+                    schema_name, schema_name, r_id);
 
   -- delete referenced thematic surfaces
-  EXECUTE format('SELECT geodb_pkg.delete_thematic_surface(id) FROM %I.thematic_surface WHERE room_id = %L', schema_name, r_id);
+  EXECUTE format('SELECT geodb_pkg.delete_thematic_surface(id, %L) FROM %I.thematic_surface WHERE room_id = %L', 
+                    schema_name, schema_name, r_id);
   
   -- delete referenced building furniture
-  EXECUTE format('SELECT geodb_pkg.delete_building_furniture(id) FROM %I.building_furniture WHERE room_id = %L', schema_name, r_id);
+  EXECUTE format('SELECT geodb_pkg.delete_building_furniture(id, %L) FROM %I.building_furniture WHERE room_id = %L', 
+                    schema_name, schema_name, r_id);
 
   -- get reference id to surface_geometry table 
   EXECUTE format('SELECT lod4_multi_surface_id, lod4_solid_id FROM %I.room WHERE id = %L', schema_name, r_id) 
@@ -1479,7 +1487,8 @@ DECLARE
 BEGIN
   --// PRE DELETE TRANSPORTATION COMPLEX //--
   -- delete referenced traffic area(s)
-  EXECUTE format('SELECT geodb_pkg.delete_traffic_area(id) FROM %I.traffic_area WHERE transportation_complex_id = %L', schema_name, tc_id);
+  EXECUTE format('SELECT geodb_pkg.delete_traffic_area(id, %L) FROM %I.traffic_area WHERE transportation_complex_id = %L', 
+                    schema_name, schema_name, tc_id);
 
   -- get reference ids to surface_geometry table
   EXECUTE format('SELECT lod1_multi_surface_id, lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id 
@@ -1582,7 +1591,8 @@ BEGIN
   EXECUTE format('DELETE FROM %I.cityobject_member WHERE citymodel_id = %L', schema_name, cm_id);
 
   -- delete appearances assigned to the city model
-  EXECUTE format('SELECT geodb_pkg.delete_appearance(id) FROM %I.appearance WHERE cityobject_id = %L', schema_name, cm_id);
+  EXECUTE format('SELECT geodb_pkg.delete_appearance(id, %L) FROM %I.appearance WHERE cityobject_id = %L', 
+                    schema_name, schema_name, cm_id);
 
   --// DELETE CITY MODEL //--
   EXECUTE format('DELETE FROM %I.citymodel WHERE id = %L', schema_name, cm_id);
@@ -1615,22 +1625,26 @@ DECLARE
 BEGIN
   --// PRE DELETE BRIDGE //--
   -- delete referenced bridge part(s)
-  EXECUTE format('SELECT geodb_pkg.delete_bridge(id) FROM %I.bridge WHERE id != %L AND bridge_parent_id = %L', schema_name, brd_id, brd_id);
+  EXECUTE format('SELECT geodb_pkg.delete_bridge(id, %L) FROM %I.bridge WHERE id != %L AND bridge_parent_id = %L', 
+                    schema_name, schema_name, brd_id, brd_id);
 
   -- delete referenced bridge installation(s)
-  EXECUTE format('SELECT geodb_pkg.delete_bridge_inst(id) FROM %I.bridge_installation WHERE bridge_id = %L', schema_name, brd_id);
+  EXECUTE format('SELECT geodb_pkg.delete_bridge_inst(id, %L) FROM %I.bridge_installation WHERE bridge_id = %L', 
+                    schema_name, schema_name, brd_id);
 
   -- delete referenced bridge thematic surfaces
-  EXECUTE format('SELECT geodb_pkg.delete_bridge_them_srf(id) FROM %I.bridge_thematic_surface WHERE bridge_id = %L', schema_name, brd_id);
+  EXECUTE format('SELECT geodb_pkg.delete_bridge_them_srf(id, %L) FROM %I.bridge_thematic_surface WHERE bridge_id = %L', 
+                    schema_name, schema_name, brd_id);
 
   -- delete referenced bridge_room(s)
-  EXECUTE format('SELECT geodb_pkg.delete_bridge_room(id) FROM %I.bridge_room WHERE bridge_id = %L', schema_name, brd_id);
+  EXECUTE format('SELECT geodb_pkg.delete_bridge_room(id, %L) FROM %I.bridge_room WHERE bridge_id = %L', 
+                    schema_name, schema_name, brd_id);
 
   -- delete address(es) being not referenced from bridges any more
-  EXECUTE format('SELECT geodb_pkg.delete_address(ad_id) FROM %I.address ad, %I.address_to_bridge ad2brd 
+  EXECUTE format('SELECT geodb_pkg.delete_address(ad_id, %L) FROM %I.address ad, %I.address_to_bridge ad2brd 
                     WHERE ad.id = ad2brd.address_id AND ad2brd.bridge_id = %L
                     AND geodb_pkg.is_not_referenced(%L, %L, ad.id, %L, %L, %L)',
-                    schema_name, schema_name, brd_id, 
+                    schema_name, schema_name, schema_name, brd_id, 
                     'address_to_bridge', 'address_id', 'bridge_id', brd_id, schema_name);
 
   -- delete reference to address
@@ -1698,7 +1712,8 @@ DECLARE
 BEGIN
   --// PRE DELETE BRIDGE INSTALLATION //--
   -- delete referenced bridge thematic surfaces
-  EXECUTE format('SELECT geodb_pkg.delete_bridge_them_srf(id) FROM %I.bridge_thematic_surface WHERE bridge_installation_id = %L', schema_name, brdi_id);
+  EXECUTE format('SELECT geodb_pkg.delete_bridge_them_srf(id, %L) FROM %I.bridge_thematic_surface WHERE bridge_installation_id = %L', 
+                    schema_name, schema_name, brdi_id);
 
   -- get reference ids to surface_geometry table 
   EXECUTE format('SELECT lod2_brep_id, lod3_brep_id, lod4_brep_id 
@@ -1756,10 +1771,10 @@ DECLARE
 BEGIN
   --// PRE DELETE THEMATIC SURFACE //--
   -- delete opening(s) not being referenced by a bridge thematic surface any more
-  EXECUTE format('SELECT geodb_pkg.delete_bridge_opening(o.id) FROM %I.bridge_opening brdo, %I.bridge_open_to_them_srf brdo2ts
+  EXECUTE format('SELECT geodb_pkg.delete_bridge_opening(o.id, %L) FROM %I.bridge_opening brdo, %I.bridge_open_to_them_srf brdo2ts
                     WHERE brdo.id = brdo2ts.bridge_opening_id AND brdo2ts.bridge_thematic_surface_id = %L
                     AND geodb_pkg.is_not_referenced(%L, %L, brdo.id, %L, %L, %L)',
-                    schema_name, schema_name, brdts_id, 
+                    schema_name, schema_name, schema_name, brdts_id, 
                     'bridge_open_to_them_srf', 'bridge_opening_id', 'bridge_thematic_surface_id', brdts_id, schema_name);
 
   -- delete reference to opening
@@ -1820,11 +1835,11 @@ BEGIN
 
   -- delete addresses not being referenced from bridges and bridge openings any more
   IF brdo_add_id IS NOT NULL THEN
-    EXECUTE format('SELECT geodb_pkg.delete_address(ad.id) FROM %I.address ad 
+    EXECUTE format('SELECT geodb_pkg.delete_address(ad.id, %L) FROM %I.address ad 
                       LEFT OUTER JOIN %I.address_to_bridge ad2brd ON ad.id = ad2brd.address_id 
                       WHERE ad.id = %L AND ad2brd.address_id IS NULL
                       AND geodb_pkg.is_not_referenced(%L, %L, ad.id, %L, %L, %L)',
-                      schema_name, schema_name, brdo_add_id,
+                      schema_name, schema_name, schema_name, brdo_add_id,
                       'bridge_opening', 'address_id', 'id', brdo_id, schema_name);
   END IF;
 
@@ -1914,13 +1929,16 @@ DECLARE
 BEGIN
   --// PRE DELETE BRIDGE ROOM //--
   -- delete referenced bridge installation(s)
-  EXECUTE format('SELECT geodb_pkg.delete_bridge_inst(id) FROM %I.bridge_installation WHERE bridge_room_id = %L', schema_name, brdr_id);
+  EXECUTE format('SELECT geodb_pkg.delete_bridge_inst(id, %L) FROM %I.bridge_installation WHERE bridge_room_id = %L', 
+                    schema_name, schema_name, brdr_id);
 
   -- delete referenced bridge thematic surfaces
-  EXECUTE format('SELECT geodb_pkg.delete_bridge_them_srf(id) FROM %I.bridge_thematic_surface WHERE bridge_room_id = %L', schema_name, brdr_id);
+  EXECUTE format('SELECT geodb_pkg.delete_bridge_them_srf(id, %L) FROM %I.bridge_thematic_surface WHERE bridge_room_id = %L', 
+                    schema_name, schema_name, brdr_id);
   
   -- delete referenced bridge furniture
-  EXECUTE format('SELECT geodb_pkg.delete_bridge_furniture(id) FROM %I.bridge_furniture WHERE bridge_room_id = %L', schema_name, brdr_id);
+  EXECUTE format('SELECT geodb_pkg.delete_bridge_furniture(id, %L) FROM %I.bridge_furniture WHERE bridge_room_id = %L', 
+                    schema_name, schema_name, brdr_id);
 
   -- get reference id to surface_geometry table 
   EXECUTE format('SELECT lod4_multi_surface_id, lod4_solid_id FROM %I.bridge_room WHERE id = %L', schema_name, brdr_id)   
@@ -1965,7 +1983,8 @@ DECLARE
 BEGIN
   --// PRE DELETE BRIDGE CONSTRUCTION ELEMENT //--
   -- delete referenced bridge thematic surfaces
-  EXECUTE format('SELECT geodb_pkg.delete_bridge_them_srf(id) FROM %I.bridge_thematic_surface WHERE bridge_constr_element_id = %L', schema_name, brdce_id);
+  EXECUTE format('SELECT geodb_pkg.delete_bridge_them_srf(id, %L) FROM %I.bridge_thematic_surface WHERE bridge_constr_element_id = %L', 
+                    schema_name, schema_name, brdce_id);
 
   -- get reference ids to surface_geometry table 
   EXECUTE format('SELECT lod1_brep_id, lod2_brep_id, lod3_brep_id, lod4_brep_id 
@@ -2033,16 +2052,20 @@ DECLARE
 BEGIN
   --// PRE DELETE TUNNEL //--
   -- delete referenced tunnel part(s)
-  EXECUTE format('SELECT geodb_pkg.delete_tunnel(id) FROM %I.tunnel WHERE id != %L AND tunnel_parent_id = %L', schema_name, tun_id, tun_id);
+  EXECUTE format('SELECT geodb_pkg.delete_tunnel(id, %L) FROM %I.tunnel WHERE id != %L AND tunnel_parent_id = %L', 
+                    schema_name, schema_name, tun_id, tun_id);
 
   -- delete referenced tunnel installation(s)
-  EXECUTE format('SELECT geodb_pkg.delete_tunnel_inst(id) FROM %I.tunnel_installation WHERE tunnel_id = %L', schema_name, tun_id);
+  EXECUTE format('SELECT geodb_pkg.delete_tunnel_inst(id, %L) FROM %I.tunnel_installation WHERE tunnel_id = %L', 
+                    schema_name, schema_name, tun_id);
 
   -- delete referenced tunnel thematic surfaces
-  EXECUTE format('SELECT geodb_pkg.delete_tunnel_them_srf(id) FROM %I.tunnel_thematic_surface WHERE tunnel_id = %L', schema_name, tun_id);
+  EXECUTE format('SELECT geodb_pkg.delete_tunnel_them_srf(id, %L) FROM %I.tunnel_thematic_surface WHERE tunnel_id = %L', 
+                    schema_name, schema_name, tun_id);
 
   -- delete referenced tunnel hollow space(s)
-  EXECUTE format('SELECT geodb_pkg.delete_tunnel_hollow_space(id) FROM %I.tunnel_hollow_space WHERE tunnel_id = %L', schema_name, tun_id);
+  EXECUTE format('SELECT geodb_pkg.delete_tunnel_hollow_space(id, %L) FROM %I.tunnel_hollow_space WHERE tunnel_id = %L', 
+                    schema_name, schema_name, tun_id);
 
   -- get reference ids to surface_geometry table  
   EXECUTE format('SELECT lod1_multi_surface_id, lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id,
@@ -2106,7 +2129,8 @@ DECLARE
 BEGIN
   --// PRE DELETE TUNNEL INSTALLATION //--
   -- delete referenced tunnel thematic surfaces
-  EXECUTE format('SELECT geodb_pkg.delete_tunnel_them_srf(id) FROM %I.tunnel_thematic_surface WHERE tunnel_installation_id = %L', schema_name, tuni_id);
+  EXECUTE format('SELECT geodb_pkg.delete_tunnel_them_srf(id, %L) FROM %I.tunnel_thematic_surface WHERE tunnel_installation_id = %L', 
+                    schema_name, schema_name, tuni_id);
 
   -- get reference ids to surface_geometry table 
   EXECUTE format('SELECT lod2_brep_id, lod3_brep_id, lod4_brep_id 
@@ -2164,10 +2188,10 @@ DECLARE
 BEGIN
   --// PRE DELETE THEMATIC SURFACE //--
   -- delete opening(s) not being referenced by a tunnel thematic surface any more
-  EXECUTE format('SELECT geodb_pkg.delete_tunnel_opening(o.id) FROM %I.tunnel_opening tuno, %I.tunnel_open_to_them_srf tuno2ts
+  EXECUTE format('SELECT geodb_pkg.delete_tunnel_opening(o.id, %L) FROM %I.tunnel_opening tuno, %I.tunnel_open_to_them_srf tuno2ts
                     WHERE tuno.id = tuno2ts.tunnel_opening_id AND tuno2ts.tunnel_thematic_surface_id = %L
                       AND geodb_pkg.is_not_referenced(%L, %L, tuno.id, %L, %L, %L)',
-                      schema_name, schema_name, tunts_id,
+                      schema_name, schema_name, schema_name, tunts_id,
                       'tunnel_open_to_them_srf', 'tunnel_opening_id', 'tunnel_thematic_surface_id', tunts_id, schema_name);
 
   -- delete reference to opening
@@ -2311,13 +2335,16 @@ DECLARE
 BEGIN
   --// PRE DELETE TUNNEL HOLLOW SPACE //--
   -- delete referenced tunnel installation(s)
-  EXECUTE format('SELECT geodb_pkg.delete_tunnel_inst(id) FROM %I.tunnel_installation WHERE tunnel_hollow_space_id = %L', schema_name, tunhs_id);
+  EXECUTE format('SELECT geodb_pkg.delete_tunnel_inst(id, %L) FROM %I.tunnel_installation WHERE tunnel_hollow_space_id = %L', 
+                    schema_name, schema_name, tunhs_id);
 
   -- delete referenced tunnel thematic surfaces
-  EXECUTE format('SELECT geodb_pkg.delete_tunnel_them_srf(id) FROM %I.tunnel_thematic_surface WHERE tunnel_hollow_space_id = %L', schema_name, tunhs_id);
+  EXECUTE format('SELECT geodb_pkg.delete_tunnel_them_srf(id, %L) FROM %I.tunnel_thematic_surface WHERE tunnel_hollow_space_id = %L', 
+                    schema_name, schema_name, tunhs_id);
   
   -- delete referenced tunnel furniture
-  EXECUTE format('SELECT geodb_pkg.delete_tunnel_furniture(id) FROM %I.tunnel_furniture WHERE tunnel_hollow_space_id = %L', schema_name, tunhs_id);
+  EXECUTE format('SELECT geodb_pkg.delete_tunnel_furniture(id, %L) FROM %I.tunnel_furniture WHERE tunnel_hollow_space_id = %L', 
+                    schema_name, schema_name, tunhs_id);
 
   -- get reference id to surface_geometry table 
   EXECUTE format('SELECT lod4_multi_surface_id, lod4_solid_id FROM %I.tunnel_hollow_space WHERE id = %L', schema_name, tunhs_id)  
@@ -2357,20 +2384,20 @@ BEGIN
   -- have been deleted at this stage. thus, we can check and delete
   -- surface data which does not have a valid texture parameterization
   -- any more.
-  EXECUTE format('SELECT geodb_pkg.delete_surface_data(s.id) FROM %I.surface_data s 
+  EXECUTE format('SELECT geodb_pkg.delete_surface_data(s.id, %L) FROM %I.surface_data s 
                     LEFT OUTER JOIN %I.textureparam t ON s.id=t.surface_data_id 
-                    WHERE t.surface_data_id IS NULL', schema_name, schema_name);
+                    WHERE t.surface_data_id IS NULL', schema_name, schema_name, schema_name);
 
   -- delete appearances which does not have surface data any more
   IF only_global=1 THEN
-    EXECUTE format('SELECT geodb_pkg.delete_appearance(a.id) FROM %I.appearance a 
+    EXECUTE format('SELECT geodb_pkg.delete_appearance(a.id, %L) FROM %I.appearance a 
                       LEFT OUTER JOIN %I.appear_to_surface_data asd ON a.id=asd.appearance_id 
                       WHERE a.cityobject_id IS NULL AND asd.appearance_id IS NULL',
-                      schema_name, schema_name);
+                      schema_name, schema_name, schema_name);
   ELSE
-    EXECUTE format('SELECT geodb_pkg.delete_appearance(a.id) FROM %I.appearance a 
+    EXECUTE format('SELECT geodb_pkg.delete_appearance(a.id, %L) FROM %I.appearance a 
                       LEFT OUTER JOIN %I.appear_to_surface_data asd ON a.id=asd.appearance_id 
-                      WHERE asd.appearance_id IS NULL', schema_name, schema_name);
+                      WHERE asd.appearance_id IS NULL', schema_name, schema_name, schema_name);
   END IF;
 END; 
 $$ 
@@ -2380,7 +2407,7 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_addresses(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID AS
 $$
 BEGIN
-  EXECUTE format('SELECT geodb_pkg.delete_address(ad.id) FROM %I.address ad
+  EXECUTE format('SELECT geodb_pkg.delete_address(ad.id, %L) FROM %I.address ad
                     LEFT OUTER JOIN %I.address_to_building ad2b ON ad2b.address_id = ad.id
                     LEFT OUTER JOIN %I.address_to_bridge ad2brd ON ad2brd.address_id = ad.id
                     LEFT OUTER JOIN %I.opening o ON o.address_id = ad.id
@@ -2389,7 +2416,7 @@ BEGIN
                       AND ad2brd.bridge_id IS NULL
                       AND o.address_id IS NULL
                       AND brdo.address_id IS NULL',
-                      schema_name, schema_name, schema_name, schema_name, schema_name);
+                      schema_name, schema_name, schema_name, schema_name, schema_name, schema_name);
 END;
 $$ 
 LANGUAGE plpgsql;
@@ -2398,9 +2425,9 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_cityobjectgroups(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID AS
 $$
 BEGIN
-  EXECUTE format('SELECT geodb_pkg.delete_cityobjectgroup(g.id, 1) FROM %I.cityobjectgroup g 
+  EXECUTE format('SELECT geodb_pkg.delete_cityobjectgroup(g.id, 1, %L) FROM %I.cityobjectgroup g 
                     LEFT OUTER JOIN %I.group_to_cityobject gtc ON g.id=gtc.cityobjectgroup_id 
-                    WHERE gtc.cityobject_id IS NULL', schema_name, schema_name);
+                    WHERE gtc.cityobject_id IS NULL', schema_name, schema_name, schema_name);
 END;
 $$ 
 LANGUAGE plpgsql;
@@ -2409,9 +2436,9 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_citymodels(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID AS
 $$
 BEGIN
-  EXECUTE format('SELECT geodb_pkg.delete_citymodel(c.id, 1) FROM I%.citymodel c 
+  EXECUTE format('SELECT geodb_pkg.delete_citymodel(c.id, 1, %L) FROM I%.citymodel c 
                     LEFT OUTER JOIN I%.cityobject_member cm ON c.id=cm.citymodel_id 
-                    WHERE cm.cityobject_id IS NULL', schema_name, schema_name);
+                    WHERE cm.cityobject_id IS NULL', schema_name, schema_name, schema_name);
 END;
 $$ 
 LANGUAGE plpgsql;
