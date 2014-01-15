@@ -35,8 +35,8 @@
 * CONTENT
 *
 * FUNCTIONS:
-*   change_column_srid(t_name VARCHAR, c_name VARCHAR, dim INTEGER, db_srid INTEGER, s_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   change_db_srid(db_srid INTEGER, db_gml_srs_name VARCHAR) RETURNS SETOF VOID
+*   change_column_srid(t_name VARCHAR, c_name VARCHAR, dim INTEGER, schema_srid INTEGER, s_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
+*   change_schema_srid(schema_srid INTEGER, schema_gml_srs_name VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   db_metadata() RETURNS TABLE(
 *     srid INTEGER, 
 *     gml_srs_name VARCHAR(1000), 
@@ -45,15 +45,15 @@
 *     versioning VARCHAR(100)
 *     )
 *   get_seq_values(seq_name VARCHAR, seq_count INTEGER) RETURNS SETOF INTEGER
-*   is_coord_ref_sys_3d(srid INTEGER) RETURNS INTEGER
+*   is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER
 *   is_db_coord_ref_sys_3d() RETURNS INTEGER
 *   min(a NUMERIC, b NUMERIC) RETURNS NUMERIC
 *   objectclass_id_to_table_name(class_id INTEGER) RETURNS VARCHAR
-*   srs_info(OUT srid DATABASE_SRS.SRID%TYPE, OUT srs DATABASE_SRS.GML_SRS_NAME%TYPE) RETURNS SETOF RECORD
+*   db_info(OUT schema_srid INTEGER, OUT schema_gml_srs_name VARCHAR, OUT versioning VARCHAR) RETURNS RECORD AS 
 *   transform_or_null(geom GEOMETRY, srid INTEGER) RETURNS GEOMETRY
 *   update_schema_constraints(on_delete_param VARCHAR DEFAULT 'CASCADE', schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   update_table_constraint(fkey_name VARCHAR, table_name VARCHAR, column_name VARCHAR, ref_table VARCHAR, ref_column VARCHAR, 
-*     on_delete_param VARCHAR, deferrable_param VARCHAR) RETURNS SETOF VOID
+*     delete_param VARCHAR, deferrable_param VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   versioning_db() RETURNS VARCHAR
 *   versioning_table(table_name VARCHAR) RETURNS VARCHAR
 ******************************************************************/
@@ -62,11 +62,16 @@
 * versioning_table
 *
 * @param table_name name of table
+* @param schema_name name of schema
 * @RETURN VARCHAR 'ON' for version-enabled, 'OFF' otherwise
 ******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.versioning_table(table_name VARCHAR) RETURNS VARCHAR AS $$
+CREATE OR REPLACE FUNCTION geodb_pkg.versioning_table(
+  table_name VARCHAR,
+  schema_name DEFAULT 'public'
+  ) RETURNS VARCHAR AS 
+$$
 BEGIN
-  EXECUTE format('SELECT audit_id FROM %I LIMIT 1', table_name);
+  EXECUTE format('SELECT audit_id FROM %I.%I LIMIT 1', schema_name, table_name);
   RETURN 'ON';
 
   EXCEPTION
@@ -80,9 +85,10 @@ LANGUAGE plpgsql;
 /*****************************************************************
 * versioning_db
 *
-* @RETURN VARCHAR 'ON' for version-enabled, 'PARTLY' and 'OFF'
+* @RETURN VARCHAR 'ON' for version-enabled, 'OFF' for version-disabled
 ******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.versioning_db() RETURNS VARCHAR AS $$
+CREATE OR REPLACE FUNCTION geodb_pkg.versioning_db() RETURNS VARCHAR AS 
+$$
 BEGIN
   RETURN 'OFF';
 END;
@@ -93,28 +99,41 @@ LANGUAGE plpgsql;
 /*****************************************************************
 * db_info
 *
-* @param srid database srid
-* @param srs database srs name
+* @param schema_srid database srid
+* @param schema_srs database srs name
+* @param versioning database versioning
 ******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.srs_info(
-  OUT srid DATABASE_SRS.SRID%TYPE, 
-  OUT srs DATABASE_SRS.GML_SRS_NAME%TYPE
-  ) RETURNS SETOF RECORD AS $$
-  SELECT srid, gml_srs_name FROM database_srs;
+CREATE OR REPLACE FUNCTION geodb_pkg.db_info(
+  OUT schema_srid INTEGER, 
+  OUT schema_gml_srs_name VARCHAR,
+  OUT versioning VARCHAR
+  ) RETURNS RECORD AS 
+$$
+BEGIN
+  EXECUTE 'SELECT srid, gml_srs_name FROM database_srs' INTO schema_srid, schema_gml_srs_name;
+  versioning := geodb_pkg.util_versioning_db();
+END;
 $$ 
-LANGUAGE sql;
+LANGUAGE plpgsql;
 
 
 /******************************************************************
 * db_metadata
 *
-* @RETURN TABLE with columns SRID, GML_SRS_NAME, COORD_REF_SYS_NAME, COORD_REF_SYS_KIND
+* @RETURN TABLE with columns SRID, GML_SRS_NAME, COORD_REF_SYS_NAME, 
+*               COORD_REF_SYS_KIND, VERSIONING
 ******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.db_metadata() 
-RETURNS TABLE(srid INTEGER, gml_srs_name VARCHAR(1000), coord_ref_sys_name VARCHAR(2048), coord_ref_sys_kind VARCHAR(2048), versioning VARCHAR(100)) AS $$
+CREATE OR REPLACE FUNCTION geodb_pkg.db_metadata() RETURNS TABLE(
+  schema_srid INTEGER, 
+  schema_gml_srs_name VARCHAR(1000), 
+  coord_ref_sys_name VARCHAR(2048), 
+  coord_ref_sys_kind VARCHAR(2048), 
+  versioning VARCHAR(10)
+  ) AS 
+$$
 BEGIN
-  EXECUTE 'SELECT SRID, GML_SRS_NAME FROM DATABASE_SRS' INTO srid, gml_srs_name;
-  EXECUTE 'SELECT srtext, srtext FROM spatial_ref_sys WHERE SRID=$1' INTO coord_ref_sys_name, coord_ref_sys_kind USING srid;
+  EXECUTE 'SELECT SRID, GML_SRS_NAME FROM DATABASE_SRS' INTO schema_srid, schema_gml_srs_name;
+  EXECUTE 'SELECT srtext, srtext FROM spatial_ref_sys WHERE SRID=$1' INTO coord_ref_sys_name, coord_ref_sys_kind USING schema_srid;
   coord_ref_sys_name := split_part(coord_ref_sys_name, '"', 2);
   coord_ref_sys_kind := split_part(coord_ref_sys_kind, '[', 1);
   versioning := geodb_pkg.versioning_db();
@@ -131,7 +150,11 @@ LANGUAGE plpgsql;
 * @param b second NUMERIC value
 * @RETURN NUMERIC the smaller of the two input NUMERIC values                
 ******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.min(a NUMERIC, b NUMERIC) RETURNS NUMERIC AS $$
+CREATE OR REPLACE FUNCTION geodb_pkg.min(
+  a NUMERIC, 
+  b NUMERIC
+  ) RETURNS NUMERIC AS 
+$$
 BEGIN
   IF a < b THEN
     RETURN a;
@@ -150,7 +173,11 @@ LANGUAGE plpgsql;
 * @param srid the SRID of the coordinate system to be used for the transformation.
 * @RETURN GEOMETRY the transformed geometry representation                
 ******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.transform_or_null(geom GEOMETRY, srid INTEGER) RETURNS GEOMETRY AS $$
+CREATE OR REPLACE FUNCTION geodb_pkg.transform_or_null(
+  geom GEOMETRY, 
+  srid INTEGER
+  ) RETURNS GEOMETRY AS 
+$$
 BEGIN
   IF geom IS NOT NULL THEN
     RETURN ST_Transform(geom, srid);
@@ -165,18 +192,21 @@ LANGUAGE plpgsql;
 /******************************************************************
 * is_coord_ref_sys_3d
 *
-* no 3D-Coord.-Reference-System defined in the spatial_ref_sys-table of PostGIS 2.0 by default
-* refer to spatialreference.org for INSERT-statements of 3D-SRIDs
-* they can be identified by the AXIS UP in the srtext
+* no 3D-Coord.-Reference-System defined in the spatial_ref_sys-table 
+* of PostGIS 2.0 by default. Refer to spatialreference.org for 
+* INSERT-statements of 3D-SRIDs. They can be identified by the AXIS 
+* UP in the srtext
 *
-* @param srid the SRID of the coordinate system to be checked
+* @param schema_srid the SRID of the coordinate system to be checked
 * @RETURN NUMERIC the boolean result encoded as NUMERIC: 0 = false, 1 = true                
 ******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.is_coord_ref_sys_3d(srid INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION geodb_pkg.is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER AS 
+$$
 DECLARE
   is_3d INTEGER := 0;
 BEGIN
-  EXECUTE 'SELECT 1 FROM spatial_ref_sys WHERE auth_srid=$1 AND srtext LIKE ''%UP]%''' INTO is_3d USING srid;
+  EXECUTE 'SELECT 1 FROM spatial_ref_sys WHERE auth_srid=$1 AND srtext LIKE ''%UP]%''' 
+             INTO is_3d USING schema_srid;
 
   RETURN is_3d;
 END;
@@ -191,32 +221,37 @@ LANGUAGE plpgsql;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION geodb_pkg.is_db_coord_ref_sys_3d() RETURNS INTEGER AS $$
 DECLARE
-  srid INTEGER;
+  schema_srid INTEGER;
 BEGIN
-  EXECUTE 'SELECT srid from DATABASE_SRS' INTO srid;
-  RETURN geodb_pkg.is_coord_ref_sys_3d(srid);
+  EXECUTE 'SELECT srid from DATABASE_SRS' INTO schema_srid;
+  RETURN geodb_pkg.is_coord_ref_sys_3d(schema_srid);
 END;
 $$
 LANGUAGE plpgsql;
 
 
 /*******************************************************************
-* change_db_srid
+* change_schema_srid
 *
-* @param db_srid the SRID of the coordinate system to be further used in the database
-* @param db_gml_srs_name the GML_SRS_NAME of the coordinate system to be further used in the database
+* @param schema_srid       the SRID of the coordinate system to be 
+*                          further used in the database
+* @param db_gml_srs_name   the GML_SRS_NAME of the coordinate system 
+*                          to be further used in the database
+* @param schema name       name of schema
 *******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.change_db_srid(
-  db_srid INTEGER, 
-  db_gml_srs_name VARCHAR
+CREATE OR REPLACE FUNCTION geodb_pkg.change_schema_srid(
+  schema_srid INTEGER, 
+  schema_gml_srs_name VARCHAR,
+  schema_name VARCHAR DEFAULT 'public'
   ) RETURNS SETOF VOID AS $$
 BEGIN
   -- update entry in DATABASE_SRS table first
-  UPDATE DATABASE_SRS SET SRID=db_srid, GML_SRS_NAME=db_gml_srs_name;
+  EXECUTE format('UPDATE %I.database_srs SET srid = %L, gml_srs_name = %L',
+                    schema_srid, schema_gml_srs_name);
 
   -- change srid of each spatially enabled table
-  EXECUTE 'SELECT geodb_pkg.change_column_srid(f_table_schema, f_table_name, f_geometry_column, coord_dimension, $1) 
-             FROM geometry_columns WHERE srid != 0' USING db_srid;
+  EXECUTE 'SELECT geodb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, f_table_schema) 
+             FROM geometry_columns WHERE srid != 0 AND f_table_schema = $2' USING schema_srid, schema_name;
 END;
 $$ 
 LANGUAGE plpgsql;
@@ -228,14 +263,14 @@ LANGUAGE plpgsql;
 * @param t_name name of table
 * @param c_name name of spatial column
 * @param dim dimension of geometry
-* @param db_srid the SRID of the coordinate system to be further used in the database
+* @param schema_srid the SRID of the coordinate system to be further used in the database
 * @param s_name name of schema
 ******************************************************************/
 CREATE OR REPLACE FUNCTION geodb_pkg.change_column_srid(
   t_name VARCHAR, 
   c_name VARCHAR,
   dim INTEGER,
-  db_srid INTEGER,
+  schema_srid INTEGER,
   s_name VARCHAR DEFAULT 'public'
   ) RETURNS SETOF VOID AS 
 $$
@@ -262,7 +297,7 @@ BEGIN
     EXECUTE format('DROP INDEX %I.%I', s_name, idx_name);
 
     -- update geometry SRID
-    PERFORM UpdateGeometrySRID(s_name, t_name, c_name, db_srid);
+    PERFORM UpdateGeometrySRID(s_name, t_name, c_name, schema_srid);
 
     -- recreate spatial index again
     IF dim < 3 THEN
@@ -272,7 +307,7 @@ BEGIN
     END IF;
   ELSE
     -- no spatial index defined for table, only update metadata and geometry SRID
-    PERFORM UpdateGeometrySRID(s_name, t_name, c_name, db_srid);
+    PERFORM UpdateGeometrySRID(s_name, t_name, c_name, schema_srid);
   END IF;
 END;
 $$ 
@@ -290,8 +325,9 @@ LANGUAGE plpgsql;
 * @param column_name defines the column the constraint is relying on
 * @param ref_table name of referenced table
 * @param ref_column name of referencing column of referenced table
-* @param on_delete_param whether CASCADE or RESTRICT
+* @param delete_param whether CASCADE or RESTRICT
 * @param deferrable_param whether set or not
+* @param schema_name name of schema
 ******************************************************************/
 CREATE OR REPLACE FUNCTION geodb_pkg.update_table_constraint(
   fkey_name VARCHAR,
@@ -299,14 +335,15 @@ CREATE OR REPLACE FUNCTION geodb_pkg.update_table_constraint(
   column_name VARCHAR,
   ref_table VARCHAR,
   ref_column VARCHAR,
-  on_delete_param VARCHAR,
-  deferrable_param VARCHAR
+  delete_param VARCHAR,
+  deferrable_param VARCHAR,
+  schema_name VARCHAR DEFAULT 'public'
   ) RETURNS SETOF VOID AS 
 $$
 BEGIN
-  EXECUTE format('ALTER TABLE %I DROP CONSTRAINT %I, ADD CONSTRAINT %I FOREIGN KEY (%I) REFERENCES %I (%)
-                    ON UPDATE CASCADE ON DELETE ' || on_delete_param || ' ' || deferrable_param,
-                    table_name, fkey_name, fkey_name, column_name, ref_table, ref_column);
+  EXECUTE format('ALTER TABLE %I.%I DROP CONSTRAINT %I, ADD CONSTRAINT %I FOREIGN KEY (%I) REFERENCES %I.%I (%I)
+                    ON UPDATE CASCADE ON DELETE ' || delete_param || ' ' || deferrable_param,
+                    schema_name, table_name, fkey_name, fkey_name, column_name, schema_name, ref_table, ref_column);
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -323,7 +360,7 @@ LANGUAGE plpgsql;
 * in the specified schema
 *
 * @param on_delete_param whether CASCADE (default) or RESTRICT
-* @param schema_name name of the schema
+* @param schema_name name of schema
 ******************************************************************/
 CREATE OR REPLACE FUNCTION geodb_pkg.update_schema_constraints(
   on_delete_param VARCHAR DEFAULT 'CASCADE',
@@ -331,7 +368,7 @@ CREATE OR REPLACE FUNCTION geodb_pkg.update_schema_constraints(
   ) RETURNS SETOF VOID AS 
 $$
 DECLARE
-  delete_param VARCHAR(30);
+  delete_param VARCHAR(30) := 'CASCADE';
   deferrable_param VARCHAR(30);
 BEGIN
   IF on_delete_param <> 'CASCADE' THEN
@@ -343,7 +380,7 @@ BEGIN
     RAISE NOTICE 'Constraints are set to ON DELETE CASCADE';
   END IF;
 
-  EXECUTE 'SELECT geodb_pkg.update_table_constraint(tc.constraint_name, tc.table_name, kcu.column_name, ccu.table_name, ccu.column_name, $2, $3)
+  EXECUTE 'SELECT geodb_pkg.update_table_constraint(tc.constraint_name, tc.table_name, kcu.column_name, ccu.table_name, ccu.column_name, $2, $3, tc.table_schema)
              FROM information_schema.table_constraints AS tc
              JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
              JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
