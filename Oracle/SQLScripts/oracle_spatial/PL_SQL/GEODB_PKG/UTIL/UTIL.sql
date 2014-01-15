@@ -68,18 +68,18 @@ CREATE OR REPLACE PACKAGE geodb_util
 AS
   FUNCTION versioning_table(table_name VARCHAR2) RETURN VARCHAR2;
   FUNCTION versioning_db RETURN VARCHAR2;
-  PROCEDURE db_info(srid OUT DATABASE_SRS.SRID%TYPE, srs OUT DATABASE_SRS.GML_SRS_NAME%TYPE, versioning OUT VARCHAR2);
+  PROCEDURE db_info(schema_srid OUT DATABASE_SRS.SRID%TYPE, schema_gml_srs_name OUT DATABASE_SRS.GML_SRS_NAME%TYPE, versioning OUT VARCHAR2);
   FUNCTION db_metadata RETURN DB_INFO_TABLE;
   FUNCTION split(list VARCHAR2, delim VARCHAR2 := ',') RETURN STRARRAY;
   FUNCTION min(a NUMBER, b NUMBER) RETURN NUMBER;
   FUNCTION transform_or_null(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
-  FUNCTION is_coord_ref_sys_3d(srid NUMBER) RETURN NUMBER;
+  FUNCTION is_coord_ref_sys_3d(schema_srid NUMBER) RETURN NUMBER;
   FUNCTION is_db_coord_ref_sys_3d RETURN NUMBER;
   PROCEDURE update_schema_constraints(on_delete_param VARCHAR2 := 'CASCADE');
   PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param VARCHAR2, deferrable_param VARCHAR2);
-  PROCEDURE change_db_srid(db_srid NUMBER, db_gml_srs_name VARCHAR2);
+  PROCEDURE change_schema_srid(schema_srid NUMBER, schema_gml_srs_name VARCHAR2);
   FUNCTION get_dim(t_name VARCHAR, c_name VARCHAR) RETURN NUMBER;
-  PROCEDURE change_column_srid(t_name VARCHAR2, c_name VARCHAR2, dim NUMBER, db_srid NUMBER);
+  PROCEDURE change_column_srid(t_name VARCHAR2, c_name VARCHAR2, dim NUMBER, schema_srid NUMBER);
   FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER) RETURN SEQ_TABLE;
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
 END geodb_util;
@@ -139,14 +139,14 @@ AS
   /*****************************************************************
   * db_info
   *
-  * @param srid database srid
-  * @param srs database srs name
+  * @param schema_srid database srid
+  * @param schema_gml_srs_name database srs name
   * @param versioning database versioning
   ******************************************************************/
-  PROCEDURE db_info(srid OUT DATABASE_SRS.SRID%TYPE, srs OUT DATABASE_SRS.GML_SRS_NAME%TYPE, versioning OUT VARCHAR2) 
+  PROCEDURE db_info(schema_srid OUT DATABASE_SRS.SRID%TYPE, schema_gml_srs_name OUT DATABASE_SRS.GML_SRS_NAME%TYPE, versioning OUT VARCHAR2) 
   IS
   BEGIN
-    EXECUTE IMMEDIATE 'SELECT SRID, GML_SRS_NAME from DATABASE_SRS' INTO srid, srs;
+    EXECUTE IMMEDIATE 'SELECT SRID, GML_SRS_NAME from DATABASE_SRS' INTO schema_srid, schema_gml_srs_name;
     versioning := versioning_db;
   END;
 
@@ -238,16 +238,16 @@ AS
   /*****************************************************************
   * is_coord_ref_sys_3d
   *
-  * @param srid the SRID of the coordinate system to be checked
+  * @param schema_srid the SRID of the coordinate system to be checked
   * @RETURN NUMBER the boolean result encoded as number: 0 = false, 1 = true                
   ******************************************************************/
-  FUNCTION is_coord_ref_sys_3d(srid NUMBER) RETURN NUMBER
+  FUNCTION is_coord_ref_sys_3d(schema_srid NUMBER) RETURN NUMBER
   IS
     is_3d NUMBER := 0;
   BEGIN
-    EXECUTE IMMEDIATE 'SELECT COUNT(*) from SDO_CRS_COMPOUND where SRID=:1' INTO is_3d USING srid;
+    EXECUTE IMMEDIATE 'SELECT COUNT(*) from SDO_CRS_COMPOUND where SRID=:1' INTO is_3d USING schema_srid;
     IF is_3d = 0 THEN
-      EXECUTE IMMEDIATE 'SELECT COUNT(*) from SDO_CRS_GEOGRAPHIC3D where SRID=:1' INTO is_3d USING srid;
+      EXECUTE IMMEDIATE 'SELECT COUNT(*) from SDO_CRS_GEOGRAPHIC3D where SRID=:1' INTO is_3d USING schema_srid;
     END IF;
 
     RETURN is_3d;
@@ -260,10 +260,10 @@ AS
   ******************************************************************/
   FUNCTION is_db_coord_ref_sys_3d RETURN NUMBER
   IS
-    srid NUMBER;
+    schema_srid NUMBER;
   BEGIN
-    EXECUTE IMMEDIATE 'SELECT srid from DATABASE_SRS' INTO srid;
-    RETURN is_coord_ref_sys_3d(srid);
+    EXECUTE IMMEDIATE 'SELECT srid from DATABASE_SRS' INTO schema_srid;
+    RETURN is_coord_ref_sys_3d(schema_srid);
   END;
 
   /******************************************************************
@@ -339,22 +339,22 @@ AS
   END;
 
   /*****************************************************************
-  * change_db_srid
+  * change_schema_srid
   *
-  * @param db_srid the SRID of the coordinate system to be further used in the database
-  * @param db_gml_srs_name the GML_SRS_NAME of the coordinate system to be further used in the database
+  * @param schema_srid the SRID of the coordinate system to be further used in the database
+  * @param schema_gml_srs_name the GML_SRS_NAME of the coordinate system to be further used in the database
   ******************************************************************/
-  PROCEDURE change_db_srid(db_srid NUMBER, db_gml_srs_name VARCHAR2)
+  PROCEDURE change_schema_srid(schema_srid NUMBER, schema_gml_srs_name VARCHAR2)
   IS
   BEGIN
     -- update entry in DATABASE_SRS table first
-    UPDATE DATABASE_SRS SET SRID=db_srid, GML_SRS_NAME=db_gml_srs_name;
+    UPDATE DATABASE_SRS SET SRID = schema_srid, GML_SRS_NAME = schema_gml_srs_name;
     COMMIT;
 
     -- change srid of each spatially enabled table
     FOR rec IN (SELECT table_name AS t, column_name AS c, geodb_util.get_dim(table_name, column_name) AS dim
                  FROM user_sdo_geom_metadata) LOOP
-      change_column_srid(rec.t, rec.c, rec.dim, db_srid);
+      change_column_srid(rec.t, rec.c, rec.dim, schema_srid);
     END LOOP;
   END;
 
@@ -386,13 +386,13 @@ AS
   * @param t_name name of the table
   * @param c_name name of the column
   * @param dim dimension of spatial index
-  * @param db_srid the SRID of the coordinate system to be further used in the database
+  * @param schema_srid the SRID of the coordinate system to be further used in the database
   ******************************************************************/
   PROCEDURE change_column_srid( 
     t_name VARCHAR2, 
     c_name VARCHAR2,
     dim NUMBER,
-    db_srid NUMBER)
+    schema_srid NUMBER)
   IS
     is_versioned BOOLEAN;
     is_valid BOOLEAN;
@@ -407,7 +407,7 @@ AS
     IF NOT is_valid THEN
       -- only update metadata as the index was switched off before transaction
       EXECUTE IMMEDIATE 'UPDATE USER_SDO_GEOM_METADATA SET srid = :1 WHERE table_name = :2 AND column_name = :3'
-                           USING db_srid, t_name, c_name;
+                           USING schema_srid, t_name, c_name;
       COMMIT;
     ELSE
       -- get name of spatial index
