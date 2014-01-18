@@ -157,10 +157,10 @@ CREATE TABLE geodb_pkg.INDEX_TABLE (
 ******************************************************************/
 INSERT INTO geodb_pkg.index_table VALUES (1, geodb_pkg.construct_spatial_3d('cityobject_spx', 'cityobject', 'envelope'));
 INSERT INTO geodb_pkg.index_table VALUES (2, geodb_pkg.construct_spatial_3d('surface_geom_spx', 'surface_geometry', 'geometry'));
-INSERT INTO geodb_pkg.index_table VALUES (3, geodb_pkg.construct_normal('cityobject_inx', 'cityobject', 'gmlid, gmlid_codespace'));
-INSERT INTO geodb_pkg.index_table VALUES (4, geodb_pkg.construct_normal('surface_geometry_inx', 'surface_geometry', 'gmlid, gmlid_codespace'));
-INSERT INTO geodb_pkg.index_table VALUES (5, geodb_pkg.construct_normal('appearance_inx', 'appearance', 'gmlid, gmlid_codespace'));
-INSERT INTO geodb_pkg.index_table VALUES (6, geodb_pkg.construct_normal('surface_data_inx', 'surface_data', 'gmlid, gmlid_codespace'));
+INSERT INTO geodb_pkg.index_table VALUES (3, geodb_pkg.construct_normal('cityobject_inx', 'cityobject', 'gmlid'));
+INSERT INTO geodb_pkg.index_table VALUES (4, geodb_pkg.construct_normal('surface_geometry_inx', 'surface_geometry', 'gmlid'));
+INSERT INTO geodb_pkg.index_table VALUES (5, geodb_pkg.construct_normal('appearance_inx', 'appearance', 'gmlid'));
+INSERT INTO geodb_pkg.index_table VALUES (6, geodb_pkg.construct_normal('surface_data_inx', 'surface_data', 'gmlid'));
 
 
 /*****************************************************************

@@ -107,10 +107,10 @@ AS
   INDICES CONSTANT index_table := index_table( 
     INDEX_OBJ.construct_spatial_3d('CITYOBJECT_SPX', 'CITYOBJECT', 'ENVELOPE'),
     INDEX_OBJ.construct_spatial_3d('SURFACE_GEOM_SPX', 'SURFACE_GEOMETRY', 'GEOMETRY'),
-    INDEX_OBJ.construct_normal('CITYOBJECT_INX', 'CITYOBJECT', 'GMLID, GMLID_CODESPACE'),
-    INDEX_OBJ.construct_normal('SURFACE_GEOMETRY_INX', 'SURFACE_GEOMETRY', 'GMLID, GMLID_CODESPACE'),
-    INDEX_OBJ.construct_normal('APPEARANCE_INX', 'APPEARANCE', 'GMLID, GMLID_CODESPACE'),
-    INDEX_OBJ.construct_normal('SURFACE_DATA_INX', 'SURFACE_DATA', 'GMLID, GMLID_CODESPACE')
+    INDEX_OBJ.construct_normal('CITYOBJECT_INX', 'CITYOBJECT', 'GMLID'),
+    INDEX_OBJ.construct_normal('SURFACE_GEOMETRY_INX', 'SURFACE_GEOMETRY', 'GMLID'),
+    INDEX_OBJ.construct_normal('APPEARANCE_INX', 'APPEARANCE', 'GMLID'),
+    INDEX_OBJ.construct_normal('SURFACE_DATA_INX', 'SURFACE_DATA', 'GMLID')
   );
     
   /*****************************************************************
