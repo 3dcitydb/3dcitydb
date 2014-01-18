@@ -67,7 +67,7 @@
 ******************************************************************/
 CREATE OR REPLACE FUNCTION geodb_pkg.versioning_table(
   table_name VARCHAR,
-  schema_name DEFAULT 'public'
+  schema_name VARCHAR DEFAULT 'public'
   ) RETURNS VARCHAR AS 
 $$
 BEGIN
