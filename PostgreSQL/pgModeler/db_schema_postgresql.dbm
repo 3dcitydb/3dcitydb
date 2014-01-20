@@ -6269,7 +6269,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="surface_geom_cityobj_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.implicit_geometry" table="public.surface_geometry">
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.surface_geometry">
 	<columns names="cityobject_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -7133,6 +7133,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_bridge_opening_cityobject" type="relfk"
 	 src-table="public.bridge_opening"
+	 dst-table="public.cityobject"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_surface_geometry_cityobject" type="relfk"
+	 src-table="public.surface_geometry"
 	 dst-table="public.cityobject"
 	 src-required="true" dst-required="true"/>
 
