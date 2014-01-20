@@ -3,6 +3,7 @@
 -- Authors:     Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
 --              Zhihang Yao <zhihang.yao@tum.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
+--              Felix Kunde <fkunde@virtualcitysystems.de>
 --              Philipp Willkomm <pwillkomm@moss.de>
 --              Gerhard König <gerhard.koenig@tu-berlin.de>
 --              Alexandra Lorenz <di.alex.lorenz@googlemail.com>
@@ -69,7 +70,6 @@ VALUES (8,'PlantCover',6);
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (9,'WaterBody',3);
 
-
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (10,'_WaterBoundarySurface',3);
 
@@ -82,10 +82,8 @@ VALUES (12,'WaterGroundSurface',10);
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (13,'WaterClosureSurface',10);
 
-
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (14,'ReliefFeature',3);
-
 
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (15,'_ReliefComponent',3);
@@ -101,11 +99,6 @@ VALUES (18,'BreaklineRelief',15);
 
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (19,'RasterRelief',15);
-
-
-INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
-VALUES (20,'Orthophoto',3);
-
 
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (21,'CityFurniture',3);
@@ -125,14 +118,11 @@ VALUES (25,'BuildingPart',24);
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (26,'Building',24);
 
-
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (27,'BuildingInstallation',3);
 
-
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (28,'IntBuildingInstallation',3);
-
 
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (29,'_BoundarySurface',3);
@@ -158,7 +148,6 @@ VALUES (35,'GroundSurface',29);
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (36,'ClosureSurface',29);
 
-
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (37,'_Opening',3);
 
@@ -168,16 +157,14 @@ VALUES (38,'Window',37);
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (39,'Door',37);
 
-
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (40,'BuildingFurniture',3);
 
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (41,'Room',3);
 
-
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
-VALUES (42,'_TransportationComplex',22);
+VALUES (42,'TransportationComplex',22);
 
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (43,'Track',42);
@@ -191,13 +178,11 @@ VALUES (45,'Road',42);
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (46,'Square',42);
 
-
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (47,'TrafficArea',22);
 
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (48,'AuxiliaryTrafficArea',22);
-
 
 INSERT INTO OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (49,'FeatureCollection',2);
