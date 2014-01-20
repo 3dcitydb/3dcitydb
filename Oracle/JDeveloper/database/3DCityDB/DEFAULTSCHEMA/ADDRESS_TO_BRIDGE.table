@@ -1,19 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<table xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
-  </ID>
+<table xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>ADDRESS_TO_BRIDGE</name>
   <columns>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">809290fd-d236-482c-b21a-18792e86727b</identifier>
-      </ID>
       <name>BIRDGE_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">212a4812-407e-46f2-bdea-984fe3176b35</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -22,14 +13,8 @@
       <notNull>true</notNull>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d48d2b01-aed5-4d68-ae0d-76e4fab684a4</identifier>
-      </ID>
       <name>ADDRESS_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">2198242c-83a7-4bae-9d9b-eb0126997109</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -40,94 +25,71 @@
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">1d431cd5-4c5e-4998-91fc-dbcd68aa1243</identifier>
-      </ID>
       <name>ADDRESS_TO_BRIDGE_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>ADDRESS_ID</name>
-          <identifier class="java.lang.String">d48d2b01-aed5-4d68-ae0d-76e4fab684a4</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>ADDRESS_TO_BRIDGE</name>
-            <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>ADDRESS_PK</name>
-        <identifier class="java.lang.String">fb0d62cd-ece1-491e-8ebc-b5008f4bc3bd</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>ADDRESS</name>
-          <identifier class="java.lang.String">74342933-51d9-4916-998e-d1332f84ffe7</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">8b949586-9eb9-4691-850e-a5dd362f3a4e</identifier>
-      </ID>
       <name>ADDRESS_TO_BRIDGE_FK1</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>BIRDGE_ID</name>
-          <identifier class="java.lang.String">809290fd-d236-482c-b21a-18792e86727b</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>ADDRESS_TO_BRIDGE</name>
-            <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>BRIDGE_PK</name>
-        <identifier class="java.lang.String">464f2eea-de28-4f5f-b6b4-90f218684b82</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>BRIDGE</name>
-          <identifier class="java.lang.String">49121af4-a6de-4b51-a650-809e8cdc62ee</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">413f326f-d590-4a7e-ae9e-d65e9311176d</identifier>
-      </ID>
       <name>ADDRESS_TO_BRIDGE_PK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>BIRDGE_ID</name>
-          <identifier class="java.lang.String">809290fd-d236-482c-b21a-18792e86727b</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>ADDRESS_TO_BRIDGE</name>
-            <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>ADDRESS_ID</name>
-          <identifier class="java.lang.String">d48d2b01-aed5-4d68-ae0d-76e4fab684a4</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>ADDRESS_TO_BRIDGE</name>
-            <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -135,12 +97,10 @@
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.IdentifierBasedID">
+      <indexID class="oracle.javatools.db.NameBasedID">
         <name>ADDRESS_TO_BRIDGE_PK</name>
-        <identifier class="java.lang.String">d8dfff34-b424-4280-8d2a-49b226dbc712</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>ADDRESS_TO_BRIDGE</name>
-          <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -151,34 +111,11 @@
   </constraints>
   <indexes>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">c9bf4fd3-d5de-4dfc-9f96-fcca7cdcb02b</identifier>
-      </ID>
       <name>ADDRESS_TO_BRIDGE_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">d8acd820-1280-475e-b166-202a010988dc</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">7aeb4197-10f4-4d93-b8dc-571f7a60b047</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>ADDRESS_ID</name>
-              <identifier class="java.lang.String">d48d2b01-aed5-4d68-ae0d-76e4fab684a4</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>ADDRESS_TO_BRIDGE</name>
-                <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>ADDRESS_ID</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -187,16 +124,12 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">60e350e1-419d-47c3-baa8-05742e4914fa</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initrans>2</initrans>
             <logging>true</logging>
             <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -208,34 +141,11 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">2183e25d-2a11-4614-b462-7a00d7a9d858</identifier>
-      </ID>
       <name>ADDRESS_TO_BRIDGE_FKX1</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">a548523f-eb08-44f4-b8dd-56dda795b248</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">76be8e74-fd12-4e43-95f3-6cc1f80400b2</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>BIRDGE_ID</name>
-              <identifier class="java.lang.String">809290fd-d236-482c-b21a-18792e86727b</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>ADDRESS_TO_BRIDGE</name>
-                <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>BIRDGE_ID</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -244,16 +154,12 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">d8acbd78-463a-45d4-a7aa-2647c0aee307</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initrans>2</initrans>
             <logging>true</logging>
             <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -265,58 +171,15 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d8dfff34-b424-4280-8d2a-49b226dbc712</identifier>
-      </ID>
       <name>ADDRESS_TO_BRIDGE_PK</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">ba0044eb-4e14-45a7-a3fe-8915fb67e100</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">67ff4fab-dd0b-4e75-9851-3935597a0ffd</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>BIRDGE_ID</name>
-              <identifier class="java.lang.String">809290fd-d236-482c-b21a-18792e86727b</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>ADDRESS_TO_BRIDGE</name>
-                <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>BIRDGE_ID</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">1643c9f4-fe1e-4942-bebe-add278ab9ac2</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">7a1d1a2f-8535-4f8a-9a90-7a7b7bf4afe1</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>ADDRESS_ID</name>
-              <identifier class="java.lang.String">d48d2b01-aed5-4d68-ae0d-76e4fab684a4</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>ADDRESS_TO_BRIDGE</name>
-                <identifier class="java.lang.String">553dc57f-369e-48f3-b2e3-f37997f1cbc6</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>ADDRESS_ID</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>UNIQUE</indexType>
@@ -325,16 +188,12 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">96af8740-c610-4484-b289-1cf1500a4c00</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initrans>2</initrans>
             <logging>true</logging>
             <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -350,16 +209,12 @@
     <entry>
       <key>OracleStorageProperties</key>
       <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">e131aad6-92d1-4418-b5aa-19c6f304fdca</identifier>
-        </ID>
         <bufferMode>DEFAULT</bufferMode>
         <initrans>1</initrans>
         <logging>true</logging>
         <percentFree>10</percentFree>
-        <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+        <tablespaceID class="oracle.javatools.db.NameBasedID">
           <name>USERS</name>
-          <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
           <type>TABLESPACE</type>
         </tablespaceID>
       </value>

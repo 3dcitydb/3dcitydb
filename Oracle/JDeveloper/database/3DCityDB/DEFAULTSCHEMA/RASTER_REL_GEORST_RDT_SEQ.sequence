@@ -1,8 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<sequence xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">2bbe0f38-1b21-4347-aa05-50d297772157</identifier>
-  </ID>
+<sequence xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>RASTER_REL_GEORST_RDT_SEQ</name>
   <cacheFlag>false</cacheFlag>
   <cycleFlag>false</cycleFlag>

@@ -1,19 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<table xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">442308f2-cf31-4455-9c09-ef16c8504440</identifier>
-  </ID>
+<table xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>RASTER_RELIEF_GEORASTER</name>
   <columns>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">44da0aa5-b8c0-4210-9124-bc85e441419b</identifier>
-      </ID>
       <name>ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">a1d78816-9c48-4e83-8a39-9b7684dde13c</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -22,14 +13,8 @@
       <notNull>true</notNull>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">fa5d6461-800c-497b-ba50-4456f0197475</identifier>
-      </ID>
       <name>RASTERPROPERTY</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">91403fca-2312-4969-9513-c4904c62df3b</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.Oracle10g</providerClass>
           <schemaName>MDSYS</schemaName>
@@ -41,17 +26,12 @@
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">fbe2b881-f68e-4b18-91ad-ed176d0aecc2</identifier>
-      </ID>
       <name>RASTER_RLF_GEORASTER_PK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>ID</name>
-          <identifier class="java.lang.String">44da0aa5-b8c0-4210-9124-bc85e441419b</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>RASTER_RELIEF_GEORASTER</name>
-            <identifier class="java.lang.String">442308f2-cf31-4455-9c09-ef16c8504440</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -59,12 +39,10 @@
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.IdentifierBasedID">
+      <indexID class="oracle.javatools.db.NameBasedID">
         <name>RASTER_RELIEF_GEORASTER_PK</name>
-        <identifier class="java.lang.String">4921d005-371a-4943-acfa-81ccf7950852</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>RASTER_RELIEF_GEORASTER</name>
-          <identifier class="java.lang.String">442308f2-cf31-4455-9c09-ef16c8504440</identifier>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -75,34 +53,11 @@
   </constraints>
   <indexes>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">4921d005-371a-4943-acfa-81ccf7950852</identifier>
-      </ID>
       <name>RASTER_RELIEF_GEORASTER_PK</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">04ca88f1-b9bf-4e8e-a67d-f8d48bdb2cf7</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">b7a63f2e-9be0-4e64-b81b-0945dfd85151</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>ID</name>
-              <identifier class="java.lang.String">44da0aa5-b8c0-4210-9124-bc85e441419b</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>RASTER_RELIEF_GEORASTER</name>
-                <identifier class="java.lang.String">442308f2-cf31-4455-9c09-ef16c8504440</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>ID</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>UNIQUE</indexType>
@@ -111,20 +66,16 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">82d30444-22ca-490b-8707-82f2769ec5e1</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initialExtent>65536</initialExtent>
             <initrans>2</initrans>
             <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
+            <maxExtent>0</maxExtent>
             <minExtent>1</minExtent>
             <nextExtent>1048576</nextExtent>
             <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -140,20 +91,16 @@
     <entry>
       <key>OracleStorageProperties</key>
       <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">bbb6bd65-74ab-446a-8a3f-00c38b0b6d6f</identifier>
-        </ID>
         <bufferMode>DEFAULT</bufferMode>
         <initialExtent>65536</initialExtent>
         <initrans>1</initrans>
         <logging>true</logging>
-        <maxExtent>2147483645</maxExtent>
+        <maxExtent>0</maxExtent>
         <minExtent>1</minExtent>
         <nextExtent>1048576</nextExtent>
         <percentFree>10</percentFree>
-        <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+        <tablespaceID class="oracle.javatools.db.NameBasedID">
           <name>USERS</name>
-          <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
           <type>TABLESPACE</type>
         </tablespaceID>
       </value>

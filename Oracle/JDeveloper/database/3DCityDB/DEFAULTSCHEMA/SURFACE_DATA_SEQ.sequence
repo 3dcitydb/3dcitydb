@@ -1,8 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<sequence xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">d6b4e294-bfc8-4e26-b1e0-f80846de5fdc</identifier>
-  </ID>
+<sequence xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>SURFACE_DATA_SEQ</name>
   <cacheFlag>true</cacheFlag>
   <cacheSize>10000</cacheSize>

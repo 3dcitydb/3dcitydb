@@ -1,8 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<tablespace xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">8e2fe4ea-196a-4e00-8bb0-c85b088fd99e</identifier>
-  </ID>
+<tablespace xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>UNDOTBS1</name>
   <fileType>SMALLFILE</fileType>
   <properties>
@@ -20,9 +17,6 @@
     <entry>
       <key>OracleTablespaceProperties</key>
       <value class="oracle.javatools.db.ora.OracleTablespaceProperties">
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">c6012f9a-9058-4fb2-a98a-d33d000242ab</identifier>
-        </ID>
         <autoAllocate>true</autoAllocate>
         <extentManagementType>LOCAL</extentManagementType>
         <forceLogging>false</forceLogging>

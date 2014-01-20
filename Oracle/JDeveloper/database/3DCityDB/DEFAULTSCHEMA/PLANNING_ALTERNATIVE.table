@@ -1,19 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<table xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">d79d6a2e-e63a-4063-a9a1-d2a727e6ce54</identifier>
-  </ID>
+<table xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>PLANNING_ALTERNATIVE</name>
   <columns>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d90fcb74-908a-4908-8888-7442a6628d7d</identifier>
-      </ID>
       <name>ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">e9bed960-208f-4e54-9825-392d70f0b091</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -55,14 +46,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">7f0ebdc4-1e83-442b-a0f9-0e1eb151858e</identifier>
-      </ID>
       <name>PLANNING_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">2b0b99e1-cc0e-4c18-9530-97e8cb9cb357</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -104,14 +89,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">9412805d-677a-4bed-bca2-58fe8929d602</identifier>
-      </ID>
       <name>TITLE</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">1e9bf8c0-eb73-42bb-80bf-dce20181a200</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
@@ -163,14 +142,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">2d43d615-ec79-4332-be51-9f0be8ae625c</identifier>
-      </ID>
       <name>DESCRIPTION</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">a3e6abd3-6b4c-4487-ab8b-08c6d161e293</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
@@ -222,14 +195,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">2fb9d7d7-523c-4dd1-9e08-7d17c1f2147c</identifier>
-      </ID>
       <name>GENERATOR</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">a0e5ea06-5f64-4930-a5ae-0c23917b2585</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
@@ -281,14 +248,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">56c7e606-b2c3-4cab-8bcd-0b601beda647</identifier>
-      </ID>
       <name>PLANNER</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">21434d9d-eb82-49e3-bb3b-86911bfa2e1c</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
@@ -340,14 +301,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">c487e593-3d0e-49ad-8649-6fb6bd55670c</identifier>
-      </ID>
       <name>WORKSPACE_NAME</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">e25ca493-5ceb-4f22-8ff1-c19b3617661a</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
@@ -399,14 +354,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">359135c1-93a3-4609-b9ee-a5b3897c51e1</identifier>
-      </ID>
       <name>STARTING_DATE</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">c60b2930-78ec-4a13-b937-431ff9f79384</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>DATE</typeName>
@@ -448,14 +397,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">0da7b240-cebe-40ef-ba27-d5e3e9cd1193</identifier>
-      </ID>
       <name>TERMINATION_DATE</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">40388911-8d70-4074-abd7-5601c053950a</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>DATE</typeName>
@@ -499,26 +442,20 @@
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">ddc8bd4f-c608-43ab-9363-24ee1ce867cd</identifier>
-      </ID>
       <name>REL_PLANNING_ID_ID</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>PLANNING_ID</name>
-          <identifier class="java.lang.String">7f0ebdc4-1e83-442b-a0f9-0e1eb151858e</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>PLANNING_ALTERNATIVE</name>
-            <identifier class="java.lang.String">d79d6a2e-e63a-4063-a9a1-d2a727e6ce54</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -538,49 +475,38 @@
           </value>
         </entry>
       </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>PLANNING_AREA_PK</name>
-        <identifier class="java.lang.String">922fbbb0-b87c-45fb-bb3e-3a05b1304957</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>PLANNING</name>
-          <identifier class="java.lang.String">5bc1910f-f65c-42fd-b468-57fc3d0fc4b6</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">3284d77b-a527-4f4c-b2d8-06edafce4a34</identifier>
-      </ID>
       <name>PLANNING_ALTERNATIVE_PK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>ID</name>
-          <identifier class="java.lang.String">d90fcb74-908a-4908-8888-7442a6628d7d</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>PLANNING_ALTERNATIVE</name>
-            <identifier class="java.lang.String">d79d6a2e-e63a-4063-a9a1-d2a727e6ce54</identifier>
-            <schemaName>YAO</schemaName>
+            <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
-          <schemaName>YAO</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.IdentifierBasedID">
+      <indexID class="oracle.javatools.db.NameBasedID">
         <name>PLANNING_ALTERNATIVE_PK</name>
-        <identifier class="java.lang.String">0bd5692b-7b45-4b57-b193-6dc7596dd2d0</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>PLANNING_ALTERNATIVE</name>
-          <identifier class="java.lang.String">d79d6a2e-e63a-4063-a9a1-d2a727e6ce54</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>INDEX</type>
       </indexID>
       <properties>
@@ -606,58 +532,11 @@
   </constraints>
   <indexes>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">0bd5692b-7b45-4b57-b193-6dc7596dd2d0</identifier>
-      </ID>
       <name>PLANNING_ALTERNATIVE_PK</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">2c84c13b-3e56-4a00-a824-3f9a99563504</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">207d8529-7ac4-4069-9bd3-ef7670bcec90</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>ID</name>
-              <identifier class="java.lang.String">d90fcb74-908a-4908-8888-7442a6628d7d</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>PLANNING_ALTERNATIVE</name>
-                <identifier class="java.lang.String">d79d6a2e-e63a-4063-a9a1-d2a727e6ce54</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <schemaName>YAO</schemaName>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>PLANNING_ALTERNATIVE_PK</name>
-                      <identifier class="java.math.BigDecimal">116330</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>PLANNING_ALTERNATIVE</name>
-                        <identifier class="java.math.BigDecimal">116326</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>ID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -701,9 +580,6 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">4a53c136-501c-4fcb-89be-f9ad3e1133bd</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initrans>2</initrans>
             <logging>true</logging>
@@ -728,16 +604,15 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
         </entry>
       </properties>
       <schema>
-        <name>YAO</name>
+        <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
     </indexe>
@@ -759,9 +634,6 @@
     <entry>
       <key>OracleStorageProperties</key>
       <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">d31d5a83-a8b6-4633-aba2-cdb41d078d56</identifier>
-        </ID>
         <bufferMode>DEFAULT</bufferMode>
         <initrans>1</initrans>
         <logging>true</logging>
@@ -780,9 +652,8 @@
             </value>
           </entry>
         </properties>
-        <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+        <tablespaceID class="oracle.javatools.db.NameBasedID">
           <name>USERS</name>
-          <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
           <type>TABLESPACE</type>
         </tablespaceID>
       </value>
@@ -793,6 +664,6 @@
     </entry>
   </properties>
   <schema>
-    <name>YAO</name>
+    <name>DEFAULTSCHEMA</name>
   </schema>
 </table>

@@ -1,8 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<tablespace xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">ea879b50-c7b1-4710-8f0a-e7f325bae499</identifier>
-  </ID>
+<tablespace xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>TEMP</name>
   <fileType>SMALLFILE</fileType>
   <properties>
@@ -20,9 +17,6 @@
     <entry>
       <key>OracleTablespaceProperties</key>
       <value class="oracle.javatools.db.ora.OracleTablespaceProperties">
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">56bba26c-5d13-42a2-99cc-6f233e59e74f</identifier>
-        </ID>
         <autoAllocate>false</autoAllocate>
         <extentManagementType>LOCAL</extentManagementType>
         <forceLogging>false</forceLogging>

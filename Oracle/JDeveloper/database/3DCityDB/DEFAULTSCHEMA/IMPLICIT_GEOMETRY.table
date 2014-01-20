@@ -1,19 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<table xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">cfe1b5b1-9b4b-435b-ae27-af590065bf83</identifier>
-  </ID>
+<table xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>IMPLICIT_GEOMETRY</name>
   <columns>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">05bcc7e1-4cbc-4c1c-915e-bb7bc476e16f</identifier>
-      </ID>
       <name>ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">6de6ba7c-f2f4-4491-8ca5-f0423272b6ec</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -55,21 +46,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">a4769a7c-e8bd-4945-b3df-87f7d5bf0dd7</identifier>
-      </ID>
       <name>MIME_TYPE</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">b96c9ad3-3973-488f-ad5e-8cab5d8cc7ce</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">256</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -113,21 +95,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">c1805180-9585-450c-b1c9-b120a090a695</identifier>
-      </ID>
       <name>REFERENCE_TO_LIBRARY</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">598a5ec4-7196-4bda-9199-4b5bdad4764d</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">4000</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -171,14 +144,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">7bedbfcc-a77b-44e0-95e4-041070e732ad</identifier>
-      </ID>
       <name>LIBRARY_OBJECT</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">f12da614-468f-4cda-8100-7164f5b54d33</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.Oracle8</providerClass>
           <typeName>BLOB</typeName>
@@ -220,16 +187,10 @@
         <entry>
           <key>OracleColumnProperties</key>
           <value class="oracle.javatools.db.ora.OracleColumnProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">40bacf12-7f64-4377-9e69-b1a7bc9fa709</identifier>
-            </ID>
             <LOBProperties>
-              <ID class="oracle.javatools.db.IdentifierBasedID">
-                <identifier class="java.lang.String">c7ce8df0-7720-4b0b-8c1d-d1ba79e92ab3</identifier>
-              </ID>
               <name></name>
+              <LOBCache>NOCACHE</LOBCache>
               <LOBSegName>SYS_LOB0000115549C00004$$</LOBSegName>
-              <cache>NOCACHE</cache>
               <chunk>8192</chunk>
               <properties>
                 <entry>
@@ -254,9 +215,6 @@
               </properties>
               <retention>true</retention>
               <storage>
-                <ID class="oracle.javatools.db.IdentifierBasedID">
-                  <identifier class="java.lang.String">9f87d72c-fb05-4bb1-b40c-01c817e6e671</identifier>
-                </ID>
                 <bufferMode>DEFAULT</bufferMode>
                 <logging>true</logging>
                 <properties>
@@ -309,14 +267,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">ea050dd2-3c5c-4f37-8763-c6a982099f1d</identifier>
-      </ID>
       <name>RELATIVE_BREP_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">6becfeec-ee8c-4071-a891-72285762cfa8</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -325,14 +277,8 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">04fc858a-55cf-4a0c-b342-983b19a09706</identifier>
-      </ID>
       <name>RELATIVE_OTHER_GEOM</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">6d277c40-2ce8-4aa1-b068-dfb39bb47211</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.NameBasedID">
           <name>SDO_GEOMETRY</name>
           <schemaName>MDSYS</schemaName>
@@ -344,25 +290,20 @@
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">966c56b7-331d-48ec-8e59-dfd0a6fce148</identifier>
-      </ID>
       <name>IMPLICIT_GEOM_BREP_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>RELATIVE_BREP_ID</name>
-          <identifier class="java.lang.String">ea050dd2-3c5c-4f37-8763-c6a982099f1d</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>IMPLICIT_GEOMETRY</name>
-            <identifier class="java.lang.String">cfe1b5b1-9b4b-435b-ae27-af590065bf83</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -382,31 +323,23 @@
           </value>
         </entry>
       </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>SURFACE_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>SURFACE_GEOMETRY</name>
-          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">7e7568f0-65be-44e4-8a7e-2e037c453ab7</identifier>
-      </ID>
       <name>IMPLICIT_GEOMETRY_PK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>ID</name>
-          <identifier class="java.lang.String">05bcc7e1-4cbc-4c1c-915e-bb7bc476e16f</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>IMPLICIT_GEOMETRY</name>
-            <identifier class="java.lang.String">cfe1b5b1-9b4b-435b-ae27-af590065bf83</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -414,12 +347,10 @@
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.IdentifierBasedID">
+      <indexID class="oracle.javatools.db.NameBasedID">
         <name>IMPLICIT_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">f618c82e-9b26-4843-965b-94ca394a48f5</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>IMPLICIT_GEOMETRY</name>
-          <identifier class="java.lang.String">cfe1b5b1-9b4b-435b-ae27-af590065bf83</identifier>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -449,57 +380,11 @@
   </constraints>
   <indexes>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">f618c82e-9b26-4843-965b-94ca394a48f5</identifier>
-      </ID>
       <name>IMPLICIT_GEOMETRY_PK</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">12778152-2057-45e0-812a-135f3c7fe933</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">644bf83d-c502-43c8-b3b8-957531ef4385</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>ID</name>
-              <identifier class="java.lang.String">05bcc7e1-4cbc-4c1c-915e-bb7bc476e16f</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>IMPLICIT_GEOMETRY</name>
-                <identifier class="java.lang.String">cfe1b5b1-9b4b-435b-ae27-af590065bf83</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>IMPLICIT_GEOMETRY_PK</name>
-                      <identifier class="java.math.BigDecimal">115552</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>IMPLICIT_GEOMETRY</name>
-                        <identifier class="java.math.BigDecimal">115549</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>ID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -543,9 +428,6 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">e18e4a09-947b-49f4-9f04-4beb39344a43</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initrans>2</initrans>
             <logging>true</logging>
@@ -570,9 +452,8 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -584,34 +465,11 @@
       <systemGenerated>true</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">1748afd4-1016-4307-8a74-580fc5edb354</identifier>
-      </ID>
       <name>IMPLICIT_GEOM_BREP_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">274ee352-2956-4d64-b2ed-e2cc0c1b988c</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">44a1c97e-9990-40e9-9244-b29b55e98b85</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>RELATIVE_BREP_ID</name>
-              <identifier class="java.lang.String">ea050dd2-3c5c-4f37-8763-c6a982099f1d</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>IMPLICIT_GEOMETRY</name>
-                <identifier class="java.lang.String">cfe1b5b1-9b4b-435b-ae27-af590065bf83</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>RELATIVE_BREP_ID</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -635,9 +493,6 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">cdb5baee-f4fa-43af-a8e3-bd9b938b34c7</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initrans>2</initrans>
             <logging>true</logging>
@@ -662,9 +517,8 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -676,34 +530,11 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">f0d3477f-cd90-4652-a5c3-ce378a2d3197</identifier>
-      </ID>
       <name>IMPLICIT_GEOM_REF2LIB_INX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">ff478a0e-fbcb-4095-9f52-c18c1d78bac8</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">1feb182b-67a1-41c5-ac93-84164f6fb58d</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>REFERENCE_TO_LIBRARY</name>
-              <identifier class="java.lang.String">c1805180-9585-450c-b1c9-b120a090a695</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>IMPLICIT_GEOMETRY</name>
-                <identifier class="java.lang.String">cfe1b5b1-9b4b-435b-ae27-af590065bf83</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>REFERENCE_TO_LIBRARY</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -727,9 +558,6 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">66165f99-2219-4791-9050-13dae8cac9c2</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initrans>2</initrans>
             <logging>true</logging>
@@ -754,9 +582,8 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -768,21 +595,10 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">e33e11fb-125a-4494-a17c-23b82c277e96</identifier>
-      </ID>
       <name>IMPLICIT_GEOM_XGEOM_SPX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">e2317c4b-be93-434e-ab9d-449d0df95da1</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">209940df-491b-4364-917f-b68e2685ba9d</identifier>
-            </ID>
-            <SQLText>RELATIVE_OTHER_GEOM</SQLText>
-          </expression>
+          <expressionSource>RELATIVE_OTHER_GEOM</expressionSource>
         </columnExpression>
       </columnExpressions>
       <domainIndextype class="oracle.javatools.db.ReferenceID">
@@ -815,9 +631,6 @@
     <entry>
       <key>OracleStorageProperties</key>
       <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">625a4929-ecd1-4d6f-b284-a5de22f0866a</identifier>
-        </ID>
         <bufferMode>DEFAULT</bufferMode>
         <initrans>1</initrans>
         <logging>true</logging>
@@ -836,9 +649,8 @@
             </value>
           </entry>
         </properties>
-        <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+        <tablespaceID class="oracle.javatools.db.NameBasedID">
           <name>USERS</name>
-          <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
           <type>TABLESPACE</type>
         </tablespaceID>
       </value>

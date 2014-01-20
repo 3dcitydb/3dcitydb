@@ -1,19 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<table xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
-  </ID>
+<table xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>OPENING</name>
   <columns>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">de032b7f-f99f-49eb-bf02-e2c884043225</identifier>
-      </ID>
       <name>ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">68f0dd1e-871d-44b0-a8af-c5d56fc8bb5e</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -55,22 +46,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">9d1013ad-c5a6-47cd-b428-f8ce7eeea5c0</identifier>
-      </ID>
       <name>OBJECTCLASS_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">79a19c7a-2266-40a8-a3d5-868c4133d7b6</identifier>
-        </ID>
-        <attributeValues>
-          <entry>
-            <key>size</key>
-          </entry>
-          <entry>
-            <key>unit</key>
-          </entry>
-        </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -94,14 +71,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">1597b80f-064e-4504-a328-2f000da1e780</identifier>
-      </ID>
       <name>ADDRESS_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">ea02e15b-2f14-4b96-a838-a6fe4af174de</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -143,14 +114,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">79139b90-b4f9-477f-8758-3a84d667a759</identifier>
-      </ID>
       <name>LOD3_MULTI_SURFACE_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">f0acc7fe-3ac6-4736-9bd7-60074996d5b6</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -192,14 +157,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">a64ffa97-c35f-483d-b614-2eb6df0a431c</identifier>
-      </ID>
       <name>LOD4_MULTI_SURFACE_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">4b1b07d9-debe-48b4-95b2-e7ea3d17dbaf</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -241,14 +200,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">39437f1b-6848-48cc-bb62-dec2dce4ce30</identifier>
-      </ID>
       <name>LOD3_IMPLICIT_REP_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">f2cddb83-21a1-4f8b-a3cd-c5620b8b2325</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -257,14 +210,8 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">844a5e8b-9697-4b4e-804f-4dbbd2600388</identifier>
-      </ID>
       <name>LOD4_IMPLICIT_REP_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">ee816e9b-1069-4be2-b44e-d70667ae6808</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -273,14 +220,8 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">f384c32b-1953-4a13-b2b1-9df461d7ed93</identifier>
-      </ID>
       <name>LOD3_IMPLICIT_REF_POINT</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">dcca9d5c-b3ea-4554-888f-be13f53bf965</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.NameBasedID">
           <name>SDO_GEOMETRY</name>
           <schemaName>MDSYS</schemaName>
@@ -290,14 +231,8 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">a7ee7de8-91d5-4583-b1bd-736d78c2ac32</identifier>
-      </ID>
       <name>LOD4_IMPLICIT_REF_POINT</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">6cc162da-c8ba-42bd-a7cd-6579f5752f4c</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.NameBasedID">
           <name>SDO_GEOMETRY</name>
           <schemaName>MDSYS</schemaName>
@@ -307,21 +242,12 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">955b4a9e-3c28-43ce-8e46-4005bda876a3</identifier>
-      </ID>
       <name>LOD3_IMPLICIT_TRANSFORMATION</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">4eeeaa29-719f-4463-91fc-43082f2e9557</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">1000</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -332,21 +258,12 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">2f4db6e3-0c08-4186-8aaf-dd53d9ce2cf5</identifier>
-      </ID>
       <name>LOD4_IMPLICIT_TRANSFORMATION</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">08f94d77-0803-4b4b-97a8-041919f0f922</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">1000</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -359,25 +276,20 @@
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">6be1011d-9b6a-4b8a-9071-6c6cb92848e0</identifier>
-      </ID>
       <name>OPENING_ADDRESS_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>ADDRESS_ID</name>
-          <identifier class="java.lang.String">1597b80f-064e-4504-a328-2f000da1e780</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>OPENING</name>
-            <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -397,39 +309,31 @@
           </value>
         </entry>
       </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>ADDRESS_PK</name>
-        <identifier class="java.lang.String">fb0d62cd-ece1-491e-8ebc-b5008f4bc3bd</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>ADDRESS</name>
-          <identifier class="java.lang.String">74342933-51d9-4916-998e-d1332f84ffe7</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">ce6cee11-cd82-4c34-b404-bdeb440d3a96</identifier>
-      </ID>
       <name>OPENING_CITYOBJECT_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>ID</name>
-          <identifier class="java.lang.String">de032b7f-f99f-49eb-bf02-e2c884043225</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>OPENING</name>
-            <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -449,71 +353,56 @@
           </value>
         </entry>
       </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>CITYOBJECT_PK</name>
-        <identifier class="java.lang.String">1f2323ac-4a13-48b8-a8c4-ede94dee04fb</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>CITYOBJECT</name>
-          <identifier class="java.lang.String">9135e874-587b-44a9-85c9-abe6dda90ff9</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">73aee617-9573-463c-b0ca-92bfd4eb7e6b</identifier>
-      </ID>
       <name>OPENING_LOD3IMPL_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>LOD3_IMPLICIT_REP_ID</name>
-          <identifier class="java.lang.String">39437f1b-6848-48cc-bb62-dec2dce4ce30</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>OPENING</name>
-            <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>IMPLICIT_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">7e7568f0-65be-44e4-8a7e-2e037c453ab7</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>IMPLICIT_GEOMETRY</name>
-          <identifier class="java.lang.String">cfe1b5b1-9b4b-435b-ae27-af590065bf83</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">dc60a197-8f50-4ac2-a789-84de3bc91318</identifier>
-      </ID>
       <name>OPENING_LOD3MSRF_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>LOD3_MULTI_SURFACE_ID</name>
-          <identifier class="java.lang.String">79139b90-b4f9-477f-8758-3a84d667a759</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>OPENING</name>
-            <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -533,71 +422,56 @@
           </value>
         </entry>
       </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>SURFACE_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>SURFACE_GEOMETRY</name>
-          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">841c8105-7faa-4446-90f4-bed5c3551151</identifier>
-      </ID>
       <name>OPENING_LOD4IMPL_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>LOD4_IMPLICIT_REP_ID</name>
-          <identifier class="java.lang.String">844a5e8b-9697-4b4e-804f-4dbbd2600388</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>OPENING</name>
-            <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>IMPLICIT_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">7e7568f0-65be-44e4-8a7e-2e037c453ab7</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>IMPLICIT_GEOMETRY</name>
-          <identifier class="java.lang.String">cfe1b5b1-9b4b-435b-ae27-af590065bf83</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">92564c7f-92f1-4e9b-9f71-076fa22b7543</identifier>
-      </ID>
       <name>OPENING_LOD4MSRF_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>LOD4_MULTI_SURFACE_ID</name>
-          <identifier class="java.lang.String">a64ffa97-c35f-483d-b614-2eb6df0a431c</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>OPENING</name>
-            <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -617,63 +491,48 @@
           </value>
         </entry>
       </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>SURFACE_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>SURFACE_GEOMETRY</name>
-          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">8e6d0147-8b05-4bff-83fa-7c5ae93b616e</identifier>
-      </ID>
       <name>OPENING_OBJECTCLASS_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>OBJECTCLASS_ID</name>
-          <identifier class="java.lang.String">9d1013ad-c5a6-47cd-b428-f8ce7eeea5c0</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>OPENING</name>
-            <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>OBJECTCLASS_PK</name>
-        <identifier class="java.lang.String">31dcfacc-1b98-4a31-8978-b0ea7c247f84</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>OBJECTCLASS</name>
-          <identifier class="java.lang.String">5ee8487b-fadf-4247-a64b-5d70b11bd4a9</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">c654f866-5cb3-4676-9fd5-3af330b1753e</identifier>
-      </ID>
       <name>OPENING_PK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>ID</name>
-          <identifier class="java.lang.String">de032b7f-f99f-49eb-bf02-e2c884043225</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>OPENING</name>
-            <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -681,12 +540,10 @@
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.IdentifierBasedID">
+      <indexID class="oracle.javatools.db.NameBasedID">
         <name>OPENING_PK</name>
-        <identifier class="java.lang.String">d45b1546-f616-47d2-9a04-10b805fb3d56</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>OPENING</name>
-          <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -716,57 +573,11 @@
   </constraints>
   <indexes>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">29c05a52-2d88-40af-b951-b5d6d77464df</identifier>
-      </ID>
       <name>OPENING_ADDRESS_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">71c64b0c-109d-42cc-a6a4-2ffbcc4009ae</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">963a4dd5-e62b-4096-a7f3-a0e5c9fa2bd4</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>ADDRESS_ID</name>
-              <identifier class="java.lang.String">1597b80f-064e-4504-a328-2f000da1e780</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>OPENING</name>
-                <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>OPENING_FKX</name>
-                      <identifier class="java.math.BigDecimal">115954</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>OPENING</name>
-                        <identifier class="java.math.BigDecimal">115699</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>ADDRESS_ID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -810,9 +621,6 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">43be4a03-1437-4cf4-8f7c-930cf33bf762</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initrans>2</initrans>
             <logging>true</logging>
@@ -837,9 +645,8 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -851,34 +658,11 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">8332e7af-9061-4031-8a0b-3969ce66b35e</identifier>
-      </ID>
       <name>OPENING_LOD3IMPL_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">f4c5c523-cce1-464c-84db-f1187468e4ab</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">ddaffd38-beab-4292-993c-fbcf32fea90d</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD3_IMPLICIT_REP_ID</name>
-              <identifier class="java.lang.String">39437f1b-6848-48cc-bb62-dec2dce4ce30</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>OPENING</name>
-                <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>LOD3_IMPLICIT_REP_ID</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -889,57 +673,11 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">0981e548-a73b-4953-a013-c06768de5bae</identifier>
-      </ID>
       <name>OPENING_LOD3MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">fadb1a83-127c-470c-8f1e-0a51c66d8989</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">628dd53a-15ab-41bc-9563-8d4e91e09bc2</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD3_MULTI_SURFACE_ID</name>
-              <identifier class="java.lang.String">79139b90-b4f9-477f-8758-3a84d667a759</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>OPENING</name>
-                <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>OPENING_FKX1</name>
-                      <identifier class="java.math.BigDecimal">115955</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>OPENING</name>
-                        <identifier class="java.math.BigDecimal">115699</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>LOD3_MULTI_SURFACE_ID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -983,9 +721,6 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">1f593857-e3a1-4d45-a649-65ffe7026e83</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initrans>2</initrans>
             <logging>true</logging>
@@ -1010,9 +745,8 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -1024,21 +758,10 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">b35f2f1c-7a66-4833-8f69-6b444f02eaa6</identifier>
-      </ID>
       <name>OPENING_LOD3REFPT_SPX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">10af3bfb-fe53-4a4b-a5a8-6b9c12b5b2bc</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">68d76d4f-0524-42fb-97f5-7ce10adab852</identifier>
-            </ID>
-            <SQLText>LOD3_IMPLICIT_REF_POINT</SQLText>
-          </expression>
+          <expressionSource>LOD3_IMPLICIT_REF_POINT</expressionSource>
         </columnExpression>
       </columnExpressions>
       <domainIndextype class="oracle.javatools.db.ReferenceID">
@@ -1054,34 +777,11 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">5e188c3e-b792-43df-b21f-69528adecb77</identifier>
-      </ID>
       <name>OPENING_LOD4IMPL_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">3047cde4-b9ca-4efe-9b92-b08a437180c8</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">74456bcc-7919-4dce-a580-fc40721ffda1</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD4_IMPLICIT_REP_ID</name>
-              <identifier class="java.lang.String">844a5e8b-9697-4b4e-804f-4dbbd2600388</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>OPENING</name>
-                <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>LOD4_IMPLICIT_REP_ID</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -1092,57 +792,11 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">bd136e17-57bf-4616-a24c-f72a2fc13173</identifier>
-      </ID>
       <name>OPENING_LOD4MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">eeb0ecd3-7ffe-43b2-b011-a65a4209e0ee</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">aa4908db-21f8-45c4-b21d-cc3e76a3f659</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>LOD4_MULTI_SURFACE_ID</name>
-              <identifier class="java.lang.String">a64ffa97-c35f-483d-b614-2eb6df0a431c</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>OPENING</name>
-                <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>OPENING_FKX2</name>
-                      <identifier class="java.math.BigDecimal">115956</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>OPENING</name>
-                        <identifier class="java.math.BigDecimal">115699</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>LOD4_MULTI_SURFACE_ID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1186,9 +840,6 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">1988d57a-cde1-47c0-8247-8e04a17d573d</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initrans>2</initrans>
             <logging>true</logging>
@@ -1213,9 +864,8 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -1227,21 +877,10 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">2d9c2869-2644-4d3f-90ec-e882a0885e43</identifier>
-      </ID>
       <name>OPENING_LOD4REFPT_SPX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">1637ba0b-bb86-4694-a7ea-c29d2e461f42</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">17aedaf4-ac3c-4ebd-9671-06e21054ef56</identifier>
-            </ID>
-            <SQLText>LOD4_IMPLICIT_REF_POINT</SQLText>
-          </expression>
+          <expressionSource>LOD4_IMPLICIT_REF_POINT</expressionSource>
         </columnExpression>
       </columnExpressions>
       <domainIndextype class="oracle.javatools.db.ReferenceID">
@@ -1257,33 +896,10 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d47f2134-bbdb-4260-8964-42b6094ef578</identifier>
-      </ID>
       <name>OPENING_OBJECTCLASS_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">f5a6b2a2-4a78-4bc0-b119-19a109e478e2</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">ff56ddda-4160-4e58-b726-59eba0ed7aa1</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>OBJECTCLASS_ID</name>
-              <identifier class="java.lang.String">9d1013ad-c5a6-47cd-b428-f8ce7eeea5c0</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>OPENING</name>
-                <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
+          <expressionSource>OBJECTCLASS_ID</expressionSource>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -1294,57 +910,11 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d45b1546-f616-47d2-9a04-10b805fb3d56</identifier>
-      </ID>
       <name>OPENING_PK</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">43d4b4b9-95de-436e-b759-643ce249a1d7</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">a8371610-61af-4ae9-a564-f54df745e7d7</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>ID</name>
-              <identifier class="java.lang.String">de032b7f-f99f-49eb-bf02-e2c884043225</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>OPENING</name>
-                <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>OPENING_PK</name>
-                      <identifier class="java.math.BigDecimal">115700</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>OPENING</name>
-                        <identifier class="java.math.BigDecimal">115699</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>ID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1388,9 +958,6 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">b1ce6980-2529-4ed8-b24f-dd29cb767c68</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initrans>2</initrans>
             <logging>true</logging>
@@ -1415,9 +982,8 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -1446,9 +1012,6 @@
     <entry>
       <key>OracleStorageProperties</key>
       <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">10eb9886-d9c3-4570-9132-cd7b1b00c2d1</identifier>
-        </ID>
         <bufferMode>DEFAULT</bufferMode>
         <initrans>1</initrans>
         <logging>true</logging>
@@ -1467,9 +1030,8 @@
             </value>
           </entry>
         </properties>
-        <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+        <tablespaceID class="oracle.javatools.db.NameBasedID">
           <name>USERS</name>
-          <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
           <type>TABLESPACE</type>
         </tablespaceID>
       </value>

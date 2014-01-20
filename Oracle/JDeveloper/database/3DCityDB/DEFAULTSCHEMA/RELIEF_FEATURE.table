@@ -1,19 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<table xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">6c4fa606-0a58-4541-ad2f-e1bddf90f8e0</identifier>
-  </ID>
+<table xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>RELIEF_FEATURE</name>
   <columns>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">eae7ced0-5d28-48b2-8cc8-40f20ab8d792</identifier>
-      </ID>
       <name>ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">d57658fe-bbd8-422f-b6d8-c213ffc4df57</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -55,21 +46,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">251d41da-fa44-41eb-b0ae-a1bc5b04300a</identifier>
-      </ID>
       <name>LOD</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">e9fda72c-4016-4e6b-8c6d-23403e08602b</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>precision</key>
             <value class="java.lang.String">1</value>
-          </entry>
-          <entry>
-            <key>scale</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -115,293 +97,8 @@
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.CheckConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">1f8ed9fc-ff76-471f-93df-4026079f58c7</identifier>
-      </ID>
       <name>RELIEF_FEAT_LOD_CHK</name>
-      <checkConditionFragment class="oracle.javatools.db.sql.WhereObject">
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">883a9e4f-f26e-41a0-b52e-ba243cf480f3</identifier>
-        </ID>
-        <arguments>
-          <argument class="oracle.javatools.db.sql.WhereObject">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">e8586cc2-1350-42ed-b3d9-01d0b66207a7</identifier>
-            </ID>
-            <arguments>
-              <argument class="oracle.javatools.db.sql.Comparison">
-                <ID class="oracle.javatools.db.IdentifierBasedID">
-                  <identifier class="java.lang.String">9a0d4a21-b1a6-4f7c-b337-a714e18bc511</identifier>
-                </ID>
-                <comparator>3</comparator>
-                <leftExpression class="oracle.javatools.db.sql.ColumnUsage">
-                  <ID class="oracle.javatools.db.IdentifierBasedID">
-                    <identifier class="java.lang.String">d1907eae-5994-4d8b-bbc2-267678eed47b</identifier>
-                  </ID>
-                  <objectID class="oracle.javatools.db.IdentifierBasedID">
-                    <name>LOD</name>
-                    <identifier class="java.lang.String">251d41da-fa44-41eb-b0ae-a1bc5b04300a</identifier>
-                    <parent class="oracle.javatools.db.IdentifierBasedID">
-                      <name>RELIEF_FEATURE</name>
-                      <identifier class="java.lang.String">6c4fa606-0a58-4541-ad2f-e1bddf90f8e0</identifier>
-                      <schemaName>DEFAULTSCHEMA</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <type>COLUMN</type>
-                  </objectID>
-                  <outerJoin>false</outerJoin>
-                  <properties>
-                    <entry>
-                      <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                      <value class="oracle.javatools.db.ReferenceID">
-                        <parent class="oracle.javatools.db.ReferenceID">
-                          <parent class="oracle.javatools.db.ReferenceID">
-                            <parent class="oracle.javatools.db.ReferenceID">
-                              <parent class="oracle.javatools.db.ReferenceID">
-                                <name>RELIEF_FEATURE_CHK1</name>
-                                <parent class="oracle.javatools.db.ReferenceID">
-                                  <name>RELIEF_FEATURE</name>
-                                  <identifier class="java.math.BigDecimal">115787</identifier>
-                                  <schemaName>YAO</schemaName>
-                                  <type>TABLE</type>
-                                </parent>
-                                <subType>CheckConstraint</subType>
-                                <type>CONSTRAINT</type>
-                              </parent>
-                              <type>WHERE</type>
-                            </parent>
-                            <type>WHERE</type>
-                          </parent>
-                          <type>SQLFragment</type>
-                        </parent>
-                        <type>SQLFragment</type>
-                      </value>
-                    </entry>
-                  </properties>
-                  <qualified>false</qualified>
-                </leftExpression>
-                <priorOnLeft>false</priorOnLeft>
-                <priorOnRight>false</priorOnRight>
-                <properties>
-                  <entry>
-                    <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                    <value class="oracle.javatools.db.ReferenceID">
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <parent class="oracle.javatools.db.ReferenceID">
-                          <parent class="oracle.javatools.db.ReferenceID">
-                            <name>RELIEF_FEATURE_CHK1</name>
-                            <parent class="oracle.javatools.db.ReferenceID">
-                              <name>RELIEF_FEATURE</name>
-                              <identifier class="java.math.BigDecimal">115787</identifier>
-                              <schemaName>YAO</schemaName>
-                              <type>TABLE</type>
-                            </parent>
-                            <subType>CheckConstraint</subType>
-                            <type>CONSTRAINT</type>
-                          </parent>
-                          <type>WHERE</type>
-                        </parent>
-                        <type>WHERE</type>
-                      </parent>
-                      <type>SQLFragment</type>
-                    </value>
-                  </entry>
-                </properties>
-                <rightExpression class="oracle.javatools.db.sql.SimpleSQLFragment">
-                  <ID class="oracle.javatools.db.IdentifierBasedID">
-                    <identifier class="java.lang.String">8836f4f7-6f8f-492d-9a3f-a79f8c56f28f</identifier>
-                  </ID>
-                  <SQLText>0</SQLText>
-                  <properties>
-                    <entry>
-                      <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                      <value class="oracle.javatools.db.ReferenceID">
-                        <parent class="oracle.javatools.db.ReferenceID">
-                          <parent class="oracle.javatools.db.ReferenceID">
-                            <parent class="oracle.javatools.db.ReferenceID">
-                              <parent class="oracle.javatools.db.ReferenceID">
-                                <name>RELIEF_FEATURE_CHK1</name>
-                                <parent class="oracle.javatools.db.ReferenceID">
-                                  <name>RELIEF_FEATURE</name>
-                                  <identifier class="java.math.BigDecimal">115787</identifier>
-                                  <schemaName>YAO</schemaName>
-                                  <type>TABLE</type>
-                                </parent>
-                                <subType>CheckConstraint</subType>
-                                <type>CONSTRAINT</type>
-                              </parent>
-                              <type>WHERE</type>
-                            </parent>
-                            <type>WHERE</type>
-                          </parent>
-                          <type>SQLFragment</type>
-                        </parent>
-                        <type>SQLFragment</type>
-                      </value>
-                    </entry>
-                  </properties>
-                </rightExpression>
-              </argument>
-              <argument class="oracle.javatools.db.sql.Comparison">
-                <ID class="oracle.javatools.db.IdentifierBasedID">
-                  <identifier class="java.lang.String">3e31511a-cbb4-4e1e-8746-da7d0f576d8d</identifier>
-                </ID>
-                <comparator>2</comparator>
-                <leftExpression class="oracle.javatools.db.sql.ColumnUsage">
-                  <ID class="oracle.javatools.db.IdentifierBasedID">
-                    <identifier class="java.lang.String">69a7b8b5-4beb-435b-8806-fe8586cba56d</identifier>
-                  </ID>
-                  <objectID class="oracle.javatools.db.IdentifierBasedID">
-                    <name>LOD</name>
-                    <identifier class="java.lang.String">251d41da-fa44-41eb-b0ae-a1bc5b04300a</identifier>
-                    <parent class="oracle.javatools.db.IdentifierBasedID">
-                      <name>RELIEF_FEATURE</name>
-                      <identifier class="java.lang.String">6c4fa606-0a58-4541-ad2f-e1bddf90f8e0</identifier>
-                      <schemaName>DEFAULTSCHEMA</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <type>COLUMN</type>
-                  </objectID>
-                  <outerJoin>false</outerJoin>
-                  <properties>
-                    <entry>
-                      <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                      <value class="oracle.javatools.db.ReferenceID">
-                        <parent class="oracle.javatools.db.ReferenceID">
-                          <parent class="oracle.javatools.db.ReferenceID">
-                            <parent class="oracle.javatools.db.ReferenceID">
-                              <parent class="oracle.javatools.db.ReferenceID">
-                                <name>RELIEF_FEATURE_CHK1</name>
-                                <parent class="oracle.javatools.db.ReferenceID">
-                                  <name>RELIEF_FEATURE</name>
-                                  <identifier class="java.math.BigDecimal">115787</identifier>
-                                  <schemaName>YAO</schemaName>
-                                  <type>TABLE</type>
-                                </parent>
-                                <subType>CheckConstraint</subType>
-                                <type>CONSTRAINT</type>
-                              </parent>
-                              <type>WHERE</type>
-                            </parent>
-                            <type>WHERE</type>
-                          </parent>
-                          <type>SQLFragment</type>
-                        </parent>
-                        <type>SQLFragment</type>
-                      </value>
-                    </entry>
-                  </properties>
-                  <qualified>false</qualified>
-                </leftExpression>
-                <priorOnLeft>false</priorOnLeft>
-                <priorOnRight>false</priorOnRight>
-                <properties>
-                  <entry>
-                    <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                    <value class="oracle.javatools.db.ReferenceID">
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <parent class="oracle.javatools.db.ReferenceID">
-                          <parent class="oracle.javatools.db.ReferenceID">
-                            <name>RELIEF_FEATURE_CHK1</name>
-                            <parent class="oracle.javatools.db.ReferenceID">
-                              <name>RELIEF_FEATURE</name>
-                              <identifier class="java.math.BigDecimal">115787</identifier>
-                              <schemaName>YAO</schemaName>
-                              <type>TABLE</type>
-                            </parent>
-                            <subType>CheckConstraint</subType>
-                            <type>CONSTRAINT</type>
-                          </parent>
-                          <type>WHERE</type>
-                        </parent>
-                        <type>WHERE</type>
-                      </parent>
-                      <type>SQLFragment</type>
-                    </value>
-                  </entry>
-                </properties>
-                <rightExpression class="oracle.javatools.db.sql.SimpleSQLFragment">
-                  <ID class="oracle.javatools.db.IdentifierBasedID">
-                    <identifier class="java.lang.String">fecf9c08-df60-40f9-9887-ac0763740a13</identifier>
-                  </ID>
-                  <SQLText>5</SQLText>
-                  <properties>
-                    <entry>
-                      <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                      <value class="oracle.javatools.db.ReferenceID">
-                        <parent class="oracle.javatools.db.ReferenceID">
-                          <parent class="oracle.javatools.db.ReferenceID">
-                            <parent class="oracle.javatools.db.ReferenceID">
-                              <parent class="oracle.javatools.db.ReferenceID">
-                                <name>RELIEF_FEATURE_CHK1</name>
-                                <parent class="oracle.javatools.db.ReferenceID">
-                                  <name>RELIEF_FEATURE</name>
-                                  <identifier class="java.math.BigDecimal">115787</identifier>
-                                  <schemaName>YAO</schemaName>
-                                  <type>TABLE</type>
-                                </parent>
-                                <subType>CheckConstraint</subType>
-                                <type>CONSTRAINT</type>
-                              </parent>
-                              <type>WHERE</type>
-                            </parent>
-                            <type>WHERE</type>
-                          </parent>
-                          <type>SQLFragment</type>
-                        </parent>
-                        <type>SQLFragment</type>
-                      </value>
-                    </entry>
-                  </properties>
-                </rightExpression>
-              </argument>
-            </arguments>
-            <operator>372</operator>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>RELIEF_FEATURE_CHK1</name>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>RELIEF_FEATURE</name>
-                        <identifier class="java.math.BigDecimal">115787</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <subType>CheckConstraint</subType>
-                      <type>CONSTRAINT</type>
-                    </parent>
-                    <type>WHERE</type>
-                  </parent>
-                  <type>WHERE</type>
-                </value>
-              </entry>
-            </properties>
-          </argument>
-        </arguments>
-        <operator>372</operator>
-        <properties>
-          <entry>
-            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-            <value class="oracle.javatools.db.ReferenceID">
-              <parent class="oracle.javatools.db.ReferenceID">
-                <name>RELIEF_FEATURE_CHK1</name>
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>RELIEF_FEATURE</name>
-                  <identifier class="java.math.BigDecimal">115787</identifier>
-                  <schemaName>YAO</schemaName>
-                  <type>TABLE</type>
-                </parent>
-                <subType>CheckConstraint</subType>
-                <type>CONSTRAINT</type>
-              </parent>
-              <type>WHERE</type>
-            </value>
-          </entry>
-        </properties>
-      </checkConditionFragment>
+      <checkCondition>LOD &gt;= 0 AND LOD &lt; 5</checkCondition>
       <enabled>true</enabled>
       <properties>
         <entry>
@@ -421,25 +118,20 @@
       </properties>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">33442618-94f4-41d7-82b1-01d9e3b72e37</identifier>
-      </ID>
       <name>RELIEF_FEAT_CITYOBJECT_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>ID</name>
-          <identifier class="java.lang.String">eae7ced0-5d28-48b2-8cc8-40f20ab8d792</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>RELIEF_FEATURE</name>
-            <identifier class="java.lang.String">6c4fa606-0a58-4541-ad2f-e1bddf90f8e0</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -459,31 +151,23 @@
           </value>
         </entry>
       </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>CITYOBJECT_PK</name>
-        <identifier class="java.lang.String">1f2323ac-4a13-48b8-a8c4-ede94dee04fb</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>CITYOBJECT</name>
-          <identifier class="java.lang.String">9135e874-587b-44a9-85c9-abe6dda90ff9</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d6c1759a-dbd2-44d6-aef9-c31f20c24991</identifier>
-      </ID>
       <name>RELIEF_FEATURE_PK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>ID</name>
-          <identifier class="java.lang.String">eae7ced0-5d28-48b2-8cc8-40f20ab8d792</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>RELIEF_FEATURE</name>
-            <identifier class="java.lang.String">6c4fa606-0a58-4541-ad2f-e1bddf90f8e0</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -491,12 +175,10 @@
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.IdentifierBasedID">
+      <indexID class="oracle.javatools.db.NameBasedID">
         <name>RELIEF_FEATURE_PK</name>
-        <identifier class="java.lang.String">f443ed99-8c15-45c5-bc42-4eb1d6938d08</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>RELIEF_FEATURE</name>
-          <identifier class="java.lang.String">6c4fa606-0a58-4541-ad2f-e1bddf90f8e0</identifier>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -526,57 +208,11 @@
   </constraints>
   <indexes>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">f443ed99-8c15-45c5-bc42-4eb1d6938d08</identifier>
-      </ID>
       <name>RELIEF_FEATURE_PK</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">e9736225-02e4-41c8-a9d5-4468f2c03756</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">51b9e434-0644-406d-89f1-551b9aa15ec3</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>ID</name>
-              <identifier class="java.lang.String">eae7ced0-5d28-48b2-8cc8-40f20ab8d792</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>RELIEF_FEATURE</name>
-                <identifier class="java.lang.String">6c4fa606-0a58-4541-ad2f-e1bddf90f8e0</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>RELIEF_FEATURE_PK</name>
-                      <identifier class="java.math.BigDecimal">115788</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>RELIEF_FEATURE</name>
-                        <identifier class="java.math.BigDecimal">115787</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>ID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -620,9 +256,6 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">c1e0c5d1-6545-41d7-92a7-e6aa0a9971e5</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initrans>2</initrans>
             <logging>true</logging>
@@ -647,9 +280,8 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -678,9 +310,6 @@
     <entry>
       <key>OracleStorageProperties</key>
       <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">ae98a8c3-28b1-4923-949a-04e6c08436bf</identifier>
-        </ID>
         <bufferMode>DEFAULT</bufferMode>
         <initrans>1</initrans>
         <logging>true</logging>
@@ -699,9 +328,8 @@
             </value>
           </entry>
         </properties>
-        <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+        <tablespaceID class="oracle.javatools.db.NameBasedID">
           <name>USERS</name>
-          <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
           <type>TABLESPACE</type>
         </tablespaceID>
       </value>

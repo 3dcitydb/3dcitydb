@@ -1,19 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<table xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
-  </ID>
+<table xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>SURFACE_DATA</name>
   <columns>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">4150d729-2970-4633-8a64-c8dd855cb69d</identifier>
-      </ID>
       <name>ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">b3ef918d-3ab0-4013-9a99-b3c17ee63cd5</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -55,21 +46,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">67b7fa45-7d33-4ba7-a428-b2f7134932bd</identifier>
-      </ID>
       <name>GMLID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">a97120a1-0e93-40d5-aae9-a44c638ebba6</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">256</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -113,21 +95,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">e1c26b9c-d3e3-4ff8-a2a8-9f6f9c009b58</identifier>
-      </ID>
       <name>NAME</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">28d3fdd7-08e1-4db9-af57-8b8a9b63fee0</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">1000</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -171,21 +144,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">37c309e2-efd8-4ef5-aa20-1db3c8f4c694</identifier>
-      </ID>
       <name>NAME_CODESPACE</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">e0955b05-7cdf-4620-8733-82fddf87f095</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">4000</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -229,21 +193,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">85852b8d-3f96-4776-9ec2-0111cdff1280</identifier>
-      </ID>
       <name>DESCRIPTION</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">ba405d9a-594d-4510-be34-73757fda30ac</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">4000</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -287,14 +242,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">2287ac2f-9e80-4c2e-a7fd-067347b41312</identifier>
-      </ID>
       <name>IS_FRONT</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">68b2ac20-df99-4dda-8c13-36c2e5215ce6</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>precision</key>
@@ -346,22 +295,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">da9d21e4-86d7-440c-b5e2-7c853d607010</identifier>
-      </ID>
       <name>OBJECTCLASS_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">3e980b46-ec2e-4a98-b928-5f87430c502e</identifier>
-        </ID>
-        <attributeValues>
-          <entry>
-            <key>size</key>
-          </entry>
-          <entry>
-            <key>unit</key>
-          </entry>
-        </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -385,14 +320,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">285733ac-d86d-4453-a24d-68338cb7898d</identifier>
-      </ID>
       <name>X3D_SHININESS</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">e5999983-7cdc-45c8-b568-8a363ff3e210</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.Oracle10g</providerClass>
           <typeName>BINARY_DOUBLE</typeName>
@@ -434,14 +363,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">e8af189d-718e-40d8-950b-a259dcefc79e</identifier>
-      </ID>
       <name>X3D_TRANSPARENCY</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">8fe63955-f048-4ea8-93a0-ee2512a8ff37</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.Oracle10g</providerClass>
           <typeName>BINARY_DOUBLE</typeName>
@@ -483,14 +406,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">74ba1f55-6db5-42ee-935d-3f83c3e72c4f</identifier>
-      </ID>
       <name>X3D_AMBIENT_INTENSITY</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">79273e79-d039-42a0-a537-fc49756de583</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.Oracle10g</providerClass>
           <typeName>BINARY_DOUBLE</typeName>
@@ -532,21 +449,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">0efb13d3-1fc6-4f21-8bb6-21b813326efc</identifier>
-      </ID>
       <name>X3D_SPECULAR_COLOR</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">8d87ee41-cab1-4438-bca5-056cf78f4282</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">256</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -590,21 +498,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">837d9233-57ba-4494-a7cf-b961c83c5079</identifier>
-      </ID>
       <name>X3D_DIFFUSE_COLOR</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">e880d018-04f2-48de-8649-766a8f94148b</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">256</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -648,21 +547,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">21ca623b-0bae-41d4-9348-ade1e3d12c3d</identifier>
-      </ID>
       <name>X3D_EMISSIVE_COLOR</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">3d53c139-156a-4ca9-9061-4ccc65c2bd00</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">256</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -706,14 +596,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">0e638abe-912a-4343-8808-a11426cf0347</identifier>
-      </ID>
       <name>X3D_IS_SMOOTH</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">8feabae0-ad83-4aa1-b119-f4debad7baf6</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>precision</key>
@@ -765,14 +649,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">4b281c63-23cd-4552-a1b2-9fb002a49f38</identifier>
-      </ID>
       <name>TEX_IMAGE_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">528d92fb-b916-4209-9b88-8f311287622e</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -781,21 +659,12 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">034cc9ed-43c0-44da-af24-0a5d03edc5c1</identifier>
-      </ID>
       <name>TEX_TEXTURE_TYPE</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">8f228d86-7a61-43f7-b127-114d2b6ca608</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">256</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -839,21 +708,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">b143c17b-2e6d-4631-945d-c7abbe05f199</identifier>
-      </ID>
       <name>TEX_WRAP_MODE</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">9d5a1c9c-0cd6-41f6-98a8-b0eefe5fad34</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">256</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -897,21 +757,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">0d3883d9-fbdc-4222-93f0-19a80eeddf0d</identifier>
-      </ID>
       <name>TEX_BORDER_COLOR</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">9b7b97a9-81ee-4abb-89de-47ebe414b602</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">256</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -955,14 +806,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">62647ed2-99b6-46a6-8b32-0be0a1c44536</identifier>
-      </ID>
       <name>GT_PREFER_WORLDFILE</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">cb1d263f-8e80-47ef-80bf-1802c0db085e</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>precision</key>
@@ -1014,21 +859,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">69287767-6088-49bd-b90b-93da7cc2d3fd</identifier>
-      </ID>
       <name>GT_ORIENTATION</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">090011e5-9746-471f-8540-dabcf72165c5</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">256</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -1072,14 +908,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d7939eef-a5f7-4d11-909d-4def8a5946d6</identifier>
-      </ID>
       <name>GT_REFERENCE_POINT</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">2e870aa6-f4e7-48df-9587-7fb5d5b6dcd7</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.Oracle8i</providerClass>
           <schemaName>MDSYS</schemaName>
@@ -1124,81 +954,62 @@
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">16b0df5a-c68d-4fcd-9a28-fa6e9afb86b6</identifier>
-      </ID>
       <name>SURFACE_DATA_OBJCLASS_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>OBJECTCLASS_ID</name>
-          <identifier class="java.lang.String">da9d21e4-86d7-440c-b5e2-7c853d607010</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>SURFACE_DATA</name>
-            <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>OBJECTCLASS_PK</name>
-        <identifier class="java.lang.String">31dcfacc-1b98-4a31-8978-b0ea7c247f84</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>OBJECTCLASS</name>
-          <identifier class="java.lang.String">5ee8487b-fadf-4247-a64b-5d70b11bd4a9</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">cfe6d567-cf3e-439b-a424-ad4e0bae645f</identifier>
-      </ID>
       <name>SURFACE_DATA_TEX_IMAGE_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>TEX_IMAGE_ID</name>
-          <identifier class="java.lang.String">4b281c63-23cd-4552-a1b2-9fb002a49f38</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>SURFACE_DATA</name>
-            <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>TEX_IMAGE_PK</name>
-        <identifier class="java.lang.String">f3e4f0fb-6098-4645-8cde-b6f4a07b6cee</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>TEX_IMAGE</name>
-          <identifier class="java.lang.String">59f8b5bc-55de-412e-8329-d2d608d7cd22</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">f87e5dfd-62f3-46e1-bd88-a6e501e6d349</identifier>
-      </ID>
       <name>SURFACE_DATA_PK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>ID</name>
-          <identifier class="java.lang.String">4150d729-2970-4633-8a64-c8dd855cb69d</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>SURFACE_DATA</name>
-            <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -1206,12 +1017,10 @@
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.IdentifierBasedID">
+      <indexID class="oracle.javatools.db.NameBasedID">
         <name>SURFACE_DATA_PK</name>
-        <identifier class="java.lang.String">d37e7367-9d25-4430-97e6-b28a005f7791</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>SURFACE_DATA</name>
-          <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -1241,57 +1050,11 @@
   </constraints>
   <indexes>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">1f7cd856-25e0-4343-a0ce-38f7781e407d</identifier>
-      </ID>
       <name>SURFACE_DATA_INX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">575c09ea-a875-419c-98da-c53e8684986a</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">6bd9bcbe-0148-405c-8663-65832add6de4</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>GMLID</name>
-              <identifier class="java.lang.String">67b7fa45-7d33-4ba7-a428-b2f7134932bd</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SURFACE_DATA</name>
-                <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SURFACE_DATA_INX</name>
-                      <identifier class="java.math.BigDecimal">115971</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>SURFACE_DATA</name>
-                        <identifier class="java.math.BigDecimal">115709</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>GMLID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1335,14 +1098,11 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">bdc05dc8-6176-4c7b-979c-0786c39be0d8</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initialExtent>65536</initialExtent>
             <initrans>2</initrans>
             <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
+            <maxExtent>0</maxExtent>
             <minExtent>1</minExtent>
             <nextExtent>1048576</nextExtent>
             <percentFree>10</percentFree>
@@ -1366,9 +1126,8 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -1380,34 +1139,11 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">3f0d3e9e-bc57-44cf-9d0f-842c5be1e9b0</identifier>
-      </ID>
       <name>SURFACE_DATA_OBJCLASS_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">48375baf-0418-4fb2-94da-12a94d543046</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">c5cf6067-0ae9-4118-a270-9f704d5f59d9</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>OBJECTCLASS_ID</name>
-              <identifier class="java.lang.String">da9d21e4-86d7-440c-b5e2-7c853d607010</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SURFACE_DATA</name>
-                <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>OBJECTCLASS_ID</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -1418,57 +1154,11 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d37e7367-9d25-4430-97e6-b28a005f7791</identifier>
-      </ID>
       <name>SURFACE_DATA_PK</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">496f903a-b945-4401-b262-3c9f4f6b4622</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">92ea9995-3038-4120-a68c-29776dd55892</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>ID</name>
-              <identifier class="java.lang.String">4150d729-2970-4633-8a64-c8dd855cb69d</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SURFACE_DATA</name>
-                <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SURFACE_DATA_PK</name>
-                      <identifier class="java.math.BigDecimal">115716</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>SURFACE_DATA</name>
-                        <identifier class="java.math.BigDecimal">115709</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>ID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1512,14 +1202,11 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">ed5fc0af-e641-42c8-b050-4953abc09fc9</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initialExtent>65536</initialExtent>
             <initrans>2</initrans>
             <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
+            <maxExtent>0</maxExtent>
             <minExtent>1</minExtent>
             <nextExtent>1048576</nextExtent>
             <percentFree>10</percentFree>
@@ -1543,9 +1230,8 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -1557,21 +1243,10 @@
       <systemGenerated>true</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">87dac8d3-6628-4dda-8794-1f3c182a973e</identifier>
-      </ID>
       <name>SURFACE_DATA_SPX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">bec51fe0-3354-4fd2-937a-9c7cd575d336</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.SimpleSQLFragment">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">4ad5aadc-30a2-4711-a8ba-2649665aaae0</identifier>
-            </ID>
-            <SQLText>GT_REFERENCE_POINT</SQLText>
-          </expression>
+          <expressionSource>GT_REFERENCE_POINT</expressionSource>
         </columnExpression>
       </columnExpressions>
       <domainIndextype class="oracle.javatools.db.ReferenceID">
@@ -1601,9 +1276,6 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">c61b1d05-e650-444e-9725-4ac46130b6b2</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <logging>true</logging>
             <percentFree>0</percentFree>
@@ -1636,34 +1308,11 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">9462f272-e0fd-4ea8-88bc-5c5b3b2c7891</identifier>
-      </ID>
       <name>SURFACE_DATA_TEX_IMAGE_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">aa69fbc0-1526-4379-b9db-d8e6c3a17677</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">55b99fb1-21aa-4246-98ec-f545c41d9177</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>TEX_IMAGE_ID</name>
-              <identifier class="java.lang.String">4b281c63-23cd-4552-a1b2-9fb002a49f38</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>SURFACE_DATA</name>
-                <identifier class="java.lang.String">e3da216c-779f-41f5-a81b-33f281123f19</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>TEX_IMAGE_ID</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -1691,14 +1340,11 @@
     <entry>
       <key>OracleStorageProperties</key>
       <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">0aef128f-d2ef-4e8b-a115-41664cb01cf7</identifier>
-        </ID>
         <bufferMode>DEFAULT</bufferMode>
         <initialExtent>65536</initialExtent>
         <initrans>1</initrans>
         <logging>true</logging>
-        <maxExtent>2147483645</maxExtent>
+        <maxExtent>0</maxExtent>
         <minExtent>1</minExtent>
         <nextExtent>1048576</nextExtent>
         <percentFree>10</percentFree>
@@ -1716,9 +1362,8 @@
             </value>
           </entry>
         </properties>
-        <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+        <tablespaceID class="oracle.javatools.db.NameBasedID">
           <name>USERS</name>
-          <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
           <type>TABLESPACE</type>
         </tablespaceID>
       </value>

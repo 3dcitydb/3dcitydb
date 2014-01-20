@@ -1,8 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<sequence xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">b54e2233-c22b-44ef-8559-85dd4868f50f</identifier>
-  </ID>
+<sequence xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>CITY_MODEL_ASPECT_SEQ</name>
   <cacheFlag>true</cacheFlag>
   <cacheSize>20</cacheSize>

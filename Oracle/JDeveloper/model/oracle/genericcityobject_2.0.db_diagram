@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <xmi:XMI xmi:version='2.1' xmlns:xmi='http://schema.omg.org/spec/XMI/2.1' xmlns:DI='http://xmlns.omg.org/DI/2.0'>
-  <documentation exporter='Oracle JDeveloper' exporterVersion='11.1.2.3.0'/>
+  <documentation exporter='Oracle JDeveloper' exporterVersion='12.1.2.0.0'/>
   <DI:Diagram xmi:id='id0e781961-db21-4285-b346-2ba3fda1e617' zoom='0.0'>
     <contained xmi:type='DI:GraphNode' xmi:id='ida20098bf-7221-47a8-80d4-f65319f287cd'>
       <position x='-209.99998474121094' y='1185.0'/>
@@ -203,7 +203,7 @@
       <property key='UseTabularLayout' value='false'/>
       <property key='ShowIndexesCompartment' value='false'/>
       <property key='showPK' value='true'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:TABLE:9135e874-587b-44a9-85c9-abe6dda90ff9:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c' presentation='SYMBOLIC'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:TABLE:CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c' presentation='SYMBOLIC'/>
       <size height='450.0' width='420.0000305175781'/>
     </contained>
     <contained xmi:type='DI:GraphNode' xmi:id='id5225719d-4c54-4136-bfc8-fdd3564b6117'>
@@ -396,7 +396,7 @@
       <property key='UseTabularLayout' value='false'/>
       <property key='ShowIndexesCompartment' value='false'/>
       <property key='showPK' value='true'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:TABLE:0f2238ab-9a8a-458f-a75d-85f0cdd1079b:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c' presentation='SYMBOLIC'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:TABLE:CITYOBJECT_GENERICATTRIB:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c' presentation='SYMBOLIC'/>
       <size height='435.0' width='404.99993896484375'/>
     </contained>
     <contained xmi:type='DI:GraphEdge' xmi:id='ideff446dc-5c7b-4097-8688-b9ef02f2d8cf' anchor='id2574c3e6-3cb7-47d4-912f-16fa3e221d2e idd7f1b0c4-7b17-4152-9ed8-2b3a2b4c67ee'>
@@ -424,7 +424,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:9eefc717-d771-45ad-90cd-66aed7d582e2:I:TABLE:0f2238ab-9a8a-458f-a75d-85f0cdd1079b:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GENERICATTRIB_CITYOBJ_FK:N:TABLE:CITYOBJECT_GENERICATTRIB:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1252.4998779296875' y='960.0'/>
       <waypoint x='1252.4998779296875' y='1027.5'/>
       <waypoint x='1252.499755859375' y='1027.5'/>
@@ -620,7 +620,7 @@
       <property key='UseTabularLayout' value='false'/>
       <property key='ShowIndexesCompartment' value='false'/>
       <property key='showPK' value='true'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:TABLE:409b7f68-ae75-4156-bc1d-4aefa1093003:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c' presentation='SYMBOLIC'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:TABLE:SURFACE_GEOMETRY:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c' presentation='SYMBOLIC'/>
       <size height='399.9521484375' width='375.0002746582031'/>
     </contained>
     <contained xmi:type='DI:GraphEdge' xmi:id='idad7f714a-2949-4096-a4f5-c21e60d7db52' anchor='idb8f02f97-d610-4866-82c6-53acfdd9b119 idb8f02f97-d610-4866-82c6-53acfdd9b119'>
@@ -648,7 +648,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:347977b5-1e88-44be-9bdf-423463e50a40:I:TABLE:409b7f68-ae75-4156-bc1d-4aefa1093003:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:SURFACE_GEOM_PARENT_FK:N:TABLE:SURFACE_GEOMETRY:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1308.068115234375' y='2004.9521484375'/>
       <waypoint x='1308.068115234375' y='2106.06201171875'/>
       <waypoint x='1547.3631591796875' y='2106.06201171875'/>
@@ -680,7 +680,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:a2556135-9fe0-4d65-863d-ce9152cdc0a4:I:TABLE:409b7f68-ae75-4156-bc1d-4aefa1093003:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:SURFACE_GEOM_ROOT_FK:N:TABLE:SURFACE_GEOMETRY:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1370.9708251953125' y='2004.9521484375'/>
       <waypoint x='1370.9708251953125' y='2054.24072265625'/>
       <waypoint x='1485.6009521484375' y='2054.24072265625'/>
@@ -712,7 +712,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:ad8b7ac6-8396-4824-9955-4d408d4ca62d:I:TABLE:0f2238ab-9a8a-458f-a75d-85f0cdd1079b:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GENERICATTRIB_GEOM_FK:N:TABLE:CITYOBJECT_GENERICATTRIB:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1252.4998779296875' y='1605.0'/>
       <waypoint x='1252.4998779296875' y='1500.0'/>
     </contained>
@@ -906,7 +906,7 @@
       <property key='UseTabularLayout' value='false'/>
       <property key='ShowIndexesCompartment' value='false'/>
       <property key='showPK' value='true'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:TABLE:fb6c0b29-6954-4bb3-9053-e6a02a972a8d:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c' presentation='SYMBOLIC'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:TABLE:GENERIC_CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c' presentation='SYMBOLIC'/>
       <size height='990.0' width='375.0'/>
     </contained>
     <contained xmi:type='DI:GraphEdge' xmi:id='idf7c8570b-bd1d-471b-a452-a1c1bb05db48' anchor='id2574c3e6-3cb7-47d4-912f-16fa3e221d2e id4013fb0c-40a4-4052-a101-458ae22a8461'>
@@ -934,7 +934,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:5951c30a-b67c-4051-9600-d64b1a28d4ab:I:TABLE:fb6c0b29-6954-4bb3-9053-e6a02a972a8d:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GEN_OBJECT_CITYOBJECT_FK:N:TABLE:GENERIC_CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1034.999755859375' y='778.45361328125'/>
       <waypoint x='640.8861083984375' y='778.45361328125'/>
       <waypoint x='640.8861083984375' y='990.0'/>
@@ -964,7 +964,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:f4472a4b-6f97-4da2-9c26-02c8f660e553:I:TABLE:fb6c0b29-6954-4bb3-9053-e6a02a972a8d:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GEN_OBJECT_LOD0BREP_FK:N:TABLE:GENERIC_CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1064.999755859375' y='1826.3701171875'/>
       <waypoint x='705.0000610351562' y='1826.3701171875'/>
     </contained>
@@ -993,7 +993,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:cb892f82-8901-45d4-a91a-82070a6cd2d2:I:TABLE:fb6c0b29-6954-4bb3-9053-e6a02a972a8d:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GEN_OBJECT_LOD1BREP_FK:N:TABLE:GENERIC_CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1064.999755859375' y='1939.7392578125'/>
       <waypoint x='705.0000610351562' y='1939.7392578125'/>
     </contained>
@@ -1022,7 +1022,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:2a111fff-2536-40a6-b1ef-026fb1d4aaa9:I:TABLE:fb6c0b29-6954-4bb3-9053-e6a02a972a8d:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GEN_OBJECT_LOD2BREP_FK:N:TABLE:GENERIC_CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1064.999755859375' y='1885.877197265625'/>
       <waypoint x='705.0000610351562' y='1885.877197265625'/>
     </contained>
@@ -1051,7 +1051,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:a9909a45-698a-4f82-adda-d5c608023841:I:TABLE:fb6c0b29-6954-4bb3-9053-e6a02a972a8d:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GEN_OBJECT_LOD3BREP_FK:N:TABLE:GENERIC_CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1064.999755859375' y='1766.8631591796875'/>
       <waypoint x='705.0000610351562' y='1766.8631591796875'/>
     </contained>
@@ -1080,7 +1080,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:310ca5b0-eeed-4368-b415-2f9fad68ddcb:I:TABLE:fb6c0b29-6954-4bb3-9053-e6a02a972a8d:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GEN_OBJECT_LOD9BREP_FK:N:TABLE:GENERIC_CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1064.999755859375' y='1718.6461181640625'/>
       <waypoint x='705.0000610351562' y='1718.6461181640625'/>
     </contained>
@@ -1274,7 +1274,7 @@
       <property key='UseTabularLayout' value='false'/>
       <property key='ShowIndexesCompartment' value='false'/>
       <property key='showPK' value='true'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:TABLE:cfe1b5b1-9b4b-435b-ae27-af590065bf83:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c' presentation='SYMBOLIC'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:TABLE:IMPLICIT_GEOMETRY:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c' presentation='SYMBOLIC'/>
       <size height='273.9521484375' width='345.0'/>
     </contained>
     <contained xmi:type='DI:GraphEdge' xmi:id='id7ca06d93-df9f-471b-8880-843711fffed3' anchor='idb8f02f97-d610-4866-82c6-53acfdd9b119 id61511f79-2bb9-4e71-b639-3bc128a58c4f'>
@@ -1302,7 +1302,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:966c56b7-331d-48ec-8e59-dfd0a6fce148:I:TABLE:cfe1b5b1-9b4b-435b-ae27-af590065bf83:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:IMPLICIT_GEOM_BREP_FK:N:TABLE:IMPLICIT_GEOMETRY:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1252.4998779296875' y='2004.9521484375'/>
       <waypoint x='1252.4998779296875' y='2102.978759765625'/>
       <waypoint x='-141.060791015625' y='2102.978759765625'/>
@@ -1333,7 +1333,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:da3d0cd9-20d3-40a4-b81d-a2e1eb698bc1:I:TABLE:fb6c0b29-6954-4bb3-9053-e6a02a972a8d:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GEN_OBJECT_LOD0IMPL_FK:N:TABLE:GENERIC_CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='30.0' y='1776.614501953125'/>
       <waypoint x='330.00006103515625' y='1776.614501953125'/>
     </contained>
@@ -1362,7 +1362,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:7fe320fd-4b6d-4a90-bc45-90e787ef892c:I:TABLE:fb6c0b29-6954-4bb3-9053-e6a02a972a8d:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GEN_OBJECT_LOD1IMPL_FK:N:TABLE:GENERIC_CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='30.0' y='1864.929443359375'/>
       <waypoint x='330.00006103515625' y='1864.929443359375'/>
     </contained>
@@ -1391,7 +1391,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:989484c8-7e18-4452-bb39-501ed21bc510:I:TABLE:fb6c0b29-6954-4bb3-9053-e6a02a972a8d:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GEN_OBJECT_LOD2IMPL_FK:N:TABLE:GENERIC_CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='30.0' y='1822.7491455078125'/>
       <waypoint x='330.00006103515625' y='1822.7491455078125'/>
     </contained>
@@ -1420,7 +1420,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:00fdbccd-0bfe-4922-836f-d69c6c332ea8:I:TABLE:fb6c0b29-6954-4bb3-9053-e6a02a972a8d:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GEN_OBJECT_LOD3IMPL_FK:N:TABLE:GENERIC_CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='30.0' y='1735.75244140625'/>
       <waypoint x='330.00006103515625' y='1735.75244140625'/>
     </contained>
@@ -1449,7 +1449,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:accc7be0-7cf0-4bb7-bdff-39b751a17c0d:I:TABLE:fb6c0b29-6954-4bb3-9053-e6a02a972a8d:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GEN_OBJECT_LOD4IMPL_FK:N:TABLE:GENERIC_CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='30.0' y='1911.06396484375'/>
       <waypoint x='330.00006103515625' y='1911.06396484375'/>
     </contained>
@@ -1643,7 +1643,7 @@
       <property key='UseTabularLayout' value='false'/>
       <property key='ShowIndexesCompartment' value='false'/>
       <property key='showPK' value='true'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:TABLE:5ee8487b-fadf-4247-a64b-5d70b11bd4a9:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c' presentation='SYMBOLIC'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:TABLE:OBJECTCLASS:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c' presentation='SYMBOLIC'/>
       <size height='300.0' width='390.0000305175781'/>
     </contained>
     <contained xmi:type='DI:GraphEdge' xmi:id='id921a6d00-3785-4948-abfd-d663e4ff9f7a' anchor='id0d428463-c11e-4836-9da8-78c55bcde3c4 id0d428463-c11e-4836-9da8-78c55bcde3c4'>
@@ -1671,7 +1671,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:089d9040-3177-4891-8e7b-a4cb4afe60c4:I:TABLE:5ee8487b-fadf-4247-a64b-5d70b11bd4a9:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:OBJECTCLASS_SUPERCLASS_FK:N:TABLE:OBJECTCLASS:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='137.87171936035156' y='810.0'/>
       <waypoint x='137.87171936035156' y='870.0308837890625'/>
       <waypoint x='-9.240228652954102' y='870.0308837890625'/>
@@ -1703,7 +1703,7 @@
       <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:57e6d3dc-969b-4076-b18c-e277068b08b6:I:TABLE:9135e874-587b-44a9-85c9-abe6dda90ff9:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:CITYOBJECT_OBJECTCLASS_FK:N:TABLE:CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='435.0' y='660.0'/>
       <waypoint x='1034.999755859375' y='660.0'/>
     </contained>
@@ -1732,7 +1732,7 @@
       <property key='EdgeType' value='1'/>
       <property key='showStereotype' value='false'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:2839966c-a4fc-4a9f-b2e6-fd8938c179fb:I:TABLE:0f2238ab-9a8a-458f-a75d-85f0cdd1079b:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GENERICATTRIB_PARENT_FK:N:TABLE:CITYOBJECT_GENERICATTRIB:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1386.4862060546875' y='1500.0'/>
       <waypoint x='1386.4862060546875' y='1528.2303466796875'/>
       <waypoint x='1504.999755859375' y='1528.2303466796875'/>
@@ -1764,7 +1764,7 @@
       <property key='lineWidth' value='1.0'/>
       <property key='showCardinality' value='true'/>
       <property key='showAssocName' value='false'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:cdd6852c-dafc-4244-b942-2dbffdfbb652:I:TABLE:0f2238ab-9a8a-458f-a75d-85f0cdd1079b:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GENERICATTRIB_ROOT_FK:N:TABLE:CITYOBJECT_GENERICATTRIB:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1351.4998779296875' y='1500.0'/>
       <waypoint x='1351.4998779296875' y='1556.37109375'/>
       <waypoint x='1539.140625' y='1556.37109375'/>
@@ -1796,7 +1796,7 @@
       <property key='fontColor' value='#0'/>
       <property key='lineColor' value='#ff0000'/>
       <property key='showCardinality' value='true'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:I:CONSTRAINT:a89dc0ac-0df1-46d8-b4f3-5382fbbc9c2c:I:TABLE:409b7f68-ae75-4156-bc1d-4aefa1093003:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:SURFACE_GEOM_CITYOBJ_FK:N:TABLE:SURFACE_GEOMETRY:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1034.999755859375' y='874.2440795898438'/>
       <waypoint x='908.1531372070312' y='874.2440795898438'/>
       <waypoint x='908.1531372070312' y='1665.73193359375'/>

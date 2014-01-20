@@ -1,8 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<sequence xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">07c2c091-8248-4485-b885-d0c9d72843f8</identifier>
-  </ID>
+<sequence xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>TEX_IMAGE_SEQ</name>
   <cacheFlag>true</cacheFlag>
   <cacheSize>10000</cacheSize>

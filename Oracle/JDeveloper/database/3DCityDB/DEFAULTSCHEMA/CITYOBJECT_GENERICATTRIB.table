@@ -1,19 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<table xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
-  </ID>
+<table xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>CITYOBJECT_GENERICATTRIB</name>
   <columns>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">efd3e91a-613c-4942-a2ca-aff10c3a030c</identifier>
-      </ID>
       <name>ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">bac4fd58-5ce9-422a-80b1-dce50efc4e8d</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -55,19 +46,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">2ada26e0-d0c0-4934-8c39-d7a63101d58e</identifier>
-      </ID>
       <name>PARENT_GENATTRIB_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">bd98713c-1ab8-44eb-ba01-fcfe14ccc76c</identifier>
-        </ID>
-        <attributeValues>
-          <entry>
-            <key>size</key>
-          </entry>
-        </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -76,14 +56,8 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">8b2affe7-394a-44d8-b8d1-af890e8dd0fa</identifier>
-      </ID>
       <name>ROOT_GENATTRIB_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">e2aafd68-838d-411b-8e49-94acf7723b6f</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -92,21 +66,12 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">10292eed-aeda-4201-8137-2b4a34df068a</identifier>
-      </ID>
       <name>ATTRNAME</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">f4e16765-26d5-49bb-8607-ce21e7484ac7</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">256</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -150,21 +115,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">e06d3343-42b2-480b-b492-b45541cf5689</identifier>
-      </ID>
       <name>DATATYPE</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">ac07379e-1ade-4376-81ca-c7e2fbddc953</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>precision</key>
             <value class="java.lang.String">1</value>
-          </entry>
-          <entry>
-            <key>scale</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -208,21 +164,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">45143d88-78df-4153-ae44-6f73243134a5</identifier>
-      </ID>
       <name>STRVAL</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">b400f9d2-ab1a-44f7-af5f-5e305bb6a0e8</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">4000</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -266,14 +213,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">c8889013-8bd4-4c25-a4dd-a2351e562604</identifier>
-      </ID>
       <name>INTVAL</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">11be08a1-9337-4d77-bbf5-8cbc85e72fb2</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -315,14 +256,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">78c0829d-4038-42de-9b8d-44fe5a6194b3</identifier>
-      </ID>
       <name>REALVAL</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">3bd3fcb6-0833-4ff4-94eb-7855dbf95530</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -346,21 +281,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">5434e65b-d0ae-4335-affa-b322d9bea9bf</identifier>
-      </ID>
       <name>URIVAL</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">cebee959-e911-4b4e-be00-b5c6425e02a1</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">4000</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -404,14 +330,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">ca768996-db13-498d-ba0b-e16ee66be1fe</identifier>
-      </ID>
       <name>DATEVAL</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">bdef7b14-325e-4fc1-b4b9-1ad629cb1021</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>DATE</typeName>
@@ -453,14 +373,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">336a5678-f7bc-4850-bdaa-ed66c33d1556</identifier>
-      </ID>
       <name>GEOMVAL</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">c59b864c-ddb9-4748-be54-aa55fec3dc53</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.Oracle8i</providerClass>
           <schemaName>MDSYS</schemaName>
@@ -503,14 +417,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">57bc68c2-40d8-48ab-9731-674018a33dc4</identifier>
-      </ID>
       <name>BLOBVAL</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">7d1fd752-7dbd-41db-acd6-74269fcb749a</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.Oracle8</providerClass>
           <typeName>BLOB</typeName>
@@ -552,16 +460,10 @@
         <entry>
           <key>OracleColumnProperties</key>
           <value class="oracle.javatools.db.ora.OracleColumnProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">187cf107-7257-4d50-b911-634751d6ba65</identifier>
-            </ID>
             <LOBProperties>
-              <ID class="oracle.javatools.db.IdentifierBasedID">
-                <identifier class="java.lang.String">03a34c58-0c68-4230-8789-0c6aaca08eab</identifier>
-              </ID>
               <name></name>
+              <LOBCache>NOCACHE</LOBCache>
               <LOBSegName>SYS_LOB0000115593C00017$$</LOBSegName>
-              <cache>NOCACHE</cache>
               <chunk>8192</chunk>
               <properties>
                 <entry>
@@ -586,13 +488,10 @@
               </properties>
               <retention>true</retention>
               <storage>
-                <ID class="oracle.javatools.db.IdentifierBasedID">
-                  <identifier class="java.lang.String">4ae4a062-989a-4777-ac7b-ddb7c4ec5cc3</identifier>
-                </ID>
                 <bufferMode>DEFAULT</bufferMode>
                 <initialExtent>65536</initialExtent>
                 <logging>true</logging>
-                <maxExtent>2147483645</maxExtent>
+                <maxExtent>0</maxExtent>
                 <minExtent>1</minExtent>
                 <nextExtent>1048576</nextExtent>
                 <properties>
@@ -619,9 +518,8 @@
                     </value>
                   </entry>
                 </properties>
-                <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+                <tablespaceID class="oracle.javatools.db.NameBasedID">
                   <name>USERS</name>
-                  <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
                   <type>TABLESPACE</type>
                 </tablespaceID>
               </storage>
@@ -650,21 +548,12 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">9be87614-1d7c-4974-83dc-8e5b535735f5</identifier>
-      </ID>
       <name>UNIT</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">955b430a-992f-415f-b0d8-23ac461094b3</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">4000</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -675,21 +564,12 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">8fc66a52-1a35-4f7d-a441-da26e713b05c</identifier>
-      </ID>
       <name>GENATTRIBSET_CODESPACE</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">a8c532f3-684c-4f89-bf9c-4abbf9327f3a</identifier>
-        </ID>
         <attributeValues>
           <entry>
             <key>size</key>
             <value class="java.lang.Long">4000</value>
-          </entry>
-          <entry>
-            <key>unit</key>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -700,14 +580,8 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">efeeee83-037c-40c9-b1ec-728d6bab41ab</identifier>
-      </ID>
       <name>SURFACE_GEOMETRY_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">0f4ecf0a-6f65-479e-9564-7c8450e161c3</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -749,14 +623,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">8b391843-ce7b-4a8e-958d-3bf8026eaf3d</identifier>
-      </ID>
       <name>CITYOBJECT_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">e44f5fcd-6547-4bb8-bc28-9a4e6b12ca32</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -800,25 +668,20 @@
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">9eefc717-d771-45ad-90cd-66aed7d582e2</identifier>
-      </ID>
       <name>GENERICATTRIB_CITYOBJ_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>CITYOBJECT_ID</name>
-          <identifier class="java.lang.String">8b391843-ce7b-4a8e-958d-3bf8026eaf3d</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>CITYOBJECT_GENERICATTRIB</name>
-            <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -838,39 +701,31 @@
           </value>
         </entry>
       </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>CITYOBJECT_PK</name>
-        <identifier class="java.lang.String">1f2323ac-4a13-48b8-a8c4-ede94dee04fb</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>CITYOBJECT</name>
-          <identifier class="java.lang.String">9135e874-587b-44a9-85c9-abe6dda90ff9</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">ad8b7ac6-8396-4824-9955-4d408d4ca62d</identifier>
-      </ID>
       <name>GENERICATTRIB_GEOM_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>SURFACE_GEOMETRY_ID</name>
-          <identifier class="java.lang.String">efeeee83-037c-40c9-b1ec-728d6bab41ab</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>CITYOBJECT_GENERICATTRIB</name>
-            <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -890,45 +745,10 @@
           </value>
         </entry>
       </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>SURFACE_GEOMETRY_PK</name>
-        <identifier class="java.lang.String">b7d7cdda-aedf-4c7b-aac7-88d0f746778e</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>SURFACE_GEOMETRY</name>
-          <identifier class="java.lang.String">409b7f68-ae75-4156-bc1d-4aefa1093003</identifier>
-          <schemaName>YAO</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>YAO</schemaName>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">2839966c-a4fc-4a9f-b2e6-fd8938c179fb</identifier>
-      </ID>
-      <name>GENERICATTRIB_PARENT_FK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>PARENT_GENATTRIB_ID</name>
-          <identifier class="java.lang.String">2ada26e0-d0c0-4934-8c39-d7a63101d58e</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
-            <name>CITYOBJECT_GENERICATTRIB</name>
-            <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <deleteMode>0</deleteMode>
-      <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
-        <name>CITYOBJ_GENERICATTRIB_PK</name>
-        <identifier class="java.lang.String">d896059f-3d21-4aa7-b0fe-0fbe1a1333ec</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
-          <name>CITYOBJECT_GENERICATTRIB</name>
-          <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -936,31 +756,49 @@
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">cdd6852c-dafc-4244-b942-2dbffdfbb652</identifier>
-      </ID>
-      <name>GENERICATTRIB_ROOT_FK</name>
+      <name>GENERICATTRIB_PARENT_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
-          <name>ROOT_GENATTRIB_ID</name>
-          <identifier class="java.lang.String">8b2affe7-394a-44d8-b8d1-af890e8dd0fa</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>PARENT_GENATTRIB_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>CITYOBJECT_GENERICATTRIB</name>
-            <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>CITYOBJ_GENERICATTRIB_PK</name>
-        <identifier class="java.lang.String">d896059f-3d21-4aa7-b0fe-0fbe1a1333ec</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>CITYOBJECT_GENERICATTRIB</name>
-          <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <name>GENERICATTRIB_ROOT_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>ROOT_GENATTRIB_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>CITYOBJECT_GENERICATTRIB</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <referenceID class="oracle.javatools.db.NameBasedID">
+        <name>CITYOBJ_GENERICATTRIB_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>CITYOBJECT_GENERICATTRIB</name>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -968,17 +806,12 @@
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">d896059f-3d21-4aa7-b0fe-0fbe1a1333ec</identifier>
-      </ID>
       <name>CITYOBJ_GENERICATTRIB_PK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>ID</name>
-          <identifier class="java.lang.String">efd3e91a-613c-4942-a2ca-aff10c3a030c</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>CITYOBJECT_GENERICATTRIB</name>
-            <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -986,12 +819,10 @@
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.IdentifierBasedID">
+      <indexID class="oracle.javatools.db.NameBasedID">
         <name>CITYOBJ_GENERICATTRIB_PK</name>
-        <identifier class="java.lang.String">a527cf93-a5b3-44fe-b479-781da38f9d05</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>CITYOBJECT_GENERICATTRIB</name>
-          <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -1021,57 +852,11 @@
   </constraints>
   <indexes>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">a527cf93-a5b3-44fe-b479-781da38f9d05</identifier>
-      </ID>
       <name>CITYOBJ_GENERICATTRIB_PK</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">ae661f15-d05b-400e-85b6-b0389689953c</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">6789b768-b62d-436a-b8c9-5f23785a8b10</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>ID</name>
-              <identifier class="java.lang.String">efd3e91a-613c-4942-a2ca-aff10c3a030c</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>CITYOBJECT_GENERICATTRIB</name>
-                <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>CITYOBJ_GENERICATTRIB_PK</name>
-                      <identifier class="java.math.BigDecimal">115600</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>CITYOBJECT_GENERICATTRIB</name>
-                        <identifier class="java.math.BigDecimal">115593</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>ID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1115,14 +900,11 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">86950a90-af5c-4e86-811e-c341e2e8b289</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initialExtent>65536</initialExtent>
             <initrans>2</initrans>
             <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
+            <maxExtent>0</maxExtent>
             <minExtent>1</minExtent>
             <nextExtent>1048576</nextExtent>
             <percentFree>10</percentFree>
@@ -1146,9 +928,8 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -1160,57 +941,11 @@
       <systemGenerated>true</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">865d7a38-e422-45b7-8bf7-3e444e923834</identifier>
-      </ID>
       <name>GENERICATTRIB_CITYOBJ_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">34991f40-c0f7-4d1b-a122-712cf2dbe58c</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">25a11ff8-d709-4858-9d0e-3853cc3553e4</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>CITYOBJECT_ID</name>
-              <identifier class="java.lang.String">8b391843-ce7b-4a8e-958d-3bf8026eaf3d</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>CITYOBJECT_GENERICATTRIB</name>
-                <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>CITYOBJ_GENERICATTRIB_FKX</name>
-                      <identifier class="java.math.BigDecimal">115925</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>CITYOBJECT_GENERICATTRIB</name>
-                        <identifier class="java.math.BigDecimal">115593</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>CITYOBJECT_ID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1254,14 +989,11 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">49ada7d3-28a5-4b59-8628-3a0e8803ce86</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initialExtent>65536</initialExtent>
             <initrans>2</initrans>
             <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
+            <maxExtent>0</maxExtent>
             <minExtent>1</minExtent>
             <nextExtent>1048576</nextExtent>
             <percentFree>10</percentFree>
@@ -1285,9 +1017,8 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -1299,57 +1030,11 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">4361d396-43c7-4c4f-8848-a0267d9fe9fe</identifier>
-      </ID>
       <name>GENERICATTRIB_GEOM_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">a3f10b2a-04dd-49fc-970a-d71fce117ace</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">e0d78b3e-432b-4ccc-b1ca-79c3bb7faa8e</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>SURFACE_GEOMETRY_ID</name>
-              <identifier class="java.lang.String">efeeee83-037c-40c9-b1ec-728d6bab41ab</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>CITYOBJECT_GENERICATTRIB</name>
-                <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>CITYOBJ_GENERICATTRIB_FKX1</name>
-                      <identifier class="java.math.BigDecimal">115926</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>CITYOBJECT_GENERICATTRIB</name>
-                        <identifier class="java.math.BigDecimal">115593</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>SURFACE_GEOMETRY_ID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1393,14 +1078,11 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">9f894bfd-620d-44e5-8a8c-dd950404bfd1</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initialExtent>65536</initialExtent>
             <initrans>2</initrans>
             <logging>true</logging>
-            <maxExtent>2147483645</maxExtent>
+            <maxExtent>0</maxExtent>
             <minExtent>1</minExtent>
             <nextExtent>1048576</nextExtent>
             <percentFree>10</percentFree>
@@ -1424,9 +1106,8 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -1438,33 +1119,10 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">24259f6c-3f1a-4c17-b723-d0e73272b11c</identifier>
-      </ID>
       <name>GENERICATTRIB_PARENT_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">592965a8-1db0-42d8-8985-b16362a9066c</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">06d1c8a6-0e51-4eda-a974-7dac7fa92fc2</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>PARENT_GENATTRIB_ID</name>
-              <identifier class="java.lang.String">2ada26e0-d0c0-4934-8c39-d7a63101d58e</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>CITYOBJECT_GENERICATTRIB</name>
-                <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
+          <expressionSource>PARENT_GENATTRIB_ID</expressionSource>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -1475,34 +1133,11 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">05cdc473-e55c-483a-82ab-025839660177</identifier>
-      </ID>
       <name>GENERICATTRIB_ROOT_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">6ff9c33a-d742-4341-9250-a1a23505bcb1</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">40641070-11b0-4d3d-aed1-c4efb2a51af3</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>ROOT_GENATTRIB_ID</name>
-              <identifier class="java.lang.String">8b2affe7-394a-44d8-b8d1-af890e8dd0fa</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>CITYOBJECT_GENERICATTRIB</name>
-                <identifier class="java.lang.String">0f2238ab-9a8a-458f-a75d-85f0cdd1079b</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>ROOT_GENATTRIB_ID</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -1530,14 +1165,11 @@
     <entry>
       <key>OracleStorageProperties</key>
       <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">2ab1eed1-c579-48dd-8542-80439d5b60de</identifier>
-        </ID>
         <bufferMode>DEFAULT</bufferMode>
         <initialExtent>65536</initialExtent>
         <initrans>1</initrans>
         <logging>true</logging>
-        <maxExtent>2147483645</maxExtent>
+        <maxExtent>0</maxExtent>
         <minExtent>1</minExtent>
         <nextExtent>1048576</nextExtent>
         <percentFree>10</percentFree>
@@ -1555,9 +1187,8 @@
             </value>
           </entry>
         </properties>
-        <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+        <tablespaceID class="oracle.javatools.db.NameBasedID">
           <name>USERS</name>
-          <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
           <type>TABLESPACE</type>
         </tablespaceID>
       </value>

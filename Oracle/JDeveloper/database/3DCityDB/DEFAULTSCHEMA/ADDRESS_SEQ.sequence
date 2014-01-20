@@ -1,8 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<sequence xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">3f261d2a-db9f-46d9-9c6e-df20d00f118b</identifier>
-  </ID>
+<sequence xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>ADDRESS_SEQ</name>
   <cacheFlag>true</cacheFlag>
   <cacheSize>10000</cacheSize>

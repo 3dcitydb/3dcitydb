@@ -1,19 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<table xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
-  </ID>
+<table xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>RELIEF_FEAT_TO_REL_COMP</name>
   <columns>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">534c490a-77a7-4507-8df7-80d177c59424</identifier>
-      </ID>
       <name>RELIEF_COMPONENT_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">4fef96f1-b90f-4155-a3c0-c3955a89ed1a</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -55,14 +46,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">a8700ce1-9fdc-432e-985c-b39f1f7392ee</identifier>
-      </ID>
       <name>RELIEF_FEATURE_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">d87f8d53-5678-4723-90dd-53f20e642d4b</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -106,25 +91,20 @@
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">680e111a-dac1-4217-8af0-c51b52d29eed</identifier>
-      </ID>
       <name>REL_FEAT_TO_REL_COMP_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>RELIEF_COMPONENT_ID</name>
-          <identifier class="java.lang.String">534c490a-77a7-4507-8df7-80d177c59424</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>RELIEF_FEAT_TO_REL_COMP</name>
-            <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -144,39 +124,31 @@
           </value>
         </entry>
       </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>RELIEF_COMPONENT_PK</name>
-        <identifier class="java.lang.String">a957a19d-34a4-4599-938e-5a37893d4305</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>RELIEF_COMPONENT</name>
-          <identifier class="java.lang.String">f0da539f-f6eb-47c2-af39-3abd6c98ad1a</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">06abf5ac-b64d-4ff5-9c42-b2ddc5e78f9b</identifier>
-      </ID>
       <name>REL_FEAT_TO_REL_COMP_FK1</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>RELIEF_FEATURE_ID</name>
-          <identifier class="java.lang.String">a8700ce1-9fdc-432e-985c-b39f1f7392ee</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>RELIEF_FEAT_TO_REL_COMP</name>
-            <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -196,42 +168,32 @@
           </value>
         </entry>
       </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>RELIEF_FEATURE_PK</name>
-        <identifier class="java.lang.String">d6c1759a-dbd2-44d6-aef9-c31f20c24991</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>RELIEF_FEATURE</name>
-          <identifier class="java.lang.String">6c4fa606-0a58-4541-ad2f-e1bddf90f8e0</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
-        <schemaName>YAO</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">5881ca43-e2ab-47d0-b574-667c73ccf6d7</identifier>
-      </ID>
       <name>RELIEF_FEAT_TO_REL_COMP_PK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>RELIEF_COMPONENT_ID</name>
-          <identifier class="java.lang.String">534c490a-77a7-4507-8df7-80d177c59424</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>RELIEF_FEAT_TO_REL_COMP</name>
-            <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>RELIEF_FEATURE_ID</name>
-          <identifier class="java.lang.String">a8700ce1-9fdc-432e-985c-b39f1f7392ee</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>RELIEF_FEAT_TO_REL_COMP</name>
-            <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -239,12 +201,10 @@
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.IdentifierBasedID">
+      <indexID class="oracle.javatools.db.NameBasedID">
         <name>RELIEF_FEAT_TO_REL_COMP_PK</name>
-        <identifier class="java.lang.String">cca31277-9e8d-4d47-be6e-ffc0a659398d</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>RELIEF_FEAT_TO_REL_COMP</name>
-          <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -275,57 +235,11 @@
   </constraints>
   <indexes>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">cca31277-9e8d-4d47-be6e-ffc0a659398d</identifier>
-      </ID>
       <name>RELIEF_FEAT_TO_REL_COMP_PK</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">2cb2b68e-f0aa-42ec-8fc6-e588d72699ef</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">39a41019-6e66-43b2-a42e-3e749da75dd3</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>RELIEF_COMPONENT_ID</name>
-              <identifier class="java.lang.String">534c490a-77a7-4507-8df7-80d177c59424</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>RELIEF_FEAT_TO_REL_COMP</name>
-                <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>RELIEF_FEAT_TO_REL_COMP_PK</name>
-                      <identifier class="java.math.BigDecimal">115786</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>RELIEF_FEAT_TO_REL_COMP</name>
-                        <identifier class="java.math.BigDecimal">115785</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>RELIEF_COMPONENT_ID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -348,51 +262,8 @@
           </properties>
         </columnExpression>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">735e5b53-018d-4e65-a5dd-96dd7d320d7a</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">b31aef45-1426-4221-b2e4-7cabd871e4f2</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>RELIEF_FEATURE_ID</name>
-              <identifier class="java.lang.String">a8700ce1-9fdc-432e-985c-b39f1f7392ee</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>RELIEF_FEAT_TO_REL_COMP</name>
-                <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>RELIEF_FEAT_TO_REL_COMP_PK</name>
-                      <identifier class="java.math.BigDecimal">115786</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>RELIEF_FEAT_TO_REL_COMP</name>
-                        <identifier class="java.math.BigDecimal">115785</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>RELIEF_FEATURE_ID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -436,9 +307,6 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">3eb11f10-bbac-486e-8cd9-23a9abdd7ab0</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initrans>2</initrans>
             <logging>true</logging>
@@ -463,9 +331,8 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -477,34 +344,11 @@
       <systemGenerated>true</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">e8803dca-4853-4af3-9aca-4f48cc8eee0e</identifier>
-      </ID>
       <name>REL_FEAT_TO_REL_COMP_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">d73b954a-4a79-4e51-8a1c-9f77daa97d8d</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">3cdfb337-5b5b-477e-a3e7-613b26032d40</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>RELIEF_COMPONENT_ID</name>
-              <identifier class="java.lang.String">534c490a-77a7-4507-8df7-80d177c59424</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>RELIEF_FEAT_TO_REL_COMP</name>
-                <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>RELIEF_COMPONENT_ID</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -515,34 +359,11 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">1ee460bc-b1b8-4c30-9b42-34ad3c9ff435</identifier>
-      </ID>
       <name>REL_FEAT_TO_REL_COMP_FKX1</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">c3a21c93-8304-41a6-9659-d8491a867249</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">384e06ea-7221-4e47-8946-2d9ccf0c0ca9</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>RELIEF_FEATURE_ID</name>
-              <identifier class="java.lang.String">a8700ce1-9fdc-432e-985c-b39f1f7392ee</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>RELIEF_FEAT_TO_REL_COMP</name>
-                <identifier class="java.lang.String">63c0f7ed-7619-4088-b33b-c76ad5ed9d07</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>RELIEF_FEATURE_ID</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -570,9 +391,6 @@
     <entry>
       <key>OracleStorageProperties</key>
       <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">4c6b0243-34be-4572-b27c-618b75ae2fb3</identifier>
-        </ID>
         <bufferMode>DEFAULT</bufferMode>
         <initrans>1</initrans>
         <logging>true</logging>
@@ -591,9 +409,8 @@
             </value>
           </entry>
         </properties>
-        <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+        <tablespaceID class="oracle.javatools.db.NameBasedID">
           <name>USERS</name>
-          <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
           <type>TABLESPACE</type>
         </tablespaceID>
       </value>

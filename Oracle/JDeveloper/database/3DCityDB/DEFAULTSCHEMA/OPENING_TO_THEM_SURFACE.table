@@ -1,19 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<table xmlns="http://xmlns.oracle.com/jdeveloper/1112/offlinedb">
-  <ID class="oracle.javatools.db.IdentifierBasedID">
-    <identifier class="java.lang.String">c530f31a-8fcc-4015-a509-9ddf5aa6d626</identifier>
-  </ID>
+<table xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>OPENING_TO_THEM_SURFACE</name>
   <columns>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">f8da498d-88b4-43fc-9d50-7bf98bb5bd91</identifier>
-      </ID>
       <name>OPENING_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">2257fa85-1626-41a9-92e1-cf5276be02e2</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -55,14 +46,8 @@
       </properties>
     </column>
     <column>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">1d77d0c5-e6c5-47aa-b7f5-7f14ea7c6503</identifier>
-      </ID>
       <name>THEMATIC_SURFACE_ID</name>
       <dataTypeUsage>
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">7c0827eb-606f-4dd4-99ab-f8a828ec7329</identifier>
-        </ID>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
@@ -106,25 +91,20 @@
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">dc2aa046-fa5c-436e-8d84-dad23fa00b86</identifier>
-      </ID>
       <name>OPEN_TO_THEM_SURFACE_FK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>OPENING_ID</name>
-          <identifier class="java.lang.String">f8da498d-88b4-43fc-9d50-7bf98bb5bd91</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>OPENING_TO_THEM_SURFACE</name>
-            <identifier class="java.lang.String">c530f31a-8fcc-4015-a509-9ddf5aa6d626</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -144,38 +124,31 @@
           </value>
         </entry>
       </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>OPENING_PK</name>
-        <identifier class="java.lang.String">c654f866-5cb3-4676-9fd5-3af330b1753e</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>OPENING</name>
-          <identifier class="java.lang.String">0f5a1a32-aaa9-4ec4-b62c-d9f47acd01b7</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">c4611c50-1b1a-4e00-b8d7-aceb2519d078</identifier>
-      </ID>
       <name>OPEN_TO_THEM_SURFACE_FK1</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>THEMATIC_SURFACE_ID</name>
-          <identifier class="java.lang.String">1d77d0c5-e6c5-47aa-b7f5-7f14ea7c6503</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>OPENING_TO_THEM_SURFACE</name>
-            <identifier class="java.lang.String">c530f31a-8fcc-4015-a509-9ddf5aa6d626</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
-      <deleteMode>0</deleteMode>
       <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -195,41 +168,32 @@
           </value>
         </entry>
       </properties>
-      <referenceID class="oracle.javatools.db.IdentifierBasedID">
+      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>THEMATIC_SURFACE_PK</name>
-        <identifier class="java.lang.String">30799cf2-d54d-414d-a09d-dbc7571bffdd</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>THEMATIC_SURFACE</name>
-          <identifier class="java.lang.String">67ad2569-04ef-4a95-bc0e-404cfef429d6</identifier>
-          <schemaName>YAO</schemaName>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">c528fcb6-5636-4ebc-8d99-ad47aad9a92c</identifier>
-      </ID>
       <name>OPENING_TO_THEM_SURFACE_PK</name>
       <columnIDs>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>OPENING_ID</name>
-          <identifier class="java.lang.String">f8da498d-88b4-43fc-9d50-7bf98bb5bd91</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>OPENING_TO_THEM_SURFACE</name>
-            <identifier class="java.lang.String">c530f31a-8fcc-4015-a509-9ddf5aa6d626</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
           <type>COLUMN</type>
         </columnID>
-        <columnID class="oracle.javatools.db.IdentifierBasedID">
+        <columnID class="oracle.javatools.db.NameBasedID">
           <name>THEMATIC_SURFACE_ID</name>
-          <identifier class="java.lang.String">1d77d0c5-e6c5-47aa-b7f5-7f14ea7c6503</identifier>
-          <parent class="oracle.javatools.db.IdentifierBasedID">
+          <parent class="oracle.javatools.db.NameBasedID">
             <name>OPENING_TO_THEM_SURFACE</name>
-            <identifier class="java.lang.String">c530f31a-8fcc-4015-a509-9ddf5aa6d626</identifier>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -237,12 +201,10 @@
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.IdentifierBasedID">
+      <indexID class="oracle.javatools.db.NameBasedID">
         <name>OPENING_TO_THEM_SURFACE_PK</name>
-        <identifier class="java.lang.String">8d3b5bbf-6993-4a15-965d-a959d746140a</identifier>
-        <parent class="oracle.javatools.db.IdentifierBasedID">
+        <parent class="oracle.javatools.db.NameBasedID">
           <name>OPENING_TO_THEM_SURFACE</name>
-          <identifier class="java.lang.String">c530f31a-8fcc-4015-a509-9ddf5aa6d626</identifier>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -273,57 +235,11 @@
   </constraints>
   <indexes>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">8d3b5bbf-6993-4a15-965d-a959d746140a</identifier>
-      </ID>
       <name>OPENING_TO_THEM_SURFACE_PK</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">3e38a34c-f79d-4288-a344-8514fedcdbd6</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">4d396f71-8804-41ab-bba4-ce8563497ad2</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>OPENING_ID</name>
-              <identifier class="java.lang.String">f8da498d-88b4-43fc-9d50-7bf98bb5bd91</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>OPENING_TO_THEM_SURFACE</name>
-                <identifier class="java.lang.String">c530f31a-8fcc-4015-a509-9ddf5aa6d626</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>OPENING_TO_THEM_SURFACE_PK</name>
-                      <identifier class="java.math.BigDecimal">115702</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>OPENING_TO_THEM_SURFACE</name>
-                        <identifier class="java.math.BigDecimal">115701</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>OPENING_ID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -346,51 +262,8 @@
           </properties>
         </columnExpression>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">3a7a3662-dbb5-4221-9065-20b2f398f865</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">128813b7-9b0e-47c2-b111-4b03565cf73e</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>THEMATIC_SURFACE_ID</name>
-              <identifier class="java.lang.String">1d77d0c5-e6c5-47aa-b7f5-7f14ea7c6503</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>OPENING_TO_THEM_SURFACE</name>
-                <identifier class="java.lang.String">c530f31a-8fcc-4015-a509-9ddf5aa6d626</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>OPENING_TO_THEM_SURFACE_PK</name>
-                      <identifier class="java.math.BigDecimal">115702</identifier>
-                      <parent class="oracle.javatools.db.ReferenceID">
-                        <name>OPENING_TO_THEM_SURFACE</name>
-                        <identifier class="java.math.BigDecimal">115701</identifier>
-                        <schemaName>YAO</schemaName>
-                        <type>TABLE</type>
-                      </parent>
-                      <schemaName>YAO</schemaName>
-                      <type>INDEX</type>
-                    </parent>
-                    <type>IndexObject</type>
-                  </parent>
-                  <type>SQLFragment</type>
-                </value>
-              </entry>
-            </properties>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>THEMATIC_SURFACE_ID</expressionSource>
+          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -434,9 +307,6 @@
         <entry>
           <key>OracleStorageProperties</key>
           <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">5e789c7d-ac57-4155-8ab2-7fea37a05056</identifier>
-            </ID>
             <bufferMode>DEFAULT</bufferMode>
             <initrans>2</initrans>
             <logging>true</logging>
@@ -461,9 +331,8 @@
                 </value>
               </entry>
             </properties>
-            <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+            <tablespaceID class="oracle.javatools.db.NameBasedID">
               <name>USERS</name>
-              <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
               <type>TABLESPACE</type>
             </tablespaceID>
           </value>
@@ -475,34 +344,11 @@
       <systemGenerated>true</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">c5b83c43-3c18-4b93-af3b-72cc33e5175d</identifier>
-      </ID>
       <name>OPEN_TO_THEM_SURFACE_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">6bd39587-b2cd-486f-972d-bcd6000307f3</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">042bbb45-a3f9-4200-b7d1-66bbf7b7186b</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>OPENING_ID</name>
-              <identifier class="java.lang.String">f8da498d-88b4-43fc-9d50-7bf98bb5bd91</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>OPENING_TO_THEM_SURFACE</name>
-                <identifier class="java.lang.String">c530f31a-8fcc-4015-a509-9ddf5aa6d626</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>OPENING_ID</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -513,34 +359,11 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <ID class="oracle.javatools.db.IdentifierBasedID">
-        <identifier class="java.lang.String">31fa24df-9c13-4e6b-b630-68800b3fad95</identifier>
-      </ID>
       <name>OPEN_TO_THEM_SURFACE_FKX1</name>
       <columnExpressions>
         <columnExpression>
-          <ID class="oracle.javatools.db.IdentifierBasedID">
-            <identifier class="java.lang.String">968dc437-4b32-41b3-bd93-dc292afee367</identifier>
-          </ID>
-          <expression class="oracle.javatools.db.sql.ColumnUsage">
-            <ID class="oracle.javatools.db.IdentifierBasedID">
-              <identifier class="java.lang.String">e2158a14-5741-46f4-b886-1552151585da</identifier>
-            </ID>
-            <objectID class="oracle.javatools.db.IdentifierBasedID">
-              <name>THEMATIC_SURFACE_ID</name>
-              <identifier class="java.lang.String">1d77d0c5-e6c5-47aa-b7f5-7f14ea7c6503</identifier>
-              <parent class="oracle.javatools.db.IdentifierBasedID">
-                <name>OPENING_TO_THEM_SURFACE</name>
-                <identifier class="java.lang.String">c530f31a-8fcc-4015-a509-9ddf5aa6d626</identifier>
-                <schemaName>DEFAULTSCHEMA</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>COLUMN</type>
-            </objectID>
-            <outerJoin>false</outerJoin>
-            <qualified>true</qualified>
-          </expression>
-          <order>ASC</order>
+          <expressionSource>THEMATIC_SURFACE_ID</expressionSource>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -568,9 +391,6 @@
     <entry>
       <key>OracleStorageProperties</key>
       <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <ID class="oracle.javatools.db.IdentifierBasedID">
-          <identifier class="java.lang.String">1a52cbeb-91e2-4d40-b347-487b8fcfc69e</identifier>
-        </ID>
         <bufferMode>DEFAULT</bufferMode>
         <initrans>1</initrans>
         <logging>true</logging>
@@ -589,9 +409,8 @@
             </value>
           </entry>
         </properties>
-        <tablespaceID class="oracle.javatools.db.IdentifierBasedID">
+        <tablespaceID class="oracle.javatools.db.NameBasedID">
           <name>USERS</name>
-          <identifier class="java.lang.String">fc19fd78-7f0d-4126-b1a2-31063af5cd2d</identifier>
           <type>TABLESPACE</type>
         </tablespaceID>
       </value>
