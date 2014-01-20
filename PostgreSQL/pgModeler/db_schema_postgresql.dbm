@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel>
+<dbmodel pgmodeler-ver="0.7.0-pre">
 <schema name="public" protected="true" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
@@ -4453,6 +4453,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="termination_date">
 		<type name="timestamp"/>
 	</column>
+	<column name="relative_to_terrain">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="relative_to_water">
+		<type name="character varying" length="256"/>
+	</column>
 	<column name="last_modification_date">
 		<type name="timestamp"/>
 	</column>
@@ -4463,12 +4469,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="lineage">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="relative_to_terrain">
-		<type name="character varying" length="256"/>
-	</column>
-	<column name="relative_to_water">
 		<type name="character varying" length="256"/>
 	</column>
 	<column name="xml_source">
@@ -6374,9 +6374,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.surface_geometry"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="4207.58" y="1575.88"/>
-	<position x="4207.58" y="1454.2"/>
-	<position x="4085.91" y="1454.2"/>
+		<position x="4169.58" y="1583.48"/>
+	<position x="4169.58" y="1454.2"/>
+	<position x="4060.58" y="1454.2"/>
 	</line>
 </relationship>
 
@@ -6425,9 +6425,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.building"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="4267.74" y="4150.25"/>
-	<position x="4267.74" y="3821.37"/>
-	<position x="4092.74" y="3821.37"/>
+		<position x="4211.74" y="4172.65"/>
+	<position x="4211.74" y="3821.37"/>
+	<position x="4055.41" y="3821.37"/>
 	</line>
 </relationship>
 
@@ -6779,9 +6779,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.cityobject_genericattrib"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="2706" y="506.88"/>
-	<position x="2706" y="374"/>
-	<position x="2562" y="374"/>
+		<position x="2656" y="515.28"/>
+	<position x="2656" y="374"/>
+	<position x="2528.67" y="374"/>
 	</line>
 </relationship>
 
@@ -6800,9 +6800,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.tunnel"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="1810.18" y="3541.05"/>
-	<position x="1810.18" y="3279.37"/>
-	<position x="1645.51" y="3279.37"/>
+		<position x="1755.18" y="3558.65"/>
+	<position x="1755.18" y="3279.37"/>
+	<position x="1608.85" y="3279.37"/>
 	</line>
 </relationship>
 
@@ -6940,9 +6940,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.bridge"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="5370.08" y="3911.65"/>
-	<position x="5370.08" y="3644.37"/>
-	<position x="5210.41" y="3644.37"/>
+		<position x="5317.08" y="3929.65"/>
+	<position x="5317.08" y="3644.37"/>
+	<position x="5175.08" y="3644.37"/>
 	</line>
 </relationship>
 
@@ -7115,9 +7115,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.objectclass"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="2923.17" y="1199.12"/>
-	<position x="2923.17" y="1155.84"/>
-	<position x="2806.17" y="1155.84"/>
+		<position x="2891.17" y="1201.12"/>
+	<position x="2891.17" y="1155.84"/>
+	<position x="2784.84" y="1155.84"/>
 	</line>
 </relationship>
 
