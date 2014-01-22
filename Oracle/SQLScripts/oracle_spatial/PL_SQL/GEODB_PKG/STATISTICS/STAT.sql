@@ -92,6 +92,7 @@ AS
                            AND table_name != ''DATABASE_SRS''
                            AND table_name != ''OBJECTCLASS''
                            AND table_name NOT LIKE ''%MDRT%''
+                           AND table_name NOT LIKE ''TMP_%''
                            AND length(table_name) <= 26
                            ORDER BY table_name ASC
                          ) tab' INTO report USING owner_name;
