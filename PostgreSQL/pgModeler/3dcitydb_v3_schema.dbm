@@ -5007,7 +5007,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="raster_relief_georaster">
 	<schema name="public"/>
 	<position x="6193.75" y="2392.5"/>
-	<column name="id" default-value="nextval('raster_relief_georast_seq'::regclass)">
+	<column name="id" default-value="nextval('raster_rel_georaster_seq'::regclass)">
 		<type name="integer"/>
 	</column>
 	<column name="rasterproperty">

@@ -106,7 +106,7 @@ DROP SEQUENCE cityobject_genericatt_seq;
 DROP SEQUENCE cityobject_seq;
 DROP SEQUENCE external_ref_seq;
 DROP SEQUENCE implicit_geometry_seq;
-DROP SEQUENCE raster_relief_georast_seq;
+DROP SEQUENCE raster_rel_georaster_seq;
 DROP SEQUENCE surface_data_seq;
 DROP SEQUENCE surface_geometry_seq;
 DROP SEQUENCE tex_image_seq;
