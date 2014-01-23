@@ -155,10 +155,10 @@ CREATE TABLE geodb_pkg.INDEX_TABLE (
 * Populate INDEX_TABLE with INDEX_OBJ instances
 * 
 ******************************************************************/
-INSERT INTO geodb_pkg.index_table VALUES (1, geodb_pkg.construct_spatial_3d('cityobject_spx', 'cityobject', 'envelope'));
+INSERT INTO geodb_pkg.index_table VALUES (1, geodb_pkg.construct_spatial_3d('cityobject_envelope_spx', 'cityobject', 'envelope'));
 INSERT INTO geodb_pkg.index_table VALUES (2, geodb_pkg.construct_spatial_3d('surface_geom_spx', 'surface_geometry', 'geometry'));
 INSERT INTO geodb_pkg.index_table VALUES (3, geodb_pkg.construct_normal('cityobject_inx', 'cityobject', 'gmlid'));
-INSERT INTO geodb_pkg.index_table VALUES (4, geodb_pkg.construct_normal('surface_geometry_inx', 'surface_geometry', 'gmlid'));
+INSERT INTO geodb_pkg.index_table VALUES (4, geodb_pkg.construct_normal('surface_geom_inx', 'surface_geometry', 'gmlid'));
 INSERT INTO geodb_pkg.index_table VALUES (5, geodb_pkg.construct_normal('appearance_inx', 'appearance', 'gmlid'));
 INSERT INTO geodb_pkg.index_table VALUES (6, geodb_pkg.construct_normal('surface_data_inx', 'surface_data', 'gmlid'));
 

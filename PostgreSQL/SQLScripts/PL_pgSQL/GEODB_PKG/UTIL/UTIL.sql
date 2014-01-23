@@ -247,11 +247,11 @@ CREATE OR REPLACE FUNCTION geodb_pkg.change_schema_srid(
 BEGIN
   -- update entry in DATABASE_SRS table first
   EXECUTE format('UPDATE %I.database_srs SET srid = %L, gml_srs_name = %L',
-                    schema_srid, schema_gml_srs_name);
+                    schema_name, schema_srid, schema_gml_srs_name);
 
   -- change srid of each spatially enabled table
   EXECUTE 'SELECT geodb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, f_table_schema) 
-             FROM geometry_columns WHERE srid != 0 AND f_table_schema = $2' USING schema_srid, schema_name;
+             FROM geometry_columns WHERE f_table_schema = $2' USING schema_srid, schema_name;
 END;
 $$ 
 LANGUAGE plpgsql;
