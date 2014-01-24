@@ -6,7 +6,7 @@
 --               Claus Nagel <cnagel@virtualcitysystems.de>
 --               Felix Kunde <fkunde@virtualcitysystems.de>
 --               Philipp Willkomm <pwillkomm@moss.de>
---               Gerhard KÃ¶nig <gerhard.koenig@tu-berlin.de>
+--               Gerhard König <gerhard.koenig@tu-berlin.de>
 --               Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 
 SET check_function_bodies = false;
@@ -18,7 +18,7 @@ CREATE SEQUENCE public.citymodel_seq
 	MINVALUE 0
 	MAXVALUE 2147483647
 	START WITH 1
-	CACHE 10000
+	CACHE 1
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
@@ -29,7 +29,7 @@ CREATE SEQUENCE public.cityobject_seq
 	MINVALUE 0
 	MAXVALUE 2147483647
 	START WITH 1
-	CACHE 10000
+	CACHE 1
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
@@ -65,7 +65,7 @@ CREATE SEQUENCE public.external_ref_seq
 	MINVALUE 0
 	MAXVALUE 2147483647
 	START WITH 1
-	CACHE 10000
+	CACHE 1
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
@@ -101,7 +101,7 @@ CREATE SEQUENCE public.surface_geometry_seq
 	MINVALUE 0
 	MAXVALUE 2147483647
 	START WITH 1
-	CACHE 10000
+	CACHE 1
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
@@ -109,12 +109,12 @@ CREATE SEQUENCE public.surface_geometry_seq
 -- object: public.cityobjectgroup | type: TABLE --
 CREATE TABLE public.cityobjectgroup(
 	id integer NOT NULL,
-	name character varying(1000),
-	name_codespace character varying(4000),
-	description character varying(4000),
 	class character varying(256),
+	class_codespace character varying(4000),
 	function character varying(1000),
+	function_codespace character varying(4000),
 	usage character varying(1000),
+	usage_codespace character varying(4000),
 	brep_id integer,
 	other_geom geometry(GEOMETRYZ,:SRSNO),
 	parent_cityobject_id integer,
@@ -205,7 +205,7 @@ CREATE SEQUENCE public.implicit_geometry_seq
 	MINVALUE 0
 	MAXVALUE 2147483647
 	START WITH 1
-	CACHE 10000
+	CACHE 1
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
@@ -414,7 +414,7 @@ CREATE SEQUENCE public.cityobject_genericatt_seq
 	MINVALUE 0
 	MAXVALUE 2147483647
 	START WITH 1
-	CACHE 10000
+	CACHE 1
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
@@ -669,7 +669,7 @@ CREATE SEQUENCE public.address_seq
 	MINVALUE 0
 	MAXVALUE 2147483647
 	START WITH 1
-	CACHE 10000
+	CACHE 1
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
@@ -972,9 +972,9 @@ CREATE TABLE public.building_installation(
 	lod2_other_geom geometry(GEOMETRYZ,:SRSNO),
 	lod3_other_geom geometry(GEOMETRYZ,:SRSNO),
 	lod4_other_geom geometry(GEOMETRYZ,:SRSNO),
-	lod2_implcity_rep_id integer,
-	lod3_implcity_rep_id integer,
-	lod4_implcity_rep_id integer,
+	lod2_implicit_rep_id integer,
+	lod3_implicit_rep_id integer,
+	lod4_implicit_rep_id integer,
 	lod2_implicit_ref_point geometry(POINTZ,:SRSNO),
 	lod3_implicit_ref_point geometry(POINTZ,:SRSNO),
 	lod4_implicit_ref_point geometry(POINTZ,:SRSNO),
@@ -1053,7 +1053,7 @@ CREATE INDEX bldg_inst_lod4xgeom_spx ON public.building_installation
 CREATE INDEX bldg_inst_lod2impl_fkx ON public.building_installation
 	USING btree
 	(
-	  lod2_implcity_rep_id ASC NULLS LAST
+	  lod2_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -1061,7 +1061,7 @@ CREATE INDEX bldg_inst_lod2impl_fkx ON public.building_installation
 CREATE INDEX bldg_inst_lod3impl_fkx ON public.building_installation
 	USING btree
 	(
-	  lod3_implcity_rep_id ASC NULLS LAST
+	  lod3_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -1069,7 +1069,7 @@ CREATE INDEX bldg_inst_lod3impl_fkx ON public.building_installation
 CREATE INDEX bldg_inst_lod4impl_fkx ON public.building_installation
 	USING btree
 	(
-	  lod4_implcity_rep_id ASC NULLS LAST
+	  lod4_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -1323,7 +1323,7 @@ CREATE SEQUENCE public.appearance_seq
 	MINVALUE 0
 	MAXVALUE 2147483647
 	START WITH 1
-	CACHE 10000
+	CACHE 1
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
@@ -1334,7 +1334,7 @@ CREATE SEQUENCE public.surface_data_seq
 	MINVALUE 0
 	MAXVALUE 2147483647
 	START WITH 1
-	CACHE 10000
+	CACHE 1
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
@@ -1737,10 +1737,10 @@ CREATE TABLE public.plant_cover(
 	lod2_multi_surface_id integer,
 	lod3_multi_surface_id integer,
 	lod4_multi_surface_id integer,
-	lod1_solid_id integer,
-	lod2_solid_id integer,
-	lod3_solid_id integer,
-	lod4_solid_id integer,
+	lod1_multi_solid_id integer,
+	lod2_multi_solid_id integer,
+	lod3_multi_solid_id integer,
+	lod4_multi_solid_id integer,
 	CONSTRAINT plant_cover_pk PRIMARY KEY (id)
 
 );
@@ -1777,35 +1777,35 @@ CREATE INDEX plant_cover_lod4msrf_fkx ON public.plant_cover
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
--- object: plant_cover_lod1solid_fkx | type: INDEX --
-CREATE INDEX plant_cover_lod1solid_fkx ON public.plant_cover
+-- object: plant_cover_lod1msolid_fkx | type: INDEX --
+CREATE INDEX plant_cover_lod1msolid_fkx ON public.plant_cover
 	USING btree
 	(
-	  lod1_solid_id ASC NULLS LAST
+	  lod1_multi_solid_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
--- object: plant_cover_lod2solid_fkx | type: INDEX --
-CREATE INDEX plant_cover_lod2solid_fkx ON public.plant_cover
+-- object: plant_cover_lod2msolid_fkx | type: INDEX --
+CREATE INDEX plant_cover_lod2msolid_fkx ON public.plant_cover
 	USING btree
 	(
-	  lod2_solid_id ASC NULLS LAST
+	  lod2_multi_solid_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
--- object: plant_cover_lod3solid_fkx | type: INDEX --
-CREATE INDEX plant_cover_lod3solid_fkx ON public.plant_cover
+-- object: plant_cover_lod3msolid_fkx | type: INDEX --
+CREATE INDEX plant_cover_lod3msolid_fkx ON public.plant_cover
 	USING btree
 	(
-	  lod3_solid_id ASC NULLS LAST
+	  lod3_multi_solid_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
--- object: plant_cover_lod4solid_fkx | type: INDEX --
-CREATE INDEX plant_cover_lod4solid_fkx ON public.plant_cover
+-- object: plant_cover_lod4msolid_fkx | type: INDEX --
+CREATE INDEX plant_cover_lod4msolid_fkx ON public.plant_cover
 	USING btree
 	(
-	  lod4_solid_id ASC NULLS LAST
+	  lod4_multi_solid_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -2467,7 +2467,7 @@ CREATE SEQUENCE public.tex_image_seq
 	MINVALUE 0
 	MAXVALUE 2147483647
 	START WITH 1
-	CACHE 10000
+	CACHE 1
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
@@ -2563,9 +2563,9 @@ CREATE TABLE public.tunnel_installation(
 	lod2_other_geom geometry(GEOMETRYZ,:SRSNO),
 	lod3_other_geom geometry(GEOMETRYZ,:SRSNO),
 	lod4_other_geom geometry(GEOMETRYZ,:SRSNO),
-	lod2_implcity_rep_id integer,
-	lod3_implcity_rep_id integer,
-	lod4_implcity_rep_id integer,
+	lod2_implicit_rep_id integer,
+	lod3_implicit_rep_id integer,
+	lod4_implicit_rep_id integer,
 	lod2_implicit_ref_point geometry(POINTZ,:SRSNO),
 	lod3_implicit_ref_point geometry(POINTZ,:SRSNO),
 	lod4_implicit_ref_point geometry(POINTZ,:SRSNO),
@@ -2644,7 +2644,7 @@ CREATE INDEX tunnel_inst_lod4xgeom_spx ON public.tunnel_installation
 CREATE INDEX tunnel_inst_lod2impl_fkx ON public.tunnel_installation
 	USING btree
 	(
-	  lod2_implcity_rep_id ASC NULLS LAST
+	  lod2_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -2652,7 +2652,7 @@ CREATE INDEX tunnel_inst_lod2impl_fkx ON public.tunnel_installation
 CREATE INDEX tunnel_inst_lod3impl_fkx ON public.tunnel_installation
 	USING btree
 	(
-	  lod3_implcity_rep_id ASC NULLS LAST
+	  lod3_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -2660,7 +2660,7 @@ CREATE INDEX tunnel_inst_lod3impl_fkx ON public.tunnel_installation
 CREATE INDEX tunnel_inst_lod4impl_fkx ON public.tunnel_installation
 	USING btree
 	(
-	  lod4_implcity_rep_id ASC NULLS LAST
+	  lod4_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -2997,9 +2997,9 @@ CREATE TABLE public.bridge_installation(
 	lod2_other_geom geometry(GEOMETRYZ,:SRSNO),
 	lod3_other_geom geometry(GEOMETRYZ,:SRSNO),
 	lod4_other_geom geometry(GEOMETRYZ,:SRSNO),
-	lod2_implcity_rep_id integer,
-	lod3_implcity_rep_id integer,
-	lod4_implcity_rep_id integer,
+	lod2_implicit_rep_id integer,
+	lod3_implicit_rep_id integer,
+	lod4_implicit_rep_id integer,
 	lod2_implicit_ref_point geometry(POINTZ,:SRSNO),
 	lod3_implicit_ref_point geometry(POINTZ,:SRSNO),
 	lod4_implicit_ref_point geometry(POINTZ,:SRSNO),
@@ -3078,7 +3078,7 @@ CREATE INDEX bridge_inst_lod4xgeom_spx ON public.bridge_installation
 CREATE INDEX bridge_inst_lod2impl_fkx ON public.bridge_installation
 	USING btree
 	(
-	  lod2_implcity_rep_id ASC NULLS LAST
+	  lod2_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -3086,7 +3086,7 @@ CREATE INDEX bridge_inst_lod2impl_fkx ON public.bridge_installation
 CREATE INDEX bridge_inst_lod3impl_fkx ON public.bridge_installation
 	USING btree
 	(
-	  lod3_implcity_rep_id ASC NULLS LAST
+	  lod3_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -3094,7 +3094,7 @@ CREATE INDEX bridge_inst_lod3impl_fkx ON public.bridge_installation
 CREATE INDEX bridge_inst_lod4impl_fkx ON public.bridge_installation
 	USING btree
 	(
-	  lod4_implcity_rep_id ASC NULLS LAST
+	  lod4_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -3373,10 +3373,10 @@ CREATE TABLE public.bridge_constr_element(
 	lod2_other_geom geometry(GEOMETRYZ,:SRSNO),
 	lod3_other_geom geometry(GEOMETRYZ,:SRSNO),
 	lod4_other_geom geometry(GEOMETRYZ,:SRSNO),
-	lod1_implcity_rep_id integer,
-	lod2_implcity_rep_id integer,
-	lod3_implcity_rep_id integer,
-	lod4_implcity_rep_id integer,
+	lod1_implicit_rep_id integer,
+	lod2_implicit_rep_id integer,
+	lod3_implicit_rep_id integer,
+	lod4_implicit_rep_id integer,
 	lod1_implicit_ref_point geometry(POINTZ,:SRSNO),
 	lod2_implicit_ref_point geometry(POINTZ,:SRSNO),
 	lod3_implicit_ref_point geometry(POINTZ,:SRSNO),
@@ -3497,7 +3497,7 @@ CREATE INDEX bridge_const_lod4xgeom_spx ON public.bridge_constr_element
 CREATE INDEX bridge_constr_lod1impl_fkx ON public.bridge_constr_element
 	USING btree
 	(
-	  lod1_implcity_rep_id ASC NULLS LAST
+	  lod1_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -3505,7 +3505,7 @@ CREATE INDEX bridge_constr_lod1impl_fkx ON public.bridge_constr_element
 CREATE INDEX bridge_constr_lod2impl_fkx ON public.bridge_constr_element
 	USING btree
 	(
-	  lod2_implcity_rep_id ASC NULLS LAST
+	  lod2_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -3513,7 +3513,7 @@ CREATE INDEX bridge_constr_lod2impl_fkx ON public.bridge_constr_element
 CREATE INDEX bridge_constr_lod3impl_fkx ON public.bridge_constr_element
 	USING btree
 	(
-	  lod3_implcity_rep_id ASC NULLS LAST
+	  lod3_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -3521,7 +3521,7 @@ CREATE INDEX bridge_constr_lod3impl_fkx ON public.bridge_constr_element
 CREATE INDEX bridge_constr_lod4impl_fkx ON public.bridge_constr_element
 	USING btree
 	(
-	  lod4_implcity_rep_id ASC NULLS LAST
+	  lod4_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -3583,13 +3583,13 @@ CREATE INDEX address_to_bridge_fkx1 ON public.address_to_bridge
 -- ddl-end --
 
 
--- object: public.raster_relief_georast_seq | type: SEQUENCE --
-CREATE SEQUENCE public.raster_relief_georast_seq
+-- object: public.raster_rel_georaster_seq | type: SEQUENCE --
+CREATE SEQUENCE public.raster_rel_georaster_seq
 	INCREMENT BY 1
 	MINVALUE 0
 	MAXVALUE 2147483647
 	START WITH 1
-	CACHE 10000
+	CACHE 1
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
@@ -3605,12 +3605,12 @@ CREATE TABLE public.cityobject(
 	envelope geometry(POLYGONZ,:SRSNO),
 	creation_date timestamp NOT NULL,
 	termination_date timestamp,
+	relative_to_terrain character varying(256),
+	relative_to_water character varying(256),
 	last_modification_date timestamp,
 	updating_person character varying(256),
 	reason_for_update character varying(4000),
 	lineage character varying(256),
-	relative_to_terrain character varying(256),
-	relative_to_water character varying(256),
 	xml_source text,
 	CONSTRAINT cityobject_pk PRIMARY KEY (id)
 
@@ -3967,7 +3967,7 @@ CREATE TABLE public.tex_image(
 -- ddl-end --
 -- object: public.raster_relief_georaster | type: TABLE --
 CREATE TABLE public.raster_relief_georaster(
-	id integer DEFAULT nextval('raster_relief_georast_seq'::regclass),
+	id integer DEFAULT nextval('raster_rel_georaster_seq'::regclass),
 	rasterproperty raster,
 	CONSTRAINT raster_relief_georaster_pk PRIMARY KEY (id)
 
@@ -4359,21 +4359,21 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 
 
 -- object: bldg_inst_lod2impl_fk | type: CONSTRAINT --
-ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_lod2impl_fk FOREIGN KEY (lod2_implcity_rep_id)
+ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
 -- object: bldg_inst_lod3impl_fk | type: CONSTRAINT --
-ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_lod3impl_fk FOREIGN KEY (lod3_implcity_rep_id)
+ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
 -- object: bldg_inst_lod4impl_fk | type: CONSTRAINT --
-ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_lod4impl_fk FOREIGN KEY (lod4_implcity_rep_id)
+ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
@@ -4771,29 +4771,29 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: plant_cover_lod1solid_fk | type: CONSTRAINT --
-ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod1solid_fk FOREIGN KEY (lod1_solid_id)
+-- object: plant_cover_lod1msolid_fk | type: CONSTRAINT --
+ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod1msolid_fk FOREIGN KEY (lod1_multi_solid_id)
 REFERENCES public.surface_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: plant_cover_lod2solid_fk | type: CONSTRAINT --
-ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod2solid_fk FOREIGN KEY (lod2_solid_id)
+-- object: plant_cover_lod2msolid_fk | type: CONSTRAINT --
+ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod2msolid_fk FOREIGN KEY (lod2_multi_solid_id)
 REFERENCES public.surface_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: plant_cover_lod3solid_fk | type: CONSTRAINT --
-ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod3solid_fk FOREIGN KEY (lod3_solid_id)
+-- object: plant_cover_lod3msolid_fk | type: CONSTRAINT --
+ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod3msolid_fk FOREIGN KEY (lod3_multi_solid_id)
 REFERENCES public.surface_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: plant_cover_lod4solid_fk | type: CONSTRAINT --
-ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod4solid_fk FOREIGN KEY (lod4_solid_id)
+-- object: plant_cover_lod4msolid_fk | type: CONSTRAINT --
+ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod4msolid_fk FOREIGN KEY (lod4_multi_solid_id)
 REFERENCES public.surface_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
@@ -5234,21 +5234,21 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 
 
 -- object: tunnel_inst_lod2impl_fk | type: CONSTRAINT --
-ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_lod2impl_fk FOREIGN KEY (lod2_implcity_rep_id)
+ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
 -- object: tunnel_inst_lod3impl_fk | type: CONSTRAINT --
-ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_lod3impl_fk FOREIGN KEY (lod3_implcity_rep_id)
+ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
 -- object: tunnel_inst_lod4impl_fk | type: CONSTRAINT --
-ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_lod4impl_fk FOREIGN KEY (lod4_implcity_rep_id)
+ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
@@ -5423,21 +5423,21 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 
 
 -- object: bridge_inst_lod2impl_fk | type: CONSTRAINT --
-ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_lod2impl_fk FOREIGN KEY (lod2_implcity_rep_id)
+ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
 -- object: bridge_inst_lod3impl_fk | type: CONSTRAINT --
-ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_lod3impl_fk FOREIGN KEY (lod3_implcity_rep_id)
+ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
 -- object: bridge_inst_lod4impl_fk | type: CONSTRAINT --
-ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_lod4impl_fk FOREIGN KEY (lod4_implcity_rep_id)
+ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
@@ -5640,28 +5640,28 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 
 
 -- object: bridge_constr_lod1impl_fk | type: CONSTRAINT --
-ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod1impl_fk FOREIGN KEY (lod1_implcity_rep_id)
+ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod1impl_fk FOREIGN KEY (lod1_implicit_rep_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
 -- object: bridge_constr_lod2impl_fk | type: CONSTRAINT --
-ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod2impl_fk FOREIGN KEY (lod2_implcity_rep_id)
+ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
 -- object: bridge_constr_lod3impl_fk | type: CONSTRAINT --
-ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod3impl_fk FOREIGN KEY (lod3_implcity_rep_id)
+ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
 -- object: bridge_constr_lod4impl_fk | type: CONSTRAINT --
-ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod4impl_fk FOREIGN KEY (lod4_implcity_rep_id)
+ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
 REFERENCES public.implicit_geometry (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
@@ -5725,7 +5725,7 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 
 -- object: surface_geom_cityobj_fk | type: CONSTRAINT --
 ALTER TABLE public.surface_geometry ADD CONSTRAINT surface_geom_cityobj_fk FOREIGN KEY (cityobject_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
+REFERENCES public.cityobject (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 

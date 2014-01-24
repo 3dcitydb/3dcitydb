@@ -107,23 +107,23 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="name">
-		<type name="character varying" length="1000"/>
-	</column>
-	<column name="name_codespace">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="description">
-		<type name="character varying" length="4000"/>
-	</column>
 	<column name="class">
 		<type name="character varying" length="256"/>
+	</column>
+	<column name="class_codespace">
+		<type name="character varying" length="4000"/>
 	</column>
 	<column name="function">
 		<type name="character varying" length="1000"/>
 	</column>
+	<column name="function_codespace">
+		<type name="character varying" length="4000"/>
+	</column>
 	<column name="usage">
 		<type name="character varying" length="1000"/>
+	</column>
+	<column name="usage_codespace">
+		<type name="character varying" length="4000"/>
 	</column>
 	<column name="brep_id">
 		<type name="integer"/>
@@ -2145,16 +2145,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="lod4_multi_surface_id">
 		<type name="integer"/>
 	</column>
-	<column name="lod1_solid_id">
+	<column name="lod1_multi_solid_id">
 		<type name="integer"/>
 	</column>
-	<column name="lod2_solid_id">
+	<column name="lod2_multi_solid_id">
 		<type name="integer"/>
 	</column>
-	<column name="lod3_solid_id">
+	<column name="lod3_multi_solid_id">
 		<type name="integer"/>
 	</column>
-	<column name="lod4_solid_id">
+	<column name="lod4_multi_solid_id">
 		<type name="integer"/>
 	</column>
 	<constraint name="plant_cover_pk" type="pk-constr" factor="100" table="public.plant_cover">
@@ -2188,32 +2188,32 @@ CAUTION: Do not modify this file unless you know what you are doing.
 			<column name="lod4_multi_surface_id"/>
 		</idxelement>
 	</index>
-	<index name="plant_cover_lod1solid_fkx" table="public.plant_cover"
+	<index name="plant_cover_lod1msolid_fkx" table="public.plant_cover"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="lod1_solid_id"/>
+			<column name="lod1_multi_solid_id"/>
 		</idxelement>
 	</index>
-	<index name="plant_cover_lod2solid_fkx" table="public.plant_cover"
+	<index name="plant_cover_lod2msolid_fkx" table="public.plant_cover"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="lod2_solid_id"/>
+			<column name="lod2_multi_solid_id"/>
 		</idxelement>
 	</index>
-	<index name="plant_cover_lod3solid_fkx" table="public.plant_cover"
+	<index name="plant_cover_lod3msolid_fkx" table="public.plant_cover"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="lod3_solid_id"/>
+			<column name="lod3_multi_solid_id"/>
 		</idxelement>
 	</index>
-	<index name="plant_cover_lod4solid_fkx" table="public.plant_cover"
+	<index name="plant_cover_lod4msolid_fkx" table="public.plant_cover"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="lod4_solid_id"/>
+			<column name="lod4_multi_solid_id"/>
 		</idxelement>
 	</index>
 </table>
@@ -5588,24 +5588,24 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="lod4_multi_surface_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="plant_cover_lod1solid_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+<constraint name="plant_cover_lod1msolid_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.plant_cover">
-	<columns names="lod1_solid_id" ref-type="src-columns"/>
+	<columns names="lod1_multi_solid_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="plant_cover_lod2solid_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+<constraint name="plant_cover_lod2msolid_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.plant_cover">
-	<columns names="lod2_solid_id" ref-type="src-columns"/>
+	<columns names="lod2_multi_solid_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="plant_cover_lod3solid_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+<constraint name="plant_cover_lod3msolid_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.plant_cover">
-	<columns names="lod3_solid_id" ref-type="src-columns"/>
+	<columns names="lod3_multi_solid_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="plant_cover_lod4solid_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+<constraint name="plant_cover_lod4msolid_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.plant_cover">
-	<columns names="lod4_solid_id" ref-type="src-columns"/>
+	<columns names="lod4_multi_solid_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="sol_veg_obj_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
