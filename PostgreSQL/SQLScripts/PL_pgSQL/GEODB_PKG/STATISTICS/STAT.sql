@@ -58,7 +58,7 @@ BEGIN
                 FROM pg_tables WHERE schemaname = $1 
                 AND tablename != ''spatial_ref_sys'' 
                 AND tablename != ''database_srs'' 
-                AND tablename NOT LIKE ''TMP_%''
+                AND tablename NOT LIKE ''tmp_%''
                 ORDER BY tablename ASC
               ) tab' INTO report USING schema_name;
 

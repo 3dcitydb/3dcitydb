@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel>
+<dbmodel pgmodeler-ver="0.7.0-alpha">
 <schema name="public" protected="true" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
@@ -129,7 +129,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="parent_cityobject_id">
 		<type name="integer"/>
@@ -285,16 +285,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="lod1_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod2_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod3_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod4_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod1_implicit_rep_id">
 		<type name="integer"/>
@@ -539,19 +539,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="lod0_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod1_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod2_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod3_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod4_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod0_implicit_rep_id">
 		<type name="integer"/>
@@ -1093,7 +1093,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="lod4_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
 		<type name="integer"/>
@@ -1150,8 +1150,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="is_external">
-		<type name="numeric" precision="0"/>
+	<column name="objectclass_id">
+		<type name="integer" precision="0"/>
 	</column>
 	<column name="class">
 		<type name="character varying" length="256"/>
@@ -1187,13 +1187,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="lod2_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod3_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod4_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod2_implicit_rep_id">
 		<type name="integer"/>
@@ -1225,6 +1225,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="building_installation_pk" type="pk-constr" factor="100" table="public.building_installation">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+	<index name="bldg_inst_objclass_fkx" table="public.building_installation"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="objectclass_id"/>
+		</idxelement>
+	</index>
 	<index name="bldg_inst_building_fkx" table="public.building_installation"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
@@ -1885,7 +1892,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="lod0_network">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod1_multi_surface_id">
 		<type name="integer"/>
@@ -1952,8 +1959,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="is_auxiliary">
-		<type name="numeric" precision="0"/>
+	<column name="objectclass_id">
+		<type name="integer" precision="0"/>
 	</column>
 	<column name="class">
 		<type name="character varying" length="256"/>
@@ -1994,6 +2001,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="traffic_area_pk" type="pk-constr" factor="100" table="public.traffic_area">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+	<index name="traffic_area_objclass_fkx" table="public.traffic_area"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="objectclass_id"/>
+		</idxelement>
+	</index>
 	<index name="traffic_area_lod2msrf_fkx" table="public.traffic_area"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
@@ -2279,16 +2293,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="lod1_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod2_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod3_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod4_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod1_implicit_rep_id">
 		<type name="integer"/>
@@ -3134,8 +3148,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="is_external">
-		<type name="numeric" precision="0"/>
+	<column name="objectclass_id">
+		<type name="integer" precision="0"/>
 	</column>
 	<column name="class">
 		<type name="character varying" length="256"/>
@@ -3171,13 +3185,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="lod2_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod3_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod4_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod2_implicit_rep_id">
 		<type name="integer"/>
@@ -3209,14 +3223,21 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="tunnel_installation_pk" type="pk-constr" factor="100" table="public.tunnel_installation">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
-	<index name="tunnel_inst_building_fkx" table="public.tunnel_installation"
+	<index name="tunnel_inst_objclass_fk" table="public.tunnel_installation"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="objectclass_id"/>
+		</idxelement>
+	</index>
+	<index name="tunnel_inst_tunnel_fkx" table="public.tunnel_installation"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
 			<column name="tunnel_id"/>
 		</idxelement>
 	</index>
-	<index name="tunnel_inst_room_fkx" table="public.tunnel_installation"
+	<index name="tunnel_inst_hspace_fkx" table="public.tunnel_installation"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
@@ -3340,7 +3361,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="lod4_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
 		<type name="integer"/>
@@ -3630,7 +3651,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="lod4_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
 		<type name="integer"/>
@@ -3687,8 +3708,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="is_external">
-		<type name="numeric" precision="0"/>
+	<column name="objectclass_id">
+		<type name="integer" precision="0"/>
 	</column>
 	<column name="class">
 		<type name="character varying" length="256"/>
@@ -3724,13 +3745,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="lod2_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod3_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod4_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod2_implicit_rep_id">
 		<type name="integer"/>
@@ -3762,6 +3783,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="bridge_installation_pk" type="pk-constr" factor="100" table="public.bridge_installation">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+	<index name="bridge_inst_objclass_fkx" table="public.bridge_installation"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="objectclass_id"/>
+		</idxelement>
+	</index>
 	<index name="bridge_inst_bridge_fkx" table="public.bridge_installation"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
@@ -4189,16 +4217,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="lod1_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod2_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod3_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod4_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod1_implicit_rep_id">
 		<type name="integer"/>
@@ -4579,7 +4607,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="relative_other_geom">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<constraint name="implicit_geometry_pk" type="pk-constr" factor="100" table="public.implicit_geometry">
 		<columns names="id" ref-type="src-columns"/>
@@ -4596,13 +4624,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
 			<column name="relative_brep_id"/>
-		</idxelement>
-	</index>
-	<index name="implicit_geom_xgeom_skx" table="public.implicit_geometry"
-		 concurrent="false" unique="false" fast-update="false"
-		 index-type="gist" factor="0">
-		<idxelement use-sorting="false">
-			<column name="relative_other_geom"/>
 		</idxelement>
 	</index>
 </table>
@@ -4641,7 +4662,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="POLYGON" variation="1" srid="0"/>
 	</column>
 	<column name="solid_geometry">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
+	</column>
+	<column name="implicit_geometry">
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="cityobject_id">
 		<type name="integer"/>
@@ -4733,7 +4757,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="surface_data">
 	<schema name="public"/>
-	<position x="4543.17" y="832.933"/>
+	<position x="4548.17" y="813.933"/>
 	<column name="id" not-null="true" default-value="nextval('surface_data_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -4812,6 +4836,20 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		 index-type="gist" factor="0">
 		<idxelement use-sorting="false">
 			<column name="gt_reference_point"/>
+		</idxelement>
+	</index>
+	<index name="surface_data_objclass_fkx" table="public.surface_data"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="objectclass_id"/>
+		</idxelement>
+	</index>
+	<index name="surface_data_tex_image_fkx" table="public.surface_data"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="tex_image_id"/>
 		</idxelement>
 	</index>
 </table>
@@ -4901,7 +4939,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="date"/>
 	</column>
 	<column name="geomval">
-		<type name="geometry"/>
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="blobval">
 		<type name="bytea"/>
@@ -5268,6 +5306,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
+<constraint name="bldg_inst_objclass_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.objectclass" table="public.building_installation">
+	<columns names="objectclass_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
 <constraint name="bldg_inst_building_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.building" table="public.building_installation">
 	<columns names="building_id" ref-type="src-columns"/>
@@ -5513,9 +5556,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="traffic_area_trancmplx_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.transportation_complex" table="public.traffic_area">
-	<columns names="transportation_complex_id" ref-type="src-columns"/>
+<constraint name="traffic_area_objclass_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.objectclass" table="public.traffic_area">
+	<columns names="objectclass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="traffic_area_lod2msrf_fk" type="fk-constr"	 comparison-type="MATCH FULL"
@@ -5531,6 +5574,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <constraint name="traffic_area_lod4msrf_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.surface_geometry" table="public.traffic_area">
 	<columns names="lod4_multi_surface_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="traffic_area_trancmplx_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.transportation_complex" table="public.traffic_area">
+	<columns names="transportation_complex_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="land_use_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
@@ -5893,6 +5941,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
+<constraint name="tunnel_inst_objclass_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.objectclass" table="public.tunnel_installation">
+	<columns names="objectclass_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
 <constraint name="tunnel_inst_tunnel_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.tunnel" table="public.tunnel_installation">
 	<columns names="tunnel_id" ref-type="src-columns"/>
@@ -6026,6 +6079,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <constraint name="bridge_inst_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.cityobject" table="public.bridge_installation">
 	<columns names="id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="bridge_inst_objclass_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.objectclass" table="public.bridge_installation">
+	<columns names="objectclass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="bridge_inst_bridge_fk" type="fk-constr"	 comparison-type="MATCH FULL"
@@ -6352,6 +6410,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<position x="2923.17" y="1155.84"/>
 	<position x="2806.17" y="1155.84"/>
 	</line>
+	<label ref-type="name-label">
+		<position x="6.30591" y="-14.0399"/>
+	</label>
 </relationship>
 
 <relationship name="rel_city_furniture_cityobject" type="relfk"
@@ -6362,7 +6423,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_city_furniture_surface_geometry" type="relfk"
 	 src-table="public.city_furniture"
 	 dst-table="public.surface_geometry"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-60.7427" y="1.84131"/>
+	</label>
+</relationship>
 
 <relationship name="rel_city_furniture_implicit_geometry" type="relfk"
 	 src-table="public.city_furniture"
@@ -6372,12 +6437,20 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_generic_cityobject_cityobject" type="relfk"
 	 src-table="public.generic_cityobject"
 	 dst-table="public.cityobject"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-21.7393" y="-50.377"/>
+	</label>
+</relationship>
 
 <relationship name="rel_generic_cityobject_surface_geometry" type="relfk"
 	 src-table="public.generic_cityobject"
 	 dst-table="public.surface_geometry"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="83.1458" y="4.14307"/>
+	</label>
+</relationship>
 
 <relationship name="rel_generic_cityobject_implicit_geometry" type="relfk"
 	 src-table="public.generic_cityobject"
@@ -6413,7 +6486,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_building_surface_geometry" type="relfk"
 	 src-table="public.building"
 	 dst-table="public.surface_geometry"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-4.68408" y="-54.7336"/>
+	</label>
+</relationship>
 
 <relationship name="rel_building_furniture_cityobject" type="relfk"
 	 src-table="public.building_furniture"
@@ -6423,7 +6500,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_building_furniture_room" type="relfk"
 	 src-table="public.building_furniture"
 	 dst-table="public.room"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="99.376" y="-18.4985"/>
+	</label>
+</relationship>
 
 <relationship name="rel_building_furniture_surface_geometry" type="relfk"
 	 src-table="public.building_furniture"
@@ -6468,7 +6549,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_opening_objectclass" type="relfk"
 	 src-table="public.opening"
 	 dst-table="public.objectclass"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="79.8308" y="-45.8337"/>
+	</label>
+</relationship>
 
 <relationship name="rel_opening_address" type="relfk"
 	 src-table="public.opening"
@@ -6488,7 +6573,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_opening_to_them_surface_opening" type="relfk"
 	 src-table="public.opening_to_them_surface"
 	 dst-table="public.opening"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="96.3557" y="0.576172"/>
+	</label>
+</relationship>
 
 <relationship name="rel_opening_to_them_surface_thematic_surface" type="relfk"
 	 src-table="public.opening_to_them_surface"
@@ -6503,7 +6592,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_room_building" type="relfk"
 	 src-table="public.room"
 	 dst-table="public.building"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-57.1091" y="-44.0835"/>
+	</label>
+</relationship>
 
 <relationship name="rel_room_surface_geometry" type="relfk"
 	 src-table="public.room"
@@ -6523,7 +6616,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_thematic_surface_building" type="relfk"
 	 src-table="public.thematic_surface"
 	 dst-table="public.building"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-123.379" y="-3.35352"/>
+	</label>
+</relationship>
 
 <relationship name="rel_thematic_surface_room" type="relfk"
 	 src-table="public.thematic_surface"
@@ -6538,7 +6635,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_thematic_surface_surface_geometry" type="relfk"
 	 src-table="public.thematic_surface"
 	 dst-table="public.surface_geometry"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-93.2993" y="1.73145"/>
+	</label>
+</relationship>
 
 <relationship name="rel_textureparam_surface_geometry" type="relfk"
 	 src-table="public.textureparam"
@@ -6548,7 +6649,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_textureparam_surface_data" type="relfk"
 	 src-table="public.textureparam"
 	 dst-table="public.surface_data"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="100.556" y="40.37"/>
+	</label>
+</relationship>
 
 <relationship name="rel_appear_to_surface_data_surface_data" type="relfk"
 	 src-table="public.appear_to_surface_data"
@@ -6583,12 +6688,20 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_relief_feat_to_rel_comp_relief_component" type="relfk"
 	 src-table="public.relief_feat_to_rel_comp"
 	 dst-table="public.relief_component"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-38.0342" y="-48.3337"/>
+	</label>
+</relationship>
 
 <relationship name="rel_relief_feat_to_rel_comp_relief_feature" type="relfk"
 	 src-table="public.relief_feat_to_rel_comp"
 	 dst-table="public.relief_feature"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-101.699" y="7.86646"/>
+	</label>
+</relationship>
 
 <relationship name="rel_relief_feature_cityobject" type="relfk"
 	 src-table="public.relief_feature"
@@ -6628,7 +6741,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_traffic_area_transportation_complex" type="relfk"
 	 src-table="public.traffic_area"
 	 dst-table="public.transportation_complex"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="143.946" y="-20.3337"/>
+	</label>
+</relationship>
 
 <relationship name="rel_traffic_area_surface_geometry" type="relfk"
 	 src-table="public.traffic_area"
@@ -6668,7 +6785,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_solitary_vegetat_object_implicit_geometry" type="relfk"
 	 src-table="public.solitary_vegetat_object"
 	 dst-table="public.implicit_geometry"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="16.4177" y="-66.4836"/>
+	</label>
+</relationship>
 
 <relationship name="rel_waterbody_cityobject" type="relfk"
 	 src-table="public.waterbody"
@@ -6683,7 +6804,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_waterbod_to_waterbnd_srf_waterboundary_surface" type="relfk"
 	 src-table="public.waterbod_to_waterbnd_srf"
 	 dst-table="public.waterboundary_surface"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-105.471" y="22.7164"/>
+	</label>
+</relationship>
 
 <relationship name="rel_waterbod_to_waterbnd_srf_waterbody" type="relfk"
 	 src-table="public.waterbod_to_waterbnd_srf"
@@ -6713,7 +6838,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_raster_relief_raster_relief_georaster" type="relfk"
 	 src-table="public.raster_relief"
 	 dst-table="public.raster_relief_georaster"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="src-label">
+		<position x="-9.72748e-05" y="-3.35205"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="94.1006" y="17.7515"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_cityobject" type="relfk"
 	 src-table="public.tunnel"
@@ -6749,17 +6881,29 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_tunnel_hollow_space_cityobject" type="relfk"
 	 src-table="public.tunnel_hollow_space"
 	 dst-table="public.cityobject"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="134.668" y="-3.26855"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_hollow_space_tunnel" type="relfk"
 	 src-table="public.tunnel_hollow_space"
 	 dst-table="public.tunnel"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-54.4973" y="1.16626"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_hollow_space_surface_geometry" type="relfk"
 	 src-table="public.tunnel_hollow_space"
 	 dst-table="public.surface_geometry"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="17.5527" y="-46.7485"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_thematic_surface_cityobject" type="relfk"
 	 src-table="public.tunnel_thematic_surface"
@@ -6784,7 +6928,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_tunnel_thematic_surface_tunnel_installation" type="relfk"
 	 src-table="public.tunnel_thematic_surface"
 	 dst-table="public.tunnel_installation"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="139.991" y="8.92627"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_thematic_surface_surface_geometry" type="relfk"
 	 src-table="public.tunnel_thematic_surface"
@@ -6799,12 +6947,20 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_tunnel_opening_objectclass" type="relfk"
 	 src-table="public.tunnel_opening"
 	 dst-table="public.objectclass"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-77.6692" y="-57.8337"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_opening_surface_geometry" type="relfk"
 	 src-table="public.tunnel_opening"
 	 dst-table="public.surface_geometry"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-25.8743" y="-49.0137"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_opening_implicit_geometry" type="relfk"
 	 src-table="public.tunnel_opening"
@@ -6824,7 +6980,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_tunnel_installation_tunnel_hollow_space" type="relfk"
 	 src-table="public.tunnel_installation"
 	 dst-table="public.tunnel_hollow_space"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-1.24176" y="55.6113"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_installation_surface_geometry" type="relfk"
 	 src-table="public.tunnel_installation"
@@ -6854,7 +7014,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_tunnel_furniture_implicit_geometry" type="relfk"
 	 src-table="public.tunnel_furniture"
 	 dst-table="public.implicit_geometry"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="18.9272" y="1.54126"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_bridge" type="relfk"
 	 src-table="public.bridge"
@@ -6865,6 +7029,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<position x="5370.08" y="3644.37"/>
 	<position x="5210.41" y="3644.37"/>
 	</line>
+	<label ref-type="name-label">
+		<position x="60.3955" y="254.43"/>
+	</label>
 </relationship>
 
 <relationship name="rel_bridge_surface_geometry" type="relfk"
@@ -6890,7 +7057,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_bridge_furniture_implicit_geometry" type="relfk"
 	 src-table="public.bridge_furniture"
 	 dst-table="public.implicit_geometry"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-66.5942" y="1.08618"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_installation_cityobject" type="relfk"
 	 src-table="public.bridge_installation"
@@ -6925,7 +7096,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_bridge_opening_objectclass" type="relfk"
 	 src-table="public.bridge_opening"
 	 dst-table="public.objectclass"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="106.166" y="8.3313"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_opening_address" type="relfk"
 	 src-table="public.bridge_opening"
@@ -6935,7 +7110,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_bridge_opening_surface_geometry" type="relfk"
 	 src-table="public.bridge_opening"
 	 dst-table="public.surface_geometry"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-11.0396" y="-61.8486"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_opening_implicit_geometry" type="relfk"
 	 src-table="public.bridge_opening"
@@ -6945,7 +7124,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_bridge_open_to_them_srf_bridge_opening" type="relfk"
 	 src-table="public.bridge_open_to_them_srf"
 	 dst-table="public.bridge_opening"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="128.371" y="14.1465"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_open_to_them_srf_bridge_thematic_surface" type="relfk"
 	 src-table="public.bridge_open_to_them_srf"
@@ -6955,7 +7138,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_bridge_room_cityobject" type="relfk"
 	 src-table="public.bridge_room"
 	 dst-table="public.cityobject"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_room_bridge" type="relfk"
 	 src-table="public.bridge_room"
@@ -6995,7 +7182,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_bridge_thematic_surface_bridge_constr_element" type="relfk"
 	 src-table="public.bridge_thematic_surface"
 	 dst-table="public.bridge_constr_element"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="51.3306" y="7.86133"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_thematic_surface_surface_geometry" type="relfk"
 	 src-table="public.bridge_thematic_surface"
@@ -7010,7 +7201,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_bridge_constr_element_bridge" type="relfk"
 	 src-table="public.bridge_constr_element"
 	 dst-table="public.bridge"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-80.6392" y="-124.774"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_constr_element_surface_geometry" type="relfk"
 	 src-table="public.bridge_constr_element"
@@ -7071,7 +7266,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_surface_data_tex_image" type="relfk"
 	 src-table="public.surface_data"
 	 dst-table="public.tex_image"
-	 src-required="true" dst-required="true"/>
+	 src-required="true" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-6.60938" y="5.03497"/>
+	</label>
+</relationship>
 
 <relationship name="rel_surface_data_objectclass" type="relfk"
 	 src-table="public.surface_data"
@@ -7102,6 +7301,26 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_external_reference_cityobject" type="relfk"
 	 src-table="public.external_reference"
 	 dst-table="public.cityobject"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_traffic_area_objectclass" type="relfk"
+	 src-table="public.traffic_area"
+	 dst-table="public.objectclass"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_bridge_installation_objectclass" type="relfk"
+	 src-table="public.bridge_installation"
+	 dst-table="public.objectclass"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_building_installation_objectclass" type="relfk"
+	 src-table="public.building_installation"
+	 dst-table="public.objectclass"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_tunnel_installation_objectclass" type="relfk"
+	 src-table="public.tunnel_installation"
+	 dst-table="public.objectclass"
 	 src-required="true" dst-required="true"/>
 
 </dbmodel>

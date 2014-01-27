@@ -41,6 +41,16 @@
 
 SET client_min_messages TO WARNING;
 
+--// create TABLES, SEQUENCES, CONSTRAINTS, INDEXES
+\i SCHEMA/SCHEMA.sql
+
+--// fill tables OBJECTCLASS and DATABASE_SRS
+\i UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
+
+--// create GEODB_PKG (additional schema with PL_pgSQL-Functions)
+\i CREATE_GEODB_PKG.sql
+
+\echo
 \prompt 'Please enter a valid SRID (e.g., 3068 for DHDN/Soldner Berlin): ' SRS_NO
 \prompt 'Please enter the corresponding SRSName to be used in GML exports (e.g., urn:ogc:def:crs,crs:EPSG::3068,crs:EPSG::5783): ' GMLSRSNAME
 
@@ -52,15 +62,12 @@ SET client_min_messages TO WARNING;
 \i UTIL/CREATE_DB/CHECK_SRID.sql
 SELECT check_srid(:SRS_NO);
 
---// create TABLES, SEQUENCES, CONSTRAINTS, INDEXES
-\i SCHEMA/SCHEMA.sql
-
---// fill tables OBJECTCLASS and DATABASE_SRS
-\i UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
+\echo 'Setting spatial reference system of 3DCityDB instance ...'
 INSERT INTO DATABASE_SRS(SRID,GML_SRS_NAME) VALUES (:SRS_NO,:'GMLSRSNAME');
-
---// create GEODB_PKG (additional schema with PL_pgSQL-Functions)
-\i CREATE_GEODB_PKG.sql
-
+SELECT geodb_pkg.change_schema_srid(:SRS_NO,:'GMLSRSNAME');
+SELECT geodb_pkg.change_column_srid('surface_geometry','implicit_geometry',3,0);
+SELECT geodb_pkg.change_column_srid('implicit_geometry','relative_other_geom',3,0);
+SELECT geodb_pkg.change_column_srid('textureparam','texture_coordinates',2,0);
+\echo 'Done'
 \echo
 \echo '3DCityDB creation complete!'
