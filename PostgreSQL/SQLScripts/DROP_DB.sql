@@ -114,8 +114,8 @@ DROP SEQUENCE tex_image_seq;
 --//DROP SCHEMA
 DROP SCHEMA GEODB_PKG CASCADE;
 
---//DROP FUNCTION
-DROP FUNCTION check_srid(srid INTEGER);
+--//DROP POSTGIS EXTENSION
+DROP EXTENSION postgis CASCADE;
 
 \echo
 \echo '3DCityDB schema successfully removed!'

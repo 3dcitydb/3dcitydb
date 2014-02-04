@@ -37,6 +37,7 @@
 * FUNCTIONS:
 *   change_column_srid(t_name VARCHAR, c_name VARCHAR, dim INTEGER, schema_srid INTEGER, s_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   change_schema_srid(schema_srid INTEGER, schema_gml_srs_name VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
+*   check_srid(srsno INTEGER DEFAULT 0) RETURNS VARCHAR
 *   db_metadata() RETURNS TABLE(
 *     srid INTEGER, 
 *     gml_srs_name VARCHAR(1000), 
@@ -225,6 +226,40 @@ DECLARE
 BEGIN
   EXECUTE 'SELECT srid from DATABASE_SRS' INTO schema_srid;
   RETURN geodb_pkg.is_coord_ref_sys_3d(schema_srid);
+END;
+$$
+LANGUAGE plpgsql;
+
+
+/*******************************************************************
+* check_srid
+*
+* @param srsno     the chosen SRID to be further used in the database
+*
+* @RETURN VARCHAR  status of srid check
+*******************************************************************/
+CREATE OR REPLACE FUNCTION geodb_pkg.check_srid(srsno INTEGER DEFAULT 0) RETURNS VARCHAR AS
+$$
+DECLARE
+  schema_srid INTEGER;
+BEGIN
+  EXECUTE 'SELECT srid FROM spatial_ref_sys WHERE srid = $1' INTO schema_srid USING srsno;
+
+  IF schema_srid <> 0 THEN
+    BEGIN
+      PERFORM ST_Transform(ST_GeomFromEWKT('SRID='||schema_srid||';POINT(1 1 1)'),4326);
+
+	  RETURN 'SRID ok';
+
+      EXCEPTION
+        WHEN others THEN
+          RAISE EXCEPTION 'The chosen SRID % was not appropriate for PostGIS functions.', srsno;
+          RETURN 'SRID not ok';
+    END;
+  ELSE
+    RAISE EXCEPTION 'Table spatial_ref_sys does not contain the SRID %. Insert commands for missing SRIDs can be found at spatialreference.org', srsno;
+    RETURN 'SRID not ok';
+  END IF;
 END;
 $$
 LANGUAGE plpgsql;
