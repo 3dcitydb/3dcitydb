@@ -2,13 +2,7 @@
 -- pgModeler  version: 0.7.0-alpha
 -- PostgreSQL version: 9.3
 -- Project Site: pgmodeler.com.br
--- Model Author: Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---               Zhihang Yao <zhihang.yao@tum.de>
---               Claus Nagel <cnagel@virtualcitysystems.de>
---               Felix Kunde <fkunde@virtualcitysystems.de>
---               Philipp Willkomm <pwillkomm@moss.de>
---               Gerhard König <gerhard.koenig@tu-berlin.de>
---               Alexandra Lorenz <di.alex.lorenz@googlemail.com>
+-- Model Author: ---
 
 SET check_function_bodies = false;
 -- ddl-end --
@@ -19,7 +13,6 @@ SET check_function_bodies = false;
 -- -- object: "3DCityDB_v3.0" | type: DATABASE --
 -- -- DROP DATABASE "3DCityDB_v3.0";
 -- CREATE DATABASE "3DCityDB_v3.0"
--- 	TEMPLATE = 3DCityDB_Template
 -- 	ENCODING = 'UTF8'
 -- 	TABLESPACE = pg_default
 -- 	OWNER = postgres
@@ -4439,8 +4432,8 @@ CREATE INDEX ext_ref_cityobject_fkx ON public.external_reference
 -- DROP TABLE public.tex_image;
 CREATE TABLE public.tex_image(
 	id integer NOT NULL DEFAULT nextval('tex_image_seq'::regclass),
-	tey_image_uri character varying(4000),
-	tey_image bytea,
+	tex_image_uri character varying(4000),
+	tex_image bytea,
 	tex_mime_type character varying(256),
 	tex_mime_type_codespace character varying(4000),
 	CONSTRAINT tex_image_pk PRIMARY KEY (id)
