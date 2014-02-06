@@ -113,10 +113,9 @@ BEGIN
       EXECUTE IMMEDIATE 'grant execute on ' || UPPER('&SCHEMA_OWNER') || '.GEODB_IDX to ' || v_role;
       EXECUTE IMMEDIATE 'grant execute on ' || UPPER('&SCHEMA_OWNER') || '.GEODB_STAT to ' || v_role;
       EXECUTE IMMEDIATE 'grant execute on ' || UPPER('&SCHEMA_OWNER') || '.GEODB_UTIL to ' || v_role;
+--      EXECUTE IMMEDIATE 'grant execute on ' || UPPER('&SCHEMA_OWNER') || '.GEODB_SRS to ' || v_role;	  
 --      EXECUTE IMMEDIATE 'grant execute on ' || UPPER('&SCHEMA_OWNER') || '.GEODB_DELETE_BY_LINEAGE to ' || v_role;
---      EXECUTE IMMEDIATE 'grant execute on ' || UPPER('&SCHEMA_OWNER') || '.GEODB_MATCH to ' || v_role;
 --      EXECUTE IMMEDIATE 'grant execute on ' || UPPER('&SCHEMA_OWNER') || '.GEODB_DELETE to ' || v_role;
---      EXECUTE IMMEDIATE 'grant execute on ' || UPPER('&SCHEMA_OWNER') || '.GEODB_MERGE to ' || v_role;
       EXECUTE IMMEDIATE 'grant select on ' || UPPER('&SCHEMA_OWNER') || '.GROUP_TO_CITYOBJECT to ' || v_role;
       EXECUTE IMMEDIATE 'grant select on ' || UPPER('&SCHEMA_OWNER') || '.IMPLICIT_GEOMETRY to ' || v_role;
       EXECUTE IMMEDIATE 'grant select on ' || UPPER('&SCHEMA_OWNER') || '.IMPORT_PROCEDURES to ' || v_role;
@@ -158,8 +157,6 @@ BEGIN
   EXECUTE IMMEDIATE 'grant RESOURCE to ' || v_readOnlyName;
 
 -- synonyms for tables
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.MATCH_RESULT_RELEVANT for ' || v_schemaOwnerName || '.MATCH_RESULT_RELEVANT';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.MATCH_TMP_BUILDING for ' || v_schemaOwnerName || '.MATCH_TMP_BUILDING';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.PLANNING_ALTERNATIVE for ' || v_schemaOwnerName || '.PLANNING_ALTERNATIVE';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.PLANNING for ' || v_schemaOwnerName || '.PLANNING';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.CITY_MODEL_ASPECT_COMPONENT for ' || v_schemaOwnerName || '.CITY_MODEL_ASPECT_COMPONENT';
@@ -211,19 +208,12 @@ BEGIN
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.OPENING for ' || v_schemaOwnerName || '.OPENING';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.BUILDING_INSTALLATION for ' || v_schemaOwnerName || '.BUILDING_INSTALLATION';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.BUILDING_FURNITURE for ' || v_schemaOwnerName || '.BUILDING_FURNITURE';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.MATCH_RESULT for ' || v_schemaOwnerName || '.MATCH_RESULT';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.CONTAINER_IDS for ' || v_schemaOwnerName || '.CONTAINER_IDS';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.COLLECT_GEOM for ' || v_schemaOwnerName || '.COLLECT_GEOM';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.MATCH_ALLOCATE_GEOM for ' || v_schemaOwnerName || '.MATCH_ALLOCATE_GEOM';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.MATCH_CAND_AGGR_GEOM for ' || v_schemaOwnerName || '.MATCH_CAND_AGGR_GEOM';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.MATCH_MASTER_AGGR_GEOM for ' || v_schemaOwnerName || '.MATCH_MASTER_AGGR_GEOM';
 
 -- synonyms for PL/SQL packages
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GEODB_DELETE for ' || v_schemaOwnerName || '.GEODB_DELETE';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GEODB_DELETE_BY_LINEAGE for ' || v_schemaOwnerName || '.GEODB_DELETE_BY_LINEAGE';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GEODB_IDX for ' || v_schemaOwnerName || '.GEODB_IDX';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GEODB_MATCH for ' || v_schemaOwnerName || '.GEODB_MATCH';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GEODB_MERGE for ' || v_schemaOwnerName || '.GEODB_MERGE';
+  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GEODB_SRS for ' || v_schemaOwnerName || '.GEODB_SRS';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GEODB_STAT for ' || v_schemaOwnerName || '.GEODB_STAT';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GEODB_UTIL for ' || v_schemaOwnerName || '.GEODB_UTIL';
 
@@ -232,6 +222,7 @@ BEGIN
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.STRARRAY for ' || v_schemaOwnerName || '.STRARRAY';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.DB_INFO_TABLE for ' || v_schemaOwnerName || '.DB_INFO_TABLE';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.DB_INFO_OBJ for ' || v_schemaOwnerName || '.DB_INFO_OBJ';
+  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.SEQ_TABLE for ' || v_schemaOwnerName || '.SEQ_TABLE';
 
   COMMIT;
   dbms_output.put_line(' ');
