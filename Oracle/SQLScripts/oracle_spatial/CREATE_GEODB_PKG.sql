@@ -24,11 +24,12 @@
 -- Version | Date       | Description                               | Author
 -- 1.0.0     2008-09-10   release version                             CNag
 --
-SELECT 'Creating packages ''geodb_util'', ''geodb_idx'', ''geodb_stat'', ''geodb_delete_by_lineage'', ''geodb_delete'', and corresponding types' as message from DUAL;
+SELECT 'Creating packages ''geodb_util'', ''geodb_idx'', ''geodb_srs'', ''geodb_stat'', ''geodb_delete_by_lineage'', ''geodb_delete'', and corresponding types' as message from DUAL;
 @@PL_SQL/GEODB_PKG/UTIL/UTIL.sql;
 @@PL_SQL/GEODB_PKG/INDEX/IDX.sql;
+@@PL_SQL/GEODB_PKG/SRS/SRS.sql;
 @@PL_SQL/GEODB_PKG/STATISTICS/STAT.sql;
 @@PL_SQL/GEODB_PKG/DELETE/DELETE.sql;
 @@PL_SQL/GEODB_PKG/DELETE/DELETE_BY_LINEAGE;
-SELECT 'Packages ''geodb_util'', ''geodb_idx'', ''geodb_stat'', ''geodb_delete_by_lineage'', and ''geodb_delete'' created' as message from DUAL;
+SELECT 'Packages ''geodb_util'', ''geodb_idx'', ''geodb_srs'', ''geodb_stat'', ''geodb_delete_by_lineage'', and ''geodb_delete'' created' as message from DUAL;
 

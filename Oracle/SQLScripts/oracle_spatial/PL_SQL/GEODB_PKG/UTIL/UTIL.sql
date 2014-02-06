@@ -25,11 +25,14 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 2.0.0     2014-01-09   new version for 3DCityDB V3                 FKun
+-- 2.0.0     2014-02-06   new version for 3DCityDB V3                 FKun
 -- 1.2.0     2013-08-29   added change_db_srid procedure              FKun
 -- 1.1.0     2011-07-28   update to 2.0.6                             CNag
 -- 1.0.0     2008-09-10   release version                             CNag
 --
+
+SET term OFF;
+SET serveroutput OFF;
 
 /*****************************************************************
 * TYPE STRARRAY
@@ -37,15 +40,14 @@
 * global type for arrays of strings, e.g. used for log messages
 * and reports
 ******************************************************************/
-SET term OFF;
-SET serveroutput OFF;
-
 CREATE OR REPLACE TYPE STRARRAY IS TABLE OF VARCHAR2(32767);
 /
 
-CREATE OR REPLACE TYPE SEQ_TABLE IS TABLE OF NUMBER;
-/
-
+/*****************************************************************
+* TYPE DB_INFO_OBJ and DB_INFO_TABLE
+* 
+* global type for database metadata
+******************************************************************/
 DROP TYPE DB_INFO_TABLE;
 CREATE OR REPLACE TYPE DB_INFO_OBJ AS OBJECT(
   SRID NUMBER,
@@ -60,6 +62,15 @@ CREATE OR REPLACE TYPE DB_INFO_TABLE IS TABLE OF DB_INFO_OBJ;
 /
 
 /*****************************************************************
+* TYPE SEQ_TABLE
+*
+* global type for arrays of numbers to fetch sequence values
+******************************************************************/
+CREATE OR REPLACE TYPE SEQ_TABLE IS TABLE OF NUMBER;
+/
+
+
+/*****************************************************************
 * PACKAGE geodb_util
 * 
 * utility methods for applications and subpackages
@@ -72,14 +83,8 @@ AS
   FUNCTION db_metadata RETURN DB_INFO_TABLE;
   FUNCTION split(list VARCHAR2, delim VARCHAR2 := ',') RETURN STRARRAY;
   FUNCTION min(a NUMBER, b NUMBER) RETURN NUMBER;
-  FUNCTION transform_or_null(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
-  FUNCTION is_coord_ref_sys_3d(schema_srid NUMBER) RETURN NUMBER;
-  FUNCTION is_db_coord_ref_sys_3d RETURN NUMBER;
   PROCEDURE update_schema_constraints(on_delete_param VARCHAR2 := 'CASCADE');
   PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param VARCHAR2, deferrable_param VARCHAR2);
-  PROCEDURE change_schema_srid(schema_srid NUMBER, schema_gml_srs_name VARCHAR2);
-  FUNCTION get_dim(t_name VARCHAR, c_name VARCHAR) RETURN NUMBER;
-  PROCEDURE change_column_srid(t_name VARCHAR2, c_name VARCHAR2, dim NUMBER, schema_srid NUMBER);
   FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER) RETURN SEQ_TABLE;
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
 END geodb_util;
@@ -218,54 +223,6 @@ AS
     END IF;
   END;
 
-  /*****************************************************************
-  * transform_or_null
-  *
-  * @param geom the geometry whose representation is to be transformed USING  another coordinate system 
-  * @param srid the SRID of the coordinate system to be used for the transformation.
-  * @RETURN MDSYS.SDO_GEOMETRY the transformed geometry representation                
-  ******************************************************************/
-  FUNCTION transform_or_null(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY
-  IS
-  BEGIN
-    IF geom IS NOT NULL THEN
-      RETURN SDO_CS.TRANSFORM(geom, srid);
-    ELSE
-      RETURN NULL;
-    END IF;
-  END;  
-
-  /*****************************************************************
-  * is_coord_ref_sys_3d
-  *
-  * @param schema_srid the SRID of the coordinate system to be checked
-  * @RETURN NUMBER the boolean result encoded as number: 0 = false, 1 = true                
-  ******************************************************************/
-  FUNCTION is_coord_ref_sys_3d(schema_srid NUMBER) RETURN NUMBER
-  IS
-    is_3d NUMBER := 0;
-  BEGIN
-    EXECUTE IMMEDIATE 'SELECT COUNT(*) from SDO_CRS_COMPOUND where SRID=:1' INTO is_3d USING schema_srid;
-    IF is_3d = 0 THEN
-      EXECUTE IMMEDIATE 'SELECT COUNT(*) from SDO_CRS_GEOGRAPHIC3D where SRID=:1' INTO is_3d USING schema_srid;
-    END IF;
-
-    RETURN is_3d;
-  END;
-
-  /*****************************************************************
-  * is_db_coord_ref_sys_3d
-  *
-  * @RETURN NUMBER the boolean result encoded as number: 0 = false, 1 = true                
-  ******************************************************************/
-  FUNCTION is_db_coord_ref_sys_3d RETURN NUMBER
-  IS
-    schema_srid NUMBER;
-  BEGIN
-    EXECUTE IMMEDIATE 'SELECT srid from DATABASE_SRS' INTO schema_srid;
-    RETURN is_coord_ref_sys_3d(schema_srid);
-  END;
-
   /******************************************************************
   * update_table_constraint
   *
@@ -338,98 +295,6 @@ AS
     END LOOP;
   END;
 
-  /*****************************************************************
-  * change_schema_srid
-  *
-  * @param schema_srid the SRID of the coordinate system to be further used in the database
-  * @param schema_gml_srs_name the GML_SRS_NAME of the coordinate system to be further used in the database
-  ******************************************************************/
-  PROCEDURE change_schema_srid(schema_srid NUMBER, schema_gml_srs_name VARCHAR2)
-  IS
-  BEGIN
-    -- update entry in DATABASE_SRS table first
-    UPDATE DATABASE_SRS SET SRID = schema_srid, GML_SRS_NAME = schema_gml_srs_name;
-    COMMIT;
-
-    -- change srid of each spatially enabled table
-    FOR rec IN (SELECT table_name AS t, column_name AS c, geodb_util.get_dim(table_name, column_name) AS dim
-                 FROM user_sdo_geom_metadata) LOOP
-      change_column_srid(rec.t, rec.c, rec.dim, schema_srid);
-    END LOOP;
-  END;
-
-  /*****************************************************************
-  * get_dim
-  *
-  * @param t_name name of the table
-  * @param c_name name of the column
-  * @RETURN NUMBER number of dimension
-  ******************************************************************/
-  FUNCTION get_dim(t_name VARCHAR, c_name VARCHAR) RETURN NUMBER
-  IS
-    is_3d NUMBER(1,0);
-  BEGIN
-    EXECUTE IMMEDIATE 'SELECT 3 FROM user_sdo_geom_metadata m, TABLE(m.diminfo) dim
-                         WHERE table_name = :1 AND column_name = :2 AND dim.sdo_dimname = ''Z'''
-                         INTO is_3d USING t_name, c_name;
-
-    RETURN is_3d;
-
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN 2;
-  END;
-  
-  /*****************************************************************
-  * change_column_srid
-  *
-  * @param t_name name of the table
-  * @param c_name name of the column
-  * @param dim dimension of spatial index
-  * @param schema_srid the SRID of the coordinate system to be further used in the database
-  ******************************************************************/
-  PROCEDURE change_column_srid( 
-    t_name VARCHAR2, 
-    c_name VARCHAR2,
-    dim NUMBER,
-    schema_srid NUMBER)
-  IS
-    is_versioned BOOLEAN;
-    is_valid BOOLEAN;
-    idx_name VARCHAR2(30);
-    idx INDEX_OBJ;
-    sql_err_code VARCHAR2(20);
-  BEGIN
-    is_versioned := versioning_table(t_name) = 'ON';
-
-    is_valid := geodb_idx.index_status(t_name, c_name) = 'VALID';
-
-    IF NOT is_valid THEN
-      -- only update metadata as the index was switched off before transaction
-      EXECUTE IMMEDIATE 'UPDATE USER_SDO_GEOM_METADATA SET srid = :1 WHERE table_name = :2 AND column_name = :3'
-                           USING schema_srid, t_name, c_name;
-      COMMIT;
-    ELSE
-      -- get name of spatial index
-      EXECUTE IMMEDIATE 'SELECT index_name FROM user_ind_columns 
-                           WHERE table_name = upper(:1) AND column_name = upper(:2)'
-                           INTO idx_name USING t_name, c_name;
-
-      -- create INDEX_OBJ
-      IF dim = 3 THEN
-        idx := INDEX_OBJ.construct_spatial_3d(idx_name, t_name, c_name);
-      ELSE
-        idx := INDEX_OBJ.construct_spatial_2d(idx_name, t_name, c_name);
-      END IF;
-
-      -- drop spatial index
-      sql_err_code := geodb_idx.drop_index(idx, is_versioned);
-
-      -- create spatial index (incl. new spatial metadata)
-      sql_err_code := geodb_idx.create_index(idx, is_versioned);
-    END IF;
-  END;
-  
   /*****************************************************************
   * get_seq_values
   *

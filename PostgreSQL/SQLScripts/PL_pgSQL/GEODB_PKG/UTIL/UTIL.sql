@@ -24,7 +24,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                                | Author
--- 2.0.0     2014-01-09   several improvements for 3DCityDB V3         FKun
+-- 2.0.0     2014-01-09   revision for 3DCityDB V3                     FKun
 -- 1.2.0     2013-08-29   minor changes to change_db_srid function     FKun
 -- 1.1.0     2013-02-22   PostGIS version                              FKun
 --                                                                     CNag
@@ -35,9 +35,6 @@
 * CONTENT
 *
 * FUNCTIONS:
-*   change_column_srid(t_name VARCHAR, c_name VARCHAR, dim INTEGER, schema_srid INTEGER, s_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   change_schema_srid(schema_srid INTEGER, schema_gml_srs_name VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   check_srid(srsno INTEGER DEFAULT 0) RETURNS VARCHAR
 *   db_metadata() RETURNS TABLE(
 *     srid INTEGER, 
 *     gml_srs_name VARCHAR(1000), 
@@ -46,12 +43,9 @@
 *     versioning VARCHAR(100)
 *     )
 *   get_seq_values(seq_name VARCHAR, seq_count INTEGER) RETURNS SETOF INTEGER
-*   is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER
-*   is_db_coord_ref_sys_3d() RETURNS INTEGER
 *   min(a NUMERIC, b NUMERIC) RETURNS NUMERIC
 *   objectclass_id_to_table_name(class_id INTEGER) RETURNS VARCHAR
 *   db_info(OUT schema_srid INTEGER, OUT schema_gml_srs_name VARCHAR, OUT versioning VARCHAR) RETURNS RECORD AS 
-*   transform_or_null(geom GEOMETRY, srid INTEGER) RETURNS GEOMETRY
 *   update_schema_constraints(on_delete_param VARCHAR DEFAULT 'CASCADE', schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   update_table_constraint(fkey_name VARCHAR, table_name VARCHAR, column_name VARCHAR, ref_table VARCHAR, ref_column VARCHAR, 
 *     delete_param VARCHAR, deferrable_param VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
@@ -164,188 +158,6 @@ BEGIN
   END IF;
 END;
 $$
-LANGUAGE plpgsql;
-
-
-/******************************************************************
-* transform_or_null
-*
-* @param geom the geometry whose representation is to be transformed using another coordinate system 
-* @param srid the SRID of the coordinate system to be used for the transformation.
-* @RETURN GEOMETRY the transformed geometry representation                
-******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.transform_or_null(
-  geom GEOMETRY, 
-  srid INTEGER
-  ) RETURNS GEOMETRY AS 
-$$
-BEGIN
-  IF geom IS NOT NULL THEN
-    RETURN ST_Transform(geom, srid);
-  ELSE
-    RETURN NULL;
-  END IF;
-END;
-$$
-LANGUAGE plpgsql;
-
-
-/******************************************************************
-* is_coord_ref_sys_3d
-*
-* no 3D-Coord.-Reference-System defined in the spatial_ref_sys-table 
-* of PostGIS 2.0 by default. Refer to spatialreference.org for 
-* INSERT-statements of 3D-SRIDs. They can be identified by the AXIS 
-* UP in the srtext
-*
-* @param schema_srid the SRID of the coordinate system to be checked
-* @RETURN NUMERIC the boolean result encoded as NUMERIC: 0 = false, 1 = true                
-******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER AS 
-$$
-DECLARE
-  is_3d INTEGER := 0;
-BEGIN
-  EXECUTE 'SELECT 1 FROM spatial_ref_sys WHERE auth_srid=$1 AND srtext LIKE ''%UP]%''' 
-             INTO is_3d USING schema_srid;
-
-  RETURN is_3d;
-END;
-$$
-LANGUAGE plpgsql;
-
-
-/******************************************************************
-* is_db_coord_ref_sys_3d
-*
-* @RETURN NUMERIC the boolean result encoded as NUMERIC: 0 = false, 1 = true                
-******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.is_db_coord_ref_sys_3d() RETURNS INTEGER AS $$
-DECLARE
-  schema_srid INTEGER;
-BEGIN
-  EXECUTE 'SELECT srid from DATABASE_SRS' INTO schema_srid;
-  RETURN geodb_pkg.is_coord_ref_sys_3d(schema_srid);
-END;
-$$
-LANGUAGE plpgsql;
-
-
-/*******************************************************************
-* check_srid
-*
-* @param srsno     the chosen SRID to be further used in the database
-*
-* @RETURN VARCHAR  status of srid check
-*******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.check_srid(srsno INTEGER DEFAULT 0) RETURNS VARCHAR AS
-$$
-DECLARE
-  schema_srid INTEGER;
-BEGIN
-  EXECUTE 'SELECT srid FROM spatial_ref_sys WHERE srid = $1' INTO schema_srid USING srsno;
-
-  IF schema_srid <> 0 THEN
-    BEGIN
-      PERFORM ST_Transform(ST_GeomFromEWKT('SRID='||schema_srid||';POINT(1 1 1)'),4326);
-
-	  RETURN 'SRID ok';
-
-      EXCEPTION
-        WHEN others THEN
-          RAISE EXCEPTION 'The chosen SRID % was not appropriate for PostGIS functions.', srsno;
-          RETURN 'SRID not ok';
-    END;
-  ELSE
-    RAISE EXCEPTION 'Table spatial_ref_sys does not contain the SRID %. Insert commands for missing SRIDs can be found at spatialreference.org', srsno;
-    RETURN 'SRID not ok';
-  END IF;
-END;
-$$
-LANGUAGE plpgsql;
-
-
-/*******************************************************************
-* change_schema_srid
-*
-* @param schema_srid       the SRID of the coordinate system to be 
-*                          further used in the database
-* @param db_gml_srs_name   the GML_SRS_NAME of the coordinate system 
-*                          to be further used in the database
-* @param schema name       name of schema
-*******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.change_schema_srid(
-  schema_srid INTEGER, 
-  schema_gml_srs_name VARCHAR,
-  schema_name VARCHAR DEFAULT 'public'
-  ) RETURNS SETOF VOID AS $$
-BEGIN
-  -- update entry in DATABASE_SRS table first
-  EXECUTE format('UPDATE %I.database_srs SET srid = %L, gml_srs_name = %L',
-                    schema_name, schema_srid, schema_gml_srs_name);
-
-  -- change srid of each spatially enabled table
-  EXECUTE 'SELECT geodb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, f_table_schema) 
-             FROM geometry_columns WHERE f_table_schema = $2' USING schema_srid, schema_name;
-END;
-$$ 
-LANGUAGE plpgsql;
-
-
-/*****************************************************************
-* change_column_srid
-*
-* @param t_name name of table
-* @param c_name name of spatial column
-* @param dim dimension of geometry
-* @param schema_srid the SRID of the coordinate system to be further used in the database
-* @param s_name name of schema
-******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.change_column_srid(
-  t_name VARCHAR, 
-  c_name VARCHAR,
-  dim INTEGER,
-  schema_srid INTEGER,
-  s_name VARCHAR DEFAULT 'public'
-  ) RETURNS SETOF VOID AS 
-$$
-DECLARE
-  idx_name VARCHAR (50);
-BEGIN
-  -- check if a spatial index is defined for the column
-  EXECUTE 'SELECT pgc_i.relname AS idx_name 
-             FROM pg_class pgc_t, pg_class pgc_i, pg_index pgi, 
-                  pg_am pgam, pg_attribute pga, pg_namespace pgns
-             WHERE pgc_t.oid = pgi.indrelid
-               AND pgc_i.oid = pgi.indexrelid
-               AND pgam.oid = pgc_i.relam
-               AND pga.attrelid = pgc_i.oid
-               AND pgns.oid = pgc_i.relnamespace
-               AND pgns.nspname = $1
-               AND pgc_t.relname = $2
-               AND pga.attname = $3
-               AND pgam.amname = ''gist'''
-               INTO idx_name USING s_name, t_name, c_name;
-
-  IF idx_name IS NOT NULL THEN 
-    -- drop spatial index if exists
-    EXECUTE format('DROP INDEX %I.%I', s_name, idx_name);
-
-    -- update geometry SRID
-    PERFORM UpdateGeometrySRID(s_name, t_name, c_name, schema_srid);
-
-    -- recreate spatial index again
-    IF dim < 3 THEN
-      EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I)', idx_name, s_name, t_name, c_name);
-    ELSE
-      EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_nd )', idx_name, s_name, t_name, c_name);
-    END IF;
-  ELSE
-    -- no spatial index defined for table, only update metadata and geometry SRID
-    PERFORM UpdateGeometrySRID(s_name, t_name, c_name, schema_srid);
-  END IF;
-END;
-$$ 
 LANGUAGE plpgsql;
 
 
