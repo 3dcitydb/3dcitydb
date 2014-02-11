@@ -70,7 +70,7 @@
 *   delete_room(r_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_solitary_veg_obj(svo_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_surface_data(sd_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_surface_geometry(sg_id INTEGER, clean_apps INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
+*   delete_surface_geometry(sg_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_thematic_surface(ts_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_tin_relief(tr INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_traffic_area(ta_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
@@ -295,8 +295,7 @@ LANGUAGE plpgsql;
 delete from SURFACE_GEOMETRY
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_surface_geometry(
-  sg_id INTEGER, 
-  clean_apps INTEGER DEFAULT 0,
+  sg_id INTEGER,
   schema_name VARCHAR DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
@@ -308,12 +307,8 @@ BEGIN
                   UNION ALL
                     SELECT sg.id, sg.parent_id, g.level + 1 AS level FROM %I.surface_geometry sg, geometry g WHERE sg.parent_id = g.id
                   )
-                  SELECT intern_delete_surface_geometry(id, %L) FROM geometry ORDER BY level DESC',
+                  SELECT geodb_pkg.intern_delete_surface_geometry(id, %L) FROM geometry ORDER BY level DESC',
                   schema_name, sg_id, schema_name, schema_name);
-
-  IF clean_apps <> 0 THEN
-    PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
-  END IF;
 
   EXCEPTION
     WHEN OTHERS THEN
