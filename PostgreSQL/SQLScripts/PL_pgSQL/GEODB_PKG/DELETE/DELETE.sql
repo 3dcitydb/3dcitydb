@@ -46,13 +46,13 @@
 *   delete_bridge(brd_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_bridge_constr_elem(brdce_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_bridge_furniture(brdf_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_bridge_inst(brdi_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
+*   delete_bridge_installation(brdi_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_bridge_opening(brdo_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_bridge_room(brdr_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID	
 *   delete_bridge_them_srf(brdts_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_building(b_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_building_furniture(bf_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_building_inst(bi_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
+*   delete_building_installation(bi_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_city_furniture(cf_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_citymodel(cm_id INTEGER, affect_rel_objs INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID 
 *   delete_cityobject(co_id INTEGER, affect_rel_objs INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
@@ -78,7 +78,7 @@
 *   delete_tunnel(tun_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_tunnel_furniture(tunf_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_tunnel_hollow_space(tunhs_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_tunnel_inst(tuni_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
+*   delete_tunnel_installation(tuni_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_tunnel_opening(tuno_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_tunnel_them_srf(tuntd_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_waterbnd_surface(wbs_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
@@ -124,7 +124,7 @@ BEGIN
     WHEN class_id = 25 OR 
          class_id = 26 THEN PERFORM geodb_pkg.delete_building(co_id, schema_name);
     WHEN class_id = 27 OR 
-         class_id = 28 THEN PERFORM geodb_pkg.delete_building_inst(co_id, schema_name);
+         class_id = 28 THEN PERFORM geodb_pkg.delete_building_installation(co_id, schema_name);
     WHEN class_id = 30 OR 
          class_id = 31 OR 
          class_id = 32 OR 
@@ -146,7 +146,7 @@ BEGIN
     WHEN class_id = 63 OR
          class_id = 62 THEN PERFORM geodb_pkg.delete_bridge(co_id, schema_name);
     WHEN class_id = 65 OR
-         class_id = 66 THEN PERFORM geodb_pkg.delete_bridge_inst(co_id, schema_name);
+         class_id = 66 THEN PERFORM geodb_pkg.delete_bridge_installation(co_id, schema_name);
     WHEN class_id = 68 OR 
          class_id = 69 OR 
          class_id = 70 OR 
@@ -164,7 +164,7 @@ BEGIN
     WHEN class_id = 84 OR
          class_id = 85 THEN PERFORM geodb_pkg.delete_tunnel(co_id, schema_name);
     WHEN class_id = 86 OR
-         class_id = 87 THEN PERFORM geodb_pkg.delete_tunnel_inst(co_id, schema_name);
+         class_id = 87 THEN PERFORM geodb_pkg.delete_tunnel_installation(co_id, schema_name);
     WHEN class_id = 88 OR 
          class_id = 89 OR 
          class_id = 90 OR 
@@ -1121,7 +1121,7 @@ BEGIN
                     schema_name, schema_name, b_id, b_id);
 
   -- delete referenced building installation(s)
-  EXECUTE format('SELECT geodb_pkg.delete_building_inst(id, %L) FROM %I.building_installation WHERE building_id = %L', 
+  EXECUTE format('SELECT geodb_pkg.delete_building_installation(id, %L) FROM %I.building_installation WHERE building_id = %L', 
                     schema_name, schema_name, b_id);
 
   -- delete referenced thematic surfaces
@@ -1199,7 +1199,7 @@ LANGUAGE plpgsql;
 /*
 delete from BUILDING_INSTALLATION
 */
-CREATE OR REPLACE FUNCTION geodb_pkg.delete_building_inst(
+CREATE OR REPLACE FUNCTION geodb_pkg.delete_building_installation(
   bi_id INTEGER, 
   schema_name VARCHAR DEFAULT 'public'
   ) RETURNS SETOF VOID AS
@@ -1249,7 +1249,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'delete_building_installation (id: %): %', bi_id, SQLERRM;
+      RAISE NOTICE 'delete_building_installationallation (id: %): %', bi_id, SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;
@@ -1428,7 +1428,7 @@ DECLARE
 BEGIN
   --// PRE DELETE ROOM //--
   -- delete referenced building installation(s)
-  EXECUTE format('SELECT geodb_pkg.delete_building_inst(id, %L) FROM %I.building_installation WHERE room_id = %L', 
+  EXECUTE format('SELECT geodb_pkg.delete_building_installation(id, %L) FROM %I.building_installation WHERE room_id = %L', 
                     schema_name, schema_name, r_id);
 
   -- delete referenced thematic surfaces
@@ -1624,7 +1624,7 @@ BEGIN
                     schema_name, schema_name, brd_id, brd_id);
 
   -- delete referenced bridge installation(s)
-  EXECUTE format('SELECT geodb_pkg.delete_bridge_inst(id, %L) FROM %I.bridge_installation WHERE bridge_id = %L', 
+  EXECUTE format('SELECT geodb_pkg.delete_bridge_installation(id, %L) FROM %I.bridge_installation WHERE bridge_id = %L', 
                     schema_name, schema_name, brd_id);
 
   -- delete referenced bridge thematic surfaces
@@ -1695,7 +1695,7 @@ LANGUAGE plpgsql;
 /*
 delete from BRIDGE_INSTALLATION
 */
-CREATE OR REPLACE FUNCTION geodb_pkg.delete_bridge_inst(
+CREATE OR REPLACE FUNCTION geodb_pkg.delete_bridge_installation(
   brdi_id INTEGER, 
   schema_name VARCHAR DEFAULT 'public'
   ) RETURNS SETOF VOID AS
@@ -1745,7 +1745,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'delete_bridge_installation (id: %): %', brdi_id, SQLERRM;
+      RAISE NOTICE 'delete_bridge_installationallation (id: %): %', brdi_id, SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;
@@ -1924,7 +1924,7 @@ DECLARE
 BEGIN
   --// PRE DELETE BRIDGE ROOM //--
   -- delete referenced bridge installation(s)
-  EXECUTE format('SELECT geodb_pkg.delete_bridge_inst(id, %L) FROM %I.bridge_installation WHERE bridge_room_id = %L', 
+  EXECUTE format('SELECT geodb_pkg.delete_bridge_installation(id, %L) FROM %I.bridge_installation WHERE bridge_room_id = %L', 
                     schema_name, schema_name, brdr_id);
 
   -- delete referenced bridge thematic surfaces
@@ -2051,7 +2051,7 @@ BEGIN
                     schema_name, schema_name, tun_id, tun_id);
 
   -- delete referenced tunnel installation(s)
-  EXECUTE format('SELECT geodb_pkg.delete_tunnel_inst(id, %L) FROM %I.tunnel_installation WHERE tunnel_id = %L', 
+  EXECUTE format('SELECT geodb_pkg.delete_tunnel_installation(id, %L) FROM %I.tunnel_installation WHERE tunnel_id = %L', 
                     schema_name, schema_name, tun_id);
 
   -- delete referenced tunnel thematic surfaces
@@ -2112,7 +2112,7 @@ LANGUAGE plpgsql;
 /*
 delete from TUNNEL_INSTALLATION
 */
-CREATE OR REPLACE FUNCTION geodb_pkg.delete_tunnel_inst(
+CREATE OR REPLACE FUNCTION geodb_pkg.delete_tunnel_installation(
   tuni_id INTEGER, 
   schema_name VARCHAR DEFAULT 'public'
   ) RETURNS SETOF VOID AS
@@ -2162,7 +2162,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'delete_tunnel_installation (id: %): %', tuni_id, SQLERRM;
+      RAISE NOTICE 'delete_tunnel_installationallation (id: %): %', tuni_id, SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;
@@ -2330,7 +2330,7 @@ DECLARE
 BEGIN
   --// PRE DELETE TUNNEL HOLLOW SPACE //--
   -- delete referenced tunnel installation(s)
-  EXECUTE format('SELECT geodb_pkg.delete_tunnel_inst(id, %L) FROM %I.tunnel_installation WHERE tunnel_hollow_space_id = %L', 
+  EXECUTE format('SELECT geodb_pkg.delete_tunnel_installation(id, %L) FROM %I.tunnel_installation WHERE tunnel_hollow_space_id = %L', 
                     schema_name, schema_name, tunhs_id);
 
   -- delete referenced tunnel thematic surfaces
