@@ -1249,7 +1249,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'delete_building_installationallation (id: %): %', bi_id, SQLERRM;
+      RAISE NOTICE 'delete_building_installation (id: %): %', bi_id, SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;
@@ -1745,7 +1745,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'delete_bridge_installationallation (id: %): %', brdi_id, SQLERRM;
+      RAISE NOTICE 'delete_bridge_installation (id: %): %', brdi_id, SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;
@@ -2162,7 +2162,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'delete_tunnel_installationallation (id: %): %', tuni_id, SQLERRM;
+      RAISE NOTICE 'delete_tunnel_installation (id: %): %', tuni_id, SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;
