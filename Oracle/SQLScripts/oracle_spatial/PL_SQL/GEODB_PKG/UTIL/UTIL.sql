@@ -362,7 +362,7 @@ AS
            class_id = 48 THEN table_name := 'traffic_area';
       WHEN class_id = 57 THEN table_name := 'citymodel';
       WHEN class_id = 63 OR
-           class_id = 62 THEN table_name := 'bridge';
+           class_id = 64 THEN table_name := 'bridge';
       WHEN class_id = 65 OR
            class_id = 66 THEN table_name := 'bridge_installation';
       WHEN class_id = 68 OR 

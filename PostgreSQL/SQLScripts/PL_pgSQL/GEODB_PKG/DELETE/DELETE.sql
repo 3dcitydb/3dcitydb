@@ -146,7 +146,7 @@ BEGIN
          class_id = 48 THEN PERFORM geodb_pkg.delete_traffic_area(co_id, schema_name);
     WHEN class_id = 57 THEN PERFORM geodb_pkg.delete_citymodel(co_id, affect_rel_objs, schema_name);
     WHEN class_id = 63 OR
-         class_id = 62 THEN PERFORM geodb_pkg.delete_bridge(co_id, schema_name);
+         class_id = 64 THEN PERFORM geodb_pkg.delete_bridge(co_id, schema_name);
     WHEN class_id = 65 OR
          class_id = 66 THEN PERFORM geodb_pkg.delete_bridge_installation(co_id, schema_name);
     WHEN class_id = 68 OR 
