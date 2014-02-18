@@ -130,8 +130,10 @@ BEGIN
          class_id = 32 OR 
          class_id = 33 OR 
          class_id = 34 OR 
-         class_id = 35 OR 
-         class_id = 36 THEN PERFORM geodb_pkg.delete_thematic_surface(co_id, schema_name);
+         class_id = 35 OR
+         class_id = 36 OR
+         class_id = 60 OR
+         class_id = 61 THEN PERFORM geodb_pkg.delete_thematic_surface(co_id, schema_name);
     WHEN class_id = 38 OR 
          class_id = 39 THEN PERFORM geodb_pkg.delete_opening(co_id, schema_name);
     WHEN class_id = 40 THEN PERFORM geodb_pkg.delete_building_furniture(co_id, schema_name);
