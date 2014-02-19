@@ -25,7 +25,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 2.0.0     2014-01-08   complete revision for 3DCityDB V3           FKun
+-- 2.0.0     2014-02-19   complete revision for 3DCityDB V3           FKun
 -- 1.2.0     2013-08-08   extended to all thematic classes            FKun
 --                                                                    GHud
 -- 1.1.0     2012-02-22   some performance improvements               CNag
@@ -40,6 +40,7 @@
 *   cleanup_appearances(only_global INTEGER DEFAULT 1, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   cleanup_citymodels(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   cleanup_cityobjectgroups(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
+*   cleanup_implicit_geometries(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_address(ad_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_appearance(app_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_breakline_relief(blr INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
@@ -304,34 +305,21 @@ $$
 DECLARE
   surface_geometry_rec INTEGER;
 BEGIN
-  EXECUTE format('WITH RECURSIVE geometry(id, parent_id, level) AS (
-                    SELECT sg.id, sg.parent_id, 1 AS level FROM %I.surface_geometry sg WHERE sg.id = %L
-                  UNION ALL
-                    SELECT sg.id, sg.parent_id, g.level + 1 AS level FROM %I.surface_geometry sg, geometry g WHERE sg.parent_id = g.id
-                  )
-                  SELECT geodb_pkg.intern_delete_surface_geometry(id, %L) FROM geometry ORDER BY level DESC',
-                  schema_name, sg_id, schema_name, schema_name);
+  FOR surface_geometry_rec IN 
+    EXECUTE format('WITH RECURSIVE geometry(id, parent_id, level) AS (
+                      SELECT sg.id, sg.parent_id, 1 AS level FROM %I.surface_geometry sg WHERE sg.id = %L
+                    UNION ALL
+                      SELECT sg.id, sg.parent_id, g.level + 1 AS level FROM %I.surface_geometry sg, geometry g WHERE sg.parent_id = g.id
+                    )
+                    SELECT id FROM geometry ORDER BY level DESC',
+                    schema_name, sg_id, schema_name) LOOP 			  
+    EXECUTE 'DELETE FROM textureparam WHERE surface_geometry_id = $1' USING surface_geometry_rec;
+    EXECUTE 'DELETE FROM surface_geometry WHERE id = $1' USING surface_geometry_rec;
+  END LOOP;
 
   EXCEPTION
     WHEN OTHERS THEN
       RAISE NOTICE 'delete_surface_geometry (id: %): %', sg_id, SQLERRM;
-END;
-$$
-LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION geodb_pkg.intern_delete_surface_geometry(
-  sg_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
-  ) RETURNS SETOF VOID AS
-$$
-BEGIN
-  EXECUTE format('DELETE FROM %I.textureparam WHERE surface_geometry_id = %L', schema_name, sg_id);
-  EXECUTE format('DELETE FROM %I.surface_geometry WHERE id = %L', schema_name, sg_id);
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'intern_delete_surface_geometry (id: %): %', sg_id, SQLERRM;
 END;
 $$
 LANGUAGE plpgsql;
@@ -354,7 +342,7 @@ BEGIN
                     schema_name, ig_id) INTO rel_brep_id;
 
   --// DELETE IMPLICIT GEOMETRY //--
-  EXECUTE format('DELETE FROM I%.implicit_geometry WHERE id = %L', schema_name, ig_id);
+  EXECUTE format('DELETE FROM %I.implicit_geometry WHERE id = %L', schema_name, ig_id);
 
   --// POST DELETE IMPLICIT GEOMETRY //--
   -- delete geometry
@@ -560,20 +548,6 @@ BEGIN
     PERFORM geodb_pkg.delete_surface_geometry(gco_lod4_id, schema_name);
   END IF;
 
-  -- cleanup implicit geometry
-  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, %L) FROM %I.implicit_geometry ig
-                    LEFT JOIN %I.generic_cityobject gco0 ON gco0.lod0_implicit_rep_id = ig.id
-                    LEFT JOIN %I.generic_cityobject gco1 ON gco1.lod1_implicit_rep_id = ig.id
-                    LEFT JOIN %I.generic_cityobject gco2 ON gco2.lod2_implicit_rep_id = ig.id
-                    LEFT JOIN %I.generic_cityobject gco3 ON gco3.lod3_implicit_rep_id = ig.id
-                    LEFT JOIN %I.generic_cityobject gco4 ON gco4.lod4_implicit_rep_id = ig.id
-                    WHERE gco0.lod0_implicit_rep_id IS NULL
-                      AND gco1.lod1_implicit_rep_id IS NULL
-                      AND gco2.lod2_implicit_rep_id IS NULL
-                      AND gco3.lod3_implicit_rep_id IS NULL
-                      AND gco4.lod4_implicit_rep_id IS NULL',
-                      schema_name, schema_name, schema_name, schema_name, schema_name, schema_name, schema_name);
-
   -- delete city object
   PERFORM geodb_pkg.intern_delete_cityobject(gco_id, schema_name);
 
@@ -623,18 +597,6 @@ BEGIN
     PERFORM geodb_pkg.delete_surface_geometry(svo_lod4_id, schema_name);
   END IF;
 
-  -- cleanup implicit geometry
-  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, %L) FROM %I.implicit_geometry ig
-                    LEFT JOIN %I.solitary_vegetat_object svo1 ON svo1.lod1_implicit_rep_id = ig.id
-                    LEFT JOIN %I.solitary_vegetat_object svo2 ON svo2.lod2_implicit_rep_id = ig.id
-                    LEFT JOIN %I.solitary_vegetat_object svo3 ON svo3.lod3_implicit_rep_id = ig.id
-                    LEFT JOIN %I.solitary_vegetat_object svo4 ON svo4.lod4_implicit_rep_id = ig.id
-                    WHERE svo1.lod1_implicit_rep_id IS NULL
-                      AND svo2.lod2_implicit_rep_id IS NULL
-                      AND svo3.lod3_implicit_rep_id IS NULL
-                      AND svo4.lod4_implicit_rep_id IS NULL',
-                      schema_name, schema_name, schema_name, schema_name, schema_name, schema_name);
-
   -- delete city object
   PERFORM geodb_pkg.intern_delete_cityobject(svo_id, schema_name);
 
@@ -659,17 +621,17 @@ DECLARE
   pc_lod2_msrf_id INTEGER;
   pc_lod3_msrf_id INTEGER;
   pc_lod4_msrf_id INTEGER;
-  pc_lod1_solid_id INTEGER;
-  pc_lod2_solid_id INTEGER;
-  pc_lod3_solid_id INTEGER;
-  pc_lod4_solid_id INTEGER;
+  pc_lod1_msolid_id INTEGER;
+  pc_lod2_msolid_id INTEGER;
+  pc_lod3_msolid_id INTEGER;
+  pc_lod4_msolid_id INTEGER;
 BEGIN
   --// PRE DELETE PLANT COVER //--
   -- get reference ids to surface_geometry table  
   EXECUTE format('SELECT lod1_multi_surface_id , lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id,
-             lod1_solid_id , lod2_solid_id, lod3_solid_id, lod4_solid_id FROM %I.plant_cover WHERE id = %L', schema_name, pc_id) 
+             lod1_multi_solid_id , lod2_multi_solid_id, lod3_multi_solid_id, lod4_multi_solid_id FROM %I.plant_cover WHERE id = %L', schema_name, pc_id) 
              INTO pc_lod1_msrf_id, pc_lod2_msrf_id, pc_lod3_msrf_id, pc_lod4_msrf_id, 
-                  pc_lod1_solid_id, pc_lod2_solid_id, pc_lod3_solid_id, pc_lod4_solid_id;
+                  pc_lod1_msolid_id, pc_lod2_msolid_id, pc_lod3_msolid_id, pc_lod4_msolid_id;
 
   --// DELETE PLANT COVER //--
   EXECUTE format('DELETE FROM %I.plant_cover WHERE id = %L', schema_name, pc_id);
@@ -688,17 +650,17 @@ BEGIN
   IF pc_lod4_msrf_id IS NOT NULL THEN
     PERFORM geodb_pkg.delete_surface_geometry(pc_lod4_msrf_id, schema_name);
   END IF;
-  IF pc_lod1_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(pc_lod1_solid_id, schema_name);
+  IF pc_lod1_msolid_id IS NOT NULL THEN
+    PERFORM geodb_pkg.delete_surface_geometry(pc_lod1_msolid_id, schema_name);
   END IF;
-  IF pc_lod2_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(pc_lod2_solid_id, schema_name);
+  IF pc_lod2_msolid_id IS NOT NULL THEN
+    PERFORM geodb_pkg.delete_surface_geometry(pc_lod2_msolid_id, schema_name);
   END IF;
-  IF pc_lod3_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(pc_lod3_solid_id, schema_name);
+  IF pc_lod3_msolid_id IS NOT NULL THEN
+    PERFORM geodb_pkg.delete_surface_geometry(pc_lod3_msolid_id, schema_name);
   END IF;
-  IF pc_lod4_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(pc_lod4_solid_id, schema_name);
+  IF pc_lod4_msolid_id IS NOT NULL THEN
+    PERFORM geodb_pkg.delete_surface_geometry(pc_lod4_msolid_id, schema_name);
   END IF;
 
   -- delete city object
@@ -1028,18 +990,6 @@ BEGIN
     PERFORM geodb_pkg.delete_surface_geometry(cf_lod4_id, schema_name);
   END IF;
 
-  -- cleanup implicit geometry
-  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, %L) FROM %I.implicit_geometry ig
-                    LEFT JOIN %I.city_furniture cf1 ON cf1.lod1_implicit_rep_id = ig.id
-                    LEFT JOIN %I.city_furniture cf2 ON cf2.lod2_implicit_rep_id = ig.id
-                    LEFT JOIN %I.city_furniture cf3 ON cf3.lod3_implicit_rep_id = ig.id
-                    LEFT JOIN %I.city_furniture cf4 ON cf4.lod4_implicit_rep_id = ig.id
-                    WHERE cf1.lod1_implicit_rep_id IS NULL
-                      AND cf2.lod2_implicit_rep_id IS NULL
-                      AND cf3.lod3_implicit_rep_id IS NULL
-                      AND cf4.lod4_implicit_rep_id IS NULL',
-                      schema_name, schema_name, schema_name, schema_name, schema_name, schema_name);
-
   -- delete city object
   PERFORM geodb_pkg.intern_delete_cityobject(cf_id, schema_name);
 
@@ -1135,7 +1085,7 @@ BEGIN
                     schema_name, schema_name, b_id);
 
   -- delete address(es) being not referenced from buildings any more
-  EXECUTE format('SELECT geodb_pkg.delete_address(ad_id, %L) FROM %I.address ad, %I.address_to_building ad2b 
+  EXECUTE format('SELECT geodb_pkg.delete_address(ad.id, %L) FROM %I.address ad, %I.address_to_building ad2b 
                     WHERE ad.id = ad2b.address_id AND ad2b.building_id = %L
                     AND geodb_pkg.is_not_referenced(%L, %L, ad.id, %L, %L, %L)', 
                     schema_name, schema_name, schema_name, b_id, 
@@ -1235,16 +1185,6 @@ BEGIN
   IF bi_lod4_id IS NOT NULL THEN
     PERFORM geodb_pkg.delete_surface_geometry(bi_lod4_id, schema_name);
   END IF;
-
-  -- cleanup implicit geometry
-  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, %L) FROM %I.implicit_geometry ig
-                    LEFT JOIN %I.building_installation bi1 ON bi1.lod2_implicit_rep_id = ig.id
-                    LEFT JOIN %I.building_installation bi2 ON bi2.lod3_implicit_rep_id = ig.id
-                    LEFT JOIN %I.building_installation bi3 ON bi3.lod4_implicit_rep_id = ig.id
-                    WHERE bi1.lod2_implicit_rep_id IS NULL
-                      AND bi2.lod3_implicit_rep_id IS NULL
-                      AND bi3.lod4_implicit_rep_id IS NULL',
-                      schema_name, schema_name, schema_name, schema_name, schema_name);
 
   -- delete city object
   PERFORM geodb_pkg.intern_delete_cityobject(bi_id, schema_name);
@@ -1356,14 +1296,6 @@ BEGIN
     PERFORM geodb_pkg.delete_surface_geometry(o_lod4_id, schema_name);
   END IF;
 
-  -- cleanup implicit geometry
-  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, %L) FROM %I.implicit_geometry ig
-                    LEFT JOIN %I.opening o1 ON o1.lod3_implicit_rep_id = ig.id
-                    LEFT JOIN %I.opening o2 ON o2.lod4_implicit_rep_id = ig.id
-                    WHERE o1.lod3_implicit_rep_id IS NULL
-                      AND o2.lod4_implicit_rep_id IS NULL',
-                      schema_name, schema_name, schema_name, schema_name);
-
   -- delete city object
   PERFORM geodb_pkg.intern_delete_cityobject(o_id, schema_name);
 
@@ -1398,12 +1330,6 @@ BEGIN
   IF bf_lod4_id IS NOT NULL THEN
     PERFORM geodb_pkg.delete_surface_geometry(bf_lod4_id, schema_name);
   END IF;
-
-  -- cleanup implicit geometry
-  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, %L) FROM %I.implicit_geometry ig
-                    LEFT JOIN %I.building_furniture bf ON bf.lod4_implicit_rep_id = ig.id
-                    WHERE bf.lod4_implicit_rep_id IS NULL',
-                    schema_name, schema_name, schema_name);
 
   -- delete city object
   PERFORM geodb_pkg.intern_delete_cityobject(bf_id, schema_name);
@@ -1638,7 +1564,7 @@ BEGIN
                     schema_name, schema_name, brd_id);
 
   -- delete address(es) being not referenced from bridges any more
-  EXECUTE format('SELECT geodb_pkg.delete_address(ad_id, %L) FROM %I.address ad, %I.address_to_bridge ad2brd 
+  EXECUTE format('SELECT geodb_pkg.delete_address(ad.id, %L) FROM %I.address ad, %I.address_to_bridge ad2brd 
                     WHERE ad.id = ad2brd.address_id AND ad2brd.bridge_id = %L
                     AND geodb_pkg.is_not_referenced(%L, %L, ad.id, %L, %L, %L)',
                     schema_name, schema_name, schema_name, brd_id, 
@@ -1731,16 +1657,6 @@ BEGIN
   IF brdi_lod4_id IS NOT NULL THEN
     PERFORM geodb_pkg.delete_surface_geometry(brdi_lod4_id, schema_name);
   END IF;
-
-  -- cleanup implicit geometry
-  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, %L) FROM %I.implicit_geometry ig
-                    LEFT JOIN %I.bridge_installation brdi1 ON brdi1.lod2_implicit_rep_id = ig.id
-                    LEFT JOIN %I.bridge_installation brdi2 ON brdi2.lod3_implicit_rep_id = ig.id
-                    LEFT JOIN %I.bridge_installation brdi3 ON brdi3.lod4_implicit_rep_id = ig.id
-                    WHERE brdi1.lod2_implicit_rep_id IS NULL
-                      AND brdi2.lod3_implicit_rep_id IS NULL
-                      AND brdi3.lod4_implicit_rep_id IS NULL',
-                      schema_name, schema_name, schema_name, schema_name, schema_name);
 
   -- delete city object
   PERFORM geodb_pkg.intern_delete_cityobject(brdi_id, schema_name);
@@ -1852,14 +1768,6 @@ BEGIN
     PERFORM geodb_pkg.delete_surface_geometry(brdo_lod4_id, schema_name);
   END IF;
 
-  -- cleanup implicit geometry
-  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, %L) FROM %I.implicit_geometry ig
-                    LEFT JOIN %I.bridge_opening brdo1 ON brdo1.lod3_implicit_rep_id = ig.id
-                    LEFT JOIN %I.bridge_opening brdo2 ON brdo2.lod4_implicit_rep_id = ig.id
-                    WHERE brdo1.lod3_implicit_rep_id IS NULL
-                      AND brdo2.lod4_implicit_rep_id IS NULL',
-                      schema_name, schema_name, schema_name, schema_name);
-
   -- delete city object
   PERFORM geodb_pkg.intern_delete_cityobject(brdo_id, schema_name);
 
@@ -1894,12 +1802,6 @@ BEGIN
   IF brdf_lod4_id IS NOT NULL THEN
     PERFORM geodb_pkg.delete_surface_geometry(brdf_lod4_id, schema_name);
   END IF;
-
-  -- cleanup implicit geometry
-  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, %L) FROM %I.implicit_geometry ig
-                    LEFT JOIN %I.bridge_furniture brdf ON brdf.lod4_implicit_rep_id = ig.id
-                    WHERE brdf.lod4_implicit_rep_id IS NULL',
-                    schema_name, schema_name, schema_name);
 
   -- delete city object
   PERFORM geodb_pkg.intern_delete_cityobject(brdf_id, schema_name);
@@ -2005,18 +1907,6 @@ BEGIN
   IF brdce_lod4_id IS NOT NULL THEN
     PERFORM geodb_pkg.delete_surface_geometry(brdce_lod4_id, schema_name);
   END IF;
-
-  -- cleanup implicit geometry
-  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, %L) FROM %I.implicit_geometry ig
-                    LEFT JOIN %I.bridge_constr_element brdce1 ON brdce1.lod1_implicit_rep_id = ig.id
-                    LEFT JOIN %I.bridge_constr_element brdce2 ON brdce2.lod2_implicit_rep_id = ig.id
-                    LEFT JOIN %I.bridge_constr_element brdce3 ON brdce3.lod3_implicit_rep_id = ig.id
-                    LEFT JOIN %I.bridge_constr_element brdce4 ON brdce4.lod4_implicit_rep_id = ig.id
-                    WHERE brdce1.lod1_implicit_rep_id IS NULL
-                      AND brdce2.lod2_implicit_rep_id IS NULL
-                      AND brdce3.lod3_implicit_rep_id IS NULL
-                      AND brdce4.lod4_implicit_rep_id IS NULL',
-                      schema_name, schema_name, schema_name, schema_name, schema_name, schema_name);
 
   -- delete city object
   PERFORM geodb_pkg.intern_delete_cityobject(brdce_id, schema_name);
@@ -2149,16 +2039,6 @@ BEGIN
     PERFORM geodb_pkg.delete_surface_geometry(tuni_lod4_id, schema_name);
   END IF;
 
-  -- cleanup implicit geometry
-  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, %L) FROM %I.implicit_geometry ig
-                    LEFT JOIN %I.tunnel_installation tuni1 ON tuni1.lod2_implicit_rep_id = ig.id
-                    LEFT JOIN %I.tunnel_installation tuni2 ON tuni2.lod3_implicit_rep_id = ig.id
-                    LEFT JOIN %I.tunnel_installation tuni3 ON tuni3.lod4_implicit_rep_id = ig.id
-                    WHERE tuni1.lod2_implicit_rep_id IS NULL
-                      AND tuni2.lod3_implicit_rep_id IS NULL
-                      AND tuni3.lod4_implicit_rep_id IS NULL',
-                      schema_name, schema_name, schema_name, schema_name, schema_name);
-
   -- delete city object
   PERFORM geodb_pkg.intern_delete_cityobject(tuni_id, schema_name);
 
@@ -2258,14 +2138,6 @@ BEGIN
     PERFORM geodb_pkg.delete_surface_geometry(tuno_lod4_id, schema_name);
   END IF;
 
-  -- cleanup implicit geometry
-  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, %L) FROM %I.implicit_geometry ig
-                    LEFT JOIN %I.tunnel_opening tuno1 ON tuno1.lod3_implicit_rep_id = ig.id
-                    LEFT JOIN %I.tunnel_opening tuno2 ON tuno2.lod4_implicit_rep_id = ig.id
-                    WHERE tuno1.lod3_implicit_rep_id IS NULL
-                      AND tuno2.lod4_implicit_rep_id IS NULL',
-                      schema_name, schema_name, schema_name, schema_name);
-
   -- delete city object
   PERFORM geodb_pkg.intern_delete_cityobject(tuno_id, schema_name);
 
@@ -2300,12 +2172,6 @@ BEGIN
   IF tunf_lod4_id IS NOT NULL THEN
     PERFORM geodb_pkg.delete_surface_geometry(tunf_lod4_id, schema_name);
   END IF;
-
-  -- cleanup implicit geometry
-  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, %L) FROM %I.implicit_geometry ig
-                    LEFT JOIN %I.tunnel_furniture tunf ON tunf.lod4_implicit_rep_id = ig.id
-                    WHERE tunf.lod4_implicit_rep_id IS NULL',
-                    schema_name, schema_name, schema_name);
 
   -- delete city object
   PERFORM geodb_pkg.intern_delete_cityobject(tunf_id, schema_name);
@@ -2365,6 +2231,103 @@ BEGIN
   EXCEPTION
     WHEN OTHERS THEN
       RAISE NOTICE 'delete_tunnel_hollow_space (id: %): %', tunhs_id, SQLERRM;
+END; 
+$$ 
+LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_implicit_geometries(
+  clean_apps INTEGER DEFAULT 0, 
+  schema_name VARCHAR DEFAULT 'public'
+  ) RETURNS SETOF VOID AS
+$$
+BEGIN
+  EXECUTE format('SELECT geodb_pkg.delete_implicit_geom(ig.id, %L) FROM %I.implicit_geometry ig
+                    LEFT JOIN %I.bridge_furniture brdf ON brdf.lod4_implicit_rep_id = ig.id
+                    LEFT JOIN %I.bridge_constr_element brdce1 ON brdce1.lod1_implicit_rep_id = ig.id
+                    LEFT JOIN %I.bridge_constr_element brdce2 ON brdce1.lod2_implicit_rep_id = ig.id
+                    LEFT JOIN %I.bridge_constr_element brdce3 ON brdce1.lod3_implicit_rep_id = ig.id
+                    LEFT JOIN %I.bridge_constr_element brdce4 ON brdce1.lod4_implicit_rep_id = ig.id
+                    LEFT JOIN %I.bridge_installation brdi1 ON brdi1.lod2_implicit_rep_id = ig.id
+                    LEFT JOIN %I.bridge_installation brdi2 ON brdi2.lod3_implicit_rep_id = ig.id
+                    LEFT JOIN %I.bridge_installation brdi3 ON brdi3.lod4_implicit_rep_id = ig.id
+                    LEFT JOIN %I.bridge_opening brdo1 ON brdo1.lod3_implicit_rep_id = ig.id
+                    LEFT JOIN %I.bridge_opening brdo2 ON brdo2.lod4_implicit_rep_id = ig.id
+                    LEFT JOIN %I.building_furniture bf ON bf.lod4_implicit_rep_id = ig.id
+                    LEFT JOIN %I.building_installation bi1 ON bi1.lod2_implicit_rep_id = ig.id
+                    LEFT JOIN %I.building_installation bi2 ON bi2.lod3_implicit_rep_id = ig.id
+                    LEFT JOIN %I.building_installation bi3 ON bi3.lod4_implicit_rep_id = ig.id
+                    LEFT JOIN %I.city_furniture cf1 ON cf1.lod1_implicit_rep_id = ig.id
+                    LEFT JOIN %I.city_furniture cf2 ON cf2.lod2_implicit_rep_id = ig.id
+                    LEFT JOIN %I.city_furniture cf3 ON cf3.lod3_implicit_rep_id = ig.id
+                    LEFT JOIN %I.city_furniture cf4 ON cf4.lod4_implicit_rep_id = ig.id
+                    LEFT JOIN %I.generic_cityobject gco0 ON gco0.lod0_implicit_rep_id = ig.id
+                    LEFT JOIN %I.generic_cityobject gco1 ON gco1.lod1_implicit_rep_id = ig.id
+                    LEFT JOIN %I.generic_cityobject gco2 ON gco2.lod2_implicit_rep_id = ig.id
+                    LEFT JOIN %I.generic_cityobject gco3 ON gco3.lod3_implicit_rep_id = ig.id
+                    LEFT JOIN %I.generic_cityobject gco4 ON gco4.lod4_implicit_rep_id = ig.id
+                    LEFT JOIN %I.opening o1 ON o1.lod3_implicit_rep_id = ig.id
+                    LEFT JOIN %I.opening o2 ON o2.lod4_implicit_rep_id = ig.id
+                    LEFT JOIN %I.solitary_vegetat_object svo1 ON svo1.lod1_implicit_rep_id = ig.id
+                    LEFT JOIN %I.solitary_vegetat_object svo2 ON svo2.lod2_implicit_rep_id = ig.id
+                    LEFT JOIN %I.solitary_vegetat_object svo3 ON svo3.lod3_implicit_rep_id = ig.id
+                    LEFT JOIN %I.solitary_vegetat_object svo4 ON svo4.lod4_implicit_rep_id = ig.id
+                    LEFT JOIN %I.tunnel_furniture tunf ON tunf.lod4_implicit_rep_id = ig.id
+                    LEFT JOIN %I.tunnel_installation tuni1 ON tuni1.lod2_implicit_rep_id = ig.id
+                    LEFT JOIN %I.tunnel_installation tuni2 ON tuni2.lod3_implicit_rep_id = ig.id
+                    LEFT JOIN %I.tunnel_installation tuni3 ON tuni3.lod4_implicit_rep_id = ig.id
+                    LEFT JOIN %I.tunnel_opening tuno1 ON tuno1.lod3_implicit_rep_id = ig.id
+                    LEFT JOIN %I.tunnel_opening tuno2 ON tuno2.lod4_implicit_rep_id = ig.id
+                    WHERE (brdf.lod4_implicit_rep_id IS NULL)
+                      AND (brdce1.lod1_implicit_rep_id IS NULL)
+                      AND (brdce2.lod2_implicit_rep_id IS NULL)
+                      AND (brdce3.lod3_implicit_rep_id IS NULL)
+                      AND (brdce4.lod4_implicit_rep_id IS NULL)
+                      AND (brdi1.lod2_implicit_rep_id IS NULL)
+                      AND (brdi2.lod3_implicit_rep_id IS NULL)
+                      AND (brdi3.lod4_implicit_rep_id IS NULL)
+                      AND (brdo1.lod3_implicit_rep_id IS NULL)
+                      AND (brdo2.lod4_implicit_rep_id IS NULL)
+                      AND (bf.lod4_implicit_rep_id IS NULL)
+                      AND (bi1.lod2_implicit_rep_id IS NULL)
+                      AND (bi2.lod3_implicit_rep_id IS NULL)
+                      AND (bi3.lod4_implicit_rep_id IS NULL)
+                      AND (cf1.lod1_implicit_rep_id IS NULL)
+                      AND (cf2.lod2_implicit_rep_id IS NULL)
+                      AND (cf3.lod3_implicit_rep_id IS NULL)
+                      AND (cf4.lod4_implicit_rep_id IS NULL)
+                      AND (gco0.lod0_implicit_rep_id IS NULL)
+                      AND (gco1.lod1_implicit_rep_id IS NULL)
+                      AND (gco2.lod2_implicit_rep_id IS NULL)
+                      AND (gco3.lod3_implicit_rep_id IS NULL)
+                      AND (gco4.lod4_implicit_rep_id IS NULL)
+                      AND (o1.lod3_implicit_rep_id IS NULL)
+                      AND (o2.lod4_implicit_rep_id IS NULL)
+                      AND (svo1.lod1_implicit_rep_id IS NULL)
+                      AND (svo2.lod2_implicit_rep_id IS NULL)
+                      AND (svo3.lod3_implicit_rep_id IS NULL)
+                      AND (svo4.lod4_implicit_rep_id IS NULL)
+                      AND (tunf.lod4_implicit_rep_id IS NULL)
+                      AND (tuni1.lod2_implicit_rep_id IS NULL)
+                      AND (tuni2.lod3_implicit_rep_id IS NULL)
+                      AND (tuni3.lod4_implicit_rep_id IS NULL)
+                      AND (tuno1.lod3_implicit_rep_id IS NULL)
+                      AND (tuno2.lod4_implicit_rep_id IS NULL)', schema_name, schema_name,
+                      schema_name, schema_name, schema_name, schema_name, schema_name,
+                      schema_name, schema_name, schema_name, schema_name, schema_name,
+                      schema_name, schema_name, schema_name, schema_name, schema_name,
+                      schema_name, schema_name, schema_name, schema_name, schema_name,
+                      schema_name, schema_name, schema_name, schema_name, schema_name,
+                      schema_name, schema_name, schema_name, schema_name, schema_name,
+                      schema_name, schema_name, schema_name, schema_name, schema_name);
+
+  IF clean_apps <> 0 THEN
+    PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  END IF;
+
+  EXCEPTION  
+    WHEN OTHERS THEN
+      RAISE NOTICE 'cleanup_implicit_geometries: %', SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;
@@ -2433,8 +2396,8 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_citymodels(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID AS
 $$
 BEGIN
-  EXECUTE format('SELECT geodb_pkg.delete_citymodel(c.id, 1, %L) FROM I%.citymodel c 
-                    LEFT OUTER JOIN I%.cityobject_member cm ON c.id=cm.citymodel_id 
+  EXECUTE format('SELECT geodb_pkg.delete_citymodel(c.id, 1, %L) FROM %I.citymodel c 
+                    LEFT OUTER JOIN %I.cityobject_member cm ON c.id=cm.citymodel_id 
                     WHERE cm.cityobject_id IS NULL', schema_name, schema_name, schema_name);
 END;
 $$ 

@@ -26,7 +26,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 2.0.0     2014-01-08   minor changes for 3DCityDB V3               FKun
+-- 2.0.0     2014-02-19   minor changes for 3DCityDB V3               FKun
 -- 1.3.0     2013-08-08   extended to all thematic classes            GHud
 --                                                                    FKun
 -- 1.2.0     2012-02-22   minor changes                               CNag
@@ -79,8 +79,9 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(1);
-  PERFORM geodb_pkg.cleanup_citymodels();
+  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -111,8 +112,9 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(1);
-  PERFORM geodb_pkg.cleanup_citymodels();
+  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -143,8 +145,9 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(1);
-  PERFORM geodb_pkg.cleanup_citymodels();
+  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -175,8 +178,8 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(1);
-  PERFORM geodb_pkg.cleanup_citymodels();
+  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -207,8 +210,8 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(1);
-  PERFORM geodb_pkg.cleanup_citymodels();
+  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -239,8 +242,9 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(1);
-  PERFORM geodb_pkg.cleanup_citymodels();
+  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -271,8 +275,8 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(1);
-  PERFORM geodb_pkg.cleanup_citymodels();
+  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -303,8 +307,8 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(1);
-  PERFORM geodb_pkg.cleanup_citymodels();
+  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -335,8 +339,8 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(1);
-  PERFORM geodb_pkg.cleanup_citymodels();
+  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -372,8 +376,9 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(1);
-  PERFORM geodb_pkg.cleanup_citymodels();
+  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -408,8 +413,9 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(1);
-  PERFORM geodb_pkg.cleanup_citymodels();
+  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -441,8 +447,8 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(1);
-  PERFORM geodb_pkg.cleanup_citymodels();
+  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -472,8 +478,8 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(1);
-  PERFORM geodb_pkg.cleanup_citymodels();
+  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN
