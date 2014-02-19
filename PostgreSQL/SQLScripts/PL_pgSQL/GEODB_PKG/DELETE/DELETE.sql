@@ -106,84 +106,87 @@ BEGIN
 
   EXECUTE format('SELECT objectclass_id FROM %I.cityobject WHERE id = %L', schema_name, co_id) INTO class_id;
 
-  CASE
-    WHEN class_id = 4 THEN PERFORM geodb_pkg.delete_land_use(co_id, schema_name);
-    WHEN class_id = 5 THEN PERFORM geodb_pkg.delete_generic_cityobject(co_id, schema_name);
-    WHEN class_id = 7 THEN PERFORM geodb_pkg.delete_solitary_veg_obj(co_id, schema_name);
-    WHEN class_id = 8 THEN PERFORM geodb_pkg.delete_plant_cover(co_id, schema_name);
-    WHEN class_id = 9 THEN PERFORM geodb_pkg.delete_waterbody(co_id, schema_name);
-    WHEN class_id = 11 OR 
-         class_id = 12 OR 
-         class_id = 13 THEN PERFORM geodb_pkg.delete_waterbnd_surface(co_id, schema_name);
-    WHEN class_id = 14 THEN PERFORM geodb_pkg.delete_relief_feature(co_id, schema_name);
-    WHEN class_id = 16 OR 
-         class_id = 17 OR 
-         class_id = 18 OR 
-         class_id = 19 THEN PERFORM geodb_pkg.delete_relief_component(co_id, schema_name);
-    WHEN class_id = 21 THEN PERFORM geodb_pkg.delete_city_furniture(co_id, schema_name);
-    WHEN class_id = 23 THEN PERFORM geodb_pkg.delete_cityobjectgroup(co_id, affect_rel_objs, schema_name);
-    WHEN class_id = 25 OR 
-         class_id = 26 THEN PERFORM geodb_pkg.delete_building(co_id, schema_name);
-    WHEN class_id = 27 OR 
-         class_id = 28 THEN PERFORM geodb_pkg.delete_building_installation(co_id, schema_name);
-    WHEN class_id = 30 OR 
-         class_id = 31 OR 
-         class_id = 32 OR 
-         class_id = 33 OR 
-         class_id = 34 OR 
-         class_id = 35 OR
-         class_id = 36 OR
-         class_id = 60 OR
-         class_id = 61 THEN PERFORM geodb_pkg.delete_thematic_surface(co_id, schema_name);
-    WHEN class_id = 38 OR 
-         class_id = 39 THEN PERFORM geodb_pkg.delete_opening(co_id, schema_name);
-    WHEN class_id = 40 THEN PERFORM geodb_pkg.delete_building_furniture(co_id, schema_name);
-    WHEN class_id = 41 THEN PERFORM geodb_pkg.delete_room(co_id, schema_name);
-    WHEN class_id = 43 OR 
-         class_id = 44 OR 
-         class_id = 45 OR 
-         class_id = 46 THEN PERFORM geodb_pkg.delete_transport_complex(co_id, schema_name);
-    WHEN class_id = 47 OR 
-         class_id = 48 THEN PERFORM geodb_pkg.delete_traffic_area(co_id, schema_name);
-    WHEN class_id = 57 THEN PERFORM geodb_pkg.delete_citymodel(co_id, affect_rel_objs, schema_name);
-    WHEN class_id = 63 OR
-         class_id = 64 THEN PERFORM geodb_pkg.delete_bridge(co_id, schema_name);
-    WHEN class_id = 65 OR
-         class_id = 66 THEN PERFORM geodb_pkg.delete_bridge_installation(co_id, schema_name);
-    WHEN class_id = 68 OR 
-         class_id = 69 OR 
-         class_id = 70 OR 
-         class_id = 71 OR 
-         class_id = 72 OR
-         class_id = 73 OR
-         class_id = 74 OR
-         class_id = 75 OR
-         class_id = 76 THEN PERFORM geodb_pkg.delete_bridge_them_srf(co_id, schema_name);
-    WHEN class_id = 78 OR 
-         class_id = 79 THEN PERFORM geodb_pkg.delete_bridge_opening(co_id, schema_name);		 
-    WHEN class_id = 80 THEN PERFORM geodb_pkg.delete_bridge_furniture(co_id, schema_name);
-    WHEN class_id = 81 THEN PERFORM geodb_pkg.delete_bridge_room(co_id, schema_name);
-    WHEN class_id = 82 THEN PERFORM geodb_pkg.delete_bridge_constr_elem(co_id, schema_name);
-    WHEN class_id = 84 OR
-         class_id = 85 THEN PERFORM geodb_pkg.delete_tunnel(co_id, schema_name);
-    WHEN class_id = 86 OR
-         class_id = 87 THEN PERFORM geodb_pkg.delete_tunnel_installation(co_id, schema_name);
-    WHEN class_id = 88 OR 
-         class_id = 89 OR 
-         class_id = 90 OR 
-         class_id = 91 OR 
-         class_id = 92 OR
-         class_id = 93 OR
-         class_id = 94 OR
-         class_id = 95 OR
-         class_id = 96 THEN PERFORM geodb_pkg.delete_tunnel_them_srf(co_id, schema_name);
-    WHEN class_id = 99 OR 
-         class_id = 100 THEN PERFORM geodb_pkg.delete_tunnel_opening(co_id, schema_name);
-    WHEN class_id = 101 THEN PERFORM geodb_pkg.delete_tunnel_furniture(co_id, schema_name);
-    WHEN class_id = 102 THEN PERFORM geodb_pkg.delete_tunnel_hollow_space(co_id, schema_name);
-    ELSE
-      RAISE NOTICE 'Can not delete chosen objects.';
-  END CASE;
+  -- class_id can be NULL if objects has already been deleted
+  IF class_id IS NOT NULL THEN
+    CASE
+      WHEN class_id = 4 THEN PERFORM geodb_pkg.delete_land_use(co_id, schema_name);
+      WHEN class_id = 5 THEN PERFORM geodb_pkg.delete_generic_cityobject(co_id, schema_name);
+      WHEN class_id = 7 THEN PERFORM geodb_pkg.delete_solitary_veg_obj(co_id, schema_name);
+      WHEN class_id = 8 THEN PERFORM geodb_pkg.delete_plant_cover(co_id, schema_name);
+      WHEN class_id = 9 THEN PERFORM geodb_pkg.delete_waterbody(co_id, schema_name);
+      WHEN class_id = 11 OR 
+           class_id = 12 OR 
+           class_id = 13 THEN PERFORM geodb_pkg.delete_waterbnd_surface(co_id, schema_name);
+      WHEN class_id = 14 THEN PERFORM geodb_pkg.delete_relief_feature(co_id, schema_name);
+      WHEN class_id = 16 OR 
+           class_id = 17 OR 
+           class_id = 18 OR 
+           class_id = 19 THEN PERFORM geodb_pkg.delete_relief_component(co_id, schema_name);
+      WHEN class_id = 21 THEN PERFORM geodb_pkg.delete_city_furniture(co_id, schema_name);
+      WHEN class_id = 23 THEN PERFORM geodb_pkg.delete_cityobjectgroup(co_id, affect_rel_objs, schema_name);
+      WHEN class_id = 25 OR 
+           class_id = 26 THEN PERFORM geodb_pkg.delete_building(co_id, schema_name);
+      WHEN class_id = 27 OR 
+           class_id = 28 THEN PERFORM geodb_pkg.delete_building_installation(co_id, schema_name);
+      WHEN class_id = 30 OR 
+           class_id = 31 OR 
+           class_id = 32 OR 
+           class_id = 33 OR 
+           class_id = 34 OR 
+           class_id = 35 OR
+           class_id = 36 OR
+           class_id = 60 OR
+           class_id = 61 THEN PERFORM geodb_pkg.delete_thematic_surface(co_id, schema_name);
+      WHEN class_id = 38 OR 
+           class_id = 39 THEN PERFORM geodb_pkg.delete_opening(co_id, schema_name);
+      WHEN class_id = 40 THEN PERFORM geodb_pkg.delete_building_furniture(co_id, schema_name);
+      WHEN class_id = 41 THEN PERFORM geodb_pkg.delete_room(co_id, schema_name);
+      WHEN class_id = 43 OR 
+           class_id = 44 OR 
+           class_id = 45 OR 
+           class_id = 46 THEN PERFORM geodb_pkg.delete_transport_complex(co_id, schema_name);
+      WHEN class_id = 47 OR 
+           class_id = 48 THEN PERFORM geodb_pkg.delete_traffic_area(co_id, schema_name);
+      WHEN class_id = 57 THEN PERFORM geodb_pkg.delete_citymodel(co_id, affect_rel_objs, schema_name);
+      WHEN class_id = 63 OR
+           class_id = 64 THEN PERFORM geodb_pkg.delete_bridge(co_id, schema_name);
+      WHEN class_id = 65 OR
+           class_id = 66 THEN PERFORM geodb_pkg.delete_bridge_installation(co_id, schema_name);
+      WHEN class_id = 68 OR 
+           class_id = 69 OR 
+           class_id = 70 OR 
+           class_id = 71 OR 
+           class_id = 72 OR
+           class_id = 73 OR
+           class_id = 74 OR
+           class_id = 75 OR
+           class_id = 76 THEN PERFORM geodb_pkg.delete_bridge_them_srf(co_id, schema_name);
+      WHEN class_id = 78 OR 
+           class_id = 79 THEN PERFORM geodb_pkg.delete_bridge_opening(co_id, schema_name);		 
+      WHEN class_id = 80 THEN PERFORM geodb_pkg.delete_bridge_furniture(co_id, schema_name);
+      WHEN class_id = 81 THEN PERFORM geodb_pkg.delete_bridge_room(co_id, schema_name);
+      WHEN class_id = 82 THEN PERFORM geodb_pkg.delete_bridge_constr_elem(co_id, schema_name);
+      WHEN class_id = 84 OR
+           class_id = 85 THEN PERFORM geodb_pkg.delete_tunnel(co_id, schema_name);
+      WHEN class_id = 86 OR
+           class_id = 87 THEN PERFORM geodb_pkg.delete_tunnel_installation(co_id, schema_name);
+      WHEN class_id = 88 OR 
+           class_id = 89 OR 
+           class_id = 90 OR 
+           class_id = 91 OR 
+           class_id = 92 OR
+           class_id = 93 OR
+           class_id = 94 OR
+           class_id = 95 OR
+           class_id = 96 THEN PERFORM geodb_pkg.delete_tunnel_them_srf(co_id, schema_name);
+      WHEN class_id = 99 OR 
+           class_id = 100 THEN PERFORM geodb_pkg.delete_tunnel_opening(co_id, schema_name);
+      WHEN class_id = 101 THEN PERFORM geodb_pkg.delete_tunnel_furniture(co_id, schema_name);
+      WHEN class_id = 102 THEN PERFORM geodb_pkg.delete_tunnel_hollow_space(co_id, schema_name);
+      ELSE
+        RAISE NOTICE 'Can not delete chosen object with ID % and objectclass_id %.', co_id, class_id;
+    END CASE;
+  END IF;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -211,7 +214,7 @@ BEGIN
   EXECUTE format('DELETE FROM %I.cityobject WHERE id = %L', schema_name, co_id);
   
   -- fourth step: cleanup
-  PERFORM geodb_pkg.cleanup_appearances(schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
   PERFORM geodb_pkg.cleanup_addresses(schema_name);
   PERFORM geodb_pkg.cleanup_cityobjectgroups(schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
@@ -241,7 +244,7 @@ DECLARE
   is_not_referenced BOOLEAN := false;
 BEGIN
   EXECUTE format('SELECT 1 FROM %I.%I WHERE %I = %L AND NOT %I = %L',
-                    schema_name, table_name, check_column, check_id, not_id) INTO dummy;
+                    schema_name, table_name, check_column, check_id, not_column, not_id) INTO dummy;
 
   IF dummy IS NULL THEN
     is_not_referenced := true;
@@ -405,16 +408,34 @@ BEGIN
   -- delete texture params
   EXECUTE format('DELETE FROM %I.textureparam WHERE surface_data_id = %L', schema_name, sd_id);
 
-  -- delete texture images
-  EXECUTE format('DELETE FROM %I.tex_image ti, %I.surface_data sd WHERE ti.id = sd.tex_image_id
-                    AND sd.id = %L', schema_name, schema_name, sd_id);
-
   --// DELETE SURFACE DATA //--
   EXECUTE format('DELETE FROM %I.surface_data WHERE id = %L', schema_name, sd_id);
+
+  -- to delete entries in TEX_IMAGE table use geodb_pkg.cleanup_tex_images('schema_name')
 
   EXCEPTION
     WHEN OTHERS THEN
       RAISE NOTICE 'delete_surface_data (id: %): %', sd_id, SQLERRM;
+END; 
+$$ 
+LANGUAGE plpgsql;
+
+
+/*
+delete from TEX_IMAGE
+*/
+CREATE OR REPLACE FUNCTION geodb_pkg.delete_tex_image(
+  ti_id INTEGER,
+  schema_name VARCHAR DEFAULT 'public'
+  ) RETURNS SETOF VOID AS
+$$
+BEGIN
+  --// DELETE TEX IMAGE //--
+  EXECUTE format('DELETE FROM %I.tex_image WHERE id = %L', schema_name, ti_id);
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      RAISE NOTICE 'delete_tex_image (id: %): %', sd_id, SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;
@@ -693,7 +714,7 @@ BEGIN
   --// PRE DELETE WATERBODY //--
   -- delete water boundary surfaces being not referenced from waterbodies any more
   EXECUTE format('SELECT geodb_pkg.delete_waterbnd_surface(wbs.id, %L) 
-                    FROM %I.waterboundary_surface, %I.waterbod_to_waterbnd_srf wb2wbs
+                    FROM %I.waterboundary_surface wbs, %I.waterbod_to_waterbnd_srf wb2wbs
                     WHERE wbs.id = wb2wbs.waterboundary_surface_id AND wb2wbs.waterbody_id = %L
                     AND geodb_pkg.is_not_referenced(%L, %L, wbs.id, %L, %L, %L)', 
                     schema_name, schema_name, schema_name, wb_id, 
@@ -968,12 +989,12 @@ DECLARE
 BEGIN
   --// PRE DELETE CITY_FURNITURE //--
   -- get reference ids to surface_geometry table
-  EXECUTE format('SELECT lod1_brep_id , lod2_brep_id, lod3_brep_id, lod4_brep_id
-                    FROM %I.city_furniture WHERE id = %L', schema_name, cf_id),
-                    cf_lod1_id, cf_lod2_id, cf_lod3_id, cf_lod4_id;
+  EXECUTE format('SELECT lod1_brep_id, lod2_brep_id, lod3_brep_id, lod4_brep_id
+                    FROM %I.city_furniture WHERE id = %L', schema_name, cf_id)
+                    INTO cf_lod1_id, cf_lod2_id, cf_lod3_id, cf_lod4_id;
 
   --// DELETE CITY_FURNITURE //--
-  EXECUTE format('DELETE FROM city_furniture WHERE id = %L', schema_name, cf_id);
+  EXECUTE format('DELETE FROM %I.city_furniture WHERE id = %L', schema_name, cf_id);
 
   --// POST DELETE CITY_FURNITURE //--
   -- delete geometry
@@ -1555,6 +1576,10 @@ BEGIN
   EXECUTE format('SELECT geodb_pkg.delete_bridge_installation(id, %L) FROM %I.bridge_installation WHERE bridge_id = %L', 
                     schema_name, schema_name, brd_id);
 
+  -- delete referenced bridge construction element(s)
+  EXECUTE format('SELECT geodb_pkg.delete_bridge_constr_elem(id, %L) FROM %I.bridge_constr_element WHERE bridge_id = %L', 
+                    schema_name, schema_name, brd_id);
+
   -- delete referenced bridge thematic surfaces
   EXECUTE format('SELECT geodb_pkg.delete_bridge_them_srf(id, %L) FROM %I.bridge_thematic_surface WHERE bridge_id = %L', 
                     schema_name, schema_name, brd_id);
@@ -1670,7 +1695,7 @@ LANGUAGE plpgsql;
 
 
 /*
-delete from THEMATIC_SURFACE
+delete from BRIDGE_THEMATIC_SURFACE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_bridge_them_srf(
   brdts_id INTEGER, 
@@ -1682,9 +1707,9 @@ DECLARE
   brdts_lod3_id INTEGER;
   brdts_lod4_id INTEGER;
 BEGIN
-  --// PRE DELETE THEMATIC SURFACE //--
+  --// PRE DELETE BRIDGE THEMATIC SURFACE //--
   -- delete opening(s) not being referenced by a bridge thematic surface any more
-  EXECUTE format('SELECT geodb_pkg.delete_bridge_opening(o.id, %L) FROM %I.bridge_opening brdo, %I.bridge_open_to_them_srf brdo2ts
+  EXECUTE format('SELECT geodb_pkg.delete_bridge_opening(brdo.id, %L) FROM %I.bridge_opening brdo, %I.bridge_open_to_them_srf brdo2ts
                     WHERE brdo.id = brdo2ts.bridge_opening_id AND brdo2ts.bridge_thematic_surface_id = %L
                     AND geodb_pkg.is_not_referenced(%L, %L, brdo.id, %L, %L, %L)',
                     schema_name, schema_name, schema_name, brdts_id, 
@@ -1698,10 +1723,10 @@ BEGIN
                     FROM %I.bridge_thematic_surface WHERE id = %L', schema_name, brdts_id)
                     INTO brdts_lod2_id, brdts_lod3_id, brdts_lod4_id;
 
-  --// DELETE THEMATIC SURFACE //--
+  --// DELETE BRIDGE THEMATIC SURFACE //--
   EXECUTE format('DELETE FROM %I.bridge_thematic_surface WHERE id = %L', schema_name, brdts_id);
 
-  --// POST DELETE THEMATIC SURFACE //--
+  --// POST DELETE BRIDGE THEMATIC SURFACE //--
   -- delete geometry
   IF brdts_lod2_id IS NOT NULL THEN
     PERFORM geodb_pkg.delete_surface_geometry(brdts_lod2_id, schema_name);
@@ -1725,7 +1750,7 @@ LANGUAGE plpgsql;
 
 
 /*
-delete from OPENING
+delete from BRIDGE_OPENING
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_bridge_opening(
   brdo_id INTEGER, 
@@ -1815,7 +1840,7 @@ LANGUAGE plpgsql;
 
 
 /*
-delete from ROOM
+delete from BRIDGE_ROOM
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_bridge_room(
   brdr_id INTEGER, 
@@ -2051,7 +2076,7 @@ LANGUAGE plpgsql;
 
 
 /*
-delete from THEMATIC_SURFACE
+delete from TUNNEL_THEMATIC_SURFACE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_tunnel_them_srf(
   tunts_id INTEGER, 
@@ -2063,26 +2088,26 @@ DECLARE
   tunts_lod3_id INTEGER;
   tunts_lod4_id INTEGER;
 BEGIN
-  --// PRE DELETE THEMATIC SURFACE //--
+  --// PRE DELETE TUNNEL THEMATIC SURFACE //--
   -- delete opening(s) not being referenced by a tunnel thematic surface any more
-  EXECUTE format('SELECT geodb_pkg.delete_tunnel_opening(o.id, %L) FROM %I.tunnel_opening tuno, %I.tunnel_open_to_them_srf tuno2ts
+  EXECUTE format('SELECT geodb_pkg.delete_tunnel_opening(tuno.id, %L) FROM %I.tunnel_opening tuno, %I.tunnel_open_to_them_srf tuno2ts
                     WHERE tuno.id = tuno2ts.tunnel_opening_id AND tuno2ts.tunnel_thematic_surface_id = %L
                       AND geodb_pkg.is_not_referenced(%L, %L, tuno.id, %L, %L, %L)',
                       schema_name, schema_name, schema_name, tunts_id,
                       'tunnel_open_to_them_srf', 'tunnel_opening_id', 'tunnel_thematic_surface_id', tunts_id, schema_name);
 
   -- delete reference to opening
-  EXECUTE format('DELETE FROM tunnel_open_to_them_srf WHERE tunnel_thematic_surface_id = %L', schema_name, tunts_id);
+  EXECUTE format('DELETE FROM %I.tunnel_open_to_them_srf WHERE tunnel_thematic_surface_id = %L', schema_name, tunts_id);
 
   -- get reference ids to surface_geometry table 
   EXECUTE format('SELECT lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id 
-                    FROM %I.tunnel_thematic_surface WHERE id = %L', schema_name, tunst_id)
+                    FROM %I.tunnel_thematic_surface WHERE id = %L', schema_name, tunts_id)
                     INTO tunts_lod2_id, tunts_lod3_id, tunts_lod4_id;
 
-  --// DELETE THEMATIC SURFACE //--
+  --// DELETE TUNNEL THEMATIC SURFACE //--
   EXECUTE format('DELETE FROM %I.tunnel_thematic_surface WHERE id = %L', schema_name, tunts_id);
 
-  --// POST DELETE THEMATIC SURFACE //--
+  --// POST DELETE TUNNEL THEMATIC SURFACE //--
   -- delete geometry
   IF tunts_lod2_id IS NOT NULL THEN
     PERFORM geodb_pkg.delete_surface_geometry(tunts_lod2_id, schema_name);
@@ -2106,7 +2131,7 @@ LANGUAGE plpgsql;
 
 
 /*
-delete from OPENING
+delete from TUNNEL_OPENING
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_tunnel_opening(
   tuno_id INTEGER, 
@@ -2242,7 +2267,7 @@ CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_implicit_geometries(
   ) RETURNS SETOF VOID AS
 $$
 BEGIN
-  EXECUTE format('SELECT geodb_pkg.delete_implicit_geom(ig.id, %L) FROM %I.implicit_geometry ig
+  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, %L) FROM %I.implicit_geometry ig
                     LEFT JOIN %I.bridge_furniture brdf ON brdf.lod4_implicit_rep_id = ig.id
                     LEFT JOIN %I.bridge_constr_element brdce1 ON brdce1.lod1_implicit_rep_id = ig.id
                     LEFT JOIN %I.bridge_constr_element brdce2 ON brdce1.lod2_implicit_rep_id = ig.id
@@ -2345,7 +2370,7 @@ BEGIN
   -- surface data which does not have a valid texture parameterization
   -- any more.
   EXECUTE format('SELECT geodb_pkg.delete_surface_data(s.id, %L) FROM %I.surface_data s 
-                    LEFT OUTER JOIN %I.textureparam t ON s.id=t.surface_data_id 
+                    LEFT OUTER JOIN %I.textureparam t ON s.id = t.surface_data_id 
                     WHERE t.surface_data_id IS NULL', schema_name, schema_name, schema_name);
 
   -- delete appearances which does not have surface data any more
@@ -2359,6 +2384,30 @@ BEGIN
                       LEFT OUTER JOIN %I.appear_to_surface_data asd ON a.id=asd.appearance_id 
                       WHERE asd.appearance_id IS NULL', schema_name, schema_name, schema_name);
   END IF;
+
+  -- delete tex images not referenced by surface data any more
+  PERFORM geodb_pkg.cleanup_tex_images(schema_name);
+
+  EXCEPTION  
+    WHEN OTHERS THEN
+      RAISE NOTICE 'cleanup_appearances: %', SQLERRM;
+END; 
+$$ 
+LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_tex_images(
+  schema_name VARCHAR DEFAULT 'public'
+  ) RETURNS SETOF VOID AS
+$$
+BEGIN
+  EXECUTE format('SELECT geodb_pkg.delete_tex_image(ti.id, %L) FROM %I.tex_image ti
+                    LEFT JOIN %I.surface_data sd ON sd.tex_image_id = ti.id
+                    WHERE sd.tex_image_id IS NULL', schema_name, schema_name, schema_name);
+
+  EXCEPTION  
+    WHEN OTHERS THEN
+      RAISE NOTICE 'cleanup_tex_images: %', SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;
@@ -2377,6 +2426,10 @@ BEGIN
                       AND o.address_id IS NULL
                       AND brdo.address_id IS NULL',
                       schema_name, schema_name, schema_name, schema_name, schema_name, schema_name);
+
+  EXCEPTION  
+    WHEN OTHERS THEN
+      RAISE NOTICE 'cleanup_addresses: %', SQLERRM;
 END;
 $$ 
 LANGUAGE plpgsql;
@@ -2399,6 +2452,10 @@ BEGIN
   EXECUTE format('SELECT geodb_pkg.delete_citymodel(c.id, 1, %L) FROM %I.citymodel c 
                     LEFT OUTER JOIN %I.cityobject_member cm ON c.id=cm.citymodel_id 
                     WHERE cm.cityobject_id IS NULL', schema_name, schema_name, schema_name);
+
+  EXCEPTION  
+    WHEN OTHERS THEN
+      RAISE NOTICE 'cleanup_citymodels: %', SQLERRM;
 END;
 $$ 
 LANGUAGE plpgsql;

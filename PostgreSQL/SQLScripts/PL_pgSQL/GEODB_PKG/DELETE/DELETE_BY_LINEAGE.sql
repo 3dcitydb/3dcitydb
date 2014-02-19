@@ -447,6 +447,7 @@ BEGIN
   END LOOP;
 
   -- cleanup
+  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
   PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
@@ -478,6 +479,7 @@ BEGIN
   END LOOP;
 
   -- cleanup
+  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
   PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
