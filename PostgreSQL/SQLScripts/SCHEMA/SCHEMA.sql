@@ -2,7 +2,13 @@
 -- pgModeler  version: 0.7.0-alpha
 -- PostgreSQL version: 9.3
 -- Project Site: pgmodeler.com.br
--- Model Author: ---
+-- Model Author: Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
+--               Zhihang Yao <zhihang.yao@tum.de>
+--               Claus Nagel <cnagel@virtualcitysystems.de>
+--               Felix Kunde <fkunde@virtualcitysystems.de>
+--               Philipp Willkomm <pwillkomm@moss.de>
+--               Gerhard König <gerhard.koenig@tu-berlin.de>
+--               Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 
 SET check_function_bodies = false;
 -- ddl-end --
@@ -809,7 +815,9 @@ CREATE TABLE public.building(
 	storeys_above_ground numeric(8,0),
 	storeys_below_ground numeric(8,0),
 	storey_heights_above_ground character varying(4000),
+	storey_heights_ag_codespace character varying(4000),
 	storey_heights_below_ground character varying(4000),
+	storey_heights_bg_codespace character varying(4000),
 	lod1_terrain_intersection geometry(MULTILINESTRINGZ),
 	lod2_terrain_intersection geometry(MULTILINESTRINGZ),
 	lod3_terrain_intersection geometry(MULTILINESTRINGZ),

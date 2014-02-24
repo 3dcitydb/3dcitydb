@@ -25,7 +25,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 2.0.0     2014-02-19   complete revision for 3DCityDB V3           FKun
+-- 2.0.0     2014-02-24   complete revision for 3DCityDB V3           FKun
 -- 1.2.0     2013-08-08   extended to all thematic classes            FKun
 --                                                                    GHud
 -- 1.1.0     2012-02-22   some performance improvements               CNag
@@ -40,7 +40,8 @@
 *   cleanup_appearances(only_global INTEGER DEFAULT 1, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   cleanup_citymodels(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   cleanup_cityobjectgroups(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   cleanup_implicit_geometries(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
+*   cleanup_implicit_geometries(clean_apps INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
+*   cleanup_tex_images(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_address(ad_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_appearance(app_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_breakline_relief(blr INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
@@ -72,6 +73,7 @@
 *   delete_solitary_veg_obj(svo_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_surface_data(sd_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_surface_geometry(sg_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
+*   delete_tex_image(ti_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_thematic_surface(ts_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_tin_relief(tr INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_traffic_area(ta_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
@@ -106,7 +108,7 @@ BEGIN
 
   EXECUTE format('SELECT objectclass_id FROM %I.cityobject WHERE id = %L', schema_name, co_id) INTO class_id;
 
-  -- class_id can be NULL if objects has already been deleted
+  -- class_id can be NULL if object has already been deleted
   IF class_id IS NOT NULL THEN
     CASE
       WHEN class_id = 4 THEN PERFORM geodb_pkg.delete_land_use(co_id, schema_name);
@@ -214,6 +216,7 @@ BEGIN
   EXECUTE format('DELETE FROM %I.cityobject WHERE id = %L', schema_name, co_id);
   
   -- fourth step: cleanup
+  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);  
   PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
   PERFORM geodb_pkg.cleanup_addresses(schema_name);
   PERFORM geodb_pkg.cleanup_cityobjectgroups(schema_name);

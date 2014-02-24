@@ -870,7 +870,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="storey_heights_above_ground">
 		<type name="character varying" length="4000"/>
 	</column>
+	<column name="storey_heights_ag_codespace">
+		<type name="character varying" length="4000"/>
+	</column>
 	<column name="storey_heights_below_ground">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="storey_heights_bg_codespace">
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="lod1_terrain_intersection">
@@ -6406,9 +6412,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.objectclass"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="2891.17" y="1201.12"/>
-	<position x="2891.17" y="1155.84"/>
-	<position x="2784.84" y="1155.84"/>
+		<position x="2923.17" y="1199.12"/>
+	<position x="2923.17" y="1155.84"/>
+	<position x="2806.17" y="1155.84"/>
 	</line>
 	<label ref-type="name-label">
 		<position x="6.30591" y="-14.0399"/>
@@ -6477,9 +6483,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.building"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="4211.74" y="4172.65"/>
-	<position x="4211.74" y="3821.37"/>
-	<position x="4055.41" y="3821.37"/>
+		<position x="4267.74" y="4150.25"/>
+	<position x="4267.74" y="3821.37"/>
+	<position x="4092.74" y="3821.37"/>
 	</line>
 </relationship>
 
@@ -6857,9 +6863,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.tunnel"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="1755.18" y="3558.65"/>
-	<position x="1755.18" y="3279.37"/>
-	<position x="1608.85" y="3279.37"/>
+		<position x="1810.18" y="3541.05"/>
+	<position x="1810.18" y="3279.37"/>
+	<position x="1645.51" y="3279.37"/>
 	</line>
 </relationship>
 
@@ -7025,9 +7031,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.bridge"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="5317.08" y="3929.65"/>
-	<position x="5317.08" y="3644.37"/>
-	<position x="5175.08" y="3644.37"/>
+		<position x="5370.08" y="3911.65"/>
+	<position x="5370.08" y="3644.37"/>
+	<position x="5210.41" y="3644.37"/>
 	</line>
 	<label ref-type="name-label">
 		<position x="60.3955" y="254.43"/>
@@ -7252,9 +7258,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.surface_geometry"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="4189.58" y="1589.48"/>
-	<position x="4189.58" y="1454.2"/>
-	<position x="4073.91" y="1454.2"/>
+		<position x="4221.58" y="1581.48"/>
+	<position x="4221.58" y="1454.2"/>
+	<position x="4095.25" y="1454.2"/>
 	</line>
 </relationship>
 
@@ -7282,9 +7288,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.cityobject_genericattrib"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="2656" y="515.28"/>
-	<position x="2656" y="374"/>
-	<position x="2528.67" y="374"/>
+		<position x="2706" y="506.88"/>
+	<position x="2706" y="374"/>
+	<position x="2562" y="374"/>
 	</line>
 </relationship>
 

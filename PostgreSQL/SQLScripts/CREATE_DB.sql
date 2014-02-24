@@ -29,7 +29,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 3.0.0     2014-01-08   new script for 3DCityDB V3                  FKun	   
+-- 3.0.0     2014-02-24   new script for 3DCityDB V3                  FKun	   
 -- 2.0.0     2012-05-21   PostGIS version                             FKun
 --                                                                    TKol
 --                                                                    GKoe
@@ -44,6 +44,8 @@ SET client_min_messages TO WARNING;
 \echo
 \prompt 'Please enter a valid SRID (e.g., 3068 for DHDN/Soldner Berlin): ' SRS_NO
 \prompt 'Please enter the corresponding SRSName to be used in GML exports (e.g., urn:ogc:def:crs,crs:EPSG::3068,crs:EPSG::5783): ' GMLSRSNAME
+
+\set SRSNO :SRS_NO
 
 --// create TABLES, SEQUENCES, CONSTRAINTS, INDEXES
 \echo
@@ -61,7 +63,6 @@ SET client_min_messages TO WARNING;
 \echo
 \echo '3DCityDB creation complete!'
 
-\set SRSNO :SRS_NO
 \set ON_ERROR_STOP ON
 
 --// checks if the chosen SRID is provided by the spatial_ref_sys table
