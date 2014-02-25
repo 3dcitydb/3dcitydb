@@ -870,13 +870,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="storey_heights_above_ground">
 		<type name="character varying" length="4000"/>
 	</column>
-	<column name="storey_heights_ag_codespace">
+	<column name="storey_heights_above_grnd_unit">
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="storey_heights_below_ground">
 		<type name="character varying" length="4000"/>
 	</column>
-	<column name="storey_heights_bg_codespace">
+	<column name="storey_heights_below_grnd_unit">
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="lod1_terrain_intersection">
@@ -1824,6 +1824,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="max_length">
 		<type name="double precision"/>
+	</column>
+	<column name="max_length_unit">
+		<type name="character varying" length="4000"/>
 	</column>
 	<column name="stop_lines">
 		<type name="geometry" spatial-type="MULTILINESTRING" variation="1" srid="0"/>
@@ -6483,9 +6486,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.building"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="4267.74" y="4150.25"/>
-	<position x="4267.74" y="3821.37"/>
-	<position x="4092.74" y="3821.37"/>
+		<position x="4269.74" y="4161.45"/>
+	<position x="4269.74" y="3821.37"/>
+	<position x="4094.07" y="3821.37"/>
 	</line>
 </relationship>
 
