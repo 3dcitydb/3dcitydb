@@ -501,6 +501,17 @@
       <notNull>false</notNull>
     </column>
     <column>
+      <name>IMPLICIT_GEOMETRY</name>
+      <dataTypeUsage>
+        <dataTypeID class="oracle.javatools.db.NameBasedID">
+          <name>SDO_GEOMETRY</name>
+          <schemaName>MDSYS</schemaName>
+          <type>TYPE</type>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
       <name>CITYOBJECT_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">

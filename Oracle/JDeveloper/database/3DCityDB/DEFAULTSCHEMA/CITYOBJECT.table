@@ -52,24 +52,6 @@
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
-        <properties>
-          <entry>
-            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-            <value class="oracle.javatools.db.ReferenceID">
-              <parent class="oracle.javatools.db.ReferenceID">
-                <name>CLASS_ID</name>
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>CITYOBJECT</name>
-                  <identifier class="java.math.BigDecimal">115535</identifier>
-                  <schemaName>YAO</schemaName>
-                  <type>TABLE</type>
-                </parent>
-                <type>COLUMN</type>
-              </parent>
-              <type>DataTypeUsage</type>
-            </value>
-          </entry>
-        </properties>
       </dataTypeUsage>
       <notNull>true</notNull>
       <properties>

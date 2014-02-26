@@ -439,7 +439,7 @@
       </properties>
     </column>
     <column>
-      <name>LOD1_SOLID_ID</name>
+      <name>LOD1_MULTI_SOLID_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
@@ -449,7 +449,7 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <name>LOD2_SOLID_ID</name>
+      <name>LOD2_MULTI_SOLID_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
@@ -459,7 +459,7 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <name>LOD3_SOLID_ID</name>
+      <name>LOD3_MULTI_SOLID_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
@@ -469,7 +469,7 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <name>LOD4_SOLID_ID</name>
+      <name>LOD4_MULTI_SOLID_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
@@ -480,6 +480,51 @@
     </column>
   </columns>
   <constraints>
+    <constraint class="oracle.javatools.db.PKConstraint">
+      <name>PLANT_COVER_PK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>PLANT_COVER</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <indexID class="oracle.javatools.db.NameBasedID">
+        <name>PLANT_COVER_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>PLANT_COVER</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
+        <type>INDEX</type>
+      </indexID>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>PLANT_COVER_PK</name>
+            <childObjectNames>
+              <childObjectName>ID</childObjectName>
+            </childObjectNames>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>PLANT_COVER</name>
+              <identifier class="java.math.BigDecimal">115853</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <subType>PKConstraint</subType>
+            <type>CONSTRAINT</type>
+          </value>
+        </entry>
+      </properties>
+    </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <name>PLANT_COVER_CITYOBJECT_FK</name>
       <columnIDs>
@@ -490,6 +535,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -525,6 +571,32 @@
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
+      <name>PLANT_COVER_LOD1MSOLID_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>LOD1_MULTI_SOLID_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>PLANT_COVER</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <referenceID class="oracle.javatools.db.NameBasedID">
+        <name>SURFACE_GEOMETRY_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>SURFACE_GEOMETRY</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
       <name>PLANT_COVER_LOD1MSRF_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
@@ -534,6 +606,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -569,15 +642,16 @@
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <name>PLANT_COVER_LOD1SOLID_FK</name>
+      <name>PLANT_COVER_LOD2MSOLID_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>LOD1_SOLID_ID</name>
+          <name>LOD2_MULTI_SOLID_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>PLANT_COVER</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -603,6 +677,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -638,15 +713,16 @@
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <name>PLANT_COVER_LOD2SOLID_FK</name>
+      <name>PLANT_COVER_LOD3MSOLID_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>LOD2_SOLID_ID</name>
+          <name>LOD3_MULTI_SOLID_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>PLANT_COVER</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -672,6 +748,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -707,15 +784,16 @@
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <name>PLANT_COVER_LOD3SOLID_FK</name>
+      <name>PLANT_COVER_LOD4MSOLID_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>LOD3_SOLID_ID</name>
+          <name>LOD4_MULTI_SOLID_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>PLANT_COVER</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -741,6 +819,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -774,75 +853,6 @@
         </parent>
         <type>CONSTRAINT</type>
       </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <name>PLANT_COVER_LOD4SOLID_FK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>LOD4_SOLID_ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>PLANT_COVER</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <onDeleteAction>NO_ACTION</onDeleteAction>
-      <referenceID class="oracle.javatools.db.NameBasedID">
-        <name>SURFACE_GEOMETRY_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>SURFACE_GEOMETRY</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.PKConstraint">
-      <name>PLANT_COVER_PK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>PLANT_COVER</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.NameBasedID">
-        <name>PLANT_COVER_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>PLANT_COVER</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>DEFAULTSCHEMA</schemaName>
-        <type>INDEX</type>
-      </indexID>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>PLANT_COVER_PK</name>
-            <childObjectNames>
-              <childObjectName>ID</childObjectName>
-            </childObjectNames>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>PLANT_COVER</name>
-              <identifier class="java.math.BigDecimal">115853</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <subType>PKConstraint</subType>
-            <type>CONSTRAINT</type>
-          </value>
-        </entry>
-      </properties>
     </constraint>
   </constraints>
   <indexes>
@@ -932,7 +942,7 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <name>PLANT_COVER_LOD1SOLID_FKX</name>
+      <name>PLANT_COVER_LOD2MSOLID_FKX</name>
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD1_SOLID_ID</expressionSource>
@@ -1045,6 +1055,20 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
+      <name>PLANT_COVER_LOD3MSOLID_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <expressionSource>LOD3_SOLID_ID</expressionSource>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <parallelDegree>1</parallelDegree>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
       <name>PLANT_COVER_LOD3MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -1130,10 +1154,10 @@
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <name>PLANT_COVER_LOD3SOLID_FKX</name>
+      <name>PLANT_COVER_LOD4MSOLID_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <expressionSource>LOD3_SOLID_ID</expressionSource>
+          <expressionSource>LOD4_SOLID_ID</expressionSource>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -1223,20 +1247,6 @@
           </value>
         </entry>
       </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <name>PLANT_COVER_LOD4SOLID_FKX</name>
-      <columnExpressions>
-        <columnExpression>
-          <expressionSource>LOD4_SOLID_ID</expressionSource>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
