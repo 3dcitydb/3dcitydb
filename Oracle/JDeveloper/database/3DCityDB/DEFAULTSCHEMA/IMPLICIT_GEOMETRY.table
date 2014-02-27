@@ -289,50 +289,6 @@
     </column>
   </columns>
   <constraints>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <name>IMPLICIT_GEOM_BREP_FK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>RELATIVE_BREP_ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>IMPLICIT_GEOMETRY</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <onDeleteAction>NO_ACTION</onDeleteAction>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>IMPLICIT_GEOMETRY_FK</name>
-            <childObjectNames>
-              <childObjectName>RELATIVE_GEOMETRY_ID</childObjectName>
-            </childObjectNames>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>IMPLICIT_GEOMETRY</name>
-              <identifier class="java.math.BigDecimal">115549</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <subType>FKConstraint</subType>
-            <type>CONSTRAINT</type>
-          </value>
-        </entry>
-      </properties>
-      <referenceID class="oracle.javatools.db.NameBasedID">
-        <name>SURFACE_GEOMETRY_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>SURFACE_GEOMETRY</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
       <name>IMPLICIT_GEOMETRY_PK</name>
       <columnIDs>
@@ -343,6 +299,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -376,6 +333,51 @@
           </value>
         </entry>
       </properties>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <name>IMPLICIT_GEOM_BREP_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>RELATIVE_BREP_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>IMPLICIT_GEOMETRY</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>IMPLICIT_GEOMETRY_FK</name>
+            <childObjectNames>
+              <childObjectName>RELATIVE_GEOMETRY_ID</childObjectName>
+            </childObjectNames>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>IMPLICIT_GEOMETRY</name>
+              <identifier class="java.math.BigDecimal">115549</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <subType>FKConstraint</subType>
+            <type>CONSTRAINT</type>
+          </value>
+        </entry>
+      </properties>
+      <referenceID class="oracle.javatools.db.NameBasedID">
+        <name>SURFACE_GEOMETRY_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>SURFACE_GEOMETRY</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
     </constraint>
   </constraints>
   <indexes>
@@ -589,25 +591,6 @@
           </value>
         </entry>
       </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <name>IMPLICIT_GEOM_XGEOM_SPX</name>
-      <columnExpressions>
-        <columnExpression>
-          <expressionSource>RELATIVE_OTHER_GEOM</expressionSource>
-        </columnExpression>
-      </columnExpressions>
-      <domainIndextype class="oracle.javatools.db.ReferenceID">
-        <name>SPATIAL_INDEX</name>
-        <schemaName>MDSYS</schemaName>
-        <type>INDEXTYPE</type>
-      </domainIndextype>
-      <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
