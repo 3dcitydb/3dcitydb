@@ -1257,6 +1257,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1301,6 +1302,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1345,6 +1347,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1389,6 +1392,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1433,6 +1437,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1477,6 +1482,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1521,6 +1527,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1565,6 +1572,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1609,6 +1617,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1653,6 +1662,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1697,6 +1707,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1741,6 +1752,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1782,7 +1794,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1806,7 +1817,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>UNIQUE</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1823,43 +1833,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERIC_CITYOBJECT_PK</name>
-                    <identifier class="java.math.BigDecimal">115642</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -1871,11 +1844,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD0_BREP_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1892,43 +1863,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERIC_CITYOBJECT_FKX5</name>
-                    <identifier class="java.math.BigDecimal">115941</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -1940,7 +1874,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD0_IMPLICIT_REP_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1964,7 +1897,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1979,43 +1911,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERIC_CITYOBJECT_FKX</name>
-                    <identifier class="java.math.BigDecimal">115936</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
           </value>
         </entry>
       </properties>
@@ -2037,7 +1932,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -2057,7 +1951,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2072,34 +1965,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERICCITY_LOD0TERR_SPX</name>
-                    <identifier class="java.math.BigDecimal">116065</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
           </value>
         </entry>
       </properties>
@@ -2121,7 +1986,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -2132,11 +1996,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD1_BREP_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2153,43 +2015,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERIC_CITYOBJECT_FKX6</name>
-                    <identifier class="java.math.BigDecimal">115942</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -2201,7 +2026,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD1_IMPLICIT_REP_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2225,7 +2049,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2240,43 +2063,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERIC_CITYOBJECT_FKX1</name>
-                    <identifier class="java.math.BigDecimal">115937</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
           </value>
         </entry>
       </properties>
@@ -2299,7 +2085,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2314,34 +2099,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERICCITY_LOD1REFPNT_SPX</name>
-                    <identifier class="java.math.BigDecimal">116100</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
           </value>
         </entry>
       </properties>
@@ -2364,7 +2121,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2379,34 +2135,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERICCITY_LOD1TERR_SPX</name>
-                    <identifier class="java.math.BigDecimal">116072</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
           </value>
         </entry>
       </properties>
@@ -2428,7 +2156,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -2439,11 +2166,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD2_BREP_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2460,43 +2185,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERIC_CITYOBJECT_FKX7</name>
-                    <identifier class="java.math.BigDecimal">115943</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -2508,7 +2196,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD2_IMPLICIT_REP_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2532,7 +2219,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2547,43 +2233,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERIC_CITYOBJECT_FKX2</name>
-                    <identifier class="java.math.BigDecimal">115938</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
           </value>
         </entry>
       </properties>
@@ -2606,7 +2255,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2621,34 +2269,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERICCITY_LOD2REFPNT_SPX</name>
-                    <identifier class="java.math.BigDecimal">116107</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
           </value>
         </entry>
       </properties>
@@ -2671,7 +2291,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2686,34 +2305,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERICCITY_LOD2TERR_SPX</name>
-                    <identifier class="java.math.BigDecimal">116079</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
           </value>
         </entry>
       </properties>
@@ -2735,7 +2326,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -2746,11 +2336,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD3_BREP_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2767,43 +2355,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERIC_CITYOBJECT_FKX8</name>
-                    <identifier class="java.math.BigDecimal">115944</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -2815,7 +2366,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD3_IMPLICIT_REP_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2839,7 +2389,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2854,43 +2403,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERIC_CITYOBJECT_FKX3</name>
-                    <identifier class="java.math.BigDecimal">115939</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
           </value>
         </entry>
       </properties>
@@ -2913,7 +2425,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2928,34 +2439,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERICCITY_LOD3REFPNT_SPX</name>
-                    <identifier class="java.math.BigDecimal">116114</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
           </value>
         </entry>
       </properties>
@@ -2978,7 +2461,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2993,34 +2475,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERICCITY_LOD3TERR_SPX</name>
-                    <identifier class="java.math.BigDecimal">116086</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
           </value>
         </entry>
       </properties>
@@ -3042,7 +2496,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -3053,11 +2506,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD4_BREP_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -3074,43 +2525,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERIC_CITYOBJECT_FKX9</name>
-                    <identifier class="java.math.BigDecimal">115945</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -3122,7 +2536,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD4_IMPLICIT_REP_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -3146,7 +2559,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -3161,43 +2573,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERIC_CITYOBJECT_FKX4</name>
-                    <identifier class="java.math.BigDecimal">115940</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
           </value>
         </entry>
       </properties>
@@ -3220,7 +2595,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -3235,34 +2609,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERICCITY_LOD4REFPNT_SPX</name>
-                    <identifier class="java.math.BigDecimal">116121</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
           </value>
         </entry>
       </properties>
@@ -3285,7 +2631,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -3300,34 +2645,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>GENERICCITY_LOD4TERR_SPX</name>
-                    <identifier class="java.math.BigDecimal">116093</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>GENERIC_CITYOBJECT</name>
-                      <identifier class="java.math.BigDecimal">115601</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
           </value>
         </entry>
       </properties>
@@ -3349,7 +2666,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -3368,37 +2684,6 @@
         <identifier class="java.math.BigDecimal">115601</identifier>
         <schemaName>YAO</schemaName>
         <type>TABLE</type>
-      </value>
-    </entry>
-    <entry>
-      <key>OracleStorageProperties</key>
-      <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <bufferMode>DEFAULT</bufferMode>
-        <initialExtent>65536</initialExtent>
-        <initrans>1</initrans>
-        <logging>true</logging>
-        <maxExtent>0</maxExtent>
-        <minExtent>1</minExtent>
-        <nextExtent>1048576</nextExtent>
-        <percentFree>10</percentFree>
-        <properties>
-          <entry>
-            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-            <value class="oracle.javatools.db.ReferenceID">
-              <parent class="oracle.javatools.db.ReferenceID">
-                <name>GENERIC_CITYOBJECT</name>
-                <identifier class="java.math.BigDecimal">115601</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>OracleStorageProperties</type>
-            </value>
-          </entry>
-        </properties>
-        <tablespaceID class="oracle.javatools.db.NameBasedID">
-          <name>USERS</name>
-          <type>TABLESPACE</type>
-        </tablespaceID>
       </value>
     </entry>
     <entry>

@@ -1221,6 +1221,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1265,6 +1266,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1309,6 +1311,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1353,6 +1356,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1397,6 +1401,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1441,6 +1446,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1485,6 +1491,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1529,6 +1536,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1573,6 +1581,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1617,6 +1626,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -1658,7 +1668,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1682,7 +1691,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>UNIQUE</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1699,43 +1707,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEG_OBJECT_PK</name>
-                    <identifier class="java.math.BigDecimal">115872</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -1747,7 +1718,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD1_BREP_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1771,7 +1741,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1788,43 +1757,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX1</name>
-                    <identifier class="java.math.BigDecimal">115963</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -1836,7 +1768,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD1_IMPLICIT_REP_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1860,7 +1791,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1875,43 +1805,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX5</name>
-                    <identifier class="java.math.BigDecimal">115967</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
           </value>
         </entry>
       </properties>
@@ -1934,7 +1827,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1949,34 +1841,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOL_VEG_OBJ_LOD1REFPT_SPX</name>
-                    <identifier class="java.math.BigDecimal">116261</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
           </value>
         </entry>
       </properties>
@@ -1998,7 +1862,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -2009,7 +1872,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD2_BREP_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2033,7 +1895,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2050,43 +1911,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX2</name>
-                    <identifier class="java.math.BigDecimal">115964</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -2098,7 +1922,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD2_IMPLICIT_REP_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2122,7 +1945,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2137,43 +1959,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX6</name>
-                    <identifier class="java.math.BigDecimal">115968</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
           </value>
         </entry>
       </properties>
@@ -2216,7 +2001,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2231,34 +2015,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOL_VEG_OBJ_LOD2REFPT_SPX</name>
-                    <identifier class="java.math.BigDecimal">116268</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
           </value>
         </entry>
       </properties>
@@ -2280,7 +2036,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -2291,7 +2046,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD3_BREP_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2315,7 +2069,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2332,43 +2085,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX3</name>
-                    <identifier class="java.math.BigDecimal">115965</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -2380,7 +2096,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD3_IMPLICIT_REP_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2404,7 +2119,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2419,43 +2133,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX7</name>
-                    <identifier class="java.math.BigDecimal">115969</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
           </value>
         </entry>
       </properties>
@@ -2498,7 +2175,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2513,34 +2189,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOL_VEG_OBJ_LOD3REFPT_SPX</name>
-                    <identifier class="java.math.BigDecimal">116275</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
           </value>
         </entry>
       </properties>
@@ -2562,7 +2210,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -2573,7 +2220,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD4_BREP_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2597,7 +2243,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2614,43 +2259,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX4</name>
-                    <identifier class="java.math.BigDecimal">115966</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -2662,7 +2270,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD4_IMPLICIT_REP_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2686,7 +2293,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2701,43 +2307,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOLITARY_VEGETAT_OBJ_FKX8</name>
-                    <identifier class="java.math.BigDecimal">115970</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
           </value>
         </entry>
       </properties>
@@ -2760,7 +2329,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -2775,34 +2343,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>SOL_VEG_OBJ_LOD4REFPT_SPX</name>
-                    <identifier class="java.math.BigDecimal">116282</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>SOLITARY_VEGETAT_OBJECT</name>
-                      <identifier class="java.math.BigDecimal">115855</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
           </value>
         </entry>
       </properties>
@@ -2824,7 +2364,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -2843,37 +2382,6 @@
         <identifier class="java.math.BigDecimal">115855</identifier>
         <schemaName>YAO</schemaName>
         <type>TABLE</type>
-      </value>
-    </entry>
-    <entry>
-      <key>OracleStorageProperties</key>
-      <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <bufferMode>DEFAULT</bufferMode>
-        <initialExtent>65536</initialExtent>
-        <initrans>1</initrans>
-        <logging>true</logging>
-        <maxExtent>0</maxExtent>
-        <minExtent>1</minExtent>
-        <nextExtent>1048576</nextExtent>
-        <percentFree>10</percentFree>
-        <properties>
-          <entry>
-            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-            <value class="oracle.javatools.db.ReferenceID">
-              <parent class="oracle.javatools.db.ReferenceID">
-                <name>SOLITARY_VEGETAT_OBJECT</name>
-                <identifier class="java.math.BigDecimal">115855</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>OracleStorageProperties</type>
-            </value>
-          </entry>
-        </properties>
-        <tablespaceID class="oracle.javatools.db.NameBasedID">
-          <name>USERS</name>
-          <type>TABLESPACE</type>
-        </tablespaceID>
       </value>
     </entry>
     <entry>

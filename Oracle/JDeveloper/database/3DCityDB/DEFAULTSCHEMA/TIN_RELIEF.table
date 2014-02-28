@@ -281,51 +281,6 @@
     </column>
   </columns>
   <constraints>
-    <constraint class="oracle.javatools.db.PKConstraint">
-      <name>TIN_RELIEF_PK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>TIN_RELIEF</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.NameBasedID">
-        <name>TIN_RELIEF_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>TIN_RELIEF</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>DEFAULTSCHEMA</schemaName>
-        <type>INDEX</type>
-      </indexID>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>TIN_RELIEF_PK</name>
-            <childObjectNames>
-              <childObjectName>ID</childObjectName>
-            </childObjectNames>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>TIN_RELIEF</name>
-              <identifier class="java.math.BigDecimal">115789</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <subType>PKConstraint</subType>
-            <type>CONSTRAINT</type>
-          </value>
-        </entry>
-      </properties>
-    </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <name>TIN_RELIEF_COMP_FK</name>
       <columnIDs>
@@ -416,6 +371,51 @@
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
+    <constraint class="oracle.javatools.db.PKConstraint">
+      <name>TIN_RELIEF_PK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>TIN_RELIEF</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <indexID class="oracle.javatools.db.NameBasedID">
+        <name>TIN_RELIEF_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>TIN_RELIEF</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
+        <type>INDEX</type>
+      </indexID>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>TIN_RELIEF_PK</name>
+            <childObjectNames>
+              <childObjectName>ID</childObjectName>
+            </childObjectNames>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>TIN_RELIEF</name>
+              <identifier class="java.math.BigDecimal">115789</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <subType>PKConstraint</subType>
+            <type>CONSTRAINT</type>
+          </value>
+        </entry>
+      </properties>
+    </constraint>
   </constraints>
   <indexes>
     <indexe>
@@ -432,7 +432,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -447,34 +446,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>TIN_RELF_BREAK_SPX</name>
-                    <identifier class="java.math.BigDecimal">116051</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>TIN_RELIEF</name>
-                      <identifier class="java.math.BigDecimal">115789</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
           </value>
         </entry>
       </properties>
@@ -517,7 +488,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -532,34 +502,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>TIN_RELF_CRTLPTS_SPX</name>
-                    <identifier class="java.math.BigDecimal">116058</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>TIN_RELIEF</name>
-                      <identifier class="java.math.BigDecimal">115789</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
           </value>
         </entry>
       </properties>
@@ -582,7 +524,6 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -599,34 +540,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>TIN_RELF_STOP_SPX</name>
-                    <identifier class="java.math.BigDecimal">116044</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>TIN_RELIEF</name>
-                      <identifier class="java.math.BigDecimal">115789</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -638,7 +551,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>SURFACE_GEOMETRY_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -662,7 +574,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -679,43 +590,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>TIN_RELIEF_FKX</name>
-                    <identifier class="java.math.BigDecimal">115984</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>TIN_RELIEF</name>
-                      <identifier class="java.math.BigDecimal">115789</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -727,7 +601,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -751,7 +624,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>UNIQUE</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -766,43 +638,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>TIN_RELIEF_PK</name>
-                    <identifier class="java.math.BigDecimal">115802</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>TIN_RELIEF</name>
-                      <identifier class="java.math.BigDecimal">115789</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
           </value>
         </entry>
       </properties>
@@ -824,37 +659,6 @@
         <identifier class="java.math.BigDecimal">115789</identifier>
         <schemaName>YAO</schemaName>
         <type>TABLE</type>
-      </value>
-    </entry>
-    <entry>
-      <key>OracleStorageProperties</key>
-      <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <bufferMode>DEFAULT</bufferMode>
-        <initialExtent>65536</initialExtent>
-        <initrans>1</initrans>
-        <logging>true</logging>
-        <maxExtent>0</maxExtent>
-        <minExtent>1</minExtent>
-        <nextExtent>1048576</nextExtent>
-        <percentFree>10</percentFree>
-        <properties>
-          <entry>
-            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-            <value class="oracle.javatools.db.ReferenceID">
-              <parent class="oracle.javatools.db.ReferenceID">
-                <name>TIN_RELIEF</name>
-                <identifier class="java.math.BigDecimal">115789</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>OracleStorageProperties</type>
-            </value>
-          </entry>
-        </properties>
-        <tablespaceID class="oracle.javatools.db.NameBasedID">
-          <name>USERS</name>
-          <type>TABLESPACE</type>
-        </tablespaceID>
       </value>
     </entry>
     <entry>

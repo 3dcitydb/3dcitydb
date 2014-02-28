@@ -34,6 +34,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -59,6 +60,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -75,7 +77,7 @@
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <name>TUNNEL_OPEN_TO_THEM_SURF_PK</name>
+      <name>TUNNEL_OPEN_TO_THEM_SRF_PK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
           <name>TUNNEL_OPENING_ID</name>
@@ -84,6 +86,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.NameBasedID">
@@ -93,12 +96,13 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
       <indexID class="oracle.javatools.db.NameBasedID">
-        <name>TUNNEL_OPEN_TO_THEM_SRF</name>
+        <name>TUNNEL_OPEN_TO_THEM_SRF_PK</name>
         <parent class="oracle.javatools.db.NameBasedID">
           <name>TUNNEL_OPEN_TO_THEM_SRF</name>
           <schemaName>DEFAULTSCHEMA</schemaName>
@@ -111,7 +115,7 @@
   </constraints>
   <indexes>
     <indexe>
-      <name>TUNNEL_OPEN_TO_THEM_SRF</name>
+      <name>TUNNEL_OPEN_TO_THEM_SRF_PK</name>
       <columnExpressions>
         <columnExpression>
           <expressionSource>TUNNEL_OPENING_ID</expressionSource>
@@ -123,22 +127,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>UNIQUE</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -149,11 +137,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>TUNNEL_OPENING_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -164,11 +150,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>TUNNEL_THEMATIC_SURFACE_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -176,19 +160,6 @@
     </indexe>
   </indexes>
   <properties>
-    <entry>
-      <key>OracleStorageProperties</key>
-      <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <bufferMode>DEFAULT</bufferMode>
-        <initrans>1</initrans>
-        <logging>true</logging>
-        <percentFree>10</percentFree>
-        <tablespaceID class="oracle.javatools.db.NameBasedID">
-          <name>USERS</name>
-          <type>TABLESPACE</type>
-        </tablespaceID>
-      </value>
-    </entry>
     <entry>
       <key>TableType</key>
       <value class="oracle.javatools.db.Table$TableType">NORMAL</value>

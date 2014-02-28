@@ -314,32 +314,6 @@
     </column>
   </columns>
   <constraints>
-    <constraint class="oracle.javatools.db.PKConstraint">
-      <name>TUNNEL_INSTALLATION_PK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>TUNNEL_INSTALLATION</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.NameBasedID">
-        <name>TUNNEL_INSTALLATION_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>TUNNEL_INSTALLATION</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>DEFAULTSCHEMA</schemaName>
-        <type>INDEX</type>
-      </indexID>
-    </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <name>TUNNEL_INST_CITYOBJECT_FK</name>
       <columnIDs>
@@ -383,12 +357,13 @@
       <enabled>true</enabled>
       <onDeleteAction>NO_ACTION</onDeleteAction>
       <referenceID class="oracle.javatools.db.NameBasedID">
-        <name>TUNNEL_HOLLOWSPACE_PK</name>
+        <name>TUNNEL_HOLLOW_SPACE_PK</name>
         <parent class="oracle.javatools.db.NameBasedID">
           <name>TUNNEL_HOLLOW_SPACE</name>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
@@ -600,6 +575,32 @@
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
+    <constraint class="oracle.javatools.db.PKConstraint">
+      <name>TUNNEL_INSTALLATION_PK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>TUNNEL_INSTALLATION</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <indexID class="oracle.javatools.db.NameBasedID">
+        <name>TUNNEL_INSTALLATION_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>TUNNEL_INSTALLATION</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
+        <type>INDEX</type>
+      </indexID>
+    </constraint>
   </constraints>
   <indexes>
     <indexe>
@@ -607,26 +608,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>UNIQUE</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -637,26 +621,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>TUNNEL_HOLLOW_SPACE_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -667,26 +634,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD2_BREP_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -697,11 +647,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD2_IMPLICIT_REP_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -720,7 +668,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -739,7 +686,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -750,26 +696,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD3_BREP_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -780,11 +709,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD3_IMPLICIT_REP_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -803,7 +730,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -822,7 +748,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -833,26 +758,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD4_BREP_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -863,11 +771,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD4_IMPLICIT_REP_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -886,7 +792,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -905,7 +810,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -929,26 +833,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>TUNNEL_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -956,19 +843,6 @@
     </indexe>
   </indexes>
   <properties>
-    <entry>
-      <key>OracleStorageProperties</key>
-      <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <bufferMode>DEFAULT</bufferMode>
-        <initrans>1</initrans>
-        <logging>true</logging>
-        <percentFree>10</percentFree>
-        <tablespaceID class="oracle.javatools.db.NameBasedID">
-          <name>USERS</name>
-          <type>TABLESPACE</type>
-        </tablespaceID>
-      </value>
-    </entry>
     <entry>
       <key>TableType</key>
       <value class="oracle.javatools.db.Table$TableType">NORMAL</value>

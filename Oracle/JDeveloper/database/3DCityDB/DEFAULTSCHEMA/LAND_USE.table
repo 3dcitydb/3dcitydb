@@ -467,6 +467,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -511,6 +512,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -555,6 +557,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -599,6 +602,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -643,6 +647,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -687,6 +692,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -731,6 +737,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -772,7 +779,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD0_MULTI_SURFACE_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -796,7 +802,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -813,39 +818,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>LAND_USE_FKX</name>
-                    <identifier class="java.math.BigDecimal">115948</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>LAND_USE</name>
-                      <identifier class="java.math.BigDecimal">115851</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -857,7 +829,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD1_MULTI_SURFACE_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -881,7 +852,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -898,39 +868,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>LAND_USE_FKX1</name>
-                    <identifier class="java.math.BigDecimal">115949</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>LAND_USE</name>
-                      <identifier class="java.math.BigDecimal">115851</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -942,7 +879,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD2_MULTI_SURFACE_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -966,7 +902,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -983,39 +918,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>LAND_USE_FKX2</name>
-                    <identifier class="java.math.BigDecimal">115950</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>LAND_USE</name>
-                      <identifier class="java.math.BigDecimal">115851</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -1027,7 +929,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD3_MULTI_SURFACE_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1051,7 +952,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1068,39 +968,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>LAND_USE_FKX3</name>
-                    <identifier class="java.math.BigDecimal">115951</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>LAND_USE</name>
-                      <identifier class="java.math.BigDecimal">115851</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -1112,7 +979,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD4_MULTI_SURFACE_ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1136,7 +1002,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1153,39 +1018,6 @@
             <type>INDEX</type>
           </value>
         </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>LAND_USE_FKX4</name>
-                    <identifier class="java.math.BigDecimal">115952</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>LAND_USE</name>
-                      <identifier class="java.math.BigDecimal">115851</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
       </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
@@ -1197,7 +1029,6 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>ID</expressionSource>
-          <orderType>ASC</orderType>
           <properties>
             <entry>
               <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1221,7 +1052,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>UNIQUE</indexType>
-      <parallelDegree>1</parallelDegree>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -1236,39 +1066,6 @@
             </parent>
             <schemaName>YAO</schemaName>
             <type>INDEX</type>
-          </value>
-        </entry>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <properties>
-              <entry>
-                <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-                <value class="oracle.javatools.db.ReferenceID">
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>LAND_USE_PK</name>
-                    <identifier class="java.math.BigDecimal">115852</identifier>
-                    <parent class="oracle.javatools.db.ReferenceID">
-                      <name>LAND_USE</name>
-                      <identifier class="java.math.BigDecimal">115851</identifier>
-                      <schemaName>YAO</schemaName>
-                      <type>TABLE</type>
-                    </parent>
-                    <schemaName>YAO</schemaName>
-                    <type>INDEX</type>
-                  </parent>
-                  <type>OracleStorageProperties</type>
-                </value>
-              </entry>
-            </properties>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
           </value>
         </entry>
       </properties>
@@ -1290,33 +1087,6 @@
         <identifier class="java.math.BigDecimal">115851</identifier>
         <schemaName>YAO</schemaName>
         <type>TABLE</type>
-      </value>
-    </entry>
-    <entry>
-      <key>OracleStorageProperties</key>
-      <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <bufferMode>DEFAULT</bufferMode>
-        <initrans>1</initrans>
-        <logging>true</logging>
-        <percentFree>10</percentFree>
-        <properties>
-          <entry>
-            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-            <value class="oracle.javatools.db.ReferenceID">
-              <parent class="oracle.javatools.db.ReferenceID">
-                <name>LAND_USE</name>
-                <identifier class="java.math.BigDecimal">115851</identifier>
-                <schemaName>YAO</schemaName>
-                <type>TABLE</type>
-              </parent>
-              <type>OracleStorageProperties</type>
-            </value>
-          </entry>
-        </properties>
-        <tablespaceID class="oracle.javatools.db.NameBasedID">
-          <name>USERS</name>
-          <type>TABLESPACE</type>
-        </tablespaceID>
       </value>
     </entry>
     <entry>

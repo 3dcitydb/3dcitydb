@@ -179,24 +179,25 @@
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <name>BRIDGE_FURNITURE_FK</name>
+      <name>BRIDGE_FURN_BRD_ROOM_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>LOD4_IMPLICIT_REP_ID</name>
+          <name>BRIDGE_ROOM_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>BRIDGE_FURNITURE</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
       <onDeleteAction>NO_ACTION</onDeleteAction>
       <referenceID class="oracle.javatools.db.NameBasedID">
-        <name>IMPLICIT_GEOMETRY_PK</name>
+        <name>BRIDGE_ROOM_PK</name>
         <parent class="oracle.javatools.db.NameBasedID">
-          <name>IMPLICIT_GEOMETRY</name>
+          <name>BRIDGE_ROOM</name>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -204,7 +205,7 @@
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <name>BRIDGE_FURNITURE_FK1</name>
+      <name>BRIDGE_FURN_CITYOBJECT_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
           <name>ID</name>
@@ -213,6 +214,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -229,7 +231,7 @@
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <name>BRIDGE_FURNITURE_FK2</name>
+      <name>BRIDGE_FURN_LOD4BREP_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
           <name>LOD4_BREP_ID</name>
@@ -238,6 +240,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -254,24 +257,25 @@
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <name>BRIDGE_FURNITURE_ROOM_FK</name>
+      <name>BRIDGE_FURN_LOD4IMPL_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>BRIDGE_ROOM_ID</name>
+          <name>LOD4_IMPLICIT_REP_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>BRIDGE_FURNITURE</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
       <onDeleteAction>NO_ACTION</onDeleteAction>
       <referenceID class="oracle.javatools.db.NameBasedID">
-        <name>BRIDGE_ROOM_PK</name>
+        <name>IMPLICIT_GEOMETRY_PK</name>
         <parent class="oracle.javatools.db.NameBasedID">
-          <name>BRIDGE_ROOM</name>
+          <name>IMPLICIT_GEOMETRY</name>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -288,6 +292,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -306,7 +311,59 @@
   </constraints>
   <indexes>
     <indexe>
-      <name>BRD_FURN_LOD4REFPT_SPX1</name>
+      <name>BRIDGE_FURNITURE_PK</name>
+      <columnExpressions>
+        <columnExpression>
+          <expressionSource>ID</expressionSource>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>UNIQUE</indexType>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>true</systemGenerated>
+    </indexe>
+    <indexe>
+      <name>BRIDGE_FURN_BRD_ROOM_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <expressionSource>BRIDGE_ROOM_ID</expressionSource>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <name>BRIDGE_FURN_LOD4BREP_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <expressionSource>LOD4_BREP_ID</expressionSource>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <name>BRIDGE_FURN_LOD4IMPL_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <expressionSource>LOD4_IMPLICIT_REP_ID</expressionSource>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </indexe>
+    <indexe>
+      <name>BRIDGE_FURN_LOD4REFPT_SPX</name>
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD4_IMPLICIT_REF_POINT</expressionSource>
@@ -319,160 +376,13 @@
       </domainIndextype>
       <domainIndextypeOpStatus>VALID</domainIndextypeOpStatus>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <logging>true</logging>
-            <percentFree>0</percentFree>
-          </value>
-        </entry>
-      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
     </indexe>
     <indexe>
-      <name>BRIDGE_FURNITURE_FKX</name>
-      <columnExpressions>
-        <columnExpression>
-          <expressionSource>LOD4_BREP_ID</expressionSource>
-          <orderType>ASC</orderType>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <name>BRIDGE_FURNITURE_FKX1</name>
-      <columnExpressions>
-        <columnExpression>
-          <expressionSource>LOD4_IMPLICIT_REP_ID</expressionSource>
-          <orderType>ASC</orderType>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <name>BRIDGE_FURNITURE_FKX2</name>
-      <columnExpressions>
-        <columnExpression>
-          <expressionSource>BRIDGE_ROOM_ID</expressionSource>
-          <orderType>ASC</orderType>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
-      <name>BRIDGE_FURNITURE_PK</name>
-      <columnExpressions>
-        <columnExpression>
-          <expressionSource>ID</expressionSource>
-          <orderType>ASC</orderType>
-        </columnExpression>
-      </columnExpressions>
-      <indexType>UNIQUE</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initialExtent>65536</initialExtent>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <maxExtent>0</maxExtent>
-            <minExtent>1</minExtent>
-            <nextExtent>1048576</nextExtent>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
-      <schema>
-        <name>DEFAULTSCHEMA</name>
-      </schema>
-      <systemGenerated>true</systemGenerated>
-    </indexe>
-    <indexe>
-      <name>BRIDGE_FURN_OTHER_SPX2</name>
+      <name>BRIDGE_FURN_LOD4XGEOM_SPX</name>
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD4_OTHER_GEOM</expressionSource>
@@ -484,7 +394,6 @@
         <type>INDEXTYPE</type>
       </domainIndextype>
       <indexType>DOMAIN</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -492,23 +401,6 @@
     </indexe>
   </indexes>
   <properties>
-    <entry>
-      <key>OracleStorageProperties</key>
-      <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <bufferMode>DEFAULT</bufferMode>
-        <initialExtent>65536</initialExtent>
-        <initrans>1</initrans>
-        <logging>true</logging>
-        <maxExtent>0</maxExtent>
-        <minExtent>1</minExtent>
-        <nextExtent>1048576</nextExtent>
-        <percentFree>10</percentFree>
-        <tablespaceID class="oracle.javatools.db.NameBasedID">
-          <name>USERS</name>
-          <type>TABLESPACE</type>
-        </tablespaceID>
-      </value>
-    </entry>
     <entry>
       <key>TableType</key>
       <value class="oracle.javatools.db.Table$TableType">NORMAL</value>

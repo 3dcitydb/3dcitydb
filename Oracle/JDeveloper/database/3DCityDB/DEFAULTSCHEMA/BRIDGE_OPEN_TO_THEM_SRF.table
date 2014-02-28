@@ -34,6 +34,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -59,23 +60,25 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
       <onDeleteAction>NO_ACTION</onDeleteAction>
       <referenceID class="oracle.javatools.db.NameBasedID">
-        <name>BIRDGE_THEMATIC_SURFACE_PK</name>
+        <name>BRIDGE_THEMATIC_SURFACE_PK</name>
         <parent class="oracle.javatools.db.NameBasedID">
           <name>BRIDGE_THEMATIC_SURFACE</name>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <name>BRD_OPEN_TO_THEM_SURFACE_PK</name>
+      <name>BRIDGE_OPEN_TO_THEM_SRF_PK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
           <name>BRIDGE_OPENING_ID</name>
@@ -84,6 +87,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.NameBasedID">
@@ -93,6 +97,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -118,7 +123,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -132,7 +136,6 @@
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -143,30 +146,12 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>BRIDGE_OPENING_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
         <columnExpression>
           <expressionSource>BRIDGE_THEMATIC_SURFACE_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>UNIQUE</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -174,19 +159,6 @@
     </indexe>
   </indexes>
   <properties>
-    <entry>
-      <key>OracleStorageProperties</key>
-      <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <bufferMode>DEFAULT</bufferMode>
-        <initrans>1</initrans>
-        <logging>true</logging>
-        <percentFree>10</percentFree>
-        <tablespaceID class="oracle.javatools.db.NameBasedID">
-          <name>USERS</name>
-          <type>TABLESPACE</type>
-        </tablespaceID>
-      </value>
-    </entry>
     <entry>
       <key>TableType</key>
       <value class="oracle.javatools.db.Table$TableType">NORMAL</value>

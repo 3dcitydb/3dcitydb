@@ -2,7 +2,7 @@
 <sequence xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
   <name>APPEARANCE_SEQ</name>
   <cacheFlag>true</cacheFlag>
-  <cacheSize>1</cacheSize>
+  <cacheSize>10000</cacheSize>
   <cycleFlag>false</cycleFlag>
   <incrementBy>1</incrementBy>
   <lastNumber>1</lastNumber>

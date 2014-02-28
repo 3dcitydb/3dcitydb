@@ -24,6 +24,42 @@
     </column>
   </columns>
   <constraints>
+    <constraint class="oracle.javatools.db.PKConstraint">
+      <name>ADDRESS_TO_BRIDGE_PK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>BIRDGE_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>ADDRESS_TO_BRIDGE</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>ADDRESS_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>ADDRESS_TO_BRIDGE</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <indexID class="oracle.javatools.db.NameBasedID">
+        <name>ADDRESS_TO_BRIDGE_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>ADDRESS_TO_BRIDGE</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
+        <type>INDEX</type>
+      </indexID>
+    </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <name>ADDRESS_TO_BRIDGE_FK</name>
       <columnIDs>
@@ -34,6 +70,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -59,6 +96,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -74,40 +112,6 @@
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
-    <constraint class="oracle.javatools.db.PKConstraint">
-      <name>ADDRESS_TO_BRIDGE_PK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>BIRDGE_ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>ADDRESS_TO_BRIDGE</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>ADDRESS_ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>ADDRESS_TO_BRIDGE</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.NameBasedID">
-        <name>ADDRESS_TO_BRIDGE_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>ADDRESS_TO_BRIDGE</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>DEFAULTSCHEMA</schemaName>
-        <type>INDEX</type>
-      </indexID>
-    </constraint>
   </constraints>
   <indexes>
     <indexe>
@@ -115,26 +119,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>ADDRESS_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -145,26 +132,9 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>BIRDGE_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -175,30 +145,12 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>BIRDGE_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
         <columnExpression>
           <expressionSource>ADDRESS_ID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>UNIQUE</indexType>
-      <parallelDegree>1</parallelDegree>
-      <properties>
-        <entry>
-          <key>OracleStorageProperties</key>
-          <value class="oracle.javatools.db.ora.OracleStorageProperties">
-            <bufferMode>DEFAULT</bufferMode>
-            <initrans>2</initrans>
-            <logging>true</logging>
-            <percentFree>10</percentFree>
-            <tablespaceID class="oracle.javatools.db.NameBasedID">
-              <name>USERS</name>
-              <type>TABLESPACE</type>
-            </tablespaceID>
-          </value>
-        </entry>
-      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
@@ -206,19 +158,6 @@
     </indexe>
   </indexes>
   <properties>
-    <entry>
-      <key>OracleStorageProperties</key>
-      <value class="oracle.javatools.db.ora.OracleStorageProperties">
-        <bufferMode>DEFAULT</bufferMode>
-        <initrans>1</initrans>
-        <logging>true</logging>
-        <percentFree>10</percentFree>
-        <tablespaceID class="oracle.javatools.db.NameBasedID">
-          <name>USERS</name>
-          <type>TABLESPACE</type>
-        </tablespaceID>
-      </value>
-    </entry>
     <entry>
       <key>TableType</key>
       <value class="oracle.javatools.db.Table$TableType">NORMAL</value>

@@ -1,19 +1,13 @@
--- LAND_USE.sql
+-- SEQUENCES.sql
 --
 -- Authors:     Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
 --              Zhihang Yao <zhihang.yao@tum.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
 --              Philipp Willkomm <pwillkomm@moss.de>
---              Gerhard König <gerhard.koenig@tu-berlin.de>
---              Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 --
 -- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
 --                             http://www.gis.bv.tum.de
---
---              (c) 2007-2012  Institute for Geodesy and Geoinformation Science,
---                             Technische Universität Berlin, Germany
---                             http://www.igg.tu-berlin.de
 --
 --              This skript is free software under the LGPL Version 2.1.
 --              See the GNU Lesser General Public License at
@@ -36,27 +30,27 @@
 --                                                                    GKoe
 --                                                                    CNag
 --                                                                    ALor
---
-CREATE TABLE LAND_USE
-(
-ID NUMBER NOT NULL,
-CLASS VARCHAR2(256),
-CLASS_CODESPACE VARCHAR2(4000),
-FUNCTION VARCHAR2(1000),
-FUNCTION_CODESPACE VARCHAR2(4000),
-USAGE VARCHAR2(1000),
-USAGE_CODESPACE VARCHAR2(4000),
-LOD0_MULTI_SURFACE_ID NUMBER,
-LOD1_MULTI_SURFACE_ID NUMBER,
-LOD2_MULTI_SURFACE_ID NUMBER,
-LOD3_MULTI_SURFACE_ID NUMBER,
-LOD4_MULTI_SURFACE_ID NUMBER 
-)
-;
-ALTER TABLE LAND_USE
-ADD CONSTRAINT LAND_USE_PK PRIMARY KEY
-(
-ID
-)
- ENABLE
-;
+CREATE SEQUENCE ADDRESS_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1 CACHE 10000;
+
+CREATE SEQUENCE APPEARANCE_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1 CACHE 10000;
+
+CREATE SEQUENCE CITYMODEL_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1 CACHE 10000;
+
+CREATE SEQUENCE CITYOBJECT_GENERICATT_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1 CACHE 10000;
+
+CREATE SEQUENCE CITYOBJECT_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1 CACHE 10000;
+
+CREATE SEQUENCE EXTERNAL_REF_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1 CACHE 10000;
+
+CREATE SEQUENCE IMPLICIT_GEOMETRY_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1 CACHE 10000;
+
+CREATE SEQUENCE RASTER_REL_GEORASTER_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1 NOCACHE;
+
+CREATE SEQUENCE RASTER_REL_GEORST_RDT_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1 NOCACHE;
+
+CREATE SEQUENCE SURFACE_DATA_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1 CACHE 10000;
+
+CREATE SEQUENCE SURFACE_GEOMETRY_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1 CACHE 10000;
+
+CREATE SEQUENCE TEX_IMAGE_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1 CACHE 10000;
+

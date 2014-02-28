@@ -10,7 +10,7 @@
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>true</notNull>
+      <notNull>false</notNull>
     </column>
     <column>
       <name>PYRAMIDLEVEL</name>
@@ -20,7 +20,7 @@
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>true</notNull>
+      <notNull>false</notNull>
     </column>
     <column>
       <name>BANDBLOCKNUMBER</name>
@@ -30,7 +30,7 @@
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>true</notNull>
+      <notNull>false</notNull>
     </column>
     <column>
       <name>ROWBLOCKNUMBER</name>
@@ -40,7 +40,7 @@
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>true</notNull>
+      <notNull>false</notNull>
     </column>
     <column>
       <name>COLUMNBLOCKNUMBER</name>
@@ -50,7 +50,7 @@
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>true</notNull>
+      <notNull>false</notNull>
     </column>
     <column>
       <name>BLOCKMBR</name>
@@ -79,11 +79,8 @@
             <LOBProperties>
               <name></name>
               <LOBCache>CACHE</LOBCache>
+              <LOBSegName>SECUREFILE</LOBSegName>
               <retention>false</retention>
-              <storage>
-                <bufferMode>DEFAULT</bufferMode>
-                <logging>true</logging>
-              </storage>
               <storageEnabledInRow>true</storageEnabledInRow>
             </LOBProperties>
           </value>
@@ -93,7 +90,7 @@
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <name>RASTER_REL_GEORASTER_RDT_PK</name>
+      <name>RASTER_REL_GEORAST_RDT_PK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
           <name>RASTERID</name>
@@ -102,6 +99,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.NameBasedID">
@@ -111,6 +109,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.NameBasedID">
@@ -120,6 +119,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.NameBasedID">
@@ -129,6 +129,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.NameBasedID">
@@ -138,6 +139,7 @@
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
           <type>COLUMN</type>
         </columnID>
       </columnIDs>
@@ -160,27 +162,21 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>RASTERID</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
         <columnExpression>
           <expressionSource>PYRAMIDLEVEL</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
         <columnExpression>
           <expressionSource>BANDBLOCKNUMBER</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
         <columnExpression>
           <expressionSource>ROWBLOCKNUMBER</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
         <columnExpression>
           <expressionSource>COLUMNBLOCKNUMBER</expressionSource>
-          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>UNIQUE</indexType>
-      <parallelDegree>1</parallelDegree>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>
