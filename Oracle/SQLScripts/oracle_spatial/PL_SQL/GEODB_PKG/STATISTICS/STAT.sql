@@ -35,8 +35,8 @@
 ******************************************************************/
 CREATE OR REPLACE PACKAGE geodb_stat
 AS
-  FUNCTION table_contents(schema_name VARCHAR2 := USER) RETURN STRARRAY;
-  FUNCTION table_content(schema_name VARCHAR, table_name VARCHAR) RETURN NUMBER;
+  FUNCTION table_contents RETURN STRARRAY;
+  FUNCTION table_content(table_name VARCHAR2) RETURN NUMBER;
   FUNCTION table_label(table_name VARCHAR2) RETURN VARCHAR2;
 END geodb_stat;
 /
@@ -50,7 +50,7 @@ AS
   * @param schema_name name of schema
   * @RETURN TEXT[] database report as text array
   ******************************************************************/
-  FUNCTION table_contents(schema_name VARCHAR2 := USER) RETURN STRARRAY
+  FUNCTION table_contents RETURN STRARRAY
   IS
     report_header STRARRAY := STRARRAY();
     report STRARRAY := STRARRAY();
@@ -60,7 +60,6 @@ AS
     reportDate DATE;
     pa_id PLANNING_ALTERNATIVE.ID%TYPE;
     pa_title PLANNING_ALTERNATIVE.TITLE%TYPE;
-    owner_name VARCHAR2(20);
   BEGIN
     SELECT SYSDATE INTO reportDate FROM DUAL;  
     report_header.extend; report_header(report_header.count) := ('Database Report on 3D City Model - Report date: ' || TO_CHAR(reportDate, 'DD.MM.YYYY HH24:MI:SS'));
@@ -84,18 +83,16 @@ AS
     END IF;
     report_header.extend; report_header(report_header.count) := '';
 
-    owner_name := upper(schema_name);
-
     EXECUTE IMMEDIATE 'SELECT CAST(COLLECT(tab.t) AS STRARRAY) FROM (
-                         SELECT geodb_stat.table_label(table_name) || geodb_stat.table_content(owner, table_name) AS t
-                           FROM all_tables WHERE owner = upper(:1) 
-                           AND table_name != ''DATABASE_SRS''
+                         SELECT geodb_stat.table_label(table_name) || geodb_stat.table_content(table_name) AS t
+                           FROM user_tables WHERE table_name != ''DATABASE_SRS''
                            AND table_name != ''OBJECTCLASS''
                            AND table_name NOT LIKE ''%MDRT%''
-                           AND table_name NOT LIKE ''TMP_%''
+						   AND table_name NOT LIKE ''%MDXT%''
+                           AND table_name NOT LIKE ''%TMP_%''
                            AND length(table_name) <= 26
                            ORDER BY table_name ASC
-                         ) tab' INTO report USING owner_name;
+                         ) tab' INTO report;
 
     EXECUTE IMMEDIATE 'SELECT :1 MULTISET UNION :2 FROM dual' INTO report USING report_header, report;
 
@@ -105,18 +102,16 @@ AS
   /*****************************************************************
   * table_content
   *
-  * @param schema_name name of schema
   * @param table_name name of table
   * @RETURN INTEGER number of entries in table
   ******************************************************************/
   FUNCTION table_content(
-    schema_name VARCHAR, 
-    table_name VARCHAR
+    table_name VARCHAR2
   ) RETURN NUMBER
   IS
     cnt NUMBER;  
   BEGIN
-    EXECUTE IMMEDIATE 'SELECT count(*) FROM ' || schema_name || '.' || table_name INTO cnt;
+    EXECUTE IMMEDIATE 'SELECT count(*) FROM ' || table_name INTO cnt;
     RETURN cnt;
   END;
 
