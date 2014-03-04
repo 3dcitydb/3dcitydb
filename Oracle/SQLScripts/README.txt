@@ -1,8 +1,8 @@
 3D City Database version 3.0
 
-  The 3D City Database version 3.0 is free software and comes 
-  WITHOUT ANY WARRANTY. See the DISCLAIMER at the end of this document
-  for more details. 
+The 3D City Database version 3.0 is free software and comes 
+WITHOUT ANY WARRANTY. See the DISCLAIMER at the end 
+of this document for more details. 
 
 
 0. Index
@@ -36,12 +36,12 @@ COPYING and COPYING.LESSER or visit http://www.gnu.org/licenses/.
 
 (c) 2012-2014  
 Chair of Geoinformatics (TUMGI)
-Technische Universit�t M�nchen, Germany
+Technische Universität München, Germany
 http://www.gis.bv.tum.de
 
 (c) 2007-2012  
 Institute for Geodesy and Geoinformation Science (IGG)
-Technische Universit�t Berlin, Germany
+Technische Universität Berlin, Germany
 http://www.igg.tu-berlin.de
 
 3. About
@@ -57,7 +57,7 @@ standard for representing and exchanging virtual 3D city models issued
 by the Open Geospatial Consortium (OGC).
 
 The 3D City Database has been realized as an Oracle 10G R2 Spatial relational
-database schema, supporting following key features:
+database schema (or higher), supporting following key features:
 
     * Complex thematic modelling
     * Five different Levels of Detail (LODs)
@@ -66,16 +66,15 @@ database schema, supporting following key features:
     * Representation of generic and prototypical 3D objects
     * Free, also recursive aggregation of geo objects
     * Flexible 3D geometries
-    * Management of large aerial photographs
     * Version and history management
 
 The 3D City Database is shipped as a collection of SQL scripts which allow
 for creating and dropping database instances.
 
 The 3D City Database Version 3.0 was developed in collaboration of the Chair of 
-Geoinformatics, Technische Universit�t M�nchen (TUMGI), virtualcitySYSTEMS GmbH, and 
+Geoinformatics, Technische Universität München (TUMGI), virtualcitySYSTEMS GmbH, and 
 M.O.S.S. Computer Grafik Systeme GmbH. The previous version of the the 3D City Database 
-was implemented on behalf of the Berliner Senatsverwaltung fuer Wirtschaft, Arbeit und
+was implemented on behalf of the Berliner Senatsverwaltung für Wirtschaft, Arbeit und
 Frauen and the Berlin Partner GmbH. The development is continuing the work of the Institute 
 for Geodesy and Geoinformation Science (IGG), TU Berlin, and the Institute for Cartography and 
 Geoinformation (IKG), University of Bonn. Please find the previous versions of the database 
@@ -115,8 +114,8 @@ distribution package.
 7. Documentation
 ----------------
 
-A comprehensive documentation on the 3D City Database version 3.0 can be found
-on the project's website at https://github.com/3dcitydb/3dcitydb. 
+A comprehensive documentation on the 3D City Database can be found
+on the project's website at http://www.3dcitydb.net/3dcitydb/documentation/ 
 
 
 8. Cooperation partners and supporters  
@@ -126,19 +125,12 @@ The development of the 3D City Database version 3.0 has been
 supported by the following cooperation partners:
 
 * Chair of Geoinformatics
-  Technische Universit�t M�nchen, Germany
+  Technische Universität München, Germany
   http://www.gis.bv.tum.de
 * virtualcitySYSTEMS GmbH, Berlin
   http://www.virtualcitysystems.de/  
 * M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen
   http://www.moss.de/  
-* Institute for Geodesy and Geoinformation Science (IGG)
-  Technische Universit�t Berlin, Germany
-  http://www.igg.tu-berlin.de
-* Business Location Center, Berlin 
-  http://www.businesslocationcenter.de/
-* Berlin Senate of Business, Technology and Women
-  http://www.berlin.de/sen/wtf/
 
   
 9. Developers
@@ -148,22 +140,19 @@ Claus Nagel <cnagel@virtualcitysystems.de>
 Zhihang Yao <zhihang.yao@tum.de>
 Felix Kunde <fkunde@virtualcitysystems.de>
 Thomas H. Kolbe <thomas.kolbe@tum.de>
-Gy�rgy Hudra <ghudra@moss.de>
+György Hudra <ghudra@moss.de>
 Javier Herreruela <javier.herreruela@tu-berlin.de>
 Alexandra Lorenz <alexandra.lorenz@tu-berlin.de>
-Gerhard K�nig <gerhard.koenig@tu-berlin.de>
-
+Gerhard König <gerhard.koenig@tu-berlin.de>
 
 
 10. Contact
 ----------
 
-cnagel@virtualcitysystems.de
-zhihang.yao@tum.de
-fkunde@virtualcitysystems.de
 thomas.kolbe@tum.de
-ghudra@moss.de
-javier.herreruela@tu-berlin.de
+cnagel@virtualcitysystems.de
+pwillkomm@moss.de
+
 
 11. Websites
 ------------
