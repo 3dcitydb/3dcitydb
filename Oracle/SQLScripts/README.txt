@@ -1,6 +1,6 @@
-3D City Database version 2.1
+3D City Database version 3.0
 
-  The 3D City Database version 2.1 is free software and comes 
+  The 3D City Database version 3.0 is free software and comes 
   WITHOUT ANY WARRANTY. See the DISCLAIMER at the end of this document
   for more details. 
 
@@ -25,7 +25,7 @@
 1. License
 ----------
 
-The 3D City Database version 2.1 is free software under the GNU Lesser 
+The 3D City Database version 3.0 is free software under the GNU Lesser 
 General Public License Version 3.0. See the file LICENSE for more details. 
 For a copy of the GNU Lesser General Public License see the files 
 COPYING and COPYING.LESSER or visit http://www.gnu.org/licenses/.
@@ -34,11 +34,15 @@ COPYING and COPYING.LESSER or visit http://www.gnu.org/licenses/.
 2. Copyright
 ------------
 
-(c) 2007 - 2013
-Institute for Geodesy and Geoinformation Science (IGG)
-Technische Universitaet Berlin, Germany
-http://www.igg.tu-berlin.de/
+(c) 2012-2014  
+Chair of Geoinformatics (TUMGI)
+Technische Universität München, Germany
+http://www.gis.bv.tum.de
 
+(c) 2007-2012  
+Institute for Geodesy and Geoinformation Science (IGG)
+Technische Universität Berlin, Germany
+http://www.igg.tu-berlin.de
 
 3. About
 --------
@@ -68,11 +72,14 @@ database schema, supporting following key features:
 The 3D City Database is shipped as a collection of SQL scripts which allow
 for creating and dropping database instances.
 
-The 3D City Database was implemented on behalf of the Berliner
-Senatsverwaltung fuer Wirtschaft, Arbeit und Frauen and the Berlin Partner GmbH.
-The development is continuing the work of the Institute for Cartography and
-Geoinformation (IKG), University of Bonn. Please find the previous version of the
-database at http://www.3dcitydb.net/.
+The 3D City Database Version 3.0 was implemented by Chair of Geoinformatics (TUMGI), 
+Technische Universität München in corporation with virtualcitySYSTEMS GmbH and 
+M.O.S.S. Computer Grafik Systeme GmbH. The prvious version of the the 3D City Database 
+was implemented on behalf of the Berliner Senatsverwaltung fuer Wirtschaft, Arbeit und
+Frauen and the Berlin Partner GmbH. The development is continuing the work of the Institute 
+for geodesy and Geoinformation (IGG), TU Berlin, and Institute for Cartography and 
+Geoinformation (IKG), University of Bonn. Please find the previous version of the database 
+at http://www.3dcitydb.net/.
 
 
 4. System requirements
@@ -108,47 +115,55 @@ distribution package.
 7. Documentation
 ----------------
 
-A comprehensive documentation on the 3D City Database version 2.1 can be found
-on the project's website at http://www.igg.tu-berlin.de/software/. 
+A comprehensive documentation on the 3D City Database version 3.0 can be found
+on the project's website at https://github.com/3dcitydb/3dcitydb. 
 
 
 8. Cooperation partners and supporters  
 --------------------------------------
 
-The development of the 3D City Database version 2.1 has been 
+The development of the 3D City Database version 3.0 has been 
 supported by the following cooperation partners:
 
+* Chair of Geoinformatics
+  Technische Universität München, Germany
+  http://www.gis.bv.tum.de
+* virtualcitySYSTEMS GmbH, Berlin
+  http://www.virtualcitysystems.de/  
+* M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen
+  http://www.moss.de/  
+* Institute for Geodesy and Geoinformation Science (IGG)
+  Technische Universität Berlin, Germany
+  http://www.igg.tu-berlin.de
 * Business Location Center, Berlin 
   http://www.businesslocationcenter.de/
-* virtualcitySYSTEMS GmbH, Berlin
-  http://www.virtualcitysystems.de/
 * Berlin Senate of Business, Technology and Women
   http://www.berlin.de/sen/wtf/
-* M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen
-  http://www.moss.de/
 
   
 9. Developers
 -------------
 
 Claus Nagel <cnagel@virtualcitysystems.de>
-Javier Herreruela <javier.herreruela@tu-berlin.de>
+Zhihang Yao <zhihang.yao@tum.de>
 Felix Kunde <fkunde@virtualcitysystems.de>
-Alexandra Lorenz <alexandra.lorenz@tu-berlin.de>
-Gerhard KÃ¶nig <gerhard.koenig@tu-berlin.de>
 Thomas H. Kolbe <thomas.kolbe@tum.de>
-GyÃ¶rgy Hudra <ghudra@moss.de>
+György Hudra <ghudra@moss.de>
+Javier Herreruela <javier.herreruela@tu-berlin.de>
+Alexandra Lorenz <alexandra.lorenz@tu-berlin.de>
+Gerhard König <gerhard.koenig@tu-berlin.de>
+
 
 
 10. Contact
 ----------
 
 cnagel@virtualcitysystems.de
-javier.herreruela@tu-berlin.de
+zhihang.yao@tum.de
 fkunde@virtualcitysystems.de
 thomas.kolbe@tum.de
 ghudra@moss.de
-
+javier.herreruela@tu-berlin.de
 
 11. Websites
 ------------
@@ -157,8 +172,8 @@ Official 3D City Database website:
 http://www.3dcitydb.net/
 
 Related websites:
-http://www.igg.tu-berlin.de/
-http://www.opportunity.bv.tu-berlin.de/
+https://github.com/3dcitydb/
+http://www.gis.bv.tum.de/
 http://www.citygml.org/
 http://www.citygmlwiki.org/
 http://www.opengeospatial.org/standards/citygml
@@ -167,17 +182,17 @@ http://www.opengeospatial.org/standards/citygml
 12. Disclaimer
 --------------
 
-THIS SOFTWARE IS PROVIDED BY IGG "AS IS" AND "WITH ALL FAULTS." 
-IGG MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY KIND CONCERNING THE 
+THIS SOFTWARE IS PROVIDED BY TUMGI "AS IS" AND "WITH ALL FAULTS." 
+TUMGI MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY KIND CONCERNING THE 
 QUALITY, SAFETY OR SUITABILITY OF THE SOFTWARE, EITHER EXPRESSED OR 
 IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OF 
 MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
 
-IGG MAKES NO REPRESENTATIONS OR WARRANTIES AS TO THE TRUTH, ACCURACY OR 
+TUMGI MAKES NO REPRESENTATIONS OR WARRANTIES AS TO THE TRUTH, ACCURACY OR 
 COMPLETENESS OF ANY STATEMENTS, INFORMATION OR MATERIALS CONCERNING THE 
 SOFTWARE THAT IS CONTAINED ON AND WITHIN ANY OF THE WEBSITES OWNED AND 
-OPERATED BY IGG.
+OPERATED BY TUMGI.
 
-IN NO EVENT WILL IGG BE LIABLE FOR ANY INDIRECT, PUNITIVE, SPECIAL, 
+IN NO EVENT WILL TUMGI BE LIABLE FOR ANY INDIRECT, PUNITIVE, SPECIAL, 
 INCIDENTAL OR CONSEQUENTIAL DAMAGES HOWEVER THEY MAY ARISE AND EVEN IF 
-IGG HAVE BEEN PREVIOUSLY ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+TUMGI HAVE BEEN PREVIOUSLY ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
