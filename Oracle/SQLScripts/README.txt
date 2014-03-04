@@ -36,12 +36,12 @@ COPYING and COPYING.LESSER or visit http://www.gnu.org/licenses/.
 
 (c) 2012-2014  
 Chair of Geoinformatics (TUMGI)
-Technische Universität München, Germany
+Technische Universitï¿½t Mï¿½nchen, Germany
 http://www.gis.bv.tum.de
 
 (c) 2007-2012  
 Institute for Geodesy and Geoinformation Science (IGG)
-Technische Universität Berlin, Germany
+Technische Universitï¿½t Berlin, Germany
 http://www.igg.tu-berlin.de
 
 3. About
@@ -72,8 +72,8 @@ database schema, supporting following key features:
 The 3D City Database is shipped as a collection of SQL scripts which allow
 for creating and dropping database instances.
 
-The 3D City Database Version 3.0 was implemented by Chair of Geoinformatics (TUMGI), 
-Technische Universität München in corporation with virtualcitySYSTEMS GmbH and 
+The 3D City Database Version 3.0 was developed in collaboration of the Chair of 
+Geoinformatics, Technische Universitï¿½t Mï¿½nchen   i(TUMGI)n icorporation with virtualcitySYSTEMS GmbH and 
 M.O.S.S. Computer Grafik Systeme GmbH. The prvious version of the the 3D City Database 
 was implemented on behalf of the Berliner Senatsverwaltung fuer Wirtschaft, Arbeit und
 Frauen and the Berlin Partner GmbH. The development is continuing the work of the Institute 
@@ -126,14 +126,14 @@ The development of the 3D City Database version 3.0 has been
 supported by the following cooperation partners:
 
 * Chair of Geoinformatics
-  Technische Universität München, Germany
+  Technische Universitï¿½t Mï¿½nchen, Germany
   http://www.gis.bv.tum.de
 * virtualcitySYSTEMS GmbH, Berlin
   http://www.virtualcitysystems.de/  
 * M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen
   http://www.moss.de/  
 * Institute for Geodesy and Geoinformation Science (IGG)
-  Technische Universität Berlin, Germany
+  Technische Universitï¿½t Berlin, Germany
   http://www.igg.tu-berlin.de
 * Business Location Center, Berlin 
   http://www.businesslocationcenter.de/
@@ -148,10 +148,10 @@ Claus Nagel <cnagel@virtualcitysystems.de>
 Zhihang Yao <zhihang.yao@tum.de>
 Felix Kunde <fkunde@virtualcitysystems.de>
 Thomas H. Kolbe <thomas.kolbe@tum.de>
-György Hudra <ghudra@moss.de>
+Gyï¿½rgy Hudra <ghudra@moss.de>
 Javier Herreruela <javier.herreruela@tu-berlin.de>
 Alexandra Lorenz <alexandra.lorenz@tu-berlin.de>
-Gerhard König <gerhard.koenig@tu-berlin.de>
+Gerhard Kï¿½nig <gerhard.koenig@tu-berlin.de>
 
 
 
