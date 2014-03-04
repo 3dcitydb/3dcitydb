@@ -73,12 +73,12 @@ The 3D City Database is shipped as a collection of SQL scripts which allow
 for creating and dropping database instances.
 
 The 3D City Database Version 3.0 was developed in collaboration of the Chair of 
-Geoinformatics, Technische Universit�t M�nchen   i(TUMGI)n icorporation with virtualcitySYSTEMS GmbH and 
-M.O.S.S. Computer Grafik Systeme GmbH. The prvious version of the the 3D City Database 
+Geoinformatics, Technische Universit�t M�nchen (TUMGI), virtualcitySYSTEMS GmbH, and 
+M.O.S.S. Computer Grafik Systeme GmbH. The previous version of the the 3D City Database 
 was implemented on behalf of the Berliner Senatsverwaltung fuer Wirtschaft, Arbeit und
 Frauen and the Berlin Partner GmbH. The development is continuing the work of the Institute 
-for geodesy and Geoinformation (IGG), TU Berlin, and Institute for Cartography and 
-Geoinformation (IKG), University of Bonn. Please find the previous version of the database 
+for Geodesy and Geoinformation Science (IGG), TU Berlin, and the Institute for Cartography and 
+Geoinformation (IKG), University of Bonn. Please find the previous versions of the database 
 at http://www.3dcitydb.net/.
 
 
