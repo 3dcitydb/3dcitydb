@@ -32,9 +32,8 @@
       <name>TEX_IMAGE</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle8i</providerClass>
-          <schemaName>ORDSYS</schemaName>
-          <typeName>ORDIMAGE</typeName>
+          <providerClass>oracle.javatools.db.ora.Oracle8</providerClass>
+          <typeName>BLOB</typeName>
         </dataTypeID>
       </dataTypeUsage>
       <notNull>false</notNull>
