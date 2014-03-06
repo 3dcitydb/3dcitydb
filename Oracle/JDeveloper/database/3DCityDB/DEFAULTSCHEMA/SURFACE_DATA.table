@@ -1079,7 +1079,7 @@
           </properties>
         </columnExpression>
       </columnExpressions>
-      <indexType>UNIQUE</indexType>
+      <indexType>NORMAL</indexType>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>

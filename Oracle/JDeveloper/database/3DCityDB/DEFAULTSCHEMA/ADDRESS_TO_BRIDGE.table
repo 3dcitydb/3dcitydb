@@ -3,7 +3,7 @@
   <name>ADDRESS_TO_BRIDGE</name>
   <columns>
     <column>
-      <name>BIRDGE_ID</name>
+      <name>BRIDGE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
@@ -28,7 +28,7 @@
       <name>ADDRESS_TO_BRIDGE_PK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>BIRDGE_ID</name>
+          <name>BRIDGE_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>ADDRESS_TO_BRIDGE</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
@@ -90,7 +90,7 @@
       <name>ADDRESS_TO_BRIDGE_FK1</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>BIRDGE_ID</name>
+          <name>BRIDGE_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>ADDRESS_TO_BRIDGE</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
@@ -131,7 +131,7 @@
       <name>ADDRESS_TO_BRIDGE_FKX1</name>
       <columnExpressions>
         <columnExpression>
-          <expressionSource>BIRDGE_ID</expressionSource>
+          <expressionSource>BRIDGE_ID</expressionSource>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -144,7 +144,7 @@
       <name>ADDRESS_TO_BRIDGE_PK</name>
       <columnExpressions>
         <columnExpression>
-          <expressionSource>BIRDGE_ID</expressionSource>
+          <expressionSource>BRIDGE_ID</expressionSource>
         </columnExpression>
         <columnExpression>
           <expressionSource>ADDRESS_ID</expressionSource>

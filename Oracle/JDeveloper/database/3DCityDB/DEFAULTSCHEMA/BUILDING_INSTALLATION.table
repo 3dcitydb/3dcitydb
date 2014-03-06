@@ -460,7 +460,7 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <name>LOD2_IMPLICIT_TRANSPORMATION</name>
+      <name>LOD2_IMPLICIT_TRANSFORMATION</name>
       <dataTypeUsage>
         <attributeValues>
           <entry>
@@ -492,7 +492,7 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <name>LOD4_IMPLICIT_TRANFORMATION</name>
+      <name>LOD4_IMPLICIT_TRANSFORMATION</name>
       <dataTypeUsage>
         <attributeValues>
           <entry>

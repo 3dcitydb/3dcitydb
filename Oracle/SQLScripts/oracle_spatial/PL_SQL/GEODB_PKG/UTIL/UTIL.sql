@@ -31,8 +31,8 @@
 -- 1.0.0     2008-09-10   release version                             CNag
 --
 
-SET term OFF;
-SET serveroutput OFF;
+--SET term OFF;
+--SET serveroutput OFF;
 
 /*****************************************************************
 * TYPE STRARRAY

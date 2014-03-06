@@ -599,7 +599,7 @@
           <expressionSource>GMLID</expressionSource>
         </columnExpression>
       </columnExpressions>
-      <indexType>UNIQUE</indexType>
+      <indexType>NORMAL</indexType>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>

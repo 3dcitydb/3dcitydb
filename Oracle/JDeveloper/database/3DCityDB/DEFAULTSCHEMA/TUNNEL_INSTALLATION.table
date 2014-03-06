@@ -341,10 +341,10 @@
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <name>TUNNEL_INST_HAPACE_FK</name>
+      <name>TUNNEL_INST_HSPACE_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>ID</name>
+          <name>TUNNEL_HOLLOW_SPACE_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>TUNNEL_INSTALLATION</name>
             <schemaName>DEFAULTSCHEMA</schemaName>

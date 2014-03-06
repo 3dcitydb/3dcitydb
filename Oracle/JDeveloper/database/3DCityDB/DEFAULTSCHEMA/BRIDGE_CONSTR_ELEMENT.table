@@ -331,7 +331,7 @@
       <notNull>false</notNull>
     </column>
     <column>
-      <name>LOD1_IMPLICTI_TRANSFORMATION</name>
+      <name>LOD1_IMPLICIT_TRANSFORMATION</name>
       <dataTypeUsage>
         <attributeValues>
           <entry>
@@ -396,11 +396,37 @@
     </column>
   </columns>
   <constraints>
+    <constraint class="oracle.javatools.db.PKConstraint">
+      <name>BRIDGE_CONSTR_ELEMENT_PK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>BRIDGE_CONSTR_ELEMENT</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <indexID class="oracle.javatools.db.NameBasedID">
+        <name>BRIDGE_CONSTR_ELEMENT_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>BRIDGE_CONSTR_ELEMENT</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
+        <type>INDEX</type>
+      </indexID>
+    </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <name>BRIDGE_CONSTR_BRIDGE_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>ID</name>
+          <name>BRIDGE_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>BRIDGE_CONSTR_ELEMENT</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
@@ -655,32 +681,6 @@
         </parent>
         <type>CONSTRAINT</type>
       </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.PKConstraint">
-      <name>BRIDGE_CONSTR_ELEMENT_PK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>BRIDGE_CONSTR_ELEMENT</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.NameBasedID">
-        <name>BRIDGE_CONSTR_ELEMENT_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>BRIDGE_CONSTR_ELEMENT</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>DEFAULTSCHEMA</schemaName>
-        <type>INDEX</type>
-      </indexID>
     </constraint>
   </constraints>
   <indexes>
