@@ -1,4 +1,4 @@
--- STAT.sql
+-- SRS.sql
 --
 -- Authors:     Felix Kunde <fkunde@virtualcitysystems.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
@@ -96,21 +96,12 @@ DECLARE
 BEGIN
   EXECUTE 'SELECT srid FROM spatial_ref_sys WHERE srid = $1' INTO schema_srid USING srsno;
 
-  IF schema_srid <> 0 THEN
-    BEGIN
-      PERFORM ST_Transform(ST_GeomFromEWKT('SRID='||schema_srid||';POINT(1 1 1)'),4326);
-
-	  RETURN 'SRID ok';
-
-      EXCEPTION
-        WHEN others THEN
-          RAISE EXCEPTION 'The chosen SRID % was not appropriate for PostGIS functions.', srsno;
-          RETURN 'SRID not ok';
-    END;
-  ELSE
+  IF schema_srid IS NULL THEN
     RAISE EXCEPTION 'Table spatial_ref_sys does not contain the SRID %. Insert commands for missing SRIDs can be found at spatialreference.org', srsno;
     RETURN 'SRID not ok';
   END IF;
+
+  RETURN 'SRID ok';
 END;
 $$
 LANGUAGE plpgsql;

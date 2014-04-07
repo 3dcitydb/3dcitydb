@@ -495,7 +495,7 @@ BEGIN
   --// PRE DELETE LAND USE //--
   -- get reference ids to surface_geometry table
   EXECUTE format('SELECT lod0_multi_surface_id, lod1_multi_surface_id, lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id
-                    FROM %I.land_use WHERE id = %L', schema_name, li_id) 
+                    FROM %I.land_use WHERE id = %L', schema_name, lu_id) 
                     INTO lu_lod0_id, lu_lod1_id, lu_lod2_id, lu_lod3_id, lu_lod4_id;
 
   --// DELETE LAND USE //--
