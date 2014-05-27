@@ -24,7 +24,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                                | Author
--- 2.0.0     2014-01-09   revision for 3DCityDB V3                     FKun
+-- 2.0.0     2014-05-27   revision for 3DCityDB V3                     FKun
 -- 1.2.0     2013-08-29   minor changes to change_db_srid function     FKun
 -- 1.1.0     2013-02-22   PostGIS version                              FKun
 --                                                                     CNag
@@ -51,6 +51,7 @@
 *     delete_param VARCHAR, deferrable_param VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   versioning_db() RETURNS VARCHAR
 *   versioning_table(table_name VARCHAR) RETURNS VARCHAR
+*   get_3dcitydb_version(OUT version_no TEXT) RETURNS TEXT
 ******************************************************************/
 
 /*****************************************************************
@@ -350,3 +351,16 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql;
+
+
+/*****************************************************************
+* get_3dcitydb_version
+*
+* @RETURN TEXT version number of the installed 3D City Database 
+*              instance
+******************************************************************/
+CREATE OR REPLACE FUNCTION geodb_pkg.get_3dcitydb_version(OUT version_no TEXT) RETURNS TEXT AS
+$$
+SELECT '3D City Database v3.0.0'::text;
+$$
+LANGUAGE sql;

@@ -25,7 +25,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 2.0.0     2014-04-23   new version for 3DCityDB V3                 FKun
+-- 2.0.0     2014-05-27   new version for 3DCityDB V3                 FKun
 -- 1.2.0     2013-08-29   added change_db_srid procedure              FKun
 -- 1.1.0     2011-07-28   update to 2.0.6                             CNag
 -- 1.0.0     2008-09-10   release version                             CNag
@@ -87,6 +87,7 @@ AS
   PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param VARCHAR2, deferrable_param VARCHAR2);
   FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER) RETURN SEQ_TABLE;
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
+  FUNCTION get_3dcitydb_version RETURN VARCHAR2;
   FUNCTION to_2d(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
 END geodb_util;
 /
@@ -314,8 +315,8 @@ AS
   * objectclass_id_to_table_name
   *
   * @param class_id objectclass_id identifier
-  * @RETURN VARCHAR name of table that stores objects referred 
-  *                 to the given objectclass_id
+  * @RETURN VARCHAR2 name of table that stores objects referred 
+  *                  to the given objectclass_id
   ******************************************************************/
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2
   IS
@@ -402,6 +403,19 @@ AS
     END CASE;
 
     RETURN table_name;
+  END;
+
+
+  /*****************************************************************
+  * get_3dcitydb_version
+  *
+  * @RETURN VARCHAR2 version number of the installed 3D City Database 
+  *                  instance
+  ******************************************************************/
+  FUNCTION get_3dcitydb_version RETURN VARCHAR2 
+  IS
+  BEGIN
+    RETURN '3D City Database v3.0.0';
   END;
 
   /*
