@@ -25,7 +25,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 2.0.0     2014-02-24   complete revision for 3DCityDB V3           FKun
+-- 2.0.0     2014-06-20   complete revision for 3DCityDB V3           FKun
 -- 1.2.0     2013-08-08   extended to all thematic classes            FKun
 --                                                                    GHud
 -- 1.1.0     2012-02-22   some performance improvements               CNag
@@ -91,144 +91,6 @@
 *   is_not_referenced(table_name VARCHAR, check_column VARCHAR, check_id INTEGER, not_column VARCHAR, 
 *     not_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS BOOLEAN
 ******************************************************************/
-
--- generic function to delete any cityobject
-CREATE OR REPLACE FUNCTION geodb_pkg.delete_cityobject(
-  co_id INTEGER,
-  affect_rel_objs INTEGER DEFAULT 0,
-  schema_name VARCHAR DEFAULT 'public'
-  ) RETURNS SETOF VOID AS
-$$
-DECLARE
-  class_id INTEGER;
-BEGIN
-  IF affect_rel_objs < 0 OR affect_rel_objs > 1 THEN 
-    RAISE EXCEPTION 'Incorrect parameter for affection option: %', affect_rel_objs USING HINT = 'Use 1 to delete related objects or 0 if you plan to keep them.';
-  END IF;  
-
-  EXECUTE format('SELECT objectclass_id FROM %I.cityobject WHERE id = %L', schema_name, co_id) INTO class_id;
-
-  -- class_id can be NULL if object has already been deleted
-  IF class_id IS NOT NULL THEN
-    CASE
-      WHEN class_id = 4 THEN PERFORM geodb_pkg.delete_land_use(co_id, schema_name);
-      WHEN class_id = 5 THEN PERFORM geodb_pkg.delete_generic_cityobject(co_id, schema_name);
-      WHEN class_id = 7 THEN PERFORM geodb_pkg.delete_solitary_veg_obj(co_id, schema_name);
-      WHEN class_id = 8 THEN PERFORM geodb_pkg.delete_plant_cover(co_id, schema_name);
-      WHEN class_id = 9 THEN PERFORM geodb_pkg.delete_waterbody(co_id, schema_name);
-      WHEN class_id = 11 OR 
-           class_id = 12 OR 
-           class_id = 13 THEN PERFORM geodb_pkg.delete_waterbnd_surface(co_id, schema_name);
-      WHEN class_id = 14 THEN PERFORM geodb_pkg.delete_relief_feature(co_id, schema_name);
-      WHEN class_id = 16 OR 
-           class_id = 17 OR 
-           class_id = 18 OR 
-           class_id = 19 THEN PERFORM geodb_pkg.delete_relief_component(co_id, schema_name);
-      WHEN class_id = 21 THEN PERFORM geodb_pkg.delete_city_furniture(co_id, schema_name);
-      WHEN class_id = 23 THEN PERFORM geodb_pkg.delete_cityobjectgroup(co_id, affect_rel_objs, schema_name);
-      WHEN class_id = 25 OR 
-           class_id = 26 THEN PERFORM geodb_pkg.delete_building(co_id, schema_name);
-      WHEN class_id = 27 OR 
-           class_id = 28 THEN PERFORM geodb_pkg.delete_building_installation(co_id, schema_name);
-      WHEN class_id = 30 OR 
-           class_id = 31 OR 
-           class_id = 32 OR 
-           class_id = 33 OR 
-           class_id = 34 OR 
-           class_id = 35 OR
-           class_id = 36 OR
-           class_id = 60 OR
-           class_id = 61 THEN PERFORM geodb_pkg.delete_thematic_surface(co_id, schema_name);
-      WHEN class_id = 38 OR 
-           class_id = 39 THEN PERFORM geodb_pkg.delete_opening(co_id, schema_name);
-      WHEN class_id = 40 THEN PERFORM geodb_pkg.delete_building_furniture(co_id, schema_name);
-      WHEN class_id = 41 THEN PERFORM geodb_pkg.delete_room(co_id, schema_name);
-      WHEN class_id = 43 OR 
-           class_id = 44 OR 
-           class_id = 45 OR 
-           class_id = 46 THEN PERFORM geodb_pkg.delete_transport_complex(co_id, schema_name);
-      WHEN class_id = 47 OR 
-           class_id = 48 THEN PERFORM geodb_pkg.delete_traffic_area(co_id, schema_name);
-      WHEN class_id = 57 THEN PERFORM geodb_pkg.delete_citymodel(co_id, affect_rel_objs, schema_name);
-      WHEN class_id = 63 OR
-           class_id = 64 THEN PERFORM geodb_pkg.delete_bridge(co_id, schema_name);
-      WHEN class_id = 65 OR
-           class_id = 66 THEN PERFORM geodb_pkg.delete_bridge_installation(co_id, schema_name);
-      WHEN class_id = 68 OR 
-           class_id = 69 OR 
-           class_id = 70 OR 
-           class_id = 71 OR 
-           class_id = 72 OR
-           class_id = 73 OR
-           class_id = 74 OR
-           class_id = 75 OR
-           class_id = 76 THEN PERFORM geodb_pkg.delete_bridge_them_srf(co_id, schema_name);
-      WHEN class_id = 78 OR 
-           class_id = 79 THEN PERFORM geodb_pkg.delete_bridge_opening(co_id, schema_name);		 
-      WHEN class_id = 80 THEN PERFORM geodb_pkg.delete_bridge_furniture(co_id, schema_name);
-      WHEN class_id = 81 THEN PERFORM geodb_pkg.delete_bridge_room(co_id, schema_name);
-      WHEN class_id = 82 THEN PERFORM geodb_pkg.delete_bridge_constr_elem(co_id, schema_name);
-      WHEN class_id = 84 OR
-           class_id = 85 THEN PERFORM geodb_pkg.delete_tunnel(co_id, schema_name);
-      WHEN class_id = 86 OR
-           class_id = 87 THEN PERFORM geodb_pkg.delete_tunnel_installation(co_id, schema_name);
-      WHEN class_id = 88 OR 
-           class_id = 89 OR 
-           class_id = 90 OR 
-           class_id = 91 OR 
-           class_id = 92 OR
-           class_id = 93 OR
-           class_id = 94 OR
-           class_id = 95 OR
-           class_id = 96 THEN PERFORM geodb_pkg.delete_tunnel_them_srf(co_id, schema_name);
-      WHEN class_id = 99 OR 
-           class_id = 100 THEN PERFORM geodb_pkg.delete_tunnel_opening(co_id, schema_name);
-      WHEN class_id = 101 THEN PERFORM geodb_pkg.delete_tunnel_furniture(co_id, schema_name);
-      WHEN class_id = 102 THEN PERFORM geodb_pkg.delete_tunnel_hollow_space(co_id, schema_name);
-      ELSE
-        RAISE NOTICE 'Can not delete chosen object with ID % and objectclass_id %.', co_id, class_id;
-    END CASE;
-  END IF;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_cityobject (id: %): %', co_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
--- delete any cityobject by pretending on foreign key relations
--- NOTE: all constraints have to be set to ON DELETE CASCADE (function: geodb_pkg.update_schema_constraints)
-CREATE OR REPLACE FUNCTION geodb_pkg.delete_cityobject_cascade(
-  co_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
-  ) RETURNS SETOF VOID AS
-$$
-BEGIN  
-  -- first step: delete local appearance
-  EXECUTE format('SELECT geodb_pkg.delete_appearance(id, %L) FROM %I.appearance WHERE cityobject_id = %L', schema_name, schema_name, co_id);
-  
-  -- second step: delete geometries
-  EXECUTE format('DELETE FROM %I.surface_geometry WHERE cityobject_id = %L AND parent_id IS NULL', schema_name, co_id);
-  
-  -- third step: delete the cityobject
-  EXECUTE format('DELETE FROM %I.cityobject WHERE id = %L', schema_name, co_id);
-  
-  -- fourth step: cleanup
-  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);  
-  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
-  PERFORM geodb_pkg.cleanup_addresses(schema_name);
-  PERFORM geodb_pkg.cleanup_cityobjectgroups(schema_name);
-  PERFORM geodb_pkg.cleanup_citymodels(schema_name);
-  
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_cityobject (id: %): %', co_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
 
 /*
 helper functions
@@ -964,9 +826,19 @@ CREATE OR REPLACE FUNCTION geodb_pkg.delete_raster_relief(
   schema_name VARCHAR DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
+DECLARE
+  rast_id INTEGER;
 BEGIN
+  --// PRE DELETE RATSER RELIEF //--
+  -- get reference id to raster_relief_georaster table
+  EXECUTE format('SELECT raster_id FROM %I.raster_relief WHERE id = %L', schema_name, rr_id) INTO rast_id;
+
   --// DELETE RATSER RELIEF //--
   EXECUTE format('DELETE FROM %I.raster_relief WHERE id = %L', schema_name, rr_id);
+
+  --// POST DELETE RATSER RELIEF //--
+  -- delete raster data
+  EXECUTE format('DELETE FROM %I.raster_relief_georaster WHERE id = %L', schema_name, rast_id);
 
   EXCEPTION
 	WHEN OTHERS THEN
@@ -2264,6 +2136,9 @@ $$
 LANGUAGE plpgsql;
 
 
+/*
+cleanup procedures
+*/
 CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_implicit_geometries(
   clean_apps INTEGER DEFAULT 0, 
   schema_name VARCHAR DEFAULT 'public'
@@ -2361,6 +2236,23 @@ $$
 LANGUAGE plpgsql;
 
 
+CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_tex_images(
+  schema_name VARCHAR DEFAULT 'public'
+  ) RETURNS SETOF VOID AS
+$$
+BEGIN
+  EXECUTE format('SELECT geodb_pkg.delete_tex_image(ti.id, %L) FROM %I.tex_image ti
+                    LEFT JOIN %I.surface_data sd ON sd.tex_image_id = ti.id
+                    WHERE sd.tex_image_id IS NULL', schema_name, schema_name, schema_name);
+
+  EXCEPTION  
+    WHEN OTHERS THEN
+      RAISE NOTICE 'cleanup_tex_images: %', SQLERRM;
+END; 
+$$ 
+LANGUAGE plpgsql;
+
+
 CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_appearances(
   only_global INTEGER DEFAULT 1,
   schema_name VARCHAR DEFAULT 'public'
@@ -2394,23 +2286,6 @@ BEGIN
   EXCEPTION  
     WHEN OTHERS THEN
       RAISE NOTICE 'cleanup_appearances: %', SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_tex_images(
-  schema_name VARCHAR DEFAULT 'public'
-  ) RETURNS SETOF VOID AS
-$$
-BEGIN
-  EXECUTE format('SELECT geodb_pkg.delete_tex_image(ti.id, %L) FROM %I.tex_image ti
-                    LEFT JOIN %I.surface_data sd ON sd.tex_image_id = ti.id
-                    WHERE sd.tex_image_id IS NULL', schema_name, schema_name, schema_name);
-
-  EXCEPTION  
-    WHEN OTHERS THEN
-      RAISE NOTICE 'cleanup_tex_images: %', SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;
@@ -2460,5 +2335,143 @@ BEGIN
     WHEN OTHERS THEN
       RAISE NOTICE 'cleanup_citymodels: %', SQLERRM;
 END;
+$$ 
+LANGUAGE plpgsql;
+
+
+-- generic function to delete any cityobject
+CREATE OR REPLACE FUNCTION geodb_pkg.delete_cityobject(
+  co_id INTEGER,
+  affect_rel_objs INTEGER DEFAULT 0,
+  schema_name VARCHAR DEFAULT 'public'
+  ) RETURNS SETOF VOID AS
+$$
+DECLARE
+  class_id INTEGER;
+BEGIN
+  IF affect_rel_objs < 0 OR affect_rel_objs > 1 THEN 
+    RAISE EXCEPTION 'Incorrect parameter for affection option: %', affect_rel_objs USING HINT = 'Use 1 to delete related objects or 0 if you plan to keep them.';
+  END IF;  
+
+  EXECUTE format('SELECT objectclass_id FROM %I.cityobject WHERE id = %L', schema_name, co_id) INTO class_id;
+
+  -- class_id can be NULL if object has already been deleted
+  IF class_id IS NOT NULL THEN
+    CASE
+      WHEN class_id = 4 THEN PERFORM geodb_pkg.delete_land_use(co_id, schema_name);
+      WHEN class_id = 5 THEN PERFORM geodb_pkg.delete_generic_cityobject(co_id, schema_name);
+      WHEN class_id = 7 THEN PERFORM geodb_pkg.delete_solitary_veg_obj(co_id, schema_name);
+      WHEN class_id = 8 THEN PERFORM geodb_pkg.delete_plant_cover(co_id, schema_name);
+      WHEN class_id = 9 THEN PERFORM geodb_pkg.delete_waterbody(co_id, schema_name);
+      WHEN class_id = 11 OR 
+           class_id = 12 OR 
+           class_id = 13 THEN PERFORM geodb_pkg.delete_waterbnd_surface(co_id, schema_name);
+      WHEN class_id = 14 THEN PERFORM geodb_pkg.delete_relief_feature(co_id, schema_name);
+      WHEN class_id = 16 OR 
+           class_id = 17 OR 
+           class_id = 18 OR 
+           class_id = 19 THEN PERFORM geodb_pkg.delete_relief_component(co_id, schema_name);
+      WHEN class_id = 21 THEN PERFORM geodb_pkg.delete_city_furniture(co_id, schema_name);
+      WHEN class_id = 23 THEN PERFORM geodb_pkg.delete_cityobjectgroup(co_id, affect_rel_objs, schema_name);
+      WHEN class_id = 25 OR 
+           class_id = 26 THEN PERFORM geodb_pkg.delete_building(co_id, schema_name);
+      WHEN class_id = 27 OR 
+           class_id = 28 THEN PERFORM geodb_pkg.delete_building_installation(co_id, schema_name);
+      WHEN class_id = 30 OR 
+           class_id = 31 OR 
+           class_id = 32 OR 
+           class_id = 33 OR 
+           class_id = 34 OR 
+           class_id = 35 OR
+           class_id = 36 OR
+           class_id = 60 OR
+           class_id = 61 THEN PERFORM geodb_pkg.delete_thematic_surface(co_id, schema_name);
+      WHEN class_id = 38 OR 
+           class_id = 39 THEN PERFORM geodb_pkg.delete_opening(co_id, schema_name);
+      WHEN class_id = 40 THEN PERFORM geodb_pkg.delete_building_furniture(co_id, schema_name);
+      WHEN class_id = 41 THEN PERFORM geodb_pkg.delete_room(co_id, schema_name);
+      WHEN class_id = 43 OR 
+           class_id = 44 OR 
+           class_id = 45 OR 
+           class_id = 46 THEN PERFORM geodb_pkg.delete_transport_complex(co_id, schema_name);
+      WHEN class_id = 47 OR 
+           class_id = 48 THEN PERFORM geodb_pkg.delete_traffic_area(co_id, schema_name);
+      WHEN class_id = 57 THEN PERFORM geodb_pkg.delete_citymodel(co_id, affect_rel_objs, schema_name);
+      WHEN class_id = 63 OR
+           class_id = 64 THEN PERFORM geodb_pkg.delete_bridge(co_id, schema_name);
+      WHEN class_id = 65 OR
+           class_id = 66 THEN PERFORM geodb_pkg.delete_bridge_installation(co_id, schema_name);
+      WHEN class_id = 68 OR 
+           class_id = 69 OR 
+           class_id = 70 OR 
+           class_id = 71 OR 
+           class_id = 72 OR
+           class_id = 73 OR
+           class_id = 74 OR
+           class_id = 75 OR
+           class_id = 76 THEN PERFORM geodb_pkg.delete_bridge_them_srf(co_id, schema_name);
+      WHEN class_id = 78 OR 
+           class_id = 79 THEN PERFORM geodb_pkg.delete_bridge_opening(co_id, schema_name);		 
+      WHEN class_id = 80 THEN PERFORM geodb_pkg.delete_bridge_furniture(co_id, schema_name);
+      WHEN class_id = 81 THEN PERFORM geodb_pkg.delete_bridge_room(co_id, schema_name);
+      WHEN class_id = 82 THEN PERFORM geodb_pkg.delete_bridge_constr_elem(co_id, schema_name);
+      WHEN class_id = 84 OR
+           class_id = 85 THEN PERFORM geodb_pkg.delete_tunnel(co_id, schema_name);
+      WHEN class_id = 86 OR
+           class_id = 87 THEN PERFORM geodb_pkg.delete_tunnel_installation(co_id, schema_name);
+      WHEN class_id = 88 OR 
+           class_id = 89 OR 
+           class_id = 90 OR 
+           class_id = 91 OR 
+           class_id = 92 OR
+           class_id = 93 OR
+           class_id = 94 OR
+           class_id = 95 OR
+           class_id = 96 THEN PERFORM geodb_pkg.delete_tunnel_them_srf(co_id, schema_name);
+      WHEN class_id = 99 OR 
+           class_id = 100 THEN PERFORM geodb_pkg.delete_tunnel_opening(co_id, schema_name);
+      WHEN class_id = 101 THEN PERFORM geodb_pkg.delete_tunnel_furniture(co_id, schema_name);
+      WHEN class_id = 102 THEN PERFORM geodb_pkg.delete_tunnel_hollow_space(co_id, schema_name);
+      ELSE
+        RAISE NOTICE 'Can not delete chosen object with ID % and objectclass_id %.', co_id, class_id;
+    END CASE;
+  END IF;
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      RAISE NOTICE 'delete_cityobject (id: %): %', co_id, SQLERRM;
+END; 
+$$ 
+LANGUAGE plpgsql;
+
+
+-- delete any cityobject by pretending on foreign key relations
+-- NOTE: all constraints have to be set to ON DELETE CASCADE (function: geodb_pkg.update_schema_constraints)
+CREATE OR REPLACE FUNCTION geodb_pkg.delete_cityobject_cascade(
+  co_id INTEGER,
+  schema_name VARCHAR DEFAULT 'public'
+  ) RETURNS SETOF VOID AS
+$$
+BEGIN  
+  -- first step: delete local appearance
+  EXECUTE format('SELECT geodb_pkg.delete_appearance(id, %L) FROM %I.appearance WHERE cityobject_id = %L', schema_name, schema_name, co_id);
+  
+  -- second step: delete geometries
+  EXECUTE format('DELETE FROM %I.surface_geometry WHERE cityobject_id = %L AND parent_id IS NULL', schema_name, co_id);
+  
+  -- third step: delete the cityobject
+  EXECUTE format('DELETE FROM %I.cityobject WHERE id = %L', schema_name, co_id);
+  
+  -- fourth step: cleanup
+  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);  
+  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_addresses(schema_name);
+  PERFORM geodb_pkg.cleanup_cityobjectgroups(schema_name);
+  PERFORM geodb_pkg.cleanup_citymodels(schema_name);
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      RAISE NOTICE 'delete_cityobject (id: %): %', co_id, SQLERRM;
+END; 
 $$ 
 LANGUAGE plpgsql;
