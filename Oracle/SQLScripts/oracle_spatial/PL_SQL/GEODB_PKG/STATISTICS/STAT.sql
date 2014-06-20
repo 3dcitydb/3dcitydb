@@ -24,7 +24,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                          | Author
--- 2.0       2014-01-09   complete revision for 3DCityDB V3      FKun
+-- 2.0       2014-06-04   complete revision for 3DCityDB V3      FKun
 --                                                               CNag
 --
 
@@ -55,44 +55,33 @@ AS
     report_header STRARRAY := STRARRAY();
     report STRARRAY := STRARRAY();
     ws VARCHAR2(30);
-    cnt NUMBER;
-    refreshDate DATE;
     reportDate DATE;
-    pa_id PLANNING_ALTERNATIVE.ID%TYPE;
-    pa_title PLANNING_ALTERNATIVE.TITLE%TYPE;
   BEGIN
     SELECT SYSDATE INTO reportDate FROM DUAL;  
     report_header.extend; report_header(report_header.count) := ('Database Report on 3D City Model - Report date: ' || TO_CHAR(reportDate, 'DD.MM.YYYY HH24:MI:SS'));
     report_header.extend; report_header(report_header.count) := ('===================================================================');
-  
+
     -- Determine current workspace
     ws := DBMS_WM.GetWorkspace;
     report_header.extend; report_header(report_header.count) := ('Current workspace: ' || ws);
-  
-    IF ws != 'LIVE' THEN
-      -- Get associated planning alternative
-      SELECT id,title INTO pa_id,pa_title FROM PLANNING_ALTERNATIVE
-      WHERE workspace_name=ws;
-      report_header.extend; report_header(report_header.count) := (' (PlanningAlternative ID ' || pa_id ||': "' || pa_title || '")');
-
-      -- Query date of last refresh
-      SELECT createtime INTO refreshDate
-      FROM all_workspace_savepoints
-      WHERE savepoint='refreshed' AND workspace=ws;
-      report_header.extend; report_header(report_header.count) := ('Last refresh from LIVE workspace: ' || TO_CHAR(refreshDate, 'DD.MM.YYYY HH24:MI:SS'));
-    END IF;
-    report_header.extend; report_header(report_header.count) := '';
+    report_header.extend; report_header(report_header.count) := '';  
 
     EXECUTE IMMEDIATE 'SELECT CAST(COLLECT(tab.t) AS STRARRAY) FROM (
-                         SELECT geodb_stat.table_label(table_name) || geodb_stat.table_content(table_name) AS t
-                           FROM user_tables WHERE table_name != ''DATABASE_SRS''
-                           AND table_name != ''OBJECTCLASS''
-                           AND table_name NOT LIKE ''%MDRT%''
-						   AND table_name NOT LIKE ''%MDXT%''
-                           AND table_name NOT LIKE ''%TMP_%''
-                           AND length(table_name) <= 26
-                           ORDER BY table_name ASC
-                         ) tab' INTO report;
+	                     SELECT CASE WHEN ut.table_name LIKE ''%\_LT'' ESCAPE ''\'' THEN
+                           (SELECT geodb_stat.table_label(view_name) || geodb_stat.table_content(view_name) FROM user_views 
+                              WHERE view_name = substr(ut.table_name, 1, length(ut.table_name)-3))
+                         ELSE
+                           (SELECT geodb_stat.table_label(table_name) || geodb_stat.table_content(table_name)
+                              FROM user_tables WHERE table_name = ut.table_name) 
+                         END AS t
+                         FROM user_tables ut
+                           WHERE ut.table_name NOT IN (''DATABASE_SRS'', ''OBJECTCLASS'')
+                           AND ut.table_name NOT LIKE ''%\_AUX'' ESCAPE ''\''
+                           AND ut.table_name NOT LIKE ''%TMP\_%'' ESCAPE ''\''
+                           AND ut.table_name NOT LIKE ''%MDRT%''
+                           AND ut.table_name NOT LIKE ''%MDXT%''
+                         ORDER BY ut.table_name ASC
+                       ) tab' INTO report;
 
     EXECUTE IMMEDIATE 'SELECT :1 MULTISET UNION :2 FROM dual' INTO report USING report_header, report;
 

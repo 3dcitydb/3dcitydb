@@ -32,12 +32,12 @@
 * global type to store information relevant to indexes
 ******************************************************************/
 CREATE OR REPLACE TYPE INDEX_OBJ AS OBJECT
-  (index_name 				VARCHAR2(100),
-   table_name 				VARCHAR2(100),
-   attribute_name 		VARCHAR2(100),
-   type       				NUMBER(1),
-   srid               NUMBER,
-   is_3d 							NUMBER(1, 0),
+  (index_name VARCHAR2(100),
+   table_name VARCHAR2(100),
+   attribute_name VARCHAR2(100),
+   type NUMBER(1),
+   srid NUMBER,
+   is_3d NUMBER(1, 0),
      STATIC function construct_spatial_3d
      (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0)
      RETURN INDEX_OBJ,

@@ -91,26 +91,6 @@ AS
   END;
 
   /*****************************************************************
-  * change_schema_srid
-  *
-  * @param schema_srid the SRID of the coordinate system to be further used in the database
-  * @param schema_gml_srs_name the GML_SRS_NAME of the coordinate system to be further used in the database
-  ******************************************************************/
-  PROCEDURE change_schema_srid(schema_srid NUMBER, schema_gml_srs_name VARCHAR2)
-  IS
-  BEGIN
-    -- update entry in DATABASE_SRS table first
-    UPDATE DATABASE_SRS SET SRID = schema_srid, GML_SRS_NAME = schema_gml_srs_name;
-    COMMIT;
-
-    -- change srid of each spatially enabled table
-    FOR rec IN (SELECT table_name AS t, column_name AS c, get_dim(table_name, column_name) AS dim
-                 FROM user_sdo_geom_metadata) LOOP
-      change_column_srid(rec.t, rec.c, rec.dim, schema_srid);
-    END LOOP;
-  END;
-
-  /*****************************************************************
   * get_dim
   *
   * @param t_name name of the table
@@ -146,13 +126,19 @@ AS
     dim NUMBER,
     schema_srid NUMBER)
   IS
-    is_versioned BOOLEAN;
+    internal_t_name VARCHAR2(30);
+    is_versioned BOOLEAN := FALSE;
     is_valid BOOLEAN;
     idx_name VARCHAR2(30);
     idx INDEX_OBJ;
     sql_err_code VARCHAR2(20);
   BEGIN
-    is_versioned := geodb_util.versioning_table(t_name) = 'ON';
+    IF t_name LIKE '%\_LT' ESCAPE '\' THEN
+      is_versioned := TRUE;
+      internal_t_name := substr(t_name, 1, length(t_name)-3);
+    ELSE
+      internal_t_name := t_name;
+    END IF;
 
     is_valid := geodb_idx.index_status(t_name, c_name) = 'VALID';
 
@@ -161,18 +147,24 @@ AS
       EXECUTE IMMEDIATE 'UPDATE USER_SDO_GEOM_METADATA SET srid = :1 WHERE table_name = :2 AND column_name = :3'
                            USING schema_srid, t_name, c_name;
       COMMIT;
-    ELSE
+    ELSE  
       -- get name of spatial index
-      EXECUTE IMMEDIATE 'SELECT index_name FROM user_ind_columns 
-                           WHERE table_name = upper(:1) AND column_name = upper(:2)'
-                           INTO idx_name USING t_name, c_name;
+      BEGIN
+        EXECUTE IMMEDIATE 'SELECT index_name FROM user_ind_columns 
+                             WHERE table_name = upper(:1) AND column_name = upper(:2)'
+                             INTO idx_name USING t_name, c_name;
 
-      -- create INDEX_OBJ
-      IF dim = 3 THEN
-        idx := INDEX_OBJ.construct_spatial_3d(idx_name, t_name, c_name);
-      ELSE
-        idx := INDEX_OBJ.construct_spatial_2d(idx_name, t_name, c_name);
-      END IF;
+        -- create INDEX_OBJ
+        IF dim = 3 THEN
+          idx := INDEX_OBJ.construct_spatial_3d(idx_name, internal_t_name, c_name);
+        ELSE
+          idx := INDEX_OBJ.construct_spatial_2d(idx_name, internal_t_name, c_name);
+        END IF;
+
+        EXCEPTION
+          WHEN NO_DATA_FOUND THEN
+            RETURN;
+      END;
 
       -- drop spatial index
       sql_err_code := geodb_idx.drop_index(idx, is_versioned);
@@ -180,6 +172,26 @@ AS
       -- create spatial index (incl. new spatial metadata)
       sql_err_code := geodb_idx.create_index(idx, is_versioned);
     END IF;
+  END;
+
+  /*****************************************************************
+  * change_schema_srid
+  *
+  * @param schema_srid the SRID of the coordinate system to be further used in the database
+  * @param schema_gml_srs_name the GML_SRS_NAME of the coordinate system to be further used in the database
+  ******************************************************************/
+  PROCEDURE change_schema_srid(schema_srid NUMBER, schema_gml_srs_name VARCHAR2)
+  IS
+  BEGIN
+    -- update entry in DATABASE_SRS table first
+    UPDATE DATABASE_SRS SET SRID = schema_srid, GML_SRS_NAME = schema_gml_srs_name;
+    COMMIT;
+
+    -- change srid of each spatially enabled table
+    FOR rec IN (SELECT table_name AS t, column_name AS c, get_dim(table_name, column_name) AS dim
+                  FROM user_sdo_geom_metadata) LOOP
+      change_column_srid(rec.t, rec.c, rec.dim, schema_srid);
+    END LOOP;
   END;
   
 END geodb_srs;
