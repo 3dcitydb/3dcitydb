@@ -249,19 +249,10 @@ AS
     )
   IS
   BEGIN
-    IF versioned_table(table_name) = 'ON' THEN
-      DBMS_WM.BeginDDL(table_name);
-    END IF;
-
     EXECUTE IMMEDIATE 'ALTER TABLE ' || table_name || ' DROP CONSTRAINT ' || fkey_name;
     EXECUTE IMMEDIATE 'ALTER TABLE ' || table_name || ' ADD CONSTRAINT ' || fkey_name || 
                          ' FOREIGN KEY (' || column_name || ') REFERENCES ' || ref_table || '(' || ref_column || ')'
                          || on_delete_param || ' ' || deferrable_param;
-
-    IF versioned_table(table_name) = 'ON' THEN
-      DBMS_WM.CommitDDL(table_name);
-    END IF;
-
     EXCEPTION
       WHEN OTHERS THEN
         dbms_output.put_line('Error on constraint ' || fkey_name || ': ' || SQLERRM);

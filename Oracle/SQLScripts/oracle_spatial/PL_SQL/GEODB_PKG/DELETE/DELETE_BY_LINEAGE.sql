@@ -26,6 +26,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 2.0.0     2014-06-02   extended for 3DCityDB V3                    GHud
 -- 1.3.0     2013-08-08   extended to all thematic classes            GHud
 --                                                                    FKun
 -- 1.2.0     2012-02-22   minor changes                               CNag
@@ -37,6 +38,8 @@ CREATE OR REPLACE PACKAGE geodb_delete_by_lineage
 AS
   procedure delete_cityobjects(lineage_value varchar2);
   procedure delete_buildings(lineage_value varchar2);
+  procedure delete_bridges(lineage_value varchar2);
+  procedure delete_tunnels(lineage_value varchar2);
   procedure delete_city_furnitures(lineage_value varchar2);
   procedure delete_generic_cityobjects(lineage_value varchar2);
   procedure delete_land_uses(lineage_value varchar2);
@@ -67,7 +70,7 @@ AS
     end loop;
 
     -- cleanup
-    geodb_delete.cleanup_implicitgeometries;
+    geodb_delete.cleanup_implicit_geometries;
     geodb_delete.cleanup_appearances;
     geodb_delete.cleanup_citymodels;
   exception
@@ -75,11 +78,58 @@ AS
       dbms_output.put_line('delete_buildings: ' || SQLERRM);
   end;
 
+  procedure delete_bridges(lineage_value varchar2)
+  is
+    cursor bridge_cur is
+      select b.id from bridge b, cityobject c where b.id = c.id and c.lineage = lineage_value;
+  begin    
+    for bridge_rec in bridge_cur loop
+      begin
+        geodb_delete.delete_bridge(bridge_rec.id);
+      exception
+        when others then
+          dbms_output.put_line('delete_bridges: deletion of bridge with ID ' || bridge_rec.id || ' threw: ' || SQLERRM);
+      end;
+    end loop;
+
+    -- cleanup
+    geodb_delete.cleanup_implicit_geometries;
+    geodb_delete.cleanup_appearances;
+    geodb_delete.cleanup_citymodels;
+  exception
+    when others then
+      dbms_output.put_line('delete_bridges: ' || SQLERRM);
+  end;
+
+  procedure delete_tunnels(lineage_value varchar2)
+  is
+    cursor tunnel_cur is
+      select t.id from tunnel t, cityobject c where t.id = c.id and c.lineage = lineage_value;
+  begin    
+    for tunnel_rec in tunnel_cur loop
+      begin
+        geodb_delete.delete_tunnel(tunnel_rec.id);
+      exception
+        when others then
+          dbms_output.put_line('delete_tunnels: deletion of tunnel with ID ' || tunnel_rec.id || ' threw: ' || SQLERRM);
+      end;
+    end loop;
+
+    -- cleanup
+    geodb_delete.cleanup_implicit_geometries;
+    geodb_delete.cleanup_appearances;
+    geodb_delete.cleanup_citymodels;
+  exception
+    when others then
+      dbms_output.put_line('delete_tunnels: ' || SQLERRM);
+  end;
+  
   procedure delete_city_furnitures(lineage_value varchar2)
   is
     cursor city_furniture_cur is
       select cf.id from city_furniture cf, cityobject c where cf.id = c.id and c.lineage = lineage_value;
   begin
+    dbms_output.put_line('::delete_city_furnitures START');
     for city_furniture_rec in city_furniture_cur loop
       begin
         geodb_delete.delete_city_furniture(city_furniture_rec.id);
@@ -90,9 +140,13 @@ AS
     end loop;
 
     -- cleanup
-    geodb_delete.cleanup_implicitgeometries;
+    dbms_output.put_line('::delete_city_furnitures cleanup');
+    geodb_delete.cleanup_implicit_geometries;
     geodb_delete.cleanup_appearances;
     geodb_delete.cleanup_citymodels;
+    
+    dbms_output.put_line('::delete_city_furnitures END');
+
   exception
     when others then
       dbms_output.put_line('delete_city_furnitures: ' || SQLERRM);
@@ -113,7 +167,7 @@ AS
     end loop;
 
     -- cleanup
-    geodb_delete.cleanup_implicitgeometries;
+    geodb_delete.cleanup_implicit_geometries;
     geodb_delete.cleanup_appearances;
     geodb_delete.cleanup_citymodels;
   exception
@@ -180,7 +234,7 @@ AS
     end loop;
 
     -- cleanup
-    geodb_delete.cleanup_implicitgeometries;
+    geodb_delete.cleanup_implicit_geometries;
     geodb_delete.cleanup_appearances;
     geodb_delete.cleanup_citymodels;
   exception
@@ -291,7 +345,7 @@ AS
     end loop;
 
     -- cleanup
-    geodb_delete.cleanup_implicitgeometries;
+    geodb_delete.cleanup_implicit_geometries;
     geodb_delete.cleanup_appearances;
     geodb_delete.cleanup_citymodels;
   exception
