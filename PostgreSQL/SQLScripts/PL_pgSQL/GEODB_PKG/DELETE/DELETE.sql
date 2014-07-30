@@ -25,7 +25,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 2.0.0     2014-06-20   complete revision for 3DCityDB V3           FKun
+-- 2.0.0     2014-07-30   complete revision for 3DCityDB V3           FKun
 -- 1.2.0     2013-08-08   extended to all thematic classes            FKun
 --                                                                    GHud
 -- 1.1.0     2012-02-22   some performance improvements               CNag
@@ -60,6 +60,7 @@
 *   delete_cityobject(co_id INTEGER, affect_rel_objs INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_cityobject_cascade(co_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_cityobjectgroup(cog_id INTEGER, affect_rel_objs INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
+*   delete_grid_coverage(gc_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_generic_cityobject(gco_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_implicit_geometry(ig_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
 *   delete_land_use(lu_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
@@ -221,6 +222,25 @@ BEGIN
   EXCEPTION
     WHEN OTHERS THEN
       RAISE NOTICE 'delete_implicit_geometry (id: %): %', ig_id, SQLERRM;
+END; 
+$$ 
+LANGUAGE plpgsql;
+
+
+/*
+delete from GRID_COVERAGE
+*/
+CREATE OR REPLACE FUNCTION geodb_pkg.delete_grid_coverage(
+  gc_id INTEGER,
+  schema_name VARCHAR DEFAULT 'public'
+  ) RETURNS SETOF VOID AS
+$$
+BEGIN
+  EXECUTE format('DELETE FROM %I.grid_coverage WHERE id = %L', schema_name, gc_id);
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      RAISE NOTICE 'delete_grid_coverage (id: %): %', gc_id, SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;
@@ -827,18 +847,18 @@ CREATE OR REPLACE FUNCTION geodb_pkg.delete_raster_relief(
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
-  rast_id INTEGER;
+  cov_id INTEGER;
 BEGIN
   --// PRE DELETE RATSER RELIEF //--
   -- get reference id to raster_relief_georaster table
-  EXECUTE format('SELECT raster_id FROM %I.raster_relief WHERE id = %L', schema_name, rr_id) INTO rast_id;
+  EXECUTE format('SELECT coverage_id FROM %I.raster_relief WHERE id = %L', schema_name, rr_id) INTO cov_id;
 
   --// DELETE RATSER RELIEF //--
   EXECUTE format('DELETE FROM %I.raster_relief WHERE id = %L', schema_name, rr_id);
 
   --// POST DELETE RATSER RELIEF //--
   -- delete raster data
-  EXECUTE format('DELETE FROM %I.raster_relief_georaster WHERE id = %L', schema_name, rast_id);
+  PERFORM geodb_pkg.delete_grid_coverage(cov_id, schema_name);
 
   EXCEPTION
 	WHEN OTHERS THEN
@@ -2445,7 +2465,7 @@ $$
 LANGUAGE plpgsql;
 
 
--- delete any cityobject by pretending on foreign key relations
+-- delete any cityobject using foreign key relations
 -- NOTE: all constraints have to be set to ON DELETE CASCADE (function: geodb_pkg.update_schema_constraints)
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_cityobject_cascade(
   co_id INTEGER,
@@ -2471,7 +2491,7 @@ BEGIN
   
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'delete_cityobject (id: %): %', co_id, SQLERRM;
+      RAISE NOTICE 'delete_cityobject_cascade (id: %): %', co_id, SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;

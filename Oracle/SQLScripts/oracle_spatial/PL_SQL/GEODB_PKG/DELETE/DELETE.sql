@@ -26,7 +26,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 2.0.0     2014-07-15   extended for 3DCityDB V3                    GHud
+-- 2.0.0     2014-07-30   extended for 3DCityDB V3                    GHud
 --                                                                    FKun
 -- 1.2.0     2013-08-08   extended to all thematic classes            GHud
 --                                                                    FKun
@@ -96,6 +96,7 @@ AS
   -- private procedures
   procedure intern_delete_surface_geometry(pid number);
   procedure intern_delete_implicit_geom(pid number);
+  procedure intern_delete_grid_coverage(pid number);
   procedure intern_delete_cityobject(pid number);
   procedure delete_citymodel(citymodel_rec citymodel%rowtype);
   procedure delete_appearance(appearance_rec appearance%rowtype);
@@ -261,6 +262,18 @@ AS
   exception
     when others then
       dbms_output.put_line('post_delete_implicit_geom (id: ' || implicit_geometry_rec.id || '): ' || SQLERRM);
+  end;
+
+  /*
+    internal: delete from GRID_COVERAGE
+  */
+  procedure intern_delete_grid_coverage(pid number)
+  is
+  begin
+    execute immediate 'delete from grid_coverage where id=:1' using pid;
+  exception
+    when others then
+      dbms_output.put_line('intern_delete_grid_coverage (id: ' || pid || '): ' || SQLERRM);
   end;
 
   /*
@@ -1265,13 +1278,10 @@ AS
   procedure post_delete_raster_relief(raster_relief_rec raster_relief%rowtype)
   is
   begin
-    execute immediate 'delete from raster_rel_georaster_rdt where raster_id=:1' using raster_relief_rec.georaster_id;
-    execute immediate 'delete from raster_relief_georaster where id=:1' using raster_relief_rec.georaster_id;
+    intern_delete_grid_coverage(raster_relief_rec.coverage_id);
   exception
-    when no_data_found then
-      return;
     when others then
-      dbms_output.put_line('pre_delete_raster_relief (id: ' || raster_relief_rec.id || '): ' || SQLERRM);
+      dbms_output.put_line('post_delete_raster_relief (id: ' || raster_relief_rec.id || '): ' || SQLERRM);
   end;
 
   /*
