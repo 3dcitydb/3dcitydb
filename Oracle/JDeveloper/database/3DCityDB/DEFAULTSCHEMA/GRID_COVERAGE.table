@@ -1,12 +1,11 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <table xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
-  <name>RASTER_RELIEF_GEORASTER</name>
+  <name>GRID_COVERAGE</name>
   <columns>
     <column>
       <name>ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -16,7 +15,6 @@
       <name>RASTERPROPERTY</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle10g</providerClass>
           <schemaName>MDSYS</schemaName>
           <typeName>SDO_GEORASTER</typeName>
         </dataTypeID>
@@ -26,12 +24,12 @@
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <name>RASTER_RELIEF_GEORASTER_PK</name>
+      <name>GRID_COVERAGE_PK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
           <name>ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
-            <name>RASTER_RELIEF_GEORASTER</name>
+            <name>GRID_COVERAGE</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -41,9 +39,9 @@
       </columnIDs>
       <enabled>true</enabled>
       <indexID class="oracle.javatools.db.NameBasedID">
-        <name>RASTER_RELIEF_GEORASTER_PK</name>
+        <name>GRID_COVERAGE_PK</name>
         <parent class="oracle.javatools.db.NameBasedID">
-          <name>RASTER_RELIEF_GEORASTER</name>
+          <name>GRID_COVERAGE</name>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -53,8 +51,8 @@
     </constraint>
   </constraints>
   <indexes>
-    <indexe>
-      <name>RASTER_RELIEF_GEORASTER_PK</name>
+    <index>
+      <name>GRID_COVERAGE_PK</name>
       <columnExpressions>
         <columnExpression>
           <expressionSource>ID</expressionSource>
@@ -65,7 +63,7 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
-    </indexe>
+    </index>
   </indexes>
   <properties>
     <entry>

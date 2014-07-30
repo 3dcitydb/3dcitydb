@@ -1,12 +1,11 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <table xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
-  <name>RASTER_REL_GEORASTER_RDT</name>
+  <name>GRID_COVERAGE_RDT</name>
   <columns>
     <column>
       <name>RASTERID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -16,7 +15,6 @@
       <name>PYRAMIDLEVEL</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -26,7 +24,6 @@
       <name>BANDBLOCKNUMBER</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -36,7 +33,6 @@
       <name>ROWBLOCKNUMBER</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -46,7 +42,6 @@
       <name>COLUMNBLOCKNUMBER</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -67,7 +62,6 @@
       <name>RASTERBLOCK</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle8</providerClass>
           <typeName>BLOB</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -90,12 +84,12 @@
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <name>RASTER_REL_GEORAST_RDT_PK</name>
+      <name>GRID_COVERAGE_RDT_PK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
           <name>RASTERID</name>
           <parent class="oracle.javatools.db.NameBasedID">
-            <name>RASTER_REL_GEORASTER_RDT</name>
+            <name>GRID_COVERAGE_RDT</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -105,7 +99,7 @@
         <columnID class="oracle.javatools.db.NameBasedID">
           <name>PYRAMIDLEVEL</name>
           <parent class="oracle.javatools.db.NameBasedID">
-            <name>RASTER_REL_GEORASTER_RDT</name>
+            <name>GRID_COVERAGE_RDT</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -115,7 +109,7 @@
         <columnID class="oracle.javatools.db.NameBasedID">
           <name>BANDBLOCKNUMBER</name>
           <parent class="oracle.javatools.db.NameBasedID">
-            <name>RASTER_REL_GEORASTER_RDT</name>
+            <name>GRID_COVERAGE_RDT</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -125,7 +119,7 @@
         <columnID class="oracle.javatools.db.NameBasedID">
           <name>ROWBLOCKNUMBER</name>
           <parent class="oracle.javatools.db.NameBasedID">
-            <name>RASTER_REL_GEORASTER_RDT</name>
+            <name>GRID_COVERAGE_RDT</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -135,7 +129,7 @@
         <columnID class="oracle.javatools.db.NameBasedID">
           <name>COLUMNBLOCKNUMBER</name>
           <parent class="oracle.javatools.db.NameBasedID">
-            <name>RASTER_REL_GEORASTER_RDT</name>
+            <name>GRID_COVERAGE_RDT</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -145,9 +139,9 @@
       </columnIDs>
       <enabled>true</enabled>
       <indexID class="oracle.javatools.db.NameBasedID">
-        <name>RASTER_REL_GEORAST_RDT_PK</name>
+        <name>GRID_COVERAGE_RDT_PK</name>
         <parent class="oracle.javatools.db.NameBasedID">
-          <name>RASTER_REL_GEORASTER_RDT</name>
+          <name>GRID_COVERAGE_RDT</name>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -157,8 +151,8 @@
     </constraint>
   </constraints>
   <indexes>
-    <indexe>
-      <name>RASTER_REL_GEORAST_RDT_PK</name>
+    <index>
+      <name>GRID_COVERAGE_RDT_PK</name>
       <columnExpressions>
         <columnExpression>
           <expressionSource>RASTERID</expressionSource>
@@ -181,7 +175,7 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
-    </indexe>
+    </index>
   </indexes>
   <properties>
     <entry>

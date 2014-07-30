@@ -6,7 +6,6 @@
       <name>ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -55,17 +54,15 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
       </dataTypeUsage>
       <notNull>false</notNull>
     </column>
     <column>
-      <name>GEORASTER_ID</name>
+      <name>COVERAGE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -160,10 +157,10 @@
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <name>RASTER_RELIEF_GEORAST_FK</name>
+      <name>RASTER_RELIEF_COVERAGE_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>GEORASTER_ID</name>
+          <name>COVERAGE_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>RASTER_RELIEF</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
@@ -176,9 +173,9 @@
       <enabled>true</enabled>
       <onDeleteAction>NO_ACTION</onDeleteAction>
       <referenceID class="oracle.javatools.db.NameBasedID">
-        <name>RASTER_RELIEF_GEORASTER_PK</name>
+        <name>GRID_COVERAGE_PK</name>
         <parent class="oracle.javatools.db.NameBasedID">
-          <name>RASTER_RELIEF_GEORASTER</name>
+          <name>GRID_COVERAGE</name>
           <schemaName>DEFAULTSCHEMA</schemaName>
           <type>TABLE</type>
         </parent>
@@ -188,11 +185,11 @@
     </constraint>
   </constraints>
   <indexes>
-    <indexe>
-      <name>RASTER_RELIEF_GEORAST_FKX</name>
+    <index>
+      <name>RASTER_RELIEF_COVERAGE_FKX</name>
       <columnExpressions>
         <columnExpression>
-          <expressionSource>GEORASTER_ID</expressionSource>
+          <expressionSource>COVERAGE_ID</expressionSource>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -200,8 +197,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>RASTER_RELIEF_PK</name>
       <columnExpressions>
         <columnExpression>
@@ -250,7 +247,7 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
-    </indexe>
+    </index>
   </indexes>
   <properties>
     <entry>
