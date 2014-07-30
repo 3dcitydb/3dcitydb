@@ -2409,17 +2409,17 @@ CREATE INDEX waterbnd_srf_lod4srf_fkx ON public.waterboundary_surface
 CREATE TABLE public.raster_relief(
 	id integer NOT NULL,
 	raster_uri character varying(4000),
-	raster_id integer,
+	coverage_id integer,
 	CONSTRAINT raster_relief_pk PRIMARY KEY (id)
 
 );
 -- ddl-end --
--- object: raster_relief_georast_fkx | type: INDEX --
--- DROP INDEX public.raster_relief_georast_fkx;
-CREATE INDEX raster_relief_georast_fkx ON public.raster_relief
+-- object: raster_relief_coverage_fkx | type: INDEX --
+-- DROP INDEX public.raster_relief_coverage_fkx;
+CREATE INDEX raster_relief_coverage_fkx ON public.raster_relief
 	USING btree
 	(
-	  raster_id ASC NULLS LAST
+	  coverage_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -4022,9 +4022,9 @@ CREATE INDEX address_to_bridge_fkx1 ON public.address_to_bridge
 -- ddl-end --
 
 
--- object: public.raster_rel_georaster_seq | type: SEQUENCE --
--- DROP SEQUENCE public.raster_rel_georaster_seq;
-CREATE SEQUENCE public.raster_rel_georaster_seq
+-- object: public.grid_coverage_seq | type: SEQUENCE --
+-- DROP SEQUENCE public.grid_coverage_seq;
+CREATE SEQUENCE public.grid_coverage_seq
 	INCREMENT BY 1
 	MINVALUE 0
 	MAXVALUE 2147483647
@@ -4442,19 +4442,19 @@ CREATE INDEX ext_ref_cityobject_fkx ON public.external_reference
 CREATE TABLE public.tex_image(
 	id integer NOT NULL DEFAULT nextval('tex_image_seq'::regclass),
 	tex_image_uri character varying(4000),
-	tex_image bytea,
+	tex_image_data bytea,
 	tex_mime_type character varying(256),
 	tex_mime_type_codespace character varying(4000),
 	CONSTRAINT tex_image_pk PRIMARY KEY (id)
 
 );
 -- ddl-end --
--- object: public.raster_relief_georaster | type: TABLE --
--- DROP TABLE public.raster_relief_georaster;
-CREATE TABLE public.raster_relief_georaster(
-	id integer DEFAULT nextval('raster_rel_georaster_seq'::regclass),
+-- object: public.grid_coverage | type: TABLE --
+-- DROP TABLE public.grid_coverage;
+CREATE TABLE public.grid_coverage(
+	id integer DEFAULT nextval('grid_coverage_seq'::regclass),
 	rasterproperty raster,
-	CONSTRAINT raster_relief_georaster_pk PRIMARY KEY (id)
+	CONSTRAINT grid_coverage_pk PRIMARY KEY (id)
 
 );
 -- ddl-end --
@@ -5610,10 +5610,10 @@ ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 
 
--- object: raster_relief_georast_fk | type: CONSTRAINT --
--- ALTER TABLE public.raster_relief DROP CONSTRAINT raster_relief_georast_fk;
-ALTER TABLE public.raster_relief ADD CONSTRAINT raster_relief_georast_fk FOREIGN KEY (raster_id)
-REFERENCES public.raster_relief_georaster (id) MATCH FULL
+-- object: raster_relief_coverage_fk | type: CONSTRAINT --
+-- ALTER TABLE public.raster_relief DROP CONSTRAINT raster_relief_coverage_fk;
+ALTER TABLE public.raster_relief ADD CONSTRAINT raster_relief_coverage_fk FOREIGN KEY (coverage_id)
+REFERENCES public.grid_coverage (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
 -- ddl-end --
 

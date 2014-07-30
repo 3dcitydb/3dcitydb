@@ -1684,7 +1684,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="breakline_relief">
 	<schema name="public"/>
-	<position x="5887.84" y="2034.44"/>
+	<position x="5994.51" y="2082.77"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1715,7 +1715,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="masspoint_relief">
 	<schema name="public"/>
-	<position x="5899.34" y="1914.47"/>
+	<position x="5972.67" y="1932.8"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1736,7 +1736,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="relief_component">
 	<schema name="public"/>
-	<position x="5201.01" y="2108.3"/>
+	<position x="5447.68" y="1968.3"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1773,7 +1773,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="relief_feat_to_rel_comp">
 	<schema name="public"/>
-	<position x="5455.01" y="1917.47"/>
+	<position x="5463.34" y="1782.47"/>
 	<column name="relief_component_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1801,7 +1801,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="relief_feature">
 	<schema name="public"/>
-	<position x="5166.84" y="1905.8"/>
+	<position x="5160.17" y="1797.47"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1818,7 +1818,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="tin_relief">
 	<schema name="public"/>
-	<position x="5899.67" y="2182"/>
+	<position x="5918" y="2252"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1875,7 +1875,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="transportation_complex">
 	<schema name="public"/>
-	<position x="5945.53" y="2526.01"/>
+	<position x="5943.86" y="2494.34"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1964,7 +1964,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="traffic_area">
 	<schema name="public"/>
-	<position x="5960.53" y="2900.76"/>
+	<position x="5943.86" y="2882.43"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2662,24 +2662,24 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="raster_relief">
 	<schema name="public"/>
-	<position x="5750" y="2381"/>
+	<position x="5897.33" y="1786.67"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="raster_uri">
 		<type name="character varying" length="4000"/>
 	</column>
-	<column name="raster_id">
+	<column name="coverage_id">
 		<type name="integer"/>
 	</column>
 	<constraint name="raster_relief_pk" type="pk-constr" factor="100" table="public.raster_relief">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
-	<index name="raster_relief_georast_fkx" table="public.raster_relief"
+	<index name="raster_relief_coverage_fkx" table="public.raster_relief"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="raster_id"/>
+			<column name="coverage_id"/>
 		</idxelement>
 	</index>
 </table>
@@ -4453,7 +4453,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</index>
 </table>
 
-<sequence name="raster_rel_georaster_seq"
+<sequence name="grid_coverage_seq"
 	 start="1" increment="1"
 	 min-value="0" max-value="2147483647"
 	 cache="1" cycle="false">
@@ -5037,7 +5037,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="tex_image_uri">
 		<type name="character varying" length="4000"/>
 	</column>
-	<column name="tex_image">
+	<column name="tex_image_data">
 		<type name="bytea"/>
 	</column>
 	<column name="tex_mime_type">
@@ -5051,16 +5051,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="raster_relief_georaster">
+<table name="grid_coverage">
 	<schema name="public"/>
-	<position x="6193.75" y="2392.5"/>
-	<column name="id" default-value="nextval('raster_rel_georaster_seq'::regclass)">
+	<position x="5143.08" y="1616.17"/>
+	<column name="id" default-value="nextval('grid_coverage_seq'::regclass)">
 		<type name="integer"/>
 	</column>
 	<column name="rasterproperty">
 		<type name="raster"/>
 	</column>
-	<constraint name="raster_relief_georaster_pk" type="pk-constr" factor="100" table="public.raster_relief_georaster">
+	<constraint name="grid_coverage_pk" type="pk-constr" factor="100" table="public.grid_coverage">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
@@ -5785,9 +5785,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
-<constraint name="raster_relief_georast_fk" type="fk-constr"	 comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.raster_relief_georaster" table="public.raster_relief">
-	<columns names="raster_id" ref-type="src-columns"/>
+<constraint name="raster_relief_coverage_fk" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.grid_coverage" table="public.raster_relief">
+	<columns names="coverage_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="tunnel_cityobject_fk" type="fk-constr"	 comparison-type="MATCH FULL"
@@ -6415,9 +6415,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.objectclass"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="2891.17" y="1201.12"/>
-	<position x="2891.17" y="1155.84"/>
-	<position x="2784.84" y="1155.84"/>
+		<position x="2923.17" y="1199.12"/>
+	<position x="2923.17" y="1155.84"/>
+	<position x="2806.17" y="1155.84"/>
 	</line>
 	<label ref-type="name-label">
 		<position x="6.30591" y="-14.0399"/>
@@ -6486,9 +6486,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.building"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="4224.74" y="4184.65"/>
-	<position x="4224.74" y="3821.37"/>
-	<position x="4064.07" y="3821.37"/>
+		<position x="4267.74" y="4161.45"/>
+	<position x="4267.74" y="3821.37"/>
+	<position x="4092.74" y="3821.37"/>
 	</line>
 </relationship>
 
@@ -6846,7 +6846,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_raster_relief_raster_relief_georaster" type="relfk"
 	 src-table="public.raster_relief"
-	 dst-table="public.raster_relief_georaster"
+	 dst-table="public.grid_coverage"
 	 src-required="true" dst-required="true">
 	<label ref-type="src-label">
 		<position x="-9.72748e-05" y="-3.35205"/>
@@ -6866,9 +6866,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.tunnel"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="1755.18" y="3558.65"/>
-	<position x="1755.18" y="3279.37"/>
-	<position x="1608.85" y="3279.37"/>
+		<position x="1810.18" y="3541.05"/>
+	<position x="1810.18" y="3279.37"/>
+	<position x="1645.51" y="3279.37"/>
 	</line>
 </relationship>
 
@@ -7034,9 +7034,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.bridge"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="5317.08" y="3929.65"/>
-	<position x="5317.08" y="3644.37"/>
-	<position x="5175.08" y="3644.37"/>
+		<position x="5370.08" y="3911.65"/>
+	<position x="5370.08" y="3644.37"/>
+	<position x="5210.41" y="3644.37"/>
 	</line>
 	<label ref-type="name-label">
 		<position x="60.3955" y="254.43"/>
@@ -7261,9 +7261,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.surface_geometry"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="4189.58" y="1589.48"/>
-	<position x="4189.58" y="1454.2"/>
-	<position x="4073.91" y="1454.2"/>
+		<position x="4221.58" y="1581.48"/>
+	<position x="4221.58" y="1454.2"/>
+	<position x="4095.25" y="1454.2"/>
 	</line>
 </relationship>
 
@@ -7291,9 +7291,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.cityobject_genericattrib"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="2656" y="515.28"/>
-	<position x="2656" y="374"/>
-	<position x="2528.67" y="374"/>
+		<position x="2706" y="506.88"/>
+	<position x="2706" y="374"/>
+	<position x="2562" y="374"/>
 	</line>
 </relationship>
 
