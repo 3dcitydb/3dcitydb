@@ -36,73 +36,72 @@
 * CONTENT
 *
 * FUNCTIONS:
-*   cleanup_addresses(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   cleanup_appearances(only_global INTEGER DEFAULT 1, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   cleanup_citymodels(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   cleanup_cityobjectgroups(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   cleanup_implicit_geometries(clean_apps INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   cleanup_tex_images(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_address(ad_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_appearance(app_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_breakline_relief(blr INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_bridge(brd_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_bridge_constr_elem(brdce_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_bridge_furniture(brdf_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_bridge_installation(brdi_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_bridge_opening(brdo_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_bridge_room(brdr_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID	
-*   delete_bridge_them_srf(brdts_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_building(b_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_building_furniture(bf_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_building_installation(bi_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_city_furniture(cf_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_citymodel(cm_id INTEGER, affect_rel_objs INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID 
-*   delete_cityobject(co_id INTEGER, affect_rel_objs INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_cityobject_cascade(co_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_cityobjectgroup(cog_id INTEGER, affect_rel_objs INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_grid_coverage(gc_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_generic_cityobject(gco_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_implicit_geometry(ig_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_land_use(lu_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_masspoint_relief(mpr_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_opening(o_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_plant_cover(pc_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_raster_relief(rr INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_relief_component(rc_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_relief_feature(rf_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_room(r_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_solitary_veg_obj(svo_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_surface_data(sd_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_surface_geometry(sg_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_tex_image(ti_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_thematic_surface(ts_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_tin_relief(tr INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_traffic_area(ta_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_transport_complex(tc_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_tunnel(tun_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_tunnel_furniture(tunf_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_tunnel_hollow_space(tunhs_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_tunnel_installation(tuni_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_tunnel_opening(tuno_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_tunnel_them_srf(tuntd_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_waterbnd_surface(wbs_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_waterbody(wb_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   intern_delete_cityobject(co_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   intern_delete_surface_geometry(sg_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   is_not_referenced(table_name VARCHAR, check_column VARCHAR, check_id INTEGER, not_column VARCHAR, 
-*     not_id INTEGER, schema_name VARCHAR DEFAULT 'public') RETURNS BOOLEAN
+*   cleanup_addresses(schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   cleanup_appearances(only_global INTEGER DEFAULT 1, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   cleanup_citymodels(schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   cleanup_cityobjectgroups(schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   cleanup_implicit_geometries(clean_apps INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   cleanup_tex_images(schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_address(ad_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_appearance(app_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_breakline_relief(blr INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_bridge(brd_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_bridge_constr_elem(brdce_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_bridge_furniture(brdf_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_bridge_installation(brdi_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_bridge_opening(brdo_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_bridge_room(brdr_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID	
+*   delete_bridge_them_srf(brdts_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_building(b_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_building_furniture(bf_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_building_installation(bi_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_city_furniture(cf_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_citymodel(cm_id INTEGER, affect_rel_objs INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID 
+*   delete_cityobject(co_id INTEGER, affect_rel_objs INTEGER DEFAULT 0, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_cityobject_cascade(co_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_cityobjectgroup(cog_id INTEGER, affect_rel_objs INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_grid_coverage(gc_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_generic_cityobject(gco_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_implicit_geometry(ig_id INTEGER, clean_apps INTEGER := 0 INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_land_use(lu_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_masspoint_relief(mpr_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_opening(o_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_plant_cover(pc_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_raster_relief(rr INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_relief_component(rc_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_relief_feature(rf_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_room(r_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_solitary_veg_obj(svo_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_surface_data(sd_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_surface_geometry(sg_id INTEGER, clean_apps INTEGER := 0 INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_thematic_surface(ts_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_tin_relief(tr INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_traffic_area(ta_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_transport_complex(tc_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_tunnel(tun_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_tunnel_furniture(tunf_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_tunnel_hollow_space(tunhs_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_tunnel_installation(tuni_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_tunnel_opening(tuno_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_tunnel_them_srf(tuntd_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_waterbnd_surface(wbs_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_waterbody(wb_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   intern_delete_cityobject(co_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   intern_delete_surface_geometry(sg_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   is_not_referenced(table_name TEXT, check_column TEXT, check_id INTEGER, not_column TEXT, 
+*     not_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS BOOLEAN
 ******************************************************************/
 
 /*
 helper functions
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.is_not_referenced(
-  table_name VARCHAR, 
-  check_column VARCHAR, 
+  table_name TEXT, 
+  check_column TEXT, 
   check_id INTEGER, 
-  not_column VARCHAR, 
+  not_column TEXT, 
   not_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS BOOLEAN AS
 $$
 DECLARE
@@ -127,7 +126,7 @@ delete from CITY_OBJECT
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.intern_delete_cityobject(
   co_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 BEGIN
@@ -168,7 +167,8 @@ delete from SURFACE_GEOMETRY
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_surface_geometry(
   sg_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  clean_apps INTEGER DEFAULT 0,
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -186,6 +186,10 @@ BEGIN
     EXECUTE 'DELETE FROM surface_geometry WHERE id = $1' USING surface_geometry_rec;
   END LOOP;
 
+  IF clean_apps <> 0 THEN
+    PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  END IF;
+
   EXCEPTION
     WHEN OTHERS THEN
       RAISE NOTICE 'delete_surface_geometry (id: %): %', sg_id, SQLERRM;
@@ -199,7 +203,8 @@ delete from IMPLICIT_GEOMETRY
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_implicit_geometry(
   ig_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  clean_apps INTEGER DEFAULT 0,
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -216,7 +221,7 @@ BEGIN
   --// POST DELETE IMPLICIT GEOMETRY //--
   -- delete geometry
   IF rel_brep_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(rel_brep_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(rel_brep_id, clean_apps, schema_name);
   END IF;
 
   EXCEPTION
@@ -232,7 +237,7 @@ delete from GRID_COVERAGE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_grid_coverage(
   gc_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 BEGIN
@@ -251,7 +256,7 @@ delete from APPEARANCE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_appearance(
   app_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 BEGIN
@@ -282,7 +287,7 @@ delete from SURFACE_DATA
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_surface_data(
   sd_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 BEGIN
@@ -307,31 +312,11 @@ LANGUAGE plpgsql;
 
 
 /*
-delete from TEX_IMAGE
-*/
-CREATE OR REPLACE FUNCTION geodb_pkg.delete_tex_image(
-  ti_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
-  ) RETURNS SETOF VOID AS
-$$
-BEGIN
-  --// DELETE TEX IMAGE //--
-  EXECUTE format('DELETE FROM %I.tex_image WHERE id = %L', schema_name, ti_id);
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_tex_image (id: %): %', sd_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
 delete from ADDRESS
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_address(
   ad_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 BEGIN
@@ -364,7 +349,7 @@ delete from LAND_USE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_land_use(
   lu_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -386,19 +371,19 @@ BEGIN
   --// POST DELETE LAND USE //--
   -- delete geometry
   IF lu_lod0_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(lu_lod0_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(lu_lod0_id, 0, schema_name);
   END IF;
   IF lu_lod1_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(lu_lod1_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(lu_lod1_id, 0, schema_name);
   END IF;
   IF lu_lod2_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(lu_lod2_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(lu_lod2_id, 0, schema_name);
   END IF;
   IF lu_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(lu_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(lu_lod3_id, 0, schema_name);
   END IF;
   IF lu_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(lu_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(lu_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -417,7 +402,7 @@ delete from GENERIC_CITYOBJECT
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_generic_cityobject(
   gco_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -439,19 +424,19 @@ BEGIN
   --// POST DELETE GENERIC CITY OBJECT //--
   -- delete geometry
   IF gco_lod0_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(gco_lod0_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(gco_lod0_id, 0, schema_name);
   END IF;
   IF gco_lod1_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(gco_lod1_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(gco_lod1_id, 0, schema_name);
   END IF;
   IF gco_lod2_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(gco_lod2_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(gco_lod2_id, 0, schema_name);
   END IF;
   IF gco_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(gco_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(gco_lod3_id, 0, schema_name);
   END IF;
   IF gco_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(gco_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(gco_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -470,7 +455,7 @@ delete from SOLITARY_VEGETAT_OBJECT
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_solitary_veg_obj(
   svo_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -491,16 +476,16 @@ BEGIN
   --// POST DELETE SOLITARY VEGETATION OBJECT //--
   -- delete geometry
   IF svo_lod1_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(svo_lod1_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(svo_lod1_id, 0, schema_name);
   END IF; 
   IF svo_lod2_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(svo_lod2_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(svo_lod2_id, 0, schema_name);
   END IF;
   IF svo_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(svo_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(svo_lod3_id, 0, schema_name);
   END IF;
   IF svo_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(svo_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(svo_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -519,7 +504,7 @@ delete from PLANT_COVER
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_plant_cover(
   pc_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -545,28 +530,28 @@ BEGIN
   --// POST DELETE PLANT COVER //--
   -- delete geometry
   IF pc_lod1_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(pc_lod1_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(pc_lod1_msrf_id, 0, schema_name);
   END IF;
   IF pc_lod2_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(pc_lod2_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(pc_lod2_msrf_id, 0, schema_name);
   END IF;
   IF pc_lod3_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(pc_lod3_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(pc_lod3_msrf_id, 0, schema_name);
   END IF;
   IF pc_lod4_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(pc_lod4_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(pc_lod4_msrf_id, 0, schema_name);
   END IF;
   IF pc_lod1_msolid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(pc_lod1_msolid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(pc_lod1_msolid_id, 0, schema_name);
   END IF;
   IF pc_lod2_msolid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(pc_lod2_msolid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(pc_lod2_msolid_id, 0, schema_name);
   END IF;
   IF pc_lod3_msolid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(pc_lod3_msolid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(pc_lod3_msolid_id, 0, schema_name);
   END IF;
   IF pc_lod4_msolid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(pc_lod4_msolid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(pc_lod4_msolid_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -585,7 +570,7 @@ delete from WATERBODY
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_waterbody(
   wb_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -620,22 +605,22 @@ BEGIN
   --// POST DELETE WATERBODY //--
   -- delete geometry
   IF wb_lod0_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(wb_lod0_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(wb_lod0_msrf_id, 0, schema_name);
   END IF;
   IF wb_lod1_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(wb_lod1_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(wb_lod1_msrf_id, 0, schema_name);
   END IF;
   IF wb_lod1_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(wb_lod1_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(wb_lod1_solid_id, 0, schema_name);
   END IF;
   IF wb_lod2_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(wb_lod2_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(wb_lod2_solid_id, 0, schema_name);
   END IF;
   IF wb_lod3_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(wb_lod3_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(wb_lod3_solid_id, 0, schema_name);
   END IF;
   IF wb_lod4_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(wb_lod4_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(wb_lod4_solid_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -654,7 +639,7 @@ delete from WATER BOUNDARY SURFACE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_waterbnd_surface(
   wbs_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -677,13 +662,13 @@ BEGIN
   --// POST DELETE WATER BOUNDARY SURFACE //--
   -- delete geometry
   IF wbs_lod2_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(wbs_lod2_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(wbs_lod2_id, 0, schema_name);
   END IF;
   IF wbs_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(wbs_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(wbs_lod3_id, 0, schema_name);
   END IF;
   IF wbs_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(wbs_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(wbs_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -702,7 +687,7 @@ delete from RELIEF_FEATURE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_relief_feature(
   rf_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -739,7 +724,7 @@ delete from RELIEF_COMPONENT
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_relief_component(
   rc_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 BEGIN
@@ -773,7 +758,7 @@ delete from MASSPOINT_RELIEF
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_masspoint_relief(
   mpr_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 BEGIN
@@ -793,7 +778,7 @@ delete from BREAKLINE_RELIEF
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_breakline_relief(
   blr_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 BEGIN
@@ -813,7 +798,7 @@ delete from TIN_RELIEF
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_tin_relief(
   tr_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -828,7 +813,7 @@ BEGIN
 
   --// POST DELETE TIN RELIEF //--
   -- delete geometry
-  PERFORM geodb_pkg.delete_surface_geometry(geom_id, schema_name);
+  PERFORM geodb_pkg.delete_surface_geometry(geom_id, 0, schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -843,7 +828,7 @@ delete from RASTER_RELIEF
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_raster_relief(
   rr_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -873,7 +858,7 @@ delete from CITY_FURNITURE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_city_furniture(
   cf_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -894,16 +879,16 @@ BEGIN
   --// POST DELETE CITY_FURNITURE //--
   -- delete geometry
   IF cf_lod1_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(cf_lod1_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(cf_lod1_id, 0, schema_name);
   END IF; 
   IF cf_lod2_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(cf_lod2_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(cf_lod2_id, 0, schema_name);
   END IF;
   IF cf_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(cf_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(cf_lod3_id, 0, schema_name);
   END IF;
   IF cf_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(cf_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(cf_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -923,18 +908,30 @@ delete from CITYOBJECTGROUP
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_cityobjectgroup(
   cog_id INTEGER,
   affect_rel_objs INTEGER DEFAULT 0,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
+  member_id INTEGER;
   geom_id INTEGER;
 BEGIN
   --// PRE DELETE CITY OBJECT GROUP //--
   -- delete contained city objects if corresponding option is set
-  IF affect_rel_objs = 1 THEN
-    EXECUTE format('SELECT geodb_pkg.delete_cityobject(cityobject_id, %L, %L) 
-                      FROM %I.group_to_cityobject WHERE cityobjectgroup_id = %L', 
-                      affect_rel_objs, schema_name, schema_name, cog_id);
+  IF affect_rel_objs <> 0 THEN
+    FOR member_id IN EXECUTE format('SELECT cityobject_id FROM %I.group_to_cityobject WHERE cityobjectgroup_id = %L', 
+                                       schema_name, cog_id) LOOP
+      BEGIN
+        PERFORM geodb_pkg.delete_cityobject(member_id, affect_rel_objs, 0, schema_name);
+
+        EXCEPTION
+          WHEN OTHERS THEN
+            RAISE NOTICE 'delete_cityobjectgroup: deletion of group_member with ID % threw %', member_id, SQLERRM;
+      END;
+    END LOOP;
+
+    -- cleanup
+    PERFORM geodb_pkg.cleanup_implicit_geometries(1, schema_name);
+    PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   END IF;
 
   -- delete reference to city object
@@ -949,7 +946,7 @@ BEGIN
   --// POST DELETE CITY OBJECT GROUP //--
   -- delete geometry
   IF geom_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(geom_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(geom_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -968,7 +965,7 @@ delete from BUILDING
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_building(
   b_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1023,34 +1020,34 @@ BEGIN
   --// POST DELETE BUILDING //--
   -- delete geometry
   IF b_lod0_foot_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(b_lod0_foot_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(b_lod0_foot_id, 0, schema_name);
   END IF; 
   IF b_lod0_roof_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(b_lod0_roof_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(b_lod0_roof_id, 0, schema_name);
   END IF; 
   IF b_lod1_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(b_lod1_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(b_lod1_msrf_id, 0, schema_name);
   END IF; 
   IF b_lod2_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(b_lod2_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(b_lod2_msrf_id, 0, schema_name);
   END IF;
   IF b_lod3_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(b_lod3_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(b_lod3_msrf_id, 0, schema_name);
   END IF;
   IF b_lod4_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(b_lod4_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(b_lod4_msrf_id, 0, schema_name);
   END IF;
   IF b_lod1_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(b_lod1_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(b_lod1_solid_id, 0, schema_name);
   END IF; 
   IF b_lod2_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(b_lod2_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(b_lod2_solid_id, 0, schema_name);
   END IF;
   IF b_lod3_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(b_lod3_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(b_lod3_solid_id, 0, schema_name);
   END IF;
   IF b_lod4_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(b_lod4_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(b_lod4_solid_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1069,7 +1066,7 @@ delete from BUILDING_INSTALLATION
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_building_installation(
   bi_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1093,13 +1090,13 @@ BEGIN
   --// POST DELETE BUILDING INSTALLATION //--
   -- delete geometry
   IF bi_lod2_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(bi_lod2_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(bi_lod2_id, 0, schema_name);
   END IF;
   IF bi_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(bi_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(bi_lod3_id, 0, schema_name);
   END IF;
   IF bi_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(bi_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(bi_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1118,7 +1115,7 @@ delete from THEMATIC_SURFACE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_thematic_surface(
   ts_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1148,13 +1145,13 @@ BEGIN
   --// POST DELETE THEMATIC SURFACE //--
   -- delete geometry
   IF ts_lod2_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(ts_lod2_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(ts_lod2_id, 0, schema_name);
   END IF;
   IF ts_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(ts_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(ts_lod3_id, 0, schema_name);
   END IF;
   IF ts_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(ts_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(ts_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1173,7 +1170,7 @@ delete from OPENING
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_opening(
   o_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1206,10 +1203,10 @@ BEGIN
   --// POST DELETE OPENING //--
   -- delete geometry
   IF o_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(o_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(o_lod3_id, 0, schema_name);
   END IF;
   IF o_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(o_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(o_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1228,7 +1225,7 @@ delete from BUILDING_FURNITURE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_building_furniture(
   bf_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1244,7 +1241,7 @@ BEGIN
   --// POST DELETE BUILDING FURNITURE //--
   -- delete geometry
   IF bf_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(bf_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(bf_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1263,7 +1260,7 @@ delete from ROOM
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_room(
   r_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1293,10 +1290,10 @@ BEGIN
   --// POST DELETE ROOM //--
   -- delete geometry
   IF r_lod4_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(r_lod4_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(r_lod4_msrf_id, 0, schema_name);
   END IF;
   IF r_lod4_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(r_lod4_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(r_lod4_solid_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1315,7 +1312,7 @@ delete from TRANSPORTATION_COMPLEX
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_transport_complex(
   tc_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1340,16 +1337,16 @@ BEGIN
   --// POST DELETE TRANSPORTATION COMPLEX //--
   -- delete geometry
   IF tc_lod1_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tc_lod1_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tc_lod1_id, 0, schema_name);
   END IF;
   IF tc_lod2_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tc_lod2_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tc_lod2_id, 0, schema_name);
   END IF;
   IF tc_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tc_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tc_lod3_id, 0, schema_name);
   END IF;
   IF tc_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tc_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tc_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1368,7 +1365,7 @@ delete from TRAFFIC_AREA
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_traffic_area(
   ta_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1388,13 +1385,13 @@ BEGIN
   --// POST DELETE TRAFFIC AREA //--
   -- delete geometry
   IF ta_lod2_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(ta_lod2_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(ta_lod2_id, 0, schema_name);
   END IF;
   IF ta_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(ta_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(ta_lod3_id, 0, schema_name);
   END IF;
   IF ta_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(ta_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(ta_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1414,16 +1411,29 @@ delete from CITYMODEL
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_citymodel(
   cm_id INTEGER,
   affect_rel_objs INTEGER DEFAULT 0,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
+DECLARE
+  member_id INTEGER;
 BEGIN
   --// PRE DELETE CITY MODEL //--
   -- delete contained cityobjects if corresponding option is set
-  IF affect_rel_objs = 1 THEN
-    EXECUTE format('SELECT geodb_pkg.delete_cityobject(cityobject_id, %L, %L) 
-                      FROM %I.cityobject_member WHERE citymodel_id = %L', 
-                      affect_rel_objs, schema_name, schema_name, cm_id);
+  IF affect_rel_objs <> 0 THEN
+    FOR member_id IN EXECUTE format('SELECT cityobject_id FROM %I.cityobject_member WHERE citymodel_id = %L', 
+                                        schema_name, cm_id) LOOP
+      BEGIN
+        PERFORM geodb_pkg.delete_cityobject(member_id, affect_rel_objs, 0, schema_name);
+
+        EXCEPTION
+          WHEN OTHERS THEN
+            RAISE NOTICE 'delete_citymodel: deletion of cityobject_member with ID % threw %', member_id, SQLERRM;
+      END;
+    END LOOP;
+
+    -- cleanup
+    PERFORM geodb_pkg.cleanup_implicit_geometries(1, schema_name);
+    PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   END IF;
   
   -- delete reference to city objects
@@ -1449,7 +1459,7 @@ delete from BRIDGE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_bridge(
   brd_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1505,28 +1515,28 @@ BEGIN
   --// POST DELETE BRIDGE //--
   -- delete geometry
   IF brd_lod1_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brd_lod1_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brd_lod1_msrf_id, 0, schema_name);
   END IF; 
   IF brd_lod2_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brd_lod2_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brd_lod2_msrf_id, 0, schema_name);
   END IF;
   IF brd_lod3_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brd_lod3_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brd_lod3_msrf_id, 0, schema_name);
   END IF;
   IF brd_lod4_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brd_lod4_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brd_lod4_msrf_id, 0, schema_name);
   END IF;
   IF brd_lod1_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brd_lod1_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brd_lod1_solid_id, 0, schema_name);
   END IF; 
   IF brd_lod2_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brd_lod2_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brd_lod2_solid_id, 0, schema_name);
   END IF;
   IF brd_lod3_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brd_lod3_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brd_lod3_solid_id, 0, schema_name);
   END IF;
   IF brd_lod4_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brd_lod4_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brd_lod4_solid_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1545,7 +1555,7 @@ delete from BRIDGE_INSTALLATION
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_bridge_installation(
   brdi_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1569,13 +1579,13 @@ BEGIN
   --// POST DELETE BRIDGE INSTALLATION //--
   -- delete geometry
   IF brdi_lod2_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brdi_lod2_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brdi_lod2_id, 0, schema_name);
   END IF;
   IF brdi_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brdi_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brdi_lod3_id, 0, schema_name);
   END IF;
   IF brdi_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brdi_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brdi_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1594,7 +1604,7 @@ delete from BRIDGE_THEMATIC_SURFACE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_bridge_them_srf(
   brdts_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1624,13 +1634,13 @@ BEGIN
   --// POST DELETE BRIDGE THEMATIC SURFACE //--
   -- delete geometry
   IF brdts_lod2_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brdts_lod2_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brdts_lod2_id, 0, schema_name);
   END IF;
   IF brdts_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brdts_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brdts_lod3_id, 0, schema_name);
   END IF;
   IF brdts_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brdts_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brdts_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1649,7 +1659,7 @@ delete from BRIDGE_OPENING
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_bridge_opening(
   brdo_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1682,10 +1692,10 @@ BEGIN
   --// POST DELETE BRIDGE OPENING //--
   -- delete geometry
   IF brdo_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brdo_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brdo_lod3_id, 0, schema_name);
   END IF;
   IF brdo_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brdo_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brdo_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1704,7 +1714,7 @@ delete from BRIDGE_FURNITURE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_bridge_furniture(
   brdf_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1720,11 +1730,11 @@ BEGIN
   --// POST DELETE BRIDGE FURNITURE //--
   -- delete geometry
   IF brdf_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brdf_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brdf_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
-  PERFORM geodb_pkg.intern_delete_cityobject(brdf_id, schema_name);
+  PERFORM geodb_pkg.intern_delete_cityobject(brdf_id, 0, schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1739,7 +1749,7 @@ delete from BRIDGE_ROOM
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_bridge_room(
   brdr_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1769,10 +1779,10 @@ BEGIN
   --// POST DELETE BRIDGE ROOM //--
   -- delete geometry
   IF brdr_lod4_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brdr_lod4_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brdr_lod4_msrf_id, 0, schema_name);
   END IF;
   IF brdr_lod4_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brdr_lod4_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brdr_lod4_solid_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1791,7 +1801,7 @@ delete from BRIDGE_CONSTR_ELEMENT
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_bridge_constr_elem(
   brdce_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1816,16 +1826,16 @@ BEGIN
   --// POST DELETE BRIDGE CONSTRUCTION ELEMENT //--
   -- delete geometry
   IF brdce_lod1_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brdce_lod1_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brdce_lod1_id, 0, schema_name);
   END IF;
   IF brdce_lod2_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brdce_lod2_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brdce_lod2_id, 0, schema_name);
   END IF;
   IF brdce_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brdce_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brdce_lod3_id, 0, schema_name);
   END IF;
   IF brdce_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(brdce_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(brdce_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1844,7 +1854,7 @@ delete from TUNNEL
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_tunnel(
   tun_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1886,28 +1896,28 @@ BEGIN
   --// POST DELETE TUNNEL //--
   -- delete geometry
   IF tun_lod1_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tun_lod1_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tun_lod1_msrf_id, 0, schema_name);
   END IF; 
   IF tun_lod2_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tun_lod2_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tun_lod2_msrf_id, 0, schema_name);
   END IF;
   IF tun_lod3_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tun_lod3_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tun_lod3_msrf_id, 0, schema_name);
   END IF;
   IF tun_lod4_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tun_lod4_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tun_lod4_msrf_id, 0, schema_name);
   END IF;
   IF tun_lod1_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tun_lod1_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tun_lod1_solid_id, 0, schema_name);
   END IF; 
   IF tun_lod2_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tun_lod2_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tun_lod2_solid_id, 0, schema_name);
   END IF;
   IF tun_lod3_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tun_lod3_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tun_lod3_solid_id, 0, schema_name);
   END IF;
   IF tun_lod4_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tun_lod4_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tun_lod4_solid_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1926,7 +1936,7 @@ delete from TUNNEL_INSTALLATION
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_tunnel_installation(
   tuni_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -1950,13 +1960,13 @@ BEGIN
   --// POST DELETE TUNNEL INSTALLATION //--
   -- delete geometry
   IF tuni_lod2_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tuni_lod2_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tuni_lod2_id, 0, schema_name);
   END IF;
   IF tuni_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tuni_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tuni_lod3_id, 0, schema_name);
   END IF;
   IF tuni_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tuni_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tuni_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -1975,7 +1985,7 @@ delete from TUNNEL_THEMATIC_SURFACE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_tunnel_them_srf(
   tunts_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -2005,13 +2015,13 @@ BEGIN
   --// POST DELETE TUNNEL THEMATIC SURFACE //--
   -- delete geometry
   IF tunts_lod2_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tunts_lod2_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tunts_lod2_id, 0, schema_name);
   END IF;
   IF tunts_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tunts_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tunts_lod3_id, 0, schema_name);
   END IF;
   IF tunts_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tunts_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tunts_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -2030,7 +2040,7 @@ delete from TUNNEL_OPENING
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_tunnel_opening(
   tuno_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -2052,10 +2062,10 @@ BEGIN
   --// POST DELETE TUNNEL OPENING //--
   -- delete geometry
   IF tuno_lod3_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tuno_lod3_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tuno_lod3_id, 0, schema_name);
   END IF;
   IF tuno_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tuno_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tuno_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -2074,7 +2084,7 @@ delete from TUNNEL_FURNITURE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_tunnel_furniture(
   tunf_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -2090,7 +2100,7 @@ BEGIN
   --// POST DELETE TUNNEL FURNITURE //--
   -- delete geometry
   IF tunf_lod4_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tunf_lod4_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tunf_lod4_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -2109,7 +2119,7 @@ delete from TUNNEL_HOLLOW_SPACE
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_tunnel_hollow_space(
   tunhs_id INTEGER, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -2139,10 +2149,10 @@ BEGIN
   --// POST DELETE TUNNEL HOLLOW SPACE //--
   -- delete geometry
   IF tunhs_lod4_msrf_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tunhs_lod4_msrf_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tunhs_lod4_msrf_id, 0, schema_name);
   END IF;
   IF tunhs_lod4_solid_id IS NOT NULL THEN
-    PERFORM geodb_pkg.delete_surface_geometry(tunhs_lod4_solid_id, schema_name);
+    PERFORM geodb_pkg.delete_surface_geometry(tunhs_lod4_solid_id, 0, schema_name);
   END IF;
 
   -- delete city object
@@ -2161,7 +2171,7 @@ cleanup procedures
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_implicit_geometries(
   clean_apps INTEGER DEFAULT 0, 
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 BEGIN
@@ -2257,13 +2267,18 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_tex_images(
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
+DECLARE
+  ti_id INTEGER;
 BEGIN
-  EXECUTE format('SELECT geodb_pkg.delete_tex_image(ti.id, %L) FROM %I.tex_image ti
-                    LEFT JOIN %I.surface_data sd ON sd.tex_image_id = ti.id
-                    WHERE sd.tex_image_id IS NULL', schema_name, schema_name, schema_name);
+  FOR ti_id IN EXECUTE format('SELECT ti.id FROM %I.tex_image ti
+                                 LEFT JOIN %I.surface_data sd ON sd.tex_image_id = ti.id
+                                 WHERE sd.tex_image_id IS NULL', schema_name, schema_name) LOOP
+    --// DELETE TEX IMAGE //--
+    EXECUTE format('DELETE FROM %I.tex_image WHERE id = %L', schema_name, ti_id);						 
+  END LOOP;
 
   EXCEPTION  
     WHEN OTHERS THEN
@@ -2275,7 +2290,7 @@ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_appearances(
   only_global INTEGER DEFAULT 1,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 BEGIN
@@ -2311,7 +2326,7 @@ $$
 LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_addresses(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID AS
+CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_addresses(schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID AS
 $$
 BEGIN
   EXECUTE format('SELECT geodb_pkg.delete_address(ad.id, %L) FROM %I.address ad
@@ -2333,10 +2348,10 @@ $$
 LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_cityobjectgroups(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID AS
+CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_cityobjectgroups(schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID AS
 $$
 BEGIN
-  EXECUTE format('SELECT geodb_pkg.delete_cityobjectgroup(g.id, 1, %L) FROM %I.cityobjectgroup g 
+  EXECUTE format('SELECT geodb_pkg.delete_cityobjectgroup(g.id, 0, %L) FROM %I.cityobjectgroup g 
                     LEFT OUTER JOIN %I.group_to_cityobject gtc ON g.id=gtc.cityobjectgroup_id 
                     WHERE gtc.cityobject_id IS NULL', schema_name, schema_name, schema_name);
 END;
@@ -2344,10 +2359,10 @@ $$
 LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_citymodels(schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID AS
+CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_citymodels(schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID AS
 $$
 BEGIN
-  EXECUTE format('SELECT geodb_pkg.delete_citymodel(c.id, 1, %L) FROM %I.citymodel c 
+  EXECUTE format('SELECT geodb_pkg.delete_citymodel(c.id, 0, %L) FROM %I.citymodel c 
                     LEFT OUTER JOIN %I.cityobject_member cm ON c.id=cm.citymodel_id 
                     WHERE cm.cityobject_id IS NULL', schema_name, schema_name, schema_name);
 
@@ -2363,16 +2378,13 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_cityobject(
   co_id INTEGER,
   affect_rel_objs INTEGER DEFAULT 0,
-  schema_name VARCHAR DEFAULT 'public'
+  cleanup INTEGER DEFAULT 0,
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
   class_id INTEGER;
 BEGIN
-  IF affect_rel_objs < 0 OR affect_rel_objs > 1 THEN 
-    RAISE EXCEPTION 'Incorrect parameter for affection option: %', affect_rel_objs USING HINT = 'Use 1 to delete related objects or 0 if you plan to keep them.';
-  END IF;  
-
   EXECUTE format('SELECT objectclass_id FROM %I.cityobject WHERE id = %L', schema_name, co_id) INTO class_id;
 
   -- class_id can be NULL if object has already been deleted
@@ -2457,6 +2469,12 @@ BEGIN
     END CASE;
   END IF;
 
+  IF cleanup <> 0 THEN
+    PERFORM geodb_pkg.cleanup_implicit_geometries(1, schema_name);
+    PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
+    PERFORM geodb_pkg.cleanup_citymodels(schema_name);
+  END IF;
+
   EXCEPTION
     WHEN OTHERS THEN
       RAISE NOTICE 'delete_cityobject (id: %): %', co_id, SQLERRM;
@@ -2469,7 +2487,7 @@ LANGUAGE plpgsql;
 -- NOTE: all constraints have to be set to ON DELETE CASCADE (function: geodb_pkg.update_schema_constraints)
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_cityobject_cascade(
   co_id INTEGER,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 BEGIN  
@@ -2483,8 +2501,8 @@ BEGIN
   EXECUTE format('DELETE FROM %I.cityobject WHERE id = %L', schema_name, co_id);
   
   -- fourth step: cleanup
-  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);  
-  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_implicit_geometries(1, schema_name);  
+  PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   PERFORM geodb_pkg.cleanup_addresses(schema_name);
   PERFORM geodb_pkg.cleanup_cityobjectgroups(schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);

@@ -26,7 +26,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 2.0.0     2014-02-19   minor changes for 3DCityDB V3               FKun
+-- 2.0.0     2014-07-30   minor changes for 3DCityDB V3               FKun
 -- 1.3.0     2013-08-08   extended to all thematic classes            GHud
 --                                                                    FKun
 -- 1.2.0     2012-02-22   minor changes                               CNag
@@ -38,24 +38,24 @@
 * CONTENT
 *
 * FUNCTIONS:
-*   delete_bridges(lineage_value VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_buildings(lineage_value VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_city_furnitures(lineage_value VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_cityobjects(lineage_value VARCHAR, affect_rel_objs INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_cityobjectgroups(lineage_value VARCHAR, affect_rel_objs INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_generic_cityobjects(lineage_value VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_land_uses(lineage_value VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_plant_covers(lineage_value VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_relief_features(lineage_value VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_soltary_veg_objs(lineage_value VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_transport_complexes(lineage_value VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_tunnels(lineage_value VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   delete_waterbodies(lineage_value VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
+*   delete_bridges(lineage_value TEXT, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_buildings(lineage_value TEXT, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_city_furnitures(lineage_value TEXT, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_cityobjects(lineage_value TEXT, affect_rel_objs INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_cityobjectgroups(lineage_value TEXT, affect_rel_objs INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_generic_cityobjects(lineage_value TEXT, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_land_uses(lineage_value TEXT, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_plant_covers(lineage_value TEXT, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_relief_features(lineage_value TEXT, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_soltary_veg_objs(lineage_value TEXT, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_transport_complexes(lineage_value TEXT, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_tunnels(lineage_value TEXT, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_waterbodies(lineage_value TEXT, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 ******************************************************************/
 
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_buildings(
-  lineage_value VARCHAR, 
-  schema_name VARCHAR DEFAULT 'public'
+  lineage_value TEXT, 
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -79,8 +79,8 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
-  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_implicit_geometries(1, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
@@ -92,8 +92,8 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_city_furnitures(
-  lineage_value VARCHAR, 
-  schema_name VARCHAR DEFAULT 'public'
+  lineage_value TEXT, 
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -112,8 +112,8 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
-  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_implicit_geometries(1, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
@@ -125,8 +125,8 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_generic_cityobjects(
-  lineage_value VARCHAR, 
-  schema_name VARCHAR DEFAULT 'public'
+  lineage_value TEXT, 
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -145,8 +145,8 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
-  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_implicit_geometries(1, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
@@ -158,8 +158,8 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_land_uses(
-  lineage_value VARCHAR, 
-  schema_name VARCHAR DEFAULT 'public'
+  lineage_value TEXT, 
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -178,7 +178,7 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
@@ -190,8 +190,8 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_plant_covers(
-  lineage_value VARCHAR, 
-  schema_name VARCHAR DEFAULT 'public'
+  lineage_value TEXT, 
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -210,7 +210,7 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
@@ -222,8 +222,8 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_soltary_veg_objs(
-  lineage_value VARCHAR, 
-  schema_name VARCHAR DEFAULT 'public'
+  lineage_value TEXT, 
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -242,8 +242,8 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
-  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_implicit_geometries(1, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
@@ -255,8 +255,8 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_transport_complexes(
-  lineage_value VARCHAR, 
-  schema_name VARCHAR DEFAULT 'public'
+  lineage_value TEXT, 
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -275,7 +275,7 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
@@ -287,8 +287,8 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_waterbodies(
-  lineage_value VARCHAR, 
-  schema_name VARCHAR DEFAULT 'public'
+  lineage_value TEXT, 
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -307,7 +307,7 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
@@ -319,8 +319,8 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_relief_features(
-  lineage_value VARCHAR, 
-  schema_name VARCHAR DEFAULT 'public'
+  lineage_value TEXT, 
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -339,7 +339,7 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
@@ -351,8 +351,8 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_bridges(
-  lineage_value VARCHAR, 
-  schema_name VARCHAR DEFAULT 'public'
+  lineage_value TEXT, 
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -376,8 +376,8 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
-  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_implicit_geometries(1, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
@@ -389,8 +389,8 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_tunnels(
-  lineage_value VARCHAR, 
-  schema_name VARCHAR DEFAULT 'public'
+  lineage_value TEXT, 
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -413,8 +413,8 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
-  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_implicit_geometries(1, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
@@ -426,9 +426,9 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_cityobjectgroups(
-  lineage_value VARCHAR,
+  lineage_value TEXT,
   affect_rel_objs INTEGER DEFAULT 0,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -447,8 +447,8 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
-  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_implicit_geometries(1, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION
@@ -460,9 +460,9 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_cityobjects(
-  lineage_value VARCHAR,
+  lineage_value TEXT,
   affect_rel_objs INTEGER DEFAULT 0,
-  schema_name VARCHAR DEFAULT 'public'
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
@@ -470,7 +470,7 @@ DECLARE
 BEGIN
   FOR cityobject_id IN EXECUTE format('SELECT id FROM %I.cityobject WHERE lineage = %L', schema_name, lineage_value) LOOP
     BEGIN
-      PERFORM geodb_pkg.delete_cityobject(cityobject_id, affect_rel_objs, schema_name);
+      PERFORM geodb_pkg.delete_cityobject(cityobject_id, affect_rel_objs, 0, schema_name);
 
       EXCEPTION
         WHEN OTHERS THEN
@@ -479,8 +479,8 @@ BEGIN
   END LOOP;
 
   -- cleanup
-  PERFORM geodb_pkg.cleanup_implicit_geometries(0, schema_name);
-  PERFORM geodb_pkg.cleanup_appearances(0, schema_name);
+  PERFORM geodb_pkg.cleanup_implicit_geometries(1, schema_name);
+  PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   PERFORM geodb_pkg.cleanup_citymodels(schema_name);
 
   EXCEPTION

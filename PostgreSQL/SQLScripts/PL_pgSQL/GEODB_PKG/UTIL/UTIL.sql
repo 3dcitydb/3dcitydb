@@ -24,7 +24,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                                | Author
--- 2.0.0     2014-05-27   revision for 3DCityDB V3                     FKun
+-- 2.0.0     2014-07-30   revision for 3DCityDB V3                     FKun
 -- 1.2.0     2013-08-29   minor changes to change_db_srid function     FKun
 -- 1.1.0     2013-02-22   PostGIS version                              FKun
 --                                                                     CNag
@@ -37,20 +37,20 @@
 * FUNCTIONS:
 *   db_metadata() RETURNS TABLE(
 *     srid INTEGER, 
-*     gml_srs_name VARCHAR(1000), 
-*     coord_ref_sys_name VARCHAR(2048), 
-*     coord_ref_sys_kind VARCHAR(2048), 
-*     versioning VARCHAR(100)
+*     gml_srs_name TEXT, 
+*     coord_ref_sys_name TEXT, 
+*     coord_ref_sys_kind TEXT, 
+*     versioning TEXT
 *     )
-*   get_seq_values(seq_name VARCHAR, seq_count INTEGER) RETURNS SETOF INTEGER
+*   get_seq_values(seq_name TEXT, seq_count INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF INTEGER
 *   min(a NUMERIC, b NUMERIC) RETURNS NUMERIC
-*   objectclass_id_to_table_name(class_id INTEGER) RETURNS VARCHAR
-*   db_info(OUT schema_srid INTEGER, OUT schema_gml_srs_name VARCHAR, OUT versioning VARCHAR) RETURNS RECORD AS 
-*   update_schema_constraints(on_delete_param VARCHAR DEFAULT 'CASCADE', schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   update_table_constraint(fkey_name VARCHAR, table_name VARCHAR, column_name VARCHAR, ref_table VARCHAR, ref_column VARCHAR, 
-*     delete_param VARCHAR, deferrable_param VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   versioning_db() RETURNS VARCHAR
-*   versioning_table(table_name VARCHAR) RETURNS VARCHAR
+*   objectclass_id_to_table_name(class_id INTEGER) RETURNS TEXT
+*   db_info(OUT schema_srid INTEGER, OUT schema_gml_srs_name TEXT, OUT versioning TEXT) RETURNS RECORD AS 
+*   update_schema_constraints(on_delete_param TEXT DEFAULT 'CASCADE', schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   update_table_constraint(fkey_name TEXT, table_name TEXT, column_name TEXT, ref_table TEXT, ref_column TEXT, 
+*     delete_param TEXT, deferrable_param TEXT, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   versioning_db(schema_name TEXT DEFAULT 'public') RETURNS TEXT
+*   versioning_table(table_name TEXT, schema_name TEXT DEFAULT 'public') RETURNS TEXT
 *   get_3dcitydb_version(OUT version_no TEXT) RETURNS TEXT
 ******************************************************************/
 
@@ -58,21 +58,16 @@
 * versioning_table
 *
 * @param table_name name of table
-* @param schema_name name of schema
-* @RETURN VARCHAR 'ON' for version-enabled, 'OFF' otherwise
+* @param schema_name name of schema of target table
+* @RETURN TEXT 'ON' for version-enabled, 'OFF' otherwise
 ******************************************************************/
 CREATE OR REPLACE FUNCTION geodb_pkg.versioning_table(
-  table_name VARCHAR,
-  schema_name VARCHAR DEFAULT 'public'
-  ) RETURNS VARCHAR AS 
+  table_name TEXT,
+  schema_name TEXT DEFAULT 'public'
+  ) RETURNS TEXT AS 
 $$
 BEGIN
-  EXECUTE format('SELECT audit_id FROM %I.%I LIMIT 1', schema_name, table_name);
-  RETURN 'ON';
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RETURN 'OFF';
+  RETURN 'OFF';
 END;
 $$
 LANGUAGE plpgsql;
@@ -81,9 +76,10 @@ LANGUAGE plpgsql;
 /*****************************************************************
 * versioning_db
 *
-* @RETURN VARCHAR 'ON' for version-enabled, 'OFF' for version-disabled
+* @param schema_name name of schema
+* @RETURN TEXT 'ON' for version-enabled, 'OFF' for version-disabled
 ******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.versioning_db() RETURNS VARCHAR AS 
+CREATE OR REPLACE FUNCTION geodb_pkg.versioning_db(schema_name TEXT DEFAULT 'public') RETURNS TEXT AS 
 $$
 BEGIN
   RETURN 'OFF';
@@ -101,13 +97,13 @@ LANGUAGE plpgsql;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION geodb_pkg.db_info(
   OUT schema_srid INTEGER, 
-  OUT schema_gml_srs_name VARCHAR,
-  OUT versioning VARCHAR
+  OUT schema_gml_srs_name TEXT,
+  OUT versioning TEXT
   ) RETURNS RECORD AS 
 $$
 BEGIN
   EXECUTE 'SELECT srid, gml_srs_name FROM database_srs' INTO schema_srid, schema_gml_srs_name;
-  versioning := geodb_pkg.util_versioning_db();
+  versioning := geodb_pkg.util_versioning_db(current_schema());
 END;
 $$ 
 LANGUAGE plpgsql;
@@ -121,10 +117,10 @@ LANGUAGE plpgsql;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION geodb_pkg.db_metadata() RETURNS TABLE(
   schema_srid INTEGER, 
-  schema_gml_srs_name VARCHAR(1000), 
-  coord_ref_sys_name VARCHAR(2048), 
-  coord_ref_sys_kind VARCHAR(2048), 
-  versioning VARCHAR(10)
+  schema_gml_srs_name TEXT, 
+  coord_ref_sys_name TEXT, 
+  coord_ref_sys_kind TEXT, 
+  versioning TEXT
   ) AS 
 $$
 BEGIN
@@ -165,7 +161,7 @@ LANGUAGE plpgsql;
 /******************************************************************
 * update_table_constraint
 *
-* Removes a contraint to add it again with parameters
+* Removes a constraint to add it again with parameters
 * ON UPDATE CASCADE ON DELETE CASCADE or RESTRICT
 *
 * @param fkey_name name of the foreign key that is updated 
@@ -175,17 +171,17 @@ LANGUAGE plpgsql;
 * @param ref_column name of referencing column of referenced table
 * @param delete_param whether CASCADE or RESTRICT
 * @param deferrable_param whether set or not
-* @param schema_name name of schema
+* @param schema_name name of schema of target constraints
 ******************************************************************/
 CREATE OR REPLACE FUNCTION geodb_pkg.update_table_constraint(
-  fkey_name VARCHAR,
-  table_name VARCHAR,
-  column_name VARCHAR,
-  ref_table VARCHAR,
-  ref_column VARCHAR,
-  delete_param VARCHAR,
-  deferrable_param VARCHAR,
-  schema_name VARCHAR DEFAULT 'public'
+  fkey_name TEXT,
+  table_name TEXT,
+  column_name TEXT,
+  ref_table TEXT,
+  ref_column TEXT,
+  delete_param TEXT DEFAULT 'CASCADE',
+  deferrable_param TEXT DEFAULT 'INITIALLY DEFERRED',
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS 
 $$
 BEGIN
@@ -204,20 +200,20 @@ LANGUAGE plpgsql;
 /******************************************************************
 * update_schema_constraints
 *
-* calls update_table_constraint for updating all the contraints
+* calls update_table_constraint for updating all the constraints
 * in the specified schema
 *
 * @param on_delete_param whether CASCADE (default) or RESTRICT
-* @param schema_name name of schema
+* @param schema_name name of schema of target constraints
 ******************************************************************/
 CREATE OR REPLACE FUNCTION geodb_pkg.update_schema_constraints(
-  on_delete_param VARCHAR DEFAULT 'CASCADE',
-  schema_name VARCHAR DEFAULT 'public'
+  on_delete_param TEXT DEFAULT 'CASCADE',
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS 
 $$
 DECLARE
-  delete_param VARCHAR(30) := 'CASCADE';
-  deferrable_param VARCHAR(30);
+  delete_param TEXT := 'CASCADE';
+  deferrable_param TEXT;
 BEGIN
   IF on_delete_param <> 'CASCADE' THEN
     delete_param := 'RESTRICT';
@@ -244,13 +240,15 @@ LANGUAGE plpgsql;
 *
 * @param seq_name name of the sequence
 * @param count number of values to be queried from the sequence
+* @param schema_name name of schema of target sequence
 ******************************************************************/
 CREATE OR REPLACE FUNCTION geodb_pkg.get_seq_values(
-  seq_name VARCHAR,
-  seq_count INTEGER
+  seq_name TEXT,
+  seq_count INTEGER,
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF INTEGER AS $$
 BEGIN
-  RETURN QUERY EXECUTE 'SELECT nextval($1)::int FROM generate_series(1, $2)' USING seq_name, seq_count;
+  RETURN QUERY EXECUTE 'SELECT nextval($1)::int FROM generate_series(1, $2)' USING schema_name || '.' || seq_name, seq_count;
 END;
 $$
 LANGUAGE plpgsql;
@@ -260,13 +258,13 @@ LANGUAGE plpgsql;
 * objectclass_id_to_table_name
 *
 * @param class_id objectclass_id identifier
-* @RETURN VARCHAR name of table that stores objects referred 
+* @RETURN TEXT name of table that stores objects referred 
 *                 to the given objectclass_id
 ******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.objectclass_id_to_table_name(class_id INTEGER) RETURNS VARCHAR AS
+CREATE OR REPLACE FUNCTION geodb_pkg.objectclass_id_to_table_name(class_id INTEGER) RETURNS TEXT AS
 $$
 DECLARE
-  table_name VARCHAR(30) := '';
+  table_name TEXT := '';
 BEGIN
   CASE 
     WHEN class_id = 4 THEN table_name := 'land_use';

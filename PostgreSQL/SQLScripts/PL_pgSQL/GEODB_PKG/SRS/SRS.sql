@@ -24,7 +24,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                          | Author
--- 1.0.0     2014-02-06   new script for 3DCityDB V3             FKun
+-- 1.0.0     2014-07-30   new script for 3DCityDB V3             FKun
 --                                                               CNag
 --
 
@@ -32,9 +32,9 @@
 * CONTENT
 *
 * FUNCTIONS:
-*   change_column_srid(t_name VARCHAR, c_name VARCHAR, dim INTEGER, schema_srid INTEGER, s_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   change_schema_srid(schema_srid INTEGER, schema_gml_srs_name VARCHAR, schema_name VARCHAR DEFAULT 'public') RETURNS SETOF VOID
-*   check_srid(srsno INTEGER DEFAULT 0) RETURNS VARCHAR
+*   change_column_srid(t_name TEXT, c_name TEXT, dim INTEGER, schema_srid INTEGER, s_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   change_schema_srid(schema_srid INTEGER, schema_gml_srs_name TEXT, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   check_srid(srsno INTEGER DEFAULT 0) RETURNS TEXT
 *   is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER
 *   is_db_coord_ref_sys_3d() RETURNS INTEGER
 *   transform_or_null(geom GEOMETRY, srid INTEGER) RETURNS GEOMETRY
@@ -87,9 +87,9 @@ LANGUAGE plpgsql;
 *
 * @param srsno     the chosen SRID to be further used in the database
 *
-* @RETURN VARCHAR  status of srid check
+* @RETURN TEXT  status of srid check
 *******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.check_srid(srsno INTEGER DEFAULT 0) RETURNS VARCHAR AS
+CREATE OR REPLACE FUNCTION geodb_pkg.check_srid(srsno INTEGER DEFAULT 0) RETURNS TEXT AS
 $$
 DECLARE
   schema_srid INTEGER;
@@ -130,33 +130,6 @@ $$
 LANGUAGE plpgsql;
 
 
-/*******************************************************************
-* change_schema_srid
-*
-* @param schema_srid       the SRID of the coordinate system to be 
-*                          further used in the database
-* @param db_gml_srs_name   the GML_SRS_NAME of the coordinate system 
-*                          to be further used in the database
-* @param schema name       name of schema
-*******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.change_schema_srid(
-  schema_srid INTEGER, 
-  schema_gml_srs_name VARCHAR,
-  schema_name VARCHAR DEFAULT 'public'
-  ) RETURNS SETOF VOID AS $$
-BEGIN
-  -- update entry in DATABASE_SRS table first
-  EXECUTE format('UPDATE %I.database_srs SET srid = %L, gml_srs_name = %L',
-                    schema_name, schema_srid, schema_gml_srs_name);
-
-  -- change srid of each spatially enabled table
-  EXECUTE 'SELECT geodb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, f_table_schema) 
-             FROM geometry_columns WHERE f_table_schema = $2' USING schema_srid, schema_name;
-END;
-$$ 
-LANGUAGE plpgsql;
-
-
 /*****************************************************************
 * change_column_srid
 *
@@ -167,15 +140,15 @@ LANGUAGE plpgsql;
 * @param s_name name of schema
 ******************************************************************/
 CREATE OR REPLACE FUNCTION geodb_pkg.change_column_srid(
-  t_name VARCHAR, 
-  c_name VARCHAR,
+  t_name TEXT, 
+  c_name TEXT,
   dim INTEGER,
   schema_srid INTEGER,
-  s_name VARCHAR DEFAULT 'public'
+  s_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS 
 $$
 DECLARE
-  idx_name VARCHAR (50);
+  idx_name TEXT;
 BEGIN
   -- check if a spatial index is defined for the column
   EXECUTE 'SELECT pgc_i.relname AS idx_name 
@@ -209,6 +182,33 @@ BEGIN
     -- no spatial index defined for table, only update metadata and geometry SRID
     PERFORM UpdateGeometrySRID(s_name, t_name, c_name, schema_srid);
   END IF;
+END;
+$$ 
+LANGUAGE plpgsql;
+
+
+/*******************************************************************
+* change_schema_srid
+*
+* @param schema_srid       the SRID of the coordinate system to be 
+*                          further used in the database
+* @param db_gml_srs_name   the GML_SRS_NAME of the coordinate system 
+*                          to be further used in the database
+* @param schema name       name of schema
+*******************************************************************/
+CREATE OR REPLACE FUNCTION geodb_pkg.change_schema_srid(
+  schema_srid INTEGER, 
+  schema_gml_srs_name TEXT,
+  schema_name TEXT DEFAULT 'public'
+  ) RETURNS SETOF VOID AS $$
+BEGIN
+  -- update entry in DATABASE_SRS table first
+  EXECUTE format('UPDATE %I.database_srs SET srid = %L, gml_srs_name = %L',
+                    schema_name, schema_srid, schema_gml_srs_name);
+
+  -- change srid of each spatially enabled table
+  EXECUTE 'SELECT geodb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, f_table_schema) 
+             FROM geometry_columns WHERE f_table_schema = $2' USING schema_srid, schema_name;
 END;
 $$ 
 LANGUAGE plpgsql;

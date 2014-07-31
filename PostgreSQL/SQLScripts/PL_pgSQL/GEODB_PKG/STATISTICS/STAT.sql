@@ -24,8 +24,8 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                          | Author
--- 2.0       2014-01-07   complete revision for 3DCityDB V3      FKun
--- 1.0       2013-02-22   PostGIS version                        CNag     
+-- 2.0.0     2014-07-30   complete revision for 3DCityDB V3      FKun
+-- 1.0.0     2013-02-22   PostGIS version                        CNag     
 --                                                               FKun
 --
 
@@ -33,9 +33,9 @@
 * CONTENT
 *
 * FUNCTIONS:
-*   table_content(schema_name VARCHAR, table_name VARCHAR) RETURNS INTEGER
-*   table_contents(schema_name VARCHAR DEFAULT 'public') RETURNS TEXT[]
-*   table_label(table_name VARCHAR) RETURNS TEXT
+*   table_content(table_name TEXT, schema_name TEXT) RETURNS INTEGER
+*   table_contents(schema_name TEXT DEFAULT 'public') RETURNS TEXT[]
+*   table_label(table_name TEXT) RETURNS TEXT
 ******************************************************************/
 
 /*****************************************************************
@@ -44,7 +44,7 @@
 * @param schema_name name of schema
 * @RETURN TEXT[] database report as text array
 ******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.table_contents(schema_name VARCHAR DEFAULT 'public') RETURNS TEXT[] AS $$
+CREATE OR REPLACE FUNCTION geodb_pkg.table_contents(schema_name TEXT DEFAULT 'public') RETURNS TEXT[] AS $$
 DECLARE
   report_header TEXT[] := '{}'; 
   report TEXT[] := '{}';
@@ -54,12 +54,13 @@ BEGIN
   PERFORM array_append(report_header, '');
 
   EXECUTE 'SELECT array_agg(t) FROM 
-             (SELECT geodb_pkg.table_label(tablename::varchar) || geodb_pkg.table_content(schemaname::varchar, tablename::varchar) AS t 
-                FROM pg_tables WHERE schemaname = $1 
-                AND tablename != ''spatial_ref_sys'' 
-                AND tablename != ''database_srs'' 
-                AND tablename NOT LIKE ''tmp_%''
-                ORDER BY tablename ASC
+             (SELECT geodb_pkg.table_label(table_name) || geodb_pkg.table_content(table_name, table_schema) AS t 
+                FROM information_schema.tables WHERE table_schema = $1 
+                AND table_name != ''spatial_ref_sys'' 
+                AND table_name != ''database_srs'' 
+                AND table_name != ''objectclass'' 
+                AND table_name NOT LIKE ''tmp_%''
+                ORDER BY table_name ASC
               ) tab' INTO report USING schema_name;
 
   report := array_cat(report_header,report);
@@ -78,8 +79,8 @@ LANGUAGE plpgsql;
 * @RETURN INTEGER number of entries in table
 ******************************************************************/
 CREATE OR REPLACE FUNCTION geodb_pkg.table_content(
-  schema_name VARCHAR, 
-  table_name VARCHAR
+  table_name TEXT,
+  schema_name TEXT DEFAULT 'public'
   ) RETURNS INTEGER AS $$
 DECLARE
   cnt INTEGER;  
@@ -95,9 +96,9 @@ LANGUAGE plpgsql;
 * table_label
 *
 * @param table_name name of table
-* @RETURN VARCHAR formatted string for database report
+* @RETURN TEXT formatted string for database report
 ******************************************************************/
-CREATE OR REPLACE FUNCTION geodb_pkg.table_label(table_name VARCHAR) 
+CREATE OR REPLACE FUNCTION geodb_pkg.table_label(table_name TEXT) 
   RETURNS TEXT AS $$
 DECLARE
   label TEXT := '#';
