@@ -27,6 +27,11 @@
 -- 1.0.0     2008-09-10   release version                             CNag
 --
 SELECT 'Deleting packages ''geodb_util'', ''geodb_idx'', ''geodb_srs'', ''geodb_stat'', ''geodb_delete_by_lineage'', ''geodb_delete'' and corresponding types' as message from DUAL;
+
+--// drop index table and corresponding sequence
+DROP TABLE INDEX_TABLE CASCADE CONSTRAINTS;
+DROP SEQUENCE INDEX_TABLE_SEQ;
+
 --// drop global types
 DROP TYPE STRARRAY;
 DROP TYPE SEQ_TABLE;

@@ -127,8 +127,10 @@ BEGIN
 --      EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.GEODB_SRS to ' || v_role;	 
         EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.GEODB_STAT to ' || v_role;
         EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.GEODB_UTIL to ' || v_role;
+        EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.GRID_COVERAGE to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.GROUP_TO_CITYOBJECT to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.IMPLICIT_GEOMETRY to ' || v_role;
+        EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.INDEX_TABLE to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.LAND_USE to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.MASSPOINT_RELIEF to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.OBJECTCLASS to ' || v_role;
@@ -136,7 +138,6 @@ BEGIN
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.OPENING_TO_THEM_SURFACE to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.PLANT_COVER to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.RASTER_RELIEF to ' || v_role;
-        EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.RASTER_RELIEF_GEORASTER to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.RELIEF_COMPONENT to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.RELIEF_FEATURE to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.RELIEF_FEAT_TO_REL_COMP to ' || v_role;
@@ -198,8 +199,10 @@ BEGIN
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.EXTERNAL_REFERENCE for ' || v_schemaOwnerName || '.EXTERNAL_REFERENCE';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GENERALIZATION for ' || v_schemaOwnerName || '.GENERALIZATION';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GENERIC_CITYOBJECT for ' || v_schemaOwnerName || '.GENERIC_CITYOBJECT';
+  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GRID_COVERAGE for ' || v_schemaOwnerName || '.GRID_COVERAGE';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GROUP_TO_CITYOBJECT for ' || v_schemaOwnerName || '.GROUP_TO_CITYOBJECT';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.IMPLICIT_GEOMETRY for ' || v_schemaOwnerName || '.IMPLICIT_GEOMETRY';
+  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.INDEX_TABLE for ' || v_schemaOwnerName || '.INDEX_TABLE';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.LAND_USE for ' || v_schemaOwnerName || '.LAND_USE';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.MASSPOINT_RELIEF for ' || v_schemaOwnerName || '.MASSPOINT_RELIEF';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.OBJECTCLASS for ' || v_schemaOwnerName || '.OBJECTCLASS';
@@ -207,7 +210,6 @@ BEGIN
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.OPENING_TO_THEM_SURFACE for ' || v_schemaOwnerName || '.OPENING_TO_THEM_SURFACE';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.PLANT_COVER for ' || v_schemaOwnerName || '.PLANT_COVER';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.RASTER_RELIEF for ' || v_schemaOwnerName || '.RASTER_RELIEF';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.RASTER_RELIEF_GEORASTER for ' || v_schemaOwnerName || '.RASTER_RELIEF_GEORASTER';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.RELIEF_COMPONENT for ' || v_schemaOwnerName || '.RELIEF_COMPONENT';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.RELIEF_FEATURE for ' || v_schemaOwnerName || '.RELIEF_FEATURE';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.RELIEF_FEAT_TO_REL_COMP for ' || v_schemaOwnerName || '.RELIEF_FEAT_TO_REL_COMP';
