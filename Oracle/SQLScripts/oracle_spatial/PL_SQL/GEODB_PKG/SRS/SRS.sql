@@ -20,7 +20,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 1.0.0     2014-02-06   new script for 3DCityDB V3                  FKun
+-- 1.0.0     2014-07-30   new script for 3DCityDB V3                  FKun
 --                                                                    CNag
 --
 
@@ -124,7 +124,8 @@ AS
     t_name VARCHAR2, 
     c_name VARCHAR2,
     dim NUMBER,
-    schema_srid NUMBER)
+    schema_srid NUMBER
+    )
   IS
     internal_t_name VARCHAR2(30);
     is_versioned BOOLEAN := FALSE;
@@ -180,7 +181,10 @@ AS
   * @param schema_srid the SRID of the coordinate system to be further used in the database
   * @param schema_gml_srs_name the GML_SRS_NAME of the coordinate system to be further used in the database
   ******************************************************************/
-  PROCEDURE change_schema_srid(schema_srid NUMBER, schema_gml_srs_name VARCHAR2)
+  PROCEDURE change_schema_srid(
+    schema_srid NUMBER, 
+	schema_gml_srs_name VARCHAR2
+    )
   IS
   BEGIN
     -- update entry in DATABASE_SRS table first

@@ -24,7 +24,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                          | Author
--- 2.0       2014-06-04   complete revision for 3DCityDB V3      FKun
+-- 2.0.0     2014-07-30   complete revision for 3DCityDB V3      FKun
 --                                                               CNag
 --
 
@@ -35,8 +35,8 @@
 ******************************************************************/
 CREATE OR REPLACE PACKAGE geodb_stat
 AS
-  FUNCTION table_contents RETURN STRARRAY;
-  FUNCTION table_content(table_name VARCHAR2) RETURN NUMBER;
+  FUNCTION table_contents(schema_name VARCHAR2 := USER) RETURN STRARRAY;
+  FUNCTION table_content(table_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN NUMBER;
   FUNCTION table_label(table_name VARCHAR2) RETURN VARCHAR2;
 END geodb_stat;
 /
@@ -50,12 +50,13 @@ AS
   * @param schema_name name of schema
   * @RETURN TEXT[] database report as text array
   ******************************************************************/
-  FUNCTION table_contents RETURN STRARRAY
+  FUNCTION table_contents(schema_name VARCHAR2 := USER) RETURN STRARRAY
   IS
     report_header STRARRAY := STRARRAY();
     report STRARRAY := STRARRAY();
     ws VARCHAR2(30);
     reportDate DATE;
+    owner_name VARCHAR2(20);
   BEGIN
     SELECT SYSDATE INTO reportDate FROM DUAL;  
     report_header.extend; report_header(report_header.count) := ('Database Report on 3D City Model - Report date: ' || TO_CHAR(reportDate, 'DD.MM.YYYY HH24:MI:SS'));
@@ -66,22 +67,25 @@ AS
     report_header.extend; report_header(report_header.count) := ('Current workspace: ' || ws);
     report_header.extend; report_header(report_header.count) := '';  
 
+    owner_name := upper(schema_name);
+
     EXECUTE IMMEDIATE 'SELECT CAST(COLLECT(tab.t) AS STRARRAY) FROM (
-	                     SELECT CASE WHEN ut.table_name LIKE ''%\_LT'' ESCAPE ''\'' THEN
-                           (SELECT geodb_stat.table_label(view_name) || geodb_stat.table_content(view_name) FROM user_views 
-                              WHERE view_name = substr(ut.table_name, 1, length(ut.table_name)-3))
+	                     SELECT CASE WHEN at.table_name LIKE ''%\_LT'' ESCAPE ''\'' THEN
+                           (SELECT geodb_stat.table_label(view_name) || geodb_stat.table_content(view_name, :1) FROM all_views 
+                              WHERE owner = :2 AND view_name = substr(at.table_name, 1, length(at.table_name)-3))
                          ELSE
-                           (SELECT geodb_stat.table_label(table_name) || geodb_stat.table_content(table_name)
-                              FROM user_tables WHERE table_name = ut.table_name) 
+                           (SELECT geodb_stat.table_label(table_name) || geodb_stat.table_content(table_name, :3) FROM all_tables
+                              WHERE owner = :4 AND table_name = at.table_name) 
                          END AS t
-                         FROM user_tables ut
-                           WHERE ut.table_name NOT IN (''DATABASE_SRS'', ''OBJECTCLASS'')
-                           AND ut.table_name NOT LIKE ''%\_AUX'' ESCAPE ''\''
-                           AND ut.table_name NOT LIKE ''%TMP\_%'' ESCAPE ''\''
-                           AND ut.table_name NOT LIKE ''%MDRT%''
-                           AND ut.table_name NOT LIKE ''%MDXT%''
-                         ORDER BY ut.table_name ASC
-                       ) tab' INTO report;
+                         FROM all_tables at
+                           WHERE owner = :5
+                           AND at.table_name NOT IN (''DATABASE_SRS'', ''OBJECTCLASS'', ''INDEX_TABLE'')
+                           AND at.table_name NOT LIKE ''%\_AUX'' ESCAPE ''\''
+                           AND at.table_name NOT LIKE ''%TMP\_%'' ESCAPE ''\''
+                           AND at.table_name NOT LIKE ''%MDRT%''
+                           AND at.table_name NOT LIKE ''%MDXT%''
+                         ORDER BY at.table_name ASC
+                       ) tab' INTO report USING owner_name, owner_name, owner_name, owner_name, owner_name;
 
     EXECUTE IMMEDIATE 'SELECT :1 MULTISET UNION :2 FROM dual' INTO report USING report_header, report;
 
@@ -92,15 +96,17 @@ AS
   * table_content
   *
   * @param table_name name of table
+  * @param schema_name name of schema
   * @RETURN INTEGER number of entries in table
   ******************************************************************/
   FUNCTION table_content(
-    table_name VARCHAR2
+    table_name VARCHAR2,
+    schema_name VARCHAR2 := USER
   ) RETURN NUMBER
   IS
     cnt NUMBER;  
   BEGIN
-    EXECUTE IMMEDIATE 'SELECT count(*) FROM ' || table_name INTO cnt;
+    EXECUTE IMMEDIATE 'SELECT count(*) FROM ' || schema_name || '.' || table_name INTO cnt;
     RETURN cnt;
   END;
 

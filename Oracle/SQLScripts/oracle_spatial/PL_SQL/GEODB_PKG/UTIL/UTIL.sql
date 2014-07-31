@@ -25,7 +25,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 2.0.0     2014-06-04   new version for 3DCityDB V3                 FKun
+-- 2.0.0     2014-07-30   new version for 3DCityDB V3                 FKun
 -- 1.2.0     2013-08-29   added change_db_srid procedure              FKun
 -- 1.1.0     2011-07-28   update to 2.0.6                             CNag
 -- 1.0.0     2008-09-10   release version                             CNag
@@ -48,7 +48,6 @@ CREATE OR REPLACE TYPE STRARRAY IS TABLE OF VARCHAR2(32767);
 * 
 * global type for database metadata
 ******************************************************************/
-DROP TYPE DB_INFO_TABLE;
 CREATE OR REPLACE TYPE DB_INFO_OBJ AS OBJECT(
   SCHEMA_SRID NUMBER,
   SCHEMA_GML_SRS_NAME VARCHAR2(1000),
@@ -77,15 +76,15 @@ CREATE OR REPLACE TYPE SEQ_TABLE IS TABLE OF NUMBER;
 ******************************************************************/
 CREATE OR REPLACE PACKAGE geodb_util
 AS
-  FUNCTION versioning_table(table_name VARCHAR2) RETURN VARCHAR2;
-  FUNCTION versioning_db RETURN VARCHAR2;
+  FUNCTION versioning_table(table_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
+  FUNCTION versioning_db(schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   PROCEDURE db_info(schema_srid OUT DATABASE_SRS.SRID%TYPE, schema_gml_srs_name OUT DATABASE_SRS.GML_SRS_NAME%TYPE, versioning OUT VARCHAR2);
   FUNCTION db_metadata RETURN DB_INFO_TABLE;
   FUNCTION split(list VARCHAR2, delim VARCHAR2 := ',') RETURN STRARRAY;
   FUNCTION min(a NUMBER, b NUMBER) RETURN NUMBER;
-  PROCEDURE update_schema_constraints(on_delete_param VARCHAR2 := 'CASCADE');
-  PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param VARCHAR2, deferrable_param VARCHAR2);
-  FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER) RETURN SEQ_TABLE;
+  PROCEDURE update_schema_constraints(on_delete_param VARCHAR2 := 'CASCADE', schema_name VARCHAR2 := USER);
+  PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param VARCHAR2 := 'CASCADE', deferrable_param VARCHAR2 := 'INITIALLY DEFERRED', schema_name VARCHAR2 := USER);
+  FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER, schema_name VARCHAR2 := USER) RETURN SEQ_TABLE;
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
   FUNCTION get_3dcitydb_version RETURN VARCHAR2;
   FUNCTION to_2d(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
@@ -100,13 +99,17 @@ AS
   *
   * @param table_name name of the unversioned table, i.e., omit
   *                   suffixes such as _LT
+  * @param schema_name name of schema of target table
   * @RETURN VARCHAR2 'ON' for version-enabled, 'OFF' otherwise
   ******************************************************************/
-  FUNCTION versioning_table(table_name VARCHAR2) RETURN VARCHAR2
+  FUNCTION versioning_table(
+    table_name VARCHAR2, 
+    schema_name VARCHAR2 := USER
+    ) RETURN VARCHAR2
   IS
     status USER_TABLES.STATUS%TYPE;
   BEGIN
-    EXECUTE IMMEDIATE 'SELECT STATUS FROM USER_TABLES WHERE TABLE_NAME=:1' INTO status USING upper(table_name) || '_LT';
+    EXECUTE IMMEDIATE 'SELECT status FROM all_table WHERE owner=:1 AND table_name=:2' INTO status USING upper(schema_name), upper(table_name) || '_LT';
     RETURN 'ON';
   EXCEPTION
     WHEN others THEN
@@ -116,9 +119,10 @@ AS
   /*****************************************************************
   * versioning_db
   *
+  * @param schema_name name of schema
   * @RETURN VARCHAR2 'ON' for version-enabled, 'PARTLY' and 'OFF'
   ******************************************************************/
-  FUNCTION versioning_db RETURN VARCHAR2
+  FUNCTION versioning_db(schema_name VARCHAR2 := USER) RETURN VARCHAR2
   IS
     table_names STRARRAY;
     is_versioned BOOLEAN := FALSE;
@@ -127,7 +131,7 @@ AS
     table_names := split('ADDRESS,ADDRESS_TO_BRIDGE,ADDRESS_TO_BUILDING,APPEAR_TO_SURFACE_DATA,APPEARANCE,BREAKLINE_RELIEF,BRIDGE,BRIDGE_CONSTR_ELEMENT,BRIDGE_FURNITURE,BRIDGE_INSTALLATION,BRIDGE_OPEN_TO_THEM_SRF,BRIDGE_OPENING,BRIDGE_ROOM,BRIDGE_THEMATIC_SURFACE,BUILDING,BUILDING_FURNITURE,BUILDING_INSTALLATION,CITY_FURNITURE,CITYMODEL,CITYOBJECT,CITYOBJECT_GENERICATTRIB,CITYOBJECT_MEMBER,CITYOBJECTGROUP,EXTERNAL_REFERENCE,GENERALIZATION,GENERIC_CITYOBJECT,GROUP_TO_CITYOBJECT,IMPLICIT_GEOMETRY,LAND_USE,MASSPOINT_RELIEF,OPENING,OPENING_TO_THEM_SURFACE,PLANT_COVER,RASTER_REL_GEORASTER_RDT,RASTER_RELIEF,RELIEF_COMPONENT,RELIEF_FEAT_TO_REL_COMP,RELIEF_FEATURE,ROOM,SOLITARY_VEGETAT_OBJECT,SURFACE_DATA,SURFACE_GEOMETRY,TEX_IMAGE,TEXTUREPARAM,THEMATIC_SURFACE,TIN_RELIEF,TRAFFIC_AREA,TRANSPORTATION_COMPLEX,TUNNEL,TUNNEL_FURNITURE,TUNNEL_HOLLOW_SPACE,TUNNEL_INSTALLATION,TUNNEL_OPEN_TO_THEM_SRF,TUNNEL_OPENING,TUNNEL_THEMATIC_SURFACE,WATERBOD_TO_WATERBND_SRF,WATERBODY,WATERBOUNDARY_SURFACE','VIEW_WO_OVERWRITE');
 
     FOR i IN table_names.first .. table_names.last LOOP
-      IF versioning_table(table_names(i)) = 'ON' THEN
+      IF versioning_table(table_names(i), schema_name) = 'ON' THEN
         is_versioned := TRUE;
       ELSE
         not_versioned := TRUE;
@@ -149,12 +153,13 @@ AS
   * @param schema_srid database srid
   * @param schema_gml_srs_name database srs name
   * @param versioning database versioning
+  * @param schema_name name of user schema
   ******************************************************************/
   PROCEDURE db_info(schema_srid OUT DATABASE_SRS.SRID%TYPE, schema_gml_srs_name OUT DATABASE_SRS.GML_SRS_NAME%TYPE, versioning OUT VARCHAR2) 
   IS
   BEGIN
     EXECUTE IMMEDIATE 'SELECT SRID, GML_SRS_NAME from DATABASE_SRS' INTO schema_srid, schema_gml_srs_name;
-    versioning := versioning_db;
+    versioning := versioning_db(USER);
   END;
 
   /*****************************************************************
@@ -227,7 +232,7 @@ AS
   /******************************************************************
   * update_table_constraint
   *
-  * Removes a contraint to add it again with parameters
+  * Removes a constraint to add it again with parameters
   * ON UPDATE CASCADE ON DELETE CASCADE or RESTRICT
   *
   * @param fkey_name name of the foreign key that is updated 
@@ -237,6 +242,7 @@ AS
   * @param ref_column name of referencing column of referenced table
   * @param on_delete_param whether CASCADE or RESTRICT
   * @param deferrable_param whether set or not
+  * @param schema_name name of schema of target constraints
   ******************************************************************/
   PROCEDURE update_table_constraint(
     fkey_name VARCHAR2,
@@ -244,14 +250,15 @@ AS
     column_name VARCHAR2,
     ref_table VARCHAR2,
     ref_column VARCHAR2,
-    on_delete_param VARCHAR2,
-    deferrable_param VARCHAR2
+    on_delete_param VARCHAR2 := 'CASCADE',
+    deferrable_param VARCHAR2 := 'INITIALLY DEFERRED',
+    schema_name VARCHAR2 := USER
     )
   IS
   BEGIN
-    EXECUTE IMMEDIATE 'ALTER TABLE ' || table_name || ' DROP CONSTRAINT ' || fkey_name;
-    EXECUTE IMMEDIATE 'ALTER TABLE ' || table_name || ' ADD CONSTRAINT ' || fkey_name || 
-                         ' FOREIGN KEY (' || column_name || ') REFERENCES ' || ref_table || '(' || ref_column || ')'
+    EXECUTE IMMEDIATE 'ALTER TABLE ' || schema_name || '.' || table_name || ' DROP CONSTRAINT ' || fkey_name;
+    EXECUTE IMMEDIATE 'ALTER TABLE ' || schema_name || '.' || table_name || ' ADD CONSTRAINT ' || fkey_name || 
+                         ' FOREIGN KEY (' || column_name || ') REFERENCES ' || schema_name || '.' || ref_table || '(' || ref_column || ')'
                          || on_delete_param || ' ' || deferrable_param;
     EXCEPTION
       WHEN OTHERS THEN
@@ -261,12 +268,16 @@ AS
   /******************************************************************
   * update_schema_constraints
   *
-  * calls update_table_constraint for updating all the contraints
+  * calls update_table_constraint for updating all the constraints
   * in the user schema
   *
   * @param on_delete_param whether CASCADE (default) or RESTRICT
+  * @param schema_name name of schema of target constraints
   ******************************************************************/
-  PROCEDURE update_schema_constraints(on_delete_param VARCHAR2 := 'CASCADE')
+  PROCEDURE update_schema_constraints(
+    on_delete_param VARCHAR2 := 'CASCADE',
+    schema_name VARCHAR2 := USER
+    )
   IS
     delete_param VARCHAR2(30) := 'ON DELETE CASCADE';
     deferrable_param VARCHAR2(30);
@@ -280,17 +291,17 @@ AS
       dbms_output.put_line('Constraints are set to ON DELETE CASCADE');
     END IF;
 
-    FOR rec IN (SELECT ucc1.constraint_name AS fkey, ucc1.table_name AS t, ucc1.column_name AS c, 
-                  uc2.table_name AS ref_t, ucc2.column_name AS ref_c
-                FROM user_cons_columns ucc1
-                JOIN user_constraints uc1 ON ucc1.owner = uc1.owner 
-                  AND ucc1.constraint_name = uc1.constraint_name
-                JOIN user_constraints uc2 ON uc1.r_owner = uc2.owner 
-                  AND uc1.r_constraint_name = uc2.constraint_name
-                JOIN user_cons_columns ucc2 ON uc2.owner = ucc2.owner 
-                  AND uc2.constraint_name = ucc2.constraint_name 
-                  AND ucc2.position = ucc1.position     
-                WHERE uc1.constraint_type = 'R') LOOP
+    FOR rec IN (SELECT acc1.constraint_name AS fkey, acc1.table_name AS t, acc1.column_name AS c, 
+                  ac2.table_name AS ref_t, acc2.column_name AS ref_c, acc1.owner AS schema
+                FROM all_cons_columns acc1
+                JOIN all_constraints ac1 ON acc1.owner = ac1.owner 
+                  AND acc1.constraint_name = ac1.constraint_name
+                JOIN all_constraints ac2 ON ac1.r_owner = ac2.owner 
+                  AND ac1.r_constraint_name = ac2.constraint_name
+                JOIN all_cons_columns acc2 ON ac2.owner = acc2.owner 
+                  AND ac2.constraint_name = acc2.constraint_name 
+                  AND acc2.position = acc1.position     
+                WHERE acc1.owner = upper(schema_name) AND ac1.constraint_type = 'R') LOOP
       update_table_constraint(rec.fkey, rec.t, rec.c, rec.ref_t, rec.ref_c, delete_param, deferrable_param);
     END LOOP;
   END;
@@ -300,12 +311,17 @@ AS
   *
   * @param seq_name name of the sequence
   * @param count number of values to be queried from the sequence
+  * @param schema_name name of schema of target sequence
   ******************************************************************/
-  FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER) RETURN SEQ_TABLE
+  FUNCTION get_seq_values(
+    seq_name VARCHAR2, 
+    seq_count NUMBER,
+    schema_name VARCHAR2 := USER
+    ) RETURN SEQ_TABLE
   IS
     seq_tbl SEQ_TABLE;
   BEGIN
-    EXECUTE IMMEDIATE 'SELECT ' || seq_name || '.nextval FROM dual CONNECT BY level <= :1' 
+    EXECUTE IMMEDIATE 'SELECT ' || upper(schema_name) || '.' || seq_name || '.nextval FROM dual CONNECT BY level <= :1' 
                          BULK COLLECT INTO seq_tbl USING seq_count;
     RETURN seq_tbl;
   END;
