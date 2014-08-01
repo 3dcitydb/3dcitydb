@@ -26,8 +26,9 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 2.0.0     2014-07-30   extended for 3DCityDB V3                    FKun
---                                                                    GHud
+-- 2.0.0     2014-06-02   extended for 3DCityDB V3                    GHud
+--                                                                    FKun
+--                                                                    CNag
 -- 1.2.0     2013-08-08   extended to all thematic classes            GHud
 --                                                                    FKun
 -- 1.1.0     2012-02-22   some performance improvements               CNag
@@ -39,10 +40,10 @@ AS
   procedure delete_surface_geometry(pid number, clean_apps int := 0, schema_name varchar2 := USER);
   procedure delete_implicit_geometry(pid number, clean_apps int := 0, schema_name varchar2 := USER);
   procedure delete_external_reference(pid number, schema_name varchar2 := USER);
-  procedure delete_citymodel(pid number, affect_rel_objs int := 0, schema_name varchar2 := USER);
+  procedure delete_citymodel(pid number, delete_members int := 0, schema_name varchar2 := USER);
   procedure delete_appearance(pid number, schema_name varchar2 := USER);
   procedure delete_surface_data(pid number, schema_name varchar2 := USER);
-  procedure delete_cityobjectgroup(pid number, affect_rel_objs int := 0, schema_name varchar2 := USER);
+  procedure delete_cityobjectgroup(pid number, delete_members int := 0, schema_name varchar2 := USER);
   procedure delete_thematic_surface(pid number, schema_name varchar2 := USER);
   procedure delete_opening(pid number, schema_name varchar2 := USER);
   procedure delete_address(pid number, schema_name varchar2 := USER);
@@ -78,14 +79,15 @@ AS
   procedure delete_tunnel_opening(pid number, schema_name varchar2 := USER);
   procedure delete_tunnel_furniture(pid number, schema_name varchar2 := USER);
   procedure delete_tunnel_hollow_space(pid number, schema_name varchar2 := USER);
-  procedure cleanup_implicit_geometries(clean_apps int := 0, schema_name varchar2 := USER);
-  procedure cleanup_tex_images(schema_name varchar2 := USER);
+  procedure delete_cityobject(pid number, delete_members int := 0, cleanup int := 0, schema_name varchar2 := USER);
+  procedure delete_cityobject_cascade(pid number, schema_name varchar2 := USER);
+
   procedure cleanup_appearances(only_global int :=1, schema_name varchar2 := USER);
   procedure cleanup_addresses(schema_name varchar2 := USER);
-  procedure cleanup_cityobjectgroups(schema_name varchar2 := USER);
   procedure cleanup_citymodels(schema_name varchar2 := USER);
-  procedure delete_cityobject(pid number, affect_rel_objs int := 0, cleanup int := 0, schema_name varchar2 := USER);
-  procedure delete_cityobject_cascade(pid number, schema_name varchar2 := USER);
+  procedure cleanup_cityobjectgroups(schema_name varchar2 := USER);
+  procedure cleanup_implicit_geometries(clean_apps int := 0, schema_name varchar2 := USER);
+  procedure cleanup_tex_images(schema_name varchar2 := USER);
   
   function is_not_referenced(table_name varchar2, check_column varchar2, check_id number, not_column varchar2, not_id number, schema_name varchar2 := USER) return boolean;
 END geodb_delete;
@@ -98,10 +100,10 @@ AS
   procedure intern_delete_implicit_geom(pid number, schema_name varchar2 := USER);
   procedure intern_delete_grid_coverage(pid number, schema_name varchar2 := USER);
   procedure intern_delete_cityobject(pid number, schema_name varchar2 := USER);
-  procedure delete_citymodel(citymodel_rec citymodel%rowtype, affect_rel_objs int := 0, schema_name varchar2 := USER);
+  procedure delete_citymodel(citymodel_rec citymodel%rowtype, delete_members int := 0, schema_name varchar2 := USER);
   procedure delete_appearance(appearance_rec appearance%rowtype, schema_name varchar2 := USER);
   procedure delete_surface_data(surface_data_rec surface_data%rowtype, schema_name varchar2 := USER);
-  procedure delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, affect_rel_objs int := 0, schema_name varchar2 := USER);
+  procedure delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, delete_members int := 0, schema_name varchar2 := USER);
   procedure delete_thematic_surface(thematic_surface_rec thematic_surface%rowtype, schema_name varchar2 := USER);
   procedure delete_opening(opening_rec opening%rowtype, schema_name varchar2 := USER);
   procedure delete_building_installation(building_installation_rec building_installation%rowtype, schema_name varchar2 := USER);
@@ -139,10 +141,10 @@ AS
   
   procedure post_delete_implicit_geom(implicit_geometry_rec implicit_geometry%rowtype, schema_name varchar2 := USER);
   procedure pre_delete_cityobject(pid number, schema_name varchar2 := USER);
-  procedure pre_delete_citymodel(citymodel_rec citymodel%rowtype, affect_rel_objs int := 0, schema_name varchar2 := USER);
+  procedure pre_delete_citymodel(citymodel_rec citymodel%rowtype, delete_members int := 0, schema_name varchar2 := USER);
   procedure pre_delete_appearance(appearance_rec appearance%rowtype, schema_name varchar2 := USER);
   procedure pre_delete_surface_data(surface_data_rec surface_data%rowtype, schema_name varchar2 := USER);
-  procedure pre_delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, affect_rel_objs int := 0, schema_name varchar2 := USER);
+  procedure pre_delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, delete_members int := 0, schema_name varchar2 := USER);
   procedure post_delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, schema_name varchar2 := USER);
   procedure pre_delete_thematic_surface(thematic_surface_rec thematic_surface%rowtype, schema_name varchar2 := USER);
   procedure post_delete_thematic_surface(thematic_surface_rec thematic_surface%rowtype, schema_name varchar2 := USER);
@@ -222,11 +224,12 @@ AS
   procedure intern_delete_surface_geometry(pid number, schema_name varchar2 := USER)
   is
     geom_cur ref_cursor;
-	sg_id number;      
+    sg_id number;
   begin
-    open geom_cur for 'select id from ' || schema_name || '.surface_geometry start with id=pid connect by prior id=parent_id order by level desc';
+    open geom_cur for 'select id from ' || schema_name || '.surface_geometry start with id=:1 connect by prior id=parent_id order by level desc' using pid;
     loop
       fetch geom_cur into sg_id;
+      exit when geom_cur%notfound;
       execute immediate 'delete from ' || schema_name || '.textureparam where surface_geometry_id=:1' using sg_id;
       execute immediate 'delete from ' || schema_name || '.surface_geometry where id=:1' using sg_id; 
     end loop;
@@ -283,8 +286,8 @@ AS
   procedure pre_delete_cityobject(pid number, schema_name varchar2 := USER)
   is
     appearance_cur ref_cursor;
-    appearance_rec appearance%rowtype;  
-  begin	
+    appearance_rec appearance%rowtype;
+  begin   
     execute immediate 'delete from ' || schema_name || '.cityobject_member where cityobject_id=:1' using pid;
     execute immediate 'delete from ' || schema_name || '.group_to_cityobject where cityobject_id=:1' using pid;
     execute immediate 'delete from ' || schema_name || '.generalization where generalizes_to_id=:1' using pid;
@@ -292,10 +295,11 @@ AS
     execute immediate 'delete from ' || schema_name || '.external_reference where cityobject_id=:1' using pid;
     execute immediate 'delete from ' || schema_name || '.cityobject_genericattrib where cityobject_id=:1' using pid;
     execute immediate 'update ' || schema_name || '.cityobjectgroup set parent_cityobject_id=null where parent_cityobject_id=:1' using pid;
-    
-	open appearance_cur for 'select * from ' || schema_name || '.appearance where cityobject_id=:1' USING pid;
+
+    open appearance_cur for 'select * from ' || schema_name || '.appearance where cityobject_id=:1' using pid;
     loop
       fetch appearance_cur into appearance_rec;
+      exit when appearance_cur%notfound;
       delete_appearance(appearance_rec, schema_name);
     end loop;
     close appearance_cur;
@@ -317,20 +321,22 @@ AS
   /*
     internal: delete from CITYMODEL
   */
-  procedure pre_delete_citymodel(citymodel_rec citymodel%rowtype, affect_rel_objs int := 0, schema_name varchar2 := USER)
+  procedure pre_delete_citymodel(citymodel_rec citymodel%rowtype, delete_members int := 0, schema_name varchar2 := USER)
   is
     member_cur ref_cursor;
     member_id number;
+    
     appearance_cur ref_cursor;
-    appearance_rec appearance%rowtype;	
+    appearance_rec appearance%rowtype;
   begin
-    -- delete contained cityobjects if corresponding option is set
-    if affect_rel_objs <> 0 then
+    -- delete members
+    if delete_members <> 0 then
       open member_cur for 'select cityobject_id from ' || schema_name || '.cityobject_member where citymodel_id=:1' USING citymodel_rec.id;
       loop
         fetch member_cur into member_id;
+        exit when member_cur%notfound;
         begin
-          delete_cityobject(member_id, affect_rel_objs, 0, schema_name);
+          delete_cityobject(member_id, delete_members, 0, schema_name);
         exception
           when others then
             dbms_output.put_line('pre_delete_citymodel: deletion of cityobject_member with ID ' || member_id || ' threw: ' || SQLERRM);
@@ -339,27 +345,27 @@ AS
 
       -- cleanup
       cleanup_implicit_geometries(1, schema_name);
-      cleanup_appearances(1, schema_name);
+      cleanup_appearances(1, schema_name);      
     end if;
 
     execute immediate 'delete from ' || schema_name || '.cityobject_member where citymodel_id=:1' using citymodel_rec.id;
 
-	open appearance_cur for 'select * from ' || schema_name || '.appearance where cityobject_id=:1' USING citymodel_rec.id;
+    open appearance_cur for 'select * from ' || schema_name || '.appearance where cityobject_id=:1' using citymodel_rec.id;
     loop
       fetch appearance_cur into appearance_rec;
+      exit when appearance_cur%notfound;
       delete_appearance(appearance_rec, schema_name);
     end loop;
     close appearance_cur;
-
   exception
     when others then
       dbms_output.put_line('pre_delete_citymodel (id: ' || citymodel_rec.id || '): ' || SQLERRM);
   end;
 
-  procedure delete_citymodel(citymodel_rec citymodel%rowtype, affect_rel_objs int := 0, schema_name varchar2 := USER)
+  procedure delete_citymodel(citymodel_rec citymodel%rowtype, delete_members int := 0, schema_name varchar2 := USER)
   is
   begin
-    pre_delete_citymodel(citymodel_rec, affect_rel_objs, schema_name);
+    pre_delete_citymodel(citymodel_rec, delete_members, schema_name);
     execute immediate 'delete from ' || schema_name || '.citymodel where id=:1' using citymodel_rec.id;
   exception
     when others then
@@ -375,16 +381,17 @@ AS
     surface_data_rec surface_data%rowtype;
   begin
     -- delete surface data not being referenced by appearances any more
-	open surface_data_cur for 'select s.* from ' || schema_name || '.surface_data s, ' || schema_name || '.appear_to_surface_data ats
-                               where s.id=ats.surface_data_id and ats.appearance_id=:1' USING appearance_rec.id;
+    open surface_data_cur for 'select s.* from ' || schema_name || '.surface_data s, ' || schema_name || '.appear_to_surface_data ats
+        where s.id=ats.surface_data_id and ats.appearance_id=:1' using appearance_rec.id;
     loop
       fetch surface_data_cur into surface_data_rec;
+      exit when surface_data_cur%notfound;
       if is_not_referenced('appear_to_surface_data', 'surface_data_id', surface_data_rec.id, 'appearance_id', appearance_rec.id, schema_name) then 
         delete_surface_data(surface_data_rec, schema_name);
       end if;
     end loop;
     close surface_data_cur;
-
+    
     execute immediate 'delete from ' || schema_name || '.appear_to_surface_data where appearance_id=:1' using appearance_rec.id;
   exception
     when others then
@@ -427,18 +434,19 @@ AS
   /*
     internal: delete from CITYOBJECTGROUP
   */
-  procedure pre_delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype,  affect_rel_objs int := 0, schema_name varchar2 := USER)
+  procedure pre_delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, delete_members int := 0, schema_name varchar2 := USER)
   is
     member_cur ref_cursor;
     member_id number;
   begin
-    -- delete contained cityobjects if corresponding option is set
-    if affect_rel_objs <> 0 then
+    -- delete members
+    if delete_members <> 0 then
       open member_cur for 'select cityobject_id from ' || schema_name || '.group_to_cityobject where cityobjectgroup_id=:1' USING cityobjectgroup_rec.id;
       loop
         fetch member_cur into member_id;
+        exit when member_cur%notfound;
         begin
-          delete_cityobject(member_id, affect_rel_objs, 0, schema_name);
+          delete_cityobject(member_id, delete_members, 0, schema_name);
         exception
           when others then
             dbms_output.put_line('pre_delete_citymodel: deletion of group_member with ID ' || member_id || ' threw: ' || SQLERRM);
@@ -449,17 +457,17 @@ AS
       geodb_delete.cleanup_implicit_geometries(1, schema_name);
       geodb_delete.cleanup_appearances(1, schema_name);
     end if;
-
+    
     execute immediate 'delete from ' || schema_name || '.group_to_cityobject where cityobjectgroup_id=:1' using cityobjectgroup_rec.id;
   exception
     when others then
       dbms_output.put_line('pre_delete_cityobjectgroup (id: ' || cityobjectgroup_rec.id || '): ' || SQLERRM);
   end;
 
-  procedure delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, affect_rel_objs int := 0, schema_name varchar2 := USER)
+  procedure delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, delete_members int := 0, schema_name varchar2 := USER)
   is
   begin
-    pre_delete_cityobjectgroup(cityobjectgroup_rec, affect_rel_objs, schema_name);
+    pre_delete_cityobjectgroup(cityobjectgroup_rec, delete_members, schema_name);
     execute immediate 'delete from ' || schema_name || '.cityobjectgroup where id=:1' using cityobjectgroup_rec.id;
     post_delete_cityobjectgroup(cityobjectgroup_rec, schema_name);      
     exception
@@ -490,9 +498,10 @@ AS
   begin
     -- delete openings not being referenced by a thematic surface any more
     open opening_cur for 'select o.* from ' || schema_name || '.opening o, ' || schema_name || '.opening_to_them_surface otm 
-                            where o.id=otm.opening_id and otm.thematic_surface_id=:1' USING thematic_surface_rec.id;
+        where o.id=otm.opening_id and otm.thematic_surface_id=:1' using thematic_surface_rec.id;
     loop
       fetch opening_cur into opening_rec;
+      exit when opening_cur%notfound;
       if is_not_referenced('opening_to_them_surface', 'opening_id', opening_rec.id, 'thematic_surface_id', thematic_surface_rec.id, schema_name) then 
         delete_opening(opening_rec, schema_name);
       end if;
@@ -561,7 +570,7 @@ AS
   procedure post_delete_opening(opening_rec opening%rowtype, schema_name varchar2 := USER)
   is
     address_cur ref_cursor;
-    address_rec address%rowtype;
+    address_id number;
   begin
     if opening_rec.lod3_multi_surface_id is not null then
       intern_delete_surface_geometry(opening_rec.lod3_multi_surface_id, schema_name);
@@ -571,13 +580,14 @@ AS
     end if;
 
     -- delete addresses not being referenced from buildings and openings any more
-	open address_cur for 'select a.id from ' || schema_name || '.address a left outer join ' || schema_name || '.address_to_building ab
-                            on a.id=ab.address_id where a.id=:1 and ab.address_id is null' USING opening_rec.address_id;
+    open address_cur for 'select a.id from ' || schema_name || '.address a left outer join ' || schema_name || '.address_to_building ab
+        on a.id=ab.address_id where a.id=:1 and ab.address_id is null' using opening_rec.address_id;
     loop
-      fetch address_cur into address_rec;
-      if is_not_referenced('opening', 'address_id', address_rec.id, 'id', opening_rec.id, schema_name) then
-        delete_address(address_rec.id, schema_name);
-      end if; 
+      fetch address_cur into address_id;
+      exit when address_cur%notfound;
+      if is_not_referenced('opening', 'address_id', address_id, 'id', opening_rec.id, schema_name) then
+        delete_address(address_id, schema_name);
+      end if;   
     end loop;
     close address_cur;
 
@@ -626,32 +636,36 @@ AS
   is
     thematic_surface_cur ref_cursor;
     thematic_surface_rec thematic_surface%rowtype;
+
     building_installation_cur ref_cursor;
     building_installation_rec building_installation%rowtype;
+
     building_furniture_cur ref_cursor;
     building_furniture_rec building_furniture%rowtype;
   begin
-	open thematic_surface_cur for 'select * from ' || schema_name || '.thematic_surface where room_id=:1' USING room_rec.id;
+    open thematic_surface_cur for 'select * from ' || schema_name || '.thematic_surface where room_id=:1' using room_rec.id;
     loop
       fetch thematic_surface_cur into thematic_surface_rec;
+      exit when thematic_surface_cur%notfound;
       delete_thematic_surface(thematic_surface_rec, schema_name);
     end loop;
     close thematic_surface_cur;
 
-	open building_installation_cur for 'select * from ' || schema_name || '.building_installation where room_id=:1' USING room_rec.id;
+    open building_installation_cur for 'select * from ' || schema_name || '.building_installation where room_id=:1' using room_rec.id;
     loop
       fetch building_installation_cur into building_installation_rec;
+      exit when building_installation_cur%notfound;
       delete_building_installation(building_installation_rec, schema_name);
     end loop;
     close building_installation_cur;
 
-	open building_furniture_cur for 'select * from ' || schema_name || '.building_furniture where room_id=:1' USING room_rec.id;
+    open building_furniture_cur for 'select * from ' || schema_name || '.building_furniture where room_id=:1' using room_rec.id;
     loop
       fetch building_furniture_cur into building_furniture_rec;
+      exit when building_furniture_cur%notfound;
       delete_building_furniture(building_furniture_rec, schema_name);
     end loop;
     close building_furniture_cur;
-
    exception
     when others then
       dbms_output.put_line('pre_delete_room (id: ' || room_rec.id || '): ' || SQLERRM);
@@ -703,6 +717,7 @@ AS
     if building_furniture_rec.lod4_brep_id is not null then
       intern_delete_surface_geometry(building_furniture_rec.lod4_brep_id, schema_name);
     end if;
+    
     intern_delete_cityobject(building_furniture_rec.id, schema_name);
   exception
     when others then
@@ -716,50 +731,59 @@ AS
   is    
     building_part_cur ref_cursor;
     building_part_rec building%rowtype;
+      
     thematic_surface_cur ref_cursor;
     thematic_surface_rec thematic_surface%rowtype;
+    
     building_installation_cur ref_cursor;
     building_installation_rec building_installation%rowtype;
+      
     room_cur ref_cursor;
-    room_rec room%rowtype;    
+    room_rec room%rowtype;
+    
     address_cur ref_cursor;
-    address_rec address%rowtype;
+    address_id number;
   begin
-	open building_part_cur for 'select * from ' || schema_name || '.building where id!=:1 and building_parent_id=:2' USING building_rec.id, building_rec.id;
+    open building_part_cur for 'select * from ' || schema_name || '.building where id!=:1 and building_parent_id=:2' using building_rec.id, building_rec.id;
     loop
       fetch building_part_cur into building_part_rec;
+      exit when building_part_cur%notfound;
       delete_building(building_part_rec, schema_name);
     end loop;
     close building_part_cur;
-
-    open thematic_surface_cur for 'select * from ' || schema_name || '.thematic_surface where building_id=:1' USING building_rec.id;
+    
+    open thematic_surface_cur for 'select * from ' || schema_name || '.thematic_surface where building_id=:1' using building_rec.id;
     loop
       fetch thematic_surface_cur into thematic_surface_rec;
+      exit when thematic_surface_cur%notfound;
       delete_thematic_surface(thematic_surface_rec, schema_name);
     end loop;
     close thematic_surface_cur;
-
-	open building_installation_cur for 'select * from ' || schema_name || '.building_installation where building_id=:1' USING building_rec.id;
+    
+    open building_installation_cur for 'select * from ' || schema_name || '.building_installation where building_id=:1' using building_rec.id;
     loop
       fetch building_installation_cur into building_installation_rec;
+      exit when building_installation_cur%notfound;
       delete_building_installation(building_installation_rec, schema_name);
     end loop;
     close building_installation_cur;
-
-	open room_cur for 'select * from ' || schema_name || '.room where building_id=:1' USING building_rec.id;
+    
+    open room_cur for 'select * from ' || schema_name || '.room where building_id=:1' using building_rec.id;
     loop
       fetch room_cur into room_rec;
+      exit when room_cur%notfound;
       delete_room(room_rec, schema_name);
     end loop;
     close room_cur;
-
+        
     -- delete addresses being not referenced from buildings any more
-	open address_cur for 'select address_id from ' || schema_name || '.address_to_building where building_id=:1' USING building_rec.id;
+    open address_cur for 'select address_id from ' || schema_name || '.address_to_building where building_id=:1' using building_rec.id;
     loop
-      fetch address_cur into address_rec;
-      if is_not_referenced('address_to_building', 'address_id', address_rec.id, 'building_id', building_rec.id, schema_name) then
-        delete_address(address_rec.id, schema_name);
-      end if; 
+      fetch address_cur into address_id;
+      exit when address_cur%notfound;
+      if is_not_referenced('address_to_building', 'address_id', address_id, 'building_id', building_rec.id, schema_name) then 
+        delete_address(address_id, schema_name);
+      end if;
     end loop;
     close address_cur;
     
@@ -1056,9 +1080,10 @@ AS
     traffic_area_cur ref_cursor;
     traffic_area_rec traffic_area%rowtype;
   begin
-  	open traffic_area_cur for 'select * from ' || schema_name || '.traffic_area where transportation_complex_id=:1' USING transport_complex_rec.id;
+    open traffic_area_cur for 'select * from ' || schema_name || '.traffic_area where transportation_complex_id=:1' using transport_complex_rec.id;
     loop
       fetch traffic_area_cur into traffic_area_rec;
+      exit when traffic_area_cur%notfound;
       delete_traffic_area(traffic_area_rec, schema_name);
     end loop;
     close traffic_area_cur;
@@ -1110,9 +1135,10 @@ AS
     waterbnd_surface_id number;
   begin
     -- delete water boundary surface being not referenced from waterbodies any more
-	open waterbnd_surface_cur for 'select waterboundary_surface_id from ' || schema_name || '.waterbod_to_waterbnd_srf where waterbody_id=:1' USING waterbody_rec.id;
+    open waterbnd_surface_cur for 'select waterboundary_surface_id from ' || schema_name || '.waterbod_to_waterbnd_srf where waterbody_id=:1' using waterbody_rec.id;
     loop
       fetch waterbnd_surface_cur into waterbnd_surface_id;
+      exit when waterbnd_surface_cur%notfound;
       if is_not_referenced('waterbod_to_waterbnd_srf', 'waterboundary_surface_id', waterbnd_surface_id, 'waterbody_id', waterbody_rec.id, schema_name) then 
         delete_waterbnd_surface(waterbnd_surface_id, schema_name);
       end if;
@@ -1209,14 +1235,15 @@ AS
   procedure pre_delete_relief_feature(relief_feature_rec relief_feature%rowtype, schema_name varchar2 := USER)
   is    
     relief_component_cur ref_cursor;
-    relief_comp_id number;
+    relief_component_id number;
   begin
     -- delete relief component being not referenced from relief fetaures any more
-   	open relief_component_cur for 'select relief_component_id from ' || schema_name || '.relief_feat_to_rel_comp where relief_feature_id=:1' USING relief_feature_rec.id;
+    open relief_component_cur for 'select relief_component_id from ' || schema_name || '.relief_feat_to_rel_comp where relief_feature_id=:1' using relief_feature_rec.id;
     loop
-      fetch relief_component_cur into relief_comp_id;
-      if is_not_referenced('relief_feat_to_rel_comp', 'relief_component_id', relief_comp_id, 'relief_feature_id', relief_feature_rec.id, schema_name) then 
-        delete_relief_component(relief_comp_id, schema_name);
+      fetch relief_component_cur into relief_component_id;
+      exit when relief_component_cur%notfound;
+      if is_not_referenced('relief_feat_to_rel_comp', 'relief_component_id', relief_component_id, 'relief_feature_id', relief_feature_rec.id) then 
+        delete_relief_component(relief_component_id, schema_name);
       end if;
     end loop;
     close relief_component_cur;
@@ -1355,76 +1382,87 @@ AS
     when others then
       dbms_output.put_line('post_delete_raster_relief (id: ' || raster_relief_rec.id || '): ' || SQLERRM);
   end;
-
+  
   /*
     internal: delete from BRIDGE
   */
   procedure pre_delete_bridge(bridge_rec bridge%rowtype, schema_name varchar2 := USER)
-  is
+  is    
     bridge_part_cur ref_cursor;
     bridge_part_rec bridge%rowtype;
+    
     bridge_thematic_surface_cur ref_cursor;
     bridge_thematic_surface_rec bridge_thematic_surface%rowtype;
+    
     bridge_installation_cur ref_cursor;
     bridge_installation_rec bridge_installation%rowtype;
+      
     bridge_constr_element_cur ref_cursor;
     bridge_constr_element_rec bridge_constr_element%rowtype;
+      
     bridge_room_cur ref_cursor;
-    bridge_room_rec room%rowtype;    
+    bridge_room_rec bridge_room%rowtype;
+    
     address_cur ref_cursor;
-    address_rec address%rowtype;
+    address_id number; 
   begin
-	open bridge_part_cur for 'select * from ' || schema_name || '.bridge where id!=:1 and bridge_parent_id=:2' USING bridge_rec.id, bridge_rec.id;
+    open bridge_part_cur for 'select * from ' || schema_name || '.bridge where id!=:1 and bridge_parent_id=:2' using bridge_rec.id, bridge_rec.id;
     loop
       fetch bridge_part_cur into bridge_part_rec;
+      exit when bridge_part_cur%notfound;
       delete_bridge(bridge_part_rec, schema_name);
     end loop;
     close bridge_part_cur;
-
-    open bridge_thematic_surface_cur for 'select * from ' || schema_name || '.bridge_thematic_surface where bridge_id=:1' USING bridge_rec.id;
+    
+    open bridge_thematic_surface_cur for 'select * from ' || schema_name || '.bridge_thematic_surface where bridge_id=:1' using bridge_rec.id;
     loop
       fetch bridge_thematic_surface_cur into bridge_thematic_surface_rec;
+      exit when bridge_thematic_surface_cur%notfound;
       delete_bridge_thematic_surface(bridge_thematic_surface_rec, schema_name);
     end loop;
     close bridge_thematic_surface_cur;
-
-	open bridge_installation_cur for 'select * from ' || schema_name || '.bridge_installation where bridge_id=:1' USING bridge_rec.id;
+    
+    open bridge_installation_cur for 'select * from ' || schema_name || '.bridge_installation where bridge_id=:1' using bridge_rec.id;
     loop
       fetch bridge_installation_cur into bridge_installation_rec;
+      exit when bridge_installation_cur%notfound;
       delete_bridge_installation(bridge_installation_rec, schema_name);
     end loop;
     close bridge_installation_cur;
 
-	open bridge_constr_element_cur for 'select * from ' || schema_name || '.bridge_constr_element where bridge_id=:1' USING bridge_rec.id;
+    open bridge_constr_element_cur for 'select * from ' || schema_name || '.bridge_constr_element where bridge_id=:1' using bridge_rec.id;
     loop
       fetch bridge_constr_element_cur into bridge_constr_element_rec;
+      exit when bridge_constr_element_cur%notfound;
       delete_bridge_constr_element(bridge_constr_element_rec, schema_name);
     end loop;
     close bridge_constr_element_cur;
-
-	open bridge_room_cur for 'select * from ' || schema_name || '.bridge_room where bridge_id=:1' USING bridge_rec.id;
+    
+    open bridge_room_cur for 'select * from ' || schema_name || '.bridge_room where bridge_id=:1' using bridge_rec.id;
     loop
       fetch bridge_room_cur into bridge_room_rec;
+      exit when bridge_room_cur%notfound;
       delete_bridge_room(bridge_room_rec, schema_name);
     end loop;
     close bridge_room_cur;
-
+        
     -- delete addresses being not referenced from bridges any more
-	open address_cur for 'select address_id from ' || schema_name || '.address_to_bridge where bridge_id=:1' USING bridge_rec.id;
+    open address_cur for 'select address_id from ' || schema_name || '.address_to_bridge where bridge_id=:1' using bridge_rec.id;
     loop
-      fetch address_cur into address_rec;
-      if is_not_referenced('address_to_bridge', 'address_id', address_rec.id, 'bridge_id', bridge_rec.id, schema_name) then
-        delete_address(address_rec.id, schema_name);
-      end if; 
+      fetch address_cur into address_id;
+      exit when address_cur%notfound;
+      if is_not_referenced('address_to_bridge', 'address_id', address_id, 'bridge_id', bridge_rec.id, schema_name) then 
+        delete_address(address_id, schema_name);
+      end if;
     end loop;
     close address_cur;
-
+    
     execute immediate 'delete from ' || schema_name || '.address_to_bridge where bridge_id=:1' using bridge_rec.id;
   exception
     when others then
       dbms_output.put_line('pre_delete_bridge (id: ' || bridge_rec.id || '): ' || SQLERRM);
   end;
-
+  
   procedure delete_bridge(bridge_rec bridge%rowtype, schema_name varchar2 := USER)
   is
   begin
@@ -1480,10 +1518,11 @@ AS
     bridge_opening_rec bridge_opening%rowtype;
   begin
     -- delete bridge openings not being referenced by a bridge thematic surface any more
-   	open bridge_opening_cur for 'select bo.* from ' || schema_name || '.bridge_opening bo, ' || schema_name || '.bridge_open_to_them_srf botm 
-                                   where bo.id=botm.bridge_opening_id and botm.bridge_thematic_surface_id=:1' USING bridge_thematic_surface_rec.id;
+    open bridge_opening_cur for 'select bo.* from ' || schema_name || '.bridge_opening bo, ' || schema_name || '.bridge_open_to_them_srf botm 
+        where bo.id=botm.bridge_opening_id and botm.bridge_thematic_surface_id=:1' using bridge_thematic_surface_rec.id;
     loop
       fetch bridge_opening_cur into bridge_opening_rec;
+      exit when bridge_opening_cur%notfound;
       if is_not_referenced('bridge_open_to_them_srf', 'bridge_opening_id', bridge_opening_rec.id, 'bridge_thematic_surface_id', bridge_thematic_surface_rec.id, schema_name) then 
         delete_bridge_opening(bridge_opening_rec, schema_name);
       end if;
@@ -1597,33 +1636,37 @@ AS
   is
     bridge_thematic_surface_cur ref_cursor;
     bridge_thematic_surface_rec bridge_thematic_surface%rowtype;
+
     bridge_installation_cur ref_cursor;
     bridge_installation_rec bridge_installation%rowtype;
+
     bridge_furniture_cur ref_cursor;
     bridge_furniture_rec bridge_furniture%rowtype;
   begin
-	open bridge_thematic_surface_cur for 'select * from ' || schema_name || '.bridge_thematic_surface where bridge_room_id=:1' USING bridge_room_rec.id; 
+    open bridge_thematic_surface_cur for 'select * from ' || schema_name || '.bridge_thematic_surface where bridge_room_id=:1' using bridge_room_rec.id;
     loop
       fetch bridge_thematic_surface_cur into bridge_thematic_surface_rec;
+      exit when bridge_thematic_surface_cur%notfound;
       delete_bridge_thematic_surface(bridge_thematic_surface_rec, schema_name);
     end loop;
     close bridge_thematic_surface_cur;
 
-	open bridge_installation_cur for 'select * from ' || schema_name || '.bridge_installation where bridge_room_id=:1' USING bridge_room_rec.id;
+    open bridge_installation_cur for 'select * from ' || schema_name || '.bridge_installation where bridge_room_id=:1' using bridge_room_rec.id;
     loop
       fetch bridge_installation_cur into bridge_installation_rec;
+      exit when bridge_installation_cur%notfound;
       delete_bridge_installation(bridge_installation_rec, schema_name);
     end loop;
     close bridge_installation_cur;
 
-	open bridge_furniture_cur for 'select * from ' || schema_name || '.bridge_furniture where bridge_room_id=:1' USING bridge_room_rec.id;
+    open bridge_furniture_cur for 'select * from ' || schema_name || '.bridge_furniture where bridge_room_id=:1' using bridge_room_rec.id;
     loop
       fetch bridge_furniture_cur into bridge_furniture_rec;
+      exit when bridge_furniture_cur%notfound;
       delete_bridge_furniture(bridge_furniture_rec, schema_name);
     end loop;
     close bridge_furniture_cur;
-
-  exception
+   exception
     when others then
       dbms_output.put_line('pre_delete_bridge_room (id: ' || bridge_room_rec.id || '): ' || SQLERRM);
   end;
@@ -1706,7 +1749,7 @@ AS
   procedure post_delete_bridge_opening(bridge_opening_rec bridge_opening%rowtype, schema_name varchar2 := USER)
   is
     address_cur ref_cursor;
-    address_rec address%rowtype;
+    address_id number;
   begin
     if bridge_opening_rec.lod3_multi_surface_id is not null then
       intern_delete_surface_geometry(bridge_opening_rec.lod3_multi_surface_id, schema_name);
@@ -1716,13 +1759,14 @@ AS
     end if;
 
     -- delete addresses not being referenced from buildings and openings any more
-	open address_cur for 'select a.id from address a left outer join address_to_bridge ab
-                            on a.id=ab.address_id where a.id=:1 and ab.address_id is null' USING bridge_opening_rec.address_id;
+    open address_cur for 'select a.id from ' || schema_name || '.address a left outer join ' || schema_name || '.address_to_bridge ab
+        on a.id=ab.address_id where a.id=:1 and ab.address_id is null' using bridge_opening_rec.address_id;
     loop
-      fetch address_cur into address_rec;
-      if is_not_referenced('bridge_opening', 'address_id', address_rec.id, 'id', bridge_opening_rec.id, schema_name) then
-        delete_address(address_rec.id, schema_name);
-      end if;
+      fetch address_cur into address_id;
+      exit when address_cur%notfound;
+      if is_not_referenced('bridge_opening', 'address_id', address_id, 'id', bridge_opening_rec.id, schema_name) then
+        delete_address(address_id, schema_name);
+      end if;   
     end loop;
     close address_cur;
 
@@ -1731,45 +1775,52 @@ AS
     when others then
       dbms_output.put_line('post_delete_bridge_opening (id: ' || bridge_opening_rec.id || '): ' || SQLERRM);
   end;
-
-  /*
+  
+   /*
     internal: delete from TUNNEL
   */
   procedure pre_delete_tunnel(tunnel_rec tunnel%rowtype, schema_name varchar2 := USER)
-  is
+  is    
     tunnel_part_cur ref_cursor;
     tunnel_part_rec tunnel%rowtype;
+    
     tunnel_thematic_surface_cur ref_cursor;
-    tunnel_thematic_surface_rec thematic_surface%rowtype;
+    tunnel_thematic_surface_rec tunnel_thematic_surface%rowtype;
+    
     tunnel_installation_cur ref_cursor;
     tunnel_installation_rec tunnel_installation%rowtype;
+      
     tunnel_hollow_space_cur ref_cursor;
-    tunnel_hollow_space_rec room%rowtype;    
+    tunnel_hollow_space_rec tunnel_hollow_space%rowtype;    
   begin
-    open tunnel_part_cur for 'select * from ' || schema_name || '.tunnel where id!=:1 and tunnel_parent_id=:2' USING tunnel_rec.id, tunnel_rec.id;
+    open tunnel_part_cur for 'select * from ' || schema_name || '.tunnel where id!=:1 and tunnel_parent_id=:2' using tunnel_rec.id, tunnel_rec.id;
     loop
       fetch tunnel_part_cur into tunnel_part_rec;
+      exit when tunnel_part_cur%notfound;
       delete_tunnel(tunnel_part_rec, schema_name);
     end loop;
     close tunnel_part_cur;
-
-    open tunnel_thematic_surface_cur for 'select * from ' || schema_name || '.tunnel_thematic_surface where tunnel_id=:1' USING tunnel_rec.id;
+    
+    open tunnel_thematic_surface_cur for 'select * from ' || schema_name || '.tunnel_thematic_surface where tunnel_id=:1' using tunnel_rec.id;
     loop
       fetch tunnel_thematic_surface_cur into tunnel_thematic_surface_rec;
+      exit when tunnel_thematic_surface_cur%notfound;
       delete_tunnel_thematic_surface(tunnel_thematic_surface_rec, schema_name);
     end loop;
     close tunnel_thematic_surface_cur;
-
-    open tunnel_installation_cur for 'select * from ' || schema_name || '.tunnel_installation where tunnel_id=:1' USING tunnel_rec.id;
+    
+    open tunnel_installation_cur for 'select * from ' || schema_name || '.tunnel_installation where tunnel_id=:1' using tunnel_rec.id;
     loop
       fetch tunnel_installation_cur into tunnel_installation_rec;
+      exit when tunnel_installation_cur%notfound;
       delete_tunnel_installation(tunnel_installation_rec, schema_name);
     end loop;
     close tunnel_installation_cur;
-
-    open tunnel_hollow_space_cur for 'select * from ' || schema_name || '.tunnel_hollow_space where tunnel_id=:1' USING tunnel_rec.id;
+    
+    open tunnel_hollow_space_cur for 'select * from ' || schema_name || '.tunnel_hollow_space where tunnel_id=:1' using tunnel_rec.id;
     loop
       fetch tunnel_hollow_space_cur into tunnel_hollow_space_rec;
+      exit when tunnel_hollow_space_cur%notfound;
       delete_tunnel_hollow_space(tunnel_hollow_space_rec, schema_name);
     end loop;
     close tunnel_hollow_space_cur;
@@ -1835,9 +1886,10 @@ AS
   begin
     -- delete tunnel openings not being referenced by a tunnel thematic surface any more
     open tunnel_opening_cur for 'select o.* from ' || schema_name || '.tunnel_opening o, ' || schema_name || '.tunnel_open_to_them_srf otm 
-        where o.id=otm.tunnel_opening_id and otm.tunnel_thematic_surface_id=:1' USING tunnel_thematic_surface_rec.id;
+        where o.id=otm.tunnel_opening_id and otm.tunnel_thematic_surface_id=:1' using tunnel_thematic_surface_rec.id;
     loop
       fetch tunnel_opening_cur into tunnel_opening_rec;
+      exit when tunnel_opening_cur%notfound;
       if is_not_referenced('tunnel_open_to_them_srf', 'tunnel_opening_id', tunnel_opening_rec.id, 'tunnel_thematic_surface_id', tunnel_thematic_surface_rec.id, schema_name) then 
         delete_tunnel_opening(tunnel_opening_rec, schema_name);
       end if;
@@ -1983,33 +2035,37 @@ AS
   is
     tunnel_thematic_surface_cur ref_cursor;
     tunnel_thematic_surface_rec tunnel_thematic_surface%rowtype;
+
     tunnel_installation_cur ref_cursor;
     tunnel_installation_rec tunnel_installation%rowtype;
+
     tunnel_furniture_cur ref_cursor;
     tunnel_furniture_rec tunnel_furniture%rowtype;
   begin
-	open tunnel_thematic_surface_cur for 'select * from ' || schema_name || '.tunnel_thematic_surface where tunnel_hollow_space_id=:1' USING tunnel_hollow_space_rec.id; 
+    open tunnel_thematic_surface_cur for 'select * from ' || schema_name || '.tunnel_thematic_surface where tunnel_hollow_space_id=:1' using tunnel_hollow_space_rec.id;
     loop
       fetch tunnel_thematic_surface_cur into tunnel_thematic_surface_rec;
+      exit when tunnel_thematic_surface_cur%notfound;
       delete_tunnel_thematic_surface(tunnel_thematic_surface_rec, schema_name);
     end loop;
     close tunnel_thematic_surface_cur;
-
-	open tunnel_installation_cur for 'select * from ' || schema_name || '.tunnel_installation where tunnel_hollow_space_id=:1' USING tunnel_hollow_space_rec.id;
+    
+    open tunnel_installation_cur for 'select * from ' || schema_name || '.tunnel_installation where tunnel_hollow_space_id=:1' using tunnel_hollow_space_rec.id;
     loop
       fetch tunnel_installation_cur into tunnel_installation_rec;
+      exit when tunnel_installation_cur%notfound;
       delete_tunnel_installation(tunnel_installation_rec, schema_name);
     end loop;
     close tunnel_installation_cur;
 
-	open tunnel_furniture_cur for 'select * from ' || schema_name || '.tunnel_furniture where tunnel_hollow_space_id=:1' USING tunnel_hollow_space_rec.id;
+    open tunnel_furniture_cur for 'select * from ' || schema_name || '.tunnel_furniture where tunnel_hollow_space_id=:1' using tunnel_hollow_space_rec.id;
     loop
       fetch tunnel_furniture_cur into tunnel_furniture_rec;
+      exit when tunnel_furniture_cur%notfound;
       delete_tunnel_furniture(tunnel_furniture_rec, schema_name);
     end loop;
     close tunnel_furniture_cur;
-
-  exception
+   exception
     when others then
       dbms_output.put_line('pre_del_tunnel_hollow_space (id: ' || tunnel_hollow_space_rec.id || '): ' || SQLERRM);
   end;
@@ -2063,7 +2119,7 @@ AS
   is
   begin
     intern_delete_implicit_geom(pid, schema_name);
-
+    
     if clean_apps <> 0 then
       cleanup_appearances(0, schema_name);
     end if;
@@ -2085,7 +2141,7 @@ AS
       dbms_output.put_line('delete_external_reference (id: ' || pid || '): ' || SQLERRM);
   end; 
 
-  procedure delete_citymodel(pid number, affect_rel_objs int := 0, schema_name varchar2 := USER)
+  procedure delete_citymodel(pid number, delete_members int := 0, schema_name varchar2 := USER)
   is
     citymodel_rec citymodel%rowtype;
   begin
@@ -2093,7 +2149,7 @@ AS
       into citymodel_rec
       using pid;
 
-    delete_citymodel(citymodel_rec, affect_rel_objs, schema_name);
+    delete_citymodel(citymodel_rec, delete_members, schema_name);
   exception
     when no_data_found then
       return;
@@ -2133,7 +2189,7 @@ AS
       dbms_output.put_line('delete_surface_data (id: ' || pid || '): ' || SQLERRM);
   end;
 
-  procedure delete_cityobjectgroup(pid number, affect_rel_objs int := 0, schema_name varchar2 := USER)
+  procedure delete_cityobjectgroup(pid number, delete_members int := 0, schema_name varchar2 := USER)
   is
     cityobjectgroup_rec cityobjectgroup%rowtype;
   begin
@@ -2143,8 +2199,8 @@ AS
       into cityobjectgroup_rec
       using pid;
 
-    dbms_output.put_line('delete_cityobjectgroup(rec, schema_name) ...');      
-    delete_cityobjectgroup(cityobjectgroup_rec, affect_rel_objs, schema_name);
+    dbms_output.put_line('delete_cityobjectgroup(rec, delete_members, schema_name) ...');      
+    delete_cityobjectgroup(cityobjectgroup_rec, delete_members, schema_name);
   exception
     when no_data_found then
       dbms_output.put_line('No record found. (Call intern_delete_cityobject instead ...)');
@@ -2153,13 +2209,14 @@ AS
     when others then
       dbms_output.put_line('delete_cityobjectgroup (id: ' || pid || '): ' || SQLERRM);
   end;
-
+  
   procedure delete_address(pid number, schema_name varchar2 := USER)
   is
   begin
     execute immediate 'delete from ' || schema_name || '.address_to_building where address_id=:1' using pid;
     execute immediate 'delete from ' || schema_name || '.address_to_bridge where address_id=:1' using pid;
     execute immediate 'update ' || schema_name || '.opening set address_id=null where address_id=:1' using pid;
+    execute immediate 'update ' || schema_name || '.bridge_opening set address_id=null where address_id=:1' using pid;
     execute immediate 'delete from ' || schema_name || '.address where id=:1' using pid;
   exception
     when no_data_found then
@@ -2167,9 +2224,9 @@ AS
     when others then
       dbms_output.put_line('delete_address (id: ' || pid || '): ' || SQLERRM);
   end;
-
+  
   procedure delete_building(pid number, schema_name varchar2 := USER)
-  is
+      is
     building_rec building%rowtype;    
   begin
     execute immediate 'select * from ' || schema_name || '.building where id=:1'
@@ -2183,7 +2240,7 @@ AS
     when others then
       dbms_output.put_line('delete_building (id: ' || pid || '): ' || SQLERRM);
   end;
-
+  
   procedure delete_thematic_surface(pid number, schema_name varchar2 := USER)
   is
     thematic_surface_rec thematic_surface%rowtype;
@@ -2199,7 +2256,7 @@ AS
     when others then
       dbms_output.put_line('delete_thematic_surface (id: ' || pid || '): ' || SQLERRM);
   end;
-
+  
   procedure delete_building_installation(pid number, schema_name varchar2 := USER)
   is
     building_installation_rec building_installation%rowtype;
@@ -2247,7 +2304,7 @@ AS
     when others then
       dbms_output.put_line('delete_room (id: ' || pid || '): ' || SQLERRM);
   end;
-
+  
   procedure delete_building_furniture(pid number, schema_name varchar2 := USER)
   is
     building_furniture_rec building_furniture%rowtype;    
@@ -2519,7 +2576,7 @@ AS
     when others then
       dbms_output.put_line('delete_bridge (id: ' || pid || '): ' || SQLERRM);
   end;
-
+  
   procedure delete_bridge_thematic_surface(pid number, schema_name varchar2 := USER)
   is
     bridge_thematic_surface_rec bridge_thematic_surface%rowtype;
@@ -2535,7 +2592,7 @@ AS
     when others then
       dbms_output.put_line('delete_bridge_thematic_surface (id: ' || pid || '): ' || SQLERRM);
   end;
-
+  
   procedure delete_bridge_installation(pid number, schema_name varchar2 := USER)
   is
     bridge_installation_rec bridge_installation%rowtype;
@@ -2551,7 +2608,7 @@ AS
     when others then
       dbms_output.put_line('delete_bridge_installation (id: ' || pid || '): ' || SQLERRM);
   end;
-
+  
   procedure delete_bridge_constr_element(pid number, schema_name varchar2 := USER)
   is
     bridge_constr_element_rec bridge_constr_element%rowtype;
@@ -2583,7 +2640,6 @@ AS
     when others then
       dbms_output.put_line('delete_bridge_opening (id: ' || pid || '): ' || SQLERRM);
   end;
-
   procedure delete_bridge_room(pid number, schema_name varchar2 := USER)
   is
     bridge_room_rec bridge_room%rowtype;    
@@ -2599,7 +2655,7 @@ AS
     when others then
       dbms_output.put_line('delete_bridge_room (id: ' || pid || '): ' || SQLERRM);
   end;
-
+  
   procedure delete_bridge_furniture(pid number, schema_name varchar2 := USER)
   is
     bridge_furniture_rec bridge_furniture%rowtype;    
@@ -2614,7 +2670,7 @@ AS
       return;
     when others then
       dbms_output.put_line('delete_bridge_furniture (id: ' || pid || '): ' || SQLERRM);
-  end;
+  end; 
   
   procedure delete_tunnel(pid number, schema_name varchar2 := USER)
   is
@@ -2647,8 +2703,8 @@ AS
     when others then
       dbms_output.put_line('delete_tunnel_thematic_surface (id: ' || pid || '): ' || SQLERRM);
   end;
-
-  procedure delete_tunnel_installation(pid number, schema_name varchar2 := USER)
+  
+    procedure delete_tunnel_installation(pid number, schema_name varchar2 := USER)
   is
     tunnel_installation_rec tunnel_installation%rowtype;
   begin
@@ -2717,86 +2773,87 @@ AS
   */
   procedure cleanup_implicit_geometries(clean_apps int := 0, schema_name varchar2 := USER)
   is
-    implicitgeom_cur ref_cursor;
-    implicitgeom_id number;
+    implicit_geom_cur ref_cursor;
+    implicit_geom_id number;
   begin
-	open implicitgeom_cur for 'select ig.id from ' || schema_name || '.implicit_geometry ig
-                                 left join ' || schema_name || '.BUILDING_FURNITURE bldf4 on bldf4.LOD4_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.BUILDING_INSTALLATION bldi2 on bldi2.LOD2_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.BUILDING_INSTALLATION bldi3 on bldi3.LOD3_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.BUILDING_INSTALLATION bldi4 on bldi4.LOD4_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.OPENING op3 on op3.LOD3_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.OPENING op4 on op4.LOD4_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.CITY_FURNITURE cf1 on cf1.LOD1_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.CITY_FURNITURE cf2 on cf2.LOD2_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.CITY_FURNITURE cf3 on cf3.LOD3_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.CITY_FURNITURE cf4 on cf4.LOD4_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.GENERIC_CITYOBJECT gco0 on gco0.LOD0_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.GENERIC_CITYOBJECT gco1 on gco1.LOD1_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.GENERIC_CITYOBJECT gco2 on gco2.LOD2_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.GENERIC_CITYOBJECT gco3 on gco3.LOD3_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.GENERIC_CITYOBJECT gco4 on gco4.LOD4_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.SOLITARY_VEGETAT_OBJECT svo1 on svo1.LOD1_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.SOLITARY_VEGETAT_OBJECT svo2 on svo2.LOD2_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.SOLITARY_VEGETAT_OBJECT svo3 on svo3.LOD3_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.SOLITARY_VEGETAT_OBJECT svo4 on svo4.LOD4_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.BRIDGE_CONSTR_ELEMENT bce1 on bce1.LOD1_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.BRIDGE_CONSTR_ELEMENT bce2 on bce2.LOD2_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.BRIDGE_CONSTR_ELEMENT bce3 on bce3.LOD3_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.BRIDGE_CONSTR_ELEMENT bce4 on bce4.LOD4_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.BRIDGE_FURNITURE brdf4 on brdf4.LOD4_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.BRIDGE_INSTALLATION brdi2 on brdi2.LOD2_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.BRIDGE_INSTALLATION brdi3 on brdi3.LOD3_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.BRIDGE_INSTALLATION brdi4 on brdi4.LOD4_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.BRIDGE_OPENING brdo3 on brdo3.LOD3_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.BRIDGE_OPENING brdo4 on brdo4.LOD4_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.TUNNEL_FURNITURE tunf4 on tunf4.LOD4_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.TUNNEL_INSTALLATION tuni2 on tuni2.LOD2_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.TUNNEL_INSTALLATION tuni3 on tuni3.LOD3_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.TUNNEL_INSTALLATION tuni4 on tuni4.LOD4_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.TUNNEL_OPENING tuno3 on tuno3.LOD3_IMPLICIT_REP_ID = ig.id
-                                 left join ' || schema_name || '.TUNNEL_OPENING tuno4 on tuno4.LOD4_IMPLICIT_REP_ID = ig.id
-                                 where (bldf4.LOD4_IMPLICIT_REP_ID is null)
-                                   and (bldi2.LOD2_IMPLICIT_REP_ID is null)
-                                   and (bldi3.LOD3_IMPLICIT_REP_ID is null)
-                                   and (bldi4.LOD4_IMPLICIT_REP_ID is null)
-                                   and (op3.LOD3_IMPLICIT_REP_ID is null)
-                                   and (op4.LOD4_IMPLICIT_REP_ID is null)
-                                   and (cf1.LOD1_IMPLICIT_REP_ID is null)
-                                   and (cf2.LOD2_IMPLICIT_REP_ID is null)
-                                   and (cf3.LOD3_IMPLICIT_REP_ID is null)
-                                   and (cf4.LOD4_IMPLICIT_REP_ID is null)
-                                   and (gco0.LOD0_IMPLICIT_REP_ID is null)
-                                   and (gco1.LOD1_IMPLICIT_REP_ID is null)
-                                   and (gco2.LOD2_IMPLICIT_REP_ID is null)
-                                   and (gco3.LOD3_IMPLICIT_REP_ID is null)
-                                   and (gco4.LOD4_IMPLICIT_REP_ID is null)
-                                   and (svo1.LOD1_IMPLICIT_REP_ID is null)
-                                   and (svo2.LOD2_IMPLICIT_REP_ID is null)
-                                   and (svo3.LOD3_IMPLICIT_REP_ID is null)
-                                   and (svo4.LOD4_IMPLICIT_REP_ID is null)
-                                   and (bce1.LOD1_IMPLICIT_REP_ID is null)
-                                   and (bce2.LOD2_IMPLICIT_REP_ID is null)
-                                   and (bce3.LOD3_IMPLICIT_REP_ID is null)
-                                   and (bce4.LOD4_IMPLICIT_REP_ID is null)
-                                   and (brdf4.LOD4_IMPLICIT_REP_ID is null)
-                                   and (brdi2.LOD2_IMPLICIT_REP_ID is null)
-                                   and (brdi3.LOD3_IMPLICIT_REP_ID is null)
-                                   and (brdi4.LOD4_IMPLICIT_REP_ID is null)
-                                   and (brdo3.LOD3_IMPLICIT_REP_ID is null)
-                                   and (brdo4.LOD4_IMPLICIT_REP_ID is null)
-                                   and (tunf4.LOD4_IMPLICIT_REP_ID is null)
-                                   and (tuni2.LOD2_IMPLICIT_REP_ID is null)
-                                   and (tuni3.LOD3_IMPLICIT_REP_ID is null)
-                                   and (tuni4.LOD4_IMPLICIT_REP_ID is null)
-                                   and (tuno3.LOD3_IMPLICIT_REP_ID is null)
-                                   and (tuno4.LOD4_IMPLICIT_REP_ID is null)';
+    open implicit_geom_cur for 'select ig.id from ' || schema_name || '.implicit_geometry ig
+        left join ' || schema_name || '.BUILDING_FURNITURE bldf4 on bldf4.LOD4_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.BUILDING_INSTALLATION bldi2 on bldi2.LOD2_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.BUILDING_INSTALLATION bldi3 on bldi3.LOD3_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.BUILDING_INSTALLATION bldi4 on bldi4.LOD4_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.OPENING op3 on op3.LOD3_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.OPENING op4 on op4.LOD4_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.CITY_FURNITURE cf1 on cf1.LOD1_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.CITY_FURNITURE cf2 on cf2.LOD2_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.CITY_FURNITURE cf3 on cf3.LOD3_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.CITY_FURNITURE cf4 on cf4.LOD4_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.GENERIC_CITYOBJECT gco0 on gco0.LOD0_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.GENERIC_CITYOBJECT gco1 on gco1.LOD1_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.GENERIC_CITYOBJECT gco2 on gco2.LOD2_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.GENERIC_CITYOBJECT gco3 on gco3.LOD3_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.GENERIC_CITYOBJECT gco4 on gco4.LOD4_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.SOLITARY_VEGETAT_OBJECT svo1 on svo1.LOD1_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.SOLITARY_VEGETAT_OBJECT svo2 on svo2.LOD2_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.SOLITARY_VEGETAT_OBJECT svo3 on svo3.LOD3_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.SOLITARY_VEGETAT_OBJECT svo4 on svo4.LOD4_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.BRIDGE_CONSTR_ELEMENT bce1 on bce1.LOD1_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.BRIDGE_CONSTR_ELEMENT bce2 on bce2.LOD2_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.BRIDGE_CONSTR_ELEMENT bce3 on bce3.LOD3_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.BRIDGE_CONSTR_ELEMENT bce4 on bce4.LOD4_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.BRIDGE_FURNITURE brdf4 on brdf4.LOD4_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.BRIDGE_INSTALLATION brdi2 on brdi2.LOD2_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.BRIDGE_INSTALLATION brdi3 on brdi3.LOD3_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.BRIDGE_INSTALLATION brdi4 on brdi4.LOD4_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.BRIDGE_OPENING brdo3 on brdo3.LOD3_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.BRIDGE_OPENING brdo4 on brdo4.LOD4_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.TUNNEL_FURNITURE tunf4 on tunf4.LOD4_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.TUNNEL_INSTALLATION tuni2 on tuni2.LOD2_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.TUNNEL_INSTALLATION tuni3 on tuni3.LOD3_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.TUNNEL_INSTALLATION tuni4 on tuni4.LOD4_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.TUNNEL_OPENING tuno3 on tuno3.LOD3_IMPLICIT_REP_ID = ig.id
+        left join ' || schema_name || '.TUNNEL_OPENING tuno4 on tuno4.LOD4_IMPLICIT_REP_ID = ig.id
+        where (bldf4.LOD4_IMPLICIT_REP_ID is null) and
+              (bldi2.LOD2_IMPLICIT_REP_ID is null) and
+              (bldi3.LOD3_IMPLICIT_REP_ID is null) and
+              (bldi4.LOD4_IMPLICIT_REP_ID is null) and
+              (op3.LOD3_IMPLICIT_REP_ID is null) and
+              (op4.LOD4_IMPLICIT_REP_ID is null) and
+              (cf1.LOD1_IMPLICIT_REP_ID is null) and
+              (cf2.LOD2_IMPLICIT_REP_ID is null) and
+              (cf3.LOD3_IMPLICIT_REP_ID is null) and
+              (cf4.LOD4_IMPLICIT_REP_ID is null) and
+              (gco0.LOD0_IMPLICIT_REP_ID is null) and
+              (gco1.LOD1_IMPLICIT_REP_ID is null) and
+              (gco2.LOD2_IMPLICIT_REP_ID is null) and
+              (gco3.LOD3_IMPLICIT_REP_ID is null) and
+              (gco4.LOD4_IMPLICIT_REP_ID is null) and
+              (svo1.LOD1_IMPLICIT_REP_ID is null) and
+              (svo2.LOD2_IMPLICIT_REP_ID is null) and
+              (svo3.LOD3_IMPLICIT_REP_ID is null) and
+              (svo4.LOD4_IMPLICIT_REP_ID is null) and
+              (bce1.LOD1_IMPLICIT_REP_ID is null) and
+              (bce2.LOD2_IMPLICIT_REP_ID is null) and
+              (bce3.LOD3_IMPLICIT_REP_ID is null) and
+              (bce4.LOD4_IMPLICIT_REP_ID is null) and
+              (brdf4.LOD4_IMPLICIT_REP_ID is null) and
+              (brdi2.LOD2_IMPLICIT_REP_ID is null) and
+              (brdi3.LOD3_IMPLICIT_REP_ID is null) and
+              (brdi4.LOD4_IMPLICIT_REP_ID is null) and
+              (brdo3.LOD3_IMPLICIT_REP_ID is null) and
+              (brdo4.LOD4_IMPLICIT_REP_ID is null) and
+              (tunf4.LOD4_IMPLICIT_REP_ID is null) and
+              (tuni2.LOD2_IMPLICIT_REP_ID is null) and
+              (tuni3.LOD3_IMPLICIT_REP_ID is null) and
+              (tuni4.LOD4_IMPLICIT_REP_ID is null) and
+              (tuno3.LOD3_IMPLICIT_REP_ID is null) and
+              (tuno4.LOD4_IMPLICIT_REP_ID is null)';
     loop
-      fetch implicitgeom_cur into implicitgeom_id;
-      intern_delete_implicit_geom(implicitgeom_id, schema_name);
+      fetch implicit_geom_cur into implicit_geom_id;
+      exit when implicit_geom_cur%notfound;
+      intern_delete_implicit_geom(implicit_geom_id, schema_name);
     end loop;
-    close implicitgeom_cur;
-
+    close implicit_geom_cur;
+    
     if clean_apps <> 0 then
       cleanup_appearances(0, schema_name);
     end if;
@@ -2808,25 +2865,26 @@ AS
   procedure cleanup_tex_images(schema_name varchar2 := USER)
   is
     tex_image_cur ref_cursor;
-    ti_id number;
+    tex_image_id number;
   begin
- 	open tex_image_cur for 'select ti.id from ' || schema_name || '.tex_image ti left outer join ' || schema_name || '.surface_data sd
-                              on ti.id=sd.tex_image_id where sd.tex_image_id is null';
+    open tex_image_cur for 'select ti.id from ' || schema_name || '.tex_image ti left outer join ' || schema_name || '.surface_data sd
+        on ti.id=sd.tex_image_id where sd.tex_image_id is null';
     loop
-      fetch tex_image_cur into ti_id;
-      execute immediate 'delete from ' || schema_name || '.tex_image where id=:1' using ti_id;
+      fetch tex_image_cur into tex_image_id;
+      exit when tex_image_cur%notfound;
+      execute immediate 'delete from ' || schema_name || '.tex_image where id=:1' using tex_image_id;
     end loop;
     close tex_image_cur;
-
   exception
     when others then
       dbms_output.put_line('cleanup_tex_images: ' || SQLERRM);
   end;
-  
-  procedure cleanup_appearances(only_global int :=1, schema_name varchar2 := USER)
+
+  procedure cleanup_appearances(only_global int := 1, schema_name varchar2 := USER)
   is
     surface_data_global_cur ref_cursor;
     surface_data_global_rec surface_data%rowtype;
+
     appearance_cur ref_cursor;
     appearance_rec appearance%rowtype;
   begin
@@ -2835,28 +2893,31 @@ AS
     -- have been deleted at this stage. thus, we can check and delete
     -- surface data which does not have a valid texture parameterization
     -- any more.
-	open surface_data_global_cur for 'select s.* from ' || schema_name || '.surface_data s left outer join ' || schema_name || '.textureparam t
-                                        on s.id=t.surface_data_id where t.surface_data_id is null';
+    open surface_data_global_cur for 'select s.* from ' || schema_name || '.surface_data s left outer join ' || schema_name || '.textureparam t
+        on s.id=t.surface_data_id where t.surface_data_id is null';
     loop
       fetch surface_data_global_cur into surface_data_global_rec;
+      exit when surface_data_global_cur%notfound;
       delete_surface_data(surface_data_global_rec, schema_name);
     end loop;
     close surface_data_global_cur;
 
     -- delete appearances which does not have surface data any more
     if only_global=1 then
-	  open appearance_cur for 'select a.* from ' || schema_name || '.appearance a left outer join ' || schema_name || '.appear_to_surface_data asd
-                                 on a.id=asd.appearance_id where a.cityobject_id is null and asd.appearance_id is null';
+      open appearance_cur for 'select a.* from ' || schema_name || '.appearance a left outer join ' || schema_name || '.appear_to_surface_data asd
+        on a.id=asd.appearance_id where a.cityobject_id is null and asd.appearance_id is null';
       loop
         fetch appearance_cur into appearance_rec;
+        exit when appearance_cur%notfound;
         delete_appearance(appearance_rec, schema_name);
       end loop;
       close appearance_cur;
     else
-	  open appearance_cur for 'select a.* from ' || schema_name || '.appearance a left outer join ' || schema_name || '.appear_to_surface_data asd
-                                 on a.id=asd.appearance_id where asd.appearance_id is null';
+      open appearance_cur for 'select a.* from ' || schema_name || '.appearance a left outer join ' || schema_name || '.appear_to_surface_data asd
+        on a.id=asd.appearance_id where asd.appearance_id is null';
       loop
         fetch appearance_cur into appearance_rec;
+        exit when appearance_cur%notfound;
         delete_appearance(appearance_rec, schema_name);
       end loop;
       close appearance_cur;
@@ -2864,28 +2925,28 @@ AS
 
     -- cleanup texture images    
     cleanup_tex_images(schema_name);
-
   exception
     when others then
       dbms_output.put_line('cleanup_appearances: ' || SQLERRM);
   end;
-
+  
   procedure cleanup_addresses(schema_name varchar2 := USER)
   is
     address_cur ref_cursor;
     add_id number;
   begin
-	open address_cur for 'select ad.id from ' || schema_name || '.address ad
-                            left outer join ' || schema_name || '.address_to_building ad2b on ad2b.address_id = ad.id
-                            left outer join ' || schema_name || '.address_to_bridge ad2brd on ad2brd.address_id = ad.id
-                            left outer join ' || schema_name || '.opening o on o.address_id = ad.id
-                            left outer join ' || schema_name || '.bridge_opening brdo on brdo.address_id = ad.id
-                            where ad2b.building_id is null
-                              and ad2brd.bridge_id is null
-                              and o.address_id is null
-                              and brdo.address_id is null';
+    open address_cur for 'select ad.id from ' || schema_name || '.address ad
+      left outer join ' || schema_name || '.address_to_building ad2b on ad2b.address_id = ad.id
+      left outer join ' || schema_name || '.address_to_bridge ad2brd on ad2brd.address_id = ad.id
+      left outer join ' || schema_name || '.opening o on o.address_id = ad.id
+      left outer join ' || schema_name || '.bridge_opening brdo on brdo.address_id = ad.id
+      where ad2b.building_id is null
+        and ad2brd.bridge_id is null
+        and o.address_id is null
+        and brdo.address_id is null';
     loop
       fetch address_cur into add_id;
+      exit when address_cur%notfound;
       delete_address(add_id, schema_name);
     end loop;
     close address_cur;
@@ -2900,14 +2961,14 @@ AS
     group_cur ref_cursor;
     group_rec cityobjectgroup%rowtype;
   begin
-	open group_cur for 'select g.* from ' || schema_name || '.cityobjectgroup g left outer join ' || schema_name || '.group_to_cityobject gtc
-                          on g.id=gtc.cityobjectgroup_id where gtc.cityobject_id is null';
+    open group_cur for 'select g.* from ' || schema_name || '.cityobjectgroup g left outer join ' || schema_name || '.group_to_cityobject gtc
+        on g.id=gtc.cityobjectgroup_id where gtc.cityobject_id is null';
     loop
       fetch group_cur into group_rec;
+      exit when group_cur%notfound;
       delete_cityobjectgroup(group_rec, 0, schema_name);
     end loop;
     close group_cur;
-
   exception
     when others then
       dbms_output.put_line('cleanup_cityobjectgroups: ' || SQLERRM);
@@ -2918,26 +2979,27 @@ AS
     citymodel_cur ref_cursor;
     citymodel_rec citymodel%rowtype;
   begin
-	open citymodel_cur for 'select c.* from ' || schema_name || '.citymodel c left outer join ' || schema_name || '.cityobject_member cm
-                               on c.id=cm.citymodel_id where cm.cityobject_id is null';
+    open citymodel_cur for 'select c.* from ' || schema_name || '.citymodel c left outer join ' || schema_name || '.cityobject_member cm
+        on c.id=cm.citymodel_id where cm.cityobject_id is null';
     loop
       fetch citymodel_cur into citymodel_rec;
+      exit when citymodel_cur%notfound;
       delete_citymodel(citymodel_rec, 0, schema_name);
     end loop;
     close citymodel_cur;
-
   exception
     when others then
       dbms_output.put_line('cleanup_citymodel: ' || SQLERRM);
   end;
   
   -- generic function to delete any cityobject  
-  procedure delete_cityobject(pid number, affect_rel_objs int := 0, cleanup int := 0, schema_name varchar2 := USER)
+  procedure delete_cityobject(pid number, delete_members int := 0, cleanup int := 0, schema_name varchar2 := USER)
   is
     objectclass_id number;    
     objectclass_name varchar2(256);    
-    object_gmlid varchar2(256);
+    object_gmlid varchar2(256);    
   begin
+  
     execute immediate 'select co.objectclass_id, oc.classname, co.gmlid from ' || schema_name || '.cityobject co join ' || schema_name || '.objectclass oc on (oc.id=co.objectclass_id) where co.id=:1'
       into objectclass_id, objectclass_name, object_gmlid
       using pid;
@@ -2959,7 +3021,7 @@ AS
            objectclass_id = 18 or 
            objectclass_id = 19 then delete_relief_component(pid, schema_name);
       when objectclass_id = 21 then delete_city_furniture(pid, schema_name);
-      when objectclass_id = 23 then delete_cityobjectgroup(pid, affect_rel_objs, schema_name);
+      when objectclass_id = 23 then delete_cityobjectgroup(pid, schema_name);
       when objectclass_id = 25 or 
            objectclass_id = 26 then delete_building(pid, schema_name);
       when objectclass_id = 27 or 
@@ -2981,7 +3043,7 @@ AS
            objectclass_id = 46 then delete_transport_complex(pid, schema_name);
       when objectclass_id = 47 or 
            objectclass_id = 48 then delete_traffic_area(pid, schema_name);
-      when objectclass_id = 57 then delete_citymodel(pid, affect_rel_objs, schema_name);
+      when objectclass_id = 57 then delete_citymodel(pid, delete_members, schema_name);
       when objectclass_id = 60 or 
            objectclass_id = 61 then delete_thematic_surface(pid, schema_name);
       when objectclass_id = 63 or 
@@ -3023,12 +3085,12 @@ AS
         -- do nothing
         null;
     end case;
-
-  if cleanup <> 0 then
-    geodb_delete.cleanup_implicit_geometries(1, schema_name);
-    geodb_delete.cleanup_appearances(1, schema_name);
-    geodb_delete.cleanup_citymodels(schema_name);
-  end if;
+    
+    if cleanup <> 0 then
+      cleanup_implicit_geometries(1, schema_name);
+      cleanup_appearances(1, schema_name);
+      cleanup_citymodels(schema_name);
+    end if;
 
   exception
     when no_data_found then
@@ -3056,12 +3118,11 @@ AS
     cleanup_appearances(0, schema_name);
     cleanup_addresses(schema_name);
     cleanup_cityobjectgroups(schema_name);
-    cleanup_citymodels(schema_name);
-  
+    cleanup_citymodels(schema_name);  
   exception
     when others then
       dbms_output.put_line('delete_cityobject_cascade (id: ' || pid || '): ' || SQLERRM);
-  end; 
+  end;
 
 END geodb_delete;
 /
