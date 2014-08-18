@@ -56,10 +56,10 @@
 *   delete_building_furniture(bf_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   delete_building_installation(bi_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   delete_city_furniture(cf_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
-*   delete_citymodel(cm_id INTEGER, affect_rel_objs INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID 
-*   delete_cityobject(co_id INTEGER, affect_rel_objs INTEGER DEFAULT 0, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_citymodel(cm_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID 
+*   delete_cityobject(co_id INTEGER, delete_members INTEGER DEFAULT 0, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   delete_cityobject_cascade(co_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
-*   delete_cityobjectgroup(cog_id INTEGER, affect_rel_objs INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_cityobjectgroup(cog_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   delete_grid_coverage(gc_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   delete_generic_cityobject(gco_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   delete_implicit_geometry(ig_id INTEGER, clean_apps INTEGER := 0 INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
@@ -907,7 +907,7 @@ delete from CITYOBJECTGROUP
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_cityobjectgroup(
   cog_id INTEGER,
-  affect_rel_objs INTEGER DEFAULT 0,
+  delete_members INTEGER DEFAULT 0,
   schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
@@ -916,12 +916,12 @@ DECLARE
   geom_id INTEGER;
 BEGIN
   --// PRE DELETE CITY OBJECT GROUP //--
-  -- delete contained city objects if corresponding option is set
-  IF affect_rel_objs <> 0 THEN
+  -- delete members
+  IF delete_members <> 0 THEN
     FOR member_id IN EXECUTE format('SELECT cityobject_id FROM %I.group_to_cityobject WHERE cityobjectgroup_id = %L', 
                                        schema_name, cog_id) LOOP
       BEGIN
-        PERFORM geodb_pkg.delete_cityobject(member_id, affect_rel_objs, 0, schema_name);
+        PERFORM geodb_pkg.delete_cityobject(member_id, delete_members, 0, schema_name);
 
         EXCEPTION
           WHEN OTHERS THEN
@@ -1410,7 +1410,7 @@ delete from CITYMODEL
 */
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_citymodel(
   cm_id INTEGER,
-  affect_rel_objs INTEGER DEFAULT 0,
+  delete_members INTEGER DEFAULT 0,
   schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
 $$
@@ -1418,12 +1418,12 @@ DECLARE
   member_id INTEGER;
 BEGIN
   --// PRE DELETE CITY MODEL //--
-  -- delete contained cityobjects if corresponding option is set
-  IF affect_rel_objs <> 0 THEN
+  -- delete members
+  IF delete_members <> 0 THEN
     FOR member_id IN EXECUTE format('SELECT cityobject_id FROM %I.cityobject_member WHERE citymodel_id = %L', 
                                         schema_name, cm_id) LOOP
       BEGIN
-        PERFORM geodb_pkg.delete_cityobject(member_id, affect_rel_objs, 0, schema_name);
+        PERFORM geodb_pkg.delete_cityobject(member_id, delete_members, 0, schema_name);
 
         EXCEPTION
           WHEN OTHERS THEN
@@ -2175,7 +2175,7 @@ CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_implicit_geometries(
   ) RETURNS SETOF VOID AS
 $$
 BEGIN
-  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, %L) FROM %I.implicit_geometry ig
+  EXECUTE format('SELECT geodb_pkg.delete_implicit_geometry(ig.id, 0, %L) FROM %I.implicit_geometry ig
                     LEFT JOIN %I.bridge_furniture brdf ON brdf.lod4_implicit_rep_id = ig.id
                     LEFT JOIN %I.bridge_constr_element brdce1 ON brdce1.lod1_implicit_rep_id = ig.id
                     LEFT JOIN %I.bridge_constr_element brdce2 ON brdce1.lod2_implicit_rep_id = ig.id
@@ -2377,7 +2377,7 @@ LANGUAGE plpgsql;
 -- generic function to delete any cityobject
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_cityobject(
   co_id INTEGER,
-  affect_rel_objs INTEGER DEFAULT 0,
+  delete_members INTEGER DEFAULT 0,
   cleanup INTEGER DEFAULT 0,
   schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
@@ -2404,7 +2404,7 @@ BEGIN
            class_id = 18 OR 
            class_id = 19 THEN PERFORM geodb_pkg.delete_relief_component(co_id, schema_name);
       WHEN class_id = 21 THEN PERFORM geodb_pkg.delete_city_furniture(co_id, schema_name);
-      WHEN class_id = 23 THEN PERFORM geodb_pkg.delete_cityobjectgroup(co_id, affect_rel_objs, schema_name);
+      WHEN class_id = 23 THEN PERFORM geodb_pkg.delete_cityobjectgroup(co_id, delete_members, schema_name);
       WHEN class_id = 25 OR 
            class_id = 26 THEN PERFORM geodb_pkg.delete_building(co_id, schema_name);
       WHEN class_id = 27 OR 
@@ -2428,7 +2428,7 @@ BEGIN
            class_id = 46 THEN PERFORM geodb_pkg.delete_transport_complex(co_id, schema_name);
       WHEN class_id = 47 OR 
            class_id = 48 THEN PERFORM geodb_pkg.delete_traffic_area(co_id, schema_name);
-      WHEN class_id = 57 THEN PERFORM geodb_pkg.delete_citymodel(co_id, affect_rel_objs, schema_name);
+      WHEN class_id = 57 THEN PERFORM geodb_pkg.delete_citymodel(co_id, delete_members, schema_name);
       WHEN class_id = 63 OR
            class_id = 64 THEN PERFORM geodb_pkg.delete_bridge(co_id, schema_name);
       WHEN class_id = 65 OR
