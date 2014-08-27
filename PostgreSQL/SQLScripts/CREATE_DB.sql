@@ -73,7 +73,4 @@ SELECT geodb_pkg.check_srid(:SRS_NO);
 \echo 'Setting spatial reference system of 3DCityDB instance ...'
 INSERT INTO DATABASE_SRS(SRID,GML_SRS_NAME) VALUES (:SRS_NO,:'GMLSRSNAME');
 SELECT geodb_pkg.change_schema_srid(:SRS_NO,:'GMLSRSNAME');
-SELECT geodb_pkg.change_column_srid('surface_geometry','implicit_geometry',3,0);
-SELECT geodb_pkg.change_column_srid('implicit_geometry','relative_other_geom',3,0);
-SELECT geodb_pkg.change_column_srid('textureparam','texture_coordinates',2,0);
 \echo 'Done'
