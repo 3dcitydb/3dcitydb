@@ -29,8 +29,7 @@ SET check_function_bodies = false;
 -- object: postgis | type: EXTENSION --
 -- DROP EXTENSION postgis CASCADE;
 CREATE EXTENSION postgis
-      WITH SCHEMA public
-      VERSION '2.1.1';
+      WITH SCHEMA public;
 COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial types and functions';
 -- ddl-end --
 
