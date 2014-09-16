@@ -25,7 +25,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 2.0.0     2014-07-30   complete revision for 3DCityDB V3           FKun
+-- 2.0.0     2014-09-16   complete revision for 3DCityDB V3           FKun
 -- 1.2.0     2013-08-08   extended to all thematic classes            FKun
 --                                                                    GHud
 -- 1.1.0     2012-02-22   some performance improvements               CNag
@@ -41,6 +41,7 @@
 *   cleanup_citymodels(schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   cleanup_cityobjectgroups(schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   cleanup_implicit_geometries(clean_apps INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   cleanup_schema(schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   cleanup_tex_images(schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   delete_address(ad_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   delete_appearance(app_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
@@ -2483,7 +2484,7 @@ $$
 LANGUAGE plpgsql;
 
 
--- delete any cityobject using foreign key relations
+-- delete a cityobject using its foreign key relations
 -- NOTE: all constraints have to be set to ON DELETE CASCADE (function: geodb_pkg.update_schema_constraints)
 CREATE OR REPLACE FUNCTION geodb_pkg.delete_cityobject_cascade(
   co_id INTEGER,
@@ -2491,16 +2492,10 @@ CREATE OR REPLACE FUNCTION geodb_pkg.delete_cityobject_cascade(
   ) RETURNS SETOF VOID AS
 $$
 BEGIN  
-  -- first step: delete local appearance
-  EXECUTE format('SELECT geodb_pkg.delete_appearance(id, %L) FROM %I.appearance WHERE cityobject_id = %L', schema_name, schema_name, co_id);
-  
-  -- second step: delete geometries
-  EXECUTE format('DELETE FROM %I.surface_geometry WHERE cityobject_id = %L AND parent_id IS NULL', schema_name, co_id);
-  
-  -- third step: delete the cityobject
+  -- delete city object and all entries from other tables referencing the cityobject_id
   EXECUTE format('DELETE FROM %I.cityobject WHERE id = %L', schema_name, co_id);
   
-  -- fourth step: cleanup
+  -- cleanup
   PERFORM geodb_pkg.cleanup_implicit_geometries(1, schema_name);  
   PERFORM geodb_pkg.cleanup_appearances(1, schema_name);
   PERFORM geodb_pkg.cleanup_addresses(schema_name);
@@ -2510,6 +2505,21 @@ BEGIN
   EXCEPTION
     WHEN OTHERS THEN
       RAISE NOTICE 'delete_cityobject_cascade (id: %): %', co_id, SQLERRM;
+END; 
+$$ 
+LANGUAGE plpgsql;
+
+
+-- delete all cityobjects using their foreign key relations
+-- NOTE: all constraints have to be set to ON DELETE CASCADE (function: geodb_pkg.update_schema_constraints)
+CREATE OR REPLACE FUNCTION geodb_pkg.cleanup_schema(schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID AS
+$$
+BEGIN  
+  EXECUTE format('SELECT geodb_pkg.delete_cityobject_cascade(id, %L) FROM %I.cityobject', schema_name, schema_name);
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      RAISE NOTICE 'cleanup_3dcitydb (id: %): %', co_id, SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;
