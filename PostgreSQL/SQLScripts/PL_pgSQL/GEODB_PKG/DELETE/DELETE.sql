@@ -2519,7 +2519,7 @@ BEGIN
   
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'cleanup_3dcitydb (id: %): %', co_id, SQLERRM;
+      RAISE NOTICE 'cleanup_schema: %', SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;

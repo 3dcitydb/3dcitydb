@@ -3223,7 +3223,7 @@ AS
     close cityobject_cur;
   exception
     when others then
-      dbms_output.put_line('cleanup_3dcitydb: ' || SQLERRM);
+      dbms_output.put_line('cleanup_schema: ' || SQLERRM);
   end;
 
 END geodb_delete;
