@@ -47,7 +47,7 @@
 *   delete_appearance(app_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   delete_breakline_relief(blr INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   delete_bridge(brd_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
-*   delete_bridge_constr_elem(brdce_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
+*   delete_bridge_constr_element(brdce_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   delete_bridge_furniture(brdf_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   delete_bridge_installation(brdi_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
 *   delete_bridge_opening(brdo_id INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF VOID
@@ -1483,7 +1483,7 @@ BEGIN
                     schema_name, schema_name, brd_id);
 
   -- delete referenced bridge construction element(s)
-  EXECUTE format('SELECT geodb_pkg.delete_bridge_constr_elem(id, %L) FROM %I.bridge_constr_element WHERE bridge_id = %L', 
+  EXECUTE format('SELECT geodb_pkg.delete_bridge_constr_element(id, %L) FROM %I.bridge_constr_element WHERE bridge_id = %L', 
                     schema_name, schema_name, brd_id);
 
   -- delete referenced bridge thematic surfaces
@@ -1800,7 +1800,7 @@ LANGUAGE plpgsql;
 /*
 delete from BRIDGE_CONSTR_ELEMENT
 */
-CREATE OR REPLACE FUNCTION geodb_pkg.delete_bridge_constr_elem(
+CREATE OR REPLACE FUNCTION geodb_pkg.delete_bridge_constr_element(
   brdce_id INTEGER, 
   schema_name TEXT DEFAULT 'public'
   ) RETURNS SETOF VOID AS
@@ -1844,7 +1844,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'delete_bridge_constr_elem (id: %): %', brdce_id, SQLERRM;
+      RAISE NOTICE 'delete_bridge_constr_element (id: %): %', brdce_id, SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;
@@ -2447,7 +2447,7 @@ BEGIN
            class_id = 79 THEN PERFORM geodb_pkg.delete_bridge_opening(co_id, schema_name);		 
       WHEN class_id = 80 THEN PERFORM geodb_pkg.delete_bridge_furniture(co_id, schema_name);
       WHEN class_id = 81 THEN PERFORM geodb_pkg.delete_bridge_room(co_id, schema_name);
-      WHEN class_id = 82 THEN PERFORM geodb_pkg.delete_bridge_constr_elem(co_id, schema_name);
+      WHEN class_id = 82 THEN PERFORM geodb_pkg.delete_bridge_constr_element(co_id, schema_name);
       WHEN class_id = 84 OR
            class_id = 85 THEN PERFORM geodb_pkg.delete_tunnel(co_id, schema_name);
       WHEN class_id = 86 OR
