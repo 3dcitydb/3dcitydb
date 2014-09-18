@@ -184,14 +184,14 @@ AS
       internal_table_name := table_name || '_LT';
     END IF;     
 
-    EXECUTE IMMEDIATE 'select upper(INDEX_TYPE), INDEX_NAME from ALL_INDEXES where INDEX_NAME=
-    	(select upper(INDEX_NAME) from ALL_IND_COLUMNS where OWNER=:1 and TABLE_NAME=:2 and COLUMN_NAME=:3)' 
-    	INTO index_type, index_name USING upper(schema_name), upper(internal_table_name), upper(column_name);  
+    EXECUTE IMMEDIATE 'select upper(INDEX_TYPE), INDEX_NAME from ALL_INDEXES where OWNER=:1 and INDEX_NAME=
+    	(select upper(INDEX_NAME) from ALL_IND_COLUMNS where INDEX_OWNER=:2 and TABLE_NAME=:3 and COLUMN_NAME=:4)' 
+    	INTO index_type, index_name USING upper(schema_name), upper(schema_name), upper(internal_table_name), upper(column_name);  
 
     IF index_type = 'DOMAIN' THEN
-      EXECUTE IMMEDIATE 'select upper(DOMIDX_OPSTATUS) FROM ALL_INDEXES where OWNER=:1 and INDEX_NAME=:2' INTO status USING schema_name, index_name;
+      EXECUTE IMMEDIATE 'select upper(DOMIDX_OPSTATUS) FROM ALL_INDEXES where OWNER=:1 and INDEX_NAME=:2' INTO status USING upper(schema_name), index_name;
     ELSE
-      EXECUTE IMMEDIATE 'select upper(STATUS) FROM ALL_INDEXES where OWNER=:1 and INDEX_NAME=:2' INTO status USING schema_name, index_name;
+      EXECUTE IMMEDIATE 'select upper(STATUS) FROM ALL_INDEXES where OWNER=:1 and INDEX_NAME=:2' INTO status USING upper(schema_name), index_name;
     END IF;
 
     RETURN status;
