@@ -39,7 +39,8 @@
 *     srid INTEGER, 
 *     gml_srs_name TEXT, 
 *     coord_ref_sys_name TEXT, 
-*     coord_ref_sys_kind TEXT, 
+*     coord_ref_sys_kind TEXT,
+*     wktext TEXT,
 *     versioning TEXT
 *     )
 *   get_seq_values(seq_name TEXT, seq_count INTEGER, schema_name TEXT DEFAULT 'public') RETURNS SETOF INTEGER
@@ -119,15 +120,16 @@ CREATE OR REPLACE FUNCTION geodb_pkg.db_metadata() RETURNS TABLE(
   schema_srid INTEGER, 
   schema_gml_srs_name TEXT, 
   coord_ref_sys_name TEXT, 
-  coord_ref_sys_kind TEXT, 
+  coord_ref_sys_kind TEXT,
+  wktext TEXT,  
   versioning TEXT
   ) AS 
 $$
 BEGIN
   EXECUTE 'SELECT SRID, GML_SRS_NAME FROM DATABASE_SRS' INTO schema_srid, schema_gml_srs_name;
-  EXECUTE 'SELECT srtext, srtext FROM spatial_ref_sys WHERE SRID=$1' INTO coord_ref_sys_name, coord_ref_sys_kind USING schema_srid;
-  coord_ref_sys_name := split_part(coord_ref_sys_name, '"', 2);
-  coord_ref_sys_kind := split_part(coord_ref_sys_kind, '[', 1);
+  EXECUTE 'SELECT srtext FROM spatial_ref_sys WHERE SRID=$1' INTO wktext USING schema_srid;
+  coord_ref_sys_name := split_part(wktext, '"', 2);
+  coord_ref_sys_kind := split_part(wktext, '[', 1);
   versioning := geodb_pkg.versioning_db();
   RETURN NEXT;
 END;

@@ -53,6 +53,7 @@ CREATE OR REPLACE TYPE DB_INFO_OBJ AS OBJECT(
   SCHEMA_GML_SRS_NAME VARCHAR2(1000),
   COORD_REF_SYS_NAME VARCHAR2(80),
   COORD_REF_SYS_KIND VARCHAR2(24),
+  WKTEXT VARCHAR2(4000),
   VERSIONING VARCHAR2(100)
 );
 /
@@ -174,10 +175,11 @@ AS
     info_ret := DB_INFO_TABLE();
     info_ret.extend;
 
-    info_tmp := DB_INFO_OBJ(0, NULL, NULL, 0, NULL);
+    info_tmp := DB_INFO_OBJ(0, NULL, NULL, 0, NULL, NULL);
 
-    EXECUTE IMMEDIATE 'SELECT SRID, GML_SRS_NAME from DATABASE_SRS' INTO info_tmp.schema_srid, info_tmp.schema_gml_srs_name;
-    EXECUTE IMMEDIATE 'SELECT COORD_REF_SYS_NAME, COORD_REF_SYS_KIND from SDO_COORD_REF_SYS where SRID=:1' INTO info_tmp.coord_ref_sys_name, info_tmp.coord_ref_sys_kind USING info_tmp.schema_srid;
+    EXECUTE IMMEDIATE 'select SRID, GML_SRS_NAME from DATABASE_SRS' INTO info_tmp.schema_srid, info_tmp.schema_gml_srs_name;
+    EXECUTE IMMEDIATE 'select COORD_REF_SYS_NAME, COORD_REF_SYS_KIND from SDO_COORD_REF_SYS where SRID=:1' INTO info_tmp.coord_ref_sys_name, info_tmp.coord_ref_sys_kind USING info_tmp.schema_srid;
+    EXECUTE IMMEDIATE 'select nvl(WKTEXT3D, WKTEXT) from CS_SRS where SRID=:1' INTO info_tmp.wktext USING info_tmp.schema_srid;
     info_tmp.versioning := versioning_db;
     info_ret(info_ret.count) := info_tmp;
     RETURN info_ret;
