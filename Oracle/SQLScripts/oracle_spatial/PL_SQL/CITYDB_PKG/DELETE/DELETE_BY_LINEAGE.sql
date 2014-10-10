@@ -26,7 +26,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 2.0.0     2014-06-02   extended for 3DCityDB V3                    GHud
+-- 2.0.0     2014-10-10   extended for 3DCityDB V3                    GHud
 --                                                                    FKun
 --                                                                    CNag
 -- 1.3.0     2013-08-08   extended to all thematic classes            GHud
@@ -36,7 +36,7 @@
 -- 1.0.0     2008-09-10   release version                             ASta
 --
 
-CREATE OR REPLACE PACKAGE geodb_delete_by_lineage
+CREATE OR REPLACE PACKAGE citydb_delete_by_lineage
 AS
   procedure delete_cityobjects(lineage_value varchar2, delete_members int := 0, schema_name varchar2 := USER);
   procedure delete_buildings(lineage_value varchar2, schema_name varchar2 := USER);
@@ -51,7 +51,7 @@ AS
   procedure delete_waterbodies(lineage_value varchar2, schema_name varchar2 := USER);
   procedure delete_cityobjectgroups(lineage_value varchar2, delete_members int := 0, schema_name varchar2 := USER);
   procedure delete_relief_features(lineage_value varchar2, schema_name varchar2 := USER);
-END geodb_delete_by_lineage;
+END citydb_delete_by_lineage;
 /
 
 CREATE OR REPLACE PACKAGE BODY GEODB_DELETE_BY_LINEAGE
@@ -68,7 +68,7 @@ AS
       fetch building_cur into building_id;
       exit when building_cur%notfound;
       begin
-        geodb_delete.delete_building(building_id, schema_name);
+        citydb_delete.delete_building(building_id, schema_name);
       exception
         when others then
           dbms_output.put_line('delete_buildings: deletion of building with ID ' || building_id || ' threw: ' || SQLERRM);
@@ -77,9 +77,9 @@ AS
     close building_cur;
     
     -- cleanup
-    geodb_delete.cleanup_implicit_geometries(1, schema_name);
-    geodb_delete.cleanup_appearances(1, schema_name);
-    geodb_delete.cleanup_citymodels(schema_name);
+    citydb_delete.cleanup_implicit_geometries(1, schema_name);
+    citydb_delete.cleanup_appearances(1, schema_name);
+    citydb_delete.cleanup_citymodels(schema_name);
   exception
     when others then
       dbms_output.put_line('delete_buildings: ' || SQLERRM);
@@ -95,7 +95,7 @@ AS
       fetch bridge_cur into bridge_id;
       exit when bridge_cur%notfound;
       begin
-        geodb_delete.delete_bridge(bridge_id, schema_name);
+        citydb_delete.delete_bridge(bridge_id, schema_name);
       exception
         when others then
           dbms_output.put_line('delete_bridges: deletion of bridge with ID ' || bridge_id || ' threw: ' || SQLERRM);
@@ -104,9 +104,9 @@ AS
     close bridge_cur;
 
     -- cleanup
-    geodb_delete.cleanup_implicit_geometries(1, schema_name);
-    geodb_delete.cleanup_appearances(1, schema_name);
-    geodb_delete.cleanup_citymodels(schema_name);
+    citydb_delete.cleanup_implicit_geometries(1, schema_name);
+    citydb_delete.cleanup_appearances(1, schema_name);
+    citydb_delete.cleanup_citymodels(schema_name);
   exception
     when others then
       dbms_output.put_line('delete_bridges: ' || SQLERRM);
@@ -122,7 +122,7 @@ AS
       fetch tunnel_cur into tunnel_id;
       exit when tunnel_cur%notfound;
       begin
-        geodb_delete.delete_tunnel(tunnel_id, schema_name);
+        citydb_delete.delete_tunnel(tunnel_id, schema_name);
       exception
         when others then
           dbms_output.put_line('delete_tunnels: deletion of tunnel with ID ' || tunnel_id || ' threw: ' || SQLERRM);
@@ -131,9 +131,9 @@ AS
     close tunnel_cur;
 
     -- cleanup
-    geodb_delete.cleanup_implicit_geometries(1, schema_name);
-    geodb_delete.cleanup_appearances(1, schema_name);
-    geodb_delete.cleanup_citymodels(schema_name);
+    citydb_delete.cleanup_implicit_geometries(1, schema_name);
+    citydb_delete.cleanup_appearances(1, schema_name);
+    citydb_delete.cleanup_citymodels(schema_name);
   exception
     when others then
       dbms_output.put_line('delete_tunnels: ' || SQLERRM);
@@ -149,7 +149,7 @@ AS
       fetch city_furniture_cur into city_furniture_id;
       exit when city_furniture_cur%notfound;
       begin
-        geodb_delete.delete_city_furniture(city_furniture_id, schema_name);
+        citydb_delete.delete_city_furniture(city_furniture_id, schema_name);
       exception
         when others then
           dbms_output.put_line('delete_city_furnitures: deletion of city_furniture with ID ' || city_furniture_id || ' threw: ' || SQLERRM);
@@ -158,9 +158,9 @@ AS
     close city_furniture_cur;
 
     -- cleanup
-    geodb_delete.cleanup_implicit_geometries(1, schema_name);
-    geodb_delete.cleanup_appearances(1, schema_name);
-    geodb_delete.cleanup_citymodels(schema_name);
+    citydb_delete.cleanup_implicit_geometries(1, schema_name);
+    citydb_delete.cleanup_appearances(1, schema_name);
+    citydb_delete.cleanup_citymodels(schema_name);
   exception
     when others then
       dbms_output.put_line('delete_city_furnitures: ' || SQLERRM);
@@ -176,7 +176,7 @@ AS
       fetch generic_cityobject_cur into generic_cityobject_id;
       exit when generic_cityobject_cur%notfound;
       begin
-        geodb_delete.delete_generic_cityobject(generic_cityobject_id, schema_name);
+        citydb_delete.delete_generic_cityobject(generic_cityobject_id, schema_name);
       exception
         when others then
           dbms_output.put_line('delete_generic_cityobjects: deletion of generic_cityobject with ID ' || generic_cityobject_id || ' threw: ' || SQLERRM);
@@ -185,9 +185,9 @@ AS
     close generic_cityobject_cur;
 
     -- cleanup
-    geodb_delete.cleanup_implicit_geometries(1, schema_name);
-    geodb_delete.cleanup_appearances(1, schema_name);
-    geodb_delete.cleanup_citymodels(schema_name);
+    citydb_delete.cleanup_implicit_geometries(1, schema_name);
+    citydb_delete.cleanup_appearances(1, schema_name);
+    citydb_delete.cleanup_citymodels(schema_name);
   exception
     when others then
       dbms_output.put_line('delete_generic_cityobjects: ' || SQLERRM);
@@ -203,7 +203,7 @@ AS
       fetch land_use_cur into land_use_id;
       exit when land_use_cur%notfound;
       begin
-        geodb_delete.delete_land_use(land_use_id, schema_name);
+        citydb_delete.delete_land_use(land_use_id, schema_name);
       exception
         when others then
           dbms_output.put_line('delete_land_uses: deletion of land_use with ID ' || land_use_id || ' threw: ' || SQLERRM);
@@ -212,8 +212,8 @@ AS
     close land_use_cur;
 
     -- cleanup
-    geodb_delete.cleanup_appearances(1, schema_name);
-    geodb_delete.cleanup_citymodels(schema_name);
+    citydb_delete.cleanup_appearances(1, schema_name);
+    citydb_delete.cleanup_citymodels(schema_name);
   exception
     when others then
       dbms_output.put_line('delete_land_uses: ' || SQLERRM);
@@ -229,7 +229,7 @@ AS
       fetch plant_cover_cur into plant_cover_id;
       exit when plant_cover_cur%notfound;
       begin
-        geodb_delete.delete_plant_cover(plant_cover_id, schema_name);
+        citydb_delete.delete_plant_cover(plant_cover_id, schema_name);
       exception
         when others then
           dbms_output.put_line('delete_plant_covers: deletion of plant_cover with ID ' || plant_cover_id || ' threw: ' || SQLERRM);
@@ -238,8 +238,8 @@ AS
     close plant_cover_cur;
 
     -- cleanup
-    geodb_delete.cleanup_appearances(1, schema_name);
-    geodb_delete.cleanup_citymodels(schema_name);
+    citydb_delete.cleanup_appearances(1, schema_name);
+    citydb_delete.cleanup_citymodels(schema_name);
   exception
     when others then
       dbms_output.put_line('delete_plant_covers: ' || SQLERRM);
@@ -255,7 +255,7 @@ AS
       fetch solitary_veg_obj_cur into solitary_veg_obj_id;
       exit when solitary_veg_obj_cur%notfound;
       begin
-        geodb_delete.delete_solitary_veg_obj(solitary_veg_obj_id, schema_name);
+        citydb_delete.delete_solitary_veg_obj(solitary_veg_obj_id, schema_name);
       exception
         when others then
           dbms_output.put_line('delete_solitary_veg_objs: deletion of solitary_vegetat_object with ID ' || solitary_veg_obj_id || ' threw: ' || SQLERRM);
@@ -264,9 +264,9 @@ AS
     close solitary_veg_obj_cur;
 
     -- cleanup
-    geodb_delete.cleanup_implicit_geometries(1, schema_name);
-    geodb_delete.cleanup_appearances(1, schema_name);
-    geodb_delete.cleanup_citymodels(schema_name);
+    citydb_delete.cleanup_implicit_geometries(1, schema_name);
+    citydb_delete.cleanup_appearances(1, schema_name);
+    citydb_delete.cleanup_citymodels(schema_name);
   exception
     when others then
       dbms_output.put_line('delete_solitary_veg_objs: ' || SQLERRM);
@@ -282,7 +282,7 @@ AS
       fetch transport_complex_cur into transport_complex_id;
       exit when transport_complex_cur%notfound;
       begin
-        geodb_delete.delete_transport_complex(transport_complex_id, schema_name);
+        citydb_delete.delete_transport_complex(transport_complex_id, schema_name);
       exception
         when others then
           dbms_output.put_line('delete_transport_complexes: deletion of transportation_complex with ID ' || transport_complex_id || ' threw: ' || SQLERRM);
@@ -291,8 +291,8 @@ AS
     close transport_complex_cur;
 
     -- cleanup
-    geodb_delete.cleanup_appearances(1, schema_name);
-    geodb_delete.cleanup_citymodels(schema_name);
+    citydb_delete.cleanup_appearances(1, schema_name);
+    citydb_delete.cleanup_citymodels(schema_name);
   exception
     when others then
       dbms_output.put_line('delete_transport_complexes: ' || SQLERRM);
@@ -308,7 +308,7 @@ AS
       fetch waterbody_cur into waterbody_id;
       exit when waterbody_cur%notfound;
       begin
-        geodb_delete.delete_waterbody(waterbody_id, schema_name);
+        citydb_delete.delete_waterbody(waterbody_id, schema_name);
       exception
         when others then
           dbms_output.put_line('delete_waterbodies: deletion of waterbody with ID ' || waterbody_id || ' threw: ' || SQLERRM);
@@ -317,8 +317,8 @@ AS
     close waterbody_cur;
 
     -- cleanup
-    geodb_delete.cleanup_appearances(1, schema_name);
-    geodb_delete.cleanup_citymodels(schema_name);
+    citydb_delete.cleanup_appearances(1, schema_name);
+    citydb_delete.cleanup_citymodels(schema_name);
   exception
     when others then
       dbms_output.put_line('delete_waterbodies: ' || SQLERRM);
@@ -334,7 +334,7 @@ AS
       fetch cityobjectgroup_cur into cityobjectgroup_id;
       exit when cityobjectgroup_cur%notfound;
       begin
-        geodb_delete.delete_cityobjectgroup(cityobjectgroup_id, delete_members, schema_name);
+        citydb_delete.delete_cityobjectgroup(cityobjectgroup_id, delete_members, schema_name);
       exception
         when others then
           dbms_output.put_line('delete_cityobjectgroups: deletion of cityobjectgroup with ID ' || cityobjectgroup_id || ' threw: ' || SQLERRM);
@@ -343,8 +343,8 @@ AS
     close cityobjectgroup_cur;
 
     -- cleanup
-    geodb_delete.cleanup_appearances(1, schema_name);
-    geodb_delete.cleanup_citymodels(schema_name);
+    citydb_delete.cleanup_appearances(1, schema_name);
+    citydb_delete.cleanup_citymodels(schema_name);
   exception
     when others then
       dbms_output.put_line('delete_cityobjectgroups: ' || SQLERRM);
@@ -360,7 +360,7 @@ AS
       fetch relief_feature_cur into relief_feature_id;
       exit when relief_feature_cur%notfound;
       begin
-        geodb_delete.delete_relief_feature(relief_feature_id, schema_name);
+        citydb_delete.delete_relief_feature(relief_feature_id, schema_name);
       exception
         when others then
           dbms_output.put_line('delete_relief_features: deletion of relief_feature with ID ' || relief_feature_id || ' threw: ' || SQLERRM);
@@ -369,8 +369,8 @@ AS
     close relief_feature_cur;
 
     -- cleanup
-    geodb_delete.cleanup_appearances(1, schema_name);
-    geodb_delete.cleanup_citymodels(schema_name);
+    citydb_delete.cleanup_appearances(1, schema_name);
+    citydb_delete.cleanup_citymodels(schema_name);
   exception
     when others then
       dbms_output.put_line('delete_relief_features: ' || SQLERRM);
@@ -386,7 +386,7 @@ AS
       fetch cityobject_cur into cityobject_id;
       exit when cityobject_cur%notfound;
       begin
-        geodb_delete.delete_cityobject(cityobject_id, delete_members, 0, schema_name);
+        citydb_delete.delete_cityobject(cityobject_id, delete_members, 0, schema_name);
       exception
         when others then
           dbms_output.put_line('delete_cityobjects: deletion of cityobject with ID ' || cityobject_id || ' threw: ' || SQLERRM);
@@ -395,13 +395,13 @@ AS
     close cityobject_cur;
 
     -- cleanup
-    geodb_delete.cleanup_implicit_geometries(1, schema_name);
-    geodb_delete.cleanup_appearances(1, schema_name);
-    geodb_delete.cleanup_citymodels(schema_name);
+    citydb_delete.cleanup_implicit_geometries(1, schema_name);
+    citydb_delete.cleanup_appearances(1, schema_name);
+    citydb_delete.cleanup_citymodels(schema_name);
   exception
     when others then
       dbms_output.put_line('delete_cityobjects: ' || SQLERRM);
   end;
 
-END geodb_delete_by_lineage;
+END citydb_delete_by_lineage;
 /

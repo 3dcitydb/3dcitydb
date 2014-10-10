@@ -86,9 +86,8 @@ column mc2 new_value VERSIONBATCHFILE2 print
 select :VERSIONBATCHFILE mc2 from dual;
 @@&VERSIONBATCHFILE2
 
---// geodb packages
-
-@@CREATE_GEODB_PKG.sql
+--// citydb packages
+@@CREATE_CITYDB_PKG.sql
 
 SHOW ERRORS;
 COMMIT;

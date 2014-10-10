@@ -25,7 +25,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 2.0.7     2012-03-03   add elements of 3DCityDB v3.0               FKun
+-- 2.0.7     2014-10-10   add elements of 3DCityDB v3.0               FKun
 -- 2.0.6     2010-06-03   bugfix for execute object rights in 2.0.6   JHer
 -- 2.0.3     2010-06-03   release version                             JHer
 --                                                                    CNag
@@ -118,15 +118,17 @@ BEGIN
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.DATABASE_SRS to ' || v_role;
         EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.DB_INFO_OBJ to ' || v_role;
         EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.DB_INFO_TABLE to ' || v_role;
+        EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.DB_VERSION_OBJ to ' || v_role;
+        EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.DB_VERSION_TABLE to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.EXTERNAL_REFERENCE to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.GENERALIZATION to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.GENERIC_CITYOBJECT to ' || v_role;
---      EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.GEODB_DELETE to ' || v_role; 
---      EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.GEODB_DELETE_BY_LINEAGE to ' || v_role;
-        EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.GEODB_IDX to ' || v_role;
---      EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.GEODB_SRS to ' || v_role;	 
-        EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.GEODB_STAT to ' || v_role;
-        EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.GEODB_UTIL to ' || v_role;
+--      EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.CITYDB_DELETE to ' || v_role; 
+--      EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.CITYDB_DELETE_BY_LINEAGE to ' || v_role;
+        EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.CITYDB_IDX to ' || v_role;
+--      EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.CITYDB_SRS to ' || v_role;	 
+        EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.CITYDB_STAT to ' || v_role;
+        EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.CITYDB_UTIL to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.GRID_COVERAGE to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.GROUP_TO_CITYOBJECT to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.IMPLICIT_GEOMETRY to ' || v_role;
@@ -235,16 +237,18 @@ BEGIN
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.WATERBOUNDARY_SURFACE for ' || v_schemaOwnerName || '.WATERBOUNDARY_SURFACE';  
 
 -- synonyms for PL/SQL packages
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GEODB_DELETE for ' || v_schemaOwnerName || '.GEODB_DELETE';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GEODB_DELETE_BY_LINEAGE for ' || v_schemaOwnerName || '.GEODB_DELETE_BY_LINEAGE';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GEODB_IDX for ' || v_schemaOwnerName || '.GEODB_IDX';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GEODB_SRS for ' || v_schemaOwnerName || '.GEODB_SRS';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GEODB_STAT for ' || v_schemaOwnerName || '.GEODB_STAT';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GEODB_UTIL for ' || v_schemaOwnerName || '.GEODB_UTIL';
+  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.CITYDB_DELETE for ' || v_schemaOwnerName || '.CITYDB_DELETE';
+  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.CITYDB_DELETE_BY_LINEAGE for ' || v_schemaOwnerName || '.CITYDB_DELETE_BY_LINEAGE';
+  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.CITYDB_IDX for ' || v_schemaOwnerName || '.CITYDB_IDX';
+  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.CITYDB_SRS for ' || v_schemaOwnerName || '.CITYDB_SRS';
+  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.CITYDB_STAT for ' || v_schemaOwnerName || '.CITYDB_STAT';
+  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.CITYDB_UTIL for ' || v_schemaOwnerName || '.CITYDB_UTIL';
 
 -- synonyms for user defined object types
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.INDEX_OBJ for ' || v_schemaOwnerName || '.INDEX_OBJ';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.STRARRAY for ' || v_schemaOwnerName || '.STRARRAY';
+  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.DB_VERSION_TABLE for ' || v_schemaOwnerName || '.DB_INFO_TABLE';
+  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.DB_VERSION_OBJ for ' || v_schemaOwnerName || '.DB_INFO_OBJ';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.DB_INFO_TABLE for ' || v_schemaOwnerName || '.DB_INFO_TABLE';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.DB_INFO_OBJ for ' || v_schemaOwnerName || '.DB_INFO_OBJ';
 --EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.SEQ_TABLE for ' || v_schemaOwnerName || '.SEQ_TABLE';
