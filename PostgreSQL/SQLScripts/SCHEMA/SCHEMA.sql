@@ -1,5 +1,5 @@
 -- Database generated with pgModeler (PostgreSQL Database Modeler).
--- pgModeler  version: 0.7.0-alpha
+-- pgModeler  version: 0.7.2
 -- PostgreSQL version: 9.3
 -- Project Site: pgmodeler.com.br
 -- Model Author: Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
@@ -7,7 +7,7 @@
 --               Claus Nagel <cnagel@virtualcitysystems.de>
 --               Felix Kunde <fkunde@virtualcitysystems.de>
 --               Philipp Willkomm <pwillkomm@moss.de>
---               Gerhard König <gerhard.koenig@tu-berlin.de>
+--               Gerhard KÃ¶nig <gerhard.koenig@tu-berlin.de>
 --               Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 
 SET check_function_bodies = false;
@@ -26,6 +26,14 @@ SET check_function_bodies = false;
 -- -- ddl-end --
 -- 
 
+-- object: citydb | type: SCHEMA --
+-- DROP SCHEMA citydb;
+CREATE SCHEMA citydb;
+-- ddl-end --
+
+SET search_path TO pg_catalog,public,citydb;
+-- ddl-end --
+
 -- object: postgis | type: EXTENSION --
 -- DROP EXTENSION postgis CASCADE;
 CREATE EXTENSION postgis
@@ -33,9 +41,9 @@ CREATE EXTENSION postgis
 COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial types and functions';
 -- ddl-end --
 
--- object: public.citymodel_seq | type: SEQUENCE --
--- DROP SEQUENCE public.citymodel_seq;
-CREATE SEQUENCE public.citymodel_seq
+-- object: citydb.citymodel_seq | type: SEQUENCE --
+-- DROP SEQUENCE citydb.citymodel_seq;
+CREATE SEQUENCE citydb.citymodel_seq
 	INCREMENT BY 1
 	MINVALUE 0
 	MAXVALUE 2147483647
@@ -45,9 +53,9 @@ CREATE SEQUENCE public.citymodel_seq
 	OWNED BY NONE;
 -- ddl-end --
 
--- object: public.cityobject_seq | type: SEQUENCE --
--- DROP SEQUENCE public.cityobject_seq;
-CREATE SEQUENCE public.cityobject_seq
+-- object: citydb.cityobject_seq | type: SEQUENCE --
+-- DROP SEQUENCE citydb.cityobject_seq;
+CREATE SEQUENCE citydb.cityobject_seq
 	INCREMENT BY 1
 	MINVALUE 0
 	MAXVALUE 2147483647
@@ -57,9 +65,9 @@ CREATE SEQUENCE public.cityobject_seq
 	OWNED BY NONE;
 -- ddl-end --
 
--- object: public.cityobject_member | type: TABLE --
--- DROP TABLE public.cityobject_member;
-CREATE TABLE public.cityobject_member(
+-- object: citydb.cityobject_member | type: TABLE --
+-- DROP TABLE citydb.cityobject_member;
+CREATE TABLE citydb.cityobject_member(
 	citymodel_id integer NOT NULL,
 	cityobject_id integer NOT NULL,
 	CONSTRAINT cityobject_member_pk PRIMARY KEY (citymodel_id,cityobject_id)
@@ -67,8 +75,8 @@ CREATE TABLE public.cityobject_member(
 );
 -- ddl-end --
 -- object: cityobject_member_fkx | type: INDEX --
--- DROP INDEX public.cityobject_member_fkx;
-CREATE INDEX cityobject_member_fkx ON public.cityobject_member
+-- DROP INDEX citydb.cityobject_member_fkx;
+CREATE INDEX cityobject_member_fkx ON citydb.cityobject_member
 	USING btree
 	(
 	  cityobject_id ASC NULLS LAST
@@ -76,8 +84,8 @@ CREATE INDEX cityobject_member_fkx ON public.cityobject_member
 -- ddl-end --
 
 -- object: cityobject_member_fkx1 | type: INDEX --
--- DROP INDEX public.cityobject_member_fkx1;
-CREATE INDEX cityobject_member_fkx1 ON public.cityobject_member
+-- DROP INDEX citydb.cityobject_member_fkx1;
+CREATE INDEX cityobject_member_fkx1 ON citydb.cityobject_member
 	USING btree
 	(
 	  citymodel_id ASC NULLS LAST
@@ -85,9 +93,9 @@ CREATE INDEX cityobject_member_fkx1 ON public.cityobject_member
 -- ddl-end --
 
 
--- object: public.external_ref_seq | type: SEQUENCE --
--- DROP SEQUENCE public.external_ref_seq;
-CREATE SEQUENCE public.external_ref_seq
+-- object: citydb.external_ref_seq | type: SEQUENCE --
+-- DROP SEQUENCE citydb.external_ref_seq;
+CREATE SEQUENCE citydb.external_ref_seq
 	INCREMENT BY 1
 	MINVALUE 0
 	MAXVALUE 2147483647
@@ -97,9 +105,9 @@ CREATE SEQUENCE public.external_ref_seq
 	OWNED BY NONE;
 -- ddl-end --
 
--- object: public.generalization | type: TABLE --
--- DROP TABLE public.generalization;
-CREATE TABLE public.generalization(
+-- object: citydb.generalization | type: TABLE --
+-- DROP TABLE citydb.generalization;
+CREATE TABLE citydb.generalization(
 	cityobject_id integer NOT NULL,
 	generalizes_to_id integer NOT NULL,
 	CONSTRAINT generalization_pk PRIMARY KEY (cityobject_id,generalizes_to_id)
@@ -107,8 +115,8 @@ CREATE TABLE public.generalization(
 );
 -- ddl-end --
 -- object: general_cityobject_fkx | type: INDEX --
--- DROP INDEX public.general_cityobject_fkx;
-CREATE INDEX general_cityobject_fkx ON public.generalization
+-- DROP INDEX citydb.general_cityobject_fkx;
+CREATE INDEX general_cityobject_fkx ON citydb.generalization
 	USING btree
 	(
 	  cityobject_id ASC NULLS LAST
@@ -116,8 +124,8 @@ CREATE INDEX general_cityobject_fkx ON public.generalization
 -- ddl-end --
 
 -- object: general_generalizes_to_fkx | type: INDEX --
--- DROP INDEX public.general_generalizes_to_fkx;
-CREATE INDEX general_generalizes_to_fkx ON public.generalization
+-- DROP INDEX citydb.general_generalizes_to_fkx;
+CREATE INDEX general_generalizes_to_fkx ON citydb.generalization
 	USING btree
 	(
 	  generalizes_to_id ASC NULLS LAST
@@ -125,9 +133,9 @@ CREATE INDEX general_generalizes_to_fkx ON public.generalization
 -- ddl-end --
 
 
--- object: public.surface_geometry_seq | type: SEQUENCE --
--- DROP SEQUENCE public.surface_geometry_seq;
-CREATE SEQUENCE public.surface_geometry_seq
+-- object: citydb.surface_geometry_seq | type: SEQUENCE --
+-- DROP SEQUENCE citydb.surface_geometry_seq;
+CREATE SEQUENCE citydb.surface_geometry_seq
 	INCREMENT BY 1
 	MINVALUE 0
 	MAXVALUE 2147483647
@@ -137,9 +145,9 @@ CREATE SEQUENCE public.surface_geometry_seq
 	OWNED BY NONE;
 -- ddl-end --
 
--- object: public.cityobjectgroup | type: TABLE --
--- DROP TABLE public.cityobjectgroup;
-CREATE TABLE public.cityobjectgroup(
+-- object: citydb.cityobjectgroup | type: TABLE --
+-- DROP TABLE citydb.cityobjectgroup;
+CREATE TABLE citydb.cityobjectgroup(
 	id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -155,8 +163,8 @@ CREATE TABLE public.cityobjectgroup(
 );
 -- ddl-end --
 -- object: group_brep_fkx | type: INDEX --
--- DROP INDEX public.group_brep_fkx;
-CREATE INDEX group_brep_fkx ON public.cityobjectgroup
+-- DROP INDEX citydb.group_brep_fkx;
+CREATE INDEX group_brep_fkx ON citydb.cityobjectgroup
 	USING btree
 	(
 	  brep_id ASC NULLS LAST
@@ -164,8 +172,8 @@ CREATE INDEX group_brep_fkx ON public.cityobjectgroup
 -- ddl-end --
 
 -- object: group_xgeom_spx | type: INDEX --
--- DROP INDEX public.group_xgeom_spx;
-CREATE INDEX group_xgeom_spx ON public.cityobjectgroup
+-- DROP INDEX citydb.group_xgeom_spx;
+CREATE INDEX group_xgeom_spx ON citydb.cityobjectgroup
 	USING gist
 	(
 	  other_geom
@@ -173,8 +181,8 @@ CREATE INDEX group_xgeom_spx ON public.cityobjectgroup
 -- ddl-end --
 
 -- object: group_parent_cityobj_fkx | type: INDEX --
--- DROP INDEX public.group_parent_cityobj_fkx;
-CREATE INDEX group_parent_cityobj_fkx ON public.cityobjectgroup
+-- DROP INDEX citydb.group_parent_cityobj_fkx;
+CREATE INDEX group_parent_cityobj_fkx ON citydb.cityobjectgroup
 	USING btree
 	(
 	  parent_cityobject_id ASC NULLS LAST
@@ -182,9 +190,9 @@ CREATE INDEX group_parent_cityobj_fkx ON public.cityobjectgroup
 -- ddl-end --
 
 
--- object: public.group_to_cityobject | type: TABLE --
--- DROP TABLE public.group_to_cityobject;
-CREATE TABLE public.group_to_cityobject(
+-- object: citydb.group_to_cityobject | type: TABLE --
+-- DROP TABLE citydb.group_to_cityobject;
+CREATE TABLE citydb.group_to_cityobject(
 	cityobject_id integer NOT NULL,
 	cityobjectgroup_id integer NOT NULL,
 	role character varying(256),
@@ -193,8 +201,8 @@ CREATE TABLE public.group_to_cityobject(
 );
 -- ddl-end --
 -- object: group_to_cityobject_fkx | type: INDEX --
--- DROP INDEX public.group_to_cityobject_fkx;
-CREATE INDEX group_to_cityobject_fkx ON public.group_to_cityobject
+-- DROP INDEX citydb.group_to_cityobject_fkx;
+CREATE INDEX group_to_cityobject_fkx ON citydb.group_to_cityobject
 	USING btree
 	(
 	  cityobject_id ASC NULLS LAST
@@ -202,8 +210,8 @@ CREATE INDEX group_to_cityobject_fkx ON public.group_to_cityobject
 -- ddl-end --
 
 -- object: group_to_cityobject_fkx1 | type: INDEX --
--- DROP INDEX public.group_to_cityobject_fkx1;
-CREATE INDEX group_to_cityobject_fkx1 ON public.group_to_cityobject
+-- DROP INDEX citydb.group_to_cityobject_fkx1;
+CREATE INDEX group_to_cityobject_fkx1 ON citydb.group_to_cityobject
 	USING btree
 	(
 	  cityobjectgroup_id ASC NULLS LAST
@@ -211,18 +219,18 @@ CREATE INDEX group_to_cityobject_fkx1 ON public.group_to_cityobject
 -- ddl-end --
 
 
--- object: public.database_srs | type: TABLE --
--- DROP TABLE public.database_srs;
-CREATE TABLE public.database_srs(
+-- object: citydb.database_srs | type: TABLE --
+-- DROP TABLE citydb.database_srs;
+CREATE TABLE citydb.database_srs(
 	srid integer NOT NULL,
 	gml_srs_name character varying(1000),
 	CONSTRAINT database_srs_pk PRIMARY KEY (srid)
 
 );
 -- ddl-end --
--- object: public.objectclass | type: TABLE --
--- DROP TABLE public.objectclass;
-CREATE TABLE public.objectclass(
+-- object: citydb.objectclass | type: TABLE --
+-- DROP TABLE citydb.objectclass;
+CREATE TABLE citydb.objectclass(
 	id integer NOT NULL,
 	classname character varying(256),
 	superclass_id integer,
@@ -231,8 +239,8 @@ CREATE TABLE public.objectclass(
 );
 -- ddl-end --
 -- object: objectclass_superclass_fkx | type: INDEX --
--- DROP INDEX public.objectclass_superclass_fkx;
-CREATE INDEX objectclass_superclass_fkx ON public.objectclass
+-- DROP INDEX citydb.objectclass_superclass_fkx;
+CREATE INDEX objectclass_superclass_fkx ON citydb.objectclass
 	USING btree
 	(
 	  superclass_id ASC NULLS LAST
@@ -240,9 +248,9 @@ CREATE INDEX objectclass_superclass_fkx ON public.objectclass
 -- ddl-end --
 
 
--- object: public.implicit_geometry_seq | type: SEQUENCE --
--- DROP SEQUENCE public.implicit_geometry_seq;
-CREATE SEQUENCE public.implicit_geometry_seq
+-- object: citydb.implicit_geometry_seq | type: SEQUENCE --
+-- DROP SEQUENCE citydb.implicit_geometry_seq;
+CREATE SEQUENCE citydb.implicit_geometry_seq
 	INCREMENT BY 1
 	MINVALUE 0
 	MAXVALUE 2147483647
@@ -252,9 +260,9 @@ CREATE SEQUENCE public.implicit_geometry_seq
 	OWNED BY NONE;
 -- ddl-end --
 
--- object: public.city_furniture | type: TABLE --
--- DROP TABLE public.city_furniture;
-CREATE TABLE public.city_furniture(
+-- object: citydb.city_furniture | type: TABLE --
+-- DROP TABLE citydb.city_furniture;
+CREATE TABLE citydb.city_furniture(
 	id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -291,8 +299,8 @@ CREATE TABLE public.city_furniture(
 );
 -- ddl-end --
 -- object: city_furn_lod1terr_spx | type: INDEX --
--- DROP INDEX public.city_furn_lod1terr_spx;
-CREATE INDEX city_furn_lod1terr_spx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod1terr_spx;
+CREATE INDEX city_furn_lod1terr_spx ON citydb.city_furniture
 	USING gist
 	(
 	  lod1_terrain_intersection
@@ -300,8 +308,8 @@ CREATE INDEX city_furn_lod1terr_spx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod2terr_spx | type: INDEX --
--- DROP INDEX public.city_furn_lod2terr_spx;
-CREATE INDEX city_furn_lod2terr_spx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod2terr_spx;
+CREATE INDEX city_furn_lod2terr_spx ON citydb.city_furniture
 	USING gist
 	(
 	  lod2_terrain_intersection
@@ -309,8 +317,8 @@ CREATE INDEX city_furn_lod2terr_spx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod3terr_spx | type: INDEX --
--- DROP INDEX public.city_furn_lod3terr_spx;
-CREATE INDEX city_furn_lod3terr_spx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod3terr_spx;
+CREATE INDEX city_furn_lod3terr_spx ON citydb.city_furniture
 	USING gist
 	(
 	  lod3_terrain_intersection
@@ -318,8 +326,8 @@ CREATE INDEX city_furn_lod3terr_spx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod4terr_spx | type: INDEX --
--- DROP INDEX public.city_furn_lod4terr_spx;
-CREATE INDEX city_furn_lod4terr_spx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod4terr_spx;
+CREATE INDEX city_furn_lod4terr_spx ON citydb.city_furniture
 	USING gist
 	(
 	  lod4_terrain_intersection
@@ -327,8 +335,8 @@ CREATE INDEX city_furn_lod4terr_spx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod1brep_fkx | type: INDEX --
--- DROP INDEX public.city_furn_lod1brep_fkx;
-CREATE INDEX city_furn_lod1brep_fkx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod1brep_fkx;
+CREATE INDEX city_furn_lod1brep_fkx ON citydb.city_furniture
 	USING btree
 	(
 	  lod1_brep_id ASC NULLS LAST
@@ -336,8 +344,8 @@ CREATE INDEX city_furn_lod1brep_fkx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod2brep_fkx | type: INDEX --
--- DROP INDEX public.city_furn_lod2brep_fkx;
-CREATE INDEX city_furn_lod2brep_fkx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod2brep_fkx;
+CREATE INDEX city_furn_lod2brep_fkx ON citydb.city_furniture
 	USING btree
 	(
 	  lod2_brep_id ASC NULLS LAST
@@ -345,8 +353,8 @@ CREATE INDEX city_furn_lod2brep_fkx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod3brep_fkx | type: INDEX --
--- DROP INDEX public.city_furn_lod3brep_fkx;
-CREATE INDEX city_furn_lod3brep_fkx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod3brep_fkx;
+CREATE INDEX city_furn_lod3brep_fkx ON citydb.city_furniture
 	USING btree
 	(
 	  lod3_brep_id ASC NULLS LAST
@@ -354,8 +362,8 @@ CREATE INDEX city_furn_lod3brep_fkx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod4brep_fkx | type: INDEX --
--- DROP INDEX public.city_furn_lod4brep_fkx;
-CREATE INDEX city_furn_lod4brep_fkx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod4brep_fkx;
+CREATE INDEX city_furn_lod4brep_fkx ON citydb.city_furniture
 	USING btree
 	(
 	  lod4_brep_id ASC NULLS LAST
@@ -363,8 +371,8 @@ CREATE INDEX city_furn_lod4brep_fkx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod1xgeom_spx | type: INDEX --
--- DROP INDEX public.city_furn_lod1xgeom_spx;
-CREATE INDEX city_furn_lod1xgeom_spx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod1xgeom_spx;
+CREATE INDEX city_furn_lod1xgeom_spx ON citydb.city_furniture
 	USING gist
 	(
 	  lod1_other_geom
@@ -372,8 +380,8 @@ CREATE INDEX city_furn_lod1xgeom_spx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod2xgeom_spx | type: INDEX --
--- DROP INDEX public.city_furn_lod2xgeom_spx;
-CREATE INDEX city_furn_lod2xgeom_spx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod2xgeom_spx;
+CREATE INDEX city_furn_lod2xgeom_spx ON citydb.city_furniture
 	USING gist
 	(
 	  lod2_other_geom
@@ -381,8 +389,8 @@ CREATE INDEX city_furn_lod2xgeom_spx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod3xgeom_spx | type: INDEX --
--- DROP INDEX public.city_furn_lod3xgeom_spx;
-CREATE INDEX city_furn_lod3xgeom_spx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod3xgeom_spx;
+CREATE INDEX city_furn_lod3xgeom_spx ON citydb.city_furniture
 	USING gist
 	(
 	  lod3_other_geom
@@ -390,8 +398,8 @@ CREATE INDEX city_furn_lod3xgeom_spx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod4xgeom_spx | type: INDEX --
--- DROP INDEX public.city_furn_lod4xgeom_spx;
-CREATE INDEX city_furn_lod4xgeom_spx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod4xgeom_spx;
+CREATE INDEX city_furn_lod4xgeom_spx ON citydb.city_furniture
 	USING gist
 	(
 	  lod4_other_geom
@@ -399,8 +407,8 @@ CREATE INDEX city_furn_lod4xgeom_spx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod1impl_fkx | type: INDEX --
--- DROP INDEX public.city_furn_lod1impl_fkx;
-CREATE INDEX city_furn_lod1impl_fkx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod1impl_fkx;
+CREATE INDEX city_furn_lod1impl_fkx ON citydb.city_furniture
 	USING btree
 	(
 	  lod1_implicit_rep_id ASC NULLS LAST
@@ -408,8 +416,8 @@ CREATE INDEX city_furn_lod1impl_fkx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod2impl_fkx | type: INDEX --
--- DROP INDEX public.city_furn_lod2impl_fkx;
-CREATE INDEX city_furn_lod2impl_fkx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod2impl_fkx;
+CREATE INDEX city_furn_lod2impl_fkx ON citydb.city_furniture
 	USING btree
 	(
 	  lod2_implicit_rep_id ASC NULLS LAST
@@ -417,8 +425,8 @@ CREATE INDEX city_furn_lod2impl_fkx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod3impl_fkx | type: INDEX --
--- DROP INDEX public.city_furn_lod3impl_fkx;
-CREATE INDEX city_furn_lod3impl_fkx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod3impl_fkx;
+CREATE INDEX city_furn_lod3impl_fkx ON citydb.city_furniture
 	USING btree
 	(
 	  lod3_implicit_rep_id ASC NULLS LAST
@@ -426,8 +434,8 @@ CREATE INDEX city_furn_lod3impl_fkx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod4impl_fkx | type: INDEX --
--- DROP INDEX public.city_furn_lod4impl_fkx;
-CREATE INDEX city_furn_lod4impl_fkx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod4impl_fkx;
+CREATE INDEX city_furn_lod4impl_fkx ON citydb.city_furniture
 	USING btree
 	(
 	  lod4_implicit_rep_id ASC NULLS LAST
@@ -435,8 +443,8 @@ CREATE INDEX city_furn_lod4impl_fkx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod1refpnt_spx | type: INDEX --
--- DROP INDEX public.city_furn_lod1refpnt_spx;
-CREATE INDEX city_furn_lod1refpnt_spx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod1refpnt_spx;
+CREATE INDEX city_furn_lod1refpnt_spx ON citydb.city_furniture
 	USING gist
 	(
 	  lod1_implicit_ref_point
@@ -444,8 +452,8 @@ CREATE INDEX city_furn_lod1refpnt_spx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod2refpnt_spx | type: INDEX --
--- DROP INDEX public.city_furn_lod2refpnt_spx;
-CREATE INDEX city_furn_lod2refpnt_spx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod2refpnt_spx;
+CREATE INDEX city_furn_lod2refpnt_spx ON citydb.city_furniture
 	USING gist
 	(
 	  lod2_implicit_ref_point
@@ -453,8 +461,8 @@ CREATE INDEX city_furn_lod2refpnt_spx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod3refpnt_spx | type: INDEX --
--- DROP INDEX public.city_furn_lod3refpnt_spx;
-CREATE INDEX city_furn_lod3refpnt_spx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod3refpnt_spx;
+CREATE INDEX city_furn_lod3refpnt_spx ON citydb.city_furniture
 	USING gist
 	(
 	  lod3_implicit_ref_point
@@ -462,8 +470,8 @@ CREATE INDEX city_furn_lod3refpnt_spx ON public.city_furniture
 -- ddl-end --
 
 -- object: city_furn_lod4refpnt_spx | type: INDEX --
--- DROP INDEX public.city_furn_lod4refpnt_spx;
-CREATE INDEX city_furn_lod4refpnt_spx ON public.city_furniture
+-- DROP INDEX citydb.city_furn_lod4refpnt_spx;
+CREATE INDEX city_furn_lod4refpnt_spx ON citydb.city_furniture
 	USING gist
 	(
 	  lod4_implicit_ref_point
@@ -471,9 +479,9 @@ CREATE INDEX city_furn_lod4refpnt_spx ON public.city_furniture
 -- ddl-end --
 
 
--- object: public.cityobject_genericatt_seq | type: SEQUENCE --
--- DROP SEQUENCE public.cityobject_genericatt_seq;
-CREATE SEQUENCE public.cityobject_genericatt_seq
+-- object: citydb.cityobject_genericatt_seq | type: SEQUENCE --
+-- DROP SEQUENCE citydb.cityobject_genericatt_seq;
+CREATE SEQUENCE citydb.cityobject_genericatt_seq
 	INCREMENT BY 1
 	MINVALUE 0
 	MAXVALUE 2147483647
@@ -483,9 +491,9 @@ CREATE SEQUENCE public.cityobject_genericatt_seq
 	OWNED BY NONE;
 -- ddl-end --
 
--- object: public.generic_cityobject | type: TABLE --
--- DROP TABLE public.generic_cityobject;
-CREATE TABLE public.generic_cityobject(
+-- object: citydb.generic_cityobject | type: TABLE --
+-- DROP TABLE citydb.generic_cityobject;
+CREATE TABLE citydb.generic_cityobject(
 	id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -528,8 +536,8 @@ CREATE TABLE public.generic_cityobject(
 );
 -- ddl-end --
 -- object: gen_object_lod0terr_spx | type: INDEX --
--- DROP INDEX public.gen_object_lod0terr_spx;
-CREATE INDEX gen_object_lod0terr_spx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod0terr_spx;
+CREATE INDEX gen_object_lod0terr_spx ON citydb.generic_cityobject
 	USING gist
 	(
 	  lod0_terrain_intersection
@@ -537,8 +545,8 @@ CREATE INDEX gen_object_lod0terr_spx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod1terr_spx | type: INDEX --
--- DROP INDEX public.gen_object_lod1terr_spx;
-CREATE INDEX gen_object_lod1terr_spx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod1terr_spx;
+CREATE INDEX gen_object_lod1terr_spx ON citydb.generic_cityobject
 	USING gist
 	(
 	  lod1_terrain_intersection
@@ -546,8 +554,8 @@ CREATE INDEX gen_object_lod1terr_spx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod2terr_spx | type: INDEX --
--- DROP INDEX public.gen_object_lod2terr_spx;
-CREATE INDEX gen_object_lod2terr_spx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod2terr_spx;
+CREATE INDEX gen_object_lod2terr_spx ON citydb.generic_cityobject
 	USING gist
 	(
 	  lod2_terrain_intersection
@@ -555,8 +563,8 @@ CREATE INDEX gen_object_lod2terr_spx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod3terr_spx | type: INDEX --
--- DROP INDEX public.gen_object_lod3terr_spx;
-CREATE INDEX gen_object_lod3terr_spx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod3terr_spx;
+CREATE INDEX gen_object_lod3terr_spx ON citydb.generic_cityobject
 	USING gist
 	(
 	  lod3_terrain_intersection
@@ -564,8 +572,8 @@ CREATE INDEX gen_object_lod3terr_spx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod4terr_spx | type: INDEX --
--- DROP INDEX public.gen_object_lod4terr_spx;
-CREATE INDEX gen_object_lod4terr_spx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod4terr_spx;
+CREATE INDEX gen_object_lod4terr_spx ON citydb.generic_cityobject
 	USING gist
 	(
 	  lod4_terrain_intersection
@@ -573,8 +581,8 @@ CREATE INDEX gen_object_lod4terr_spx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod0brep_fkx | type: INDEX --
--- DROP INDEX public.gen_object_lod0brep_fkx;
-CREATE INDEX gen_object_lod0brep_fkx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod0brep_fkx;
+CREATE INDEX gen_object_lod0brep_fkx ON citydb.generic_cityobject
 	USING btree
 	(
 	  lod0_brep_id ASC NULLS LAST
@@ -582,8 +590,8 @@ CREATE INDEX gen_object_lod0brep_fkx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod1brep_fkx | type: INDEX --
--- DROP INDEX public.gen_object_lod1brep_fkx;
-CREATE INDEX gen_object_lod1brep_fkx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod1brep_fkx;
+CREATE INDEX gen_object_lod1brep_fkx ON citydb.generic_cityobject
 	USING btree
 	(
 	  lod1_brep_id ASC NULLS LAST
@@ -591,8 +599,8 @@ CREATE INDEX gen_object_lod1brep_fkx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod2brep_fkx | type: INDEX --
--- DROP INDEX public.gen_object_lod2brep_fkx;
-CREATE INDEX gen_object_lod2brep_fkx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod2brep_fkx;
+CREATE INDEX gen_object_lod2brep_fkx ON citydb.generic_cityobject
 	USING btree
 	(
 	  lod2_brep_id ASC NULLS LAST
@@ -600,8 +608,8 @@ CREATE INDEX gen_object_lod2brep_fkx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod3brep_fkx | type: INDEX --
--- DROP INDEX public.gen_object_lod3brep_fkx;
-CREATE INDEX gen_object_lod3brep_fkx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod3brep_fkx;
+CREATE INDEX gen_object_lod3brep_fkx ON citydb.generic_cityobject
 	USING btree
 	(
 	  lod3_brep_id ASC NULLS LAST
@@ -609,8 +617,8 @@ CREATE INDEX gen_object_lod3brep_fkx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod4brep_fkx | type: INDEX --
--- DROP INDEX public.gen_object_lod4brep_fkx;
-CREATE INDEX gen_object_lod4brep_fkx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod4brep_fkx;
+CREATE INDEX gen_object_lod4brep_fkx ON citydb.generic_cityobject
 	USING btree
 	(
 	  lod4_brep_id ASC NULLS LAST
@@ -618,8 +626,8 @@ CREATE INDEX gen_object_lod4brep_fkx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod0xgeom_spx | type: INDEX --
--- DROP INDEX public.gen_object_lod0xgeom_spx;
-CREATE INDEX gen_object_lod0xgeom_spx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod0xgeom_spx;
+CREATE INDEX gen_object_lod0xgeom_spx ON citydb.generic_cityobject
 	USING gist
 	(
 	  lod0_other_geom
@@ -627,8 +635,8 @@ CREATE INDEX gen_object_lod0xgeom_spx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod1xgeom_spx | type: INDEX --
--- DROP INDEX public.gen_object_lod1xgeom_spx;
-CREATE INDEX gen_object_lod1xgeom_spx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod1xgeom_spx;
+CREATE INDEX gen_object_lod1xgeom_spx ON citydb.generic_cityobject
 	USING gist
 	(
 	  lod1_other_geom
@@ -636,8 +644,8 @@ CREATE INDEX gen_object_lod1xgeom_spx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod2xgeom_spx | type: INDEX --
--- DROP INDEX public.gen_object_lod2xgeom_spx;
-CREATE INDEX gen_object_lod2xgeom_spx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod2xgeom_spx;
+CREATE INDEX gen_object_lod2xgeom_spx ON citydb.generic_cityobject
 	USING gist
 	(
 	  lod2_other_geom
@@ -645,8 +653,8 @@ CREATE INDEX gen_object_lod2xgeom_spx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod3xgeom_spx | type: INDEX --
--- DROP INDEX public.gen_object_lod3xgeom_spx;
-CREATE INDEX gen_object_lod3xgeom_spx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod3xgeom_spx;
+CREATE INDEX gen_object_lod3xgeom_spx ON citydb.generic_cityobject
 	USING gist
 	(
 	  lod3_other_geom
@@ -654,8 +662,8 @@ CREATE INDEX gen_object_lod3xgeom_spx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod4xgeom_spx | type: INDEX --
--- DROP INDEX public.gen_object_lod4xgeom_spx;
-CREATE INDEX gen_object_lod4xgeom_spx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod4xgeom_spx;
+CREATE INDEX gen_object_lod4xgeom_spx ON citydb.generic_cityobject
 	USING gist
 	(
 	  lod4_other_geom
@@ -663,8 +671,8 @@ CREATE INDEX gen_object_lod4xgeom_spx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod0impl_fkx | type: INDEX --
--- DROP INDEX public.gen_object_lod0impl_fkx;
-CREATE INDEX gen_object_lod0impl_fkx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod0impl_fkx;
+CREATE INDEX gen_object_lod0impl_fkx ON citydb.generic_cityobject
 	USING btree
 	(
 	  lod0_implicit_rep_id ASC NULLS LAST
@@ -672,8 +680,8 @@ CREATE INDEX gen_object_lod0impl_fkx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod1impl_fkx | type: INDEX --
--- DROP INDEX public.gen_object_lod1impl_fkx;
-CREATE INDEX gen_object_lod1impl_fkx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod1impl_fkx;
+CREATE INDEX gen_object_lod1impl_fkx ON citydb.generic_cityobject
 	USING btree
 	(
 	  lod1_implicit_rep_id ASC NULLS LAST
@@ -681,8 +689,8 @@ CREATE INDEX gen_object_lod1impl_fkx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod2impl_fkx | type: INDEX --
--- DROP INDEX public.gen_object_lod2impl_fkx;
-CREATE INDEX gen_object_lod2impl_fkx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod2impl_fkx;
+CREATE INDEX gen_object_lod2impl_fkx ON citydb.generic_cityobject
 	USING btree
 	(
 	  lod2_implicit_rep_id ASC NULLS LAST
@@ -690,8 +698,8 @@ CREATE INDEX gen_object_lod2impl_fkx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod3impl_fkx | type: INDEX --
--- DROP INDEX public.gen_object_lod3impl_fkx;
-CREATE INDEX gen_object_lod3impl_fkx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod3impl_fkx;
+CREATE INDEX gen_object_lod3impl_fkx ON citydb.generic_cityobject
 	USING btree
 	(
 	  lod3_implicit_rep_id ASC NULLS LAST
@@ -699,8 +707,8 @@ CREATE INDEX gen_object_lod3impl_fkx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod4impl_fkx | type: INDEX --
--- DROP INDEX public.gen_object_lod4impl_fkx;
-CREATE INDEX gen_object_lod4impl_fkx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod4impl_fkx;
+CREATE INDEX gen_object_lod4impl_fkx ON citydb.generic_cityobject
 	USING btree
 	(
 	  lod4_implicit_rep_id ASC NULLS LAST
@@ -708,8 +716,8 @@ CREATE INDEX gen_object_lod4impl_fkx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod0refpnt_spx | type: INDEX --
--- DROP INDEX public.gen_object_lod0refpnt_spx;
-CREATE INDEX gen_object_lod0refpnt_spx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod0refpnt_spx;
+CREATE INDEX gen_object_lod0refpnt_spx ON citydb.generic_cityobject
 	USING gist
 	(
 	  lod0_implicit_ref_point
@@ -717,8 +725,8 @@ CREATE INDEX gen_object_lod0refpnt_spx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod1refpnt_spx | type: INDEX --
--- DROP INDEX public.gen_object_lod1refpnt_spx;
-CREATE INDEX gen_object_lod1refpnt_spx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod1refpnt_spx;
+CREATE INDEX gen_object_lod1refpnt_spx ON citydb.generic_cityobject
 	USING gist
 	(
 	  lod1_implicit_ref_point
@@ -726,8 +734,8 @@ CREATE INDEX gen_object_lod1refpnt_spx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod2refpnt_spx | type: INDEX --
--- DROP INDEX public.gen_object_lod2refpnt_spx;
-CREATE INDEX gen_object_lod2refpnt_spx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod2refpnt_spx;
+CREATE INDEX gen_object_lod2refpnt_spx ON citydb.generic_cityobject
 	USING gist
 	(
 	  lod2_implicit_ref_point
@@ -735,8 +743,8 @@ CREATE INDEX gen_object_lod2refpnt_spx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod3refpnt_spx | type: INDEX --
--- DROP INDEX public.gen_object_lod3refpnt_spx;
-CREATE INDEX gen_object_lod3refpnt_spx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod3refpnt_spx;
+CREATE INDEX gen_object_lod3refpnt_spx ON citydb.generic_cityobject
 	USING gist
 	(
 	  lod3_implicit_ref_point
@@ -744,8 +752,8 @@ CREATE INDEX gen_object_lod3refpnt_spx ON public.generic_cityobject
 -- ddl-end --
 
 -- object: gen_object_lod4refpnt_spx | type: INDEX --
--- DROP INDEX public.gen_object_lod4refpnt_spx;
-CREATE INDEX gen_object_lod4refpnt_spx ON public.generic_cityobject
+-- DROP INDEX citydb.gen_object_lod4refpnt_spx;
+CREATE INDEX gen_object_lod4refpnt_spx ON citydb.generic_cityobject
 	USING gist
 	(
 	  lod4_implicit_ref_point
@@ -753,9 +761,9 @@ CREATE INDEX gen_object_lod4refpnt_spx ON public.generic_cityobject
 -- ddl-end --
 
 
--- object: public.address_seq | type: SEQUENCE --
--- DROP SEQUENCE public.address_seq;
-CREATE SEQUENCE public.address_seq
+-- object: citydb.address_seq | type: SEQUENCE --
+-- DROP SEQUENCE citydb.address_seq;
+CREATE SEQUENCE citydb.address_seq
 	INCREMENT BY 1
 	MINVALUE 0
 	MAXVALUE 2147483647
@@ -765,9 +773,9 @@ CREATE SEQUENCE public.address_seq
 	OWNED BY NONE;
 -- ddl-end --
 
--- object: public.address_to_building | type: TABLE --
--- DROP TABLE public.address_to_building;
-CREATE TABLE public.address_to_building(
+-- object: citydb.address_to_building | type: TABLE --
+-- DROP TABLE citydb.address_to_building;
+CREATE TABLE citydb.address_to_building(
 	building_id integer NOT NULL,
 	address_id integer NOT NULL,
 	CONSTRAINT address_to_building_pk PRIMARY KEY (building_id,address_id)
@@ -775,8 +783,8 @@ CREATE TABLE public.address_to_building(
 );
 -- ddl-end --
 -- object: address_to_building_fkx | type: INDEX --
--- DROP INDEX public.address_to_building_fkx;
-CREATE INDEX address_to_building_fkx ON public.address_to_building
+-- DROP INDEX citydb.address_to_building_fkx;
+CREATE INDEX address_to_building_fkx ON citydb.address_to_building
 	USING btree
 	(
 	  address_id ASC NULLS LAST
@@ -784,8 +792,8 @@ CREATE INDEX address_to_building_fkx ON public.address_to_building
 -- ddl-end --
 
 -- object: address_to_building_fkx1 | type: INDEX --
--- DROP INDEX public.address_to_building_fkx1;
-CREATE INDEX address_to_building_fkx1 ON public.address_to_building
+-- DROP INDEX citydb.address_to_building_fkx1;
+CREATE INDEX address_to_building_fkx1 ON citydb.address_to_building
 	USING btree
 	(
 	  building_id ASC NULLS LAST
@@ -793,9 +801,9 @@ CREATE INDEX address_to_building_fkx1 ON public.address_to_building
 -- ddl-end --
 
 
--- object: public.building | type: TABLE --
--- DROP TABLE public.building;
-CREATE TABLE public.building(
+-- object: citydb.building | type: TABLE --
+-- DROP TABLE citydb.building;
+CREATE TABLE citydb.building(
 	id integer NOT NULL,
 	building_parent_id integer,
 	building_root_id integer,
@@ -839,8 +847,8 @@ CREATE TABLE public.building(
 );
 -- ddl-end --
 -- object: building_parent_fkx | type: INDEX --
--- DROP INDEX public.building_parent_fkx;
-CREATE INDEX building_parent_fkx ON public.building
+-- DROP INDEX citydb.building_parent_fkx;
+CREATE INDEX building_parent_fkx ON citydb.building
 	USING btree
 	(
 	  building_parent_id ASC NULLS LAST
@@ -848,8 +856,8 @@ CREATE INDEX building_parent_fkx ON public.building
 -- ddl-end --
 
 -- object: building_root_fkx | type: INDEX --
--- DROP INDEX public.building_root_fkx;
-CREATE INDEX building_root_fkx ON public.building
+-- DROP INDEX citydb.building_root_fkx;
+CREATE INDEX building_root_fkx ON citydb.building
 	USING btree
 	(
 	  building_root_id ASC NULLS LAST
@@ -857,8 +865,8 @@ CREATE INDEX building_root_fkx ON public.building
 -- ddl-end --
 
 -- object: building_lod1terr_spx | type: INDEX --
--- DROP INDEX public.building_lod1terr_spx;
-CREATE INDEX building_lod1terr_spx ON public.building
+-- DROP INDEX citydb.building_lod1terr_spx;
+CREATE INDEX building_lod1terr_spx ON citydb.building
 	USING gist
 	(
 	  lod1_terrain_intersection
@@ -866,8 +874,8 @@ CREATE INDEX building_lod1terr_spx ON public.building
 -- ddl-end --
 
 -- object: building_lod2terr_spx | type: INDEX --
--- DROP INDEX public.building_lod2terr_spx;
-CREATE INDEX building_lod2terr_spx ON public.building
+-- DROP INDEX citydb.building_lod2terr_spx;
+CREATE INDEX building_lod2terr_spx ON citydb.building
 	USING gist
 	(
 	  lod2_terrain_intersection
@@ -875,8 +883,8 @@ CREATE INDEX building_lod2terr_spx ON public.building
 -- ddl-end --
 
 -- object: building_lod3terr_spx | type: INDEX --
--- DROP INDEX public.building_lod3terr_spx;
-CREATE INDEX building_lod3terr_spx ON public.building
+-- DROP INDEX citydb.building_lod3terr_spx;
+CREATE INDEX building_lod3terr_spx ON citydb.building
 	USING gist
 	(
 	  lod3_terrain_intersection
@@ -884,8 +892,8 @@ CREATE INDEX building_lod3terr_spx ON public.building
 -- ddl-end --
 
 -- object: building_lod4terr_spx | type: INDEX --
--- DROP INDEX public.building_lod4terr_spx;
-CREATE INDEX building_lod4terr_spx ON public.building
+-- DROP INDEX citydb.building_lod4terr_spx;
+CREATE INDEX building_lod4terr_spx ON citydb.building
 	USING gist
 	(
 	  lod4_terrain_intersection
@@ -893,8 +901,8 @@ CREATE INDEX building_lod4terr_spx ON public.building
 -- ddl-end --
 
 -- object: building_lod2curve_spx | type: INDEX --
--- DROP INDEX public.building_lod2curve_spx;
-CREATE INDEX building_lod2curve_spx ON public.building
+-- DROP INDEX citydb.building_lod2curve_spx;
+CREATE INDEX building_lod2curve_spx ON citydb.building
 	USING gist
 	(
 	  lod2_multi_curve
@@ -902,8 +910,8 @@ CREATE INDEX building_lod2curve_spx ON public.building
 -- ddl-end --
 
 -- object: building_lod3curve_spx | type: INDEX --
--- DROP INDEX public.building_lod3curve_spx;
-CREATE INDEX building_lod3curve_spx ON public.building
+-- DROP INDEX citydb.building_lod3curve_spx;
+CREATE INDEX building_lod3curve_spx ON citydb.building
 	USING gist
 	(
 	  lod3_multi_curve
@@ -911,8 +919,8 @@ CREATE INDEX building_lod3curve_spx ON public.building
 -- ddl-end --
 
 -- object: building_lod4curve_spx | type: INDEX --
--- DROP INDEX public.building_lod4curve_spx;
-CREATE INDEX building_lod4curve_spx ON public.building
+-- DROP INDEX citydb.building_lod4curve_spx;
+CREATE INDEX building_lod4curve_spx ON citydb.building
 	USING gist
 	(
 	  lod4_multi_curve
@@ -920,8 +928,8 @@ CREATE INDEX building_lod4curve_spx ON public.building
 -- ddl-end --
 
 -- object: building_lod0footprint_fkx | type: INDEX --
--- DROP INDEX public.building_lod0footprint_fkx;
-CREATE INDEX building_lod0footprint_fkx ON public.building
+-- DROP INDEX citydb.building_lod0footprint_fkx;
+CREATE INDEX building_lod0footprint_fkx ON citydb.building
 	USING btree
 	(
 	  lod0_footprint_id ASC NULLS LAST
@@ -929,8 +937,8 @@ CREATE INDEX building_lod0footprint_fkx ON public.building
 -- ddl-end --
 
 -- object: building_lod0roofprint_fkx | type: INDEX --
--- DROP INDEX public.building_lod0roofprint_fkx;
-CREATE INDEX building_lod0roofprint_fkx ON public.building
+-- DROP INDEX citydb.building_lod0roofprint_fkx;
+CREATE INDEX building_lod0roofprint_fkx ON citydb.building
 	USING btree
 	(
 	  lod0_roofprint_id ASC NULLS LAST
@@ -938,8 +946,8 @@ CREATE INDEX building_lod0roofprint_fkx ON public.building
 -- ddl-end --
 
 -- object: building_lod1msrf_fkx | type: INDEX --
--- DROP INDEX public.building_lod1msrf_fkx;
-CREATE INDEX building_lod1msrf_fkx ON public.building
+-- DROP INDEX citydb.building_lod1msrf_fkx;
+CREATE INDEX building_lod1msrf_fkx ON citydb.building
 	USING btree
 	(
 	  lod1_multi_surface_id ASC NULLS LAST
@@ -947,8 +955,8 @@ CREATE INDEX building_lod1msrf_fkx ON public.building
 -- ddl-end --
 
 -- object: building_lod2msrf_fkx | type: INDEX --
--- DROP INDEX public.building_lod2msrf_fkx;
-CREATE INDEX building_lod2msrf_fkx ON public.building
+-- DROP INDEX citydb.building_lod2msrf_fkx;
+CREATE INDEX building_lod2msrf_fkx ON citydb.building
 	USING btree
 	(
 	  lod2_multi_surface_id ASC NULLS LAST
@@ -956,8 +964,8 @@ CREATE INDEX building_lod2msrf_fkx ON public.building
 -- ddl-end --
 
 -- object: building_lod3msrf_fkx | type: INDEX --
--- DROP INDEX public.building_lod3msrf_fkx;
-CREATE INDEX building_lod3msrf_fkx ON public.building
+-- DROP INDEX citydb.building_lod3msrf_fkx;
+CREATE INDEX building_lod3msrf_fkx ON citydb.building
 	USING btree
 	(
 	  lod3_multi_surface_id ASC NULLS LAST
@@ -965,8 +973,8 @@ CREATE INDEX building_lod3msrf_fkx ON public.building
 -- ddl-end --
 
 -- object: building_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.building_lod4msrf_fkx;
-CREATE INDEX building_lod4msrf_fkx ON public.building
+-- DROP INDEX citydb.building_lod4msrf_fkx;
+CREATE INDEX building_lod4msrf_fkx ON citydb.building
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -974,8 +982,8 @@ CREATE INDEX building_lod4msrf_fkx ON public.building
 -- ddl-end --
 
 -- object: building_lod1solid_fkx | type: INDEX --
--- DROP INDEX public.building_lod1solid_fkx;
-CREATE INDEX building_lod1solid_fkx ON public.building
+-- DROP INDEX citydb.building_lod1solid_fkx;
+CREATE INDEX building_lod1solid_fkx ON citydb.building
 	USING btree
 	(
 	  lod1_solid_id ASC NULLS LAST
@@ -983,8 +991,8 @@ CREATE INDEX building_lod1solid_fkx ON public.building
 -- ddl-end --
 
 -- object: building_lod2solid_fkx | type: INDEX --
--- DROP INDEX public.building_lod2solid_fkx;
-CREATE INDEX building_lod2solid_fkx ON public.building
+-- DROP INDEX citydb.building_lod2solid_fkx;
+CREATE INDEX building_lod2solid_fkx ON citydb.building
 	USING btree
 	(
 	  lod2_solid_id ASC NULLS LAST
@@ -992,8 +1000,8 @@ CREATE INDEX building_lod2solid_fkx ON public.building
 -- ddl-end --
 
 -- object: building_lod3solid_fkx | type: INDEX --
--- DROP INDEX public.building_lod3solid_fkx;
-CREATE INDEX building_lod3solid_fkx ON public.building
+-- DROP INDEX citydb.building_lod3solid_fkx;
+CREATE INDEX building_lod3solid_fkx ON citydb.building
 	USING btree
 	(
 	  lod3_solid_id ASC NULLS LAST
@@ -1001,8 +1009,8 @@ CREATE INDEX building_lod3solid_fkx ON public.building
 -- ddl-end --
 
 -- object: building_lod4solid_fkx | type: INDEX --
--- DROP INDEX public.building_lod4solid_fkx;
-CREATE INDEX building_lod4solid_fkx ON public.building
+-- DROP INDEX citydb.building_lod4solid_fkx;
+CREATE INDEX building_lod4solid_fkx ON citydb.building
 	USING btree
 	(
 	  lod4_solid_id ASC NULLS LAST
@@ -1010,9 +1018,9 @@ CREATE INDEX building_lod4solid_fkx ON public.building
 -- ddl-end --
 
 
--- object: public.building_furniture | type: TABLE --
--- DROP TABLE public.building_furniture;
-CREATE TABLE public.building_furniture(
+-- object: citydb.building_furniture | type: TABLE --
+-- DROP TABLE citydb.building_furniture;
+CREATE TABLE citydb.building_furniture(
 	id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -1031,8 +1039,8 @@ CREATE TABLE public.building_furniture(
 );
 -- ddl-end --
 -- object: bldg_furn_room_fkx | type: INDEX --
--- DROP INDEX public.bldg_furn_room_fkx;
-CREATE INDEX bldg_furn_room_fkx ON public.building_furniture
+-- DROP INDEX citydb.bldg_furn_room_fkx;
+CREATE INDEX bldg_furn_room_fkx ON citydb.building_furniture
 	USING btree
 	(
 	  room_id ASC NULLS LAST
@@ -1040,8 +1048,8 @@ CREATE INDEX bldg_furn_room_fkx ON public.building_furniture
 -- ddl-end --
 
 -- object: bldg_furn_lod4brep_fkx | type: INDEX --
--- DROP INDEX public.bldg_furn_lod4brep_fkx;
-CREATE INDEX bldg_furn_lod4brep_fkx ON public.building_furniture
+-- DROP INDEX citydb.bldg_furn_lod4brep_fkx;
+CREATE INDEX bldg_furn_lod4brep_fkx ON citydb.building_furniture
 	USING btree
 	(
 	  lod4_brep_id ASC NULLS LAST
@@ -1049,8 +1057,8 @@ CREATE INDEX bldg_furn_lod4brep_fkx ON public.building_furniture
 -- ddl-end --
 
 -- object: bldg_furn_lod4xgeom_spx | type: INDEX --
--- DROP INDEX public.bldg_furn_lod4xgeom_spx;
-CREATE INDEX bldg_furn_lod4xgeom_spx ON public.building_furniture
+-- DROP INDEX citydb.bldg_furn_lod4xgeom_spx;
+CREATE INDEX bldg_furn_lod4xgeom_spx ON citydb.building_furniture
 	USING gist
 	(
 	  lod4_other_geom
@@ -1058,8 +1066,8 @@ CREATE INDEX bldg_furn_lod4xgeom_spx ON public.building_furniture
 -- ddl-end --
 
 -- object: bldg_furn_lod4impl_fkx | type: INDEX --
--- DROP INDEX public.bldg_furn_lod4impl_fkx;
-CREATE INDEX bldg_furn_lod4impl_fkx ON public.building_furniture
+-- DROP INDEX citydb.bldg_furn_lod4impl_fkx;
+CREATE INDEX bldg_furn_lod4impl_fkx ON citydb.building_furniture
 	USING btree
 	(
 	  lod4_implicit_rep_id
@@ -1067,8 +1075,8 @@ CREATE INDEX bldg_furn_lod4impl_fkx ON public.building_furniture
 -- ddl-end --
 
 -- object: bldg_furn_lod4refpt_spx | type: INDEX --
--- DROP INDEX public.bldg_furn_lod4refpt_spx;
-CREATE INDEX bldg_furn_lod4refpt_spx ON public.building_furniture
+-- DROP INDEX citydb.bldg_furn_lod4refpt_spx;
+CREATE INDEX bldg_furn_lod4refpt_spx ON citydb.building_furniture
 	USING gist
 	(
 	  lod4_implicit_ref_point
@@ -1076,9 +1084,9 @@ CREATE INDEX bldg_furn_lod4refpt_spx ON public.building_furniture
 -- ddl-end --
 
 
--- object: public.building_installation | type: TABLE --
--- DROP TABLE public.building_installation;
-CREATE TABLE public.building_installation(
+-- object: citydb.building_installation | type: TABLE --
+-- DROP TABLE citydb.building_installation;
+CREATE TABLE citydb.building_installation(
 	id integer NOT NULL,
 	objectclass_id integer,
 	class character varying(256),
@@ -1109,8 +1117,8 @@ CREATE TABLE public.building_installation(
 );
 -- ddl-end --
 -- object: bldg_inst_objclass_fkx | type: INDEX --
--- DROP INDEX public.bldg_inst_objclass_fkx;
-CREATE INDEX bldg_inst_objclass_fkx ON public.building_installation
+-- DROP INDEX citydb.bldg_inst_objclass_fkx;
+CREATE INDEX bldg_inst_objclass_fkx ON citydb.building_installation
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -1118,8 +1126,8 @@ CREATE INDEX bldg_inst_objclass_fkx ON public.building_installation
 -- ddl-end --
 
 -- object: bldg_inst_building_fkx | type: INDEX --
--- DROP INDEX public.bldg_inst_building_fkx;
-CREATE INDEX bldg_inst_building_fkx ON public.building_installation
+-- DROP INDEX citydb.bldg_inst_building_fkx;
+CREATE INDEX bldg_inst_building_fkx ON citydb.building_installation
 	USING btree
 	(
 	  building_id ASC NULLS LAST
@@ -1127,8 +1135,8 @@ CREATE INDEX bldg_inst_building_fkx ON public.building_installation
 -- ddl-end --
 
 -- object: bldg_inst_room_fkx | type: INDEX --
--- DROP INDEX public.bldg_inst_room_fkx;
-CREATE INDEX bldg_inst_room_fkx ON public.building_installation
+-- DROP INDEX citydb.bldg_inst_room_fkx;
+CREATE INDEX bldg_inst_room_fkx ON citydb.building_installation
 	USING btree
 	(
 	  room_id ASC NULLS LAST
@@ -1136,8 +1144,8 @@ CREATE INDEX bldg_inst_room_fkx ON public.building_installation
 -- ddl-end --
 
 -- object: bldg_inst_lod2brep_fkx | type: INDEX --
--- DROP INDEX public.bldg_inst_lod2brep_fkx;
-CREATE INDEX bldg_inst_lod2brep_fkx ON public.building_installation
+-- DROP INDEX citydb.bldg_inst_lod2brep_fkx;
+CREATE INDEX bldg_inst_lod2brep_fkx ON citydb.building_installation
 	USING btree
 	(
 	  lod2_brep_id ASC NULLS LAST
@@ -1145,8 +1153,8 @@ CREATE INDEX bldg_inst_lod2brep_fkx ON public.building_installation
 -- ddl-end --
 
 -- object: bldg_inst_lod3brep_fkx | type: INDEX --
--- DROP INDEX public.bldg_inst_lod3brep_fkx;
-CREATE INDEX bldg_inst_lod3brep_fkx ON public.building_installation
+-- DROP INDEX citydb.bldg_inst_lod3brep_fkx;
+CREATE INDEX bldg_inst_lod3brep_fkx ON citydb.building_installation
 	USING btree
 	(
 	  lod3_brep_id ASC NULLS LAST
@@ -1154,8 +1162,8 @@ CREATE INDEX bldg_inst_lod3brep_fkx ON public.building_installation
 -- ddl-end --
 
 -- object: bldg_inst_lod4brep_fkx | type: INDEX --
--- DROP INDEX public.bldg_inst_lod4brep_fkx;
-CREATE INDEX bldg_inst_lod4brep_fkx ON public.building_installation
+-- DROP INDEX citydb.bldg_inst_lod4brep_fkx;
+CREATE INDEX bldg_inst_lod4brep_fkx ON citydb.building_installation
 	USING btree
 	(
 	  lod4_brep_id ASC NULLS LAST
@@ -1163,8 +1171,8 @@ CREATE INDEX bldg_inst_lod4brep_fkx ON public.building_installation
 -- ddl-end --
 
 -- object: bldg_inst_lod2xgeom_spx | type: INDEX --
--- DROP INDEX public.bldg_inst_lod2xgeom_spx;
-CREATE INDEX bldg_inst_lod2xgeom_spx ON public.building_installation
+-- DROP INDEX citydb.bldg_inst_lod2xgeom_spx;
+CREATE INDEX bldg_inst_lod2xgeom_spx ON citydb.building_installation
 	USING gist
 	(
 	  lod2_other_geom
@@ -1172,8 +1180,8 @@ CREATE INDEX bldg_inst_lod2xgeom_spx ON public.building_installation
 -- ddl-end --
 
 -- object: bldg_inst_lod3xgeom_spx | type: INDEX --
--- DROP INDEX public.bldg_inst_lod3xgeom_spx;
-CREATE INDEX bldg_inst_lod3xgeom_spx ON public.building_installation
+-- DROP INDEX citydb.bldg_inst_lod3xgeom_spx;
+CREATE INDEX bldg_inst_lod3xgeom_spx ON citydb.building_installation
 	USING gist
 	(
 	  lod3_other_geom
@@ -1181,8 +1189,8 @@ CREATE INDEX bldg_inst_lod3xgeom_spx ON public.building_installation
 -- ddl-end --
 
 -- object: bldg_inst_lod4xgeom_spx | type: INDEX --
--- DROP INDEX public.bldg_inst_lod4xgeom_spx;
-CREATE INDEX bldg_inst_lod4xgeom_spx ON public.building_installation
+-- DROP INDEX citydb.bldg_inst_lod4xgeom_spx;
+CREATE INDEX bldg_inst_lod4xgeom_spx ON citydb.building_installation
 	USING gist
 	(
 	  lod4_other_geom
@@ -1190,8 +1198,8 @@ CREATE INDEX bldg_inst_lod4xgeom_spx ON public.building_installation
 -- ddl-end --
 
 -- object: bldg_inst_lod2impl_fkx | type: INDEX --
--- DROP INDEX public.bldg_inst_lod2impl_fkx;
-CREATE INDEX bldg_inst_lod2impl_fkx ON public.building_installation
+-- DROP INDEX citydb.bldg_inst_lod2impl_fkx;
+CREATE INDEX bldg_inst_lod2impl_fkx ON citydb.building_installation
 	USING btree
 	(
 	  lod2_implicit_rep_id ASC NULLS LAST
@@ -1199,8 +1207,8 @@ CREATE INDEX bldg_inst_lod2impl_fkx ON public.building_installation
 -- ddl-end --
 
 -- object: bldg_inst_lod3impl_fkx | type: INDEX --
--- DROP INDEX public.bldg_inst_lod3impl_fkx;
-CREATE INDEX bldg_inst_lod3impl_fkx ON public.building_installation
+-- DROP INDEX citydb.bldg_inst_lod3impl_fkx;
+CREATE INDEX bldg_inst_lod3impl_fkx ON citydb.building_installation
 	USING btree
 	(
 	  lod3_implicit_rep_id ASC NULLS LAST
@@ -1208,8 +1216,8 @@ CREATE INDEX bldg_inst_lod3impl_fkx ON public.building_installation
 -- ddl-end --
 
 -- object: bldg_inst_lod4impl_fkx | type: INDEX --
--- DROP INDEX public.bldg_inst_lod4impl_fkx;
-CREATE INDEX bldg_inst_lod4impl_fkx ON public.building_installation
+-- DROP INDEX citydb.bldg_inst_lod4impl_fkx;
+CREATE INDEX bldg_inst_lod4impl_fkx ON citydb.building_installation
 	USING btree
 	(
 	  lod4_implicit_rep_id ASC NULLS LAST
@@ -1217,8 +1225,8 @@ CREATE INDEX bldg_inst_lod4impl_fkx ON public.building_installation
 -- ddl-end --
 
 -- object: bldg_inst_lod2refpt_spx | type: INDEX --
--- DROP INDEX public.bldg_inst_lod2refpt_spx;
-CREATE INDEX bldg_inst_lod2refpt_spx ON public.building_installation
+-- DROP INDEX citydb.bldg_inst_lod2refpt_spx;
+CREATE INDEX bldg_inst_lod2refpt_spx ON citydb.building_installation
 	USING gist
 	(
 	  lod2_implicit_ref_point
@@ -1226,8 +1234,8 @@ CREATE INDEX bldg_inst_lod2refpt_spx ON public.building_installation
 -- ddl-end --
 
 -- object: bldg_inst_lod3refpt_spx | type: INDEX --
--- DROP INDEX public.bldg_inst_lod3refpt_spx;
-CREATE INDEX bldg_inst_lod3refpt_spx ON public.building_installation
+-- DROP INDEX citydb.bldg_inst_lod3refpt_spx;
+CREATE INDEX bldg_inst_lod3refpt_spx ON citydb.building_installation
 	USING gist
 	(
 	  lod3_implicit_ref_point
@@ -1235,8 +1243,8 @@ CREATE INDEX bldg_inst_lod3refpt_spx ON public.building_installation
 -- ddl-end --
 
 -- object: bldg_inst_lod4refpt_spx | type: INDEX --
--- DROP INDEX public.bldg_inst_lod4refpt_spx;
-CREATE INDEX bldg_inst_lod4refpt_spx ON public.building_installation
+-- DROP INDEX citydb.bldg_inst_lod4refpt_spx;
+CREATE INDEX bldg_inst_lod4refpt_spx ON citydb.building_installation
 	USING gist
 	(
 	  lod4_implicit_ref_point
@@ -1244,9 +1252,9 @@ CREATE INDEX bldg_inst_lod4refpt_spx ON public.building_installation
 -- ddl-end --
 
 
--- object: public.opening | type: TABLE --
--- DROP TABLE public.opening;
-CREATE TABLE public.opening(
+-- object: citydb.opening | type: TABLE --
+-- DROP TABLE citydb.opening;
+CREATE TABLE citydb.opening(
 	id integer NOT NULL,
 	objectclass_id integer,
 	address_id integer,
@@ -1263,8 +1271,8 @@ CREATE TABLE public.opening(
 );
 -- ddl-end --
 -- object: opening_objectclass_fkx | type: INDEX --
--- DROP INDEX public.opening_objectclass_fkx;
-CREATE INDEX opening_objectclass_fkx ON public.opening
+-- DROP INDEX citydb.opening_objectclass_fkx;
+CREATE INDEX opening_objectclass_fkx ON citydb.opening
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -1272,8 +1280,8 @@ CREATE INDEX opening_objectclass_fkx ON public.opening
 -- ddl-end --
 
 -- object: opening_address_fkx | type: INDEX --
--- DROP INDEX public.opening_address_fkx;
-CREATE INDEX opening_address_fkx ON public.opening
+-- DROP INDEX citydb.opening_address_fkx;
+CREATE INDEX opening_address_fkx ON citydb.opening
 	USING btree
 	(
 	  address_id ASC NULLS LAST
@@ -1281,8 +1289,8 @@ CREATE INDEX opening_address_fkx ON public.opening
 -- ddl-end --
 
 -- object: opening_lod3msrf_fkx | type: INDEX --
--- DROP INDEX public.opening_lod3msrf_fkx;
-CREATE INDEX opening_lod3msrf_fkx ON public.opening
+-- DROP INDEX citydb.opening_lod3msrf_fkx;
+CREATE INDEX opening_lod3msrf_fkx ON citydb.opening
 	USING btree
 	(
 	  lod3_multi_surface_id ASC NULLS LAST
@@ -1290,8 +1298,8 @@ CREATE INDEX opening_lod3msrf_fkx ON public.opening
 -- ddl-end --
 
 -- object: opening_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.opening_lod4msrf_fkx;
-CREATE INDEX opening_lod4msrf_fkx ON public.opening
+-- DROP INDEX citydb.opening_lod4msrf_fkx;
+CREATE INDEX opening_lod4msrf_fkx ON citydb.opening
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -1299,8 +1307,8 @@ CREATE INDEX opening_lod4msrf_fkx ON public.opening
 -- ddl-end --
 
 -- object: opening_lod3impl_fkx | type: INDEX --
--- DROP INDEX public.opening_lod3impl_fkx;
-CREATE INDEX opening_lod3impl_fkx ON public.opening
+-- DROP INDEX citydb.opening_lod3impl_fkx;
+CREATE INDEX opening_lod3impl_fkx ON citydb.opening
 	USING btree
 	(
 	  lod3_implicit_rep_id ASC NULLS LAST
@@ -1308,8 +1316,8 @@ CREATE INDEX opening_lod3impl_fkx ON public.opening
 -- ddl-end --
 
 -- object: opening_lod4impl_fkx | type: INDEX --
--- DROP INDEX public.opening_lod4impl_fkx;
-CREATE INDEX opening_lod4impl_fkx ON public.opening
+-- DROP INDEX citydb.opening_lod4impl_fkx;
+CREATE INDEX opening_lod4impl_fkx ON citydb.opening
 	USING btree
 	(
 	  lod4_implicit_rep_id ASC NULLS LAST
@@ -1317,8 +1325,8 @@ CREATE INDEX opening_lod4impl_fkx ON public.opening
 -- ddl-end --
 
 -- object: opening_lod3refpt_spx | type: INDEX --
--- DROP INDEX public.opening_lod3refpt_spx;
-CREATE INDEX opening_lod3refpt_spx ON public.opening
+-- DROP INDEX citydb.opening_lod3refpt_spx;
+CREATE INDEX opening_lod3refpt_spx ON citydb.opening
 	USING gist
 	(
 	  lod3_implicit_ref_point
@@ -1326,8 +1334,8 @@ CREATE INDEX opening_lod3refpt_spx ON public.opening
 -- ddl-end --
 
 -- object: opening_lod4refpt_spx | type: INDEX --
--- DROP INDEX public.opening_lod4refpt_spx;
-CREATE INDEX opening_lod4refpt_spx ON public.opening
+-- DROP INDEX citydb.opening_lod4refpt_spx;
+CREATE INDEX opening_lod4refpt_spx ON citydb.opening
 	USING gist
 	(
 	  lod4_implicit_ref_point
@@ -1335,9 +1343,9 @@ CREATE INDEX opening_lod4refpt_spx ON public.opening
 -- ddl-end --
 
 
--- object: public.opening_to_them_surface | type: TABLE --
--- DROP TABLE public.opening_to_them_surface;
-CREATE TABLE public.opening_to_them_surface(
+-- object: citydb.opening_to_them_surface | type: TABLE --
+-- DROP TABLE citydb.opening_to_them_surface;
+CREATE TABLE citydb.opening_to_them_surface(
 	opening_id integer NOT NULL,
 	thematic_surface_id integer NOT NULL,
 	CONSTRAINT opening_to_them_surface_pk PRIMARY KEY (opening_id,thematic_surface_id)
@@ -1345,8 +1353,8 @@ CREATE TABLE public.opening_to_them_surface(
 );
 -- ddl-end --
 -- object: open_to_them_surface_fkx | type: INDEX --
--- DROP INDEX public.open_to_them_surface_fkx;
-CREATE INDEX open_to_them_surface_fkx ON public.opening_to_them_surface
+-- DROP INDEX citydb.open_to_them_surface_fkx;
+CREATE INDEX open_to_them_surface_fkx ON citydb.opening_to_them_surface
 	USING btree
 	(
 	  opening_id ASC NULLS LAST
@@ -1354,8 +1362,8 @@ CREATE INDEX open_to_them_surface_fkx ON public.opening_to_them_surface
 -- ddl-end --
 
 -- object: open_to_them_surface_fkx1 | type: INDEX --
--- DROP INDEX public.open_to_them_surface_fkx1;
-CREATE INDEX open_to_them_surface_fkx1 ON public.opening_to_them_surface
+-- DROP INDEX citydb.open_to_them_surface_fkx1;
+CREATE INDEX open_to_them_surface_fkx1 ON citydb.opening_to_them_surface
 	USING btree
 	(
 	  thematic_surface_id ASC NULLS LAST
@@ -1363,9 +1371,9 @@ CREATE INDEX open_to_them_surface_fkx1 ON public.opening_to_them_surface
 -- ddl-end --
 
 
--- object: public.room | type: TABLE --
--- DROP TABLE public.room;
-CREATE TABLE public.room(
+-- object: citydb.room | type: TABLE --
+-- DROP TABLE citydb.room;
+CREATE TABLE citydb.room(
 	id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -1381,8 +1389,8 @@ CREATE TABLE public.room(
 );
 -- ddl-end --
 -- object: room_building_fkx | type: INDEX --
--- DROP INDEX public.room_building_fkx;
-CREATE INDEX room_building_fkx ON public.room
+-- DROP INDEX citydb.room_building_fkx;
+CREATE INDEX room_building_fkx ON citydb.room
 	USING btree
 	(
 	  building_id ASC NULLS LAST
@@ -1390,8 +1398,8 @@ CREATE INDEX room_building_fkx ON public.room
 -- ddl-end --
 
 -- object: room_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.room_lod4msrf_fkx;
-CREATE INDEX room_lod4msrf_fkx ON public.room
+-- DROP INDEX citydb.room_lod4msrf_fkx;
+CREATE INDEX room_lod4msrf_fkx ON citydb.room
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -1399,8 +1407,8 @@ CREATE INDEX room_lod4msrf_fkx ON public.room
 -- ddl-end --
 
 -- object: room_lod4solid_fkx | type: INDEX --
--- DROP INDEX public.room_lod4solid_fkx;
-CREATE INDEX room_lod4solid_fkx ON public.room
+-- DROP INDEX citydb.room_lod4solid_fkx;
+CREATE INDEX room_lod4solid_fkx ON citydb.room
 	USING btree
 	(
 	  lod4_solid_id ASC NULLS LAST
@@ -1408,9 +1416,9 @@ CREATE INDEX room_lod4solid_fkx ON public.room
 -- ddl-end --
 
 
--- object: public.thematic_surface | type: TABLE --
--- DROP TABLE public.thematic_surface;
-CREATE TABLE public.thematic_surface(
+-- object: citydb.thematic_surface | type: TABLE --
+-- DROP TABLE citydb.thematic_surface;
+CREATE TABLE citydb.thematic_surface(
 	id integer NOT NULL,
 	objectclass_id integer,
 	building_id integer,
@@ -1424,8 +1432,8 @@ CREATE TABLE public.thematic_surface(
 );
 -- ddl-end --
 -- object: them_surface_objclass_fkx | type: INDEX --
--- DROP INDEX public.them_surface_objclass_fkx;
-CREATE INDEX them_surface_objclass_fkx ON public.thematic_surface
+-- DROP INDEX citydb.them_surface_objclass_fkx;
+CREATE INDEX them_surface_objclass_fkx ON citydb.thematic_surface
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -1433,8 +1441,8 @@ CREATE INDEX them_surface_objclass_fkx ON public.thematic_surface
 -- ddl-end --
 
 -- object: them_surface_building_fkx | type: INDEX --
--- DROP INDEX public.them_surface_building_fkx;
-CREATE INDEX them_surface_building_fkx ON public.thematic_surface
+-- DROP INDEX citydb.them_surface_building_fkx;
+CREATE INDEX them_surface_building_fkx ON citydb.thematic_surface
 	USING btree
 	(
 	  building_id ASC NULLS LAST
@@ -1442,8 +1450,8 @@ CREATE INDEX them_surface_building_fkx ON public.thematic_surface
 -- ddl-end --
 
 -- object: them_surface_room_fkx | type: INDEX --
--- DROP INDEX public.them_surface_room_fkx;
-CREATE INDEX them_surface_room_fkx ON public.thematic_surface
+-- DROP INDEX citydb.them_surface_room_fkx;
+CREATE INDEX them_surface_room_fkx ON citydb.thematic_surface
 	USING btree
 	(
 	  room_id ASC NULLS LAST
@@ -1451,8 +1459,8 @@ CREATE INDEX them_surface_room_fkx ON public.thematic_surface
 -- ddl-end --
 
 -- object: them_surface_bldg_inst_fkx | type: INDEX --
--- DROP INDEX public.them_surface_bldg_inst_fkx;
-CREATE INDEX them_surface_bldg_inst_fkx ON public.thematic_surface
+-- DROP INDEX citydb.them_surface_bldg_inst_fkx;
+CREATE INDEX them_surface_bldg_inst_fkx ON citydb.thematic_surface
 	USING btree
 	(
 	  building_installation_id ASC NULLS LAST
@@ -1460,8 +1468,8 @@ CREATE INDEX them_surface_bldg_inst_fkx ON public.thematic_surface
 -- ddl-end --
 
 -- object: them_surface_lod2msrf_fkx | type: INDEX --
--- DROP INDEX public.them_surface_lod2msrf_fkx;
-CREATE INDEX them_surface_lod2msrf_fkx ON public.thematic_surface
+-- DROP INDEX citydb.them_surface_lod2msrf_fkx;
+CREATE INDEX them_surface_lod2msrf_fkx ON citydb.thematic_surface
 	USING btree
 	(
 	  lod2_multi_surface_id ASC NULLS LAST
@@ -1469,8 +1477,8 @@ CREATE INDEX them_surface_lod2msrf_fkx ON public.thematic_surface
 -- ddl-end --
 
 -- object: them_surface_lod3msrf_fkx | type: INDEX --
--- DROP INDEX public.them_surface_lod3msrf_fkx;
-CREATE INDEX them_surface_lod3msrf_fkx ON public.thematic_surface
+-- DROP INDEX citydb.them_surface_lod3msrf_fkx;
+CREATE INDEX them_surface_lod3msrf_fkx ON citydb.thematic_surface
 	USING btree
 	(
 	  lod3_multi_surface_id ASC NULLS LAST
@@ -1478,8 +1486,8 @@ CREATE INDEX them_surface_lod3msrf_fkx ON public.thematic_surface
 -- ddl-end --
 
 -- object: them_surface_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.them_surface_lod4msrf_fkx;
-CREATE INDEX them_surface_lod4msrf_fkx ON public.thematic_surface
+-- DROP INDEX citydb.them_surface_lod4msrf_fkx;
+CREATE INDEX them_surface_lod4msrf_fkx ON citydb.thematic_surface
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -1487,9 +1495,9 @@ CREATE INDEX them_surface_lod4msrf_fkx ON public.thematic_surface
 -- ddl-end --
 
 
--- object: public.appearance_seq | type: SEQUENCE --
--- DROP SEQUENCE public.appearance_seq;
-CREATE SEQUENCE public.appearance_seq
+-- object: citydb.appearance_seq | type: SEQUENCE --
+-- DROP SEQUENCE citydb.appearance_seq;
+CREATE SEQUENCE citydb.appearance_seq
 	INCREMENT BY 1
 	MINVALUE 0
 	MAXVALUE 2147483647
@@ -1499,9 +1507,9 @@ CREATE SEQUENCE public.appearance_seq
 	OWNED BY NONE;
 -- ddl-end --
 
--- object: public.surface_data_seq | type: SEQUENCE --
--- DROP SEQUENCE public.surface_data_seq;
-CREATE SEQUENCE public.surface_data_seq
+-- object: citydb.surface_data_seq | type: SEQUENCE --
+-- DROP SEQUENCE citydb.surface_data_seq;
+CREATE SEQUENCE citydb.surface_data_seq
 	INCREMENT BY 1
 	MINVALUE 0
 	MAXVALUE 2147483647
@@ -1511,9 +1519,9 @@ CREATE SEQUENCE public.surface_data_seq
 	OWNED BY NONE;
 -- ddl-end --
 
--- object: public.textureparam | type: TABLE --
--- DROP TABLE public.textureparam;
-CREATE TABLE public.textureparam(
+-- object: citydb.textureparam | type: TABLE --
+-- DROP TABLE citydb.textureparam;
+CREATE TABLE citydb.textureparam(
 	surface_geometry_id integer NOT NULL,
 	is_texture_parametrization numeric,
 	world_to_texture character varying(1000),
@@ -1524,8 +1532,8 @@ CREATE TABLE public.textureparam(
 );
 -- ddl-end --
 -- object: texparam_geom_fkx | type: INDEX --
--- DROP INDEX public.texparam_geom_fkx;
-CREATE INDEX texparam_geom_fkx ON public.textureparam
+-- DROP INDEX citydb.texparam_geom_fkx;
+CREATE INDEX texparam_geom_fkx ON citydb.textureparam
 	USING btree
 	(
 	  surface_geometry_id ASC NULLS LAST
@@ -1533,8 +1541,8 @@ CREATE INDEX texparam_geom_fkx ON public.textureparam
 -- ddl-end --
 
 -- object: texparam_surface_data_fkx | type: INDEX --
--- DROP INDEX public.texparam_surface_data_fkx;
-CREATE INDEX texparam_surface_data_fkx ON public.textureparam
+-- DROP INDEX citydb.texparam_surface_data_fkx;
+CREATE INDEX texparam_surface_data_fkx ON citydb.textureparam
 	USING btree
 	(
 	  surface_data_id ASC NULLS LAST
@@ -1542,9 +1550,9 @@ CREATE INDEX texparam_surface_data_fkx ON public.textureparam
 -- ddl-end --
 
 
--- object: public.appear_to_surface_data | type: TABLE --
--- DROP TABLE public.appear_to_surface_data;
-CREATE TABLE public.appear_to_surface_data(
+-- object: citydb.appear_to_surface_data | type: TABLE --
+-- DROP TABLE citydb.appear_to_surface_data;
+CREATE TABLE citydb.appear_to_surface_data(
 	surface_data_id integer NOT NULL,
 	appearance_id integer NOT NULL,
 	CONSTRAINT appear_to_surface_data_pk PRIMARY KEY (surface_data_id,appearance_id)
@@ -1552,8 +1560,8 @@ CREATE TABLE public.appear_to_surface_data(
 );
 -- ddl-end --
 -- object: app_to_surf_data_fkx | type: INDEX --
--- DROP INDEX public.app_to_surf_data_fkx;
-CREATE INDEX app_to_surf_data_fkx ON public.appear_to_surface_data
+-- DROP INDEX citydb.app_to_surf_data_fkx;
+CREATE INDEX app_to_surf_data_fkx ON citydb.appear_to_surface_data
 	USING btree
 	(
 	  surface_data_id ASC NULLS LAST
@@ -1561,8 +1569,8 @@ CREATE INDEX app_to_surf_data_fkx ON public.appear_to_surface_data
 -- ddl-end --
 
 -- object: app_to_surf_data_fkx1 | type: INDEX --
--- DROP INDEX public.app_to_surf_data_fkx1;
-CREATE INDEX app_to_surf_data_fkx1 ON public.appear_to_surface_data
+-- DROP INDEX citydb.app_to_surf_data_fkx1;
+CREATE INDEX app_to_surf_data_fkx1 ON citydb.appear_to_surface_data
 	USING btree
 	(
 	  appearance_id ASC NULLS LAST
@@ -1570,9 +1578,9 @@ CREATE INDEX app_to_surf_data_fkx1 ON public.appear_to_surface_data
 -- ddl-end --
 
 
--- object: public.breakline_relief | type: TABLE --
--- DROP TABLE public.breakline_relief;
-CREATE TABLE public.breakline_relief(
+-- object: citydb.breakline_relief | type: TABLE --
+-- DROP TABLE citydb.breakline_relief;
+CREATE TABLE citydb.breakline_relief(
 	id integer NOT NULL,
 	ridge_or_valley_lines geometry(MULTILINESTRINGZ),
 	break_lines geometry(MULTILINESTRINGZ),
@@ -1581,8 +1589,8 @@ CREATE TABLE public.breakline_relief(
 );
 -- ddl-end --
 -- object: breakline_ridge_spx | type: INDEX --
--- DROP INDEX public.breakline_ridge_spx;
-CREATE INDEX breakline_ridge_spx ON public.breakline_relief
+-- DROP INDEX citydb.breakline_ridge_spx;
+CREATE INDEX breakline_ridge_spx ON citydb.breakline_relief
 	USING gist
 	(
 	  ridge_or_valley_lines
@@ -1590,8 +1598,8 @@ CREATE INDEX breakline_ridge_spx ON public.breakline_relief
 -- ddl-end --
 
 -- object: breakline_break_spx | type: INDEX --
--- DROP INDEX public.breakline_break_spx;
-CREATE INDEX breakline_break_spx ON public.breakline_relief
+-- DROP INDEX citydb.breakline_break_spx;
+CREATE INDEX breakline_break_spx ON citydb.breakline_relief
 	USING gist
 	(
 	  break_lines
@@ -1599,9 +1607,9 @@ CREATE INDEX breakline_break_spx ON public.breakline_relief
 -- ddl-end --
 
 
--- object: public.masspoint_relief | type: TABLE --
--- DROP TABLE public.masspoint_relief;
-CREATE TABLE public.masspoint_relief(
+-- object: citydb.masspoint_relief | type: TABLE --
+-- DROP TABLE citydb.masspoint_relief;
+CREATE TABLE citydb.masspoint_relief(
 	id integer NOT NULL,
 	relief_points geometry(MULTIPOINTZ),
 	CONSTRAINT masspoint_relief_pk PRIMARY KEY (id)
@@ -1609,8 +1617,8 @@ CREATE TABLE public.masspoint_relief(
 );
 -- ddl-end --
 -- object: masspoint_relief_spx | type: INDEX --
--- DROP INDEX public.masspoint_relief_spx;
-CREATE INDEX masspoint_relief_spx ON public.masspoint_relief
+-- DROP INDEX citydb.masspoint_relief_spx;
+CREATE INDEX masspoint_relief_spx ON citydb.masspoint_relief
 	USING gist
 	(
 	  relief_points
@@ -1618,9 +1626,9 @@ CREATE INDEX masspoint_relief_spx ON public.masspoint_relief
 -- ddl-end --
 
 
--- object: public.relief_component | type: TABLE --
--- DROP TABLE public.relief_component;
-CREATE TABLE public.relief_component(
+-- object: citydb.relief_component | type: TABLE --
+-- DROP TABLE citydb.relief_component;
+CREATE TABLE citydb.relief_component(
 	id integer NOT NULL,
 	objectclass_id integer,
 	lod numeric,
@@ -1631,8 +1639,8 @@ CREATE TABLE public.relief_component(
 );
 -- ddl-end --
 -- object: relief_comp_objclass_fkx | type: INDEX --
--- DROP INDEX public.relief_comp_objclass_fkx;
-CREATE INDEX relief_comp_objclass_fkx ON public.relief_component
+-- DROP INDEX citydb.relief_comp_objclass_fkx;
+CREATE INDEX relief_comp_objclass_fkx ON citydb.relief_component
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -1640,8 +1648,8 @@ CREATE INDEX relief_comp_objclass_fkx ON public.relief_component
 -- ddl-end --
 
 -- object: relief_comp_extent_spx | type: INDEX --
--- DROP INDEX public.relief_comp_extent_spx;
-CREATE INDEX relief_comp_extent_spx ON public.relief_component
+-- DROP INDEX citydb.relief_comp_extent_spx;
+CREATE INDEX relief_comp_extent_spx ON citydb.relief_component
 	USING gist
 	(
 	  extent
@@ -1649,9 +1657,9 @@ CREATE INDEX relief_comp_extent_spx ON public.relief_component
 -- ddl-end --
 
 
--- object: public.relief_feat_to_rel_comp | type: TABLE --
--- DROP TABLE public.relief_feat_to_rel_comp;
-CREATE TABLE public.relief_feat_to_rel_comp(
+-- object: citydb.relief_feat_to_rel_comp | type: TABLE --
+-- DROP TABLE citydb.relief_feat_to_rel_comp;
+CREATE TABLE citydb.relief_feat_to_rel_comp(
 	relief_component_id integer NOT NULL,
 	relief_feature_id integer NOT NULL,
 	CONSTRAINT relief_feat_to_rel_comp_pk PRIMARY KEY (relief_component_id,relief_feature_id)
@@ -1659,8 +1667,8 @@ CREATE TABLE public.relief_feat_to_rel_comp(
 );
 -- ddl-end --
 -- object: rel_feat_to_rel_comp_fkx | type: INDEX --
--- DROP INDEX public.rel_feat_to_rel_comp_fkx;
-CREATE INDEX rel_feat_to_rel_comp_fkx ON public.relief_feat_to_rel_comp
+-- DROP INDEX citydb.rel_feat_to_rel_comp_fkx;
+CREATE INDEX rel_feat_to_rel_comp_fkx ON citydb.relief_feat_to_rel_comp
 	USING btree
 	(
 	  relief_component_id ASC NULLS LAST
@@ -1668,8 +1676,8 @@ CREATE INDEX rel_feat_to_rel_comp_fkx ON public.relief_feat_to_rel_comp
 -- ddl-end --
 
 -- object: rel_feat_to_rel_comp_fkx1 | type: INDEX --
--- DROP INDEX public.rel_feat_to_rel_comp_fkx1;
-CREATE INDEX rel_feat_to_rel_comp_fkx1 ON public.relief_feat_to_rel_comp
+-- DROP INDEX citydb.rel_feat_to_rel_comp_fkx1;
+CREATE INDEX rel_feat_to_rel_comp_fkx1 ON citydb.relief_feat_to_rel_comp
 	USING btree
 	(
 	  relief_feature_id ASC NULLS LAST
@@ -1677,9 +1685,9 @@ CREATE INDEX rel_feat_to_rel_comp_fkx1 ON public.relief_feat_to_rel_comp
 -- ddl-end --
 
 
--- object: public.relief_feature | type: TABLE --
--- DROP TABLE public.relief_feature;
-CREATE TABLE public.relief_feature(
+-- object: citydb.relief_feature | type: TABLE --
+-- DROP TABLE citydb.relief_feature;
+CREATE TABLE citydb.relief_feature(
 	id integer NOT NULL,
 	lod numeric,
 	CONSTRAINT relief_feature_pk PRIMARY KEY (id),
@@ -1687,9 +1695,9 @@ CREATE TABLE public.relief_feature(
 
 );
 -- ddl-end --
--- object: public.tin_relief | type: TABLE --
--- DROP TABLE public.tin_relief;
-CREATE TABLE public.tin_relief(
+-- object: citydb.tin_relief | type: TABLE --
+-- DROP TABLE citydb.tin_relief;
+CREATE TABLE citydb.tin_relief(
 	id integer NOT NULL,
 	max_length double precision,
 	max_length_unit character varying(4000),
@@ -1702,8 +1710,8 @@ CREATE TABLE public.tin_relief(
 );
 -- ddl-end --
 -- object: tin_relief_geom_fkx | type: INDEX --
--- DROP INDEX public.tin_relief_geom_fkx;
-CREATE INDEX tin_relief_geom_fkx ON public.tin_relief
+-- DROP INDEX citydb.tin_relief_geom_fkx;
+CREATE INDEX tin_relief_geom_fkx ON citydb.tin_relief
 	USING btree
 	(
 	  surface_geometry_id ASC NULLS LAST
@@ -1711,8 +1719,8 @@ CREATE INDEX tin_relief_geom_fkx ON public.tin_relief
 -- ddl-end --
 
 -- object: tin_relief_stop_spx | type: INDEX --
--- DROP INDEX public.tin_relief_stop_spx;
-CREATE INDEX tin_relief_stop_spx ON public.tin_relief
+-- DROP INDEX citydb.tin_relief_stop_spx;
+CREATE INDEX tin_relief_stop_spx ON citydb.tin_relief
 	USING gist
 	(
 	  stop_lines
@@ -1720,8 +1728,8 @@ CREATE INDEX tin_relief_stop_spx ON public.tin_relief
 -- ddl-end --
 
 -- object: tin_relief_break_spx | type: INDEX --
--- DROP INDEX public.tin_relief_break_spx;
-CREATE INDEX tin_relief_break_spx ON public.tin_relief
+-- DROP INDEX citydb.tin_relief_break_spx;
+CREATE INDEX tin_relief_break_spx ON citydb.tin_relief
 	USING gist
 	(
 	  break_lines
@@ -1729,8 +1737,8 @@ CREATE INDEX tin_relief_break_spx ON public.tin_relief
 -- ddl-end --
 
 -- object: tin_relief_crtlpts_spx | type: INDEX --
--- DROP INDEX public.tin_relief_crtlpts_spx;
-CREATE INDEX tin_relief_crtlpts_spx ON public.tin_relief
+-- DROP INDEX citydb.tin_relief_crtlpts_spx;
+CREATE INDEX tin_relief_crtlpts_spx ON citydb.tin_relief
 	USING gist
 	(
 	  control_points
@@ -1738,9 +1746,9 @@ CREATE INDEX tin_relief_crtlpts_spx ON public.tin_relief
 -- ddl-end --
 
 
--- object: public.transportation_complex | type: TABLE --
--- DROP TABLE public.transportation_complex;
-CREATE TABLE public.transportation_complex(
+-- object: citydb.transportation_complex | type: TABLE --
+-- DROP TABLE citydb.transportation_complex;
+CREATE TABLE citydb.transportation_complex(
 	id integer NOT NULL,
 	objectclass_id integer,
 	class character varying(256),
@@ -1759,8 +1767,8 @@ CREATE TABLE public.transportation_complex(
 );
 -- ddl-end --
 -- object: tran_complex_objclass_fkx | type: INDEX --
--- DROP INDEX public.tran_complex_objclass_fkx;
-CREATE INDEX tran_complex_objclass_fkx ON public.transportation_complex
+-- DROP INDEX citydb.tran_complex_objclass_fkx;
+CREATE INDEX tran_complex_objclass_fkx ON citydb.transportation_complex
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -1768,8 +1776,8 @@ CREATE INDEX tran_complex_objclass_fkx ON public.transportation_complex
 -- ddl-end --
 
 -- object: tran_complex_lod0net_spx | type: INDEX --
--- DROP INDEX public.tran_complex_lod0net_spx;
-CREATE INDEX tran_complex_lod0net_spx ON public.transportation_complex
+-- DROP INDEX citydb.tran_complex_lod0net_spx;
+CREATE INDEX tran_complex_lod0net_spx ON citydb.transportation_complex
 	USING gist
 	(
 	  lod0_network
@@ -1777,8 +1785,8 @@ CREATE INDEX tran_complex_lod0net_spx ON public.transportation_complex
 -- ddl-end --
 
 -- object: tran_complex_lod1msrf_fkx | type: INDEX --
--- DROP INDEX public.tran_complex_lod1msrf_fkx;
-CREATE INDEX tran_complex_lod1msrf_fkx ON public.transportation_complex
+-- DROP INDEX citydb.tran_complex_lod1msrf_fkx;
+CREATE INDEX tran_complex_lod1msrf_fkx ON citydb.transportation_complex
 	USING btree
 	(
 	  lod1_multi_surface_id ASC NULLS LAST
@@ -1786,8 +1794,8 @@ CREATE INDEX tran_complex_lod1msrf_fkx ON public.transportation_complex
 -- ddl-end --
 
 -- object: tran_complex_lod2msrf_fkx | type: INDEX --
--- DROP INDEX public.tran_complex_lod2msrf_fkx;
-CREATE INDEX tran_complex_lod2msrf_fkx ON public.transportation_complex
+-- DROP INDEX citydb.tran_complex_lod2msrf_fkx;
+CREATE INDEX tran_complex_lod2msrf_fkx ON citydb.transportation_complex
 	USING btree
 	(
 	  lod2_multi_surface_id ASC NULLS LAST
@@ -1795,8 +1803,8 @@ CREATE INDEX tran_complex_lod2msrf_fkx ON public.transportation_complex
 -- ddl-end --
 
 -- object: tran_complex_lod3msrf_fkx | type: INDEX --
--- DROP INDEX public.tran_complex_lod3msrf_fkx;
-CREATE INDEX tran_complex_lod3msrf_fkx ON public.transportation_complex
+-- DROP INDEX citydb.tran_complex_lod3msrf_fkx;
+CREATE INDEX tran_complex_lod3msrf_fkx ON citydb.transportation_complex
 	USING btree
 	(
 	  lod3_multi_surface_id ASC NULLS LAST
@@ -1804,8 +1812,8 @@ CREATE INDEX tran_complex_lod3msrf_fkx ON public.transportation_complex
 -- ddl-end --
 
 -- object: tran_complex_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.tran_complex_lod4msrf_fkx;
-CREATE INDEX tran_complex_lod4msrf_fkx ON public.transportation_complex
+-- DROP INDEX citydb.tran_complex_lod4msrf_fkx;
+CREATE INDEX tran_complex_lod4msrf_fkx ON citydb.transportation_complex
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -1813,9 +1821,9 @@ CREATE INDEX tran_complex_lod4msrf_fkx ON public.transportation_complex
 -- ddl-end --
 
 
--- object: public.traffic_area | type: TABLE --
--- DROP TABLE public.traffic_area;
-CREATE TABLE public.traffic_area(
+-- object: citydb.traffic_area | type: TABLE --
+-- DROP TABLE citydb.traffic_area;
+CREATE TABLE citydb.traffic_area(
 	id integer NOT NULL,
 	objectclass_id integer,
 	class character varying(256),
@@ -1835,8 +1843,8 @@ CREATE TABLE public.traffic_area(
 );
 -- ddl-end --
 -- object: traffic_area_objclass_fkx | type: INDEX --
--- DROP INDEX public.traffic_area_objclass_fkx;
-CREATE INDEX traffic_area_objclass_fkx ON public.traffic_area
+-- DROP INDEX citydb.traffic_area_objclass_fkx;
+CREATE INDEX traffic_area_objclass_fkx ON citydb.traffic_area
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -1844,8 +1852,8 @@ CREATE INDEX traffic_area_objclass_fkx ON public.traffic_area
 -- ddl-end --
 
 -- object: traffic_area_lod2msrf_fkx | type: INDEX --
--- DROP INDEX public.traffic_area_lod2msrf_fkx;
-CREATE INDEX traffic_area_lod2msrf_fkx ON public.traffic_area
+-- DROP INDEX citydb.traffic_area_lod2msrf_fkx;
+CREATE INDEX traffic_area_lod2msrf_fkx ON citydb.traffic_area
 	USING btree
 	(
 	  lod2_multi_surface_id ASC NULLS LAST
@@ -1853,8 +1861,8 @@ CREATE INDEX traffic_area_lod2msrf_fkx ON public.traffic_area
 -- ddl-end --
 
 -- object: traffic_area_lod3msrf_fkx | type: INDEX --
--- DROP INDEX public.traffic_area_lod3msrf_fkx;
-CREATE INDEX traffic_area_lod3msrf_fkx ON public.traffic_area
+-- DROP INDEX citydb.traffic_area_lod3msrf_fkx;
+CREATE INDEX traffic_area_lod3msrf_fkx ON citydb.traffic_area
 	USING btree
 	(
 	  lod3_multi_surface_id ASC NULLS LAST
@@ -1862,8 +1870,8 @@ CREATE INDEX traffic_area_lod3msrf_fkx ON public.traffic_area
 -- ddl-end --
 
 -- object: traffic_area_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.traffic_area_lod4msrf_fkx;
-CREATE INDEX traffic_area_lod4msrf_fkx ON public.traffic_area
+-- DROP INDEX citydb.traffic_area_lod4msrf_fkx;
+CREATE INDEX traffic_area_lod4msrf_fkx ON citydb.traffic_area
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -1871,8 +1879,8 @@ CREATE INDEX traffic_area_lod4msrf_fkx ON public.traffic_area
 -- ddl-end --
 
 -- object: traffic_area_trancmplx_fkx | type: INDEX --
--- DROP INDEX public.traffic_area_trancmplx_fkx;
-CREATE INDEX traffic_area_trancmplx_fkx ON public.traffic_area
+-- DROP INDEX citydb.traffic_area_trancmplx_fkx;
+CREATE INDEX traffic_area_trancmplx_fkx ON citydb.traffic_area
 	USING btree
 	(
 	  transportation_complex_id ASC NULLS LAST
@@ -1880,9 +1888,9 @@ CREATE INDEX traffic_area_trancmplx_fkx ON public.traffic_area
 -- ddl-end --
 
 
--- object: public.land_use | type: TABLE --
--- DROP TABLE public.land_use;
-CREATE TABLE public.land_use(
+-- object: citydb.land_use | type: TABLE --
+-- DROP TABLE citydb.land_use;
+CREATE TABLE citydb.land_use(
 	id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -1900,8 +1908,8 @@ CREATE TABLE public.land_use(
 );
 -- ddl-end --
 -- object: land_use_lod0msrf_fkx | type: INDEX --
--- DROP INDEX public.land_use_lod0msrf_fkx;
-CREATE INDEX land_use_lod0msrf_fkx ON public.land_use
+-- DROP INDEX citydb.land_use_lod0msrf_fkx;
+CREATE INDEX land_use_lod0msrf_fkx ON citydb.land_use
 	USING btree
 	(
 	  lod0_multi_surface_id ASC NULLS LAST
@@ -1909,8 +1917,8 @@ CREATE INDEX land_use_lod0msrf_fkx ON public.land_use
 -- ddl-end --
 
 -- object: land_use_lod1msrf_fkx | type: INDEX --
--- DROP INDEX public.land_use_lod1msrf_fkx;
-CREATE INDEX land_use_lod1msrf_fkx ON public.land_use
+-- DROP INDEX citydb.land_use_lod1msrf_fkx;
+CREATE INDEX land_use_lod1msrf_fkx ON citydb.land_use
 	USING btree
 	(
 	  lod1_multi_surface_id ASC NULLS LAST
@@ -1918,8 +1926,8 @@ CREATE INDEX land_use_lod1msrf_fkx ON public.land_use
 -- ddl-end --
 
 -- object: land_use_lod2msrf_fkx | type: INDEX --
--- DROP INDEX public.land_use_lod2msrf_fkx;
-CREATE INDEX land_use_lod2msrf_fkx ON public.land_use
+-- DROP INDEX citydb.land_use_lod2msrf_fkx;
+CREATE INDEX land_use_lod2msrf_fkx ON citydb.land_use
 	USING btree
 	(
 	  lod2_multi_surface_id ASC NULLS LAST
@@ -1927,8 +1935,8 @@ CREATE INDEX land_use_lod2msrf_fkx ON public.land_use
 -- ddl-end --
 
 -- object: land_use_lod3msrf_fkx | type: INDEX --
--- DROP INDEX public.land_use_lod3msrf_fkx;
-CREATE INDEX land_use_lod3msrf_fkx ON public.land_use
+-- DROP INDEX citydb.land_use_lod3msrf_fkx;
+CREATE INDEX land_use_lod3msrf_fkx ON citydb.land_use
 	USING btree
 	(
 	  lod3_multi_surface_id ASC NULLS LAST
@@ -1936,8 +1944,8 @@ CREATE INDEX land_use_lod3msrf_fkx ON public.land_use
 -- ddl-end --
 
 -- object: land_use_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.land_use_lod4msrf_fkx;
-CREATE INDEX land_use_lod4msrf_fkx ON public.land_use
+-- DROP INDEX citydb.land_use_lod4msrf_fkx;
+CREATE INDEX land_use_lod4msrf_fkx ON citydb.land_use
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -1945,9 +1953,9 @@ CREATE INDEX land_use_lod4msrf_fkx ON public.land_use
 -- ddl-end --
 
 
--- object: public.plant_cover | type: TABLE --
--- DROP TABLE public.plant_cover;
-CREATE TABLE public.plant_cover(
+-- object: citydb.plant_cover | type: TABLE --
+-- DROP TABLE citydb.plant_cover;
+CREATE TABLE citydb.plant_cover(
 	id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -1970,8 +1978,8 @@ CREATE TABLE public.plant_cover(
 );
 -- ddl-end --
 -- object: plant_cover_lod1msrf_fkx | type: INDEX --
--- DROP INDEX public.plant_cover_lod1msrf_fkx;
-CREATE INDEX plant_cover_lod1msrf_fkx ON public.plant_cover
+-- DROP INDEX citydb.plant_cover_lod1msrf_fkx;
+CREATE INDEX plant_cover_lod1msrf_fkx ON citydb.plant_cover
 	USING btree
 	(
 	  lod1_multi_surface_id ASC NULLS LAST
@@ -1979,8 +1987,8 @@ CREATE INDEX plant_cover_lod1msrf_fkx ON public.plant_cover
 -- ddl-end --
 
 -- object: plant_cover_lod2msrf_fkx | type: INDEX --
--- DROP INDEX public.plant_cover_lod2msrf_fkx;
-CREATE INDEX plant_cover_lod2msrf_fkx ON public.plant_cover
+-- DROP INDEX citydb.plant_cover_lod2msrf_fkx;
+CREATE INDEX plant_cover_lod2msrf_fkx ON citydb.plant_cover
 	USING btree
 	(
 	  lod2_multi_surface_id ASC NULLS LAST
@@ -1988,8 +1996,8 @@ CREATE INDEX plant_cover_lod2msrf_fkx ON public.plant_cover
 -- ddl-end --
 
 -- object: plant_cover_lod3msrf_fkx | type: INDEX --
--- DROP INDEX public.plant_cover_lod3msrf_fkx;
-CREATE INDEX plant_cover_lod3msrf_fkx ON public.plant_cover
+-- DROP INDEX citydb.plant_cover_lod3msrf_fkx;
+CREATE INDEX plant_cover_lod3msrf_fkx ON citydb.plant_cover
 	USING btree
 	(
 	  lod3_multi_surface_id ASC NULLS LAST
@@ -1997,8 +2005,8 @@ CREATE INDEX plant_cover_lod3msrf_fkx ON public.plant_cover
 -- ddl-end --
 
 -- object: plant_cover_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.plant_cover_lod4msrf_fkx;
-CREATE INDEX plant_cover_lod4msrf_fkx ON public.plant_cover
+-- DROP INDEX citydb.plant_cover_lod4msrf_fkx;
+CREATE INDEX plant_cover_lod4msrf_fkx ON citydb.plant_cover
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -2006,8 +2014,8 @@ CREATE INDEX plant_cover_lod4msrf_fkx ON public.plant_cover
 -- ddl-end --
 
 -- object: plant_cover_lod1msolid_fkx | type: INDEX --
--- DROP INDEX public.plant_cover_lod1msolid_fkx;
-CREATE INDEX plant_cover_lod1msolid_fkx ON public.plant_cover
+-- DROP INDEX citydb.plant_cover_lod1msolid_fkx;
+CREATE INDEX plant_cover_lod1msolid_fkx ON citydb.plant_cover
 	USING btree
 	(
 	  lod1_multi_solid_id ASC NULLS LAST
@@ -2015,8 +2023,8 @@ CREATE INDEX plant_cover_lod1msolid_fkx ON public.plant_cover
 -- ddl-end --
 
 -- object: plant_cover_lod2msolid_fkx | type: INDEX --
--- DROP INDEX public.plant_cover_lod2msolid_fkx;
-CREATE INDEX plant_cover_lod2msolid_fkx ON public.plant_cover
+-- DROP INDEX citydb.plant_cover_lod2msolid_fkx;
+CREATE INDEX plant_cover_lod2msolid_fkx ON citydb.plant_cover
 	USING btree
 	(
 	  lod2_multi_solid_id ASC NULLS LAST
@@ -2024,8 +2032,8 @@ CREATE INDEX plant_cover_lod2msolid_fkx ON public.plant_cover
 -- ddl-end --
 
 -- object: plant_cover_lod3msolid_fkx | type: INDEX --
--- DROP INDEX public.plant_cover_lod3msolid_fkx;
-CREATE INDEX plant_cover_lod3msolid_fkx ON public.plant_cover
+-- DROP INDEX citydb.plant_cover_lod3msolid_fkx;
+CREATE INDEX plant_cover_lod3msolid_fkx ON citydb.plant_cover
 	USING btree
 	(
 	  lod3_multi_solid_id ASC NULLS LAST
@@ -2033,8 +2041,8 @@ CREATE INDEX plant_cover_lod3msolid_fkx ON public.plant_cover
 -- ddl-end --
 
 -- object: plant_cover_lod4msolid_fkx | type: INDEX --
--- DROP INDEX public.plant_cover_lod4msolid_fkx;
-CREATE INDEX plant_cover_lod4msolid_fkx ON public.plant_cover
+-- DROP INDEX citydb.plant_cover_lod4msolid_fkx;
+CREATE INDEX plant_cover_lod4msolid_fkx ON citydb.plant_cover
 	USING btree
 	(
 	  lod4_multi_solid_id ASC NULLS LAST
@@ -2042,9 +2050,9 @@ CREATE INDEX plant_cover_lod4msolid_fkx ON public.plant_cover
 -- ddl-end --
 
 
--- object: public.solitary_vegetat_object | type: TABLE --
--- DROP TABLE public.solitary_vegetat_object;
-CREATE TABLE public.solitary_vegetat_object(
+-- object: citydb.solitary_vegetat_object | type: TABLE --
+-- DROP TABLE citydb.solitary_vegetat_object;
+CREATE TABLE citydb.solitary_vegetat_object(
 	id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -2056,8 +2064,8 @@ CREATE TABLE public.solitary_vegetat_object(
 	species_codespace character varying(4000),
 	height double precision,
 	height_unit character varying(4000),
-	trunc_diameter double precision,
-	trunc_diameter_unit character varying(4000),
+	trunk_diameter double precision,
+	trunk_diameter_unit character varying(4000),
 	crown_diameter double precision,
 	crown_diameter_unit character varying(4000),
 	lod1_brep_id integer,
@@ -2085,8 +2093,8 @@ CREATE TABLE public.solitary_vegetat_object(
 );
 -- ddl-end --
 -- object: sol_veg_obj_lod1brep_fkx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod1brep_fkx;
-CREATE INDEX sol_veg_obj_lod1brep_fkx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod1brep_fkx;
+CREATE INDEX sol_veg_obj_lod1brep_fkx ON citydb.solitary_vegetat_object
 	USING btree
 	(
 	  lod1_brep_id ASC NULLS LAST
@@ -2094,8 +2102,8 @@ CREATE INDEX sol_veg_obj_lod1brep_fkx ON public.solitary_vegetat_object
 -- ddl-end --
 
 -- object: sol_veg_obj_lod2brep_fkx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod2brep_fkx;
-CREATE INDEX sol_veg_obj_lod2brep_fkx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod2brep_fkx;
+CREATE INDEX sol_veg_obj_lod2brep_fkx ON citydb.solitary_vegetat_object
 	USING btree
 	(
 	  lod2_brep_id ASC NULLS LAST
@@ -2103,8 +2111,8 @@ CREATE INDEX sol_veg_obj_lod2brep_fkx ON public.solitary_vegetat_object
 -- ddl-end --
 
 -- object: sol_veg_obj_lod3brep_fkx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod3brep_fkx;
-CREATE INDEX sol_veg_obj_lod3brep_fkx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod3brep_fkx;
+CREATE INDEX sol_veg_obj_lod3brep_fkx ON citydb.solitary_vegetat_object
 	USING btree
 	(
 	  lod3_brep_id ASC NULLS LAST
@@ -2112,8 +2120,8 @@ CREATE INDEX sol_veg_obj_lod3brep_fkx ON public.solitary_vegetat_object
 -- ddl-end --
 
 -- object: sol_veg_obj_lod4brep_fkx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod4brep_fkx;
-CREATE INDEX sol_veg_obj_lod4brep_fkx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod4brep_fkx;
+CREATE INDEX sol_veg_obj_lod4brep_fkx ON citydb.solitary_vegetat_object
 	USING btree
 	(
 	  lod4_brep_id ASC NULLS LAST
@@ -2121,8 +2129,8 @@ CREATE INDEX sol_veg_obj_lod4brep_fkx ON public.solitary_vegetat_object
 -- ddl-end --
 
 -- object: sol_veg_obj_lod1xgeom_spx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod1xgeom_spx;
-CREATE INDEX sol_veg_obj_lod1xgeom_spx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod1xgeom_spx;
+CREATE INDEX sol_veg_obj_lod1xgeom_spx ON citydb.solitary_vegetat_object
 	USING gist
 	(
 	  lod1_other_geom
@@ -2130,8 +2138,8 @@ CREATE INDEX sol_veg_obj_lod1xgeom_spx ON public.solitary_vegetat_object
 -- ddl-end --
 
 -- object: sol_veg_obj_lod2xgeom_spx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod2xgeom_spx;
-CREATE INDEX sol_veg_obj_lod2xgeom_spx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod2xgeom_spx;
+CREATE INDEX sol_veg_obj_lod2xgeom_spx ON citydb.solitary_vegetat_object
 	USING gist
 	(
 	  lod2_other_geom
@@ -2139,8 +2147,8 @@ CREATE INDEX sol_veg_obj_lod2xgeom_spx ON public.solitary_vegetat_object
 -- ddl-end --
 
 -- object: sol_veg_obj_lod3xgeom_spx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod3xgeom_spx;
-CREATE INDEX sol_veg_obj_lod3xgeom_spx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod3xgeom_spx;
+CREATE INDEX sol_veg_obj_lod3xgeom_spx ON citydb.solitary_vegetat_object
 	USING gist
 	(
 	  lod3_other_geom
@@ -2148,8 +2156,8 @@ CREATE INDEX sol_veg_obj_lod3xgeom_spx ON public.solitary_vegetat_object
 -- ddl-end --
 
 -- object: sol_veg_obj_lod4xgeom_spx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod4xgeom_spx;
-CREATE INDEX sol_veg_obj_lod4xgeom_spx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod4xgeom_spx;
+CREATE INDEX sol_veg_obj_lod4xgeom_spx ON citydb.solitary_vegetat_object
 	USING gist
 	(
 	  lod4_other_geom
@@ -2157,8 +2165,8 @@ CREATE INDEX sol_veg_obj_lod4xgeom_spx ON public.solitary_vegetat_object
 -- ddl-end --
 
 -- object: sol_veg_obj_lod1impl_fkx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod1impl_fkx;
-CREATE INDEX sol_veg_obj_lod1impl_fkx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod1impl_fkx;
+CREATE INDEX sol_veg_obj_lod1impl_fkx ON citydb.solitary_vegetat_object
 	USING btree
 	(
 	  lod1_implicit_rep_id ASC NULLS LAST
@@ -2166,8 +2174,8 @@ CREATE INDEX sol_veg_obj_lod1impl_fkx ON public.solitary_vegetat_object
 -- ddl-end --
 
 -- object: sol_veg_obj_lod2impl_fkx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod2impl_fkx;
-CREATE INDEX sol_veg_obj_lod2impl_fkx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod2impl_fkx;
+CREATE INDEX sol_veg_obj_lod2impl_fkx ON citydb.solitary_vegetat_object
 	USING btree
 	(
 	  lod2_implicit_rep_id ASC NULLS LAST
@@ -2175,8 +2183,8 @@ CREATE INDEX sol_veg_obj_lod2impl_fkx ON public.solitary_vegetat_object
 -- ddl-end --
 
 -- object: sol_veg_obj_lod3impl_fkx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod3impl_fkx;
-CREATE INDEX sol_veg_obj_lod3impl_fkx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod3impl_fkx;
+CREATE INDEX sol_veg_obj_lod3impl_fkx ON citydb.solitary_vegetat_object
 	USING btree
 	(
 	  lod3_implicit_rep_id ASC NULLS LAST
@@ -2184,8 +2192,8 @@ CREATE INDEX sol_veg_obj_lod3impl_fkx ON public.solitary_vegetat_object
 -- ddl-end --
 
 -- object: sol_veg_obj_lod4impl_fkx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod4impl_fkx;
-CREATE INDEX sol_veg_obj_lod4impl_fkx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod4impl_fkx;
+CREATE INDEX sol_veg_obj_lod4impl_fkx ON citydb.solitary_vegetat_object
 	USING btree
 	(
 	  lod4_implicit_rep_id ASC NULLS LAST
@@ -2193,8 +2201,8 @@ CREATE INDEX sol_veg_obj_lod4impl_fkx ON public.solitary_vegetat_object
 -- ddl-end --
 
 -- object: sol_veg_obj_lod1refpt_spx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod1refpt_spx;
-CREATE INDEX sol_veg_obj_lod1refpt_spx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod1refpt_spx;
+CREATE INDEX sol_veg_obj_lod1refpt_spx ON citydb.solitary_vegetat_object
 	USING gist
 	(
 	  lod1_implicit_ref_point
@@ -2202,8 +2210,8 @@ CREATE INDEX sol_veg_obj_lod1refpt_spx ON public.solitary_vegetat_object
 -- ddl-end --
 
 -- object: sol_veg_obj_lod2refpt_spx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod2refpt_spx;
-CREATE INDEX sol_veg_obj_lod2refpt_spx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod2refpt_spx;
+CREATE INDEX sol_veg_obj_lod2refpt_spx ON citydb.solitary_vegetat_object
 	USING gist
 	(
 	  lod2_implicit_ref_point
@@ -2211,8 +2219,8 @@ CREATE INDEX sol_veg_obj_lod2refpt_spx ON public.solitary_vegetat_object
 -- ddl-end --
 
 -- object: sol_veg_obj_lod3refpt_spx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod3refpt_spx;
-CREATE INDEX sol_veg_obj_lod3refpt_spx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod3refpt_spx;
+CREATE INDEX sol_veg_obj_lod3refpt_spx ON citydb.solitary_vegetat_object
 	USING gist
 	(
 	  lod3_implicit_ref_point
@@ -2220,8 +2228,8 @@ CREATE INDEX sol_veg_obj_lod3refpt_spx ON public.solitary_vegetat_object
 -- ddl-end --
 
 -- object: sol_veg_obj_lod4refpt_spx | type: INDEX --
--- DROP INDEX public.sol_veg_obj_lod4refpt_spx;
-CREATE INDEX sol_veg_obj_lod4refpt_spx ON public.solitary_vegetat_object
+-- DROP INDEX citydb.sol_veg_obj_lod4refpt_spx;
+CREATE INDEX sol_veg_obj_lod4refpt_spx ON citydb.solitary_vegetat_object
 	USING gist
 	(
 	  lod4_implicit_ref_point
@@ -2229,9 +2237,9 @@ CREATE INDEX sol_veg_obj_lod4refpt_spx ON public.solitary_vegetat_object
 -- ddl-end --
 
 
--- object: public.waterbody | type: TABLE --
--- DROP TABLE public.waterbody;
-CREATE TABLE public.waterbody(
+-- object: citydb.waterbody | type: TABLE --
+-- DROP TABLE citydb.waterbody;
+CREATE TABLE citydb.waterbody(
 	id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -2252,8 +2260,8 @@ CREATE TABLE public.waterbody(
 );
 -- ddl-end --
 -- object: waterbody_lod0curve_spx | type: INDEX --
--- DROP INDEX public.waterbody_lod0curve_spx;
-CREATE INDEX waterbody_lod0curve_spx ON public.waterbody
+-- DROP INDEX citydb.waterbody_lod0curve_spx;
+CREATE INDEX waterbody_lod0curve_spx ON citydb.waterbody
 	USING gist
 	(
 	  lod0_multi_curve
@@ -2261,8 +2269,8 @@ CREATE INDEX waterbody_lod0curve_spx ON public.waterbody
 -- ddl-end --
 
 -- object: waterbody_lod1curve_spx | type: INDEX --
--- DROP INDEX public.waterbody_lod1curve_spx;
-CREATE INDEX waterbody_lod1curve_spx ON public.waterbody
+-- DROP INDEX citydb.waterbody_lod1curve_spx;
+CREATE INDEX waterbody_lod1curve_spx ON citydb.waterbody
 	USING gist
 	(
 	  lod1_multi_curve
@@ -2270,8 +2278,8 @@ CREATE INDEX waterbody_lod1curve_spx ON public.waterbody
 -- ddl-end --
 
 -- object: waterbody_lod0msrf_fkx | type: INDEX --
--- DROP INDEX public.waterbody_lod0msrf_fkx;
-CREATE INDEX waterbody_lod0msrf_fkx ON public.waterbody
+-- DROP INDEX citydb.waterbody_lod0msrf_fkx;
+CREATE INDEX waterbody_lod0msrf_fkx ON citydb.waterbody
 	USING btree
 	(
 	  lod0_multi_surface_id ASC NULLS LAST
@@ -2279,8 +2287,8 @@ CREATE INDEX waterbody_lod0msrf_fkx ON public.waterbody
 -- ddl-end --
 
 -- object: waterbody_lod1msrf_fkx | type: INDEX --
--- DROP INDEX public.waterbody_lod1msrf_fkx;
-CREATE INDEX waterbody_lod1msrf_fkx ON public.waterbody
+-- DROP INDEX citydb.waterbody_lod1msrf_fkx;
+CREATE INDEX waterbody_lod1msrf_fkx ON citydb.waterbody
 	USING btree
 	(
 	  lod1_multi_surface_id ASC NULLS LAST
@@ -2288,8 +2296,8 @@ CREATE INDEX waterbody_lod1msrf_fkx ON public.waterbody
 -- ddl-end --
 
 -- object: waterbody_lod1solid_fkx | type: INDEX --
--- DROP INDEX public.waterbody_lod1solid_fkx;
-CREATE INDEX waterbody_lod1solid_fkx ON public.waterbody
+-- DROP INDEX citydb.waterbody_lod1solid_fkx;
+CREATE INDEX waterbody_lod1solid_fkx ON citydb.waterbody
 	USING btree
 	(
 	  lod1_solid_id ASC NULLS LAST
@@ -2297,8 +2305,8 @@ CREATE INDEX waterbody_lod1solid_fkx ON public.waterbody
 -- ddl-end --
 
 -- object: waterbody_lod2solid_fkx | type: INDEX --
--- DROP INDEX public.waterbody_lod2solid_fkx;
-CREATE INDEX waterbody_lod2solid_fkx ON public.waterbody
+-- DROP INDEX citydb.waterbody_lod2solid_fkx;
+CREATE INDEX waterbody_lod2solid_fkx ON citydb.waterbody
 	USING btree
 	(
 	  lod2_solid_id ASC NULLS LAST
@@ -2306,8 +2314,8 @@ CREATE INDEX waterbody_lod2solid_fkx ON public.waterbody
 -- ddl-end --
 
 -- object: waterbody_lod3solid_fkx | type: INDEX --
--- DROP INDEX public.waterbody_lod3solid_fkx;
-CREATE INDEX waterbody_lod3solid_fkx ON public.waterbody
+-- DROP INDEX citydb.waterbody_lod3solid_fkx;
+CREATE INDEX waterbody_lod3solid_fkx ON citydb.waterbody
 	USING btree
 	(
 	  lod3_solid_id ASC NULLS LAST
@@ -2315,8 +2323,8 @@ CREATE INDEX waterbody_lod3solid_fkx ON public.waterbody
 -- ddl-end --
 
 -- object: waterbody_lod4solid_fkx | type: INDEX --
--- DROP INDEX public.waterbody_lod4solid_fkx;
-CREATE INDEX waterbody_lod4solid_fkx ON public.waterbody
+-- DROP INDEX citydb.waterbody_lod4solid_fkx;
+CREATE INDEX waterbody_lod4solid_fkx ON citydb.waterbody
 	USING btree
 	(
 	  lod4_solid_id ASC NULLS LAST
@@ -2324,9 +2332,9 @@ CREATE INDEX waterbody_lod4solid_fkx ON public.waterbody
 -- ddl-end --
 
 
--- object: public.waterbod_to_waterbnd_srf | type: TABLE --
--- DROP TABLE public.waterbod_to_waterbnd_srf;
-CREATE TABLE public.waterbod_to_waterbnd_srf(
+-- object: citydb.waterbod_to_waterbnd_srf | type: TABLE --
+-- DROP TABLE citydb.waterbod_to_waterbnd_srf;
+CREATE TABLE citydb.waterbod_to_waterbnd_srf(
 	waterboundary_surface_id integer NOT NULL,
 	waterbody_id integer NOT NULL,
 	CONSTRAINT waterbod_to_waterbnd_pk PRIMARY KEY (waterboundary_surface_id,waterbody_id)
@@ -2334,8 +2342,8 @@ CREATE TABLE public.waterbod_to_waterbnd_srf(
 );
 -- ddl-end --
 -- object: waterbod_to_waterbnd_fkx | type: INDEX --
--- DROP INDEX public.waterbod_to_waterbnd_fkx;
-CREATE INDEX waterbod_to_waterbnd_fkx ON public.waterbod_to_waterbnd_srf
+-- DROP INDEX citydb.waterbod_to_waterbnd_fkx;
+CREATE INDEX waterbod_to_waterbnd_fkx ON citydb.waterbod_to_waterbnd_srf
 	USING btree
 	(
 	  waterboundary_surface_id ASC NULLS LAST
@@ -2343,8 +2351,8 @@ CREATE INDEX waterbod_to_waterbnd_fkx ON public.waterbod_to_waterbnd_srf
 -- ddl-end --
 
 -- object: waterbod_to_waterbnd_fkx1 | type: INDEX --
--- DROP INDEX public.waterbod_to_waterbnd_fkx1;
-CREATE INDEX waterbod_to_waterbnd_fkx1 ON public.waterbod_to_waterbnd_srf
+-- DROP INDEX citydb.waterbod_to_waterbnd_fkx1;
+CREATE INDEX waterbod_to_waterbnd_fkx1 ON citydb.waterbod_to_waterbnd_srf
 	USING btree
 	(
 	  waterbody_id ASC NULLS LAST
@@ -2352,9 +2360,9 @@ CREATE INDEX waterbod_to_waterbnd_fkx1 ON public.waterbod_to_waterbnd_srf
 -- ddl-end --
 
 
--- object: public.waterboundary_surface | type: TABLE --
--- DROP TABLE public.waterboundary_surface;
-CREATE TABLE public.waterboundary_surface(
+-- object: citydb.waterboundary_surface | type: TABLE --
+-- DROP TABLE citydb.waterboundary_surface;
+CREATE TABLE citydb.waterboundary_surface(
 	id integer NOT NULL,
 	objectclass_id integer,
 	water_level character varying(256),
@@ -2367,8 +2375,8 @@ CREATE TABLE public.waterboundary_surface(
 );
 -- ddl-end --
 -- object: waterbnd_srf_objclass_fkx | type: INDEX --
--- DROP INDEX public.waterbnd_srf_objclass_fkx;
-CREATE INDEX waterbnd_srf_objclass_fkx ON public.waterboundary_surface
+-- DROP INDEX citydb.waterbnd_srf_objclass_fkx;
+CREATE INDEX waterbnd_srf_objclass_fkx ON citydb.waterboundary_surface
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -2376,8 +2384,8 @@ CREATE INDEX waterbnd_srf_objclass_fkx ON public.waterboundary_surface
 -- ddl-end --
 
 -- object: waterbnd_srf_lod2srf_fkx | type: INDEX --
--- DROP INDEX public.waterbnd_srf_lod2srf_fkx;
-CREATE INDEX waterbnd_srf_lod2srf_fkx ON public.waterboundary_surface
+-- DROP INDEX citydb.waterbnd_srf_lod2srf_fkx;
+CREATE INDEX waterbnd_srf_lod2srf_fkx ON citydb.waterboundary_surface
 	USING btree
 	(
 	  lod2_surface_id ASC NULLS LAST
@@ -2385,8 +2393,8 @@ CREATE INDEX waterbnd_srf_lod2srf_fkx ON public.waterboundary_surface
 -- ddl-end --
 
 -- object: waterbnd_srf_lod3srf_fkx | type: INDEX --
--- DROP INDEX public.waterbnd_srf_lod3srf_fkx;
-CREATE INDEX waterbnd_srf_lod3srf_fkx ON public.waterboundary_surface
+-- DROP INDEX citydb.waterbnd_srf_lod3srf_fkx;
+CREATE INDEX waterbnd_srf_lod3srf_fkx ON citydb.waterboundary_surface
 	USING btree
 	(
 	  lod3_surface_id ASC NULLS LAST
@@ -2394,8 +2402,8 @@ CREATE INDEX waterbnd_srf_lod3srf_fkx ON public.waterboundary_surface
 -- ddl-end --
 
 -- object: waterbnd_srf_lod4srf_fkx | type: INDEX --
--- DROP INDEX public.waterbnd_srf_lod4srf_fkx;
-CREATE INDEX waterbnd_srf_lod4srf_fkx ON public.waterboundary_surface
+-- DROP INDEX citydb.waterbnd_srf_lod4srf_fkx;
+CREATE INDEX waterbnd_srf_lod4srf_fkx ON citydb.waterboundary_surface
 	USING btree
 	(
 	  lod4_surface_id ASC NULLS LAST
@@ -2403,9 +2411,9 @@ CREATE INDEX waterbnd_srf_lod4srf_fkx ON public.waterboundary_surface
 -- ddl-end --
 
 
--- object: public.raster_relief | type: TABLE --
--- DROP TABLE public.raster_relief;
-CREATE TABLE public.raster_relief(
+-- object: citydb.raster_relief | type: TABLE --
+-- DROP TABLE citydb.raster_relief;
+CREATE TABLE citydb.raster_relief(
 	id integer NOT NULL,
 	raster_uri character varying(4000),
 	coverage_id integer,
@@ -2414,8 +2422,8 @@ CREATE TABLE public.raster_relief(
 );
 -- ddl-end --
 -- object: raster_relief_coverage_fkx | type: INDEX --
--- DROP INDEX public.raster_relief_coverage_fkx;
-CREATE INDEX raster_relief_coverage_fkx ON public.raster_relief
+-- DROP INDEX citydb.raster_relief_coverage_fkx;
+CREATE INDEX raster_relief_coverage_fkx ON citydb.raster_relief
 	USING btree
 	(
 	  coverage_id ASC NULLS LAST
@@ -2423,9 +2431,9 @@ CREATE INDEX raster_relief_coverage_fkx ON public.raster_relief
 -- ddl-end --
 
 
--- object: public.tunnel | type: TABLE --
--- DROP TABLE public.tunnel;
-CREATE TABLE public.tunnel(
+-- object: citydb.tunnel | type: TABLE --
+-- DROP TABLE citydb.tunnel;
+CREATE TABLE citydb.tunnel(
 	id integer NOT NULL,
 	tunnel_parent_id integer,
 	tunnel_root_id integer,
@@ -2457,8 +2465,8 @@ CREATE TABLE public.tunnel(
 );
 -- ddl-end --
 -- object: tunnel_parent_fkx | type: INDEX --
--- DROP INDEX public.tunnel_parent_fkx;
-CREATE INDEX tunnel_parent_fkx ON public.tunnel
+-- DROP INDEX citydb.tunnel_parent_fkx;
+CREATE INDEX tunnel_parent_fkx ON citydb.tunnel
 	USING btree
 	(
 	  tunnel_parent_id ASC NULLS LAST
@@ -2466,8 +2474,8 @@ CREATE INDEX tunnel_parent_fkx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_root_fkx | type: INDEX --
--- DROP INDEX public.tunnel_root_fkx;
-CREATE INDEX tunnel_root_fkx ON public.tunnel
+-- DROP INDEX citydb.tunnel_root_fkx;
+CREATE INDEX tunnel_root_fkx ON citydb.tunnel
 	USING btree
 	(
 	  tunnel_root_id ASC NULLS LAST
@@ -2475,8 +2483,8 @@ CREATE INDEX tunnel_root_fkx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_lod1terr_spx | type: INDEX --
--- DROP INDEX public.tunnel_lod1terr_spx;
-CREATE INDEX tunnel_lod1terr_spx ON public.tunnel
+-- DROP INDEX citydb.tunnel_lod1terr_spx;
+CREATE INDEX tunnel_lod1terr_spx ON citydb.tunnel
 	USING gist
 	(
 	  lod1_terrain_intersection
@@ -2484,8 +2492,8 @@ CREATE INDEX tunnel_lod1terr_spx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_lod2terr_spx | type: INDEX --
--- DROP INDEX public.tunnel_lod2terr_spx;
-CREATE INDEX tunnel_lod2terr_spx ON public.tunnel
+-- DROP INDEX citydb.tunnel_lod2terr_spx;
+CREATE INDEX tunnel_lod2terr_spx ON citydb.tunnel
 	USING gist
 	(
 	  lod2_terrain_intersection
@@ -2493,8 +2501,8 @@ CREATE INDEX tunnel_lod2terr_spx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_lod3terr_spx | type: INDEX --
--- DROP INDEX public.tunnel_lod3terr_spx;
-CREATE INDEX tunnel_lod3terr_spx ON public.tunnel
+-- DROP INDEX citydb.tunnel_lod3terr_spx;
+CREATE INDEX tunnel_lod3terr_spx ON citydb.tunnel
 	USING gist
 	(
 	  lod3_terrain_intersection
@@ -2502,8 +2510,8 @@ CREATE INDEX tunnel_lod3terr_spx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_lod4terr_spx | type: INDEX --
--- DROP INDEX public.tunnel_lod4terr_spx;
-CREATE INDEX tunnel_lod4terr_spx ON public.tunnel
+-- DROP INDEX citydb.tunnel_lod4terr_spx;
+CREATE INDEX tunnel_lod4terr_spx ON citydb.tunnel
 	USING gist
 	(
 	  lod4_terrain_intersection
@@ -2511,8 +2519,8 @@ CREATE INDEX tunnel_lod4terr_spx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_lod2curve_spx | type: INDEX --
--- DROP INDEX public.tunnel_lod2curve_spx;
-CREATE INDEX tunnel_lod2curve_spx ON public.tunnel
+-- DROP INDEX citydb.tunnel_lod2curve_spx;
+CREATE INDEX tunnel_lod2curve_spx ON citydb.tunnel
 	USING gist
 	(
 	  lod2_multi_curve
@@ -2520,8 +2528,8 @@ CREATE INDEX tunnel_lod2curve_spx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_lod3curve_spx | type: INDEX --
--- DROP INDEX public.tunnel_lod3curve_spx;
-CREATE INDEX tunnel_lod3curve_spx ON public.tunnel
+-- DROP INDEX citydb.tunnel_lod3curve_spx;
+CREATE INDEX tunnel_lod3curve_spx ON citydb.tunnel
 	USING gist
 	(
 	  lod3_multi_curve
@@ -2529,8 +2537,8 @@ CREATE INDEX tunnel_lod3curve_spx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_lod4curve_spx | type: INDEX --
--- DROP INDEX public.tunnel_lod4curve_spx;
-CREATE INDEX tunnel_lod4curve_spx ON public.tunnel
+-- DROP INDEX citydb.tunnel_lod4curve_spx;
+CREATE INDEX tunnel_lod4curve_spx ON citydb.tunnel
 	USING gist
 	(
 	  lod4_multi_curve
@@ -2538,8 +2546,8 @@ CREATE INDEX tunnel_lod4curve_spx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_lod1msrf_fkx | type: INDEX --
--- DROP INDEX public.tunnel_lod1msrf_fkx;
-CREATE INDEX tunnel_lod1msrf_fkx ON public.tunnel
+-- DROP INDEX citydb.tunnel_lod1msrf_fkx;
+CREATE INDEX tunnel_lod1msrf_fkx ON citydb.tunnel
 	USING btree
 	(
 	  lod1_multi_surface_id ASC NULLS LAST
@@ -2547,8 +2555,8 @@ CREATE INDEX tunnel_lod1msrf_fkx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_lod2msrf_fkx | type: INDEX --
--- DROP INDEX public.tunnel_lod2msrf_fkx;
-CREATE INDEX tunnel_lod2msrf_fkx ON public.tunnel
+-- DROP INDEX citydb.tunnel_lod2msrf_fkx;
+CREATE INDEX tunnel_lod2msrf_fkx ON citydb.tunnel
 	USING btree
 	(
 	  lod2_multi_surface_id ASC NULLS LAST
@@ -2556,8 +2564,8 @@ CREATE INDEX tunnel_lod2msrf_fkx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_lod3msrf_fkx | type: INDEX --
--- DROP INDEX public.tunnel_lod3msrf_fkx;
-CREATE INDEX tunnel_lod3msrf_fkx ON public.tunnel
+-- DROP INDEX citydb.tunnel_lod3msrf_fkx;
+CREATE INDEX tunnel_lod3msrf_fkx ON citydb.tunnel
 	USING btree
 	(
 	  lod3_multi_surface_id ASC NULLS LAST
@@ -2565,8 +2573,8 @@ CREATE INDEX tunnel_lod3msrf_fkx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.tunnel_lod4msrf_fkx;
-CREATE INDEX tunnel_lod4msrf_fkx ON public.tunnel
+-- DROP INDEX citydb.tunnel_lod4msrf_fkx;
+CREATE INDEX tunnel_lod4msrf_fkx ON citydb.tunnel
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -2574,8 +2582,8 @@ CREATE INDEX tunnel_lod4msrf_fkx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_lod1solid_fkx | type: INDEX --
--- DROP INDEX public.tunnel_lod1solid_fkx;
-CREATE INDEX tunnel_lod1solid_fkx ON public.tunnel
+-- DROP INDEX citydb.tunnel_lod1solid_fkx;
+CREATE INDEX tunnel_lod1solid_fkx ON citydb.tunnel
 	USING btree
 	(
 	  lod1_solid_id ASC NULLS LAST
@@ -2583,8 +2591,8 @@ CREATE INDEX tunnel_lod1solid_fkx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_lod2solid_fkx | type: INDEX --
--- DROP INDEX public.tunnel_lod2solid_fkx;
-CREATE INDEX tunnel_lod2solid_fkx ON public.tunnel
+-- DROP INDEX citydb.tunnel_lod2solid_fkx;
+CREATE INDEX tunnel_lod2solid_fkx ON citydb.tunnel
 	USING btree
 	(
 	  lod2_solid_id ASC NULLS LAST
@@ -2592,8 +2600,8 @@ CREATE INDEX tunnel_lod2solid_fkx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_lod3solid_fkx | type: INDEX --
--- DROP INDEX public.tunnel_lod3solid_fkx;
-CREATE INDEX tunnel_lod3solid_fkx ON public.tunnel
+-- DROP INDEX citydb.tunnel_lod3solid_fkx;
+CREATE INDEX tunnel_lod3solid_fkx ON citydb.tunnel
 	USING btree
 	(
 	  lod3_solid_id ASC NULLS LAST
@@ -2601,8 +2609,8 @@ CREATE INDEX tunnel_lod3solid_fkx ON public.tunnel
 -- ddl-end --
 
 -- object: tunnel_lod4solid_fkx | type: INDEX --
--- DROP INDEX public.tunnel_lod4solid_fkx;
-CREATE INDEX tunnel_lod4solid_fkx ON public.tunnel
+-- DROP INDEX citydb.tunnel_lod4solid_fkx;
+CREATE INDEX tunnel_lod4solid_fkx ON citydb.tunnel
 	USING btree
 	(
 	  lod4_solid_id ASC NULLS LAST
@@ -2610,9 +2618,9 @@ CREATE INDEX tunnel_lod4solid_fkx ON public.tunnel
 -- ddl-end --
 
 
--- object: public.tunnel_open_to_them_srf | type: TABLE --
--- DROP TABLE public.tunnel_open_to_them_srf;
-CREATE TABLE public.tunnel_open_to_them_srf(
+-- object: citydb.tunnel_open_to_them_srf | type: TABLE --
+-- DROP TABLE citydb.tunnel_open_to_them_srf;
+CREATE TABLE citydb.tunnel_open_to_them_srf(
 	tunnel_opening_id integer NOT NULL,
 	tunnel_thematic_surface_id integer NOT NULL,
 	CONSTRAINT tunnel_open_to_them_srf_pk PRIMARY KEY (tunnel_opening_id,tunnel_thematic_surface_id)
@@ -2620,8 +2628,8 @@ CREATE TABLE public.tunnel_open_to_them_srf(
 );
 -- ddl-end --
 -- object: tun_open_to_them_srf_fkx | type: INDEX --
--- DROP INDEX public.tun_open_to_them_srf_fkx;
-CREATE INDEX tun_open_to_them_srf_fkx ON public.tunnel_open_to_them_srf
+-- DROP INDEX citydb.tun_open_to_them_srf_fkx;
+CREATE INDEX tun_open_to_them_srf_fkx ON citydb.tunnel_open_to_them_srf
 	USING btree
 	(
 	  tunnel_opening_id ASC NULLS LAST
@@ -2629,8 +2637,8 @@ CREATE INDEX tun_open_to_them_srf_fkx ON public.tunnel_open_to_them_srf
 -- ddl-end --
 
 -- object: tun_open_to_them_srf_fkx1 | type: INDEX --
--- DROP INDEX public.tun_open_to_them_srf_fkx1;
-CREATE INDEX tun_open_to_them_srf_fkx1 ON public.tunnel_open_to_them_srf
+-- DROP INDEX citydb.tun_open_to_them_srf_fkx1;
+CREATE INDEX tun_open_to_them_srf_fkx1 ON citydb.tunnel_open_to_them_srf
 	USING btree
 	(
 	  tunnel_thematic_surface_id ASC NULLS LAST
@@ -2638,9 +2646,9 @@ CREATE INDEX tun_open_to_them_srf_fkx1 ON public.tunnel_open_to_them_srf
 -- ddl-end --
 
 
--- object: public.tunnel_hollow_space | type: TABLE --
--- DROP TABLE public.tunnel_hollow_space;
-CREATE TABLE public.tunnel_hollow_space(
+-- object: citydb.tunnel_hollow_space | type: TABLE --
+-- DROP TABLE citydb.tunnel_hollow_space;
+CREATE TABLE citydb.tunnel_hollow_space(
 	id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -2656,8 +2664,8 @@ CREATE TABLE public.tunnel_hollow_space(
 );
 -- ddl-end --
 -- object: tun_hspace_tunnel_fkx | type: INDEX --
--- DROP INDEX public.tun_hspace_tunnel_fkx;
-CREATE INDEX tun_hspace_tunnel_fkx ON public.tunnel_hollow_space
+-- DROP INDEX citydb.tun_hspace_tunnel_fkx;
+CREATE INDEX tun_hspace_tunnel_fkx ON citydb.tunnel_hollow_space
 	USING btree
 	(
 	  tunnel_id ASC NULLS LAST
@@ -2665,8 +2673,8 @@ CREATE INDEX tun_hspace_tunnel_fkx ON public.tunnel_hollow_space
 -- ddl-end --
 
 -- object: tun_hspace_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.tun_hspace_lod4msrf_fkx;
-CREATE INDEX tun_hspace_lod4msrf_fkx ON public.tunnel_hollow_space
+-- DROP INDEX citydb.tun_hspace_lod4msrf_fkx;
+CREATE INDEX tun_hspace_lod4msrf_fkx ON citydb.tunnel_hollow_space
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -2674,8 +2682,8 @@ CREATE INDEX tun_hspace_lod4msrf_fkx ON public.tunnel_hollow_space
 -- ddl-end --
 
 -- object: tun_hspace_lod4solid_fkx | type: INDEX --
--- DROP INDEX public.tun_hspace_lod4solid_fkx;
-CREATE INDEX tun_hspace_lod4solid_fkx ON public.tunnel_hollow_space
+-- DROP INDEX citydb.tun_hspace_lod4solid_fkx;
+CREATE INDEX tun_hspace_lod4solid_fkx ON citydb.tunnel_hollow_space
 	USING btree
 	(
 	  lod4_solid_id ASC NULLS LAST
@@ -2683,9 +2691,9 @@ CREATE INDEX tun_hspace_lod4solid_fkx ON public.tunnel_hollow_space
 -- ddl-end --
 
 
--- object: public.tunnel_thematic_surface | type: TABLE --
--- DROP TABLE public.tunnel_thematic_surface;
-CREATE TABLE public.tunnel_thematic_surface(
+-- object: citydb.tunnel_thematic_surface | type: TABLE --
+-- DROP TABLE citydb.tunnel_thematic_surface;
+CREATE TABLE citydb.tunnel_thematic_surface(
 	id integer NOT NULL,
 	objectclass_id integer,
 	tunnel_id integer,
@@ -2699,8 +2707,8 @@ CREATE TABLE public.tunnel_thematic_surface(
 );
 -- ddl-end --
 -- object: tun_them_srf_objclass_fkx | type: INDEX --
--- DROP INDEX public.tun_them_srf_objclass_fkx;
-CREATE INDEX tun_them_srf_objclass_fkx ON public.tunnel_thematic_surface
+-- DROP INDEX citydb.tun_them_srf_objclass_fkx;
+CREATE INDEX tun_them_srf_objclass_fkx ON citydb.tunnel_thematic_surface
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -2708,8 +2716,8 @@ CREATE INDEX tun_them_srf_objclass_fkx ON public.tunnel_thematic_surface
 -- ddl-end --
 
 -- object: tun_them_srf_tunnel_fkx | type: INDEX --
--- DROP INDEX public.tun_them_srf_tunnel_fkx;
-CREATE INDEX tun_them_srf_tunnel_fkx ON public.tunnel_thematic_surface
+-- DROP INDEX citydb.tun_them_srf_tunnel_fkx;
+CREATE INDEX tun_them_srf_tunnel_fkx ON citydb.tunnel_thematic_surface
 	USING btree
 	(
 	  tunnel_id ASC NULLS LAST
@@ -2717,8 +2725,8 @@ CREATE INDEX tun_them_srf_tunnel_fkx ON public.tunnel_thematic_surface
 -- ddl-end --
 
 -- object: tun_them_srf_hspace_fkx | type: INDEX --
--- DROP INDEX public.tun_them_srf_hspace_fkx;
-CREATE INDEX tun_them_srf_hspace_fkx ON public.tunnel_thematic_surface
+-- DROP INDEX citydb.tun_them_srf_hspace_fkx;
+CREATE INDEX tun_them_srf_hspace_fkx ON citydb.tunnel_thematic_surface
 	USING btree
 	(
 	  tunnel_hollow_space_id ASC NULLS LAST
@@ -2726,8 +2734,8 @@ CREATE INDEX tun_them_srf_hspace_fkx ON public.tunnel_thematic_surface
 -- ddl-end --
 
 -- object: tun_them_srf_tun_inst_fkx | type: INDEX --
--- DROP INDEX public.tun_them_srf_tun_inst_fkx;
-CREATE INDEX tun_them_srf_tun_inst_fkx ON public.tunnel_thematic_surface
+-- DROP INDEX citydb.tun_them_srf_tun_inst_fkx;
+CREATE INDEX tun_them_srf_tun_inst_fkx ON citydb.tunnel_thematic_surface
 	USING btree
 	(
 	  tunnel_installation_id ASC NULLS LAST
@@ -2735,8 +2743,8 @@ CREATE INDEX tun_them_srf_tun_inst_fkx ON public.tunnel_thematic_surface
 -- ddl-end --
 
 -- object: tun_them_srf_lod2msrf_fkx | type: INDEX --
--- DROP INDEX public.tun_them_srf_lod2msrf_fkx;
-CREATE INDEX tun_them_srf_lod2msrf_fkx ON public.tunnel_thematic_surface
+-- DROP INDEX citydb.tun_them_srf_lod2msrf_fkx;
+CREATE INDEX tun_them_srf_lod2msrf_fkx ON citydb.tunnel_thematic_surface
 	USING btree
 	(
 	  lod2_multi_surface_id ASC NULLS LAST
@@ -2744,8 +2752,8 @@ CREATE INDEX tun_them_srf_lod2msrf_fkx ON public.tunnel_thematic_surface
 -- ddl-end --
 
 -- object: tun_them_srf_lod3msrf_fkx | type: INDEX --
--- DROP INDEX public.tun_them_srf_lod3msrf_fkx;
-CREATE INDEX tun_them_srf_lod3msrf_fkx ON public.tunnel_thematic_surface
+-- DROP INDEX citydb.tun_them_srf_lod3msrf_fkx;
+CREATE INDEX tun_them_srf_lod3msrf_fkx ON citydb.tunnel_thematic_surface
 	USING btree
 	(
 	  lod3_multi_surface_id ASC NULLS LAST
@@ -2753,8 +2761,8 @@ CREATE INDEX tun_them_srf_lod3msrf_fkx ON public.tunnel_thematic_surface
 -- ddl-end --
 
 -- object: tun_them_srf_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.tun_them_srf_lod4msrf_fkx;
-CREATE INDEX tun_them_srf_lod4msrf_fkx ON public.tunnel_thematic_surface
+-- DROP INDEX citydb.tun_them_srf_lod4msrf_fkx;
+CREATE INDEX tun_them_srf_lod4msrf_fkx ON citydb.tunnel_thematic_surface
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -2762,9 +2770,9 @@ CREATE INDEX tun_them_srf_lod4msrf_fkx ON public.tunnel_thematic_surface
 -- ddl-end --
 
 
--- object: public.tex_image_seq | type: SEQUENCE --
--- DROP SEQUENCE public.tex_image_seq;
-CREATE SEQUENCE public.tex_image_seq
+-- object: citydb.tex_image_seq | type: SEQUENCE --
+-- DROP SEQUENCE citydb.tex_image_seq;
+CREATE SEQUENCE citydb.tex_image_seq
 	INCREMENT BY 1
 	MINVALUE 0
 	MAXVALUE 2147483647
@@ -2774,9 +2782,9 @@ CREATE SEQUENCE public.tex_image_seq
 	OWNED BY NONE;
 -- ddl-end --
 
--- object: public.tunnel_opening | type: TABLE --
--- DROP TABLE public.tunnel_opening;
-CREATE TABLE public.tunnel_opening(
+-- object: citydb.tunnel_opening | type: TABLE --
+-- DROP TABLE citydb.tunnel_opening;
+CREATE TABLE citydb.tunnel_opening(
 	id integer NOT NULL,
 	objectclass_id integer,
 	lod3_multi_surface_id integer,
@@ -2792,8 +2800,8 @@ CREATE TABLE public.tunnel_opening(
 );
 -- ddl-end --
 -- object: tunnel_open_objclass_fkx | type: INDEX --
--- DROP INDEX public.tunnel_open_objclass_fkx;
-CREATE INDEX tunnel_open_objclass_fkx ON public.tunnel_opening
+-- DROP INDEX citydb.tunnel_open_objclass_fkx;
+CREATE INDEX tunnel_open_objclass_fkx ON citydb.tunnel_opening
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -2801,8 +2809,8 @@ CREATE INDEX tunnel_open_objclass_fkx ON public.tunnel_opening
 -- ddl-end --
 
 -- object: tunnel_open_lod3msrf_fkx | type: INDEX --
--- DROP INDEX public.tunnel_open_lod3msrf_fkx;
-CREATE INDEX tunnel_open_lod3msrf_fkx ON public.tunnel_opening
+-- DROP INDEX citydb.tunnel_open_lod3msrf_fkx;
+CREATE INDEX tunnel_open_lod3msrf_fkx ON citydb.tunnel_opening
 	USING btree
 	(
 	  lod3_multi_surface_id ASC NULLS LAST
@@ -2810,8 +2818,8 @@ CREATE INDEX tunnel_open_lod3msrf_fkx ON public.tunnel_opening
 -- ddl-end --
 
 -- object: tunnel_open_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.tunnel_open_lod4msrf_fkx;
-CREATE INDEX tunnel_open_lod4msrf_fkx ON public.tunnel_opening
+-- DROP INDEX citydb.tunnel_open_lod4msrf_fkx;
+CREATE INDEX tunnel_open_lod4msrf_fkx ON citydb.tunnel_opening
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -2819,8 +2827,8 @@ CREATE INDEX tunnel_open_lod4msrf_fkx ON public.tunnel_opening
 -- ddl-end --
 
 -- object: tunnel_open_lod3impl_fkx | type: INDEX --
--- DROP INDEX public.tunnel_open_lod3impl_fkx;
-CREATE INDEX tunnel_open_lod3impl_fkx ON public.tunnel_opening
+-- DROP INDEX citydb.tunnel_open_lod3impl_fkx;
+CREATE INDEX tunnel_open_lod3impl_fkx ON citydb.tunnel_opening
 	USING btree
 	(
 	  lod3_implicit_rep_id ASC NULLS LAST
@@ -2828,8 +2836,8 @@ CREATE INDEX tunnel_open_lod3impl_fkx ON public.tunnel_opening
 -- ddl-end --
 
 -- object: tunnel_open_lod4impl_fkx | type: INDEX --
--- DROP INDEX public.tunnel_open_lod4impl_fkx;
-CREATE INDEX tunnel_open_lod4impl_fkx ON public.tunnel_opening
+-- DROP INDEX citydb.tunnel_open_lod4impl_fkx;
+CREATE INDEX tunnel_open_lod4impl_fkx ON citydb.tunnel_opening
 	USING btree
 	(
 	  lod4_implicit_rep_id ASC NULLS LAST
@@ -2837,8 +2845,8 @@ CREATE INDEX tunnel_open_lod4impl_fkx ON public.tunnel_opening
 -- ddl-end --
 
 -- object: tunnel_open_lod3refpt_spx | type: INDEX --
--- DROP INDEX public.tunnel_open_lod3refpt_spx;
-CREATE INDEX tunnel_open_lod3refpt_spx ON public.tunnel_opening
+-- DROP INDEX citydb.tunnel_open_lod3refpt_spx;
+CREATE INDEX tunnel_open_lod3refpt_spx ON citydb.tunnel_opening
 	USING gist
 	(
 	  lod3_implicit_ref_point
@@ -2846,8 +2854,8 @@ CREATE INDEX tunnel_open_lod3refpt_spx ON public.tunnel_opening
 -- ddl-end --
 
 -- object: tunnel_open_lod4refpt_spx | type: INDEX --
--- DROP INDEX public.tunnel_open_lod4refpt_spx;
-CREATE INDEX tunnel_open_lod4refpt_spx ON public.tunnel_opening
+-- DROP INDEX citydb.tunnel_open_lod4refpt_spx;
+CREATE INDEX tunnel_open_lod4refpt_spx ON citydb.tunnel_opening
 	USING gist
 	(
 	  lod4_implicit_ref_point
@@ -2855,9 +2863,9 @@ CREATE INDEX tunnel_open_lod4refpt_spx ON public.tunnel_opening
 -- ddl-end --
 
 
--- object: public.tunnel_installation | type: TABLE --
--- DROP TABLE public.tunnel_installation;
-CREATE TABLE public.tunnel_installation(
+-- object: citydb.tunnel_installation | type: TABLE --
+-- DROP TABLE citydb.tunnel_installation;
+CREATE TABLE citydb.tunnel_installation(
 	id integer NOT NULL,
 	objectclass_id integer,
 	class character varying(256),
@@ -2888,8 +2896,8 @@ CREATE TABLE public.tunnel_installation(
 );
 -- ddl-end --
 -- object: tunnel_inst_objclass_fk | type: INDEX --
--- DROP INDEX public.tunnel_inst_objclass_fk;
-CREATE INDEX tunnel_inst_objclass_fk ON public.tunnel_installation
+-- DROP INDEX citydb.tunnel_inst_objclass_fk;
+CREATE INDEX tunnel_inst_objclass_fk ON citydb.tunnel_installation
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -2897,8 +2905,8 @@ CREATE INDEX tunnel_inst_objclass_fk ON public.tunnel_installation
 -- ddl-end --
 
 -- object: tunnel_inst_tunnel_fkx | type: INDEX --
--- DROP INDEX public.tunnel_inst_tunnel_fkx;
-CREATE INDEX tunnel_inst_tunnel_fkx ON public.tunnel_installation
+-- DROP INDEX citydb.tunnel_inst_tunnel_fkx;
+CREATE INDEX tunnel_inst_tunnel_fkx ON citydb.tunnel_installation
 	USING btree
 	(
 	  tunnel_id ASC NULLS LAST
@@ -2906,8 +2914,8 @@ CREATE INDEX tunnel_inst_tunnel_fkx ON public.tunnel_installation
 -- ddl-end --
 
 -- object: tunnel_inst_hspace_fkx | type: INDEX --
--- DROP INDEX public.tunnel_inst_hspace_fkx;
-CREATE INDEX tunnel_inst_hspace_fkx ON public.tunnel_installation
+-- DROP INDEX citydb.tunnel_inst_hspace_fkx;
+CREATE INDEX tunnel_inst_hspace_fkx ON citydb.tunnel_installation
 	USING btree
 	(
 	  tunnel_hollow_space_id ASC NULLS LAST
@@ -2915,8 +2923,8 @@ CREATE INDEX tunnel_inst_hspace_fkx ON public.tunnel_installation
 -- ddl-end --
 
 -- object: tunnel_inst_lod2brep_fkx | type: INDEX --
--- DROP INDEX public.tunnel_inst_lod2brep_fkx;
-CREATE INDEX tunnel_inst_lod2brep_fkx ON public.tunnel_installation
+-- DROP INDEX citydb.tunnel_inst_lod2brep_fkx;
+CREATE INDEX tunnel_inst_lod2brep_fkx ON citydb.tunnel_installation
 	USING btree
 	(
 	  lod2_brep_id ASC NULLS LAST
@@ -2924,8 +2932,8 @@ CREATE INDEX tunnel_inst_lod2brep_fkx ON public.tunnel_installation
 -- ddl-end --
 
 -- object: tunnel_inst_lod3brep_fkx | type: INDEX --
--- DROP INDEX public.tunnel_inst_lod3brep_fkx;
-CREATE INDEX tunnel_inst_lod3brep_fkx ON public.tunnel_installation
+-- DROP INDEX citydb.tunnel_inst_lod3brep_fkx;
+CREATE INDEX tunnel_inst_lod3brep_fkx ON citydb.tunnel_installation
 	USING btree
 	(
 	  lod3_brep_id ASC NULLS LAST
@@ -2933,8 +2941,8 @@ CREATE INDEX tunnel_inst_lod3brep_fkx ON public.tunnel_installation
 -- ddl-end --
 
 -- object: tunnel_inst_lod4brep_fkx | type: INDEX --
--- DROP INDEX public.tunnel_inst_lod4brep_fkx;
-CREATE INDEX tunnel_inst_lod4brep_fkx ON public.tunnel_installation
+-- DROP INDEX citydb.tunnel_inst_lod4brep_fkx;
+CREATE INDEX tunnel_inst_lod4brep_fkx ON citydb.tunnel_installation
 	USING btree
 	(
 	  lod4_brep_id ASC NULLS LAST
@@ -2942,8 +2950,8 @@ CREATE INDEX tunnel_inst_lod4brep_fkx ON public.tunnel_installation
 -- ddl-end --
 
 -- object: tunnel_inst_lod2xgeom_spx | type: INDEX --
--- DROP INDEX public.tunnel_inst_lod2xgeom_spx;
-CREATE INDEX tunnel_inst_lod2xgeom_spx ON public.tunnel_installation
+-- DROP INDEX citydb.tunnel_inst_lod2xgeom_spx;
+CREATE INDEX tunnel_inst_lod2xgeom_spx ON citydb.tunnel_installation
 	USING gist
 	(
 	  lod2_other_geom
@@ -2951,8 +2959,8 @@ CREATE INDEX tunnel_inst_lod2xgeom_spx ON public.tunnel_installation
 -- ddl-end --
 
 -- object: tunnel_inst_lod3xgeom_spx | type: INDEX --
--- DROP INDEX public.tunnel_inst_lod3xgeom_spx;
-CREATE INDEX tunnel_inst_lod3xgeom_spx ON public.tunnel_installation
+-- DROP INDEX citydb.tunnel_inst_lod3xgeom_spx;
+CREATE INDEX tunnel_inst_lod3xgeom_spx ON citydb.tunnel_installation
 	USING gist
 	(
 	  lod3_other_geom
@@ -2960,8 +2968,8 @@ CREATE INDEX tunnel_inst_lod3xgeom_spx ON public.tunnel_installation
 -- ddl-end --
 
 -- object: tunnel_inst_lod4xgeom_spx | type: INDEX --
--- DROP INDEX public.tunnel_inst_lod4xgeom_spx;
-CREATE INDEX tunnel_inst_lod4xgeom_spx ON public.tunnel_installation
+-- DROP INDEX citydb.tunnel_inst_lod4xgeom_spx;
+CREATE INDEX tunnel_inst_lod4xgeom_spx ON citydb.tunnel_installation
 	USING gist
 	(
 	  lod4_other_geom
@@ -2969,8 +2977,8 @@ CREATE INDEX tunnel_inst_lod4xgeom_spx ON public.tunnel_installation
 -- ddl-end --
 
 -- object: tunnel_inst_lod2impl_fkx | type: INDEX --
--- DROP INDEX public.tunnel_inst_lod2impl_fkx;
-CREATE INDEX tunnel_inst_lod2impl_fkx ON public.tunnel_installation
+-- DROP INDEX citydb.tunnel_inst_lod2impl_fkx;
+CREATE INDEX tunnel_inst_lod2impl_fkx ON citydb.tunnel_installation
 	USING btree
 	(
 	  lod2_implicit_rep_id ASC NULLS LAST
@@ -2978,8 +2986,8 @@ CREATE INDEX tunnel_inst_lod2impl_fkx ON public.tunnel_installation
 -- ddl-end --
 
 -- object: tunnel_inst_lod3impl_fkx | type: INDEX --
--- DROP INDEX public.tunnel_inst_lod3impl_fkx;
-CREATE INDEX tunnel_inst_lod3impl_fkx ON public.tunnel_installation
+-- DROP INDEX citydb.tunnel_inst_lod3impl_fkx;
+CREATE INDEX tunnel_inst_lod3impl_fkx ON citydb.tunnel_installation
 	USING btree
 	(
 	  lod3_implicit_rep_id ASC NULLS LAST
@@ -2987,8 +2995,8 @@ CREATE INDEX tunnel_inst_lod3impl_fkx ON public.tunnel_installation
 -- ddl-end --
 
 -- object: tunnel_inst_lod4impl_fkx | type: INDEX --
--- DROP INDEX public.tunnel_inst_lod4impl_fkx;
-CREATE INDEX tunnel_inst_lod4impl_fkx ON public.tunnel_installation
+-- DROP INDEX citydb.tunnel_inst_lod4impl_fkx;
+CREATE INDEX tunnel_inst_lod4impl_fkx ON citydb.tunnel_installation
 	USING btree
 	(
 	  lod4_implicit_rep_id ASC NULLS LAST
@@ -2996,8 +3004,8 @@ CREATE INDEX tunnel_inst_lod4impl_fkx ON public.tunnel_installation
 -- ddl-end --
 
 -- object: tunnel_inst_lod2refpt_spx | type: INDEX --
--- DROP INDEX public.tunnel_inst_lod2refpt_spx;
-CREATE INDEX tunnel_inst_lod2refpt_spx ON public.tunnel_installation
+-- DROP INDEX citydb.tunnel_inst_lod2refpt_spx;
+CREATE INDEX tunnel_inst_lod2refpt_spx ON citydb.tunnel_installation
 	USING gist
 	(
 	  lod2_implicit_ref_point
@@ -3005,8 +3013,8 @@ CREATE INDEX tunnel_inst_lod2refpt_spx ON public.tunnel_installation
 -- ddl-end --
 
 -- object: tunnel_inst_lod3refpt_spx | type: INDEX --
--- DROP INDEX public.tunnel_inst_lod3refpt_spx;
-CREATE INDEX tunnel_inst_lod3refpt_spx ON public.tunnel_installation
+-- DROP INDEX citydb.tunnel_inst_lod3refpt_spx;
+CREATE INDEX tunnel_inst_lod3refpt_spx ON citydb.tunnel_installation
 	USING gist
 	(
 	  lod3_implicit_ref_point
@@ -3014,8 +3022,8 @@ CREATE INDEX tunnel_inst_lod3refpt_spx ON public.tunnel_installation
 -- ddl-end --
 
 -- object: tunnel_inst_lod4refpt_spx | type: INDEX --
--- DROP INDEX public.tunnel_inst_lod4refpt_spx;
-CREATE INDEX tunnel_inst_lod4refpt_spx ON public.tunnel_installation
+-- DROP INDEX citydb.tunnel_inst_lod4refpt_spx;
+CREATE INDEX tunnel_inst_lod4refpt_spx ON citydb.tunnel_installation
 	USING gist
 	(
 	  lod4_implicit_ref_point
@@ -3023,9 +3031,9 @@ CREATE INDEX tunnel_inst_lod4refpt_spx ON public.tunnel_installation
 -- ddl-end --
 
 
--- object: public.tunnel_furniture | type: TABLE --
--- DROP TABLE public.tunnel_furniture;
-CREATE TABLE public.tunnel_furniture(
+-- object: citydb.tunnel_furniture | type: TABLE --
+-- DROP TABLE citydb.tunnel_furniture;
+CREATE TABLE citydb.tunnel_furniture(
 	id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -3044,8 +3052,8 @@ CREATE TABLE public.tunnel_furniture(
 );
 -- ddl-end --
 -- object: tunnel_furn_hspace_fkx | type: INDEX --
--- DROP INDEX public.tunnel_furn_hspace_fkx;
-CREATE INDEX tunnel_furn_hspace_fkx ON public.tunnel_furniture
+-- DROP INDEX citydb.tunnel_furn_hspace_fkx;
+CREATE INDEX tunnel_furn_hspace_fkx ON citydb.tunnel_furniture
 	USING btree
 	(
 	  tunnel_hollow_space_id ASC NULLS LAST
@@ -3053,8 +3061,8 @@ CREATE INDEX tunnel_furn_hspace_fkx ON public.tunnel_furniture
 -- ddl-end --
 
 -- object: tunnel_furn_lod4brep_fkx | type: INDEX --
--- DROP INDEX public.tunnel_furn_lod4brep_fkx;
-CREATE INDEX tunnel_furn_lod4brep_fkx ON public.tunnel_furniture
+-- DROP INDEX citydb.tunnel_furn_lod4brep_fkx;
+CREATE INDEX tunnel_furn_lod4brep_fkx ON citydb.tunnel_furniture
 	USING btree
 	(
 	  lod4_brep_id ASC NULLS LAST
@@ -3062,8 +3070,8 @@ CREATE INDEX tunnel_furn_lod4brep_fkx ON public.tunnel_furniture
 -- ddl-end --
 
 -- object: tunnel_furn_lod4xgeom_spx | type: INDEX --
--- DROP INDEX public.tunnel_furn_lod4xgeom_spx;
-CREATE INDEX tunnel_furn_lod4xgeom_spx ON public.tunnel_furniture
+-- DROP INDEX citydb.tunnel_furn_lod4xgeom_spx;
+CREATE INDEX tunnel_furn_lod4xgeom_spx ON citydb.tunnel_furniture
 	USING btree
 	(
 	  lod4_other_geom ASC NULLS LAST
@@ -3071,8 +3079,8 @@ CREATE INDEX tunnel_furn_lod4xgeom_spx ON public.tunnel_furniture
 -- ddl-end --
 
 -- object: tunnel_furn_lod4impl_fkx | type: INDEX --
--- DROP INDEX public.tunnel_furn_lod4impl_fkx;
-CREATE INDEX tunnel_furn_lod4impl_fkx ON public.tunnel_furniture
+-- DROP INDEX citydb.tunnel_furn_lod4impl_fkx;
+CREATE INDEX tunnel_furn_lod4impl_fkx ON citydb.tunnel_furniture
 	USING btree
 	(
 	  lod4_implicit_rep_id
@@ -3080,8 +3088,8 @@ CREATE INDEX tunnel_furn_lod4impl_fkx ON public.tunnel_furniture
 -- ddl-end --
 
 -- object: tunnel_furn_lod4refpt_spx | type: INDEX --
--- DROP INDEX public.tunnel_furn_lod4refpt_spx;
-CREATE INDEX tunnel_furn_lod4refpt_spx ON public.tunnel_furniture
+-- DROP INDEX citydb.tunnel_furn_lod4refpt_spx;
+CREATE INDEX tunnel_furn_lod4refpt_spx ON citydb.tunnel_furniture
 	USING gist
 	(
 	  lod4_implicit_ref_point
@@ -3089,9 +3097,9 @@ CREATE INDEX tunnel_furn_lod4refpt_spx ON public.tunnel_furniture
 -- ddl-end --
 
 
--- object: public.bridge | type: TABLE --
--- DROP TABLE public.bridge;
-CREATE TABLE public.bridge(
+-- object: citydb.bridge | type: TABLE --
+-- DROP TABLE citydb.bridge;
+CREATE TABLE citydb.bridge(
 	id integer NOT NULL,
 	bridge_parent_id integer,
 	bridge_root_id integer,
@@ -3124,8 +3132,8 @@ CREATE TABLE public.bridge(
 );
 -- ddl-end --
 -- object: bridge_parent_fkx | type: INDEX --
--- DROP INDEX public.bridge_parent_fkx;
-CREATE INDEX bridge_parent_fkx ON public.bridge
+-- DROP INDEX citydb.bridge_parent_fkx;
+CREATE INDEX bridge_parent_fkx ON citydb.bridge
 	USING btree
 	(
 	  bridge_parent_id ASC NULLS LAST
@@ -3133,8 +3141,8 @@ CREATE INDEX bridge_parent_fkx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_root_fkx | type: INDEX --
--- DROP INDEX public.bridge_root_fkx;
-CREATE INDEX bridge_root_fkx ON public.bridge
+-- DROP INDEX citydb.bridge_root_fkx;
+CREATE INDEX bridge_root_fkx ON citydb.bridge
 	USING btree
 	(
 	  bridge_root_id ASC NULLS LAST
@@ -3142,8 +3150,8 @@ CREATE INDEX bridge_root_fkx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_lod1terr_spx | type: INDEX --
--- DROP INDEX public.bridge_lod1terr_spx;
-CREATE INDEX bridge_lod1terr_spx ON public.bridge
+-- DROP INDEX citydb.bridge_lod1terr_spx;
+CREATE INDEX bridge_lod1terr_spx ON citydb.bridge
 	USING gist
 	(
 	  lod1_terrain_intersection
@@ -3151,8 +3159,8 @@ CREATE INDEX bridge_lod1terr_spx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_lod2terr_spx | type: INDEX --
--- DROP INDEX public.bridge_lod2terr_spx;
-CREATE INDEX bridge_lod2terr_spx ON public.bridge
+-- DROP INDEX citydb.bridge_lod2terr_spx;
+CREATE INDEX bridge_lod2terr_spx ON citydb.bridge
 	USING gist
 	(
 	  lod2_terrain_intersection
@@ -3160,8 +3168,8 @@ CREATE INDEX bridge_lod2terr_spx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_lod3terr_spx | type: INDEX --
--- DROP INDEX public.bridge_lod3terr_spx;
-CREATE INDEX bridge_lod3terr_spx ON public.bridge
+-- DROP INDEX citydb.bridge_lod3terr_spx;
+CREATE INDEX bridge_lod3terr_spx ON citydb.bridge
 	USING gist
 	(
 	  lod3_terrain_intersection
@@ -3169,8 +3177,8 @@ CREATE INDEX bridge_lod3terr_spx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_lod4terr_spx | type: INDEX --
--- DROP INDEX public.bridge_lod4terr_spx;
-CREATE INDEX bridge_lod4terr_spx ON public.bridge
+-- DROP INDEX citydb.bridge_lod4terr_spx;
+CREATE INDEX bridge_lod4terr_spx ON citydb.bridge
 	USING gist
 	(
 	  lod4_terrain_intersection
@@ -3178,8 +3186,8 @@ CREATE INDEX bridge_lod4terr_spx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_lod2curve_spx | type: INDEX --
--- DROP INDEX public.bridge_lod2curve_spx;
-CREATE INDEX bridge_lod2curve_spx ON public.bridge
+-- DROP INDEX citydb.bridge_lod2curve_spx;
+CREATE INDEX bridge_lod2curve_spx ON citydb.bridge
 	USING gist
 	(
 	  lod2_multi_curve
@@ -3187,8 +3195,8 @@ CREATE INDEX bridge_lod2curve_spx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_lod3curve_spx | type: INDEX --
--- DROP INDEX public.bridge_lod3curve_spx;
-CREATE INDEX bridge_lod3curve_spx ON public.bridge
+-- DROP INDEX citydb.bridge_lod3curve_spx;
+CREATE INDEX bridge_lod3curve_spx ON citydb.bridge
 	USING gist
 	(
 	  lod3_multi_curve
@@ -3196,8 +3204,8 @@ CREATE INDEX bridge_lod3curve_spx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_lod4curve_spx | type: INDEX --
--- DROP INDEX public.bridge_lod4curve_spx;
-CREATE INDEX bridge_lod4curve_spx ON public.bridge
+-- DROP INDEX citydb.bridge_lod4curve_spx;
+CREATE INDEX bridge_lod4curve_spx ON citydb.bridge
 	USING gist
 	(
 	  lod4_multi_curve
@@ -3205,8 +3213,8 @@ CREATE INDEX bridge_lod4curve_spx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_lod1msrf_fkx | type: INDEX --
--- DROP INDEX public.bridge_lod1msrf_fkx;
-CREATE INDEX bridge_lod1msrf_fkx ON public.bridge
+-- DROP INDEX citydb.bridge_lod1msrf_fkx;
+CREATE INDEX bridge_lod1msrf_fkx ON citydb.bridge
 	USING btree
 	(
 	  lod1_multi_surface_id ASC NULLS LAST
@@ -3214,8 +3222,8 @@ CREATE INDEX bridge_lod1msrf_fkx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_lod2msrf_fkx | type: INDEX --
--- DROP INDEX public.bridge_lod2msrf_fkx;
-CREATE INDEX bridge_lod2msrf_fkx ON public.bridge
+-- DROP INDEX citydb.bridge_lod2msrf_fkx;
+CREATE INDEX bridge_lod2msrf_fkx ON citydb.bridge
 	USING btree
 	(
 	  lod2_multi_surface_id ASC NULLS LAST
@@ -3223,8 +3231,8 @@ CREATE INDEX bridge_lod2msrf_fkx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_lod3msrf_fkx | type: INDEX --
--- DROP INDEX public.bridge_lod3msrf_fkx;
-CREATE INDEX bridge_lod3msrf_fkx ON public.bridge
+-- DROP INDEX citydb.bridge_lod3msrf_fkx;
+CREATE INDEX bridge_lod3msrf_fkx ON citydb.bridge
 	USING btree
 	(
 	  lod3_multi_surface_id ASC NULLS LAST
@@ -3232,8 +3240,8 @@ CREATE INDEX bridge_lod3msrf_fkx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.bridge_lod4msrf_fkx;
-CREATE INDEX bridge_lod4msrf_fkx ON public.bridge
+-- DROP INDEX citydb.bridge_lod4msrf_fkx;
+CREATE INDEX bridge_lod4msrf_fkx ON citydb.bridge
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -3241,8 +3249,8 @@ CREATE INDEX bridge_lod4msrf_fkx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_lod1solid_fkx | type: INDEX --
--- DROP INDEX public.bridge_lod1solid_fkx;
-CREATE INDEX bridge_lod1solid_fkx ON public.bridge
+-- DROP INDEX citydb.bridge_lod1solid_fkx;
+CREATE INDEX bridge_lod1solid_fkx ON citydb.bridge
 	USING btree
 	(
 	  lod1_solid_id ASC NULLS LAST
@@ -3250,8 +3258,8 @@ CREATE INDEX bridge_lod1solid_fkx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_lod2solid_fkx | type: INDEX --
--- DROP INDEX public.bridge_lod2solid_fkx;
-CREATE INDEX bridge_lod2solid_fkx ON public.bridge
+-- DROP INDEX citydb.bridge_lod2solid_fkx;
+CREATE INDEX bridge_lod2solid_fkx ON citydb.bridge
 	USING btree
 	(
 	  lod2_solid_id ASC NULLS LAST
@@ -3259,8 +3267,8 @@ CREATE INDEX bridge_lod2solid_fkx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_lod3solid_fkx | type: INDEX --
--- DROP INDEX public.bridge_lod3solid_fkx;
-CREATE INDEX bridge_lod3solid_fkx ON public.bridge
+-- DROP INDEX citydb.bridge_lod3solid_fkx;
+CREATE INDEX bridge_lod3solid_fkx ON citydb.bridge
 	USING btree
 	(
 	  lod3_solid_id ASC NULLS LAST
@@ -3268,8 +3276,8 @@ CREATE INDEX bridge_lod3solid_fkx ON public.bridge
 -- ddl-end --
 
 -- object: bridge_lod4solid_fkx | type: INDEX --
--- DROP INDEX public.bridge_lod4solid_fkx;
-CREATE INDEX bridge_lod4solid_fkx ON public.bridge
+-- DROP INDEX citydb.bridge_lod4solid_fkx;
+CREATE INDEX bridge_lod4solid_fkx ON citydb.bridge
 	USING btree
 	(
 	  lod4_solid_id ASC NULLS LAST
@@ -3277,9 +3285,9 @@ CREATE INDEX bridge_lod4solid_fkx ON public.bridge
 -- ddl-end --
 
 
--- object: public.bridge_furniture | type: TABLE --
--- DROP TABLE public.bridge_furniture;
-CREATE TABLE public.bridge_furniture(
+-- object: citydb.bridge_furniture | type: TABLE --
+-- DROP TABLE citydb.bridge_furniture;
+CREATE TABLE citydb.bridge_furniture(
 	id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -3298,8 +3306,8 @@ CREATE TABLE public.bridge_furniture(
 );
 -- ddl-end --
 -- object: bridge_furn_brd_room_fkx | type: INDEX --
--- DROP INDEX public.bridge_furn_brd_room_fkx;
-CREATE INDEX bridge_furn_brd_room_fkx ON public.bridge_furniture
+-- DROP INDEX citydb.bridge_furn_brd_room_fkx;
+CREATE INDEX bridge_furn_brd_room_fkx ON citydb.bridge_furniture
 	USING btree
 	(
 	  bridge_room_id ASC NULLS LAST
@@ -3307,8 +3315,8 @@ CREATE INDEX bridge_furn_brd_room_fkx ON public.bridge_furniture
 -- ddl-end --
 
 -- object: bridge_furn_lod4brep_fkx | type: INDEX --
--- DROP INDEX public.bridge_furn_lod4brep_fkx;
-CREATE INDEX bridge_furn_lod4brep_fkx ON public.bridge_furniture
+-- DROP INDEX citydb.bridge_furn_lod4brep_fkx;
+CREATE INDEX bridge_furn_lod4brep_fkx ON citydb.bridge_furniture
 	USING btree
 	(
 	  lod4_brep_id ASC NULLS LAST
@@ -3316,8 +3324,8 @@ CREATE INDEX bridge_furn_lod4brep_fkx ON public.bridge_furniture
 -- ddl-end --
 
 -- object: bridge_furn_lod4xgeom_spx | type: INDEX --
--- DROP INDEX public.bridge_furn_lod4xgeom_spx;
-CREATE INDEX bridge_furn_lod4xgeom_spx ON public.bridge_furniture
+-- DROP INDEX citydb.bridge_furn_lod4xgeom_spx;
+CREATE INDEX bridge_furn_lod4xgeom_spx ON citydb.bridge_furniture
 	USING gist
 	(
 	  lod4_other_geom
@@ -3325,8 +3333,8 @@ CREATE INDEX bridge_furn_lod4xgeom_spx ON public.bridge_furniture
 -- ddl-end --
 
 -- object: bridge_furn_lod4impl_fkx | type: INDEX --
--- DROP INDEX public.bridge_furn_lod4impl_fkx;
-CREATE INDEX bridge_furn_lod4impl_fkx ON public.bridge_furniture
+-- DROP INDEX citydb.bridge_furn_lod4impl_fkx;
+CREATE INDEX bridge_furn_lod4impl_fkx ON citydb.bridge_furniture
 	USING btree
 	(
 	  lod4_implicit_rep_id
@@ -3334,8 +3342,8 @@ CREATE INDEX bridge_furn_lod4impl_fkx ON public.bridge_furniture
 -- ddl-end --
 
 -- object: bridge_furn_lod4refpt_spx | type: INDEX --
--- DROP INDEX public.bridge_furn_lod4refpt_spx;
-CREATE INDEX bridge_furn_lod4refpt_spx ON public.bridge_furniture
+-- DROP INDEX citydb.bridge_furn_lod4refpt_spx;
+CREATE INDEX bridge_furn_lod4refpt_spx ON citydb.bridge_furniture
 	USING gist
 	(
 	  lod4_implicit_ref_point
@@ -3343,9 +3351,9 @@ CREATE INDEX bridge_furn_lod4refpt_spx ON public.bridge_furniture
 -- ddl-end --
 
 
--- object: public.bridge_installation | type: TABLE --
--- DROP TABLE public.bridge_installation;
-CREATE TABLE public.bridge_installation(
+-- object: citydb.bridge_installation | type: TABLE --
+-- DROP TABLE citydb.bridge_installation;
+CREATE TABLE citydb.bridge_installation(
 	id integer NOT NULL,
 	objectclass_id integer,
 	class character varying(256),
@@ -3376,8 +3384,8 @@ CREATE TABLE public.bridge_installation(
 );
 -- ddl-end --
 -- object: bridge_inst_objclass_fkx | type: INDEX --
--- DROP INDEX public.bridge_inst_objclass_fkx;
-CREATE INDEX bridge_inst_objclass_fkx ON public.bridge_installation
+-- DROP INDEX citydb.bridge_inst_objclass_fkx;
+CREATE INDEX bridge_inst_objclass_fkx ON citydb.bridge_installation
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -3385,8 +3393,8 @@ CREATE INDEX bridge_inst_objclass_fkx ON public.bridge_installation
 -- ddl-end --
 
 -- object: bridge_inst_bridge_fkx | type: INDEX --
--- DROP INDEX public.bridge_inst_bridge_fkx;
-CREATE INDEX bridge_inst_bridge_fkx ON public.bridge_installation
+-- DROP INDEX citydb.bridge_inst_bridge_fkx;
+CREATE INDEX bridge_inst_bridge_fkx ON citydb.bridge_installation
 	USING btree
 	(
 	  bridge_id ASC NULLS LAST
@@ -3394,8 +3402,8 @@ CREATE INDEX bridge_inst_bridge_fkx ON public.bridge_installation
 -- ddl-end --
 
 -- object: bridge_inst_brd_room_fkx | type: INDEX --
--- DROP INDEX public.bridge_inst_brd_room_fkx;
-CREATE INDEX bridge_inst_brd_room_fkx ON public.bridge_installation
+-- DROP INDEX citydb.bridge_inst_brd_room_fkx;
+CREATE INDEX bridge_inst_brd_room_fkx ON citydb.bridge_installation
 	USING btree
 	(
 	  bridge_room_id ASC NULLS LAST
@@ -3403,8 +3411,8 @@ CREATE INDEX bridge_inst_brd_room_fkx ON public.bridge_installation
 -- ddl-end --
 
 -- object: bridge_inst_lod2brep_fkx | type: INDEX --
--- DROP INDEX public.bridge_inst_lod2brep_fkx;
-CREATE INDEX bridge_inst_lod2brep_fkx ON public.bridge_installation
+-- DROP INDEX citydb.bridge_inst_lod2brep_fkx;
+CREATE INDEX bridge_inst_lod2brep_fkx ON citydb.bridge_installation
 	USING btree
 	(
 	  lod2_brep_id ASC NULLS LAST
@@ -3412,8 +3420,8 @@ CREATE INDEX bridge_inst_lod2brep_fkx ON public.bridge_installation
 -- ddl-end --
 
 -- object: bridge_inst_lod3brep_fkx | type: INDEX --
--- DROP INDEX public.bridge_inst_lod3brep_fkx;
-CREATE INDEX bridge_inst_lod3brep_fkx ON public.bridge_installation
+-- DROP INDEX citydb.bridge_inst_lod3brep_fkx;
+CREATE INDEX bridge_inst_lod3brep_fkx ON citydb.bridge_installation
 	USING btree
 	(
 	  lod3_brep_id ASC NULLS LAST
@@ -3421,8 +3429,8 @@ CREATE INDEX bridge_inst_lod3brep_fkx ON public.bridge_installation
 -- ddl-end --
 
 -- object: bridge_inst_lod4brep_fkx | type: INDEX --
--- DROP INDEX public.bridge_inst_lod4brep_fkx;
-CREATE INDEX bridge_inst_lod4brep_fkx ON public.bridge_installation
+-- DROP INDEX citydb.bridge_inst_lod4brep_fkx;
+CREATE INDEX bridge_inst_lod4brep_fkx ON citydb.bridge_installation
 	USING btree
 	(
 	  lod4_brep_id ASC NULLS LAST
@@ -3430,8 +3438,8 @@ CREATE INDEX bridge_inst_lod4brep_fkx ON public.bridge_installation
 -- ddl-end --
 
 -- object: bridge_inst_lod2xgeom_spx | type: INDEX --
--- DROP INDEX public.bridge_inst_lod2xgeom_spx;
-CREATE INDEX bridge_inst_lod2xgeom_spx ON public.bridge_installation
+-- DROP INDEX citydb.bridge_inst_lod2xgeom_spx;
+CREATE INDEX bridge_inst_lod2xgeom_spx ON citydb.bridge_installation
 	USING gist
 	(
 	  lod2_other_geom
@@ -3439,8 +3447,8 @@ CREATE INDEX bridge_inst_lod2xgeom_spx ON public.bridge_installation
 -- ddl-end --
 
 -- object: bridge_inst_lod3xgeom_spx | type: INDEX --
--- DROP INDEX public.bridge_inst_lod3xgeom_spx;
-CREATE INDEX bridge_inst_lod3xgeom_spx ON public.bridge_installation
+-- DROP INDEX citydb.bridge_inst_lod3xgeom_spx;
+CREATE INDEX bridge_inst_lod3xgeom_spx ON citydb.bridge_installation
 	USING gist
 	(
 	  lod3_other_geom
@@ -3448,8 +3456,8 @@ CREATE INDEX bridge_inst_lod3xgeom_spx ON public.bridge_installation
 -- ddl-end --
 
 -- object: bridge_inst_lod4xgeom_spx | type: INDEX --
--- DROP INDEX public.bridge_inst_lod4xgeom_spx;
-CREATE INDEX bridge_inst_lod4xgeom_spx ON public.bridge_installation
+-- DROP INDEX citydb.bridge_inst_lod4xgeom_spx;
+CREATE INDEX bridge_inst_lod4xgeom_spx ON citydb.bridge_installation
 	USING gist
 	(
 	  lod4_other_geom
@@ -3457,8 +3465,8 @@ CREATE INDEX bridge_inst_lod4xgeom_spx ON public.bridge_installation
 -- ddl-end --
 
 -- object: bridge_inst_lod2impl_fkx | type: INDEX --
--- DROP INDEX public.bridge_inst_lod2impl_fkx;
-CREATE INDEX bridge_inst_lod2impl_fkx ON public.bridge_installation
+-- DROP INDEX citydb.bridge_inst_lod2impl_fkx;
+CREATE INDEX bridge_inst_lod2impl_fkx ON citydb.bridge_installation
 	USING btree
 	(
 	  lod2_implicit_rep_id ASC NULLS LAST
@@ -3466,8 +3474,8 @@ CREATE INDEX bridge_inst_lod2impl_fkx ON public.bridge_installation
 -- ddl-end --
 
 -- object: bridge_inst_lod3impl_fkx | type: INDEX --
--- DROP INDEX public.bridge_inst_lod3impl_fkx;
-CREATE INDEX bridge_inst_lod3impl_fkx ON public.bridge_installation
+-- DROP INDEX citydb.bridge_inst_lod3impl_fkx;
+CREATE INDEX bridge_inst_lod3impl_fkx ON citydb.bridge_installation
 	USING btree
 	(
 	  lod3_implicit_rep_id ASC NULLS LAST
@@ -3475,8 +3483,8 @@ CREATE INDEX bridge_inst_lod3impl_fkx ON public.bridge_installation
 -- ddl-end --
 
 -- object: bridge_inst_lod4impl_fkx | type: INDEX --
--- DROP INDEX public.bridge_inst_lod4impl_fkx;
-CREATE INDEX bridge_inst_lod4impl_fkx ON public.bridge_installation
+-- DROP INDEX citydb.bridge_inst_lod4impl_fkx;
+CREATE INDEX bridge_inst_lod4impl_fkx ON citydb.bridge_installation
 	USING btree
 	(
 	  lod4_implicit_rep_id ASC NULLS LAST
@@ -3484,8 +3492,8 @@ CREATE INDEX bridge_inst_lod4impl_fkx ON public.bridge_installation
 -- ddl-end --
 
 -- object: bridge_inst_lod2refpt_spx | type: INDEX --
--- DROP INDEX public.bridge_inst_lod2refpt_spx;
-CREATE INDEX bridge_inst_lod2refpt_spx ON public.bridge_installation
+-- DROP INDEX citydb.bridge_inst_lod2refpt_spx;
+CREATE INDEX bridge_inst_lod2refpt_spx ON citydb.bridge_installation
 	USING gist
 	(
 	  lod2_implicit_ref_point
@@ -3493,8 +3501,8 @@ CREATE INDEX bridge_inst_lod2refpt_spx ON public.bridge_installation
 -- ddl-end --
 
 -- object: bridge_inst_lod3refpt_spx | type: INDEX --
--- DROP INDEX public.bridge_inst_lod3refpt_spx;
-CREATE INDEX bridge_inst_lod3refpt_spx ON public.bridge_installation
+-- DROP INDEX citydb.bridge_inst_lod3refpt_spx;
+CREATE INDEX bridge_inst_lod3refpt_spx ON citydb.bridge_installation
 	USING gist
 	(
 	  lod3_implicit_ref_point
@@ -3502,8 +3510,8 @@ CREATE INDEX bridge_inst_lod3refpt_spx ON public.bridge_installation
 -- ddl-end --
 
 -- object: bridge_inst_lod4refpt_spx | type: INDEX --
--- DROP INDEX public.bridge_inst_lod4refpt_spx;
-CREATE INDEX bridge_inst_lod4refpt_spx ON public.bridge_installation
+-- DROP INDEX citydb.bridge_inst_lod4refpt_spx;
+CREATE INDEX bridge_inst_lod4refpt_spx ON citydb.bridge_installation
 	USING gist
 	(
 	  lod4_implicit_ref_point
@@ -3511,9 +3519,9 @@ CREATE INDEX bridge_inst_lod4refpt_spx ON public.bridge_installation
 -- ddl-end --
 
 
--- object: public.bridge_opening | type: TABLE --
--- DROP TABLE public.bridge_opening;
-CREATE TABLE public.bridge_opening(
+-- object: citydb.bridge_opening | type: TABLE --
+-- DROP TABLE citydb.bridge_opening;
+CREATE TABLE citydb.bridge_opening(
 	id integer NOT NULL,
 	objectclass_id integer,
 	address_id integer,
@@ -3530,8 +3538,8 @@ CREATE TABLE public.bridge_opening(
 );
 -- ddl-end --
 -- object: bridge_open_objclass_fkx | type: INDEX --
--- DROP INDEX public.bridge_open_objclass_fkx;
-CREATE INDEX bridge_open_objclass_fkx ON public.bridge_opening
+-- DROP INDEX citydb.bridge_open_objclass_fkx;
+CREATE INDEX bridge_open_objclass_fkx ON citydb.bridge_opening
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -3539,8 +3547,8 @@ CREATE INDEX bridge_open_objclass_fkx ON public.bridge_opening
 -- ddl-end --
 
 -- object: bridge_open_address_fkx | type: INDEX --
--- DROP INDEX public.bridge_open_address_fkx;
-CREATE INDEX bridge_open_address_fkx ON public.bridge_opening
+-- DROP INDEX citydb.bridge_open_address_fkx;
+CREATE INDEX bridge_open_address_fkx ON citydb.bridge_opening
 	USING btree
 	(
 	  address_id ASC NULLS LAST
@@ -3548,8 +3556,8 @@ CREATE INDEX bridge_open_address_fkx ON public.bridge_opening
 -- ddl-end --
 
 -- object: bridge_open_lod3msrf_fkx | type: INDEX --
--- DROP INDEX public.bridge_open_lod3msrf_fkx;
-CREATE INDEX bridge_open_lod3msrf_fkx ON public.bridge_opening
+-- DROP INDEX citydb.bridge_open_lod3msrf_fkx;
+CREATE INDEX bridge_open_lod3msrf_fkx ON citydb.bridge_opening
 	USING btree
 	(
 	  lod3_multi_surface_id ASC NULLS LAST
@@ -3557,8 +3565,8 @@ CREATE INDEX bridge_open_lod3msrf_fkx ON public.bridge_opening
 -- ddl-end --
 
 -- object: bridge_open_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.bridge_open_lod4msrf_fkx;
-CREATE INDEX bridge_open_lod4msrf_fkx ON public.bridge_opening
+-- DROP INDEX citydb.bridge_open_lod4msrf_fkx;
+CREATE INDEX bridge_open_lod4msrf_fkx ON citydb.bridge_opening
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -3566,8 +3574,8 @@ CREATE INDEX bridge_open_lod4msrf_fkx ON public.bridge_opening
 -- ddl-end --
 
 -- object: bridge_open_lod3impl_fkx | type: INDEX --
--- DROP INDEX public.bridge_open_lod3impl_fkx;
-CREATE INDEX bridge_open_lod3impl_fkx ON public.bridge_opening
+-- DROP INDEX citydb.bridge_open_lod3impl_fkx;
+CREATE INDEX bridge_open_lod3impl_fkx ON citydb.bridge_opening
 	USING btree
 	(
 	  lod3_implicit_rep_id ASC NULLS LAST
@@ -3575,8 +3583,8 @@ CREATE INDEX bridge_open_lod3impl_fkx ON public.bridge_opening
 -- ddl-end --
 
 -- object: bridge_open_lod4impl_fkx | type: INDEX --
--- DROP INDEX public.bridge_open_lod4impl_fkx;
-CREATE INDEX bridge_open_lod4impl_fkx ON public.bridge_opening
+-- DROP INDEX citydb.bridge_open_lod4impl_fkx;
+CREATE INDEX bridge_open_lod4impl_fkx ON citydb.bridge_opening
 	USING btree
 	(
 	  lod4_implicit_rep_id ASC NULLS LAST
@@ -3584,8 +3592,8 @@ CREATE INDEX bridge_open_lod4impl_fkx ON public.bridge_opening
 -- ddl-end --
 
 -- object: bridge_open_lod3refpt_spx | type: INDEX --
--- DROP INDEX public.bridge_open_lod3refpt_spx;
-CREATE INDEX bridge_open_lod3refpt_spx ON public.bridge_opening
+-- DROP INDEX citydb.bridge_open_lod3refpt_spx;
+CREATE INDEX bridge_open_lod3refpt_spx ON citydb.bridge_opening
 	USING gist
 	(
 	  lod3_implicit_ref_point
@@ -3593,8 +3601,8 @@ CREATE INDEX bridge_open_lod3refpt_spx ON public.bridge_opening
 -- ddl-end --
 
 -- object: bridge_open_lod4refpt_spx | type: INDEX --
--- DROP INDEX public.bridge_open_lod4refpt_spx;
-CREATE INDEX bridge_open_lod4refpt_spx ON public.bridge_opening
+-- DROP INDEX citydb.bridge_open_lod4refpt_spx;
+CREATE INDEX bridge_open_lod4refpt_spx ON citydb.bridge_opening
 	USING gist
 	(
 	  lod4_implicit_ref_point
@@ -3602,9 +3610,9 @@ CREATE INDEX bridge_open_lod4refpt_spx ON public.bridge_opening
 -- ddl-end --
 
 
--- object: public.bridge_open_to_them_srf | type: TABLE --
--- DROP TABLE public.bridge_open_to_them_srf;
-CREATE TABLE public.bridge_open_to_them_srf(
+-- object: citydb.bridge_open_to_them_srf | type: TABLE --
+-- DROP TABLE citydb.bridge_open_to_them_srf;
+CREATE TABLE citydb.bridge_open_to_them_srf(
 	bridge_opening_id integer NOT NULL,
 	bridge_thematic_surface_id integer NOT NULL,
 	CONSTRAINT bridge_open_to_them_srf_pk PRIMARY KEY (bridge_opening_id,bridge_thematic_surface_id)
@@ -3612,8 +3620,8 @@ CREATE TABLE public.bridge_open_to_them_srf(
 );
 -- ddl-end --
 -- object: brd_open_to_them_srf_fkx | type: INDEX --
--- DROP INDEX public.brd_open_to_them_srf_fkx;
-CREATE INDEX brd_open_to_them_srf_fkx ON public.bridge_open_to_them_srf
+-- DROP INDEX citydb.brd_open_to_them_srf_fkx;
+CREATE INDEX brd_open_to_them_srf_fkx ON citydb.bridge_open_to_them_srf
 	USING btree
 	(
 	  bridge_opening_id ASC NULLS LAST
@@ -3621,8 +3629,8 @@ CREATE INDEX brd_open_to_them_srf_fkx ON public.bridge_open_to_them_srf
 -- ddl-end --
 
 -- object: brd_open_to_them_srf_fkx1 | type: INDEX --
--- DROP INDEX public.brd_open_to_them_srf_fkx1;
-CREATE INDEX brd_open_to_them_srf_fkx1 ON public.bridge_open_to_them_srf
+-- DROP INDEX citydb.brd_open_to_them_srf_fkx1;
+CREATE INDEX brd_open_to_them_srf_fkx1 ON citydb.bridge_open_to_them_srf
 	USING btree
 	(
 	  bridge_thematic_surface_id ASC NULLS LAST
@@ -3630,9 +3638,9 @@ CREATE INDEX brd_open_to_them_srf_fkx1 ON public.bridge_open_to_them_srf
 -- ddl-end --
 
 
--- object: public.bridge_room | type: TABLE --
--- DROP TABLE public.bridge_room;
-CREATE TABLE public.bridge_room(
+-- object: citydb.bridge_room | type: TABLE --
+-- DROP TABLE citydb.bridge_room;
+CREATE TABLE citydb.bridge_room(
 	id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -3648,8 +3656,8 @@ CREATE TABLE public.bridge_room(
 );
 -- ddl-end --
 -- object: bridge_room_bridge_fkx | type: INDEX --
--- DROP INDEX public.bridge_room_bridge_fkx;
-CREATE INDEX bridge_room_bridge_fkx ON public.bridge_room
+-- DROP INDEX citydb.bridge_room_bridge_fkx;
+CREATE INDEX bridge_room_bridge_fkx ON citydb.bridge_room
 	USING btree
 	(
 	  bridge_id ASC NULLS LAST
@@ -3657,8 +3665,8 @@ CREATE INDEX bridge_room_bridge_fkx ON public.bridge_room
 -- ddl-end --
 
 -- object: bridge_room_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.bridge_room_lod4msrf_fkx;
-CREATE INDEX bridge_room_lod4msrf_fkx ON public.bridge_room
+-- DROP INDEX citydb.bridge_room_lod4msrf_fkx;
+CREATE INDEX bridge_room_lod4msrf_fkx ON citydb.bridge_room
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -3666,8 +3674,8 @@ CREATE INDEX bridge_room_lod4msrf_fkx ON public.bridge_room
 -- ddl-end --
 
 -- object: bridge_room_lod4solid_fkx | type: INDEX --
--- DROP INDEX public.bridge_room_lod4solid_fkx;
-CREATE INDEX bridge_room_lod4solid_fkx ON public.bridge_room
+-- DROP INDEX citydb.bridge_room_lod4solid_fkx;
+CREATE INDEX bridge_room_lod4solid_fkx ON citydb.bridge_room
 	USING btree
 	(
 	  lod4_solid_id ASC NULLS LAST
@@ -3675,9 +3683,9 @@ CREATE INDEX bridge_room_lod4solid_fkx ON public.bridge_room
 -- ddl-end --
 
 
--- object: public.bridge_thematic_surface | type: TABLE --
--- DROP TABLE public.bridge_thematic_surface;
-CREATE TABLE public.bridge_thematic_surface(
+-- object: citydb.bridge_thematic_surface | type: TABLE --
+-- DROP TABLE citydb.bridge_thematic_surface;
+CREATE TABLE citydb.bridge_thematic_surface(
 	id integer NOT NULL,
 	objectclass_id integer,
 	bridge_id integer,
@@ -3692,8 +3700,8 @@ CREATE TABLE public.bridge_thematic_surface(
 );
 -- ddl-end --
 -- object: brd_them_srf_objclass_fkx | type: INDEX --
--- DROP INDEX public.brd_them_srf_objclass_fkx;
-CREATE INDEX brd_them_srf_objclass_fkx ON public.bridge_thematic_surface
+-- DROP INDEX citydb.brd_them_srf_objclass_fkx;
+CREATE INDEX brd_them_srf_objclass_fkx ON citydb.bridge_thematic_surface
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -3701,8 +3709,8 @@ CREATE INDEX brd_them_srf_objclass_fkx ON public.bridge_thematic_surface
 -- ddl-end --
 
 -- object: brd_them_srf_bridge_fkx | type: INDEX --
--- DROP INDEX public.brd_them_srf_bridge_fkx;
-CREATE INDEX brd_them_srf_bridge_fkx ON public.bridge_thematic_surface
+-- DROP INDEX citydb.brd_them_srf_bridge_fkx;
+CREATE INDEX brd_them_srf_bridge_fkx ON citydb.bridge_thematic_surface
 	USING btree
 	(
 	  bridge_id ASC NULLS LAST
@@ -3710,8 +3718,8 @@ CREATE INDEX brd_them_srf_bridge_fkx ON public.bridge_thematic_surface
 -- ddl-end --
 
 -- object: brd_them_srf_brd_room_fkx | type: INDEX --
--- DROP INDEX public.brd_them_srf_brd_room_fkx;
-CREATE INDEX brd_them_srf_brd_room_fkx ON public.bridge_thematic_surface
+-- DROP INDEX citydb.brd_them_srf_brd_room_fkx;
+CREATE INDEX brd_them_srf_brd_room_fkx ON citydb.bridge_thematic_surface
 	USING btree
 	(
 	  bridge_room_id ASC NULLS LAST
@@ -3719,8 +3727,8 @@ CREATE INDEX brd_them_srf_brd_room_fkx ON public.bridge_thematic_surface
 -- ddl-end --
 
 -- object: brd_them_srf_brd_inst_fkx | type: INDEX --
--- DROP INDEX public.brd_them_srf_brd_inst_fkx;
-CREATE INDEX brd_them_srf_brd_inst_fkx ON public.bridge_thematic_surface
+-- DROP INDEX citydb.brd_them_srf_brd_inst_fkx;
+CREATE INDEX brd_them_srf_brd_inst_fkx ON citydb.bridge_thematic_surface
 	USING btree
 	(
 	  bridge_installation_id ASC NULLS LAST
@@ -3728,8 +3736,8 @@ CREATE INDEX brd_them_srf_brd_inst_fkx ON public.bridge_thematic_surface
 -- ddl-end --
 
 -- object: brd_them_srf_brd_const_fkx | type: INDEX --
--- DROP INDEX public.brd_them_srf_brd_const_fkx;
-CREATE INDEX brd_them_srf_brd_const_fkx ON public.bridge_thematic_surface
+-- DROP INDEX citydb.brd_them_srf_brd_const_fkx;
+CREATE INDEX brd_them_srf_brd_const_fkx ON citydb.bridge_thematic_surface
 	USING btree
 	(
 	  bridge_constr_element_id ASC NULLS LAST
@@ -3737,8 +3745,8 @@ CREATE INDEX brd_them_srf_brd_const_fkx ON public.bridge_thematic_surface
 -- ddl-end --
 
 -- object: brd_them_srf_lod2msrf_fkx | type: INDEX --
--- DROP INDEX public.brd_them_srf_lod2msrf_fkx;
-CREATE INDEX brd_them_srf_lod2msrf_fkx ON public.bridge_thematic_surface
+-- DROP INDEX citydb.brd_them_srf_lod2msrf_fkx;
+CREATE INDEX brd_them_srf_lod2msrf_fkx ON citydb.bridge_thematic_surface
 	USING btree
 	(
 	  lod2_multi_surface_id ASC NULLS LAST
@@ -3746,8 +3754,8 @@ CREATE INDEX brd_them_srf_lod2msrf_fkx ON public.bridge_thematic_surface
 -- ddl-end --
 
 -- object: brd_them_srf_lod3msrf_fkx | type: INDEX --
--- DROP INDEX public.brd_them_srf_lod3msrf_fkx;
-CREATE INDEX brd_them_srf_lod3msrf_fkx ON public.bridge_thematic_surface
+-- DROP INDEX citydb.brd_them_srf_lod3msrf_fkx;
+CREATE INDEX brd_them_srf_lod3msrf_fkx ON citydb.bridge_thematic_surface
 	USING btree
 	(
 	  lod3_multi_surface_id ASC NULLS LAST
@@ -3755,8 +3763,8 @@ CREATE INDEX brd_them_srf_lod3msrf_fkx ON public.bridge_thematic_surface
 -- ddl-end --
 
 -- object: brd_them_srf_lod4msrf_fkx | type: INDEX --
--- DROP INDEX public.brd_them_srf_lod4msrf_fkx;
-CREATE INDEX brd_them_srf_lod4msrf_fkx ON public.bridge_thematic_surface
+-- DROP INDEX citydb.brd_them_srf_lod4msrf_fkx;
+CREATE INDEX brd_them_srf_lod4msrf_fkx ON citydb.bridge_thematic_surface
 	USING btree
 	(
 	  lod4_multi_surface_id ASC NULLS LAST
@@ -3764,9 +3772,9 @@ CREATE INDEX brd_them_srf_lod4msrf_fkx ON public.bridge_thematic_surface
 -- ddl-end --
 
 
--- object: public.bridge_constr_element | type: TABLE --
--- DROP TABLE public.bridge_constr_element;
-CREATE TABLE public.bridge_constr_element(
+-- object: citydb.bridge_constr_element | type: TABLE --
+-- DROP TABLE citydb.bridge_constr_element;
+CREATE TABLE citydb.bridge_constr_element(
 	id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -3804,8 +3812,8 @@ CREATE TABLE public.bridge_constr_element(
 );
 -- ddl-end --
 -- object: bridge_constr_bridge_fkx | type: INDEX --
--- DROP INDEX public.bridge_constr_bridge_fkx;
-CREATE INDEX bridge_constr_bridge_fkx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_constr_bridge_fkx;
+CREATE INDEX bridge_constr_bridge_fkx ON citydb.bridge_constr_element
 	USING btree
 	(
 	  bridge_id ASC NULLS LAST
@@ -3813,8 +3821,8 @@ CREATE INDEX bridge_constr_bridge_fkx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_constr_lod1terr_spx | type: INDEX --
--- DROP INDEX public.bridge_constr_lod1terr_spx;
-CREATE INDEX bridge_constr_lod1terr_spx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_constr_lod1terr_spx;
+CREATE INDEX bridge_constr_lod1terr_spx ON citydb.bridge_constr_element
 	USING gist
 	(
 	  lod1_terrain_intersection
@@ -3822,8 +3830,8 @@ CREATE INDEX bridge_constr_lod1terr_spx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_constr_lod2terr_spx | type: INDEX --
--- DROP INDEX public.bridge_constr_lod2terr_spx;
-CREATE INDEX bridge_constr_lod2terr_spx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_constr_lod2terr_spx;
+CREATE INDEX bridge_constr_lod2terr_spx ON citydb.bridge_constr_element
 	USING gist
 	(
 	  lod2_terrain_intersection
@@ -3831,8 +3839,8 @@ CREATE INDEX bridge_constr_lod2terr_spx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_constr_lod3terr_spx | type: INDEX --
--- DROP INDEX public.bridge_constr_lod3terr_spx;
-CREATE INDEX bridge_constr_lod3terr_spx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_constr_lod3terr_spx;
+CREATE INDEX bridge_constr_lod3terr_spx ON citydb.bridge_constr_element
 	USING gist
 	(
 	  lod3_terrain_intersection
@@ -3840,8 +3848,8 @@ CREATE INDEX bridge_constr_lod3terr_spx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_constr_lod4terr_spx | type: INDEX --
--- DROP INDEX public.bridge_constr_lod4terr_spx;
-CREATE INDEX bridge_constr_lod4terr_spx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_constr_lod4terr_spx;
+CREATE INDEX bridge_constr_lod4terr_spx ON citydb.bridge_constr_element
 	USING gist
 	(
 	  lod4_terrain_intersection
@@ -3849,8 +3857,8 @@ CREATE INDEX bridge_constr_lod4terr_spx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_constr_lod1brep_fkx | type: INDEX --
--- DROP INDEX public.bridge_constr_lod1brep_fkx;
-CREATE INDEX bridge_constr_lod1brep_fkx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_constr_lod1brep_fkx;
+CREATE INDEX bridge_constr_lod1brep_fkx ON citydb.bridge_constr_element
 	USING btree
 	(
 	  lod1_brep_id ASC NULLS LAST
@@ -3858,8 +3866,8 @@ CREATE INDEX bridge_constr_lod1brep_fkx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_constr_lod2brep_fkx | type: INDEX --
--- DROP INDEX public.bridge_constr_lod2brep_fkx;
-CREATE INDEX bridge_constr_lod2brep_fkx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_constr_lod2brep_fkx;
+CREATE INDEX bridge_constr_lod2brep_fkx ON citydb.bridge_constr_element
 	USING btree
 	(
 	  lod2_brep_id ASC NULLS LAST
@@ -3867,8 +3875,8 @@ CREATE INDEX bridge_constr_lod2brep_fkx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_constr_lod3brep_fkx | type: INDEX --
--- DROP INDEX public.bridge_constr_lod3brep_fkx;
-CREATE INDEX bridge_constr_lod3brep_fkx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_constr_lod3brep_fkx;
+CREATE INDEX bridge_constr_lod3brep_fkx ON citydb.bridge_constr_element
 	USING btree
 	(
 	  lod3_brep_id ASC NULLS LAST
@@ -3876,8 +3884,8 @@ CREATE INDEX bridge_constr_lod3brep_fkx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_constr_lod4brep_fkx | type: INDEX --
--- DROP INDEX public.bridge_constr_lod4brep_fkx;
-CREATE INDEX bridge_constr_lod4brep_fkx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_constr_lod4brep_fkx;
+CREATE INDEX bridge_constr_lod4brep_fkx ON citydb.bridge_constr_element
 	USING btree
 	(
 	  lod4_brep_id ASC NULLS LAST
@@ -3885,8 +3893,8 @@ CREATE INDEX bridge_constr_lod4brep_fkx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_const_lod1xgeom_spx | type: INDEX --
--- DROP INDEX public.bridge_const_lod1xgeom_spx;
-CREATE INDEX bridge_const_lod1xgeom_spx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_const_lod1xgeom_spx;
+CREATE INDEX bridge_const_lod1xgeom_spx ON citydb.bridge_constr_element
 	USING gist
 	(
 	  lod1_other_geom
@@ -3894,8 +3902,8 @@ CREATE INDEX bridge_const_lod1xgeom_spx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_const_lod2xgeom_spx | type: INDEX --
--- DROP INDEX public.bridge_const_lod2xgeom_spx;
-CREATE INDEX bridge_const_lod2xgeom_spx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_const_lod2xgeom_spx;
+CREATE INDEX bridge_const_lod2xgeom_spx ON citydb.bridge_constr_element
 	USING gist
 	(
 	  lod2_other_geom
@@ -3903,8 +3911,8 @@ CREATE INDEX bridge_const_lod2xgeom_spx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_const_lod3xgeom_spx | type: INDEX --
--- DROP INDEX public.bridge_const_lod3xgeom_spx;
-CREATE INDEX bridge_const_lod3xgeom_spx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_const_lod3xgeom_spx;
+CREATE INDEX bridge_const_lod3xgeom_spx ON citydb.bridge_constr_element
 	USING gist
 	(
 	  lod3_other_geom
@@ -3912,8 +3920,8 @@ CREATE INDEX bridge_const_lod3xgeom_spx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_const_lod4xgeom_spx | type: INDEX --
--- DROP INDEX public.bridge_const_lod4xgeom_spx;
-CREATE INDEX bridge_const_lod4xgeom_spx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_const_lod4xgeom_spx;
+CREATE INDEX bridge_const_lod4xgeom_spx ON citydb.bridge_constr_element
 	USING gist
 	(
 	  lod4_other_geom
@@ -3921,8 +3929,8 @@ CREATE INDEX bridge_const_lod4xgeom_spx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_constr_lod1impl_fkx | type: INDEX --
--- DROP INDEX public.bridge_constr_lod1impl_fkx;
-CREATE INDEX bridge_constr_lod1impl_fkx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_constr_lod1impl_fkx;
+CREATE INDEX bridge_constr_lod1impl_fkx ON citydb.bridge_constr_element
 	USING btree
 	(
 	  lod1_implicit_rep_id ASC NULLS LAST
@@ -3930,8 +3938,8 @@ CREATE INDEX bridge_constr_lod1impl_fkx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_constr_lod2impl_fkx | type: INDEX --
--- DROP INDEX public.bridge_constr_lod2impl_fkx;
-CREATE INDEX bridge_constr_lod2impl_fkx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_constr_lod2impl_fkx;
+CREATE INDEX bridge_constr_lod2impl_fkx ON citydb.bridge_constr_element
 	USING btree
 	(
 	  lod2_implicit_rep_id ASC NULLS LAST
@@ -3939,8 +3947,8 @@ CREATE INDEX bridge_constr_lod2impl_fkx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_constr_lod3impl_fkx | type: INDEX --
--- DROP INDEX public.bridge_constr_lod3impl_fkx;
-CREATE INDEX bridge_constr_lod3impl_fkx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_constr_lod3impl_fkx;
+CREATE INDEX bridge_constr_lod3impl_fkx ON citydb.bridge_constr_element
 	USING btree
 	(
 	  lod3_implicit_rep_id ASC NULLS LAST
@@ -3948,8 +3956,8 @@ CREATE INDEX bridge_constr_lod3impl_fkx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_constr_lod4impl_fkx | type: INDEX --
--- DROP INDEX public.bridge_constr_lod4impl_fkx;
-CREATE INDEX bridge_constr_lod4impl_fkx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_constr_lod4impl_fkx;
+CREATE INDEX bridge_constr_lod4impl_fkx ON citydb.bridge_constr_element
 	USING btree
 	(
 	  lod4_implicit_rep_id ASC NULLS LAST
@@ -3957,8 +3965,8 @@ CREATE INDEX bridge_constr_lod4impl_fkx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_const_lod1refpt_spx | type: INDEX --
--- DROP INDEX public.bridge_const_lod1refpt_spx;
-CREATE INDEX bridge_const_lod1refpt_spx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_const_lod1refpt_spx;
+CREATE INDEX bridge_const_lod1refpt_spx ON citydb.bridge_constr_element
 	USING gist
 	(
 	  lod1_implicit_ref_point
@@ -3966,8 +3974,8 @@ CREATE INDEX bridge_const_lod1refpt_spx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_const_lod2refpt_spx | type: INDEX --
--- DROP INDEX public.bridge_const_lod2refpt_spx;
-CREATE INDEX bridge_const_lod2refpt_spx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_const_lod2refpt_spx;
+CREATE INDEX bridge_const_lod2refpt_spx ON citydb.bridge_constr_element
 	USING gist
 	(
 	  lod2_implicit_ref_point
@@ -3975,8 +3983,8 @@ CREATE INDEX bridge_const_lod2refpt_spx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_const_lod3refpt_spx | type: INDEX --
--- DROP INDEX public.bridge_const_lod3refpt_spx;
-CREATE INDEX bridge_const_lod3refpt_spx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_const_lod3refpt_spx;
+CREATE INDEX bridge_const_lod3refpt_spx ON citydb.bridge_constr_element
 	USING gist
 	(
 	  lod3_implicit_ref_point
@@ -3984,8 +3992,8 @@ CREATE INDEX bridge_const_lod3refpt_spx ON public.bridge_constr_element
 -- ddl-end --
 
 -- object: bridge_const_lod4refpt_spx | type: INDEX --
--- DROP INDEX public.bridge_const_lod4refpt_spx;
-CREATE INDEX bridge_const_lod4refpt_spx ON public.bridge_constr_element
+-- DROP INDEX citydb.bridge_const_lod4refpt_spx;
+CREATE INDEX bridge_const_lod4refpt_spx ON citydb.bridge_constr_element
 	USING gist
 	(
 	  lod4_implicit_ref_point
@@ -3993,9 +4001,9 @@ CREATE INDEX bridge_const_lod4refpt_spx ON public.bridge_constr_element
 -- ddl-end --
 
 
--- object: public.address_to_bridge | type: TABLE --
--- DROP TABLE public.address_to_bridge;
-CREATE TABLE public.address_to_bridge(
+-- object: citydb.address_to_bridge | type: TABLE --
+-- DROP TABLE citydb.address_to_bridge;
+CREATE TABLE citydb.address_to_bridge(
 	bridge_id integer,
 	address_id integer,
 	CONSTRAINT address_to_bridge_pk PRIMARY KEY (bridge_id,address_id)
@@ -4003,8 +4011,8 @@ CREATE TABLE public.address_to_bridge(
 );
 -- ddl-end --
 -- object: address_to_bridge_fkx | type: INDEX --
--- DROP INDEX public.address_to_bridge_fkx;
-CREATE INDEX address_to_bridge_fkx ON public.address_to_bridge
+-- DROP INDEX citydb.address_to_bridge_fkx;
+CREATE INDEX address_to_bridge_fkx ON citydb.address_to_bridge
 	USING btree
 	(
 	  address_id ASC NULLS LAST
@@ -4012,8 +4020,8 @@ CREATE INDEX address_to_bridge_fkx ON public.address_to_bridge
 -- ddl-end --
 
 -- object: address_to_bridge_fkx1 | type: INDEX --
--- DROP INDEX public.address_to_bridge_fkx1;
-CREATE INDEX address_to_bridge_fkx1 ON public.address_to_bridge
+-- DROP INDEX citydb.address_to_bridge_fkx1;
+CREATE INDEX address_to_bridge_fkx1 ON citydb.address_to_bridge
 	USING btree
 	(
 	  bridge_id ASC NULLS LAST
@@ -4021,9 +4029,9 @@ CREATE INDEX address_to_bridge_fkx1 ON public.address_to_bridge
 -- ddl-end --
 
 
--- object: public.grid_coverage_seq | type: SEQUENCE --
--- DROP SEQUENCE public.grid_coverage_seq;
-CREATE SEQUENCE public.grid_coverage_seq
+-- object: citydb.grid_coverage_seq | type: SEQUENCE --
+-- DROP SEQUENCE citydb.grid_coverage_seq;
+CREATE SEQUENCE citydb.grid_coverage_seq
 	INCREMENT BY 1
 	MINVALUE 0
 	MAXVALUE 2147483647
@@ -4033,9 +4041,9 @@ CREATE SEQUENCE public.grid_coverage_seq
 	OWNED BY NONE;
 -- ddl-end --
 
--- object: public.cityobject | type: TABLE --
--- DROP TABLE public.cityobject;
-CREATE TABLE public.cityobject(
+-- object: citydb.cityobject | type: TABLE --
+-- DROP TABLE citydb.cityobject;
+CREATE TABLE citydb.cityobject(
 	id integer NOT NULL DEFAULT nextval('cityobject_seq'::regclass),
 	objectclass_id integer NOT NULL,
 	gmlid character varying(256),
@@ -4057,8 +4065,8 @@ CREATE TABLE public.cityobject(
 );
 -- ddl-end --
 -- object: cityobject_inx | type: INDEX --
--- DROP INDEX public.cityobject_inx;
-CREATE INDEX cityobject_inx ON public.cityobject
+-- DROP INDEX citydb.cityobject_inx;
+CREATE INDEX cityobject_inx ON citydb.cityobject
 	USING btree
 	(
 	  gmlid
@@ -4066,8 +4074,8 @@ CREATE INDEX cityobject_inx ON public.cityobject
 -- ddl-end --
 
 -- object: cityobject_objectclass_fkx | type: INDEX --
--- DROP INDEX public.cityobject_objectclass_fkx;
-CREATE INDEX cityobject_objectclass_fkx ON public.cityobject
+-- DROP INDEX citydb.cityobject_objectclass_fkx;
+CREATE INDEX cityobject_objectclass_fkx ON citydb.cityobject
 	USING btree
 	(
 	  objectclass_id
@@ -4075,8 +4083,8 @@ CREATE INDEX cityobject_objectclass_fkx ON public.cityobject
 -- ddl-end --
 
 -- object: cityobject_envelope_spx | type: INDEX --
--- DROP INDEX public.cityobject_envelope_spx;
-CREATE INDEX cityobject_envelope_spx ON public.cityobject
+-- DROP INDEX citydb.cityobject_envelope_spx;
+CREATE INDEX cityobject_envelope_spx ON citydb.cityobject
 	USING gist
 	(
 	  envelope
@@ -4084,9 +4092,9 @@ CREATE INDEX cityobject_envelope_spx ON public.cityobject
 -- ddl-end --
 
 
--- object: public.appearance | type: TABLE --
--- DROP TABLE public.appearance;
-CREATE TABLE public.appearance(
+-- object: citydb.appearance | type: TABLE --
+-- DROP TABLE citydb.appearance;
+CREATE TABLE citydb.appearance(
 	id integer NOT NULL DEFAULT nextval('appearance_seq'::regclass),
 	gmlid character varying(256),
 	name character varying(1000),
@@ -4100,8 +4108,8 @@ CREATE TABLE public.appearance(
 );
 -- ddl-end --
 -- object: appearance_inx | type: INDEX --
--- DROP INDEX public.appearance_inx;
-CREATE INDEX appearance_inx ON public.appearance
+-- DROP INDEX citydb.appearance_inx;
+CREATE INDEX appearance_inx ON citydb.appearance
 	USING btree
 	(
 	  gmlid
@@ -4109,8 +4117,8 @@ CREATE INDEX appearance_inx ON public.appearance
 -- ddl-end --
 
 -- object: appearance_theme_inx | type: INDEX --
--- DROP INDEX public.appearance_theme_inx;
-CREATE INDEX appearance_theme_inx ON public.appearance
+-- DROP INDEX citydb.appearance_theme_inx;
+CREATE INDEX appearance_theme_inx ON citydb.appearance
 	USING btree
 	(
 	  theme ASC NULLS LAST
@@ -4118,8 +4126,8 @@ CREATE INDEX appearance_theme_inx ON public.appearance
 -- ddl-end --
 
 -- object: appearance_citymodel_fkx | type: INDEX --
--- DROP INDEX public.appearance_citymodel_fkx;
-CREATE INDEX appearance_citymodel_fkx ON public.appearance
+-- DROP INDEX citydb.appearance_citymodel_fkx;
+CREATE INDEX appearance_citymodel_fkx ON citydb.appearance
 	USING btree
 	(
 	  citymodel_id ASC NULLS LAST
@@ -4127,8 +4135,8 @@ CREATE INDEX appearance_citymodel_fkx ON public.appearance
 -- ddl-end --
 
 -- object: appearance_cityobject_fkx | type: INDEX --
--- DROP INDEX public.appearance_cityobject_fkx;
-CREATE INDEX appearance_cityobject_fkx ON public.appearance
+-- DROP INDEX citydb.appearance_cityobject_fkx;
+CREATE INDEX appearance_cityobject_fkx ON citydb.appearance
 	USING btree
 	(
 	  cityobject_id ASC NULLS LAST
@@ -4136,9 +4144,9 @@ CREATE INDEX appearance_cityobject_fkx ON public.appearance
 -- ddl-end --
 
 
--- object: public.implicit_geometry | type: TABLE --
--- DROP TABLE public.implicit_geometry;
-CREATE TABLE public.implicit_geometry(
+-- object: citydb.implicit_geometry | type: TABLE --
+-- DROP TABLE citydb.implicit_geometry;
+CREATE TABLE citydb.implicit_geometry(
 	id integer NOT NULL DEFAULT nextval('implicit_geometry_seq'::regclass),
 	mime_type character varying(256),
 	reference_to_library character varying(4000),
@@ -4150,8 +4158,8 @@ CREATE TABLE public.implicit_geometry(
 );
 -- ddl-end --
 -- object: implicit_geom_ref2lib_inx | type: INDEX --
--- DROP INDEX public.implicit_geom_ref2lib_inx;
-CREATE INDEX implicit_geom_ref2lib_inx ON public.implicit_geometry
+-- DROP INDEX citydb.implicit_geom_ref2lib_inx;
+CREATE INDEX implicit_geom_ref2lib_inx ON citydb.implicit_geometry
 	USING btree
 	(
 	  reference_to_library ASC NULLS LAST
@@ -4159,8 +4167,8 @@ CREATE INDEX implicit_geom_ref2lib_inx ON public.implicit_geometry
 -- ddl-end --
 
 -- object: implicit_geom_brep_fkx | type: INDEX --
--- DROP INDEX public.implicit_geom_brep_fkx;
-CREATE INDEX implicit_geom_brep_fkx ON public.implicit_geometry
+-- DROP INDEX citydb.implicit_geom_brep_fkx;
+CREATE INDEX implicit_geom_brep_fkx ON citydb.implicit_geometry
 	USING btree
 	(
 	  relative_brep_id ASC NULLS LAST
@@ -4168,9 +4176,9 @@ CREATE INDEX implicit_geom_brep_fkx ON public.implicit_geometry
 -- ddl-end --
 
 
--- object: public.surface_geometry | type: TABLE --
--- DROP TABLE public.surface_geometry;
-CREATE TABLE public.surface_geometry(
+-- object: citydb.surface_geometry | type: TABLE --
+-- DROP TABLE citydb.surface_geometry;
+CREATE TABLE citydb.surface_geometry(
 	id integer NOT NULL DEFAULT nextval('surface_geometry_seq'::regclass),
 	gmlid character varying(256),
 	parent_id integer,
@@ -4189,8 +4197,8 @@ CREATE TABLE public.surface_geometry(
 );
 -- ddl-end --
 -- object: surface_geom_inx | type: INDEX --
--- DROP INDEX public.surface_geom_inx;
-CREATE INDEX surface_geom_inx ON public.surface_geometry
+-- DROP INDEX citydb.surface_geom_inx;
+CREATE INDEX surface_geom_inx ON citydb.surface_geometry
 	USING btree
 	(
 	  gmlid
@@ -4198,8 +4206,8 @@ CREATE INDEX surface_geom_inx ON public.surface_geometry
 -- ddl-end --
 
 -- object: surface_geom_parent_fkx | type: INDEX --
--- DROP INDEX public.surface_geom_parent_fkx;
-CREATE INDEX surface_geom_parent_fkx ON public.surface_geometry
+-- DROP INDEX citydb.surface_geom_parent_fkx;
+CREATE INDEX surface_geom_parent_fkx ON citydb.surface_geometry
 	USING btree
 	(
 	  parent_id ASC NULLS LAST
@@ -4207,8 +4215,8 @@ CREATE INDEX surface_geom_parent_fkx ON public.surface_geometry
 -- ddl-end --
 
 -- object: surface_geom_root_fkx | type: INDEX --
--- DROP INDEX public.surface_geom_root_fkx;
-CREATE INDEX surface_geom_root_fkx ON public.surface_geometry
+-- DROP INDEX citydb.surface_geom_root_fkx;
+CREATE INDEX surface_geom_root_fkx ON citydb.surface_geometry
 	USING btree
 	(
 	  root_id ASC NULLS LAST
@@ -4216,8 +4224,8 @@ CREATE INDEX surface_geom_root_fkx ON public.surface_geometry
 -- ddl-end --
 
 -- object: surface_geom_spx | type: INDEX --
--- DROP INDEX public.surface_geom_spx;
-CREATE INDEX surface_geom_spx ON public.surface_geometry
+-- DROP INDEX citydb.surface_geom_spx;
+CREATE INDEX surface_geom_spx ON citydb.surface_geometry
 	USING gist
 	(
 	  geometry
@@ -4225,8 +4233,8 @@ CREATE INDEX surface_geom_spx ON public.surface_geometry
 -- ddl-end --
 
 -- object: surface_geom_solid_spx | type: INDEX --
--- DROP INDEX public.surface_geom_solid_spx;
-CREATE INDEX surface_geom_solid_spx ON public.surface_geometry
+-- DROP INDEX citydb.surface_geom_solid_spx;
+CREATE INDEX surface_geom_solid_spx ON citydb.surface_geometry
 	USING gist
 	(
 	  solid_geometry
@@ -4234,8 +4242,8 @@ CREATE INDEX surface_geom_solid_spx ON public.surface_geometry
 -- ddl-end --
 
 -- object: surface_geom_cityobj_fkx | type: INDEX --
--- DROP INDEX public.surface_geom_cityobj_fkx;
-CREATE INDEX surface_geom_cityobj_fkx ON public.surface_geometry
+-- DROP INDEX citydb.surface_geom_cityobj_fkx;
+CREATE INDEX surface_geom_cityobj_fkx ON citydb.surface_geometry
 	USING btree
 	(
 	  cityobject_id ASC NULLS LAST
@@ -4243,9 +4251,9 @@ CREATE INDEX surface_geom_cityobj_fkx ON public.surface_geometry
 -- ddl-end --
 
 
--- object: public.address | type: TABLE --
--- DROP TABLE public.address;
-CREATE TABLE public.address(
+-- object: citydb.address | type: TABLE --
+-- DROP TABLE citydb.address;
+CREATE TABLE citydb.address(
 	id integer NOT NULL DEFAULT nextval('address_seq'::regclass),
 	street character varying(1000),
 	house_number character varying(256),
@@ -4260,9 +4268,9 @@ CREATE TABLE public.address(
 
 );
 -- ddl-end --
--- object: public.surface_data | type: TABLE --
--- DROP TABLE public.surface_data;
-CREATE TABLE public.surface_data(
+-- object: citydb.surface_data | type: TABLE --
+-- DROP TABLE citydb.surface_data;
+CREATE TABLE citydb.surface_data(
 	id integer NOT NULL DEFAULT nextval('surface_data_seq'::regclass),
 	gmlid character varying(256),
 	name character varying(1000),
@@ -4289,8 +4297,8 @@ CREATE TABLE public.surface_data(
 );
 -- ddl-end --
 -- object: surface_data_inx | type: INDEX --
--- DROP INDEX public.surface_data_inx;
-CREATE INDEX surface_data_inx ON public.surface_data
+-- DROP INDEX citydb.surface_data_inx;
+CREATE INDEX surface_data_inx ON citydb.surface_data
 	USING btree
 	(
 	  gmlid
@@ -4298,8 +4306,8 @@ CREATE INDEX surface_data_inx ON public.surface_data
 -- ddl-end --
 
 -- object: surface_data_spx | type: INDEX --
--- DROP INDEX public.surface_data_spx;
-CREATE INDEX surface_data_spx ON public.surface_data
+-- DROP INDEX citydb.surface_data_spx;
+CREATE INDEX surface_data_spx ON citydb.surface_data
 	USING gist
 	(
 	  gt_reference_point
@@ -4307,8 +4315,8 @@ CREATE INDEX surface_data_spx ON public.surface_data
 -- ddl-end --
 
 -- object: surface_data_objclass_fkx | type: INDEX --
--- DROP INDEX public.surface_data_objclass_fkx;
-CREATE INDEX surface_data_objclass_fkx ON public.surface_data
+-- DROP INDEX citydb.surface_data_objclass_fkx;
+CREATE INDEX surface_data_objclass_fkx ON citydb.surface_data
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -4316,8 +4324,8 @@ CREATE INDEX surface_data_objclass_fkx ON public.surface_data
 -- ddl-end --
 
 -- object: surface_data_tex_image_fkx | type: INDEX --
--- DROP INDEX public.surface_data_tex_image_fkx;
-CREATE INDEX surface_data_tex_image_fkx ON public.surface_data
+-- DROP INDEX citydb.surface_data_tex_image_fkx;
+CREATE INDEX surface_data_tex_image_fkx ON citydb.surface_data
 	USING btree
 	(
 	  tex_image_id ASC NULLS LAST
@@ -4325,9 +4333,9 @@ CREATE INDEX surface_data_tex_image_fkx ON public.surface_data
 -- ddl-end --
 
 
--- object: public.citymodel | type: TABLE --
--- DROP TABLE public.citymodel;
-CREATE TABLE public.citymodel(
+-- object: citydb.citymodel | type: TABLE --
+-- DROP TABLE citydb.citymodel;
+CREATE TABLE citydb.citymodel(
 	id integer NOT NULL DEFAULT nextval('citymodel_seq'::regclass),
 	gmlid character varying(256),
 	name character varying(1000),
@@ -4345,8 +4353,8 @@ CREATE TABLE public.citymodel(
 );
 -- ddl-end --
 -- object: citymodel_envelope_spx | type: INDEX --
--- DROP INDEX public.citymodel_envelope_spx;
-CREATE INDEX citymodel_envelope_spx ON public.citymodel
+-- DROP INDEX citydb.citymodel_envelope_spx;
+CREATE INDEX citymodel_envelope_spx ON citydb.citymodel
 	USING gist
 	(
 	  envelope
@@ -4354,9 +4362,9 @@ CREATE INDEX citymodel_envelope_spx ON public.citymodel
 -- ddl-end --
 
 
--- object: public.cityobject_genericattrib | type: TABLE --
--- DROP TABLE public.cityobject_genericattrib;
-CREATE TABLE public.cityobject_genericattrib(
+-- object: citydb.cityobject_genericattrib | type: TABLE --
+-- DROP TABLE citydb.cityobject_genericattrib;
+CREATE TABLE citydb.cityobject_genericattrib(
 	id integer NOT NULL DEFAULT nextval('cityobject_genericatt_seq'::regclass),
 	parent_genattrib_id integer,
 	root_genattrib_id integer,
@@ -4378,8 +4386,8 @@ CREATE TABLE public.cityobject_genericattrib(
 );
 -- ddl-end --
 -- object: genericattrib_parent_fkx | type: INDEX --
--- DROP INDEX public.genericattrib_parent_fkx;
-CREATE INDEX genericattrib_parent_fkx ON public.cityobject_genericattrib
+-- DROP INDEX citydb.genericattrib_parent_fkx;
+CREATE INDEX genericattrib_parent_fkx ON citydb.cityobject_genericattrib
 	USING btree
 	(
 	  parent_genattrib_id ASC NULLS LAST
@@ -4387,8 +4395,8 @@ CREATE INDEX genericattrib_parent_fkx ON public.cityobject_genericattrib
 -- ddl-end --
 
 -- object: genericattrib_root_fkx | type: INDEX --
--- DROP INDEX public.genericattrib_root_fkx;
-CREATE INDEX genericattrib_root_fkx ON public.cityobject_genericattrib
+-- DROP INDEX citydb.genericattrib_root_fkx;
+CREATE INDEX genericattrib_root_fkx ON citydb.cityobject_genericattrib
 	USING btree
 	(
 	  root_genattrib_id ASC NULLS LAST
@@ -4396,8 +4404,8 @@ CREATE INDEX genericattrib_root_fkx ON public.cityobject_genericattrib
 -- ddl-end --
 
 -- object: genericattrib_geom_fkx | type: INDEX --
--- DROP INDEX public.genericattrib_geom_fkx;
-CREATE INDEX genericattrib_geom_fkx ON public.cityobject_genericattrib
+-- DROP INDEX citydb.genericattrib_geom_fkx;
+CREATE INDEX genericattrib_geom_fkx ON citydb.cityobject_genericattrib
 	USING btree
 	(
 	  surface_geometry_id
@@ -4405,8 +4413,8 @@ CREATE INDEX genericattrib_geom_fkx ON public.cityobject_genericattrib
 -- ddl-end --
 
 -- object: genericattrib_cityobj_fkx | type: INDEX --
--- DROP INDEX public.genericattrib_cityobj_fkx;
-CREATE INDEX genericattrib_cityobj_fkx ON public.cityobject_genericattrib
+-- DROP INDEX citydb.genericattrib_cityobj_fkx;
+CREATE INDEX genericattrib_cityobj_fkx ON citydb.cityobject_genericattrib
 	USING btree
 	(
 	  cityobject_id
@@ -4414,9 +4422,9 @@ CREATE INDEX genericattrib_cityobj_fkx ON public.cityobject_genericattrib
 -- ddl-end --
 
 
--- object: public.external_reference | type: TABLE --
--- DROP TABLE public.external_reference;
-CREATE TABLE public.external_reference(
+-- object: citydb.external_reference | type: TABLE --
+-- DROP TABLE citydb.external_reference;
+CREATE TABLE citydb.external_reference(
 	id integer NOT NULL DEFAULT nextval('external_ref_seq'::regclass),
 	infosys character varying(4000),
 	name character varying(4000),
@@ -4427,8 +4435,8 @@ CREATE TABLE public.external_reference(
 );
 -- ddl-end --
 -- object: ext_ref_cityobject_fkx | type: INDEX --
--- DROP INDEX public.ext_ref_cityobject_fkx;
-CREATE INDEX ext_ref_cityobject_fkx ON public.external_reference
+-- DROP INDEX citydb.ext_ref_cityobject_fkx;
+CREATE INDEX ext_ref_cityobject_fkx ON citydb.external_reference
 	USING btree
 	(
 	  cityobject_id ASC NULLS LAST
@@ -4436,9 +4444,9 @@ CREATE INDEX ext_ref_cityobject_fkx ON public.external_reference
 -- ddl-end --
 
 
--- object: public.tex_image | type: TABLE --
--- DROP TABLE public.tex_image;
-CREATE TABLE public.tex_image(
+-- object: citydb.tex_image | type: TABLE --
+-- DROP TABLE citydb.tex_image;
+CREATE TABLE citydb.tex_image(
 	id integer NOT NULL DEFAULT nextval('tex_image_seq'::regclass),
 	tex_image_uri character varying(4000),
 	tex_image_data bytea,
@@ -4448,9 +4456,9 @@ CREATE TABLE public.tex_image(
 
 );
 -- ddl-end --
--- object: public.grid_coverage | type: TABLE --
--- DROP TABLE public.grid_coverage;
-CREATE TABLE public.grid_coverage(
+-- object: citydb.grid_coverage | type: TABLE --
+-- DROP TABLE citydb.grid_coverage;
+CREATE TABLE citydb.grid_coverage(
 	id integer DEFAULT nextval('grid_coverage_seq'::regclass),
 	rasterproperty raster,
 	CONSTRAINT grid_coverage_pk PRIMARY KEY (id)
@@ -4458,2098 +4466,2098 @@ CREATE TABLE public.grid_coverage(
 );
 -- ddl-end --
 -- object: cityobject_member_fk | type: CONSTRAINT --
--- ALTER TABLE public.cityobject_member DROP CONSTRAINT cityobject_member_fk;
-ALTER TABLE public.cityobject_member ADD CONSTRAINT cityobject_member_fk FOREIGN KEY (cityobject_id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.cityobject_member DROP CONSTRAINT cityobject_member_fk;
+ALTER TABLE citydb.cityobject_member ADD CONSTRAINT cityobject_member_fk FOREIGN KEY (cityobject_id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: cityobject_member_fk1 | type: CONSTRAINT --
--- ALTER TABLE public.cityobject_member DROP CONSTRAINT cityobject_member_fk1;
-ALTER TABLE public.cityobject_member ADD CONSTRAINT cityobject_member_fk1 FOREIGN KEY (citymodel_id)
-REFERENCES public.citymodel (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.cityobject_member DROP CONSTRAINT cityobject_member_fk1;
+ALTER TABLE citydb.cityobject_member ADD CONSTRAINT cityobject_member_fk1 FOREIGN KEY (citymodel_id)
+REFERENCES citydb.citymodel (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: general_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.generalization DROP CONSTRAINT general_cityobject_fk;
-ALTER TABLE public.generalization ADD CONSTRAINT general_cityobject_fk FOREIGN KEY (cityobject_id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.generalization DROP CONSTRAINT general_cityobject_fk;
+ALTER TABLE citydb.generalization ADD CONSTRAINT general_cityobject_fk FOREIGN KEY (cityobject_id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: general_generalizes_to_fk | type: CONSTRAINT --
--- ALTER TABLE public.generalization DROP CONSTRAINT general_generalizes_to_fk;
-ALTER TABLE public.generalization ADD CONSTRAINT general_generalizes_to_fk FOREIGN KEY (generalizes_to_id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.generalization DROP CONSTRAINT general_generalizes_to_fk;
+ALTER TABLE citydb.generalization ADD CONSTRAINT general_generalizes_to_fk FOREIGN KEY (generalizes_to_id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: group_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.cityobjectgroup DROP CONSTRAINT group_cityobject_fk;
-ALTER TABLE public.cityobjectgroup ADD CONSTRAINT group_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.cityobjectgroup DROP CONSTRAINT group_cityobject_fk;
+ALTER TABLE citydb.cityobjectgroup ADD CONSTRAINT group_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: group_brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.cityobjectgroup DROP CONSTRAINT group_brep_fk;
-ALTER TABLE public.cityobjectgroup ADD CONSTRAINT group_brep_fk FOREIGN KEY (brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.cityobjectgroup DROP CONSTRAINT group_brep_fk;
+ALTER TABLE citydb.cityobjectgroup ADD CONSTRAINT group_brep_fk FOREIGN KEY (brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: group_parent_cityobj_fk | type: CONSTRAINT --
--- ALTER TABLE public.cityobjectgroup DROP CONSTRAINT group_parent_cityobj_fk;
-ALTER TABLE public.cityobjectgroup ADD CONSTRAINT group_parent_cityobj_fk FOREIGN KEY (parent_cityobject_id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.cityobjectgroup DROP CONSTRAINT group_parent_cityobj_fk;
+ALTER TABLE citydb.cityobjectgroup ADD CONSTRAINT group_parent_cityobj_fk FOREIGN KEY (parent_cityobject_id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: group_to_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.group_to_cityobject DROP CONSTRAINT group_to_cityobject_fk;
-ALTER TABLE public.group_to_cityobject ADD CONSTRAINT group_to_cityobject_fk FOREIGN KEY (cityobject_id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.group_to_cityobject DROP CONSTRAINT group_to_cityobject_fk;
+ALTER TABLE citydb.group_to_cityobject ADD CONSTRAINT group_to_cityobject_fk FOREIGN KEY (cityobject_id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: group_to_cityobject_fk1 | type: CONSTRAINT --
--- ALTER TABLE public.group_to_cityobject DROP CONSTRAINT group_to_cityobject_fk1;
-ALTER TABLE public.group_to_cityobject ADD CONSTRAINT group_to_cityobject_fk1 FOREIGN KEY (cityobjectgroup_id)
-REFERENCES public.cityobjectgroup (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.group_to_cityobject DROP CONSTRAINT group_to_cityobject_fk1;
+ALTER TABLE citydb.group_to_cityobject ADD CONSTRAINT group_to_cityobject_fk1 FOREIGN KEY (cityobjectgroup_id)
+REFERENCES citydb.cityobjectgroup (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: objectclass_superclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.objectclass DROP CONSTRAINT objectclass_superclass_fk;
-ALTER TABLE public.objectclass ADD CONSTRAINT objectclass_superclass_fk FOREIGN KEY (superclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.objectclass DROP CONSTRAINT objectclass_superclass_fk;
+ALTER TABLE citydb.objectclass ADD CONSTRAINT objectclass_superclass_fk FOREIGN KEY (superclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: city_furn_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.city_furniture DROP CONSTRAINT city_furn_cityobject_fk;
-ALTER TABLE public.city_furniture ADD CONSTRAINT city_furn_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.city_furniture DROP CONSTRAINT city_furn_cityobject_fk;
+ALTER TABLE citydb.city_furniture ADD CONSTRAINT city_furn_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: city_furn_lod1brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.city_furniture DROP CONSTRAINT city_furn_lod1brep_fk;
-ALTER TABLE public.city_furniture ADD CONSTRAINT city_furn_lod1brep_fk FOREIGN KEY (lod1_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.city_furniture DROP CONSTRAINT city_furn_lod1brep_fk;
+ALTER TABLE citydb.city_furniture ADD CONSTRAINT city_furn_lod1brep_fk FOREIGN KEY (lod1_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: city_furn_lod2brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.city_furniture DROP CONSTRAINT city_furn_lod2brep_fk;
-ALTER TABLE public.city_furniture ADD CONSTRAINT city_furn_lod2brep_fk FOREIGN KEY (lod2_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.city_furniture DROP CONSTRAINT city_furn_lod2brep_fk;
+ALTER TABLE citydb.city_furniture ADD CONSTRAINT city_furn_lod2brep_fk FOREIGN KEY (lod2_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: city_furn_lod3brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.city_furniture DROP CONSTRAINT city_furn_lod3brep_fk;
-ALTER TABLE public.city_furniture ADD CONSTRAINT city_furn_lod3brep_fk FOREIGN KEY (lod3_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.city_furniture DROP CONSTRAINT city_furn_lod3brep_fk;
+ALTER TABLE citydb.city_furniture ADD CONSTRAINT city_furn_lod3brep_fk FOREIGN KEY (lod3_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: city_furn_lod4brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.city_furniture DROP CONSTRAINT city_furn_lod4brep_fk;
-ALTER TABLE public.city_furniture ADD CONSTRAINT city_furn_lod4brep_fk FOREIGN KEY (lod4_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.city_furniture DROP CONSTRAINT city_furn_lod4brep_fk;
+ALTER TABLE citydb.city_furniture ADD CONSTRAINT city_furn_lod4brep_fk FOREIGN KEY (lod4_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: city_furn_lod1impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.city_furniture DROP CONSTRAINT city_furn_lod1impl_fk;
-ALTER TABLE public.city_furniture ADD CONSTRAINT city_furn_lod1impl_fk FOREIGN KEY (lod1_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.city_furniture DROP CONSTRAINT city_furn_lod1impl_fk;
+ALTER TABLE citydb.city_furniture ADD CONSTRAINT city_furn_lod1impl_fk FOREIGN KEY (lod1_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: city_furn_lod2impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.city_furniture DROP CONSTRAINT city_furn_lod2impl_fk;
-ALTER TABLE public.city_furniture ADD CONSTRAINT city_furn_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.city_furniture DROP CONSTRAINT city_furn_lod2impl_fk;
+ALTER TABLE citydb.city_furniture ADD CONSTRAINT city_furn_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: city_furn_lod3impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.city_furniture DROP CONSTRAINT city_furn_lod3impl_fk;
-ALTER TABLE public.city_furniture ADD CONSTRAINT city_furn_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.city_furniture DROP CONSTRAINT city_furn_lod3impl_fk;
+ALTER TABLE citydb.city_furniture ADD CONSTRAINT city_furn_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: city_furn_lod4impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.city_furniture DROP CONSTRAINT city_furn_lod4impl_fk;
-ALTER TABLE public.city_furniture ADD CONSTRAINT city_furn_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.city_furniture DROP CONSTRAINT city_furn_lod4impl_fk;
+ALTER TABLE citydb.city_furniture ADD CONSTRAINT city_furn_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: gen_object_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.generic_cityobject DROP CONSTRAINT gen_object_cityobject_fk;
-ALTER TABLE public.generic_cityobject ADD CONSTRAINT gen_object_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.generic_cityobject DROP CONSTRAINT gen_object_cityobject_fk;
+ALTER TABLE citydb.generic_cityobject ADD CONSTRAINT gen_object_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: gen_object_lod0brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.generic_cityobject DROP CONSTRAINT gen_object_lod0brep_fk;
-ALTER TABLE public.generic_cityobject ADD CONSTRAINT gen_object_lod0brep_fk FOREIGN KEY (lod0_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.generic_cityobject DROP CONSTRAINT gen_object_lod0brep_fk;
+ALTER TABLE citydb.generic_cityobject ADD CONSTRAINT gen_object_lod0brep_fk FOREIGN KEY (lod0_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: gen_object_lod1brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.generic_cityobject DROP CONSTRAINT gen_object_lod1brep_fk;
-ALTER TABLE public.generic_cityobject ADD CONSTRAINT gen_object_lod1brep_fk FOREIGN KEY (lod1_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.generic_cityobject DROP CONSTRAINT gen_object_lod1brep_fk;
+ALTER TABLE citydb.generic_cityobject ADD CONSTRAINT gen_object_lod1brep_fk FOREIGN KEY (lod1_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: gen_object_lod2brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.generic_cityobject DROP CONSTRAINT gen_object_lod2brep_fk;
-ALTER TABLE public.generic_cityobject ADD CONSTRAINT gen_object_lod2brep_fk FOREIGN KEY (lod2_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.generic_cityobject DROP CONSTRAINT gen_object_lod2brep_fk;
+ALTER TABLE citydb.generic_cityobject ADD CONSTRAINT gen_object_lod2brep_fk FOREIGN KEY (lod2_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: gen_object_lod3brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.generic_cityobject DROP CONSTRAINT gen_object_lod3brep_fk;
-ALTER TABLE public.generic_cityobject ADD CONSTRAINT gen_object_lod3brep_fk FOREIGN KEY (lod3_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.generic_cityobject DROP CONSTRAINT gen_object_lod3brep_fk;
+ALTER TABLE citydb.generic_cityobject ADD CONSTRAINT gen_object_lod3brep_fk FOREIGN KEY (lod3_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: gen_object_lod4brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.generic_cityobject DROP CONSTRAINT gen_object_lod4brep_fk;
-ALTER TABLE public.generic_cityobject ADD CONSTRAINT gen_object_lod4brep_fk FOREIGN KEY (lod4_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.generic_cityobject DROP CONSTRAINT gen_object_lod4brep_fk;
+ALTER TABLE citydb.generic_cityobject ADD CONSTRAINT gen_object_lod4brep_fk FOREIGN KEY (lod4_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: gen_object_lod0impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.generic_cityobject DROP CONSTRAINT gen_object_lod0impl_fk;
-ALTER TABLE public.generic_cityobject ADD CONSTRAINT gen_object_lod0impl_fk FOREIGN KEY (lod0_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.generic_cityobject DROP CONSTRAINT gen_object_lod0impl_fk;
+ALTER TABLE citydb.generic_cityobject ADD CONSTRAINT gen_object_lod0impl_fk FOREIGN KEY (lod0_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: gen_object_lod1impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.generic_cityobject DROP CONSTRAINT gen_object_lod1impl_fk;
-ALTER TABLE public.generic_cityobject ADD CONSTRAINT gen_object_lod1impl_fk FOREIGN KEY (lod1_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.generic_cityobject DROP CONSTRAINT gen_object_lod1impl_fk;
+ALTER TABLE citydb.generic_cityobject ADD CONSTRAINT gen_object_lod1impl_fk FOREIGN KEY (lod1_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: gen_object_lod2impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.generic_cityobject DROP CONSTRAINT gen_object_lod2impl_fk;
-ALTER TABLE public.generic_cityobject ADD CONSTRAINT gen_object_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.generic_cityobject DROP CONSTRAINT gen_object_lod2impl_fk;
+ALTER TABLE citydb.generic_cityobject ADD CONSTRAINT gen_object_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: gen_object_lod3impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.generic_cityobject DROP CONSTRAINT gen_object_lod3impl_fk;
-ALTER TABLE public.generic_cityobject ADD CONSTRAINT gen_object_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.generic_cityobject DROP CONSTRAINT gen_object_lod3impl_fk;
+ALTER TABLE citydb.generic_cityobject ADD CONSTRAINT gen_object_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: gen_object_lod4impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.generic_cityobject DROP CONSTRAINT gen_object_lod4impl_fk;
-ALTER TABLE public.generic_cityobject ADD CONSTRAINT gen_object_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.generic_cityobject DROP CONSTRAINT gen_object_lod4impl_fk;
+ALTER TABLE citydb.generic_cityobject ADD CONSTRAINT gen_object_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: address_to_building_fk | type: CONSTRAINT --
--- ALTER TABLE public.address_to_building DROP CONSTRAINT address_to_building_fk;
-ALTER TABLE public.address_to_building ADD CONSTRAINT address_to_building_fk FOREIGN KEY (address_id)
-REFERENCES public.address (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.address_to_building DROP CONSTRAINT address_to_building_fk;
+ALTER TABLE citydb.address_to_building ADD CONSTRAINT address_to_building_fk FOREIGN KEY (address_id)
+REFERENCES citydb.address (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: address_to_building_fk1 | type: CONSTRAINT --
--- ALTER TABLE public.address_to_building DROP CONSTRAINT address_to_building_fk1;
-ALTER TABLE public.address_to_building ADD CONSTRAINT address_to_building_fk1 FOREIGN KEY (building_id)
-REFERENCES public.building (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.address_to_building DROP CONSTRAINT address_to_building_fk1;
+ALTER TABLE citydb.address_to_building ADD CONSTRAINT address_to_building_fk1 FOREIGN KEY (building_id)
+REFERENCES citydb.building (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: building_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.building DROP CONSTRAINT building_cityobject_fk;
-ALTER TABLE public.building ADD CONSTRAINT building_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building DROP CONSTRAINT building_cityobject_fk;
+ALTER TABLE citydb.building ADD CONSTRAINT building_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: building_parent_fk | type: CONSTRAINT --
--- ALTER TABLE public.building DROP CONSTRAINT building_parent_fk;
-ALTER TABLE public.building ADD CONSTRAINT building_parent_fk FOREIGN KEY (building_parent_id)
-REFERENCES public.building (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building DROP CONSTRAINT building_parent_fk;
+ALTER TABLE citydb.building ADD CONSTRAINT building_parent_fk FOREIGN KEY (building_parent_id)
+REFERENCES citydb.building (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: building_root_fk | type: CONSTRAINT --
--- ALTER TABLE public.building DROP CONSTRAINT building_root_fk;
-ALTER TABLE public.building ADD CONSTRAINT building_root_fk FOREIGN KEY (building_root_id)
-REFERENCES public.building (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building DROP CONSTRAINT building_root_fk;
+ALTER TABLE citydb.building ADD CONSTRAINT building_root_fk FOREIGN KEY (building_root_id)
+REFERENCES citydb.building (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: building_lod0footprint_fk | type: CONSTRAINT --
--- ALTER TABLE public.building DROP CONSTRAINT building_lod0footprint_fk;
-ALTER TABLE public.building ADD CONSTRAINT building_lod0footprint_fk FOREIGN KEY (lod0_footprint_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building DROP CONSTRAINT building_lod0footprint_fk;
+ALTER TABLE citydb.building ADD CONSTRAINT building_lod0footprint_fk FOREIGN KEY (lod0_footprint_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: building_lod0roofprint_fk | type: CONSTRAINT --
--- ALTER TABLE public.building DROP CONSTRAINT building_lod0roofprint_fk;
-ALTER TABLE public.building ADD CONSTRAINT building_lod0roofprint_fk FOREIGN KEY (lod0_roofprint_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building DROP CONSTRAINT building_lod0roofprint_fk;
+ALTER TABLE citydb.building ADD CONSTRAINT building_lod0roofprint_fk FOREIGN KEY (lod0_roofprint_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: building_lod1msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.building DROP CONSTRAINT building_lod1msrf_fk;
-ALTER TABLE public.building ADD CONSTRAINT building_lod1msrf_fk FOREIGN KEY (lod1_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building DROP CONSTRAINT building_lod1msrf_fk;
+ALTER TABLE citydb.building ADD CONSTRAINT building_lod1msrf_fk FOREIGN KEY (lod1_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: building_lod2msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.building DROP CONSTRAINT building_lod2msrf_fk;
-ALTER TABLE public.building ADD CONSTRAINT building_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building DROP CONSTRAINT building_lod2msrf_fk;
+ALTER TABLE citydb.building ADD CONSTRAINT building_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: building_lod3msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.building DROP CONSTRAINT building_lod3msrf_fk;
-ALTER TABLE public.building ADD CONSTRAINT building_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building DROP CONSTRAINT building_lod3msrf_fk;
+ALTER TABLE citydb.building ADD CONSTRAINT building_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: building_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.building DROP CONSTRAINT building_lod4msrf_fk;
-ALTER TABLE public.building ADD CONSTRAINT building_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building DROP CONSTRAINT building_lod4msrf_fk;
+ALTER TABLE citydb.building ADD CONSTRAINT building_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: building_lod1solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.building DROP CONSTRAINT building_lod1solid_fk;
-ALTER TABLE public.building ADD CONSTRAINT building_lod1solid_fk FOREIGN KEY (lod1_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building DROP CONSTRAINT building_lod1solid_fk;
+ALTER TABLE citydb.building ADD CONSTRAINT building_lod1solid_fk FOREIGN KEY (lod1_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: building_lod2solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.building DROP CONSTRAINT building_lod2solid_fk;
-ALTER TABLE public.building ADD CONSTRAINT building_lod2solid_fk FOREIGN KEY (lod2_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building DROP CONSTRAINT building_lod2solid_fk;
+ALTER TABLE citydb.building ADD CONSTRAINT building_lod2solid_fk FOREIGN KEY (lod2_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: building_lod3solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.building DROP CONSTRAINT building_lod3solid_fk;
-ALTER TABLE public.building ADD CONSTRAINT building_lod3solid_fk FOREIGN KEY (lod3_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building DROP CONSTRAINT building_lod3solid_fk;
+ALTER TABLE citydb.building ADD CONSTRAINT building_lod3solid_fk FOREIGN KEY (lod3_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: building_lod4solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.building DROP CONSTRAINT building_lod4solid_fk;
-ALTER TABLE public.building ADD CONSTRAINT building_lod4solid_fk FOREIGN KEY (lod4_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building DROP CONSTRAINT building_lod4solid_fk;
+ALTER TABLE citydb.building ADD CONSTRAINT building_lod4solid_fk FOREIGN KEY (lod4_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bldg_furn_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.building_furniture DROP CONSTRAINT bldg_furn_cityobject_fk;
-ALTER TABLE public.building_furniture ADD CONSTRAINT bldg_furn_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building_furniture DROP CONSTRAINT bldg_furn_cityobject_fk;
+ALTER TABLE citydb.building_furniture ADD CONSTRAINT bldg_furn_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bldg_furn_room_fk | type: CONSTRAINT --
--- ALTER TABLE public.building_furniture DROP CONSTRAINT bldg_furn_room_fk;
-ALTER TABLE public.building_furniture ADD CONSTRAINT bldg_furn_room_fk FOREIGN KEY (room_id)
-REFERENCES public.room (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building_furniture DROP CONSTRAINT bldg_furn_room_fk;
+ALTER TABLE citydb.building_furniture ADD CONSTRAINT bldg_furn_room_fk FOREIGN KEY (room_id)
+REFERENCES citydb.room (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bldg_furn_lod4brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.building_furniture DROP CONSTRAINT bldg_furn_lod4brep_fk;
-ALTER TABLE public.building_furniture ADD CONSTRAINT bldg_furn_lod4brep_fk FOREIGN KEY (lod4_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building_furniture DROP CONSTRAINT bldg_furn_lod4brep_fk;
+ALTER TABLE citydb.building_furniture ADD CONSTRAINT bldg_furn_lod4brep_fk FOREIGN KEY (lod4_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bldg_furn_lod4impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.building_furniture DROP CONSTRAINT bldg_furn_lod4impl_fk;
-ALTER TABLE public.building_furniture ADD CONSTRAINT bldg_furn_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building_furniture DROP CONSTRAINT bldg_furn_lod4impl_fk;
+ALTER TABLE citydb.building_furniture ADD CONSTRAINT bldg_furn_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bldg_inst_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.building_installation DROP CONSTRAINT bldg_inst_cityobject_fk;
-ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building_installation DROP CONSTRAINT bldg_inst_cityobject_fk;
+ALTER TABLE citydb.building_installation ADD CONSTRAINT bldg_inst_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bldg_inst_objclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.building_installation DROP CONSTRAINT bldg_inst_objclass_fk;
-ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_objclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building_installation DROP CONSTRAINT bldg_inst_objclass_fk;
+ALTER TABLE citydb.building_installation ADD CONSTRAINT bldg_inst_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bldg_inst_building_fk | type: CONSTRAINT --
--- ALTER TABLE public.building_installation DROP CONSTRAINT bldg_inst_building_fk;
-ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_building_fk FOREIGN KEY (building_id)
-REFERENCES public.building (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building_installation DROP CONSTRAINT bldg_inst_building_fk;
+ALTER TABLE citydb.building_installation ADD CONSTRAINT bldg_inst_building_fk FOREIGN KEY (building_id)
+REFERENCES citydb.building (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bldg_inst_room_fk | type: CONSTRAINT --
--- ALTER TABLE public.building_installation DROP CONSTRAINT bldg_inst_room_fk;
-ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_room_fk FOREIGN KEY (room_id)
-REFERENCES public.room (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building_installation DROP CONSTRAINT bldg_inst_room_fk;
+ALTER TABLE citydb.building_installation ADD CONSTRAINT bldg_inst_room_fk FOREIGN KEY (room_id)
+REFERENCES citydb.room (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bldg_inst_lod2brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.building_installation DROP CONSTRAINT bldg_inst_lod2brep_fk;
-ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_lod2brep_fk FOREIGN KEY (lod2_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building_installation DROP CONSTRAINT bldg_inst_lod2brep_fk;
+ALTER TABLE citydb.building_installation ADD CONSTRAINT bldg_inst_lod2brep_fk FOREIGN KEY (lod2_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bldg_inst_lod3brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.building_installation DROP CONSTRAINT bldg_inst_lod3brep_fk;
-ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_lod3brep_fk FOREIGN KEY (lod3_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building_installation DROP CONSTRAINT bldg_inst_lod3brep_fk;
+ALTER TABLE citydb.building_installation ADD CONSTRAINT bldg_inst_lod3brep_fk FOREIGN KEY (lod3_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bldg_inst_lod4brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.building_installation DROP CONSTRAINT bldg_inst_lod4brep_fk;
-ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_lod4brep_fk FOREIGN KEY (lod4_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building_installation DROP CONSTRAINT bldg_inst_lod4brep_fk;
+ALTER TABLE citydb.building_installation ADD CONSTRAINT bldg_inst_lod4brep_fk FOREIGN KEY (lod4_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bldg_inst_lod2impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.building_installation DROP CONSTRAINT bldg_inst_lod2impl_fk;
-ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building_installation DROP CONSTRAINT bldg_inst_lod2impl_fk;
+ALTER TABLE citydb.building_installation ADD CONSTRAINT bldg_inst_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bldg_inst_lod3impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.building_installation DROP CONSTRAINT bldg_inst_lod3impl_fk;
-ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building_installation DROP CONSTRAINT bldg_inst_lod3impl_fk;
+ALTER TABLE citydb.building_installation ADD CONSTRAINT bldg_inst_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bldg_inst_lod4impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.building_installation DROP CONSTRAINT bldg_inst_lod4impl_fk;
-ALTER TABLE public.building_installation ADD CONSTRAINT bldg_inst_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.building_installation DROP CONSTRAINT bldg_inst_lod4impl_fk;
+ALTER TABLE citydb.building_installation ADD CONSTRAINT bldg_inst_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: opening_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.opening DROP CONSTRAINT opening_cityobject_fk;
-ALTER TABLE public.opening ADD CONSTRAINT opening_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.opening DROP CONSTRAINT opening_cityobject_fk;
+ALTER TABLE citydb.opening ADD CONSTRAINT opening_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: opening_objectclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.opening DROP CONSTRAINT opening_objectclass_fk;
-ALTER TABLE public.opening ADD CONSTRAINT opening_objectclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.opening DROP CONSTRAINT opening_objectclass_fk;
+ALTER TABLE citydb.opening ADD CONSTRAINT opening_objectclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: opening_address_fk | type: CONSTRAINT --
--- ALTER TABLE public.opening DROP CONSTRAINT opening_address_fk;
-ALTER TABLE public.opening ADD CONSTRAINT opening_address_fk FOREIGN KEY (address_id)
-REFERENCES public.address (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.opening DROP CONSTRAINT opening_address_fk;
+ALTER TABLE citydb.opening ADD CONSTRAINT opening_address_fk FOREIGN KEY (address_id)
+REFERENCES citydb.address (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: opening_lod3msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.opening DROP CONSTRAINT opening_lod3msrf_fk;
-ALTER TABLE public.opening ADD CONSTRAINT opening_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.opening DROP CONSTRAINT opening_lod3msrf_fk;
+ALTER TABLE citydb.opening ADD CONSTRAINT opening_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: opening_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.opening DROP CONSTRAINT opening_lod4msrf_fk;
-ALTER TABLE public.opening ADD CONSTRAINT opening_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.opening DROP CONSTRAINT opening_lod4msrf_fk;
+ALTER TABLE citydb.opening ADD CONSTRAINT opening_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: opening_lod3impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.opening DROP CONSTRAINT opening_lod3impl_fk;
-ALTER TABLE public.opening ADD CONSTRAINT opening_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.opening DROP CONSTRAINT opening_lod3impl_fk;
+ALTER TABLE citydb.opening ADD CONSTRAINT opening_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: opening_lod4impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.opening DROP CONSTRAINT opening_lod4impl_fk;
-ALTER TABLE public.opening ADD CONSTRAINT opening_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.opening DROP CONSTRAINT opening_lod4impl_fk;
+ALTER TABLE citydb.opening ADD CONSTRAINT opening_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: open_to_them_surface_fk | type: CONSTRAINT --
--- ALTER TABLE public.opening_to_them_surface DROP CONSTRAINT open_to_them_surface_fk;
-ALTER TABLE public.opening_to_them_surface ADD CONSTRAINT open_to_them_surface_fk FOREIGN KEY (opening_id)
-REFERENCES public.opening (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.opening_to_them_surface DROP CONSTRAINT open_to_them_surface_fk;
+ALTER TABLE citydb.opening_to_them_surface ADD CONSTRAINT open_to_them_surface_fk FOREIGN KEY (opening_id)
+REFERENCES citydb.opening (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: open_to_them_surface_fk1 | type: CONSTRAINT --
--- ALTER TABLE public.opening_to_them_surface DROP CONSTRAINT open_to_them_surface_fk1;
-ALTER TABLE public.opening_to_them_surface ADD CONSTRAINT open_to_them_surface_fk1 FOREIGN KEY (thematic_surface_id)
-REFERENCES public.thematic_surface (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.opening_to_them_surface DROP CONSTRAINT open_to_them_surface_fk1;
+ALTER TABLE citydb.opening_to_them_surface ADD CONSTRAINT open_to_them_surface_fk1 FOREIGN KEY (thematic_surface_id)
+REFERENCES citydb.thematic_surface (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: room_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.room DROP CONSTRAINT room_cityobject_fk;
-ALTER TABLE public.room ADD CONSTRAINT room_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.room DROP CONSTRAINT room_cityobject_fk;
+ALTER TABLE citydb.room ADD CONSTRAINT room_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: room_building_fk | type: CONSTRAINT --
--- ALTER TABLE public.room DROP CONSTRAINT room_building_fk;
-ALTER TABLE public.room ADD CONSTRAINT room_building_fk FOREIGN KEY (building_id)
-REFERENCES public.building (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.room DROP CONSTRAINT room_building_fk;
+ALTER TABLE citydb.room ADD CONSTRAINT room_building_fk FOREIGN KEY (building_id)
+REFERENCES citydb.building (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: room_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.room DROP CONSTRAINT room_lod4msrf_fk;
-ALTER TABLE public.room ADD CONSTRAINT room_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.room DROP CONSTRAINT room_lod4msrf_fk;
+ALTER TABLE citydb.room ADD CONSTRAINT room_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: room_lod4solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.room DROP CONSTRAINT room_lod4solid_fk;
-ALTER TABLE public.room ADD CONSTRAINT room_lod4solid_fk FOREIGN KEY (lod4_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.room DROP CONSTRAINT room_lod4solid_fk;
+ALTER TABLE citydb.room ADD CONSTRAINT room_lod4solid_fk FOREIGN KEY (lod4_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: them_surface_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.thematic_surface DROP CONSTRAINT them_surface_cityobject_fk;
-ALTER TABLE public.thematic_surface ADD CONSTRAINT them_surface_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.thematic_surface DROP CONSTRAINT them_surface_cityobject_fk;
+ALTER TABLE citydb.thematic_surface ADD CONSTRAINT them_surface_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: them_surface_objclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.thematic_surface DROP CONSTRAINT them_surface_objclass_fk;
-ALTER TABLE public.thematic_surface ADD CONSTRAINT them_surface_objclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.thematic_surface DROP CONSTRAINT them_surface_objclass_fk;
+ALTER TABLE citydb.thematic_surface ADD CONSTRAINT them_surface_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: them_surface_building_fk | type: CONSTRAINT --
--- ALTER TABLE public.thematic_surface DROP CONSTRAINT them_surface_building_fk;
-ALTER TABLE public.thematic_surface ADD CONSTRAINT them_surface_building_fk FOREIGN KEY (building_id)
-REFERENCES public.building (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.thematic_surface DROP CONSTRAINT them_surface_building_fk;
+ALTER TABLE citydb.thematic_surface ADD CONSTRAINT them_surface_building_fk FOREIGN KEY (building_id)
+REFERENCES citydb.building (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: them_surface_room_fk | type: CONSTRAINT --
--- ALTER TABLE public.thematic_surface DROP CONSTRAINT them_surface_room_fk;
-ALTER TABLE public.thematic_surface ADD CONSTRAINT them_surface_room_fk FOREIGN KEY (room_id)
-REFERENCES public.room (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.thematic_surface DROP CONSTRAINT them_surface_room_fk;
+ALTER TABLE citydb.thematic_surface ADD CONSTRAINT them_surface_room_fk FOREIGN KEY (room_id)
+REFERENCES citydb.room (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: them_surface_bldg_inst_fk | type: CONSTRAINT --
--- ALTER TABLE public.thematic_surface DROP CONSTRAINT them_surface_bldg_inst_fk;
-ALTER TABLE public.thematic_surface ADD CONSTRAINT them_surface_bldg_inst_fk FOREIGN KEY (building_installation_id)
-REFERENCES public.building_installation (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.thematic_surface DROP CONSTRAINT them_surface_bldg_inst_fk;
+ALTER TABLE citydb.thematic_surface ADD CONSTRAINT them_surface_bldg_inst_fk FOREIGN KEY (building_installation_id)
+REFERENCES citydb.building_installation (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: them_surface_lod2msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.thematic_surface DROP CONSTRAINT them_surface_lod2msrf_fk;
-ALTER TABLE public.thematic_surface ADD CONSTRAINT them_surface_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.thematic_surface DROP CONSTRAINT them_surface_lod2msrf_fk;
+ALTER TABLE citydb.thematic_surface ADD CONSTRAINT them_surface_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: them_surface_lod3msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.thematic_surface DROP CONSTRAINT them_surface_lod3msrf_fk;
-ALTER TABLE public.thematic_surface ADD CONSTRAINT them_surface_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.thematic_surface DROP CONSTRAINT them_surface_lod3msrf_fk;
+ALTER TABLE citydb.thematic_surface ADD CONSTRAINT them_surface_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: them_surface_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.thematic_surface DROP CONSTRAINT them_surface_lod4msrf_fk;
-ALTER TABLE public.thematic_surface ADD CONSTRAINT them_surface_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.thematic_surface DROP CONSTRAINT them_surface_lod4msrf_fk;
+ALTER TABLE citydb.thematic_surface ADD CONSTRAINT them_surface_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: texparam_geom_fk | type: CONSTRAINT --
--- ALTER TABLE public.textureparam DROP CONSTRAINT texparam_geom_fk;
-ALTER TABLE public.textureparam ADD CONSTRAINT texparam_geom_fk FOREIGN KEY (surface_geometry_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.textureparam DROP CONSTRAINT texparam_geom_fk;
+ALTER TABLE citydb.textureparam ADD CONSTRAINT texparam_geom_fk FOREIGN KEY (surface_geometry_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: texparam_surface_data_fk | type: CONSTRAINT --
--- ALTER TABLE public.textureparam DROP CONSTRAINT texparam_surface_data_fk;
-ALTER TABLE public.textureparam ADD CONSTRAINT texparam_surface_data_fk FOREIGN KEY (surface_data_id)
-REFERENCES public.surface_data (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.textureparam DROP CONSTRAINT texparam_surface_data_fk;
+ALTER TABLE citydb.textureparam ADD CONSTRAINT texparam_surface_data_fk FOREIGN KEY (surface_data_id)
+REFERENCES citydb.surface_data (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: app_to_surf_data_fk | type: CONSTRAINT --
--- ALTER TABLE public.appear_to_surface_data DROP CONSTRAINT app_to_surf_data_fk;
-ALTER TABLE public.appear_to_surface_data ADD CONSTRAINT app_to_surf_data_fk FOREIGN KEY (surface_data_id)
-REFERENCES public.surface_data (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.appear_to_surface_data DROP CONSTRAINT app_to_surf_data_fk;
+ALTER TABLE citydb.appear_to_surface_data ADD CONSTRAINT app_to_surf_data_fk FOREIGN KEY (surface_data_id)
+REFERENCES citydb.surface_data (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: app_to_surf_data_fk1 | type: CONSTRAINT --
--- ALTER TABLE public.appear_to_surface_data DROP CONSTRAINT app_to_surf_data_fk1;
-ALTER TABLE public.appear_to_surface_data ADD CONSTRAINT app_to_surf_data_fk1 FOREIGN KEY (appearance_id)
-REFERENCES public.appearance (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.appear_to_surface_data DROP CONSTRAINT app_to_surf_data_fk1;
+ALTER TABLE citydb.appear_to_surface_data ADD CONSTRAINT app_to_surf_data_fk1 FOREIGN KEY (appearance_id)
+REFERENCES citydb.appearance (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: breakline_relief_comp_fk | type: CONSTRAINT --
--- ALTER TABLE public.breakline_relief DROP CONSTRAINT breakline_relief_comp_fk;
-ALTER TABLE public.breakline_relief ADD CONSTRAINT breakline_relief_comp_fk FOREIGN KEY (id)
-REFERENCES public.relief_component (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.breakline_relief DROP CONSTRAINT breakline_relief_comp_fk;
+ALTER TABLE citydb.breakline_relief ADD CONSTRAINT breakline_relief_comp_fk FOREIGN KEY (id)
+REFERENCES citydb.relief_component (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: masspoint_relief_comp_fk | type: CONSTRAINT --
--- ALTER TABLE public.masspoint_relief DROP CONSTRAINT masspoint_relief_comp_fk;
-ALTER TABLE public.masspoint_relief ADD CONSTRAINT masspoint_relief_comp_fk FOREIGN KEY (id)
-REFERENCES public.relief_component (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.masspoint_relief DROP CONSTRAINT masspoint_relief_comp_fk;
+ALTER TABLE citydb.masspoint_relief ADD CONSTRAINT masspoint_relief_comp_fk FOREIGN KEY (id)
+REFERENCES citydb.relief_component (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: relief_comp_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.relief_component DROP CONSTRAINT relief_comp_cityobject_fk;
-ALTER TABLE public.relief_component ADD CONSTRAINT relief_comp_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.relief_component DROP CONSTRAINT relief_comp_cityobject_fk;
+ALTER TABLE citydb.relief_component ADD CONSTRAINT relief_comp_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: relief_comp_objclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.relief_component DROP CONSTRAINT relief_comp_objclass_fk;
-ALTER TABLE public.relief_component ADD CONSTRAINT relief_comp_objclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+-- ALTER TABLE citydb.relief_component DROP CONSTRAINT relief_comp_objclass_fk;
+ALTER TABLE citydb.relief_component ADD CONSTRAINT relief_comp_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 
 -- object: rel_feat_to_rel_comp_fk | type: CONSTRAINT --
--- ALTER TABLE public.relief_feat_to_rel_comp DROP CONSTRAINT rel_feat_to_rel_comp_fk;
-ALTER TABLE public.relief_feat_to_rel_comp ADD CONSTRAINT rel_feat_to_rel_comp_fk FOREIGN KEY (relief_component_id)
-REFERENCES public.relief_component (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.relief_feat_to_rel_comp DROP CONSTRAINT rel_feat_to_rel_comp_fk;
+ALTER TABLE citydb.relief_feat_to_rel_comp ADD CONSTRAINT rel_feat_to_rel_comp_fk FOREIGN KEY (relief_component_id)
+REFERENCES citydb.relief_component (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: rel_feat_to_rel_comp_fk1 | type: CONSTRAINT --
--- ALTER TABLE public.relief_feat_to_rel_comp DROP CONSTRAINT rel_feat_to_rel_comp_fk1;
-ALTER TABLE public.relief_feat_to_rel_comp ADD CONSTRAINT rel_feat_to_rel_comp_fk1 FOREIGN KEY (relief_feature_id)
-REFERENCES public.relief_feature (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.relief_feat_to_rel_comp DROP CONSTRAINT rel_feat_to_rel_comp_fk1;
+ALTER TABLE citydb.relief_feat_to_rel_comp ADD CONSTRAINT rel_feat_to_rel_comp_fk1 FOREIGN KEY (relief_feature_id)
+REFERENCES citydb.relief_feature (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: relief_feat_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.relief_feature DROP CONSTRAINT relief_feat_cityobject_fk;
-ALTER TABLE public.relief_feature ADD CONSTRAINT relief_feat_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.relief_feature DROP CONSTRAINT relief_feat_cityobject_fk;
+ALTER TABLE citydb.relief_feature ADD CONSTRAINT relief_feat_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tin_relief_comp_fk | type: CONSTRAINT --
--- ALTER TABLE public.tin_relief DROP CONSTRAINT tin_relief_comp_fk;
-ALTER TABLE public.tin_relief ADD CONSTRAINT tin_relief_comp_fk FOREIGN KEY (id)
-REFERENCES public.relief_component (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tin_relief DROP CONSTRAINT tin_relief_comp_fk;
+ALTER TABLE citydb.tin_relief ADD CONSTRAINT tin_relief_comp_fk FOREIGN KEY (id)
+REFERENCES citydb.relief_component (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tin_relief_geom_fk | type: CONSTRAINT --
--- ALTER TABLE public.tin_relief DROP CONSTRAINT tin_relief_geom_fk;
-ALTER TABLE public.tin_relief ADD CONSTRAINT tin_relief_geom_fk FOREIGN KEY (surface_geometry_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tin_relief DROP CONSTRAINT tin_relief_geom_fk;
+ALTER TABLE citydb.tin_relief ADD CONSTRAINT tin_relief_geom_fk FOREIGN KEY (surface_geometry_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tran_complex_objclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.transportation_complex DROP CONSTRAINT tran_complex_objclass_fk;
-ALTER TABLE public.transportation_complex ADD CONSTRAINT tran_complex_objclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.transportation_complex DROP CONSTRAINT tran_complex_objclass_fk;
+ALTER TABLE citydb.transportation_complex ADD CONSTRAINT tran_complex_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tran_complex_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.transportation_complex DROP CONSTRAINT tran_complex_cityobject_fk;
-ALTER TABLE public.transportation_complex ADD CONSTRAINT tran_complex_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.transportation_complex DROP CONSTRAINT tran_complex_cityobject_fk;
+ALTER TABLE citydb.transportation_complex ADD CONSTRAINT tran_complex_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tran_complex_lod1msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.transportation_complex DROP CONSTRAINT tran_complex_lod1msrf_fk;
-ALTER TABLE public.transportation_complex ADD CONSTRAINT tran_complex_lod1msrf_fk FOREIGN KEY (lod1_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.transportation_complex DROP CONSTRAINT tran_complex_lod1msrf_fk;
+ALTER TABLE citydb.transportation_complex ADD CONSTRAINT tran_complex_lod1msrf_fk FOREIGN KEY (lod1_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tran_complex_lod2msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.transportation_complex DROP CONSTRAINT tran_complex_lod2msrf_fk;
-ALTER TABLE public.transportation_complex ADD CONSTRAINT tran_complex_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.transportation_complex DROP CONSTRAINT tran_complex_lod2msrf_fk;
+ALTER TABLE citydb.transportation_complex ADD CONSTRAINT tran_complex_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tran_complex_lod3msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.transportation_complex DROP CONSTRAINT tran_complex_lod3msrf_fk;
-ALTER TABLE public.transportation_complex ADD CONSTRAINT tran_complex_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.transportation_complex DROP CONSTRAINT tran_complex_lod3msrf_fk;
+ALTER TABLE citydb.transportation_complex ADD CONSTRAINT tran_complex_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tran_complex_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.transportation_complex DROP CONSTRAINT tran_complex_lod4msrf_fk;
-ALTER TABLE public.transportation_complex ADD CONSTRAINT tran_complex_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.transportation_complex DROP CONSTRAINT tran_complex_lod4msrf_fk;
+ALTER TABLE citydb.transportation_complex ADD CONSTRAINT tran_complex_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: traffic_area_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.traffic_area DROP CONSTRAINT traffic_area_cityobject_fk;
-ALTER TABLE public.traffic_area ADD CONSTRAINT traffic_area_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.traffic_area DROP CONSTRAINT traffic_area_cityobject_fk;
+ALTER TABLE citydb.traffic_area ADD CONSTRAINT traffic_area_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: traffic_area_objclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.traffic_area DROP CONSTRAINT traffic_area_objclass_fk;
-ALTER TABLE public.traffic_area ADD CONSTRAINT traffic_area_objclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.traffic_area DROP CONSTRAINT traffic_area_objclass_fk;
+ALTER TABLE citydb.traffic_area ADD CONSTRAINT traffic_area_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: traffic_area_lod2msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.traffic_area DROP CONSTRAINT traffic_area_lod2msrf_fk;
-ALTER TABLE public.traffic_area ADD CONSTRAINT traffic_area_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.traffic_area DROP CONSTRAINT traffic_area_lod2msrf_fk;
+ALTER TABLE citydb.traffic_area ADD CONSTRAINT traffic_area_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: traffic_area_lod3msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.traffic_area DROP CONSTRAINT traffic_area_lod3msrf_fk;
-ALTER TABLE public.traffic_area ADD CONSTRAINT traffic_area_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.traffic_area DROP CONSTRAINT traffic_area_lod3msrf_fk;
+ALTER TABLE citydb.traffic_area ADD CONSTRAINT traffic_area_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: traffic_area_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.traffic_area DROP CONSTRAINT traffic_area_lod4msrf_fk;
-ALTER TABLE public.traffic_area ADD CONSTRAINT traffic_area_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.traffic_area DROP CONSTRAINT traffic_area_lod4msrf_fk;
+ALTER TABLE citydb.traffic_area ADD CONSTRAINT traffic_area_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: traffic_area_trancmplx_fk | type: CONSTRAINT --
--- ALTER TABLE public.traffic_area DROP CONSTRAINT traffic_area_trancmplx_fk;
-ALTER TABLE public.traffic_area ADD CONSTRAINT traffic_area_trancmplx_fk FOREIGN KEY (transportation_complex_id)
-REFERENCES public.transportation_complex (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.traffic_area DROP CONSTRAINT traffic_area_trancmplx_fk;
+ALTER TABLE citydb.traffic_area ADD CONSTRAINT traffic_area_trancmplx_fk FOREIGN KEY (transportation_complex_id)
+REFERENCES citydb.transportation_complex (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: land_use_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.land_use DROP CONSTRAINT land_use_cityobject_fk;
-ALTER TABLE public.land_use ADD CONSTRAINT land_use_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.land_use DROP CONSTRAINT land_use_cityobject_fk;
+ALTER TABLE citydb.land_use ADD CONSTRAINT land_use_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: land_use_lod0msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.land_use DROP CONSTRAINT land_use_lod0msrf_fk;
-ALTER TABLE public.land_use ADD CONSTRAINT land_use_lod0msrf_fk FOREIGN KEY (lod0_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.land_use DROP CONSTRAINT land_use_lod0msrf_fk;
+ALTER TABLE citydb.land_use ADD CONSTRAINT land_use_lod0msrf_fk FOREIGN KEY (lod0_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: land_use_lod1msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.land_use DROP CONSTRAINT land_use_lod1msrf_fk;
-ALTER TABLE public.land_use ADD CONSTRAINT land_use_lod1msrf_fk FOREIGN KEY (lod1_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.land_use DROP CONSTRAINT land_use_lod1msrf_fk;
+ALTER TABLE citydb.land_use ADD CONSTRAINT land_use_lod1msrf_fk FOREIGN KEY (lod1_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: land_use_lod2msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.land_use DROP CONSTRAINT land_use_lod2msrf_fk;
-ALTER TABLE public.land_use ADD CONSTRAINT land_use_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.land_use DROP CONSTRAINT land_use_lod2msrf_fk;
+ALTER TABLE citydb.land_use ADD CONSTRAINT land_use_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: land_use_lod3msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.land_use DROP CONSTRAINT land_use_lod3msrf_fk;
-ALTER TABLE public.land_use ADD CONSTRAINT land_use_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.land_use DROP CONSTRAINT land_use_lod3msrf_fk;
+ALTER TABLE citydb.land_use ADD CONSTRAINT land_use_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: land_use_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.land_use DROP CONSTRAINT land_use_lod4msrf_fk;
-ALTER TABLE public.land_use ADD CONSTRAINT land_use_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.land_use DROP CONSTRAINT land_use_lod4msrf_fk;
+ALTER TABLE citydb.land_use ADD CONSTRAINT land_use_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: plant_cover_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.plant_cover DROP CONSTRAINT plant_cover_cityobject_fk;
-ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.plant_cover DROP CONSTRAINT plant_cover_cityobject_fk;
+ALTER TABLE citydb.plant_cover ADD CONSTRAINT plant_cover_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: plant_cover_lod1msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.plant_cover DROP CONSTRAINT plant_cover_lod1msrf_fk;
-ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod1msrf_fk FOREIGN KEY (lod1_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.plant_cover DROP CONSTRAINT plant_cover_lod1msrf_fk;
+ALTER TABLE citydb.plant_cover ADD CONSTRAINT plant_cover_lod1msrf_fk FOREIGN KEY (lod1_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: plant_cover_lod2msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.plant_cover DROP CONSTRAINT plant_cover_lod2msrf_fk;
-ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.plant_cover DROP CONSTRAINT plant_cover_lod2msrf_fk;
+ALTER TABLE citydb.plant_cover ADD CONSTRAINT plant_cover_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: plant_cover_lod3msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.plant_cover DROP CONSTRAINT plant_cover_lod3msrf_fk;
-ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.plant_cover DROP CONSTRAINT plant_cover_lod3msrf_fk;
+ALTER TABLE citydb.plant_cover ADD CONSTRAINT plant_cover_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: plant_cover_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.plant_cover DROP CONSTRAINT plant_cover_lod4msrf_fk;
-ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.plant_cover DROP CONSTRAINT plant_cover_lod4msrf_fk;
+ALTER TABLE citydb.plant_cover ADD CONSTRAINT plant_cover_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: plant_cover_lod1msolid_fk | type: CONSTRAINT --
--- ALTER TABLE public.plant_cover DROP CONSTRAINT plant_cover_lod1msolid_fk;
-ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod1msolid_fk FOREIGN KEY (lod1_multi_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.plant_cover DROP CONSTRAINT plant_cover_lod1msolid_fk;
+ALTER TABLE citydb.plant_cover ADD CONSTRAINT plant_cover_lod1msolid_fk FOREIGN KEY (lod1_multi_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: plant_cover_lod2msolid_fk | type: CONSTRAINT --
--- ALTER TABLE public.plant_cover DROP CONSTRAINT plant_cover_lod2msolid_fk;
-ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod2msolid_fk FOREIGN KEY (lod2_multi_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.plant_cover DROP CONSTRAINT plant_cover_lod2msolid_fk;
+ALTER TABLE citydb.plant_cover ADD CONSTRAINT plant_cover_lod2msolid_fk FOREIGN KEY (lod2_multi_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: plant_cover_lod3msolid_fk | type: CONSTRAINT --
--- ALTER TABLE public.plant_cover DROP CONSTRAINT plant_cover_lod3msolid_fk;
-ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod3msolid_fk FOREIGN KEY (lod3_multi_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.plant_cover DROP CONSTRAINT plant_cover_lod3msolid_fk;
+ALTER TABLE citydb.plant_cover ADD CONSTRAINT plant_cover_lod3msolid_fk FOREIGN KEY (lod3_multi_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: plant_cover_lod4msolid_fk | type: CONSTRAINT --
--- ALTER TABLE public.plant_cover DROP CONSTRAINT plant_cover_lod4msolid_fk;
-ALTER TABLE public.plant_cover ADD CONSTRAINT plant_cover_lod4msolid_fk FOREIGN KEY (lod4_multi_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.plant_cover DROP CONSTRAINT plant_cover_lod4msolid_fk;
+ALTER TABLE citydb.plant_cover ADD CONSTRAINT plant_cover_lod4msolid_fk FOREIGN KEY (lod4_multi_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: sol_veg_obj_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_cityobject_fk;
-ALTER TABLE public.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+-- ALTER TABLE citydb.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_cityobject_fk;
+ALTER TABLE citydb.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 
 -- object: sol_veg_obj_lod1brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod1brep_fk;
-ALTER TABLE public.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod1brep_fk FOREIGN KEY (lod1_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod1brep_fk;
+ALTER TABLE citydb.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod1brep_fk FOREIGN KEY (lod1_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: sol_veg_obj_lod2brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod2brep_fk;
-ALTER TABLE public.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod2brep_fk FOREIGN KEY (lod2_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod2brep_fk;
+ALTER TABLE citydb.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod2brep_fk FOREIGN KEY (lod2_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: sol_veg_obj_lod3brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod3brep_fk;
-ALTER TABLE public.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod3brep_fk FOREIGN KEY (lod3_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod3brep_fk;
+ALTER TABLE citydb.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod3brep_fk FOREIGN KEY (lod3_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: sol_veg_obj_lod4brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod4brep_fk;
-ALTER TABLE public.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod4brep_fk FOREIGN KEY (lod4_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod4brep_fk;
+ALTER TABLE citydb.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod4brep_fk FOREIGN KEY (lod4_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: sol_veg_obj_lod1impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod1impl_fk;
-ALTER TABLE public.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod1impl_fk FOREIGN KEY (lod1_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod1impl_fk;
+ALTER TABLE citydb.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod1impl_fk FOREIGN KEY (lod1_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: sol_veg_obj_lod2impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod2impl_fk;
-ALTER TABLE public.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod2impl_fk;
+ALTER TABLE citydb.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: sol_veg_obj_lod3impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod3impl_fk;
-ALTER TABLE public.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod3impl_fk;
+ALTER TABLE citydb.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: sol_veg_obj_lod4impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod4impl_fk;
-ALTER TABLE public.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.solitary_vegetat_object DROP CONSTRAINT sol_veg_obj_lod4impl_fk;
+ALTER TABLE citydb.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: waterbody_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.waterbody DROP CONSTRAINT waterbody_cityobject_fk;
-ALTER TABLE public.waterbody ADD CONSTRAINT waterbody_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.waterbody DROP CONSTRAINT waterbody_cityobject_fk;
+ALTER TABLE citydb.waterbody ADD CONSTRAINT waterbody_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: waterbody_lod0msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.waterbody DROP CONSTRAINT waterbody_lod0msrf_fk;
-ALTER TABLE public.waterbody ADD CONSTRAINT waterbody_lod0msrf_fk FOREIGN KEY (lod0_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.waterbody DROP CONSTRAINT waterbody_lod0msrf_fk;
+ALTER TABLE citydb.waterbody ADD CONSTRAINT waterbody_lod0msrf_fk FOREIGN KEY (lod0_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: waterbody_lod1msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.waterbody DROP CONSTRAINT waterbody_lod1msrf_fk;
-ALTER TABLE public.waterbody ADD CONSTRAINT waterbody_lod1msrf_fk FOREIGN KEY (lod1_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.waterbody DROP CONSTRAINT waterbody_lod1msrf_fk;
+ALTER TABLE citydb.waterbody ADD CONSTRAINT waterbody_lod1msrf_fk FOREIGN KEY (lod1_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: waterbody_lod1solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.waterbody DROP CONSTRAINT waterbody_lod1solid_fk;
-ALTER TABLE public.waterbody ADD CONSTRAINT waterbody_lod1solid_fk FOREIGN KEY (lod1_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.waterbody DROP CONSTRAINT waterbody_lod1solid_fk;
+ALTER TABLE citydb.waterbody ADD CONSTRAINT waterbody_lod1solid_fk FOREIGN KEY (lod1_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: waterbody_lod2solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.waterbody DROP CONSTRAINT waterbody_lod2solid_fk;
-ALTER TABLE public.waterbody ADD CONSTRAINT waterbody_lod2solid_fk FOREIGN KEY (lod2_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.waterbody DROP CONSTRAINT waterbody_lod2solid_fk;
+ALTER TABLE citydb.waterbody ADD CONSTRAINT waterbody_lod2solid_fk FOREIGN KEY (lod2_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: waterbody_lod3solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.waterbody DROP CONSTRAINT waterbody_lod3solid_fk;
-ALTER TABLE public.waterbody ADD CONSTRAINT waterbody_lod3solid_fk FOREIGN KEY (lod3_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.waterbody DROP CONSTRAINT waterbody_lod3solid_fk;
+ALTER TABLE citydb.waterbody ADD CONSTRAINT waterbody_lod3solid_fk FOREIGN KEY (lod3_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: waterbody_lod4solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.waterbody DROP CONSTRAINT waterbody_lod4solid_fk;
-ALTER TABLE public.waterbody ADD CONSTRAINT waterbody_lod4solid_fk FOREIGN KEY (lod4_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.waterbody DROP CONSTRAINT waterbody_lod4solid_fk;
+ALTER TABLE citydb.waterbody ADD CONSTRAINT waterbody_lod4solid_fk FOREIGN KEY (lod4_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: waterbod_to_waterbnd_fk | type: CONSTRAINT --
--- ALTER TABLE public.waterbod_to_waterbnd_srf DROP CONSTRAINT waterbod_to_waterbnd_fk;
-ALTER TABLE public.waterbod_to_waterbnd_srf ADD CONSTRAINT waterbod_to_waterbnd_fk FOREIGN KEY (waterboundary_surface_id)
-REFERENCES public.waterboundary_surface (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.waterbod_to_waterbnd_srf DROP CONSTRAINT waterbod_to_waterbnd_fk;
+ALTER TABLE citydb.waterbod_to_waterbnd_srf ADD CONSTRAINT waterbod_to_waterbnd_fk FOREIGN KEY (waterboundary_surface_id)
+REFERENCES citydb.waterboundary_surface (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: waterbod_to_waterbnd_fk1 | type: CONSTRAINT --
--- ALTER TABLE public.waterbod_to_waterbnd_srf DROP CONSTRAINT waterbod_to_waterbnd_fk1;
-ALTER TABLE public.waterbod_to_waterbnd_srf ADD CONSTRAINT waterbod_to_waterbnd_fk1 FOREIGN KEY (waterbody_id)
-REFERENCES public.waterbody (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.waterbod_to_waterbnd_srf DROP CONSTRAINT waterbod_to_waterbnd_fk1;
+ALTER TABLE citydb.waterbod_to_waterbnd_srf ADD CONSTRAINT waterbod_to_waterbnd_fk1 FOREIGN KEY (waterbody_id)
+REFERENCES citydb.waterbody (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: waterbnd_srf_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.waterboundary_surface DROP CONSTRAINT waterbnd_srf_cityobject_fk;
-ALTER TABLE public.waterboundary_surface ADD CONSTRAINT waterbnd_srf_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.waterboundary_surface DROP CONSTRAINT waterbnd_srf_cityobject_fk;
+ALTER TABLE citydb.waterboundary_surface ADD CONSTRAINT waterbnd_srf_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: waterbnd_srf_objclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.waterboundary_surface DROP CONSTRAINT waterbnd_srf_objclass_fk;
-ALTER TABLE public.waterboundary_surface ADD CONSTRAINT waterbnd_srf_objclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.waterboundary_surface DROP CONSTRAINT waterbnd_srf_objclass_fk;
+ALTER TABLE citydb.waterboundary_surface ADD CONSTRAINT waterbnd_srf_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: waterbnd_srf_lod2srf_fk | type: CONSTRAINT --
--- ALTER TABLE public.waterboundary_surface DROP CONSTRAINT waterbnd_srf_lod2srf_fk;
-ALTER TABLE public.waterboundary_surface ADD CONSTRAINT waterbnd_srf_lod2srf_fk FOREIGN KEY (lod2_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.waterboundary_surface DROP CONSTRAINT waterbnd_srf_lod2srf_fk;
+ALTER TABLE citydb.waterboundary_surface ADD CONSTRAINT waterbnd_srf_lod2srf_fk FOREIGN KEY (lod2_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: waterbnd_srf_lod3srf_fk | type: CONSTRAINT --
--- ALTER TABLE public.waterboundary_surface DROP CONSTRAINT waterbnd_srf_lod3srf_fk;
-ALTER TABLE public.waterboundary_surface ADD CONSTRAINT waterbnd_srf_lod3srf_fk FOREIGN KEY (lod3_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.waterboundary_surface DROP CONSTRAINT waterbnd_srf_lod3srf_fk;
+ALTER TABLE citydb.waterboundary_surface ADD CONSTRAINT waterbnd_srf_lod3srf_fk FOREIGN KEY (lod3_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: waterbnd_srf_lod4srf_fk | type: CONSTRAINT --
--- ALTER TABLE public.waterboundary_surface DROP CONSTRAINT waterbnd_srf_lod4srf_fk;
-ALTER TABLE public.waterboundary_surface ADD CONSTRAINT waterbnd_srf_lod4srf_fk FOREIGN KEY (lod4_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.waterboundary_surface DROP CONSTRAINT waterbnd_srf_lod4srf_fk;
+ALTER TABLE citydb.waterboundary_surface ADD CONSTRAINT waterbnd_srf_lod4srf_fk FOREIGN KEY (lod4_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: raster_relief_comp_fk | type: CONSTRAINT --
--- ALTER TABLE public.raster_relief DROP CONSTRAINT raster_relief_comp_fk;
-ALTER TABLE public.raster_relief ADD CONSTRAINT raster_relief_comp_fk FOREIGN KEY (id)
-REFERENCES public.relief_component (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.raster_relief DROP CONSTRAINT raster_relief_comp_fk;
+ALTER TABLE citydb.raster_relief ADD CONSTRAINT raster_relief_comp_fk FOREIGN KEY (id)
+REFERENCES citydb.relief_component (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: raster_relief_coverage_fk | type: CONSTRAINT --
--- ALTER TABLE public.raster_relief DROP CONSTRAINT raster_relief_coverage_fk;
-ALTER TABLE public.raster_relief ADD CONSTRAINT raster_relief_coverage_fk FOREIGN KEY (coverage_id)
-REFERENCES public.grid_coverage (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.raster_relief DROP CONSTRAINT raster_relief_coverage_fk;
+ALTER TABLE citydb.raster_relief ADD CONSTRAINT raster_relief_coverage_fk FOREIGN KEY (coverage_id)
+REFERENCES citydb.grid_coverage (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel DROP CONSTRAINT tunnel_cityobject_fk;
-ALTER TABLE public.tunnel ADD CONSTRAINT tunnel_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel DROP CONSTRAINT tunnel_cityobject_fk;
+ALTER TABLE citydb.tunnel ADD CONSTRAINT tunnel_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_parent_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel DROP CONSTRAINT tunnel_parent_fk;
-ALTER TABLE public.tunnel ADD CONSTRAINT tunnel_parent_fk FOREIGN KEY (tunnel_parent_id)
-REFERENCES public.tunnel (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel DROP CONSTRAINT tunnel_parent_fk;
+ALTER TABLE citydb.tunnel ADD CONSTRAINT tunnel_parent_fk FOREIGN KEY (tunnel_parent_id)
+REFERENCES citydb.tunnel (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_root_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel DROP CONSTRAINT tunnel_root_fk;
-ALTER TABLE public.tunnel ADD CONSTRAINT tunnel_root_fk FOREIGN KEY (tunnel_root_id)
-REFERENCES public.tunnel (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel DROP CONSTRAINT tunnel_root_fk;
+ALTER TABLE citydb.tunnel ADD CONSTRAINT tunnel_root_fk FOREIGN KEY (tunnel_root_id)
+REFERENCES citydb.tunnel (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_lod1msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel DROP CONSTRAINT tunnel_lod1msrf_fk;
-ALTER TABLE public.tunnel ADD CONSTRAINT tunnel_lod1msrf_fk FOREIGN KEY (lod1_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel DROP CONSTRAINT tunnel_lod1msrf_fk;
+ALTER TABLE citydb.tunnel ADD CONSTRAINT tunnel_lod1msrf_fk FOREIGN KEY (lod1_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_lod2msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel DROP CONSTRAINT tunnel_lod2msrf_fk;
-ALTER TABLE public.tunnel ADD CONSTRAINT tunnel_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel DROP CONSTRAINT tunnel_lod2msrf_fk;
+ALTER TABLE citydb.tunnel ADD CONSTRAINT tunnel_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_lod3msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel DROP CONSTRAINT tunnel_lod3msrf_fk;
-ALTER TABLE public.tunnel ADD CONSTRAINT tunnel_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel DROP CONSTRAINT tunnel_lod3msrf_fk;
+ALTER TABLE citydb.tunnel ADD CONSTRAINT tunnel_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel DROP CONSTRAINT tunnel_lod4msrf_fk;
-ALTER TABLE public.tunnel ADD CONSTRAINT tunnel_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel DROP CONSTRAINT tunnel_lod4msrf_fk;
+ALTER TABLE citydb.tunnel ADD CONSTRAINT tunnel_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_lod1solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel DROP CONSTRAINT tunnel_lod1solid_fk;
-ALTER TABLE public.tunnel ADD CONSTRAINT tunnel_lod1solid_fk FOREIGN KEY (lod1_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel DROP CONSTRAINT tunnel_lod1solid_fk;
+ALTER TABLE citydb.tunnel ADD CONSTRAINT tunnel_lod1solid_fk FOREIGN KEY (lod1_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_lod2solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel DROP CONSTRAINT tunnel_lod2solid_fk;
-ALTER TABLE public.tunnel ADD CONSTRAINT tunnel_lod2solid_fk FOREIGN KEY (lod2_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel DROP CONSTRAINT tunnel_lod2solid_fk;
+ALTER TABLE citydb.tunnel ADD CONSTRAINT tunnel_lod2solid_fk FOREIGN KEY (lod2_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_lod3solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel DROP CONSTRAINT tunnel_lod3solid_fk;
-ALTER TABLE public.tunnel ADD CONSTRAINT tunnel_lod3solid_fk FOREIGN KEY (lod3_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel DROP CONSTRAINT tunnel_lod3solid_fk;
+ALTER TABLE citydb.tunnel ADD CONSTRAINT tunnel_lod3solid_fk FOREIGN KEY (lod3_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_lod4solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel DROP CONSTRAINT tunnel_lod4solid_fk;
-ALTER TABLE public.tunnel ADD CONSTRAINT tunnel_lod4solid_fk FOREIGN KEY (lod4_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel DROP CONSTRAINT tunnel_lod4solid_fk;
+ALTER TABLE citydb.tunnel ADD CONSTRAINT tunnel_lod4solid_fk FOREIGN KEY (lod4_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tun_open_to_them_srf_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_open_to_them_srf DROP CONSTRAINT tun_open_to_them_srf_fk;
-ALTER TABLE public.tunnel_open_to_them_srf ADD CONSTRAINT tun_open_to_them_srf_fk FOREIGN KEY (tunnel_opening_id)
-REFERENCES public.tunnel_opening (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_open_to_them_srf DROP CONSTRAINT tun_open_to_them_srf_fk;
+ALTER TABLE citydb.tunnel_open_to_them_srf ADD CONSTRAINT tun_open_to_them_srf_fk FOREIGN KEY (tunnel_opening_id)
+REFERENCES citydb.tunnel_opening (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tun_open_to_them_srf_fk1 | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_open_to_them_srf DROP CONSTRAINT tun_open_to_them_srf_fk1;
-ALTER TABLE public.tunnel_open_to_them_srf ADD CONSTRAINT tun_open_to_them_srf_fk1 FOREIGN KEY (tunnel_thematic_surface_id)
-REFERENCES public.tunnel_thematic_surface (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_open_to_them_srf DROP CONSTRAINT tun_open_to_them_srf_fk1;
+ALTER TABLE citydb.tunnel_open_to_them_srf ADD CONSTRAINT tun_open_to_them_srf_fk1 FOREIGN KEY (tunnel_thematic_surface_id)
+REFERENCES citydb.tunnel_thematic_surface (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tun_hspace_cityobj_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_hollow_space DROP CONSTRAINT tun_hspace_cityobj_fk;
-ALTER TABLE public.tunnel_hollow_space ADD CONSTRAINT tun_hspace_cityobj_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_hollow_space DROP CONSTRAINT tun_hspace_cityobj_fk;
+ALTER TABLE citydb.tunnel_hollow_space ADD CONSTRAINT tun_hspace_cityobj_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 
 -- object: tun_hspace_tunnel_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_hollow_space DROP CONSTRAINT tun_hspace_tunnel_fk;
-ALTER TABLE public.tunnel_hollow_space ADD CONSTRAINT tun_hspace_tunnel_fk FOREIGN KEY (tunnel_id)
-REFERENCES public.tunnel (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_hollow_space DROP CONSTRAINT tun_hspace_tunnel_fk;
+ALTER TABLE citydb.tunnel_hollow_space ADD CONSTRAINT tun_hspace_tunnel_fk FOREIGN KEY (tunnel_id)
+REFERENCES citydb.tunnel (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 
 -- object: tun_hspace_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_hollow_space DROP CONSTRAINT tun_hspace_lod4msrf_fk;
-ALTER TABLE public.tunnel_hollow_space ADD CONSTRAINT tun_hspace_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_hollow_space DROP CONSTRAINT tun_hspace_lod4msrf_fk;
+ALTER TABLE citydb.tunnel_hollow_space ADD CONSTRAINT tun_hspace_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 
 -- object: tun_hspace_lod4solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_hollow_space DROP CONSTRAINT tun_hspace_lod4solid_fk;
-ALTER TABLE public.tunnel_hollow_space ADD CONSTRAINT tun_hspace_lod4solid_fk FOREIGN KEY (lod4_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_hollow_space DROP CONSTRAINT tun_hspace_lod4solid_fk;
+ALTER TABLE citydb.tunnel_hollow_space ADD CONSTRAINT tun_hspace_lod4solid_fk FOREIGN KEY (lod4_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 
 -- object: tun_them_srf_cityobj_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_cityobj_fk;
-ALTER TABLE public.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_cityobj_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_cityobj_fk;
+ALTER TABLE citydb.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_cityobj_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tun_them_srf_objclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_objclass_fk;
-ALTER TABLE public.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_objclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_objclass_fk;
+ALTER TABLE citydb.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tun_them_srf_tunnel_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_tunnel_fk;
-ALTER TABLE public.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_tunnel_fk FOREIGN KEY (tunnel_id)
-REFERENCES public.tunnel (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_tunnel_fk;
+ALTER TABLE citydb.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_tunnel_fk FOREIGN KEY (tunnel_id)
+REFERENCES citydb.tunnel (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tun_them_srf_hspace_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_hspace_fk;
-ALTER TABLE public.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_hspace_fk FOREIGN KEY (tunnel_hollow_space_id)
-REFERENCES public.tunnel_hollow_space (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_hspace_fk;
+ALTER TABLE citydb.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_hspace_fk FOREIGN KEY (tunnel_hollow_space_id)
+REFERENCES citydb.tunnel_hollow_space (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tun_them_srf_tun_inst_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_tun_inst_fk;
-ALTER TABLE public.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_tun_inst_fk FOREIGN KEY (tunnel_installation_id)
-REFERENCES public.tunnel_installation (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_tun_inst_fk;
+ALTER TABLE citydb.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_tun_inst_fk FOREIGN KEY (tunnel_installation_id)
+REFERENCES citydb.tunnel_installation (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tun_them_srf_lod2msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_lod2msrf_fk;
-ALTER TABLE public.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_lod2msrf_fk;
+ALTER TABLE citydb.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tun_them_srf_lod3msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_lod3msrf_fk;
-ALTER TABLE public.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_lod3msrf_fk;
+ALTER TABLE citydb.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tun_them_srf_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_lod4msrf_fk;
-ALTER TABLE public.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_thematic_surface DROP CONSTRAINT tun_them_srf_lod4msrf_fk;
+ALTER TABLE citydb.tunnel_thematic_surface ADD CONSTRAINT tun_them_srf_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_open_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_opening DROP CONSTRAINT tunnel_open_cityobject_fk;
-ALTER TABLE public.tunnel_opening ADD CONSTRAINT tunnel_open_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_opening DROP CONSTRAINT tunnel_open_cityobject_fk;
+ALTER TABLE citydb.tunnel_opening ADD CONSTRAINT tunnel_open_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_open_objclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_opening DROP CONSTRAINT tunnel_open_objclass_fk;
-ALTER TABLE public.tunnel_opening ADD CONSTRAINT tunnel_open_objclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_opening DROP CONSTRAINT tunnel_open_objclass_fk;
+ALTER TABLE citydb.tunnel_opening ADD CONSTRAINT tunnel_open_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_open_lod3msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_opening DROP CONSTRAINT tunnel_open_lod3msrf_fk;
-ALTER TABLE public.tunnel_opening ADD CONSTRAINT tunnel_open_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_opening DROP CONSTRAINT tunnel_open_lod3msrf_fk;
+ALTER TABLE citydb.tunnel_opening ADD CONSTRAINT tunnel_open_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_open_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_opening DROP CONSTRAINT tunnel_open_lod4msrf_fk;
-ALTER TABLE public.tunnel_opening ADD CONSTRAINT tunnel_open_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_opening DROP CONSTRAINT tunnel_open_lod4msrf_fk;
+ALTER TABLE citydb.tunnel_opening ADD CONSTRAINT tunnel_open_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_open_lod3impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_opening DROP CONSTRAINT tunnel_open_lod3impl_fk;
-ALTER TABLE public.tunnel_opening ADD CONSTRAINT tunnel_open_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_opening DROP CONSTRAINT tunnel_open_lod3impl_fk;
+ALTER TABLE citydb.tunnel_opening ADD CONSTRAINT tunnel_open_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_open_lod4impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_opening DROP CONSTRAINT tunnel_open_lod4impl_fk;
-ALTER TABLE public.tunnel_opening ADD CONSTRAINT tunnel_open_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_opening DROP CONSTRAINT tunnel_open_lod4impl_fk;
+ALTER TABLE citydb.tunnel_opening ADD CONSTRAINT tunnel_open_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_inst_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_installation DROP CONSTRAINT tunnel_inst_cityobject_fk;
-ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_installation DROP CONSTRAINT tunnel_inst_cityobject_fk;
+ALTER TABLE citydb.tunnel_installation ADD CONSTRAINT tunnel_inst_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_inst_objclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_installation DROP CONSTRAINT tunnel_inst_objclass_fk;
-ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_objclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_installation DROP CONSTRAINT tunnel_inst_objclass_fk;
+ALTER TABLE citydb.tunnel_installation ADD CONSTRAINT tunnel_inst_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_inst_tunnel_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_installation DROP CONSTRAINT tunnel_inst_tunnel_fk;
-ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_tunnel_fk FOREIGN KEY (tunnel_id)
-REFERENCES public.tunnel (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_installation DROP CONSTRAINT tunnel_inst_tunnel_fk;
+ALTER TABLE citydb.tunnel_installation ADD CONSTRAINT tunnel_inst_tunnel_fk FOREIGN KEY (tunnel_id)
+REFERENCES citydb.tunnel (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_inst_hspace_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_installation DROP CONSTRAINT tunnel_inst_hspace_fk;
-ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_hspace_fk FOREIGN KEY (tunnel_hollow_space_id)
-REFERENCES public.tunnel_hollow_space (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_installation DROP CONSTRAINT tunnel_inst_hspace_fk;
+ALTER TABLE citydb.tunnel_installation ADD CONSTRAINT tunnel_inst_hspace_fk FOREIGN KEY (tunnel_hollow_space_id)
+REFERENCES citydb.tunnel_hollow_space (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_inst_lod2brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_installation DROP CONSTRAINT tunnel_inst_lod2brep_fk;
-ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_lod2brep_fk FOREIGN KEY (lod2_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_installation DROP CONSTRAINT tunnel_inst_lod2brep_fk;
+ALTER TABLE citydb.tunnel_installation ADD CONSTRAINT tunnel_inst_lod2brep_fk FOREIGN KEY (lod2_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_inst_lod3brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_installation DROP CONSTRAINT tunnel_inst_lod3brep_fk;
-ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_lod3brep_fk FOREIGN KEY (lod3_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_installation DROP CONSTRAINT tunnel_inst_lod3brep_fk;
+ALTER TABLE citydb.tunnel_installation ADD CONSTRAINT tunnel_inst_lod3brep_fk FOREIGN KEY (lod3_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_inst_lod4brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_installation DROP CONSTRAINT tunnel_inst_lod4brep_fk;
-ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_lod4brep_fk FOREIGN KEY (lod4_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_installation DROP CONSTRAINT tunnel_inst_lod4brep_fk;
+ALTER TABLE citydb.tunnel_installation ADD CONSTRAINT tunnel_inst_lod4brep_fk FOREIGN KEY (lod4_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_inst_lod2impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_installation DROP CONSTRAINT tunnel_inst_lod2impl_fk;
-ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_installation DROP CONSTRAINT tunnel_inst_lod2impl_fk;
+ALTER TABLE citydb.tunnel_installation ADD CONSTRAINT tunnel_inst_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_inst_lod3impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_installation DROP CONSTRAINT tunnel_inst_lod3impl_fk;
-ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_installation DROP CONSTRAINT tunnel_inst_lod3impl_fk;
+ALTER TABLE citydb.tunnel_installation ADD CONSTRAINT tunnel_inst_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_inst_lod4impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_installation DROP CONSTRAINT tunnel_inst_lod4impl_fk;
-ALTER TABLE public.tunnel_installation ADD CONSTRAINT tunnel_inst_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_installation DROP CONSTRAINT tunnel_inst_lod4impl_fk;
+ALTER TABLE citydb.tunnel_installation ADD CONSTRAINT tunnel_inst_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_furn_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_furniture DROP CONSTRAINT tunnel_furn_cityobject_fk;
-ALTER TABLE public.tunnel_furniture ADD CONSTRAINT tunnel_furn_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_furniture DROP CONSTRAINT tunnel_furn_cityobject_fk;
+ALTER TABLE citydb.tunnel_furniture ADD CONSTRAINT tunnel_furn_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_furn_hspace_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_furniture DROP CONSTRAINT tunnel_furn_hspace_fk;
-ALTER TABLE public.tunnel_furniture ADD CONSTRAINT tunnel_furn_hspace_fk FOREIGN KEY (tunnel_hollow_space_id)
-REFERENCES public.tunnel_hollow_space (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_furniture DROP CONSTRAINT tunnel_furn_hspace_fk;
+ALTER TABLE citydb.tunnel_furniture ADD CONSTRAINT tunnel_furn_hspace_fk FOREIGN KEY (tunnel_hollow_space_id)
+REFERENCES citydb.tunnel_hollow_space (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_furn_lod4brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_furniture DROP CONSTRAINT tunnel_furn_lod4brep_fk;
-ALTER TABLE public.tunnel_furniture ADD CONSTRAINT tunnel_furn_lod4brep_fk FOREIGN KEY (lod4_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_furniture DROP CONSTRAINT tunnel_furn_lod4brep_fk;
+ALTER TABLE citydb.tunnel_furniture ADD CONSTRAINT tunnel_furn_lod4brep_fk FOREIGN KEY (lod4_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: tunnel_furn_lod4impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.tunnel_furniture DROP CONSTRAINT tunnel_furn_lod4impl_fk;
-ALTER TABLE public.tunnel_furniture ADD CONSTRAINT tunnel_furn_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.tunnel_furniture DROP CONSTRAINT tunnel_furn_lod4impl_fk;
+ALTER TABLE citydb.tunnel_furniture ADD CONSTRAINT tunnel_furn_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_parent_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge DROP CONSTRAINT bridge_parent_fk;
-ALTER TABLE public.bridge ADD CONSTRAINT bridge_parent_fk FOREIGN KEY (bridge_parent_id)
-REFERENCES public.bridge (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge DROP CONSTRAINT bridge_parent_fk;
+ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_parent_fk FOREIGN KEY (bridge_parent_id)
+REFERENCES citydb.bridge (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_root_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge DROP CONSTRAINT bridge_root_fk;
-ALTER TABLE public.bridge ADD CONSTRAINT bridge_root_fk FOREIGN KEY (bridge_root_id)
-REFERENCES public.bridge (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge DROP CONSTRAINT bridge_root_fk;
+ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_root_fk FOREIGN KEY (bridge_root_id)
+REFERENCES citydb.bridge (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_lod1msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge DROP CONSTRAINT bridge_lod1msrf_fk;
-ALTER TABLE public.bridge ADD CONSTRAINT bridge_lod1msrf_fk FOREIGN KEY (lod1_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge DROP CONSTRAINT bridge_lod1msrf_fk;
+ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_lod1msrf_fk FOREIGN KEY (lod1_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_lod2msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge DROP CONSTRAINT bridge_lod2msrf_fk;
-ALTER TABLE public.bridge ADD CONSTRAINT bridge_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge DROP CONSTRAINT bridge_lod2msrf_fk;
+ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_lod3msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge DROP CONSTRAINT bridge_lod3msrf_fk;
-ALTER TABLE public.bridge ADD CONSTRAINT bridge_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge DROP CONSTRAINT bridge_lod3msrf_fk;
+ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge DROP CONSTRAINT bridge_lod4msrf_fk;
-ALTER TABLE public.bridge ADD CONSTRAINT bridge_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge DROP CONSTRAINT bridge_lod4msrf_fk;
+ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_lod1solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge DROP CONSTRAINT bridge_lod1solid_fk;
-ALTER TABLE public.bridge ADD CONSTRAINT bridge_lod1solid_fk FOREIGN KEY (lod1_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge DROP CONSTRAINT bridge_lod1solid_fk;
+ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_lod1solid_fk FOREIGN KEY (lod1_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_lod2solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge DROP CONSTRAINT bridge_lod2solid_fk;
-ALTER TABLE public.bridge ADD CONSTRAINT bridge_lod2solid_fk FOREIGN KEY (lod2_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge DROP CONSTRAINT bridge_lod2solid_fk;
+ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_lod2solid_fk FOREIGN KEY (lod2_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_lod3solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge DROP CONSTRAINT bridge_lod3solid_fk;
-ALTER TABLE public.bridge ADD CONSTRAINT bridge_lod3solid_fk FOREIGN KEY (lod3_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge DROP CONSTRAINT bridge_lod3solid_fk;
+ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_lod3solid_fk FOREIGN KEY (lod3_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_lod4solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge DROP CONSTRAINT bridge_lod4solid_fk;
-ALTER TABLE public.bridge ADD CONSTRAINT bridge_lod4solid_fk FOREIGN KEY (lod4_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge DROP CONSTRAINT bridge_lod4solid_fk;
+ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_lod4solid_fk FOREIGN KEY (lod4_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_furn_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_furniture DROP CONSTRAINT bridge_furn_cityobject_fk;
-ALTER TABLE public.bridge_furniture ADD CONSTRAINT bridge_furn_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_furniture DROP CONSTRAINT bridge_furn_cityobject_fk;
+ALTER TABLE citydb.bridge_furniture ADD CONSTRAINT bridge_furn_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_furn_brd_room_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_furniture DROP CONSTRAINT bridge_furn_brd_room_fk;
-ALTER TABLE public.bridge_furniture ADD CONSTRAINT bridge_furn_brd_room_fk FOREIGN KEY (bridge_room_id)
-REFERENCES public.bridge_room (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_furniture DROP CONSTRAINT bridge_furn_brd_room_fk;
+ALTER TABLE citydb.bridge_furniture ADD CONSTRAINT bridge_furn_brd_room_fk FOREIGN KEY (bridge_room_id)
+REFERENCES citydb.bridge_room (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_furn_lod4brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_furniture DROP CONSTRAINT bridge_furn_lod4brep_fk;
-ALTER TABLE public.bridge_furniture ADD CONSTRAINT bridge_furn_lod4brep_fk FOREIGN KEY (lod4_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_furniture DROP CONSTRAINT bridge_furn_lod4brep_fk;
+ALTER TABLE citydb.bridge_furniture ADD CONSTRAINT bridge_furn_lod4brep_fk FOREIGN KEY (lod4_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_furn_lod4impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_furniture DROP CONSTRAINT bridge_furn_lod4impl_fk;
-ALTER TABLE public.bridge_furniture ADD CONSTRAINT bridge_furn_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_furniture DROP CONSTRAINT bridge_furn_lod4impl_fk;
+ALTER TABLE citydb.bridge_furniture ADD CONSTRAINT bridge_furn_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_inst_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_installation DROP CONSTRAINT bridge_inst_cityobject_fk;
-ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_installation DROP CONSTRAINT bridge_inst_cityobject_fk;
+ALTER TABLE citydb.bridge_installation ADD CONSTRAINT bridge_inst_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_inst_objclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_installation DROP CONSTRAINT bridge_inst_objclass_fk;
-ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_objclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_installation DROP CONSTRAINT bridge_inst_objclass_fk;
+ALTER TABLE citydb.bridge_installation ADD CONSTRAINT bridge_inst_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_inst_bridge_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_installation DROP CONSTRAINT bridge_inst_bridge_fk;
-ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_bridge_fk FOREIGN KEY (bridge_id)
-REFERENCES public.bridge (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_installation DROP CONSTRAINT bridge_inst_bridge_fk;
+ALTER TABLE citydb.bridge_installation ADD CONSTRAINT bridge_inst_bridge_fk FOREIGN KEY (bridge_id)
+REFERENCES citydb.bridge (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_inst_brd_room_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_installation DROP CONSTRAINT bridge_inst_brd_room_fk;
-ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_brd_room_fk FOREIGN KEY (bridge_room_id)
-REFERENCES public.bridge_room (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_installation DROP CONSTRAINT bridge_inst_brd_room_fk;
+ALTER TABLE citydb.bridge_installation ADD CONSTRAINT bridge_inst_brd_room_fk FOREIGN KEY (bridge_room_id)
+REFERENCES citydb.bridge_room (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_inst_lod2brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_installation DROP CONSTRAINT bridge_inst_lod2brep_fk;
-ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_lod2brep_fk FOREIGN KEY (lod2_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_installation DROP CONSTRAINT bridge_inst_lod2brep_fk;
+ALTER TABLE citydb.bridge_installation ADD CONSTRAINT bridge_inst_lod2brep_fk FOREIGN KEY (lod2_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_inst_lod3brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_installation DROP CONSTRAINT bridge_inst_lod3brep_fk;
-ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_lod3brep_fk FOREIGN KEY (lod3_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_installation DROP CONSTRAINT bridge_inst_lod3brep_fk;
+ALTER TABLE citydb.bridge_installation ADD CONSTRAINT bridge_inst_lod3brep_fk FOREIGN KEY (lod3_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_inst_lod4brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_installation DROP CONSTRAINT bridge_inst_lod4brep_fk;
-ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_lod4brep_fk FOREIGN KEY (lod4_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_installation DROP CONSTRAINT bridge_inst_lod4brep_fk;
+ALTER TABLE citydb.bridge_installation ADD CONSTRAINT bridge_inst_lod4brep_fk FOREIGN KEY (lod4_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_inst_lod2impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_installation DROP CONSTRAINT bridge_inst_lod2impl_fk;
-ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_installation DROP CONSTRAINT bridge_inst_lod2impl_fk;
+ALTER TABLE citydb.bridge_installation ADD CONSTRAINT bridge_inst_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_inst_lod3impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_installation DROP CONSTRAINT bridge_inst_lod3impl_fk;
-ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_installation DROP CONSTRAINT bridge_inst_lod3impl_fk;
+ALTER TABLE citydb.bridge_installation ADD CONSTRAINT bridge_inst_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_inst_lod4impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_installation DROP CONSTRAINT bridge_inst_lod4impl_fk;
-ALTER TABLE public.bridge_installation ADD CONSTRAINT bridge_inst_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_installation DROP CONSTRAINT bridge_inst_lod4impl_fk;
+ALTER TABLE citydb.bridge_installation ADD CONSTRAINT bridge_inst_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_open_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_opening DROP CONSTRAINT bridge_open_cityobject_fk;
-ALTER TABLE public.bridge_opening ADD CONSTRAINT bridge_open_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_opening DROP CONSTRAINT bridge_open_cityobject_fk;
+ALTER TABLE citydb.bridge_opening ADD CONSTRAINT bridge_open_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_open_objclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_opening DROP CONSTRAINT bridge_open_objclass_fk;
-ALTER TABLE public.bridge_opening ADD CONSTRAINT bridge_open_objclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_opening DROP CONSTRAINT bridge_open_objclass_fk;
+ALTER TABLE citydb.bridge_opening ADD CONSTRAINT bridge_open_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_open_address_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_opening DROP CONSTRAINT bridge_open_address_fk;
-ALTER TABLE public.bridge_opening ADD CONSTRAINT bridge_open_address_fk FOREIGN KEY (address_id)
-REFERENCES public.address (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_opening DROP CONSTRAINT bridge_open_address_fk;
+ALTER TABLE citydb.bridge_opening ADD CONSTRAINT bridge_open_address_fk FOREIGN KEY (address_id)
+REFERENCES citydb.address (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_open_lod3msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_opening DROP CONSTRAINT bridge_open_lod3msrf_fk;
-ALTER TABLE public.bridge_opening ADD CONSTRAINT bridge_open_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_opening DROP CONSTRAINT bridge_open_lod3msrf_fk;
+ALTER TABLE citydb.bridge_opening ADD CONSTRAINT bridge_open_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_open_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_opening DROP CONSTRAINT bridge_open_lod4msrf_fk;
-ALTER TABLE public.bridge_opening ADD CONSTRAINT bridge_open_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_opening DROP CONSTRAINT bridge_open_lod4msrf_fk;
+ALTER TABLE citydb.bridge_opening ADD CONSTRAINT bridge_open_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_open_lod3impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_opening DROP CONSTRAINT bridge_open_lod3impl_fk;
-ALTER TABLE public.bridge_opening ADD CONSTRAINT bridge_open_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_opening DROP CONSTRAINT bridge_open_lod3impl_fk;
+ALTER TABLE citydb.bridge_opening ADD CONSTRAINT bridge_open_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_open_lod4impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_opening DROP CONSTRAINT bridge_open_lod4impl_fk;
-ALTER TABLE public.bridge_opening ADD CONSTRAINT bridge_open_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_opening DROP CONSTRAINT bridge_open_lod4impl_fk;
+ALTER TABLE citydb.bridge_opening ADD CONSTRAINT bridge_open_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: brd_open_to_them_srf_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_open_to_them_srf DROP CONSTRAINT brd_open_to_them_srf_fk;
-ALTER TABLE public.bridge_open_to_them_srf ADD CONSTRAINT brd_open_to_them_srf_fk FOREIGN KEY (bridge_opening_id)
-REFERENCES public.bridge_opening (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_open_to_them_srf DROP CONSTRAINT brd_open_to_them_srf_fk;
+ALTER TABLE citydb.bridge_open_to_them_srf ADD CONSTRAINT brd_open_to_them_srf_fk FOREIGN KEY (bridge_opening_id)
+REFERENCES citydb.bridge_opening (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: brd_open_to_them_srf_fk1 | type: CONSTRAINT --
--- ALTER TABLE public.bridge_open_to_them_srf DROP CONSTRAINT brd_open_to_them_srf_fk1;
-ALTER TABLE public.bridge_open_to_them_srf ADD CONSTRAINT brd_open_to_them_srf_fk1 FOREIGN KEY (bridge_thematic_surface_id)
-REFERENCES public.bridge_thematic_surface (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_open_to_them_srf DROP CONSTRAINT brd_open_to_them_srf_fk1;
+ALTER TABLE citydb.bridge_open_to_them_srf ADD CONSTRAINT brd_open_to_them_srf_fk1 FOREIGN KEY (bridge_thematic_surface_id)
+REFERENCES citydb.bridge_thematic_surface (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_room_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_room DROP CONSTRAINT bridge_room_cityobject_fk;
-ALTER TABLE public.bridge_room ADD CONSTRAINT bridge_room_cityobject_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_room DROP CONSTRAINT bridge_room_cityobject_fk;
+ALTER TABLE citydb.bridge_room ADD CONSTRAINT bridge_room_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_room_bridge_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_room DROP CONSTRAINT bridge_room_bridge_fk;
-ALTER TABLE public.bridge_room ADD CONSTRAINT bridge_room_bridge_fk FOREIGN KEY (bridge_id)
-REFERENCES public.bridge (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_room DROP CONSTRAINT bridge_room_bridge_fk;
+ALTER TABLE citydb.bridge_room ADD CONSTRAINT bridge_room_bridge_fk FOREIGN KEY (bridge_id)
+REFERENCES citydb.bridge (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_room_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_room DROP CONSTRAINT bridge_room_lod4msrf_fk;
-ALTER TABLE public.bridge_room ADD CONSTRAINT bridge_room_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_room DROP CONSTRAINT bridge_room_lod4msrf_fk;
+ALTER TABLE citydb.bridge_room ADD CONSTRAINT bridge_room_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_room_lod4solid_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_room DROP CONSTRAINT bridge_room_lod4solid_fk;
-ALTER TABLE public.bridge_room ADD CONSTRAINT bridge_room_lod4solid_fk FOREIGN KEY (lod4_solid_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_room DROP CONSTRAINT bridge_room_lod4solid_fk;
+ALTER TABLE citydb.bridge_room ADD CONSTRAINT bridge_room_lod4solid_fk FOREIGN KEY (lod4_solid_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: brd_them_srf_cityobj_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_cityobj_fk;
-ALTER TABLE public.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_cityobj_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_cityobj_fk;
+ALTER TABLE citydb.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_cityobj_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: brd_them_srf_objclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_objclass_fk;
-ALTER TABLE public.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_objclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_objclass_fk;
+ALTER TABLE citydb.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: brd_them_srf_bridge_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_bridge_fk;
-ALTER TABLE public.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_bridge_fk FOREIGN KEY (bridge_id)
-REFERENCES public.bridge (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_bridge_fk;
+ALTER TABLE citydb.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_bridge_fk FOREIGN KEY (bridge_id)
+REFERENCES citydb.bridge (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: brd_them_srf_brd_room_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_brd_room_fk;
-ALTER TABLE public.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_brd_room_fk FOREIGN KEY (bridge_room_id)
-REFERENCES public.bridge_room (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_brd_room_fk;
+ALTER TABLE citydb.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_brd_room_fk FOREIGN KEY (bridge_room_id)
+REFERENCES citydb.bridge_room (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: brd_them_srf_brd_inst_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_brd_inst_fk;
-ALTER TABLE public.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_brd_inst_fk FOREIGN KEY (bridge_installation_id)
-REFERENCES public.bridge_installation (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_brd_inst_fk;
+ALTER TABLE citydb.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_brd_inst_fk FOREIGN KEY (bridge_installation_id)
+REFERENCES citydb.bridge_installation (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: brd_them_srf_brd_const_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_brd_const_fk;
-ALTER TABLE public.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_brd_const_fk FOREIGN KEY (bridge_constr_element_id)
-REFERENCES public.bridge_constr_element (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_brd_const_fk;
+ALTER TABLE citydb.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_brd_const_fk FOREIGN KEY (bridge_constr_element_id)
+REFERENCES citydb.bridge_constr_element (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: brd_them_srf_lod2msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_lod2msrf_fk;
-ALTER TABLE public.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_lod2msrf_fk;
+ALTER TABLE citydb.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_lod2msrf_fk FOREIGN KEY (lod2_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: brd_them_srf_lod3msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_lod3msrf_fk;
-ALTER TABLE public.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_lod3msrf_fk;
+ALTER TABLE citydb.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_lod3msrf_fk FOREIGN KEY (lod3_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: brd_them_srf_lod4msrf_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_lod4msrf_fk;
-ALTER TABLE public.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_thematic_surface DROP CONSTRAINT brd_them_srf_lod4msrf_fk;
+ALTER TABLE citydb.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_lod4msrf_fk FOREIGN KEY (lod4_multi_surface_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_constr_cityobj_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_constr_element DROP CONSTRAINT bridge_constr_cityobj_fk;
-ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_cityobj_fk FOREIGN KEY (id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_constr_element DROP CONSTRAINT bridge_constr_cityobj_fk;
+ALTER TABLE citydb.bridge_constr_element ADD CONSTRAINT bridge_constr_cityobj_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_constr_bridge_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_constr_element DROP CONSTRAINT bridge_constr_bridge_fk;
-ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_bridge_fk FOREIGN KEY (bridge_id)
-REFERENCES public.bridge (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_constr_element DROP CONSTRAINT bridge_constr_bridge_fk;
+ALTER TABLE citydb.bridge_constr_element ADD CONSTRAINT bridge_constr_bridge_fk FOREIGN KEY (bridge_id)
+REFERENCES citydb.bridge (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_constr_lod1brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_constr_element DROP CONSTRAINT bridge_constr_lod1brep_fk;
-ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod1brep_fk FOREIGN KEY (lod1_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_constr_element DROP CONSTRAINT bridge_constr_lod1brep_fk;
+ALTER TABLE citydb.bridge_constr_element ADD CONSTRAINT bridge_constr_lod1brep_fk FOREIGN KEY (lod1_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_constr_lod2brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_constr_element DROP CONSTRAINT bridge_constr_lod2brep_fk;
-ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod2brep_fk FOREIGN KEY (lod2_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_constr_element DROP CONSTRAINT bridge_constr_lod2brep_fk;
+ALTER TABLE citydb.bridge_constr_element ADD CONSTRAINT bridge_constr_lod2brep_fk FOREIGN KEY (lod2_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_constr_lod3brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_constr_element DROP CONSTRAINT bridge_constr_lod3brep_fk;
-ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod3brep_fk FOREIGN KEY (lod3_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_constr_element DROP CONSTRAINT bridge_constr_lod3brep_fk;
+ALTER TABLE citydb.bridge_constr_element ADD CONSTRAINT bridge_constr_lod3brep_fk FOREIGN KEY (lod3_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_constr_lod4brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_constr_element DROP CONSTRAINT bridge_constr_lod4brep_fk;
-ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod4brep_fk FOREIGN KEY (lod4_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_constr_element DROP CONSTRAINT bridge_constr_lod4brep_fk;
+ALTER TABLE citydb.bridge_constr_element ADD CONSTRAINT bridge_constr_lod4brep_fk FOREIGN KEY (lod4_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_constr_lod1impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_constr_element DROP CONSTRAINT bridge_constr_lod1impl_fk;
-ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod1impl_fk FOREIGN KEY (lod1_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_constr_element DROP CONSTRAINT bridge_constr_lod1impl_fk;
+ALTER TABLE citydb.bridge_constr_element ADD CONSTRAINT bridge_constr_lod1impl_fk FOREIGN KEY (lod1_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_constr_lod2impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_constr_element DROP CONSTRAINT bridge_constr_lod2impl_fk;
-ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_constr_element DROP CONSTRAINT bridge_constr_lod2impl_fk;
+ALTER TABLE citydb.bridge_constr_element ADD CONSTRAINT bridge_constr_lod2impl_fk FOREIGN KEY (lod2_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_constr_lod3impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_constr_element DROP CONSTRAINT bridge_constr_lod3impl_fk;
-ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_constr_element DROP CONSTRAINT bridge_constr_lod3impl_fk;
+ALTER TABLE citydb.bridge_constr_element ADD CONSTRAINT bridge_constr_lod3impl_fk FOREIGN KEY (lod3_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: bridge_constr_lod4impl_fk | type: CONSTRAINT --
--- ALTER TABLE public.bridge_constr_element DROP CONSTRAINT bridge_constr_lod4impl_fk;
-ALTER TABLE public.bridge_constr_element ADD CONSTRAINT bridge_constr_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
-REFERENCES public.implicit_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.bridge_constr_element DROP CONSTRAINT bridge_constr_lod4impl_fk;
+ALTER TABLE citydb.bridge_constr_element ADD CONSTRAINT bridge_constr_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
+REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: address_to_bridge_fk | type: CONSTRAINT --
--- ALTER TABLE public.address_to_bridge DROP CONSTRAINT address_to_bridge_fk;
-ALTER TABLE public.address_to_bridge ADD CONSTRAINT address_to_bridge_fk FOREIGN KEY (address_id)
-REFERENCES public.address (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.address_to_bridge DROP CONSTRAINT address_to_bridge_fk;
+ALTER TABLE citydb.address_to_bridge ADD CONSTRAINT address_to_bridge_fk FOREIGN KEY (address_id)
+REFERENCES citydb.address (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: address_to_bridge_fk1 | type: CONSTRAINT --
--- ALTER TABLE public.address_to_bridge DROP CONSTRAINT address_to_bridge_fk1;
-ALTER TABLE public.address_to_bridge ADD CONSTRAINT address_to_bridge_fk1 FOREIGN KEY (bridge_id)
-REFERENCES public.bridge (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.address_to_bridge DROP CONSTRAINT address_to_bridge_fk1;
+ALTER TABLE citydb.address_to_bridge ADD CONSTRAINT address_to_bridge_fk1 FOREIGN KEY (bridge_id)
+REFERENCES citydb.bridge (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: cityobject_objectclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.cityobject DROP CONSTRAINT cityobject_objectclass_fk;
-ALTER TABLE public.cityobject ADD CONSTRAINT cityobject_objectclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.cityobject DROP CONSTRAINT cityobject_objectclass_fk;
+ALTER TABLE citydb.cityobject ADD CONSTRAINT cityobject_objectclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: appearance_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.appearance DROP CONSTRAINT appearance_cityobject_fk;
-ALTER TABLE public.appearance ADD CONSTRAINT appearance_cityobject_fk FOREIGN KEY (cityobject_id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.appearance DROP CONSTRAINT appearance_cityobject_fk;
+ALTER TABLE citydb.appearance ADD CONSTRAINT appearance_cityobject_fk FOREIGN KEY (cityobject_id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: appearance_citymodel_fk | type: CONSTRAINT --
--- ALTER TABLE public.appearance DROP CONSTRAINT appearance_citymodel_fk;
-ALTER TABLE public.appearance ADD CONSTRAINT appearance_citymodel_fk FOREIGN KEY (citymodel_id)
-REFERENCES public.citymodel (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.appearance DROP CONSTRAINT appearance_citymodel_fk;
+ALTER TABLE citydb.appearance ADD CONSTRAINT appearance_citymodel_fk FOREIGN KEY (citymodel_id)
+REFERENCES citydb.citymodel (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: implicit_geom_brep_fk | type: CONSTRAINT --
--- ALTER TABLE public.implicit_geometry DROP CONSTRAINT implicit_geom_brep_fk;
-ALTER TABLE public.implicit_geometry ADD CONSTRAINT implicit_geom_brep_fk FOREIGN KEY (relative_brep_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.implicit_geometry DROP CONSTRAINT implicit_geom_brep_fk;
+ALTER TABLE citydb.implicit_geometry ADD CONSTRAINT implicit_geom_brep_fk FOREIGN KEY (relative_brep_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: surface_geom_parent_fk | type: CONSTRAINT --
--- ALTER TABLE public.surface_geometry DROP CONSTRAINT surface_geom_parent_fk;
-ALTER TABLE public.surface_geometry ADD CONSTRAINT surface_geom_parent_fk FOREIGN KEY (parent_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.surface_geometry DROP CONSTRAINT surface_geom_parent_fk;
+ALTER TABLE citydb.surface_geometry ADD CONSTRAINT surface_geom_parent_fk FOREIGN KEY (parent_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: surface_geom_root_fk | type: CONSTRAINT --
--- ALTER TABLE public.surface_geometry DROP CONSTRAINT surface_geom_root_fk;
-ALTER TABLE public.surface_geometry ADD CONSTRAINT surface_geom_root_fk FOREIGN KEY (root_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.surface_geometry DROP CONSTRAINT surface_geom_root_fk;
+ALTER TABLE citydb.surface_geometry ADD CONSTRAINT surface_geom_root_fk FOREIGN KEY (root_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: surface_geom_cityobj_fk | type: CONSTRAINT --
--- ALTER TABLE public.surface_geometry DROP CONSTRAINT surface_geom_cityobj_fk;
-ALTER TABLE public.surface_geometry ADD CONSTRAINT surface_geom_cityobj_fk FOREIGN KEY (cityobject_id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.surface_geometry DROP CONSTRAINT surface_geom_cityobj_fk;
+ALTER TABLE citydb.surface_geometry ADD CONSTRAINT surface_geom_cityobj_fk FOREIGN KEY (cityobject_id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: surface_data_tex_image_fk | type: CONSTRAINT --
--- ALTER TABLE public.surface_data DROP CONSTRAINT surface_data_tex_image_fk;
-ALTER TABLE public.surface_data ADD CONSTRAINT surface_data_tex_image_fk FOREIGN KEY (tex_image_id)
-REFERENCES public.tex_image (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.surface_data DROP CONSTRAINT surface_data_tex_image_fk;
+ALTER TABLE citydb.surface_data ADD CONSTRAINT surface_data_tex_image_fk FOREIGN KEY (tex_image_id)
+REFERENCES citydb.tex_image (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: surface_data_objclass_fk | type: CONSTRAINT --
--- ALTER TABLE public.surface_data DROP CONSTRAINT surface_data_objclass_fk;
-ALTER TABLE public.surface_data ADD CONSTRAINT surface_data_objclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES public.objectclass (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.surface_data DROP CONSTRAINT surface_data_objclass_fk;
+ALTER TABLE citydb.surface_data ADD CONSTRAINT surface_data_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: genericattrib_parent_fk | type: CONSTRAINT --
--- ALTER TABLE public.cityobject_genericattrib DROP CONSTRAINT genericattrib_parent_fk;
-ALTER TABLE public.cityobject_genericattrib ADD CONSTRAINT genericattrib_parent_fk FOREIGN KEY (parent_genattrib_id)
-REFERENCES public.cityobject_genericattrib (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.cityobject_genericattrib DROP CONSTRAINT genericattrib_parent_fk;
+ALTER TABLE citydb.cityobject_genericattrib ADD CONSTRAINT genericattrib_parent_fk FOREIGN KEY (parent_genattrib_id)
+REFERENCES citydb.cityobject_genericattrib (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: genericattrib_root_fk | type: CONSTRAINT --
--- ALTER TABLE public.cityobject_genericattrib DROP CONSTRAINT genericattrib_root_fk;
-ALTER TABLE public.cityobject_genericattrib ADD CONSTRAINT genericattrib_root_fk FOREIGN KEY (root_genattrib_id)
-REFERENCES public.cityobject_genericattrib (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.cityobject_genericattrib DROP CONSTRAINT genericattrib_root_fk;
+ALTER TABLE citydb.cityobject_genericattrib ADD CONSTRAINT genericattrib_root_fk FOREIGN KEY (root_genattrib_id)
+REFERENCES citydb.cityobject_genericattrib (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: genericattrib_geom_fk | type: CONSTRAINT --
--- ALTER TABLE public.cityobject_genericattrib DROP CONSTRAINT genericattrib_geom_fk;
-ALTER TABLE public.cityobject_genericattrib ADD CONSTRAINT genericattrib_geom_fk FOREIGN KEY (surface_geometry_id)
-REFERENCES public.surface_geometry (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.cityobject_genericattrib DROP CONSTRAINT genericattrib_geom_fk;
+ALTER TABLE citydb.cityobject_genericattrib ADD CONSTRAINT genericattrib_geom_fk FOREIGN KEY (surface_geometry_id)
+REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: genericattrib_cityobj_fk | type: CONSTRAINT --
--- ALTER TABLE public.cityobject_genericattrib DROP CONSTRAINT genericattrib_cityobj_fk;
-ALTER TABLE public.cityobject_genericattrib ADD CONSTRAINT genericattrib_cityobj_fk FOREIGN KEY (cityobject_id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.cityobject_genericattrib DROP CONSTRAINT genericattrib_cityobj_fk;
+ALTER TABLE citydb.cityobject_genericattrib ADD CONSTRAINT genericattrib_cityobj_fk FOREIGN KEY (cityobject_id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 
 -- object: ext_ref_cityobject_fk | type: CONSTRAINT --
--- ALTER TABLE public.external_reference DROP CONSTRAINT ext_ref_cityobject_fk;
-ALTER TABLE public.external_reference ADD CONSTRAINT ext_ref_cityobject_fk FOREIGN KEY (cityobject_id)
-REFERENCES public.cityobject (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE NOT DEFERRABLE;
+-- ALTER TABLE citydb.external_reference DROP CONSTRAINT ext_ref_cityobject_fk;
+ALTER TABLE citydb.external_reference ADD CONSTRAINT ext_ref_cityobject_fk FOREIGN KEY (cityobject_id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 

@@ -55,10 +55,13 @@ SET client_min_messages TO WARNING;
 --// fill tables OBJECTCLASS
 \i UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
 
---// create GEODB_PKG (additional schema with PL/pgSQL-Functions)
+--// create CITYDB_PKG (additional schema with PL/pgSQL-Functions)
 \echo
-\echo 'Creating additional schema ''geodb_pkg'' ...'
-\i CREATE_GEODB_PKG.sql
+\echo 'Creating additional schema ''citydb_pkg'' ...'
+\i CREATE_CITYDB_PKG.sql
+
+--// update search_path
+SET search_path TO pg_catalog,public,citydb,citydb_pkg;
 
 \echo
 \echo '3DCityDB creation complete!'
@@ -68,9 +71,9 @@ SET client_min_messages TO WARNING;
 --// checks if the chosen SRID is provided by the spatial_ref_sys table
 \echo
 \echo 'Checking spatial reference system ...'
-SELECT geodb_pkg.check_srid(:SRS_NO);
+SELECT citydb_pkg.check_srid(:SRS_NO);
 
 \echo 'Setting spatial reference system of 3DCityDB instance ...'
 INSERT INTO DATABASE_SRS(SRID,GML_SRS_NAME) VALUES (:SRS_NO,:'GMLSRSNAME');
-SELECT geodb_pkg.change_schema_srid(:SRS_NO,:'GMLSRSNAME');
+SELECT citydb_pkg.change_schema_srid(:SRS_NO,:'GMLSRSNAME');
 \echo 'Done'

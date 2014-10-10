@@ -2,7 +2,11 @@
 --
 -- Authors:     Felix Kunde <fkunde@virtualcitysystems.de>
 --
--- Copyright:   (c) 2007-2012, Institute for Geodesy and Geoinformation Science,
+-- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+--                             Technische Universität München, Germany
+--                             http://www.gis.bv.tum.de
+--
+--              (c) 2007-2012, Institute for Geodesy and Geoinformation Science,
 --                             Technische Universitaet Berlin, Germany
 --                             http://www.igg.tu-berlin.de
 --
@@ -18,8 +22,8 @@
 --
 -- ChangeLog:
 --
--- Version | Date       | Description     | Author
--- 1.0.0     2010-07-12   PostGIS version   FKun
+-- Version | Date       | Description       | Author
+-- 1.0.0     2014-10-10   release version     FKun
 --
 
 -- the script has to be called by the psql-console e.g. with this command:
@@ -30,7 +34,7 @@
 
 CREATE ROLE :RO_USERNAME WITH NOINHERIT LOGIN PASSWORD :'RO_PASSWORD';
 
-GRANT USAGE ON SCHEMA public TO :RO_USERNAME;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO :RO_USERNAME;
-GRANT USAGE ON SCHEMA geodb_pkg TO :RO_USERNAME;
-GRANT SELECT ON ALL TABLES IN SCHEMA geodb_pkg TO :RO_USERNAME;
+GRANT USAGE ON SCHEMA citydb TO :RO_USERNAME;
+GRANT SELECT ON ALL TABLES IN SCHEMA citydb TO :RO_USERNAME;
+GRANT USAGE ON SCHEMA citydb_pkg TO :RO_USERNAME;
+GRANT SELECT ON ALL TABLES IN SCHEMA citydb_pkg TO :RO_USERNAME;
