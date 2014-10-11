@@ -61,7 +61,7 @@ SET client_min_messages TO WARNING;
 \i CREATE_CITYDB_PKG.sql
 
 --// update search_path on database level
-ALTER DATABASE :DBNAME SET search_path TO pg_catalog,citydb,citydb_pkg,public;
+ALTER DATABASE :DBNAME SET search_path TO citydb,citydb_pkg,public;
 
 \echo
 \echo '3DCityDB creation complete!'
