@@ -60,8 +60,8 @@ SET client_min_messages TO WARNING;
 \echo 'Creating additional schema ''citydb_pkg'' ...'
 \i CREATE_CITYDB_PKG.sql
 
---// update search_path
-SET search_path TO pg_catalog,public,citydb,citydb_pkg;
+--// update search_path on database level
+ALTER DATABASE :DBNAME SET search_path TO pg_catalog,citydb,citydb_pkg,public;
 
 \echo
 \echo '3DCityDB creation complete!'
