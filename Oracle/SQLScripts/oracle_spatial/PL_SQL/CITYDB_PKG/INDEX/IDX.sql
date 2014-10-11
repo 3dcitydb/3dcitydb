@@ -98,6 +98,7 @@ CREATE SEQUENCE index_table_seq INCREMENT BY 1 START WITH 1 MINVALUE 1;
 ******************************************************************/
 INSERT INTO index_table (id, obj, schemaname) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('CITYOBJECT_ENVELOPE_SPX', 'CITYOBJECT', 'ENVELOPE'), USER);
 INSERT INTO index_table (id, obj, schemaname) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('SURFACE_GEOM_SPX', 'SURFACE_GEOMETRY', 'GEOMETRY'), USER);
+INSERT INTO index_table (id, obj, schemaname) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('SURFACE_GEOM_SOLID_SPX', 'SURFACE_GEOMETRY', 'SOLID_GEOMETRY'), USER);
 INSERT INTO index_table (id, obj, schemaname) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('CITYOBJECT_INX', 'CITYOBJECT', 'GMLID'), USER);
 INSERT INTO index_table (id, obj, schemaname) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('SURFACE_GEOM_INX', 'SURFACE_GEOMETRY', 'GMLID'), USER);
 INSERT INTO index_table (id, obj, schemaname) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('APPEARANCE_INX', 'APPEARANCE', 'GMLID'), USER);

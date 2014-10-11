@@ -165,6 +165,7 @@ CREATE TABLE citydb_pkg.INDEX_TABLE (
 ******************************************************************/
 INSERT INTO citydb_pkg.index_table (obj, schemaname) VALUES (citydb_pkg.construct_spatial_3d('cityobject_envelope_spx', 'cityobject', 'envelope'), 'citydb');
 INSERT INTO citydb_pkg.index_table (obj, schemaname) VALUES (citydb_pkg.construct_spatial_3d('surface_geom_spx', 'surface_geometry', 'geometry'), 'citydb');
+INSERT INTO citydb_pkg.index_table (obj, schemaname) VALUES (citydb_pkg.construct_spatial_3d('surface_geom_solid_spx', 'surface_geometry', 'solid_geometry'), 'citydb');
 INSERT INTO citydb_pkg.index_table (obj, schemaname) VALUES (citydb_pkg.construct_normal('cityobject_inx', 'cityobject', 'gmlid'), 'citydb');
 INSERT INTO citydb_pkg.index_table (obj, schemaname) VALUES (citydb_pkg.construct_normal('surface_geom_inx', 'surface_geometry', 'gmlid'), 'citydb');
 INSERT INTO citydb_pkg.index_table (obj, schemaname) VALUES (citydb_pkg.construct_normal('appearance_inx', 'appearance', 'gmlid'), 'citydb');
