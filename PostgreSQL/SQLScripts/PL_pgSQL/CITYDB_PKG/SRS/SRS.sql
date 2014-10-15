@@ -201,10 +201,17 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_schema_srid(
   schema_gml_srs_name TEXT,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS SETOF VOID AS $$
+DECLARE
+  is_set_srs_info INTEGER;
 BEGIN
-  -- update entry in DATABASE_SRS table first
-  EXECUTE format('UPDATE %I.database_srs SET srid = %L, gml_srs_name = %L',
-                    schema_name, schema_srid, schema_gml_srs_name);
+  EXECUTE 'SELECT 1 FROM pg_tables WHERE schemaname = $1 AND tablename = ''database_srs'''
+             INTO is_set_srs_info USING schema_name;
+
+  IF is_set_srs_info IS NOT NULL THEN
+    -- update entry in DATABASE_SRS table first
+    EXECUTE format('UPDATE %I.database_srs SET srid = %L, gml_srs_name = %L',
+                      schema_name, schema_srid, schema_gml_srs_name);
+  END IF;
 
   -- change srid of each spatially enabled table
   EXECUTE 'SELECT citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, f_table_schema) 
