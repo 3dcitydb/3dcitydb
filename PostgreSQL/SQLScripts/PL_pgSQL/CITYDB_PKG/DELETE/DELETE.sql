@@ -1013,7 +1013,7 @@ BEGIN
                     lod1_multi_surface_id, lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id,
                     lod1_solid_id , lod2_solid_id, lod3_solid_id, lod4_solid_id FROM %I.building WHERE id = %L', schema_name, b_id)   
                     INTO b_lod0_foot_id, b_lod0_roof_id, b_lod1_msrf_id, b_lod2_msrf_id, b_lod3_msrf_id, b_lod4_msrf_id,
-                         b_lod1_solid_id, b_lod1_solid_id, b_lod1_solid_id, b_lod1_solid_id;
+                         b_lod1_solid_id, b_lod2_solid_id, b_lod3_solid_id, b_lod4_solid_id;
 
   --// DELETE BUILDING //--
   EXECUTE format('DELETE FROM %I.building WHERE id = %L', schema_name, b_id);
@@ -1508,7 +1508,7 @@ BEGIN
   EXECUTE format('SELECT lod1_multi_surface_id, lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id,
                     lod1_solid_id, lod2_solid_id, lod3_solid_id, lod4_solid_id FROM %I.bridge WHERE id = %L', schema_name, brd_id)   
                     INTO brd_lod1_msrf_id, brd_lod2_msrf_id, brd_lod3_msrf_id, brd_lod4_msrf_id,
-                         brd_lod1_solid_id, brd_lod1_solid_id, brd_lod1_solid_id, brd_lod1_solid_id;
+                         brd_lod1_solid_id, brd_lod2_solid_id, brd_lod3_solid_id, brd_lod4_solid_id;
 
   --// DELETE BRIDGE //--
   EXECUTE format('DELETE FROM %I.bridge WHERE id = %L', schema_name, brd_id);
@@ -1889,7 +1889,7 @@ BEGIN
   EXECUTE format('SELECT lod1_multi_surface_id, lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id,
                     lod1_solid_id , lod2_solid_id, lod3_solid_id, lod4_solid_id FROM %I.tunnel WHERE id = %L', schema_name, tun_id) 
                     INTO tun_lod1_msrf_id, tun_lod2_msrf_id, tun_lod3_msrf_id, tun_lod4_msrf_id,
-                         tun_lod1_solid_id, tun_lod1_solid_id, tun_lod1_solid_id, tun_lod1_solid_id;
+                         tun_lod1_solid_id, tun_lod2_solid_id, tun_lod3_solid_id, tun_lod4_solid_id;
 
   --// DELETE TUNNEL //--
   EXECUTE format('DELETE FROM %I.tunnel WHERE id = %L', schema_name, tun_id);
