@@ -31,9 +31,6 @@ SET check_function_bodies = false;
 CREATE SCHEMA citydb;
 -- ddl-end --
 
-SET search_path TO pg_catalog,public,citydb;
--- ddl-end --
-
 -- object: postgis | type: EXTENSION --
 -- DROP EXTENSION postgis CASCADE;
 CREATE EXTENSION postgis
@@ -4051,11 +4048,11 @@ CREATE TABLE citydb.cityobject(
 	name_codespace character varying(4000),
 	description character varying(4000),
 	envelope geometry(POLYGONZ),
-	creation_date timestamp NOT NULL,
-	termination_date timestamp,
+	creation_date timestamp with time zone,
+	termination_date timestamp with time zone,
 	relative_to_terrain character varying(256),
 	relative_to_water character varying(256),
-	last_modification_date timestamp,
+	last_modification_date timestamp with time zone,
 	updating_person character varying(256),
 	reason_for_update character varying(4000),
 	lineage character varying(256),
@@ -4342,9 +4339,9 @@ CREATE TABLE citydb.citymodel(
 	name_codespace character varying(4000),
 	description character varying(4000),
 	envelope geometry(POLYGONZ),
-	creation_date timestamp,
-	termination_date timestamp,
-	last_modification_date timestamp,
+	creation_date timestamp with time zone,
+	termination_date timestamp with time zone,
+	last_modification_date timestamp with time zone,
 	updating_person character varying(256),
 	reason_for_update character varying(4000),
 	lineage character varying(256),
@@ -4374,7 +4371,7 @@ CREATE TABLE citydb.cityobject_genericattrib(
 	intval integer,
 	realval real,
 	urival character varying(4000),
-	dateval date,
+	dateval timestamp with time zone,
 	geomval geometry(GEOMETRYZ),
 	blobval bytea,
 	unit character varying(4000),

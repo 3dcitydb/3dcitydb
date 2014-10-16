@@ -6,7 +6,6 @@
       <name>ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -49,7 +48,6 @@
       <name>PARENT_GENATTRIB_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -59,7 +57,6 @@
       <name>ROOT_GENATTRIB_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -75,7 +72,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -124,7 +120,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -173,7 +168,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -216,7 +210,6 @@
       <name>INTVAL</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -259,7 +252,6 @@
       <name>REALVAL</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -290,7 +282,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -332,28 +323,15 @@
     <column>
       <name>DATEVAL</name>
       <dataTypeUsage>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
-          <typeName>DATE</typeName>
-        </dataTypeID>
-        <properties>
+        <attributeValues>
           <entry>
-            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-            <value class="oracle.javatools.db.ReferenceID">
-              <parent class="oracle.javatools.db.ReferenceID">
-                <name>DATEVAL</name>
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>CITYOBJECT_GENERICATTRIB</name>
-                  <identifier class="java.math.BigDecimal">115593</identifier>
-                  <schemaName>YAO</schemaName>
-                  <type>TABLE</type>
-                </parent>
-                <type>COLUMN</type>
-              </parent>
-              <type>DataTypeUsage</type>
-            </value>
+            <key>time_zone</key>
+            <value class="java.lang.String">TIME ZONE</value>
           </entry>
-        </properties>
+        </attributeValues>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <typeName>TIMESTAMP</typeName>
+        </dataTypeID>
       </dataTypeUsage>
       <notNull>false</notNull>
       <properties>
@@ -376,7 +354,6 @@
       <name>GEOMVAL</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle8i</providerClass>
           <schemaName>MDSYS</schemaName>
           <typeName>SDO_GEOMETRY</typeName>
         </dataTypeID>
@@ -420,7 +397,6 @@
       <name>BLOBVAL</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle8</providerClass>
           <typeName>BLOB</typeName>
         </dataTypeID>
         <properties>
@@ -492,7 +468,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -508,7 +483,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -518,7 +492,6 @@
       <name>SURFACE_GEOMETRY_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -561,7 +534,6 @@
       <name>CITYOBJECT_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -793,7 +765,7 @@
     </constraint>
   </constraints>
   <indexes>
-    <indexe>
+    <index>
       <name>CITYOBJ_GENERICATTRIB_PK</name>
       <columnExpressions>
         <columnExpression>
@@ -842,8 +814,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>GENERICATTRIB_CITYOBJ_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -892,8 +864,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>GENERICATTRIB_GEOM_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -942,8 +914,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>GENERICATTRIB_PARENT_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -955,8 +927,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>GENERICATTRIB_ROOT_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -968,7 +940,7 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
+    </index>
   </indexes>
   <properties>
     <entry>

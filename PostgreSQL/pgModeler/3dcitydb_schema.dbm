@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.7.2" last-position="0,0" last-zoom="1">
+<dbmodel pgmodeler-ver="0.7.2" last-position="0,0" last-zoom="0.0999998">
 <database name="3DCityDB_v3.0" encoding="UTF8">
 	<role name="postgres"/>
 	<tablespace name="pg_default"/>
@@ -12,7 +12,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <schema name="public" protected="true" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
-<extension name="postgis" cur-version="2.1.1">
+<extension name="postgis">
 	<schema name="public"/>
 	<comment><![CDATA[PostGIS geometry, geography, and raster spatial types and functions]]></comment>
 </extension>
@@ -4487,11 +4487,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="envelope">
 		<type name="geometry" spatial-type="POLYGON" variation="1" srid="0"/>
 	</column>
-	<column name="creation_date" not-null="true">
-		<type name="timestamp"/>
+	<column name="creation_date">
+		<type name="timestamp" with-timezone="true"/>
 	</column>
 	<column name="termination_date">
-		<type name="timestamp"/>
+		<type name="timestamp" with-timezone="true"/>
 	</column>
 	<column name="relative_to_terrain">
 		<type name="character varying" length="256"/>
@@ -4500,7 +4500,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="256"/>
 	</column>
 	<column name="last_modification_date">
-		<type name="timestamp"/>
+		<type name="timestamp" with-timezone="true"/>
 	</column>
 	<column name="updating_person">
 		<type name="character varying" length="256"/>
@@ -4888,13 +4888,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="POLYGON" variation="1" srid="0"/>
 	</column>
 	<column name="creation_date">
-		<type name="timestamp"/>
+		<type name="timestamp" with-timezone="true"/>
 	</column>
 	<column name="termination_date">
-		<type name="timestamp"/>
+		<type name="timestamp" with-timezone="true"/>
 	</column>
 	<column name="last_modification_date">
-		<type name="timestamp"/>
+		<type name="timestamp" with-timezone="true"/>
 	</column>
 	<column name="updating_person">
 		<type name="character varying" length="256"/>
@@ -4948,7 +4948,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="dateval">
-		<type name="date"/>
+		<type name="timestamp" with-timezone="true"/>
 	</column>
 	<column name="geomval">
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
@@ -6381,781 +6381,817 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_cityobject_member_cityobject" type="relfk"
 	 src-table="citydb.cityobject_member"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_cityobject_member_citymodel" type="relfk"
 	 src-table="citydb.cityobject_member"
 	 dst-table="citydb.citymodel"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_generalization_cityobject" type="relfk"
 	 src-table="citydb.generalization"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_cityobjectgroup_cityobject" type="relfk"
 	 src-table="citydb.cityobjectgroup"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_cityobjectgroup_surface_geometry" type="relfk"
 	 src-table="citydb.cityobjectgroup"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_group_to_cityobject_cityobject" type="relfk"
 	 src-table="citydb.group_to_cityobject"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_group_to_cityobject_cityobjectgroup" type="relfk"
 	 src-table="citydb.group_to_cityobject"
 	 dst-table="citydb.cityobjectgroup"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_objectclass_objectclass" type="relfk"
 	 src-table="citydb.objectclass"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true">
+	<line>
+		<position x="2904.17" y="1201.12"/>
+	<position x="2904.17" y="1155.84"/>
+	<position x="2793.5" y="1155.84"/>
+	</line>
+</relationship>
 
 <relationship name="rel_city_furniture_cityobject" type="relfk"
 	 src-table="citydb.city_furniture"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_city_furniture_surface_geometry" type="relfk"
 	 src-table="citydb.city_furniture"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_city_furniture_implicit_geometry" type="relfk"
 	 src-table="citydb.city_furniture"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_generic_cityobject_cityobject" type="relfk"
 	 src-table="citydb.generic_cityobject"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_generic_cityobject_surface_geometry" type="relfk"
 	 src-table="citydb.generic_cityobject"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_generic_cityobject_implicit_geometry" type="relfk"
 	 src-table="citydb.generic_cityobject"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_address_to_building_address" type="relfk"
 	 src-table="citydb.address_to_building"
 	 dst-table="citydb.address"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_address_to_building_building" type="relfk"
 	 src-table="citydb.address_to_building"
 	 dst-table="citydb.building"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_building_cityobject" type="relfk"
 	 src-table="citydb.building"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_building_building" type="relfk"
 	 src-table="citydb.building"
 	 dst-table="citydb.building"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true">
+	<line>
+		<position x="4211.74" y="4184.65"/>
+	<position x="4211.74" y="3821.37"/>
+	<position x="4055.41" y="3821.37"/>
+	</line>
+</relationship>
 
 <relationship name="rel_building_surface_geometry" type="relfk"
 	 src-table="citydb.building"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_building_furniture_cityobject" type="relfk"
 	 src-table="citydb.building_furniture"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_building_furniture_room" type="relfk"
 	 src-table="citydb.building_furniture"
 	 dst-table="citydb.room"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_building_furniture_surface_geometry" type="relfk"
 	 src-table="citydb.building_furniture"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_building_furniture_implicit_geometry" type="relfk"
 	 src-table="citydb.building_furniture"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_building_installation_cityobject" type="relfk"
 	 src-table="citydb.building_installation"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_building_installation_objectclass" type="relfk"
 	 src-table="citydb.building_installation"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_building_installation_building" type="relfk"
 	 src-table="citydb.building_installation"
 	 dst-table="citydb.building"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_building_installation_room" type="relfk"
 	 src-table="citydb.building_installation"
 	 dst-table="citydb.room"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_building_installation_surface_geometry" type="relfk"
 	 src-table="citydb.building_installation"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_building_installation_implicit_geometry" type="relfk"
 	 src-table="citydb.building_installation"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_opening_cityobject" type="relfk"
 	 src-table="citydb.opening"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_opening_objectclass" type="relfk"
 	 src-table="citydb.opening"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_opening_address" type="relfk"
 	 src-table="citydb.opening"
 	 dst-table="citydb.address"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_opening_surface_geometry" type="relfk"
 	 src-table="citydb.opening"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_opening_implicit_geometry" type="relfk"
 	 src-table="citydb.opening"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_opening_to_them_surface_opening" type="relfk"
 	 src-table="citydb.opening_to_them_surface"
 	 dst-table="citydb.opening"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_opening_to_them_surface_thematic_surface" type="relfk"
 	 src-table="citydb.opening_to_them_surface"
 	 dst-table="citydb.thematic_surface"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_room_cityobject" type="relfk"
 	 src-table="citydb.room"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_room_building" type="relfk"
 	 src-table="citydb.room"
 	 dst-table="citydb.building"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_room_surface_geometry" type="relfk"
 	 src-table="citydb.room"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_thematic_surface_cityobject" type="relfk"
 	 src-table="citydb.thematic_surface"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_thematic_surface_objectclass" type="relfk"
 	 src-table="citydb.thematic_surface"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_thematic_surface_building" type="relfk"
 	 src-table="citydb.thematic_surface"
 	 dst-table="citydb.building"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_thematic_surface_room" type="relfk"
 	 src-table="citydb.thematic_surface"
 	 dst-table="citydb.room"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_thematic_surface_building_installation" type="relfk"
 	 src-table="citydb.thematic_surface"
 	 dst-table="citydb.building_installation"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_thematic_surface_surface_geometry" type="relfk"
 	 src-table="citydb.thematic_surface"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_textureparam_surface_geometry" type="relfk"
 	 src-table="citydb.textureparam"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_textureparam_surface_data" type="relfk"
 	 src-table="citydb.textureparam"
 	 dst-table="citydb.surface_data"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_appear_to_surface_data_surface_data" type="relfk"
 	 src-table="citydb.appear_to_surface_data"
 	 dst-table="citydb.surface_data"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_appear_to_surface_data_appearance" type="relfk"
 	 src-table="citydb.appear_to_surface_data"
 	 dst-table="citydb.appearance"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_breakline_relief_relief_component" type="relfk"
 	 src-table="citydb.breakline_relief"
 	 dst-table="citydb.relief_component"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_masspoint_relief_relief_component" type="relfk"
 	 src-table="citydb.masspoint_relief"
 	 dst-table="citydb.relief_component"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_relief_component_cityobject" type="relfk"
 	 src-table="citydb.relief_component"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_relief_component_objectclass" type="relfk"
 	 src-table="citydb.relief_component"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_relief_feat_to_rel_comp_relief_component" type="relfk"
 	 src-table="citydb.relief_feat_to_rel_comp"
 	 dst-table="citydb.relief_component"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_relief_feat_to_rel_comp_relief_feature" type="relfk"
 	 src-table="citydb.relief_feat_to_rel_comp"
 	 dst-table="citydb.relief_feature"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_relief_feature_cityobject" type="relfk"
 	 src-table="citydb.relief_feature"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tin_relief_relief_component" type="relfk"
 	 src-table="citydb.tin_relief"
 	 dst-table="citydb.relief_component"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tin_relief_surface_geometry" type="relfk"
 	 src-table="citydb.tin_relief"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_transportation_complex_objectclass" type="relfk"
 	 src-table="citydb.transportation_complex"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_transportation_complex_cityobject" type="relfk"
 	 src-table="citydb.transportation_complex"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_transportation_complex_surface_geometry" type="relfk"
 	 src-table="citydb.transportation_complex"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_traffic_area_cityobject" type="relfk"
 	 src-table="citydb.traffic_area"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_traffic_area_objectclass" type="relfk"
 	 src-table="citydb.traffic_area"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_traffic_area_surface_geometry" type="relfk"
 	 src-table="citydb.traffic_area"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_traffic_area_transportation_complex" type="relfk"
 	 src-table="citydb.traffic_area"
 	 dst-table="citydb.transportation_complex"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_land_use_cityobject" type="relfk"
 	 src-table="citydb.land_use"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_land_use_surface_geometry" type="relfk"
 	 src-table="citydb.land_use"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_plant_cover_cityobject" type="relfk"
 	 src-table="citydb.plant_cover"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_plant_cover_surface_geometry" type="relfk"
 	 src-table="citydb.plant_cover"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_solitary_vegetat_object_cityobject" type="relfk"
 	 src-table="citydb.solitary_vegetat_object"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_solitary_vegetat_object_surface_geometry" type="relfk"
 	 src-table="citydb.solitary_vegetat_object"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_solitary_vegetat_object_implicit_geometry" type="relfk"
 	 src-table="citydb.solitary_vegetat_object"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_waterbody_cityobject" type="relfk"
 	 src-table="citydb.waterbody"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_waterbody_surface_geometry" type="relfk"
 	 src-table="citydb.waterbody"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_waterbod_to_waterbnd_srf_waterboundary_surface" type="relfk"
 	 src-table="citydb.waterbod_to_waterbnd_srf"
 	 dst-table="citydb.waterboundary_surface"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_waterbod_to_waterbnd_srf_waterbody" type="relfk"
 	 src-table="citydb.waterbod_to_waterbnd_srf"
 	 dst-table="citydb.waterbody"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_waterboundary_surface_cityobject" type="relfk"
 	 src-table="citydb.waterboundary_surface"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_waterboundary_surface_objectclass" type="relfk"
 	 src-table="citydb.waterboundary_surface"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_waterboundary_surface_surface_geometry" type="relfk"
 	 src-table="citydb.waterboundary_surface"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_raster_relief_relief_component" type="relfk"
 	 src-table="citydb.raster_relief"
 	 dst-table="citydb.relief_component"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_raster_relief_grid_coverage" type="relfk"
 	 src-table="citydb.raster_relief"
 	 dst-table="citydb.grid_coverage"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_cityobject" type="relfk"
 	 src-table="citydb.tunnel"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_tunnel" type="relfk"
 	 src-table="citydb.tunnel"
 	 dst-table="citydb.tunnel"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true">
+	<line>
+		<position x="1755.18" y="3558.65"/>
+	<position x="1755.18" y="3279.37"/>
+	<position x="1608.85" y="3279.37"/>
+	</line>
+</relationship>
 
 <relationship name="rel_tunnel_surface_geometry" type="relfk"
 	 src-table="citydb.tunnel"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_open_to_them_srf_tunnel_opening" type="relfk"
 	 src-table="citydb.tunnel_open_to_them_srf"
 	 dst-table="citydb.tunnel_opening"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_open_to_them_srf_tunnel_thematic_surface" type="relfk"
 	 src-table="citydb.tunnel_open_to_them_srf"
 	 dst-table="citydb.tunnel_thematic_surface"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_hollow_space_cityobject" type="relfk"
 	 src-table="citydb.tunnel_hollow_space"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_hollow_space_tunnel" type="relfk"
 	 src-table="citydb.tunnel_hollow_space"
 	 dst-table="citydb.tunnel"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_hollow_space_surface_geometry" type="relfk"
 	 src-table="citydb.tunnel_hollow_space"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_thematic_surface_cityobject" type="relfk"
 	 src-table="citydb.tunnel_thematic_surface"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_thematic_surface_objectclass" type="relfk"
 	 src-table="citydb.tunnel_thematic_surface"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_thematic_surface_tunnel" type="relfk"
 	 src-table="citydb.tunnel_thematic_surface"
 	 dst-table="citydb.tunnel"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_thematic_surface_tunnel_hollow_space" type="relfk"
 	 src-table="citydb.tunnel_thematic_surface"
 	 dst-table="citydb.tunnel_hollow_space"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_thematic_surface_tunnel_installation" type="relfk"
 	 src-table="citydb.tunnel_thematic_surface"
 	 dst-table="citydb.tunnel_installation"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_thematic_surface_surface_geometry" type="relfk"
 	 src-table="citydb.tunnel_thematic_surface"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_opening_cityobject" type="relfk"
 	 src-table="citydb.tunnel_opening"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_opening_objectclass" type="relfk"
 	 src-table="citydb.tunnel_opening"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_opening_surface_geometry" type="relfk"
 	 src-table="citydb.tunnel_opening"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_opening_implicit_geometry" type="relfk"
 	 src-table="citydb.tunnel_opening"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_installation_cityobject" type="relfk"
 	 src-table="citydb.tunnel_installation"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_installation_objectclass" type="relfk"
 	 src-table="citydb.tunnel_installation"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_installation_tunnel" type="relfk"
 	 src-table="citydb.tunnel_installation"
 	 dst-table="citydb.tunnel"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_installation_tunnel_hollow_space" type="relfk"
 	 src-table="citydb.tunnel_installation"
 	 dst-table="citydb.tunnel_hollow_space"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_installation_surface_geometry" type="relfk"
 	 src-table="citydb.tunnel_installation"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_installation_implicit_geometry" type="relfk"
 	 src-table="citydb.tunnel_installation"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_furniture_cityobject" type="relfk"
 	 src-table="citydb.tunnel_furniture"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_furniture_tunnel_hollow_space" type="relfk"
 	 src-table="citydb.tunnel_furniture"
 	 dst-table="citydb.tunnel_hollow_space"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_furniture_surface_geometry" type="relfk"
 	 src-table="citydb.tunnel_furniture"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_tunnel_furniture_implicit_geometry" type="relfk"
 	 src-table="citydb.tunnel_furniture"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_bridge" type="relfk"
 	 src-table="citydb.bridge"
 	 dst-table="citydb.bridge"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true">
+	<line>
+		<position x="5330.08" y="3929.65"/>
+	<position x="5330.08" y="3644.37"/>
+	<position x="5183.75" y="3644.37"/>
+	</line>
+</relationship>
 
 <relationship name="rel_bridge_surface_geometry" type="relfk"
 	 src-table="citydb.bridge"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_furniture_cityobject" type="relfk"
 	 src-table="citydb.bridge_furniture"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_furniture_bridge_room" type="relfk"
 	 src-table="citydb.bridge_furniture"
 	 dst-table="citydb.bridge_room"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_furniture_surface_geometry" type="relfk"
 	 src-table="citydb.bridge_furniture"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_furniture_implicit_geometry" type="relfk"
 	 src-table="citydb.bridge_furniture"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_installation_cityobject" type="relfk"
 	 src-table="citydb.bridge_installation"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_installation_objectclass" type="relfk"
 	 src-table="citydb.bridge_installation"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_installation_bridge" type="relfk"
 	 src-table="citydb.bridge_installation"
 	 dst-table="citydb.bridge"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_installation_bridge_room" type="relfk"
 	 src-table="citydb.bridge_installation"
 	 dst-table="citydb.bridge_room"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_installation_surface_geometry" type="relfk"
 	 src-table="citydb.bridge_installation"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_installation_implicit_geometry" type="relfk"
 	 src-table="citydb.bridge_installation"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_opening_cityobject" type="relfk"
 	 src-table="citydb.bridge_opening"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_opening_objectclass" type="relfk"
 	 src-table="citydb.bridge_opening"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_opening_address" type="relfk"
 	 src-table="citydb.bridge_opening"
 	 dst-table="citydb.address"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_opening_surface_geometry" type="relfk"
 	 src-table="citydb.bridge_opening"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_opening_implicit_geometry" type="relfk"
 	 src-table="citydb.bridge_opening"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_open_to_them_srf_bridge_opening" type="relfk"
 	 src-table="citydb.bridge_open_to_them_srf"
 	 dst-table="citydb.bridge_opening"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_open_to_them_srf_bridge_thematic_surface" type="relfk"
 	 src-table="citydb.bridge_open_to_them_srf"
 	 dst-table="citydb.bridge_thematic_surface"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_room_cityobject" type="relfk"
 	 src-table="citydb.bridge_room"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_room_bridge" type="relfk"
 	 src-table="citydb.bridge_room"
 	 dst-table="citydb.bridge"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_room_surface_geometry" type="relfk"
 	 src-table="citydb.bridge_room"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_thematic_surface_cityobject" type="relfk"
 	 src-table="citydb.bridge_thematic_surface"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_thematic_surface_objectclass" type="relfk"
 	 src-table="citydb.bridge_thematic_surface"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_thematic_surface_bridge" type="relfk"
 	 src-table="citydb.bridge_thematic_surface"
 	 dst-table="citydb.bridge"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_thematic_surface_bridge_room" type="relfk"
 	 src-table="citydb.bridge_thematic_surface"
 	 dst-table="citydb.bridge_room"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_thematic_surface_bridge_installation" type="relfk"
 	 src-table="citydb.bridge_thematic_surface"
 	 dst-table="citydb.bridge_installation"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_thematic_surface_bridge_constr_element" type="relfk"
 	 src-table="citydb.bridge_thematic_surface"
 	 dst-table="citydb.bridge_constr_element"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_thematic_surface_surface_geometry" type="relfk"
 	 src-table="citydb.bridge_thematic_surface"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_constr_element_cityobject" type="relfk"
 	 src-table="citydb.bridge_constr_element"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_constr_element_bridge" type="relfk"
 	 src-table="citydb.bridge_constr_element"
 	 dst-table="citydb.bridge"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_constr_element_surface_geometry" type="relfk"
 	 src-table="citydb.bridge_constr_element"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_bridge_constr_element_implicit_geometry" type="relfk"
 	 src-table="citydb.bridge_constr_element"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_address_to_bridge_address" type="relfk"
 	 src-table="citydb.address_to_bridge"
 	 dst-table="citydb.address"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_address_to_bridge_bridge" type="relfk"
 	 src-table="citydb.address_to_bridge"
 	 dst-table="citydb.bridge"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_cityobject_objectclass" type="relfk"
 	 src-table="citydb.cityobject"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_appearance_cityobject" type="relfk"
 	 src-table="citydb.appearance"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_appearance_citymodel" type="relfk"
 	 src-table="citydb.appearance"
 	 dst-table="citydb.citymodel"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_implicit_geometry_surface_geometry" type="relfk"
 	 src-table="citydb.implicit_geometry"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_surface_geometry_surface_geometry" type="relfk"
 	 src-table="citydb.surface_geometry"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true">
+	<line>
+		<position x="4202.58" y="1589.48"/>
+	<position x="4202.58" y="1454.2"/>
+	<position x="4082.58" y="1454.2"/>
+	</line>
+</relationship>
 
 <relationship name="rel_surface_geometry_cityobject" type="relfk"
 	 src-table="citydb.surface_geometry"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_surface_data_tex_image" type="relfk"
 	 src-table="citydb.surface_data"
 	 dst-table="citydb.tex_image"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_surface_data_objectclass" type="relfk"
 	 src-table="citydb.surface_data"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_cityobject_genericattrib_cityobject_genericattrib" type="relfk"
 	 src-table="citydb.cityobject_genericattrib"
 	 dst-table="citydb.cityobject_genericattrib"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true">
+	<line>
+		<position x="2680.33" y="511.947"/>
+	<position x="2680.33" y="370.667"/>
+	<position x="2546" y="370.667"/>
+	</line>
+</relationship>
 
 <relationship name="rel_cityobject_genericattrib_surface_geometry" type="relfk"
 	 src-table="citydb.cityobject_genericattrib"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_cityobject_genericattrib_cityobject" type="relfk"
 	 src-table="citydb.cityobject_genericattrib"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 <relationship name="rel_external_reference_cityobject" type="relfk"
 	 src-table="citydb.external_reference"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="true" dst-required="true"/>
 
 </dbmodel>

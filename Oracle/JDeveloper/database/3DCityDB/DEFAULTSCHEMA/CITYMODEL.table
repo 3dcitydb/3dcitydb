@@ -6,7 +6,6 @@
       <name>ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -55,7 +54,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -104,7 +102,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -153,7 +150,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -202,7 +198,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -245,7 +240,6 @@
       <name>ENVELOPE</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle8i</providerClass>
           <schemaName>MDSYS</schemaName>
           <typeName>SDO_GEOMETRY</typeName>
         </dataTypeID>
@@ -288,8 +282,13 @@
     <column>
       <name>CREATION_DATE</name>
       <dataTypeUsage>
+        <attributeValues>
+          <entry>
+            <key>time_zone</key>
+            <value class="java.lang.String">TIME ZONE</value>
+          </entry>
+        </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>TIMESTAMP</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -313,8 +312,13 @@
     <column>
       <name>TERMINATION_DATE</name>
       <dataTypeUsage>
+        <attributeValues>
+          <entry>
+            <key>time_zone</key>
+            <value class="java.lang.String">TIME ZONE</value>
+          </entry>
+        </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>TIMESTAMP</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -338,8 +342,13 @@
     <column>
       <name>LAST_MODIFICATION_DATE</name>
       <dataTypeUsage>
+        <attributeValues>
+          <entry>
+            <key>time_zone</key>
+            <value class="java.lang.String">TIME ZONE</value>
+          </entry>
+        </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>TIMESTAMP</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -370,7 +379,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -419,7 +427,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -468,7 +475,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -556,7 +562,7 @@
     </constraint>
   </constraints>
   <indexes>
-    <indexe>
+    <index>
       <name>CITYMODEL_ENVELOPE_SPX</name>
       <columnExpressions>
         <columnExpression>
@@ -591,8 +597,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>CITYMODEL_INX</name>
       <columnExpressions>
         <columnExpression>
@@ -604,8 +610,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>CITYMODEL_PK</name>
       <columnExpressions>
         <columnExpression>
@@ -654,7 +660,7 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
-    </indexe>
+    </index>
   </indexes>
   <properties>
     <entry>
