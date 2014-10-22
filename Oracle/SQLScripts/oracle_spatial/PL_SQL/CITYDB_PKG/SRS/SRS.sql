@@ -143,7 +143,7 @@ AS
       internal_t_name := t_name;
     END IF;
 
-    is_valid := geodb_idx.index_status(t_name, c_name) = 'VALID';
+    is_valid := citydb_idx.index_status(t_name, c_name) = 'VALID';
 
     -- update metadata as the index was switched off before transaction
     EXECUTE IMMEDIATE 'UPDATE USER_SDO_GEOM_METADATA SET srid = :1 WHERE table_name = :2 AND column_name = :3'
@@ -164,7 +164,7 @@ AS
       END IF;
 
       -- drop spatial index
-      sql_err_code := geodb_idx.drop_index(idx, is_versioned);
+      sql_err_code := citydb_idx.drop_index(idx, is_versioned);
 
       EXCEPTION
         WHEN NO_DATA_FOUND THEN
@@ -184,7 +184,7 @@ AS
 
     IF is_valid THEN
       -- create spatial index (incl. new spatial metadata)
-      sql_err_code := geodb_idx.create_index(idx, is_versioned);
+      sql_err_code := citydb_idx.create_index(idx, is_versioned);
     END IF;
   END;
 
