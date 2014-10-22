@@ -34,9 +34,9 @@ AS
   FUNCTION transform_or_null(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
   FUNCTION is_coord_ref_sys_3d(srid NUMBER) RETURN NUMBER;
   FUNCTION is_db_coord_ref_sys_3d RETURN NUMBER;
-  PROCEDURE change_schema_srid(schema_srid NUMBER, schema_gml_srs_name VARCHAR2);
+  PROCEDURE change_schema_srid(schema_srid NUMBER, schema_gml_srs_name VARCHAR2, transform NUMBER := 0);
   FUNCTION get_dim(t_name VARCHAR, c_name VARCHAR) RETURN NUMBER;
-  PROCEDURE change_column_srid(t_name VARCHAR2, c_name VARCHAR2, dim NUMBER, schema_srid NUMBER);
+  PROCEDURE change_column_srid(t_name VARCHAR2, c_name VARCHAR2, dim NUMBER, schema_srid NUMBER, transform NUMBER := 0);
 END citydb_srs;
 /
 
@@ -119,12 +119,14 @@ AS
   * @param c_name name of the column
   * @param dim dimension of spatial index
   * @param schema_srid the SRID of the coordinate system to be further used in the database
+  * @param transform 1 if existing data shall be transformed, 0 if not
   ******************************************************************/
   PROCEDURE change_column_srid( 
     t_name VARCHAR2, 
     c_name VARCHAR2,
     dim NUMBER,
-    schema_srid NUMBER
+    schema_srid NUMBER,
+	transform NUMBER := 0
     )
   IS
     internal_t_name VARCHAR2(30);
@@ -141,37 +143,48 @@ AS
       internal_t_name := t_name;
     END IF;
 
-    is_valid := citydb_idx.index_status(t_name, c_name) = 'VALID';
+    is_valid := geodb_idx.index_status(t_name, c_name) = 'VALID';
 
-    IF NOT is_valid THEN
-      -- only update metadata as the index was switched off before transaction
-      EXECUTE IMMEDIATE 'UPDATE USER_SDO_GEOM_METADATA SET srid = :1 WHERE table_name = :2 AND column_name = :3'
-                           USING schema_srid, t_name, c_name;
-      COMMIT;
-    ELSE  
-      -- get name of spatial index
-      BEGIN
-        EXECUTE IMMEDIATE 'SELECT index_name FROM user_ind_columns 
-                             WHERE table_name = upper(:1) AND column_name = upper(:2)'
-                             INTO idx_name USING t_name, c_name;
+    -- update metadata as the index was switched off before transaction
+    EXECUTE IMMEDIATE 'UPDATE USER_SDO_GEOM_METADATA SET srid = :1 WHERE table_name = :2 AND column_name = :3'
+                         USING schema_srid, t_name, c_name;
+    COMMIT;
+    
+    -- get name of spatial index
+    BEGIN
+      EXECUTE IMMEDIATE 'SELECT index_name FROM user_ind_columns 
+                           WHERE table_name = upper(:1) AND column_name = upper(:2)'
+                           INTO idx_name USING t_name, c_name;
 
-        -- create INDEX_OBJ
-        IF dim = 3 THEN
-          idx := INDEX_OBJ.construct_spatial_3d(idx_name, internal_t_name, c_name);
-        ELSE
-          idx := INDEX_OBJ.construct_spatial_2d(idx_name, internal_t_name, c_name);
-        END IF;
-
-        EXCEPTION
-          WHEN NO_DATA_FOUND THEN
-            RETURN;
-      END;
+      -- create INDEX_OBJ
+      IF dim = 3 THEN
+        idx := INDEX_OBJ.construct_spatial_3d(idx_name, internal_t_name, c_name);
+      ELSE
+        idx := INDEX_OBJ.construct_spatial_2d(idx_name, internal_t_name, c_name);
+      END IF;
 
       -- drop spatial index
-      sql_err_code := citydb_idx.drop_index(idx, is_versioned);
+      sql_err_code := geodb_idx.drop_index(idx, is_versioned);
 
+      EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+          is_valid := FALSE;
+          -- cleanup
+          EXECUTE IMMEDIATE 'DELETE FROM USER_SDO_GEOM_METADATA WHERE table_name = :1 AND column_name = :2'
+                               USING t_name, c_name;
+    END;
+
+    IF transform <> 0 THEN
+      -- coordinates of existent geometries will be transformed
+      EXECUTE IMMEDIATE 'UPDATE ' || t_name || ' SET ' || c_name || ' = SDO_CS.TRANSFORM( ' || c_name || ', :1)' USING schema_srid;
+    ELSE
+      -- only srid paramter of geometries is updated
+      EXECUTE IMMEDIATE 'UPDATE ' || t_name || ' t SET t.' || c_name || '.SDO_SRID = :1 WHERE t.' || c_name || ' IS NOT NULL' USING schema_srid;
+    END IF;
+
+    IF is_valid THEN
       -- create spatial index (incl. new spatial metadata)
-      sql_err_code := citydb_idx.create_index(idx, is_versioned);
+      sql_err_code := geodb_idx.create_index(idx, is_versioned);
     END IF;
   END;
 
@@ -180,10 +193,12 @@ AS
   *
   * @param schema_srid the SRID of the coordinate system to be further used in the database
   * @param schema_gml_srs_name the GML_SRS_NAME of the coordinate system to be further used in the database
+  * @param transform 1 if existing data shall be transformed, 0 if not
   ******************************************************************/
   PROCEDURE change_schema_srid(
     schema_srid NUMBER, 
-	schema_gml_srs_name VARCHAR2
+	schema_gml_srs_name VARCHAR2,
+	transform NUMBER := 0
     )
   IS
   BEGIN
@@ -194,7 +209,7 @@ AS
     -- change srid of each spatially enabled table
     FOR rec IN (SELECT table_name AS t, column_name AS c, get_dim(table_name, column_name) AS dim
                   FROM user_sdo_geom_metadata) LOOP
-      change_column_srid(rec.t, rec.c, rec.dim, schema_srid);
+      change_column_srid(rec.t, rec.c, rec.dim, schema_srid, transform);
     END LOOP;
   END;
   

@@ -24,7 +24,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                          | Author
--- 1.0.0     2014-10-10   new script for 3DCityDB V3             FKun
+-- 1.0.0     2014-10-22   new script for 3DCityDB V3             FKun
 --                                                               CNag
 --
 
@@ -32,8 +32,8 @@
 * CONTENT
 *
 * FUNCTIONS:
-*   change_column_srid(t_name TEXT, c_name TEXT, dim INTEGER, schema_srid INTEGER, s_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
-*   change_schema_srid(schema_srid INTEGER, schema_gml_srs_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
+*   change_column_srid(t_name TEXT, c_name TEXT, dim INTEGER, schema_srid INTEGER, transform INTEGER DEFAULT 0, geom_type TEXT DEFAULT 'GEOMETRY', s_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
+*   change_schema_srid(schema_srid INTEGER, schema_gml_srs_name TEXT, transform INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   check_srid(srsno INTEGER DEFAULT 0) RETURNS TEXT
 *   is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER
 *   is_db_coord_ref_sys_3d() RETURNS INTEGER
@@ -137,6 +137,7 @@ LANGUAGE plpgsql;
 * @param c_name name of spatial column
 * @param dim dimension of geometry
 * @param schema_srid the SRID of the coordinate system to be further used in the database
+* @param transform 1 if existing data shall be transformed, 0 if not
 * @param s_name name of schema
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.change_column_srid(
@@ -144,11 +145,14 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_column_srid(
   c_name TEXT,
   dim INTEGER,
   schema_srid INTEGER,
+  transform INTEGER DEFAULT 0,
+  geom_type TEXT DEFAULT 'GEOMETRY',
   s_name TEXT DEFAULT 'citydb'
   ) RETURNS SETOF VOID AS 
 $$
 DECLARE
   idx_name TEXT;
+  geometry_type TEXT;
 BEGIN
   -- check if a spatial index is defined for the column
   EXECUTE 'SELECT pgc_i.relname AS idx_name 
@@ -168,19 +172,31 @@ BEGIN
   IF idx_name IS NOT NULL THEN 
     -- drop spatial index if exists
     EXECUTE format('DROP INDEX %I.%I', s_name, idx_name);
+  END IF;
 
-    -- update geometry SRID
-    PERFORM UpdateGeometrySRID(s_name, t_name, c_name, schema_srid);
+  IF transform <> 0 THEN
+    -- construct correct geometry type
+    IF dim < 3 THEN
+      geometry_type := geom_type;
+    ELSE
+      geometry_type := geom_type || 'Z';
+    END IF;
 
+    -- coordinates of existent geometries will be transformed
+    EXECUTE format('ALTER TABLE %I.%I ALTER COLUMN %I TYPE geometry(%I,%L) USING ST_Transform(%I,%L)',
+                      s_name, t_name, c_name, geometry_type, schema_srid, c_name, schema_srid);
+  ELSE
+    -- only metadata of geometry columns is updated, coordinates keep unchanged
+    PERFORM UpdateGeometrySRID(s_name, t_name, c_name, db_srid);
+  END IF;
+
+  IF idx_name IS NOT NULL THEN 
     -- recreate spatial index again
     IF dim < 3 THEN
       EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I)', idx_name, s_name, t_name, c_name);
     ELSE
       EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_nd )', idx_name, s_name, t_name, c_name);
     END IF;
-  ELSE
-    -- no spatial index defined for table, only update metadata and geometry SRID
-    PERFORM UpdateGeometrySRID(s_name, t_name, c_name, schema_srid);
   END IF;
 END;
 $$ 
@@ -194,11 +210,13 @@ LANGUAGE plpgsql;
 *                          further used in the database
 * @param db_gml_srs_name   the GML_SRS_NAME of the coordinate system 
 *                          to be further used in the database
+* @param transform         1 if existing data shall be transformed, 0 if not
 * @param schema name       name of schema
 *******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.change_schema_srid(
   schema_srid INTEGER, 
   schema_gml_srs_name TEXT,
+  transform INTEGER DEFAULT 0,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS SETOF VOID AS $$
 DECLARE
@@ -214,11 +232,11 @@ BEGIN
   END IF;
 
   -- change srid of each spatially enabled table
-  EXECUTE 'SELECT citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, f_table_schema) 
-             FROM geometry_columns WHERE f_table_schema = $2
+  EXECUTE 'SELECT citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $2, type, f_table_schema) 
+             FROM geometry_columns WHERE f_table_schema = $3
               AND f_geometry_column != ''implicit_geometry''
               AND f_geometry_column != ''relative_other_geom''
-              AND f_geometry_column != ''texture_coordinates''' USING schema_srid, schema_name;
+              AND f_geometry_column != ''texture_coordinates''' USING schema_srid, transform, schema_name;
 END;
 $$ 
 LANGUAGE plpgsql;

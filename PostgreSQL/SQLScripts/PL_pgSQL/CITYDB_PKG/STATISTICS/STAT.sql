@@ -61,7 +61,6 @@ BEGIN
                 END)
 			 || citydb_pkg.table_content(table_name, table_schema) AS t 
                 FROM information_schema.tables WHERE table_schema = $1 
-                AND table_name != ''spatial_ref_sys'' 
                 AND table_name != ''database_srs'' 
                 AND table_name != ''objectclass'' 
                 AND table_name NOT LIKE ''tmp_%''
