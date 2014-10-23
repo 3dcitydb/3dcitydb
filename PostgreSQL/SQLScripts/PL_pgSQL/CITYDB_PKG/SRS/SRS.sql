@@ -187,7 +187,7 @@ BEGIN
                       s_name, t_name, c_name, geometry_type, schema_srid, c_name, schema_srid);
   ELSE
     -- only metadata of geometry columns is updated, coordinates keep unchanged
-    PERFORM UpdateGeometrySRID(s_name, t_name, c_name, db_srid);
+    PERFORM UpdateGeometrySRID(s_name, t_name, c_name, schema_srid);
   END IF;
 
   IF idx_name IS NOT NULL THEN 
