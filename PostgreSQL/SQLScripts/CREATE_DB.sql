@@ -61,7 +61,7 @@ SET client_min_messages TO WARNING;
 \i CREATE_CITYDB_PKG.sql
 
 --// update search_path on database level
-ALTER DATABASE :DBNAME SET search_path TO citydb,citydb_pkg,public;
+ALTER DATABASE :"DBNAME" SET search_path TO citydb,citydb_pkg,public;
 
 \echo
 \echo '3DCityDB creation complete!'
@@ -74,6 +74,6 @@ ALTER DATABASE :DBNAME SET search_path TO citydb,citydb_pkg,public;
 SELECT citydb_pkg.check_srid(:SRS_NO);
 
 \echo 'Setting spatial reference system of 3DCityDB instance ...'
-INSERT INTO DATABASE_SRS(SRID,GML_SRS_NAME) VALUES (:SRS_NO,:'GMLSRSNAME');
+INSERT INTO citydb.DATABASE_SRS(SRID,GML_SRS_NAME) VALUES (:SRS_NO,:'GMLSRSNAME');
 SELECT citydb_pkg.change_schema_srid(:SRS_NO,:'GMLSRSNAME');
 \echo 'Done'
