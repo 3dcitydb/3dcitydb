@@ -25,41 +25,45 @@
 --
 -- ChangeLog:
 --
--- Version | Date       | Description                               | Author
--- 2.0.0     2014-10-10   extended for 3DCityDB V3                    GHud
---                                                                    FKun
---                                                                    CNag
--- 1.3.0     2013-08-08   extended to all thematic classes            GHud
---                                                                    FKun
--- 1.2.0     2012-02-22   minor changes                               CNag
--- 1.1.0     2011-02-11   moved to new DELETE functionality           CNag
--- 1.0.0     2008-09-10   release version                             ASta
+-- Version | Date       | Description                                    | Author
+-- 2.1.0     2014-11-10   delete with returning id of deleted features     FKun
+-- 2.0.0     2014-10-10   extended for 3DCityDB V3                         GHud
+--                                                                         FKun
+--                                                                         CNag
+-- 1.3.0     2013-08-08   extended to all thematic classes                 GHud
+--                                                                         FKun
+-- 1.2.0     2012-02-22   minor changes                                    CNag
+-- 1.1.0     2011-02-11   moved to new DELETE functionality                CNag
+-- 1.0.0     2008-09-10   release version                                  ASta
 --
 
 CREATE OR REPLACE PACKAGE citydb_delete_by_lineage
 AS
-  procedure delete_cityobjects(lineage_value varchar2, delete_members int := 0, schema_name varchar2 := USER);
-  procedure delete_buildings(lineage_value varchar2, schema_name varchar2 := USER);
-  procedure delete_bridges(lineage_value varchar2, schema_name varchar2 := USER);
-  procedure delete_tunnels(lineage_value varchar2, schema_name varchar2 := USER);
-  procedure delete_city_furnitures(lineage_value varchar2, schema_name varchar2 := USER);
-  procedure delete_generic_cityobjects(lineage_value varchar2, schema_name varchar2 := USER);
-  procedure delete_land_uses(lineage_value varchar2, schema_name varchar2 := USER);
-  procedure delete_plant_covers(lineage_value varchar2, schema_name varchar2 := USER);
-  procedure delete_solitary_veg_objs(lineage_value varchar2, schema_name varchar2 := USER);
-  procedure delete_transport_complexes(lineage_value varchar2, schema_name varchar2 := USER);
-  procedure delete_waterbodies(lineage_value varchar2, schema_name varchar2 := USER);
-  procedure delete_cityobjectgroups(lineage_value varchar2, delete_members int := 0, schema_name varchar2 := USER);
-  procedure delete_relief_features(lineage_value varchar2, schema_name varchar2 := USER);
+  function delete_cityobjects(lineage_value varchar2, delete_members int := 0, schema_name varchar2 := user) return id_array;
+  function delete_buildings(lineage_value varchar2, schema_name varchar2 := user) return id_array;
+  function delete_bridges(lineage_value varchar2, schema_name varchar2 := user) return id_array;
+  function delete_tunnels(lineage_value varchar2, schema_name varchar2 := user) return id_array;
+  function delete_city_furnitures(lineage_value varchar2, schema_name varchar2 := user) return id_array;
+  function delete_generic_cityobjects(lineage_value varchar2, schema_name varchar2 := user) return id_array;
+  function delete_land_uses(lineage_value varchar2, schema_name varchar2 := user) return id_array;
+  function delete_plant_covers(lineage_value varchar2, schema_name varchar2 := user) return id_array;
+  function delete_solitary_veg_objs(lineage_value varchar2, schema_name varchar2 := user) return id_array;
+  function delete_transport_complexes(lineage_value varchar2, schema_name varchar2 := user) return id_array;
+  function delete_waterbodies(lineage_value varchar2, schema_name varchar2 := user) return id_array;
+  function delete_cityobjectgroups(lineage_value varchar2, delete_members int := 0, schema_name varchar2 := user) return id_array;
+  function delete_relief_features(lineage_value varchar2, schema_name varchar2 := user) return id_array;
 END citydb_delete_by_lineage;
 /
 
-CREATE OR REPLACE PACKAGE BODY GEODB_DELETE_BY_LINEAGE
+CREATE OR REPLACE PACKAGE BODY CITYDB_DELETE_BY_LINEAGE
 AS 
   type ref_cursor is ref cursor;
 
-  procedure delete_buildings(lineage_value varchar2, schema_name varchar2 := USER)
+  function delete_buildings(lineage_value varchar2, schema_name varchar2 := user) return id_array
   is
+    deleted_id number;
+    deleted_ids id_array := id_array();
+    dummy_ids id_array := id_array();
     building_cur ref_cursor;
     building_id number;
   begin
@@ -68,7 +72,9 @@ AS
       fetch building_cur into building_id;
       exit when building_cur%notfound;
       begin
-        citydb_delete.delete_building(building_id, schema_name);
+        deleted_id := citydb_delete.delete_building(building_id, schema_name);
+        deleted_ids.extend;
+        deleted_ids(deleted_ids.count) := deleted_id;
       exception
         when others then
           dbms_output.put_line('delete_buildings: deletion of building with ID ' || building_id || ' threw: ' || SQLERRM);
@@ -77,16 +83,21 @@ AS
     close building_cur;
     
     -- cleanup
-    citydb_delete.cleanup_implicit_geometries(1, schema_name);
-    citydb_delete.cleanup_appearances(1, schema_name);
-    citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+
+    return deleted_ids;
   exception
     when others then
       dbms_output.put_line('delete_buildings: ' || SQLERRM);
   end;
 
-  procedure delete_bridges(lineage_value varchar2, schema_name varchar2 := USER)
+  function delete_bridges(lineage_value varchar2, schema_name varchar2 := user) return id_array
   is
+    deleted_id number;
+    deleted_ids id_array := id_array();
+    dummy_ids id_array := id_array();
     bridge_cur ref_cursor;
     bridge_id number;
   begin
@@ -95,7 +106,9 @@ AS
       fetch bridge_cur into bridge_id;
       exit when bridge_cur%notfound;
       begin
-        citydb_delete.delete_bridge(bridge_id, schema_name);
+        deleted_id := citydb_delete.delete_bridge(bridge_id, schema_name);
+        deleted_ids.extend;
+        deleted_ids(deleted_ids.count) := deleted_id;
       exception
         when others then
           dbms_output.put_line('delete_bridges: deletion of bridge with ID ' || bridge_id || ' threw: ' || SQLERRM);
@@ -104,16 +117,21 @@ AS
     close bridge_cur;
 
     -- cleanup
-    citydb_delete.cleanup_implicit_geometries(1, schema_name);
-    citydb_delete.cleanup_appearances(1, schema_name);
-    citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+
+    return deleted_ids;
   exception
     when others then
       dbms_output.put_line('delete_bridges: ' || SQLERRM);
   end;
 
-  procedure delete_tunnels(lineage_value varchar2, schema_name varchar2 := USER)
+  function delete_tunnels(lineage_value varchar2, schema_name varchar2 := user) return id_array
   is
+    deleted_id number;
+    deleted_ids id_array := id_array();
+    dummy_ids id_array := id_array();
     tunnel_cur ref_cursor;
     tunnel_id number;
   begin
@@ -122,7 +140,9 @@ AS
       fetch tunnel_cur into tunnel_id;
       exit when tunnel_cur%notfound;
       begin
-        citydb_delete.delete_tunnel(tunnel_id, schema_name);
+        deleted_id := citydb_delete.delete_tunnel(tunnel_id, schema_name);
+        deleted_ids.extend;
+        deleted_ids(deleted_ids.count) := deleted_id;
       exception
         when others then
           dbms_output.put_line('delete_tunnels: deletion of tunnel with ID ' || tunnel_id || ' threw: ' || SQLERRM);
@@ -131,16 +151,21 @@ AS
     close tunnel_cur;
 
     -- cleanup
-    citydb_delete.cleanup_implicit_geometries(1, schema_name);
-    citydb_delete.cleanup_appearances(1, schema_name);
-    citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+
+    return deleted_ids;
   exception
     when others then
       dbms_output.put_line('delete_tunnels: ' || SQLERRM);
   end;
   
-  procedure delete_city_furnitures(lineage_value varchar2, schema_name varchar2 := USER)
+  function delete_city_furnitures(lineage_value varchar2, schema_name varchar2 := user) return id_array
   is
+    deleted_id number;
+    deleted_ids id_array := id_array();
+    dummy_ids id_array := id_array();
     city_furniture_cur ref_cursor;
     city_furniture_id number;
   begin
@@ -149,7 +174,9 @@ AS
       fetch city_furniture_cur into city_furniture_id;
       exit when city_furniture_cur%notfound;
       begin
-        citydb_delete.delete_city_furniture(city_furniture_id, schema_name);
+        deleted_id := citydb_delete.delete_city_furniture(city_furniture_id, schema_name);
+        deleted_ids.extend;
+        deleted_ids(deleted_ids.count) := deleted_id;
       exception
         when others then
           dbms_output.put_line('delete_city_furnitures: deletion of city_furniture with ID ' || city_furniture_id || ' threw: ' || SQLERRM);
@@ -158,16 +185,21 @@ AS
     close city_furniture_cur;
 
     -- cleanup
-    citydb_delete.cleanup_implicit_geometries(1, schema_name);
-    citydb_delete.cleanup_appearances(1, schema_name);
-    citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+
+    return deleted_ids;
   exception
     when others then
       dbms_output.put_line('delete_city_furnitures: ' || SQLERRM);
   end;
 
-  procedure delete_generic_cityobjects(lineage_value varchar2, schema_name varchar2 := USER)
+  function delete_generic_cityobjects(lineage_value varchar2, schema_name varchar2 := user) return id_array
   is
+    deleted_id number;
+    deleted_ids id_array := id_array();
+    dummy_ids id_array := id_array();
     generic_cityobject_cur ref_cursor;
     generic_cityobject_id number;
   begin
@@ -176,7 +208,9 @@ AS
       fetch generic_cityobject_cur into generic_cityobject_id;
       exit when generic_cityobject_cur%notfound;
       begin
-        citydb_delete.delete_generic_cityobject(generic_cityobject_id, schema_name);
+        deleted_id := citydb_delete.delete_generic_cityobject(generic_cityobject_id, schema_name);
+        deleted_ids.extend;
+        deleted_ids(deleted_ids.count) := deleted_id;
       exception
         when others then
           dbms_output.put_line('delete_generic_cityobjects: deletion of generic_cityobject with ID ' || generic_cityobject_id || ' threw: ' || SQLERRM);
@@ -185,16 +219,21 @@ AS
     close generic_cityobject_cur;
 
     -- cleanup
-    citydb_delete.cleanup_implicit_geometries(1, schema_name);
-    citydb_delete.cleanup_appearances(1, schema_name);
-    citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+
+    return deleted_ids;
   exception
     when others then
       dbms_output.put_line('delete_generic_cityobjects: ' || SQLERRM);
   end;
 
-  procedure delete_land_uses(lineage_value varchar2, schema_name varchar2 := USER)
+  function delete_land_uses(lineage_value varchar2, schema_name varchar2 := user) return id_array
   is
+    deleted_id number;
+    deleted_ids id_array := id_array();
+    dummy_ids id_array := id_array();
     land_use_cur ref_cursor;
     land_use_id number;
   begin
@@ -203,7 +242,9 @@ AS
       fetch land_use_cur into land_use_id;
       exit when land_use_cur%notfound;
       begin
-        citydb_delete.delete_land_use(land_use_id, schema_name);
+        deleted_id := citydb_delete.delete_land_use(land_use_id, schema_name);
+        deleted_ids.extend;
+        deleted_ids(deleted_ids.count) := deleted_id;
       exception
         when others then
           dbms_output.put_line('delete_land_uses: deletion of land_use with ID ' || land_use_id || ' threw: ' || SQLERRM);
@@ -212,15 +253,20 @@ AS
     close land_use_cur;
 
     -- cleanup
-    citydb_delete.cleanup_appearances(1, schema_name);
-    citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+
+    return deleted_ids;
   exception
     when others then
       dbms_output.put_line('delete_land_uses: ' || SQLERRM);
   end;
 
-  procedure delete_plant_covers(lineage_value varchar2, schema_name varchar2 := USER)
+  function delete_plant_covers(lineage_value varchar2, schema_name varchar2 := user) return id_array
   is
+    deleted_id number;
+    deleted_ids id_array := id_array();
+    dummy_ids id_array := id_array();
     plant_cover_cur ref_cursor;
     plant_cover_id number;
   begin
@@ -229,7 +275,9 @@ AS
       fetch plant_cover_cur into plant_cover_id;
       exit when plant_cover_cur%notfound;
       begin
-        citydb_delete.delete_plant_cover(plant_cover_id, schema_name);
+        deleted_id := citydb_delete.delete_plant_cover(plant_cover_id, schema_name);
+        deleted_ids.extend;
+        deleted_ids(deleted_ids.count) := deleted_id;
       exception
         when others then
           dbms_output.put_line('delete_plant_covers: deletion of plant_cover with ID ' || plant_cover_id || ' threw: ' || SQLERRM);
@@ -238,15 +286,20 @@ AS
     close plant_cover_cur;
 
     -- cleanup
-    citydb_delete.cleanup_appearances(1, schema_name);
-    citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+
+    return deleted_ids;
   exception
     when others then
       dbms_output.put_line('delete_plant_covers: ' || SQLERRM);
   end;
 
-  procedure delete_solitary_veg_objs(lineage_value varchar2, schema_name varchar2 := USER)
+  function delete_solitary_veg_objs(lineage_value varchar2, schema_name varchar2 := user) return id_array
   is
+    deleted_id number;
+    deleted_ids id_array := id_array();
+    dummy_ids id_array := id_array();
     solitary_veg_obj_cur ref_cursor;
     solitary_veg_obj_id number;
   begin
@@ -255,7 +308,9 @@ AS
       fetch solitary_veg_obj_cur into solitary_veg_obj_id;
       exit when solitary_veg_obj_cur%notfound;
       begin
-        citydb_delete.delete_solitary_veg_obj(solitary_veg_obj_id, schema_name);
+        deleted_id := citydb_delete.delete_solitary_veg_obj(solitary_veg_obj_id, schema_name);
+        deleted_ids.extend;
+        deleted_ids(deleted_ids.count) := deleted_id;
       exception
         when others then
           dbms_output.put_line('delete_solitary_veg_objs: deletion of solitary_vegetat_object with ID ' || solitary_veg_obj_id || ' threw: ' || SQLERRM);
@@ -264,16 +319,21 @@ AS
     close solitary_veg_obj_cur;
 
     -- cleanup
-    citydb_delete.cleanup_implicit_geometries(1, schema_name);
-    citydb_delete.cleanup_appearances(1, schema_name);
-    citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+
+    return deleted_ids;
   exception
     when others then
       dbms_output.put_line('delete_solitary_veg_objs: ' || SQLERRM);
   end;
 
-  procedure delete_transport_complexes(lineage_value varchar2, schema_name varchar2 := USER)
+  function delete_transport_complexes(lineage_value varchar2, schema_name varchar2 := user) return id_array
   is
+    deleted_id number;
+    deleted_ids id_array := id_array();
+    dummy_ids id_array := id_array();
     transport_complex_cur ref_cursor;
     transport_complex_id number;
   begin
@@ -282,7 +342,9 @@ AS
       fetch transport_complex_cur into transport_complex_id;
       exit when transport_complex_cur%notfound;
       begin
-        citydb_delete.delete_transport_complex(transport_complex_id, schema_name);
+        deleted_id := citydb_delete.delete_transport_complex(transport_complex_id, schema_name);
+        deleted_ids.extend;
+        deleted_ids(deleted_ids.count) := deleted_id;
       exception
         when others then
           dbms_output.put_line('delete_transport_complexes: deletion of transportation_complex with ID ' || transport_complex_id || ' threw: ' || SQLERRM);
@@ -291,15 +353,20 @@ AS
     close transport_complex_cur;
 
     -- cleanup
-    citydb_delete.cleanup_appearances(1, schema_name);
-    citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+
+    return deleted_ids;
   exception
     when others then
       dbms_output.put_line('delete_transport_complexes: ' || SQLERRM);
   end;
 
-  procedure delete_waterbodies(lineage_value varchar2, schema_name varchar2 := USER)
+  function delete_waterbodies(lineage_value varchar2, schema_name varchar2 := user) return id_array
   is
+    deleted_id number;
+    deleted_ids id_array := id_array();
+    dummy_ids id_array := id_array();
     waterbody_cur ref_cursor;
     waterbody_id number;
   begin
@@ -308,7 +375,9 @@ AS
       fetch waterbody_cur into waterbody_id;
       exit when waterbody_cur%notfound;
       begin
-        citydb_delete.delete_waterbody(waterbody_id, schema_name);
+        deleted_id := citydb_delete.delete_waterbody(waterbody_id, schema_name);
+        deleted_ids.extend;
+        deleted_ids(deleted_ids.count) := deleted_id;
       exception
         when others then
           dbms_output.put_line('delete_waterbodies: deletion of waterbody with ID ' || waterbody_id || ' threw: ' || SQLERRM);
@@ -317,15 +386,20 @@ AS
     close waterbody_cur;
 
     -- cleanup
-    citydb_delete.cleanup_appearances(1, schema_name);
-    citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+
+    return deleted_ids;
   exception
     when others then
       dbms_output.put_line('delete_waterbodies: ' || SQLERRM);
   end;
 
-  procedure delete_cityobjectgroups(lineage_value varchar2, delete_members int := 0, schema_name varchar2 := USER)
+  function delete_cityobjectgroups(lineage_value varchar2, delete_members int := 0, schema_name varchar2 := user) return id_array
   is
+    deleted_id number;
+    deleted_ids id_array := id_array();
+    dummy_ids id_array := id_array();
     cityobjectgroup_cur ref_cursor;
     cityobjectgroup_id number;
   begin
@@ -334,7 +408,9 @@ AS
       fetch cityobjectgroup_cur into cityobjectgroup_id;
       exit when cityobjectgroup_cur%notfound;
       begin
-        citydb_delete.delete_cityobjectgroup(cityobjectgroup_id, delete_members, schema_name);
+        deleted_id := citydb_delete.delete_cityobjectgroup(cityobjectgroup_id, delete_members, schema_name);
+        deleted_ids.extend;
+        deleted_ids(deleted_ids.count) := deleted_id;
       exception
         when others then
           dbms_output.put_line('delete_cityobjectgroups: deletion of cityobjectgroup with ID ' || cityobjectgroup_id || ' threw: ' || SQLERRM);
@@ -343,15 +419,20 @@ AS
     close cityobjectgroup_cur;
 
     -- cleanup
-    citydb_delete.cleanup_appearances(1, schema_name);
-    citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+
+    return deleted_ids;
   exception
     when others then
       dbms_output.put_line('delete_cityobjectgroups: ' || SQLERRM);
   end;
 
-  procedure delete_relief_features(lineage_value varchar2, schema_name varchar2 := USER)
+  function delete_relief_features(lineage_value varchar2, schema_name varchar2 := user) return id_array
   is
+    deleted_id number;
+    deleted_ids id_array := id_array();
+    dummy_ids id_array := id_array();
     relief_feature_cur ref_cursor;
     relief_feature_id number;
   begin
@@ -360,7 +441,9 @@ AS
       fetch relief_feature_cur into relief_feature_id;
       exit when relief_feature_cur%notfound;
       begin
-        citydb_delete.delete_relief_feature(relief_feature_id, schema_name);
+        deleted_id := citydb_delete.delete_relief_feature(relief_feature_id, schema_name);
+        deleted_ids.extend;
+        deleted_ids(deleted_ids.count) := deleted_id;
       exception
         when others then
           dbms_output.put_line('delete_relief_features: deletion of relief_feature with ID ' || relief_feature_id || ' threw: ' || SQLERRM);
@@ -369,15 +452,20 @@ AS
     close relief_feature_cur;
 
     -- cleanup
-    citydb_delete.cleanup_appearances(1, schema_name);
-    citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+
+    return deleted_ids;
   exception
     when others then
       dbms_output.put_line('delete_relief_features: ' || SQLERRM);
   end;
 
-  procedure delete_cityobjects(lineage_value varchar2, delete_members int := 0, schema_name varchar2 := USER)
+  function delete_cityobjects(lineage_value varchar2, delete_members int := 0, schema_name varchar2 := user) return id_array
   is
+    deleted_id number;
+    deleted_ids id_array := id_array();
+    dummy_ids id_array := id_array();
     cityobject_cur ref_cursor;
     cityobject_id number;
   begin
@@ -386,7 +474,9 @@ AS
       fetch cityobject_cur into cityobject_id;
       exit when cityobject_cur%notfound;
       begin
-        citydb_delete.delete_cityobject(cityobject_id, delete_members, 0, schema_name);
+        deleted_id := citydb_delete.delete_cityobject(cityobject_id, delete_members, 0, schema_name);
+        deleted_ids.extend;
+        deleted_ids(deleted_ids.count) := deleted_id;
       exception
         when others then
           dbms_output.put_line('delete_cityobjects: deletion of cityobject with ID ' || cityobject_id || ' threw: ' || SQLERRM);
@@ -395,9 +485,11 @@ AS
     close cityobject_cur;
 
     -- cleanup
-    citydb_delete.cleanup_implicit_geometries(1, schema_name);
-    citydb_delete.cleanup_appearances(1, schema_name);
-    citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
+    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+
+    return deleted_ids;
   exception
     when others then
       dbms_output.put_line('delete_cityobjects: ' || SQLERRM);
