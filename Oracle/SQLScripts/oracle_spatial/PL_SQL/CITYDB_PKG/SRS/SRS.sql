@@ -176,10 +176,12 @@ AS
 
     IF transform <> 0 THEN
       -- coordinates of existent geometries will be transformed
-      EXECUTE IMMEDIATE 'UPDATE ' || t_name || ' SET ' || c_name || ' = SDO_CS.TRANSFORM( ' || c_name || ', :1)' USING schema_srid;
+      EXECUTE IMMEDIATE 'UPDATE ' || t_name || ' SET ' || c_name || ' = SDO_CS.TRANSFORM( ' || c_name || ', :1) WHERE ' || c_name || ' IS NOT NULL' 
+                           USING schema_srid;
     ELSE
       -- only srid paramter of geometries is updated
-      EXECUTE IMMEDIATE 'UPDATE ' || t_name || ' t SET t.' || c_name || '.SDO_SRID = :1 WHERE t.' || c_name || ' IS NOT NULL' USING schema_srid;
+      EXECUTE IMMEDIATE 'UPDATE ' || t_name || ' t SET t.' || c_name || '.SDO_SRID = :1 WHERE t.' || c_name || ' IS NOT NULL' 
+                           USING schema_srid;
     END IF;
 
     IF is_valid THEN

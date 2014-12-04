@@ -251,7 +251,7 @@ BEGIN
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.DB_VERSION_OBJ for ' || v_schemaOwnerName || '.DB_INFO_OBJ';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.DB_INFO_TABLE for ' || v_schemaOwnerName || '.DB_INFO_TABLE';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.DB_INFO_OBJ for ' || v_schemaOwnerName || '.DB_INFO_OBJ';
---EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.SEQ_TABLE for ' || v_schemaOwnerName || '.SEQ_TABLE';
+  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.ID_ARRAY for ' || v_schemaOwnerName || '.ID_ARRAY';
 
   COMMIT;
   dbms_output.put_line(' ');

@@ -44,6 +44,14 @@ CREATE OR REPLACE TYPE STRARRAY IS TABLE OF VARCHAR2(32767);
 /
 
 /*****************************************************************
+* TYPE ID_ARRAY
+*
+* global type for arrays of number values
+******************************************************************/
+CREATE OR REPLACE TYPE ID_ARRAY IS TABLE OF NUMBER;
+/
+
+/*****************************************************************
 * TYPE DB_VERSION_OBJ and DB_VERSION_TABLE
 * 
 * global type for database version information
@@ -77,14 +85,6 @@ CREATE OR REPLACE TYPE DB_INFO_OBJ AS OBJECT(
 CREATE OR REPLACE TYPE DB_INFO_TABLE IS TABLE OF DB_INFO_OBJ;
 /
 
-/*****************************************************************
-* TYPE SEQ_TABLE
-*
-* global type for arrays of numbers to fetch sequence values
-******************************************************************/
-CREATE OR REPLACE TYPE SEQ_TABLE IS TABLE OF NUMBER;
-/
-
 
 /*****************************************************************
 * PACKAGE citydb_util
@@ -102,7 +102,9 @@ AS
   FUNCTION min(a NUMBER, b NUMBER) RETURN NUMBER;
   PROCEDURE update_schema_constraints(on_delete_param VARCHAR2 := 'CASCADE', schema_name VARCHAR2 := USER);
   PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param VARCHAR2 := 'CASCADE', deferrable_param VARCHAR2 := 'INITIALLY DEFERRED', schema_name VARCHAR2 := USER);
-  FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER, schema_name VARCHAR2 := USER) RETURN SEQ_TABLE;
+  FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER, schema_name VARCHAR2 := USER) RETURN ID_ARRAY;
+  FUNCTION get_id_array(query VARCHAR2) RETURN ID_ARRAY;
+  FUNCTION get_id_array_size(id_arr ID_ARRAY) RETURN NUMBER;
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
   FUNCTION to_2d(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
 END citydb_util;
@@ -353,14 +355,77 @@ AS
     seq_name VARCHAR2, 
     seq_count NUMBER,
     schema_name VARCHAR2 := USER
-    ) RETURN SEQ_TABLE
+    ) RETURN ID_ARRAY
   IS
-    seq_tbl SEQ_TABLE;
+    seq_tbl ID_ARRAY;
   BEGIN
     EXECUTE IMMEDIATE 'SELECT ' || upper(schema_name) || '.' || seq_name || '.nextval FROM dual CONNECT BY level <= :1' 
                          BULK COLLECT INTO seq_tbl USING seq_count;
     RETURN seq_tbl;
   END;
+
+
+  /*****************************************************************
+  * get_id_array
+  *
+  * low-level function that RETURN the result set of a passed query
+  *
+  * @param     @description       
+  * query      passed query string
+  *
+  * @return
+  * result set of the query as an array of IDs
+  ******************************************************************/
+  FUNCTION get_id_array(query VARCHAR2) RETURN ID_ARRAY
+  IS
+    TYPE id_cursor IS REF CURSOR;
+    id_rec id_cursor;
+    id_value NUMBER;
+    id_arr ID_ARRAY := ID_ARRAY();
+  BEGIN
+    OPEN id_rec FOR query;
+    LOOP
+      FETCH id_rec INTO id_value;
+      EXIT WHEN id_rec%NOTFOUND;
+      id_arr.extend;
+      id_arr(id_arr.count) := id_value;
+    END LOOP;
+    CLOSE id_rec;
+
+    RETURN id_arr;
+
+    EXCEPTION
+      WHEN OTHERS THEN
+        dbms_output.put_line('An error occured when executing function "vcdb_util.get_id_array": ' || SQLERRM);
+        RETURN id_arr;
+  END; 
+
+
+  /*****************************************************************
+  * get_id_array_size
+  *
+  * RETURN the size of a given ID_ARRAY object
+  *
+  * @param     @description       
+  * id_arr     passed ID_ARRAY object
+  *
+  * @return
+  * size of ID_ARRAY object
+  ******************************************************************/
+  FUNCTION get_id_array_size(id_arr ID_ARRAY) RETURN NUMBER
+  IS
+    arr_count NUMBER := 0;
+  BEGIN
+    arr_count := id_arr.count;
+
+    RETURN arr_count;
+
+    EXCEPTION
+      WHEN OTHERS THEN
+        dbms_output.put_line('An error occured when executing function "vcdb_util.get_id_array_size": ' || SQLERRM);
+        RETURN arr_count;
+  END;
+
 
   /*****************************************************************
   * objectclass_id_to_table_name

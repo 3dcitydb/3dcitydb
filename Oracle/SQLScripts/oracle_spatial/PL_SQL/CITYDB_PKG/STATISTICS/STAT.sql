@@ -95,6 +95,7 @@ AS
                            AND at.table_name NOT LIKE ''%TMP\_%'' ESCAPE ''\''
                            AND at.table_name NOT LIKE ''%MDRT%''
                            AND at.table_name NOT LIKE ''%MDXT%''
+                           AND at.table_name NOT LIKE ''%MDNT%''
                          ORDER BY at.table_name ASC
                        ) tab' INTO report USING owner_name, owner_name, owner_name, owner_name, owner_name;
 
