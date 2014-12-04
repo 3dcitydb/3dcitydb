@@ -55,7 +55,7 @@ AS
 END citydb_delete_by_lineage;
 /
 
-CREATE OR REPLACE PACKAGE BODY CITYDB_DELETE_BY_LINEAGE
+CREATE OR REPLACE PACKAGE BODY citydb_delete_by_lineage
 AS 
   type ref_cursor is ref cursor;
 

@@ -1,0 +1,182 @@
+SURFACE_GEOMETRY
+- if the parent exists in the implicit geometry table, 
+  then insert the geometry into the implicit geometry column
+- if is_solid = 1, then insert the geometry into the solid geometry column
+- insert rest without GMLID_CODESPACE
+
+CITYOBJECT
+- insert all without GMLID_CODESPACE
+- CLASS_ID is renamed as OBJECTCLASS_ID
+
+CITYMODEL
+- insert all without GMLID_CODESPACE
+
+ADDRESS
+- insert all
+
+BUILDING
+- Check from the surface_geometry table, if the geometry is MultiSurface or Solid.
+- Insert the geometry IDs from LOD1 to LOD4 from the old table as multisurface id 
+or solid id into the new table
+- Insert the name, name_space and description of the building into the cityobject table
+
+ADDRESS_TO_BUILDING
+- insert all
+
+APPEARANCE
+- insert all without GMLID_CODESPACE
+
+SURFACE_DATA
+- The objectclass_id is fetched from the objectclass table with the given type
+- The texture image is inserted into the tex_image table (after the conversion of ordimage to blob)
+- The objectclass_id and the id of the tex_image, 
+together with the other data are inserted into surface_data table
+
+APPEAR_TO_SURFACEDATA
+- insert all
+
+BREAKLINE_RELIEF
+- insert all
+
+ROOM
+- Check from the surface_geometry table, if the geometry is MultiSurface or Solid.
+- Insert the geometry ID of LOD4 from the old table as multisurface id 
+or solid id into the new table
+- Insert the name, name_space and description of the room into the cityobject table
+
+BUILDING_FURNITURE
+- LOD4_GEOMETRY_ID is renamed as LOD4_BREP_ID
+- Insert the rest
+- Insert the name, name_space and description of the building furniture into the cityobject table
+
+BUILDING_INSTALLATION
+- The objectclass_id is fetched from the objectclass table with the given is_external value
+- Insert the rest with LOD*_GEOMETRY_ID = LOD*_BREP_ID
+- Insert the name, name_space and description of the building installation into the cityobject table
+
+IMPLICIT_GEOMETRY
+- Insert all with RELATIVE_GEOMETRY_ID = RELATIVE_BREP_ID
+
+CITY_FURNITURE
+- Insert all with LOD*_GEOMETRY_ID = LOD*_BREP_ID
+- Insert the name, name_space and description of the city furniture into the cityobject table
+
+CITYOBJECT_GENERICATTRIB
+- Insert all with ROOT_GENATTRIB_ID = ID
+
+CITYOBJECT_MEMBER
+- Insert all
+
+CITYOBJECTGROUP
+- Insert all with BREP_ID = SURFACE_GEOMETRY_ID and OTHER_GEOM = GEOMETRY
+- Insert the name, name_space and description of the city objectgroup into the cityobject table
+
+EXTERNAL_REFERENCE
+- Insert all
+
+GENERALIZATION
+- Insert all
+
+GENERIC_CITYOBJECT
+- Insert all with LOD*_GEOMETRY_ID = LOD*_BREP_ID
+- Insert the name, name_space and description of the generic city object into the cityobject table
+
+GROUP_TO_CITYOBJECT
+- Insert all
+
+LAND_USE
+- Insert the name, name_space and description of the generic city object into the cityobject table
+- Insert the rest
+
+MASSPOINT_RELIEF
+- Insert all
+
+OPENING
+- The objectclass_id is fetched from the objectclass table with the given type
+- Insert the name, name_space and description of the opening into the cityobject table
+- Insert the rest
+
+THEMATIC_SURFACE
+- The objectclass_id is fetched from the objectclass table with the given type
+- Insert the name, name_space and description of the thematic surface into the cityobject table
+- Insert the rest
+
+OPENING_TO_THEM_SURFACE
+- Insert all
+
+PLANT_COVER
+- Check from the surface_geometry table, if the geometry is MultiSurface or Solid.
+- Insert the geometry IDs from LOD1 to LOD4 from the old table as multisurface id 
+or solid id into the new table
+- Insert the name, name_space and description of the plant cover into the cityobject table
+
+RELIEF_COMPONENT
+- The objectclass_id is fetched from the cityobject table with the relief component id
+- Insert the name, name_space and description of the relief component into the cityobject table
+- Insert the rest
+
+RASTER_RELIEF
+- Add the Raster Property into the Grid Coverage Table and get the id of this entry
+- Insert the grid coverage id into the raster relief table
+
+RELIEF_FEAT_TO_REL_COMP
+- Insert all
+
+RELIEF_FEATURE
+- Insert the name, name_space and description of the relief feature into the cityobject table
+- Insert the rest
+
+SOLITARY_VEGETAT_OBJECT
+- Insert all with LOD*_GEOMETRY_ID = LOD*_BREP_ID
+- Insert the name, name_space and description of the city solitary vegetation object into the cityobject table
+
+TEXTUREPARAM
+- Convert the column TEXTURE_COORDINATES in v2 from varchar to SDO_GEOMETRY in v3
+- For this purpose, convertVarcharToSDOGeom() function has been created
+- Insert the rest
+
+TIN_RELIEF
+- Insert all without MAX_LENGTH_UNIT
+
+TRAFFIC_AREA
+- The objectclass_id is fetched from the objectclass table with the is_auxiliary property
+- Insert the name, name_space and description of the traffic area into the cityobject table
+- Insert the rest
+
+TRANSPORTATION_COMPLEX
+- The objectclass_id is fetched from the objectclass table with the type property
+- Insert the name, name_space and description of the traffic area into the cityobject table
+- Insert the rest
+
+WATERBODY
+- Insert the name, name_space and description of the waterbody into the cityobject table
+- Insert the rest
+
+WATERBOUNDARY_SURFACE
+- The objectclass_id is fetched from the objectclass table with the type property
+- Insert the name, name_space and description of the water boundary surface into the cityobject table
+- Insert the rest
+
+WATERBOD_TO_WATERBND_SRF
+- Insert all
+
+For the geometry field of the tables below, during the insert, 
+the cityobject_id field of surface_geometry table is set with the table_name.id:
+
+BUILDING: LOD*_GEOMETRY_ID
+BUILDING_FURNITURE: LOD4_GEOMETRY_ID
+BUILDING_INSTALLATION: LOD(2-4)_GEOMETRY_ID
+CITY_FURNITURE: LOD*_GEOMETRY_ID
+GENERIC_CITYOBJECT: LOD*_GEOMETRY_ID
+LAND_USE: LOD(0-4)_MULTI_SURFACE_ID
+OPENING: LOD(3-4)_MULTI_SURFACE_ID
+PLANT_COVER: LOD*_GEOMETRY_ID
+ROOM: LOD4_GEOMETRY_ID
+SOLITARY_VEGETAT_OBJECT: LOD*_GEOMETRY_ID
+THEMATIC_SURFACE: LOD(2-4)_MULTI_SURFACE_ID
+TIN_RELIEF: SURFACE_GEOMETRY_ID
+TRAFFIC_AREA: LOD(2-4)_MULTI_SURFACE_ID
+TRANSPORTATION_COMPLEX: LOD(1-4)_MULTI_SURFACE_ID
+WATERBODY: LOD(1-4)_SOLID_ID and LOD(0-1)_MULTI_SURFACE_ID
+WATERBOUNDARY_SURFACE: LOD(2-4)_SURFACE_ID
+

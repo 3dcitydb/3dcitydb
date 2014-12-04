@@ -1,5 +1,5 @@
 -- Database generated with pgModeler (PostgreSQL Database Modeler).
--- pgModeler  version: 0.7.2
+-- pgModeler  version: 0.7.0-alpha
 -- PostgreSQL version: 9.3
 -- Project Site: pgmodeler.com.br
 -- Model Author: Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
@@ -7,7 +7,7 @@
 --               Claus Nagel <cnagel@virtualcitysystems.de>
 --               Felix Kunde <fkunde@virtualcitysystems.de>
 --               Philipp Willkomm <pwillkomm@moss.de>
---               Gerhard KÃ¶nig <gerhard.koenig@tu-berlin.de>
+--               Gerhard König <gerhard.koenig@tu-berlin.de>
 --               Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 
 SET check_function_bodies = false;
@@ -4041,7 +4041,7 @@ CREATE SEQUENCE citydb.grid_coverage_seq
 -- object: citydb.cityobject | type: TABLE --
 -- DROP TABLE citydb.cityobject;
 CREATE TABLE citydb.cityobject(
-	id integer NOT NULL DEFAULT nextval('cityobject_seq'::regclass),
+	id integer NOT NULL DEFAULT nextval('citydb.cityobject_seq'::regclass),
 	objectclass_id integer NOT NULL,
 	gmlid character varying(256),
 	name character varying(1000),
@@ -4092,7 +4092,7 @@ CREATE INDEX cityobject_envelope_spx ON citydb.cityobject
 -- object: citydb.appearance | type: TABLE --
 -- DROP TABLE citydb.appearance;
 CREATE TABLE citydb.appearance(
-	id integer NOT NULL DEFAULT nextval('appearance_seq'::regclass),
+	id integer NOT NULL DEFAULT nextval('citydb.appearance_seq'::regclass),
 	gmlid character varying(256),
 	name character varying(1000),
 	name_codespace character varying(4000),
@@ -4144,7 +4144,7 @@ CREATE INDEX appearance_cityobject_fkx ON citydb.appearance
 -- object: citydb.implicit_geometry | type: TABLE --
 -- DROP TABLE citydb.implicit_geometry;
 CREATE TABLE citydb.implicit_geometry(
-	id integer NOT NULL DEFAULT nextval('implicit_geometry_seq'::regclass),
+	id integer NOT NULL DEFAULT nextval('citydb.implicit_geometry_seq'::regclass),
 	mime_type character varying(256),
 	reference_to_library character varying(4000),
 	library_object bytea,
@@ -4176,7 +4176,7 @@ CREATE INDEX implicit_geom_brep_fkx ON citydb.implicit_geometry
 -- object: citydb.surface_geometry | type: TABLE --
 -- DROP TABLE citydb.surface_geometry;
 CREATE TABLE citydb.surface_geometry(
-	id integer NOT NULL DEFAULT nextval('surface_geometry_seq'::regclass),
+	id integer NOT NULL DEFAULT nextval('citydb.surface_geometry_seq'::regclass),
 	gmlid character varying(256),
 	parent_id integer,
 	root_id integer,
@@ -4251,7 +4251,7 @@ CREATE INDEX surface_geom_cityobj_fkx ON citydb.surface_geometry
 -- object: citydb.address | type: TABLE --
 -- DROP TABLE citydb.address;
 CREATE TABLE citydb.address(
-	id integer NOT NULL DEFAULT nextval('address_seq'::regclass),
+	id integer NOT NULL DEFAULT nextval('citydb.address_seq'::regclass),
 	street character varying(1000),
 	house_number character varying(256),
 	po_box character varying(256),
@@ -4268,7 +4268,7 @@ CREATE TABLE citydb.address(
 -- object: citydb.surface_data | type: TABLE --
 -- DROP TABLE citydb.surface_data;
 CREATE TABLE citydb.surface_data(
-	id integer NOT NULL DEFAULT nextval('surface_data_seq'::regclass),
+	id integer NOT NULL DEFAULT nextval('citydb.surface_data_seq'::regclass),
 	gmlid character varying(256),
 	name character varying(1000),
 	name_codespace character varying(4000),
@@ -4333,7 +4333,7 @@ CREATE INDEX surface_data_tex_image_fkx ON citydb.surface_data
 -- object: citydb.citymodel | type: TABLE --
 -- DROP TABLE citydb.citymodel;
 CREATE TABLE citydb.citymodel(
-	id integer NOT NULL DEFAULT nextval('citymodel_seq'::regclass),
+	id integer NOT NULL DEFAULT nextval('citydb.citymodel_seq'::regclass),
 	gmlid character varying(256),
 	name character varying(1000),
 	name_codespace character varying(4000),
@@ -4362,7 +4362,7 @@ CREATE INDEX citymodel_envelope_spx ON citydb.citymodel
 -- object: citydb.cityobject_genericattrib | type: TABLE --
 -- DROP TABLE citydb.cityobject_genericattrib;
 CREATE TABLE citydb.cityobject_genericattrib(
-	id integer NOT NULL DEFAULT nextval('cityobject_genericatt_seq'::regclass),
+	id integer NOT NULL DEFAULT nextval('citydb.cityobject_genericatt_seq'::regclass),
 	parent_genattrib_id integer,
 	root_genattrib_id integer,
 	attrname character varying(256) NOT NULL,
@@ -4422,7 +4422,7 @@ CREATE INDEX genericattrib_cityobj_fkx ON citydb.cityobject_genericattrib
 -- object: citydb.external_reference | type: TABLE --
 -- DROP TABLE citydb.external_reference;
 CREATE TABLE citydb.external_reference(
-	id integer NOT NULL DEFAULT nextval('external_ref_seq'::regclass),
+	id integer NOT NULL DEFAULT nextval('citydb.external_ref_seq'::regclass),
 	infosys character varying(4000),
 	name character varying(4000),
 	uri character varying(4000),
@@ -4444,7 +4444,7 @@ CREATE INDEX ext_ref_cityobject_fkx ON citydb.external_reference
 -- object: citydb.tex_image | type: TABLE --
 -- DROP TABLE citydb.tex_image;
 CREATE TABLE citydb.tex_image(
-	id integer NOT NULL DEFAULT nextval('tex_image_seq'::regclass),
+	id integer NOT NULL DEFAULT nextval('citydb.tex_image_seq'::regclass),
 	tex_image_uri character varying(4000),
 	tex_image_data bytea,
 	tex_mime_type character varying(256),
@@ -4456,7 +4456,7 @@ CREATE TABLE citydb.tex_image(
 -- object: citydb.grid_coverage | type: TABLE --
 -- DROP TABLE citydb.grid_coverage;
 CREATE TABLE citydb.grid_coverage(
-	id integer DEFAULT nextval('grid_coverage_seq'::regclass),
+	id integer DEFAULT nextval('citydb.grid_coverage_seq'::regclass),
 	rasterproperty raster,
 	CONSTRAINT grid_coverage_pk PRIMARY KEY (id)
 
