@@ -365,6 +365,7 @@ AS
             dbms_output.put_line('pre_delete_citymodel: deletion of cityobject_member with ID ' || member_id || ' threw: ' || SQLERRM);
         end;
       end loop;
+      close member_cur;
 
       -- cleanup
       dummy_ids := cleanup_implicit_geometries(1, schema_name);
@@ -484,6 +485,7 @@ AS
             dbms_output.put_line('pre_delete_cityobjectgroup: deletion of group_member with ID ' || member_id || ' threw: ' || SQLERRM);
         end;
       end loop;
+      close member_cur;
 
       -- cleanup
       dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
