@@ -2748,7 +2748,7 @@ BEGIN
   EXECUTE format('TRUNCATE TABLE %I.tex_image CASCADE', schema_name);
   EXECUTE format('TRUNCATE TABLE %I.grid_coverage CASCADE', schema_name);
   EXECUTE format('TRUNCATE TABLE %I.address CASCADE', schema_name);
-  EXECUTE format('TRUNCATE TABLE %I.city_model CASCADE', schema_name);
+  EXECUTE format('TRUNCATE TABLE %I.citymodel CASCADE', schema_name);
 
   -- restart sequences
   EXECUTE format('ALTER SEQUENCE %I.address_seq RESTART', schema_name);
