@@ -233,7 +233,7 @@ BEGIN
   --// POST DELETE IMPLICIT GEOMETRY //--
   -- delete geometry
   IF rel_brep_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, $2, §3)' USING rel_brep_id, clean_apps, schema_name;
+    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, $2, $3)' USING rel_brep_id, clean_apps, schema_name;
   END IF;
 
   RETURN deleted_id;
