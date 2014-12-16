@@ -199,8 +199,8 @@ AS
   ******************************************************************/
   PROCEDURE change_schema_srid(
     schema_srid NUMBER, 
-	schema_gml_srs_name VARCHAR2,
-	transform NUMBER := 0
+    schema_gml_srs_name VARCHAR2,
+    transform NUMBER := 0
     )
   IS
   BEGIN

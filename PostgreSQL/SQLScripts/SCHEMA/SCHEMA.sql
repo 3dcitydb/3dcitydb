@@ -4185,9 +4185,9 @@ CREATE TABLE citydb.surface_geometry(
 	is_triangulated numeric,
 	is_xlink numeric,
 	is_reverse numeric,
+	solid_geometry geometry(POLYHEDRALSURFACEZ),
 	geometry geometry(POLYGONZ),
-	solid_geometry geometry(GEOMETRYZ),
-	implicit_geometry geometry(GEOMETRYZ),
+	implicit_geometry geometry(POLYGONZ),
 	cityobject_id integer,
 	CONSTRAINT surface_geometry_pk PRIMARY KEY (id)
 
