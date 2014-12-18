@@ -351,47 +351,34 @@
       </properties>
     </column>
     <column>
-      <name>GEOMVAL</name>
+      <name>UNIT</name>
       <dataTypeUsage>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <schemaName>MDSYS</schemaName>
-          <typeName>SDO_GEOMETRY</typeName>
-        </dataTypeID>
-        <properties>
+        <attributeValues>
           <entry>
-            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-            <value class="oracle.javatools.db.ReferenceID">
-              <parent class="oracle.javatools.db.ReferenceID">
-                <name>GEOMVAL</name>
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>CITYOBJECT_GENERICATTRIB</name>
-                  <identifier class="java.math.BigDecimal">115593</identifier>
-                  <schemaName>YAO</schemaName>
-                  <type>TABLE</type>
-                </parent>
-                <type>COLUMN</type>
-              </parent>
-              <type>DataTypeUsage</type>
-            </value>
+            <key>size</key>
+            <value class="java.lang.Long">4000</value>
           </entry>
-        </properties>
+        </attributeValues>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <typeName>VARCHAR2</typeName>
+        </dataTypeID>
       </dataTypeUsage>
       <notNull>false</notNull>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>GEOMVAL</name>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>CITYOBJECT_GENERICATTRIB</name>
-              <identifier class="java.math.BigDecimal">115593</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <type>COLUMN</type>
-          </value>
-        </entry>
-      </properties>
+    </column>
+    <column>
+      <name>GENATTRIBSET_CODESPACE</name>
+      <dataTypeUsage>
+        <attributeValues>
+          <entry>
+            <key>size</key>
+            <value class="java.lang.Long">4000</value>
+          </entry>
+        </attributeValues>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <typeName>VARCHAR2</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
     </column>
     <column>
       <name>BLOBVAL</name>
@@ -459,34 +446,47 @@
       </properties>
     </column>
     <column>
-      <name>UNIT</name>
+      <name>GEOMVAL</name>
       <dataTypeUsage>
-        <attributeValues>
-          <entry>
-            <key>size</key>
-            <value class="java.lang.Long">4000</value>
-          </entry>
-        </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <typeName>VARCHAR2</typeName>
+          <schemaName>MDSYS</schemaName>
+          <typeName>SDO_GEOMETRY</typeName>
         </dataTypeID>
+        <properties>
+          <entry>
+            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+            <value class="oracle.javatools.db.ReferenceID">
+              <parent class="oracle.javatools.db.ReferenceID">
+                <name>GEOMVAL</name>
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>CITYOBJECT_GENERICATTRIB</name>
+                  <identifier class="java.math.BigDecimal">115593</identifier>
+                  <schemaName>YAO</schemaName>
+                  <type>TABLE</type>
+                </parent>
+                <type>COLUMN</type>
+              </parent>
+              <type>DataTypeUsage</type>
+            </value>
+          </entry>
+        </properties>
       </dataTypeUsage>
       <notNull>false</notNull>
-    </column>
-    <column>
-      <name>GENATTRIBSET_CODESPACE</name>
-      <dataTypeUsage>
-        <attributeValues>
-          <entry>
-            <key>size</key>
-            <value class="java.lang.Long">4000</value>
-          </entry>
-        </attributeValues>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <typeName>VARCHAR2</typeName>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>GEOMVAL</name>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>CITYOBJECT_GENERICATTRIB</name>
+              <identifier class="java.math.BigDecimal">115593</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <type>COLUMN</type>
+          </value>
+        </entry>
+      </properties>
     </column>
     <column>
       <name>SURFACE_GEOMETRY_ID</name>
@@ -770,46 +770,10 @@
       <columnExpressions>
         <columnExpression>
           <expressionSource>ID</expressionSource>
-          <properties>
-            <entry>
-              <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-              <value class="oracle.javatools.db.ReferenceID">
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>CITYOBJ_GENERICATTRIB_PK</name>
-                  <identifier class="java.math.BigDecimal">115600</identifier>
-                  <parent class="oracle.javatools.db.ReferenceID">
-                    <name>CITYOBJECT_GENERICATTRIB</name>
-                    <identifier class="java.math.BigDecimal">115593</identifier>
-                    <schemaName>YAO</schemaName>
-                    <type>TABLE</type>
-                  </parent>
-                  <schemaName>YAO</schemaName>
-                  <type>INDEX</type>
-                </parent>
-                <type>IndexObject</type>
-              </value>
-            </entry>
-          </properties>
+          <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
       <indexType>UNIQUE</indexType>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>CITYOBJ_GENERICATTRIB_PK</name>
-            <identifier class="java.math.BigDecimal">115600</identifier>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>CITYOBJECT_GENERICATTRIB</name>
-              <identifier class="java.math.BigDecimal">115593</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <schemaName>YAO</schemaName>
-            <type>INDEX</type>
-          </value>
-        </entry>
-      </properties>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>

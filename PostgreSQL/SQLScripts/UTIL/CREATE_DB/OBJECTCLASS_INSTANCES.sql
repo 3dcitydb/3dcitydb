@@ -251,7 +251,7 @@ INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (68,'BridgeCeilingSurface',67);
 
 INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
-VALUES (69,'BridgeInteriorWallSurface',67);
+VALUES (69,'InteriorBridgeWallSurface',67);
 
 INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (70,'BridgeFloorSurface',67);
@@ -269,10 +269,10 @@ INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (74,'BridgeClosureSurface',67);
 
 INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
-VALUES (75,'BridgeOuterCeilingSurface',67);
+VALUES (75,'OuterBridgeCeilingSurface',67);
 
 INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
-VALUES (76,'BridgeOuterFloorSurface',67);
+VALUES (76,'OuterBridgeFloorSurface',67);
 
 INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (77,'_BridgeOpening',3);
@@ -316,7 +316,7 @@ INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (89,'TunnelCeilingSurface',88);
 
 INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
-VALUES (90,'TunnelInteriorWallSurface',88);
+VALUES (90,'InteriorTunnelWallSurface',88);
 
 INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (91,'TunnelFloorSurface',88);
@@ -334,10 +334,10 @@ INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (95,'TunnelClosureSurface',88);
 
 INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
-VALUES (96,'TunnelOuterCeilingSurface',88);
+VALUES (96,'OuterTunnelCeilingSurface',88);
 
 INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
-VALUES (97,'TunnelOuterFloorSurface',88);
+VALUES (97,'OuterTunnelFloorSurface',88);
 
 INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )
 VALUES (98,'_TunnelOpening',3);

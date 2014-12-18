@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.7.2" last-position="3446,1260" last-zoom="1">
+<dbmodel pgmodeler-ver="0.7.2" last-position="1703,203" last-zoom="1">
 <database name="3DCityDB_v3.0" encoding="UTF8">
 	<role name="postgres"/>
 	<tablespace name="pg_default"/>
@@ -4950,20 +4950,20 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="dateval">
 		<type name="timestamp" with-timezone="true"/>
 	</column>
-	<column name="geomval">
-		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
-	</column>
 	<column name="blobval">
 		<type name="bytea"/>
 	</column>
-	<column name="unit">
-		<type name="character varying" length="4000"/>
+	<column name="geomval">
+		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
+	</column>
+	<column name="surface_geometry_id">
+		<type name="integer"/>
 	</column>
 	<column name="genattribset_codespace">
 		<type name="character varying" length="4000"/>
 	</column>
-	<column name="surface_geometry_id">
-		<type name="integer"/>
+	<column name="unit">
+		<type name="character varying" length="4000"/>
 	</column>
 	<column name="cityobject_id" not-null="true">
 		<type name="integer"/>

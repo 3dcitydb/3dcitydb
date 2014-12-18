@@ -4372,10 +4372,10 @@ CREATE TABLE citydb.cityobject_genericattrib(
 	realval real,
 	urival character varying(4000),
 	dateval timestamp with time zone,
-	geomval geometry(GEOMETRYZ),
-	blobval bytea,
-	unit character varying(4000),
 	genattribset_codespace character varying(4000),
+	unit character varying(4000),
+	blobval bytea,
+	geomval geometry(GEOMETRYZ),
 	surface_geometry_id integer,
 	cityobject_id integer NOT NULL,
 	CONSTRAINT cityobj_genericattrib_pk PRIMARY KEY (id)
