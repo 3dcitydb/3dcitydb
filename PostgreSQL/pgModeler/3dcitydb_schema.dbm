@@ -2757,16 +2757,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="lod1_solid_id">
-		<type name="smallint"/>
+		<type name="integer"/>
 	</column>
 	<column name="lod2_solid_id">
-		<type name="smallint"/>
+		<type name="integer"/>
 	</column>
 	<column name="lod3_solid_id">
-		<type name="smallint"/>
+		<type name="integer"/>
 	</column>
 	<column name="lod4_solid_id">
-		<type name="smallint"/>
+		<type name="integer"/>
 	</column>
 	<constraint name="tunnel_pk" type="pk-constr" factor="100" table="citydb.tunnel">
 		<columns names="id" ref-type="src-columns"/>
@@ -4950,6 +4950,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="dateval">
 		<type name="timestamp" with-timezone="true"/>
 	</column>
+	<column name="unit">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="genattribset_codespace">
+		<type name="character varying" length="4000"/>
+	</column>
 	<column name="blobval">
 		<type name="bytea"/>
 	</column>
@@ -4958,12 +4964,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="surface_geometry_id">
 		<type name="integer"/>
-	</column>
-	<column name="genattribset_codespace">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="unit">
-		<type name="character varying" length="4000"/>
 	</column>
 	<column name="cityobject_id" not-null="true">
 		<type name="integer"/>
@@ -5504,7 +5504,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="relief_comp_objclass_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="citydb.objectclass" table="citydb.relief_component">
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="citydb.objectclass" table="citydb.relief_component">
 	<columns names="objectclass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -5669,7 +5669,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="sol_veg_obj_cityobject_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="citydb.cityobject" table="citydb.solitary_vegetat_object">
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="citydb.cityobject" table="citydb.solitary_vegetat_object">
 	<columns names="id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -5859,22 +5859,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="tun_hspace_cityobj_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="citydb.cityobject" table="citydb.tunnel_hollow_space">
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="citydb.cityobject" table="citydb.tunnel_hollow_space">
 	<columns names="id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="tun_hspace_tunnel_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="citydb.tunnel" table="citydb.tunnel_hollow_space">
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="citydb.tunnel" table="citydb.tunnel_hollow_space">
 	<columns names="tunnel_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="tun_hspace_lod4msrf_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="citydb.surface_geometry" table="citydb.tunnel_hollow_space">
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="citydb.surface_geometry" table="citydb.tunnel_hollow_space">
 	<columns names="lod4_multi_surface_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 <constraint name="tun_hspace_lod4solid_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="citydb.surface_geometry" table="citydb.tunnel_hollow_space">
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="citydb.surface_geometry" table="citydb.tunnel_hollow_space">
 	<columns names="lod4_solid_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -6418,9 +6418,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.objectclass"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="2904.17" y="1201.12"/>
-	<position x="2904.17" y="1155.84"/>
-	<position x="2793.5" y="1155.84"/>
+		<position x="2938.17" y="1199.12"/>
+	<position x="2938.17" y="1155.84"/>
+	<position x="2816.17" y="1155.84"/>
 	</line>
 </relationship>
 
@@ -6474,9 +6474,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.building"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="4211.74" y="4184.65"/>
-	<position x="4211.74" y="3821.37"/>
-	<position x="4055.41" y="3821.37"/>
+		<position x="4267.74" y="4161.45"/>
+	<position x="4267.74" y="3821.37"/>
+	<position x="4092.74" y="3821.37"/>
 	</line>
 </relationship>
 
@@ -6805,9 +6805,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.tunnel"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="1755.18" y="3558.65"/>
-	<position x="1755.18" y="3279.37"/>
-	<position x="1608.85" y="3279.37"/>
+		<position x="1810.18" y="3541.05"/>
+	<position x="1810.18" y="3279.37"/>
+	<position x="1645.51" y="3279.37"/>
 	</line>
 </relationship>
 
@@ -6946,9 +6946,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.bridge"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="5330.08" y="3929.65"/>
-	<position x="5330.08" y="3644.37"/>
-	<position x="5183.75" y="3644.37"/>
+		<position x="5385.08" y="3911.65"/>
+	<position x="5385.08" y="3644.37"/>
+	<position x="5220.41" y="3644.37"/>
 	</line>
 </relationship>
 
@@ -7147,9 +7147,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.surface_geometry"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="4202.58" y="1589.48"/>
-	<position x="4202.58" y="1454.2"/>
-	<position x="4082.58" y="1454.2"/>
+		<position x="4236.58" y="1581.48"/>
+	<position x="4236.58" y="1454.2"/>
+	<position x="4105.25" y="1454.2"/>
 	</line>
 </relationship>
 
@@ -7173,9 +7173,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.cityobject_genericattrib"
 	 src-required="true" dst-required="true">
 	<line>
-		<position x="2680.33" y="511.947"/>
-	<position x="2680.33" y="370.667"/>
-	<position x="2546" y="370.667"/>
+		<position x="2739.33" y="503.547"/>
+	<position x="2739.33" y="370.667"/>
+	<position x="2585.33" y="370.667"/>
 	</line>
 </relationship>
 
