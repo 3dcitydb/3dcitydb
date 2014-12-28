@@ -136,10 +136,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.db_info(
 $$
 BEGIN
   EXECUTE 'SELECT srid, gml_srs_name FROM database_srs' INTO schema_srid, schema_gml_srs_name;
-  versioning := citydb_pkg.util_versioning_db(current_schema());
+  versioning := citydb_pkg.versioning_db(current_schema());
 END;
 $$ 
-LANGUAGE plpgsql;
+LANGUAGE plpgsql IMMUTABLE;
 
 
 /******************************************************************
