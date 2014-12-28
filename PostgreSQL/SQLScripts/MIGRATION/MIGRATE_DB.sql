@@ -55,10 +55,10 @@ CREATE SCHEMA citydb_pkg;
 \i ./../PL_pgSQL/CITYDB_PKG/DELETE/DELETE.sql
 \i ./../PL_pgSQL/CITYDB_PKG/DELETE/DELETE_BY_LINEAGE.sql
 
---// create PROCEDURES necessary for migration process
+--// create FUNCTIONS necessary for migration process
 \echo
 \echo 'Creating helper functions for migration process in geodb_pkg schema ...'
-\i PROCEDURES.sql
+\i FUNCTIONS.sql
 
 --// migrate TABLES from old to new schema
 \echo
