@@ -46,18 +46,20 @@ DECLARE
   texture_uri VARCHAR(4000);
   texture BYTEA;
   texture_mime_type VARCHAR(256);
+  texture_id INTEGER;
 BEGIN
   EXECUTE 'SELECT tex_image_uri, tex_image, tex_mime_type FROM public.surface_data WHERE id = $1'
              INTO texture_uri, texture, texture_mime_type USING surface_data_id;
 
-  EXECUTE 'WITH tex_image_insert AS (
-             INSERT INTO citydb.tex_image (tex_image_uri, tex_image_data, tex_mime_type)
-               VALUES ($1, $2, $3) RETURNING id
+  EXECUTE 'INSERT INTO citydb.tex_image (tex_image_uri, tex_image_data, tex_mime_type)
+             VALUES ($1, $2, $3) RETURNING id' INTO texture_id USING texture_uri, texture, texture_mime_type;
+
+  EXECUTE 'WITH surface_data_ref AS (
+             SELECT id FROM public.surface_data WHERE tex_image_uri = $1
            )
-           UPDATE citydb.surface_data sd SET tex_image_id = tex_image_insert.id 
-             FROM tex_image_insert WHERE sd.id IN
-             (SELECT id FROM public.surface_data WHERE tex_image_uri = $1)'
-           USING texture_uri, texture, texture_mime_type;
+           UPDATE citydb.surface_data sd SET tex_image_id = $2
+             FROM surface_data_ref ref WHERE sd.id = ref.id' 
+           USING texture_uri, texture_id;
 END;
 $$
 LANGUAGE plpgsql;
