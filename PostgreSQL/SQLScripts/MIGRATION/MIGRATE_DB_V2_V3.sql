@@ -1208,6 +1208,7 @@ WITH building_furniture_ref AS (
     id,
     lod4_brep_id
     FROM citydb.building_furniture
+    WHERE lod4_brep_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
   FROM building_furniture_ref ref WHERE root_id = ref.lod4_brep_id;
@@ -1337,6 +1338,7 @@ WITH tin_relief_ref AS (
     id,
     surface_geometry_id
     FROM citydb.tin_relief
+    WHERE surface_geometry_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
   FROM tin_relief_ref ref WHERE root_id = ref.surface_geometry_id;
@@ -1348,6 +1350,7 @@ WITH cityobjectgroup_ref AS (
     id,
     brep_id
     FROM citydb.cityobjectgroup
+    WHERE brep_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
   FROM cityobjectgroup_ref ref WHERE root_id = ref.brep_id;
@@ -1373,6 +1376,7 @@ WITH cityobject_genericattrib_ref AS (
     cityobject_id,
     surface_geometry_id
     FROM citydb.cityobject_genericattrib
+    WHERE surface_geometry_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.cityobject_id
   FROM cityobject_genericattrib_ref ref WHERE root_id = ref.surface_geometry_id;
