@@ -46,6 +46,7 @@ SELECT srid FROM database_srs \gset
 --// create CITYDB_PKG (additional schema with PL/pgSQL-Functions)
 \echo
 \echo 'Creating additional schema ''citydb_pkg'' ...'
+DROP SCHEMA IF EXISTS citydb_pkg CASCADE;
 CREATE SCHEMA citydb_pkg;
 
 \i ./../PL_pgSQL/CITYDB_PKG/UTIL/UTIL.sql

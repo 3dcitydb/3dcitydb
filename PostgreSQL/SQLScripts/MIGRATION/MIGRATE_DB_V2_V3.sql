@@ -1083,12 +1083,14 @@ CREATE TABLE citydb.surface_geometry (
 
 -- constructing 3D geometry
 WITH get_solids AS (
-  SELECT root_id FROM citydb.surface_geometry WHERE is_solid = 1
+  SELECT sg.root_id AS solid_geom_id, ST_SetSRID(ST_GeomFromText(replace(ST_AsText(ST_Collect(sg.geometry)), 'MULTIPOLYGON','POLYHEDRALSURFACE')),:srid) AS solid_geom
+    FROM surface_geometry sg, (SELECT root_id FROM surface_geometry WHERE is_solid = 1) solids
+    WHERE sg.root_id = solids.root_id AND sg.geometry IS NOT NULL
+    GROUP BY sg.root_id
 )
-UPDATE citydb.surface_geometry SET solid_geometry = 
-  (SELECT ST_GeomFromText(replace(ST_AsText(ST_Collect(sg.geometry)), 'MULTIPOLYGON','POLYHEDRALSURFACE'))
-     FROM citydb.surface_geometry sg, get_solids gs WHERE sg.root_id = gs.root_id);
-
+UPDATE citydb.surface_geometry SET solid_geometry = gs.solid_geom
+  FROM get_solids gs WHERE id = gs.solid_geom_id;
+  
 DROP TABLE IF EXISTS citydb.implicit_geometry CASCADE;
 CREATE TABLE citydb.implicit_geometry (
 	id,
@@ -1128,68 +1130,73 @@ CREATE TABLE citydb.database_srs AS
 
 -- BUILDING module
 WITH building_ref AS (
-  SELECT 
-	id, ARRAY[
-	lod1_multi_surface_id,
-	lod2_multi_surface_id,
-	lod3_multi_surface_id,
-	lod4_multi_surface_id,
-	lod1_solid_id,
-	lod2_solid_id,
-	lod3_solid_id,
-	lod4_solid_id] AS arr
-	FROM citydb.building
+  SELECT geom_ref.id, geom_ref.geom_id FROM (
+    SELECT id, unnest(ARRAY[
+      lod1_multi_surface_id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id,
+      lod1_solid_id,
+      lod2_solid_id,
+      lod3_solid_id,
+      lod4_solid_id]) geom_id
+      FROM citydb.building) geom_ref
+    WHERE geom_ref.geom_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
-  FROM building_ref ref WHERE root_id = ANY (ref.arr);
+  FROM building_ref ref WHERE root_id = ref.geom_id;
 
 WITH building_installation_ref AS (
-  SELECT 
-	id, ARRAY[
-	lod2_brep_id,
-	lod3_brep_id,
-	lod4_brep_id] AS arr
-	FROM citydb.building_installation
+  SELECT geom_ref.id, geom_ref.geom_id FROM (
+    SELECT id, unnest(ARRAY[
+      lod2_brep_id,
+      lod3_brep_id,
+      lod4_brep_id]) geom_id
+      FROM citydb.building_installation) geom_ref
+    WHERE geom_ref.geom_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
-  FROM building_installation_ref ref WHERE root_id = ANY (ref.arr);
+  FROM building_installation_ref ref WHERE root_id = ref.geom_id;
 
 WITH thematic_surface_ref AS (
-  SELECT 
-	id, ARRAY[
-	lod2_multi_surface_id,
-	lod3_multi_surface_id,
-	lod4_multi_surface_id] AS arr
-	FROM citydb.thematic_surface
+  SELECT geom_ref.id, geom_ref.geom_id FROM (
+    SELECT id, unnest(ARRAY[
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id]) geom_id
+      FROM citydb.thematic_surface) geom_ref
+    WHERE geom_ref.geom_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
-  FROM thematic_surface_ref ref WHERE root_id = ANY (ref.arr);
+  FROM thematic_surface_ref ref WHERE root_id = ref.geom_id;
 
 WITH opening_ref AS (
-  SELECT 
-	id, ARRAY[
-	lod3_multi_surface_id,
-	lod4_multi_surface_id] AS arr
-	FROM citydb.opening
+  SELECT geom_ref.id, geom_ref.geom_id FROM (
+    SELECT id, unnest(ARRAY[
+      lod3_multi_surface_id,
+      lod4_multi_surface_id]) geom_id
+      FROM citydb.opening) geom_ref
+    WHERE geom_ref.geom_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
-  FROM opening_ref ref WHERE root_id = ANY (ref.arr);
+  FROM opening_ref ref WHERE root_id = ref.geom_id;
 
 WITH room_ref AS (
-  SELECT 
-	id, ARRAY[
-	lod4_multi_surface_id,
-	lod4_solid_id] AS arr
-	FROM citydb.room
+  SELECT geom_ref.id, geom_ref.geom_id FROM (
+    SELECT id, unnest(ARRAY[
+      lod4_multi_surface_id,
+      lod4_solid_id]) geom_id
+      FROM citydb.room) geom_ref
+    WHERE geom_ref.geom_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
-  FROM room_ref ref WHERE root_id = ANY (ref.arr);
+  FROM room_ref ref WHERE root_id = ref.geom_id;
 
 WITH building_furniture_ref AS (
   SELECT 
-	id,
-	lod4_brep_id
-	FROM citydb.building_furniture
+    id,
+    lod4_brep_id
+    FROM citydb.building_furniture
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
   FROM building_furniture_ref ref WHERE root_id = ref.lod4_brep_id;
@@ -1197,121 +1204,128 @@ UPDATE citydb.surface_geometry SET cityobject_id = ref.id
 
 -- CITY FURNITURE module
 WITH city_furniture_ref AS (
-  SELECT 
-	id, ARRAY[
-	lod1_brep_id,
-	lod2_brep_id,
-	lod3_brep_id,
-	lod4_brep_id] AS arr
-	FROM citydb.city_furniture
+  SELECT geom_ref.id, geom_ref.geom_id FROM (
+    SELECT id, unnest(ARRAY[
+      lod1_brep_id,
+      lod2_brep_id,
+      lod3_brep_id,
+      lod4_brep_id]) geom_id
+      FROM citydb.city_furniture) geom_ref
+    WHERE geom_ref.geom_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
-  FROM city_furniture_ref ref WHERE root_id = ANY (ref.arr);
+  FROM city_furniture_ref ref WHERE root_id = ref.geom_id;
 
 
 -- TRANSPORTATION module
 WITH transportation_complex_ref AS (
-  SELECT 
-	id, ARRAY[
-	lod1_multi_surface_id,
-	lod2_multi_surface_id,
-	lod3_multi_surface_id,
-	lod4_multi_surface_id] AS arr
-	FROM citydb.transportation_complex
+  SELECT geom_ref.id, geom_ref.geom_id FROM (
+    SELECT id, unnest(ARRAY[
+      lod1_multi_surface_id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id]) geom_id
+      FROM citydb.transportation_complex) geom_ref
+    WHERE geom_ref.geom_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
-  FROM transportation_complex_ref ref WHERE root_id = ANY (ref.arr);
+  FROM transportation_complex_ref ref WHERE root_id = ref.geom_id;
 
 WITH traffic_area_ref AS (
-  SELECT 
-	id, ARRAY[
-	lod2_multi_surface_id,
-	lod3_multi_surface_id,
-	lod4_multi_surface_id] AS arr
-	FROM citydb.traffic_area
+  SELECT geom_ref.id, geom_ref.geom_id FROM (
+    SELECT id, unnest(ARRAY[
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id]) geom_id
+      FROM citydb.traffic_area) geom_ref
+    WHERE geom_ref.geom_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
-  FROM traffic_area_ref ref WHERE root_id = ANY (ref.arr);
+  FROM traffic_area_ref ref WHERE root_id = ref.geom_id;
 
 
 -- VEGETATION module
 WITH plant_cover_ref AS (
-  SELECT 
-	id, ARRAY[
-	lod1_multi_surface_id,
-	lod2_multi_surface_id,
-	lod3_multi_surface_id,
-	lod4_multi_surface_id,
-	lod1_multi_solid_id,
-	lod2_multi_solid_id,
-	lod3_multi_solid_id,
-	lod4_multi_solid_id] AS arr
-	FROM citydb.plant_cover
+  SELECT geom_ref.id, geom_ref.geom_id FROM (
+    SELECT id, unnest(ARRAY[
+      lod1_multi_surface_id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id,
+      lod1_multi_solid_id,
+      lod2_multi_solid_id,
+      lod3_multi_solid_id,
+      lod4_multi_solid_id]) geom_id
+      FROM citydb.plant_cover) geom_ref
+    WHERE geom_ref.geom_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
-  FROM plant_cover_ref ref WHERE root_id = ANY (ref.arr);
+  FROM plant_cover_ref ref WHERE root_id = ref.geom_id;
 
 WITH solitary_vegetat_object_ref AS (
-  SELECT 
-	id, ARRAY[
-	lod1_brep_id,
-	lod2_brep_id,
-	lod3_brep_id,
-	lod4_brep_id] AS arr
-	FROM citydb.solitary_vegetat_object
+  SELECT geom_ref.id, geom_ref.geom_id FROM (
+    SELECT id, unnest(ARRAY[
+      lod1_brep_id,
+      lod2_brep_id,
+      lod3_brep_id,
+      lod4_brep_id]) geom_id
+      FROM citydb.solitary_vegetat_object) geom_ref
+    WHERE geom_ref.geom_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
-  FROM solitary_vegetat_object_ref ref WHERE root_id = ANY (ref.arr);
+  FROM solitary_vegetat_object_ref ref WHERE root_id = ref.geom_id;
 
 
 -- WATERBODY module
 WITH waterbody_ref AS (
-  SELECT 
-	id, ARRAY[
-	lod0_multi_surface_id,
-	lod1_multi_surface_id,
-	lod1_solid_id,
-	lod2_solid_id,
-	lod3_solid_id,
-	lod4_solid_id] AS arr
-	FROM citydb.waterbody
+  SELECT geom_ref.id, geom_ref.geom_id FROM (
+    SELECT id, unnest(ARRAY[
+      lod0_multi_surface_id,
+      lod1_multi_surface_id,
+      lod1_solid_id,
+      lod2_solid_id,
+      lod3_solid_id,
+      lod4_solid_id]) geom_id
+      FROM citydb.waterbody) geom_ref
+    WHERE geom_ref.geom_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
-  FROM waterbody_ref ref WHERE root_id = ANY (ref.arr);
+  FROM waterbody_ref ref WHERE root_id = ref.geom_id;
 
 WITH waterboundary_surface_ref AS (
-  SELECT 
-	id, ARRAY[
-	lod2_surface_id,
-	lod3_surface_id,
-	lod4_surface_id] AS arr
-	FROM citydb.waterboundary_surface
+  SELECT geom_ref.id, geom_ref.geom_id FROM (
+    SELECT id, unnest(ARRAY[
+      lod2_surface_id,
+      lod3_surface_id,
+      lod4_surface_id]) geom_id
+      FROM citydb.waterboundary_surface) geom_ref
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
-  FROM waterboundary_surface_ref ref WHERE root_id = ANY (ref.arr);
+  FROM waterboundary_surface_ref ref WHERE root_id = ref.geom_id;
 
 
 -- LAND USE module
 WITH land_use_ref AS (
-  SELECT 
-	id, ARRAY[
-	lod0_multi_surface_id,
-	lod1_multi_surface_id,
-	lod2_multi_surface_id,
-	lod3_multi_surface_id,
-	lod4_multi_surface_id] AS arr
-	FROM citydb.land_use
+  SELECT geom_ref.id, geom_ref.geom_id FROM (
+    SELECT id, unnest(ARRAY[
+      lod0_multi_surface_id,
+      lod1_multi_surface_id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id]) geom_id
+      FROM citydb.land_use) geom_ref
+    WHERE geom_ref.geom_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
-  FROM land_use_ref ref WHERE root_id = ANY (ref.arr);
+  FROM land_use_ref ref WHERE root_id = ref.geom_id;
 
 
 -- RELIEF module
 WITH tin_relief_ref AS (
   SELECT 
-	id,
-	surface_geometry_id
-	FROM citydb.tin_relief
+    id,
+    surface_geometry_id
+    FROM citydb.tin_relief
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
   FROM tin_relief_ref ref WHERE root_id = ref.surface_geometry_id;
@@ -1320,9 +1334,9 @@ UPDATE citydb.surface_geometry SET cityobject_id = ref.id
 -- CITYOBJECTGROUP module
 WITH cityobjectgroup_ref AS (
   SELECT 
-	id,
-	brep_id
-	FROM citydb.cityobjectgroup
+    id,
+    brep_id
+    FROM citydb.cityobjectgroup
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
   FROM cityobjectgroup_ref ref WHERE root_id = ref.brep_id;
@@ -1330,23 +1344,24 @@ UPDATE citydb.surface_geometry SET cityobject_id = ref.id
 
 -- GENERICS module
 WITH generic_cityobject_ref AS (
-  SELECT 
-	id, ARRAY[
-	lod0_brep_id,
-	lod1_brep_id,
-	lod2_brep_id,
-	lod3_brep_id,
-	lod4_brep_id] AS arr
-	FROM citydb.generic_cityobject
+  SELECT geom_ref.id, geom_ref.geom_id FROM (
+    SELECT id, unnest(ARRAY[
+      lod0_brep_id,
+      lod1_brep_id,
+      lod2_brep_id,
+      lod3_brep_id,
+      lod4_brep_id]) geom_id
+      FROM citydb.generic_cityobject) geom_ref
+    WHERE geom_ref.geom_id IS NOT NULL
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.id
-  FROM generic_cityobject_ref ref WHERE root_id = ANY (ref.arr);
+  FROM generic_cityobject_ref ref WHERE root_id = ref.geom_id;
 
 WITH cityobject_genericattrib_ref AS (
   SELECT 
-	cityobject_id,
-	surface_geometry_id
-	FROM citydb.cityobject_genericattrib
+    cityobject_id,
+    surface_geometry_id
+    FROM citydb.cityobject_genericattrib
 )
 UPDATE citydb.surface_geometry SET cityobject_id = ref.cityobject_id
   FROM cityobject_genericattrib_ref ref WHERE root_id = ref.surface_geometry_id;

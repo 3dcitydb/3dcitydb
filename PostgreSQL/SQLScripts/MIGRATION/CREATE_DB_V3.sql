@@ -26,7 +26,7 @@
 * create citydb schema
 *
 **************************************************/
-DROP SCHEMA IF EXISTS citydb;
+DROP SCHEMA IF EXISTS citydb CASCADE;
 CREATE SCHEMA citydb;
 
 
