@@ -373,7 +373,7 @@ BEGIN
     WHEN class_id = 43 OR 
          class_id = 44 OR 
          class_id = 45 OR 
-         class_id = 46 THEN table_name := 'transportion_complex';
+         class_id = 46 THEN table_name := 'transportation_complex';
     WHEN class_id = 47 OR 
          class_id = 48 THEN table_name := 'traffic_area';
     WHEN class_id = 57 THEN table_name := 'citymodel';
