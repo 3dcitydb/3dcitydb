@@ -1378,6 +1378,14 @@ UPDATE citydb.surface_geometry SET cityobject_id = ref.cityobject_id
   FROM cityobject_genericattrib_ref ref WHERE root_id = ref.surface_geometry_id;
 
 
+-- transfer implicit geometry to implicit_geometry column in surface_geometry column with SRID = 0
+WITH impl_geom AS (
+  SELECT id, geometry FROM citydb.surface_geometry WHERE cityobject_id IS NULL
+)
+UPDATE citydb.surface_geometry sg SET geometry = NULL, implicit_geometry = ST_SetSRID(impl_geom.geometry, 0)
+  FROM impl_geom WHERE sg.id = impl_geom.id;
+
+
 -- update sequences
 SELECT setval('citydb.address_seq', max(id)) FROM address;
 SELECT setval('citydb.appearance_seq', max(id)) FROM appearance;
