@@ -289,43 +289,6 @@ LANGUAGE plpgsql;
 
 
 /*****************************************************************
-* get_id_array
-*
-* low-level function that returns the result set of a passed query
-*
-* @param     @description       
-* query      passed query string
-*
-* @return
-* result set of the query as an array of IDs
-******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_id_array(query VARCHAR) RETURNS INTEGER[] AS
-$$
-DECLARE
-  id_cursor refcursor;
-  id_value INTEGER;
-  id_array INTEGER[ ] := '{}';
-BEGIN
-  OPEN id_cursor FOR EXECUTE query;
-  LOOP
-    FETCH id_cursor INTO id_value;
-    EXIT WHEN NOT FOUND;
-    id_array := array_append(id_array, id_value);
-  END LOOP;
-  CLOSE id_cursor;
-
-  RETURN id_array;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'An error occured when executing function "get_id_array": %', SQLERRM;
-      RETURN id_array;
-END;
-$$
-LANGUAGE plpgsql;
-
-
-/*****************************************************************
 * objectclass_id_to_table_name
 *
 * @param class_id objectclass_id identifier

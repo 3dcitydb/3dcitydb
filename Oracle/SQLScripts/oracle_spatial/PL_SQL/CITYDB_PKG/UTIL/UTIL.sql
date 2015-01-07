@@ -103,7 +103,6 @@ AS
   PROCEDURE update_schema_constraints(on_delete_param VARCHAR2 := 'CASCADE', schema_name VARCHAR2 := USER);
   PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param VARCHAR2 := 'CASCADE', deferrable_param VARCHAR2 := 'INITIALLY DEFERRED', schema_name VARCHAR2 := USER);
   FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER, schema_name VARCHAR2 := USER) RETURN ID_ARRAY;
-  FUNCTION get_id_array(query VARCHAR2) RETURN ID_ARRAY;
   FUNCTION get_id_array_size(id_arr ID_ARRAY) RETURN NUMBER;
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
   FUNCTION to_2d(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
@@ -366,42 +365,6 @@ AS
 
 
   /*****************************************************************
-  * get_id_array
-  *
-  * low-level function that RETURN the result set of a passed query
-  *
-  * @param     @description       
-  * query      passed query string
-  *
-  * @return
-  * result set of the query as an array of IDs
-  ******************************************************************/
-  FUNCTION get_id_array(query VARCHAR2) RETURN ID_ARRAY
-  IS
-    TYPE id_cursor IS REF CURSOR;
-    id_rec id_cursor;
-    id_value NUMBER;
-    id_arr ID_ARRAY := ID_ARRAY();
-  BEGIN
-    OPEN id_rec FOR query;
-    LOOP
-      FETCH id_rec INTO id_value;
-      EXIT WHEN id_rec%NOTFOUND;
-      id_arr.extend;
-      id_arr(id_arr.count) := id_value;
-    END LOOP;
-    CLOSE id_rec;
-
-    RETURN id_arr;
-
-    EXCEPTION
-      WHEN OTHERS THEN
-        dbms_output.put_line('An error occured when executing function "vcdb_util.get_id_array": ' || SQLERRM);
-        RETURN id_arr;
-  END; 
-
-
-  /*****************************************************************
   * get_id_array_size
   *
   * RETURN the size of a given ID_ARRAY object
@@ -474,7 +437,7 @@ AS
       WHEN class_id = 43 OR 
            class_id = 44 OR 
            class_id = 45 OR 
-           class_id = 46 THEN table_name := 'transportion_complex';
+           class_id = 46 THEN table_name := 'transportation_complex';
       WHEN class_id = 47 OR 
            class_id = 48 THEN table_name := 'traffic_area';
       WHEN class_id = 57 THEN table_name := 'citymodel';
