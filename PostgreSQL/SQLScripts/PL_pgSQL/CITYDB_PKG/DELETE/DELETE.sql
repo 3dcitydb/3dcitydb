@@ -61,7 +61,7 @@
 *   delete_city_furniture(cf_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_citymodel(cm_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER 
 *   delete_cityobject(co_id INTEGER, delete_members INTEGER DEFAULT 0, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_cityobject_cascade(co_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
+*   delete_cityobject_cascade(co_id INTEGER, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_cityobjectgroup(cog_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_grid_coverage(gc_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_generic_cityobject(gco_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
@@ -2637,9 +2637,9 @@ BEGIN
            class_id = 32 OR 
            class_id = 33 OR 
            class_id = 34 OR 
-           class_id = 35 OR
-           class_id = 36 OR
-           class_id = 60 OR
+           class_id = 35 OR 
+           class_id = 36 OR 
+           class_id = 60 OR 
            class_id = 61 THEN deleted_id := citydb_pkg.delete_thematic_surface(co_id, schema_name);
       WHEN class_id = 38 OR 
            class_id = 39 THEN deleted_id := citydb_pkg.delete_opening(co_id, schema_name);
@@ -2652,36 +2652,36 @@ BEGIN
       WHEN class_id = 47 OR 
            class_id = 48 THEN deleted_id := citydb_pkg.delete_traffic_area(co_id, schema_name);
       WHEN class_id = 57 THEN deleted_id := citydb_pkg.delete_citymodel(co_id, delete_members, schema_name);
-      WHEN class_id = 63 OR
+      WHEN class_id = 63 OR 
            class_id = 64 THEN deleted_id := citydb_pkg.delete_bridge(co_id, schema_name);
-      WHEN class_id = 65 OR
+      WHEN class_id = 65 OR 
            class_id = 66 THEN deleted_id := citydb_pkg.delete_bridge_installation(co_id, schema_name);
       WHEN class_id = 68 OR 
            class_id = 69 OR 
            class_id = 70 OR 
            class_id = 71 OR 
-           class_id = 72 OR
-           class_id = 73 OR
-           class_id = 74 OR
-           class_id = 75 OR
+           class_id = 72 OR 
+           class_id = 73 OR 
+           class_id = 74 OR 
+           class_id = 75 OR 
            class_id = 76 THEN deleted_id := citydb_pkg.delete_bridge_them_srf(co_id, schema_name);
       WHEN class_id = 78 OR 
            class_id = 79 THEN deleted_id := citydb_pkg.delete_bridge_opening(co_id, schema_name);		 
       WHEN class_id = 80 THEN deleted_id := citydb_pkg.delete_bridge_furniture(co_id, schema_name);
       WHEN class_id = 81 THEN deleted_id := citydb_pkg.delete_bridge_room(co_id, schema_name);
       WHEN class_id = 82 THEN deleted_id := citydb_pkg.delete_bridge_constr_element(co_id, schema_name);
-      WHEN class_id = 84 OR
+      WHEN class_id = 84 OR 
            class_id = 85 THEN deleted_id := citydb_pkg.delete_tunnel(co_id, schema_name);
-      WHEN class_id = 86 OR
+      WHEN class_id = 86 OR 
            class_id = 87 THEN deleted_id := citydb_pkg.delete_tunnel_installation(co_id, schema_name);
       WHEN class_id = 88 OR 
            class_id = 89 OR 
            class_id = 90 OR 
            class_id = 91 OR 
-           class_id = 92 OR
-           class_id = 93 OR
-           class_id = 94 OR
-           class_id = 95 OR
+           class_id = 92 OR 
+           class_id = 93 OR 
+           class_id = 94 OR 
+           class_id = 95 OR 
            class_id = 96 THEN deleted_id := citydb_pkg.delete_tunnel_them_srf(co_id, schema_name);
       WHEN class_id = 99 OR 
            class_id = 100 THEN deleted_id := citydb_pkg.delete_tunnel_opening(co_id, schema_name);
@@ -2712,22 +2712,24 @@ LANGUAGE plpgsql;
 -- NOTE: all constraints have to be set to ON DELETE CASCADE (function: citydb_pkg.update_schema_constraints)
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_cityobject_cascade(
   co_id INTEGER,
+  cleanup INTEGER DEFAULT 0,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS INTEGER AS
 $$
 DECLARE
   deleted_id INTEGER;
-BEGIN  
+BEGIN
   -- delete city object and all entries from other tables referencing the cityobject_id
   EXECUTE format('DELETE FROM %I.cityobject WHERE id = %L RETURNING id', schema_name, co_id) INTO deleted_id;
-  
-  -- cleanup
-  EXECUTE 'SELECT citydb_pkg.cleanup_implicit_geometries(1, $1)' USING schema_name;
-  EXECUTE 'SELECT citydb_pkg.cleanup_appearances(1, $1)' USING schema_name;
-  EXECUTE 'SELECT citydb_pkg.cleanup_grid_coverages($1)' USING schema_name;
-  EXECUTE 'SELECT citydb_pkg.cleanup_addresses($1)' USING schema_name;
-  EXECUTE 'SELECT citydb_pkg.cleanup_cityobjectgroups($1)' USING schema_name;
-  EXECUTE 'SELECT citydb_pkg.cleanup_citymodels($1)' USING schema_name;
+
+  IF cleanup <> 0 THEN
+    EXECUTE 'SELECT citydb_pkg.cleanup_implicit_geometries(1, $1)' USING schema_name;
+    EXECUTE 'SELECT citydb_pkg.cleanup_appearances(1, $1)' USING schema_name;
+    EXECUTE 'SELECT citydb_pkg.cleanup_grid_coverages($1)' USING schema_name;
+    EXECUTE 'SELECT citydb_pkg.cleanup_addresses($1)' USING schema_name;
+    EXECUTE 'SELECT citydb_pkg.cleanup_cityobjectgroups($1)' USING schema_name;
+    EXECUTE 'SELECT citydb_pkg.cleanup_citymodels($1)' USING schema_name;
+  END IF;
 
   RETURN deleted_id;
 

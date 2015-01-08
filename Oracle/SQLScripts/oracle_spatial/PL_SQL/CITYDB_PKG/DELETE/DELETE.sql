@@ -82,7 +82,7 @@ AS
   function delete_tunnel_furniture(pid number, schema_name varchar2 := user) return number;
   function delete_tunnel_hollow_space(pid number, schema_name varchar2 := user) return number;
   function delete_cityobject(pid number, delete_members int := 0, cleanup int := 0, schema_name varchar2 := user) return number;
-  function delete_cityobject_cascade(pid number, schema_name varchar2 := user) return number;
+  function delete_cityobject_cascade(pid number, cleanup int := 0, schema_name varchar2 := user) return number;
 
   function cleanup_appearances(only_global int :=1, schema_name varchar2 := user) return id_array;
   function cleanup_addresses(schema_name varchar2 := user) return id_array;
@@ -3504,23 +3504,24 @@ AS
 
   -- delete a cityobject using its foreign key relations
   -- NOTE: all constraints have to be set to ON DELETE CASCADE (function: citydb_util.update_schema_constraints)
-  function delete_cityobject_cascade(pid number, schema_name varchar2 := user) return number
+  function delete_cityobject_cascade(pid number, cleanup int := 0, schema_name varchar2 := user) return number
   is
     deleted_id number;
     dummy_ids id_array := id_array();
-  begin  
+  begin
     -- delete cityobject and all entries from other tables referencing the cityobject_id
     execute immediate 'delete from ' || schema_name || '.cityobject where id = :1 returning id into :2' using pid, out deleted_id;
 
-    -- cleanup
-    dummy_ids := cleanup_implicit_geometries(1, schema_name);
-    dummy_ids := cleanup_appearances(0, schema_name);
-    dummy_ids := cleanup_grid_coverages(schema_name);	
-    dummy_ids := cleanup_addresses(schema_name);
-    dummy_ids := cleanup_cityobjectgroups(schema_name);
-    dummy_ids := cleanup_citymodels(schema_name);
+    if cleanup <> 0 then
+      dummy_ids := cleanup_implicit_geometries(1, schema_name);
+      dummy_ids := cleanup_appearances(0, schema_name);
+      dummy_ids := cleanup_grid_coverages(schema_name);
+      dummy_ids := cleanup_addresses(schema_name);
+      dummy_ids := cleanup_cityobjectgroups(schema_name);
+      dummy_ids := cleanup_citymodels(schema_name);
+    end if;
 
-    return deleted_id;	
+    return deleted_id;
   exception
     when others then
       dbms_output.put_line('delete_cityobject_cascade (id: ' || pid || '): ' || SQLERRM);
@@ -3541,7 +3542,7 @@ AS
     loop
       fetch cityobject_cur into cityobject_id;
       exit when cityobject_cur%notfound;
-      dummy_id := delete_cityobject_cascade(cityobject_id, schema_name);
+      dummy_id := delete_cityobject_cascade(cityobject_id, 0, schema_name);
     end loop;
     close cityobject_cur;
 
