@@ -972,7 +972,8 @@ CREATE TABLE citydb.textureparam (
 WITH tex_image_entry AS (
   WITH tex_image_insert AS ( 
     SELECT sd_v2.tex_image_uri, sd_v2.tex_image, sd_v2.tex_mime_type
-      FROM public.surface_data sd_v2, (SELECT min(id) AS sample_id FROM public.surface_data GROUP BY tex_image_uri) sample
+      FROM public.surface_data sd_v2, 
+           (SELECT min(id) AS sample_id FROM public.surface_data WHERE tex_image_uri IS NOT NULL GROUP BY tex_image_uri) sample
       WHERE sd_v2.id = sample.sample_id
   )
   INSERT INTO citydb.tex_image (tex_image_uri, tex_image_data, tex_mime_type)
