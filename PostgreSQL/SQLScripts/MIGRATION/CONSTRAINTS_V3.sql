@@ -27,6 +27,9 @@ ALTER TABLE citydb.address
   ADD CONSTRAINT address_pk PRIMARY KEY (id),
   ALTER COLUMN id SET DEFAULT nextval('citydb.address_seq'::regclass);
 
+ALTER TABLE citydb.address_to_bridge
+  ADD CONSTRAINT address_to_bridge_pk PRIMARY KEY (bridge_id,address_id);
+
 ALTER TABLE citydb.address_to_building
   ADD CONSTRAINT address_to_building_pk PRIMARY KEY (building_id,address_id);
 
@@ -39,6 +42,30 @@ ALTER TABLE citydb.appearance
 
 ALTER TABLE citydb.breakline_relief
   ADD CONSTRAINT breakline_relief_pk PRIMARY KEY (id);
+
+ALTER TABLE citydb.bridge
+  ADD CONSTRAINT bridge_pk PRIMARY KEY (id);
+
+ALTER TABLE citydb.bridge_constr_element
+  ADD CONSTRAINT bridge_constr_element_pk PRIMARY KEY (id);
+
+ALTER TABLE citydb.bridge_furniture
+  ADD CONSTRAINT bridge_furniture_pk PRIMARY KEY (id);
+
+ALTER TABLE citydb.bridge_installation
+  ADD CONSTRAINT bridge_installation_pk PRIMARY KEY (id);
+
+ALTER TABLE citydb.bridge_open_to_them_srf
+  ADD CONSTRAINT bridge_open_to_them_srf_pk PRIMARY KEY (bridge_opening_id,bridge_thematic_surface_id);
+
+ALTER TABLE citydb.bridge_opening
+  ADD CONSTRAINT bridge_opening_pk PRIMARY KEY (id);
+
+ALTER TABLE citydb.bridge_room
+  ADD CONSTRAINT bridge_room_pk PRIMARY KEY (id);
+
+ALTER TABLE citydb.bridge_thematic_surface
+  ADD CONSTRAINT bridge_thematic_surface_pk PRIMARY KEY (id);
 
 ALTER TABLE citydb.building
   ADD CONSTRAINT building_pk PRIMARY KEY (id);
@@ -83,6 +110,9 @@ ALTER TABLE citydb.generalization
 ALTER TABLE citydb.generic_cityobject
   ADD CONSTRAINT generic_cityobject_pk PRIMARY KEY (id);
 
+ALTER TABLE citydb.grid_coverage
+  ADD CONSTRAINT grid_coverage_pk PRIMARY KEY (id);
+
 ALTER TABLE citydb.group_to_cityobject
   ADD CONSTRAINT group_to_cityobject_pk PRIMARY KEY (cityobject_id,cityobjectgroup_id);
 
@@ -95,6 +125,9 @@ ALTER TABLE citydb.land_use
 
 ALTER TABLE citydb.masspoint_relief
   ADD CONSTRAINT masspoint_relief_pk PRIMARY KEY (id);
+
+ALTER TABLE citydb.objectclass
+  ADD CONSTRAINT objectclass_pk PRIMARY KEY (id);
 
 ALTER TABLE citydb.opening
   ADD CONSTRAINT opening_pk PRIMARY KEY (id);
@@ -130,6 +163,9 @@ ALTER TABLE citydb.surface_geometry
   ADD CONSTRAINT surface_geometry_pk PRIMARY KEY (id),
   ALTER COLUMN id SET DEFAULT nextval('citydb.surface_geometry_seq'::regclass);
 
+ALTER TABLE citydb.tex_image
+  ADD CONSTRAINT tex_image_pk PRIMARY KEY (id);
+
 ALTER TABLE citydb.textureparam
   ADD CONSTRAINT textureparam_pk PRIMARY KEY (surface_geometry_id,surface_data_id);
 
@@ -144,6 +180,27 @@ ALTER TABLE citydb.transportation_complex
 
 ALTER TABLE citydb.traffic_area
   ADD CONSTRAINT traffic_area_pk PRIMARY KEY (id);
+
+ALTER TABLE citydb.tunnel
+  ADD CONSTRAINT tunnel_pk PRIMARY KEY (id);
+
+ALTER TABLE citydb.tunnel_furniture
+  ADD CONSTRAINT tunnel_furniture_pk PRIMARY KEY (id);
+
+ALTER TABLE citydb.tunnel_hollow_space
+  ADD CONSTRAINT tunnel_hollow_space_pk PRIMARY KEY (id);
+
+ALTER TABLE citydb.tunnel_installation
+  ADD CONSTRAINT tunnel_installation_pk PRIMARY KEY (id);
+
+ALTER TABLE citydb.tunnel_open_to_them_srf
+  ADD CONSTRAINT tunnel_open_to_them_srf_pk PRIMARY KEY (tunnel_opening_id,tunnel_thematic_surface_id);
+
+ALTER TABLE citydb.tunnel_opening
+  ADD CONSTRAINT tunnel_opening_pk PRIMARY KEY (id);
+
+ALTER TABLE citydb.tunnel_thematic_surface
+  ADD CONSTRAINT tunnel_thematic_surface_pk PRIMARY KEY (id);
 
 ALTER TABLE citydb.waterbod_to_waterbnd_srf
   ADD CONSTRAINT waterbod_to_waterbnd_pk PRIMARY KEY (waterboundary_surface_id,waterbody_id);

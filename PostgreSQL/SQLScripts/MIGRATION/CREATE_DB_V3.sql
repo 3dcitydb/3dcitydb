@@ -153,8 +153,7 @@ DROP TABLE IF EXISTS citydb.objectclass CASCADE;
 CREATE TABLE citydb.objectclass(
 	id integer NOT NULL,
 	classname character varying(256),
-	superclass_id integer,
-	CONSTRAINT objectclass_pk PRIMARY KEY (id)
+	superclass_id integer
 );
 
 
@@ -191,8 +190,7 @@ CREATE TABLE citydb.bridge(
 	lod1_solid_id INTEGER,
 	lod2_solid_id INTEGER,
 	lod3_solid_id INTEGER,
-	lod4_solid_id INTEGER,
-	CONSTRAINT bridge_pk PRIMARY KEY (id)
+	lod4_solid_id INTEGER
 );
 
 DROP TABLE IF EXISTS citydb.bridge_constr_element CASCADE;
@@ -228,8 +226,7 @@ CREATE TABLE citydb.bridge_constr_element(
 	lod1_implicit_transformation VARCHAR(1000),
 	lod2_implicit_transformation VARCHAR(1000),
 	lod3_implicit_transformation VARCHAR(1000),
-	lod4_implicit_transformation VARCHAR(1000),
-	CONSTRAINT bridge_constr_element_pk PRIMARY KEY (id)
+	lod4_implicit_transformation VARCHAR(1000)
 );
 
 DROP TABLE IF EXISTS citydb.bridge_installation CASCADE;
@@ -258,8 +255,7 @@ CREATE TABLE citydb.bridge_installation(
 	lod4_implicit_ref_point geometry(POINTZ,:srid),
 	lod2_implicit_transformation VARCHAR(1000),
 	lod3_implicit_transformation VARCHAR(1000),
-	lod4_implicit_transformation VARCHAR(1000),
-	CONSTRAINT bridge_installation_pk PRIMARY KEY (id)
+	lod4_implicit_transformation VARCHAR(1000)
 );
 
 DROP TABLE IF EXISTS citydb.bridge_thematic_surface CASCADE;
@@ -272,8 +268,7 @@ CREATE TABLE citydb.bridge_thematic_surface(
 	bridge_constr_element_id INTEGER,
 	lod2_multi_surface_id INTEGER,
 	lod3_multi_surface_id INTEGER,
-	lod4_multi_surface_id INTEGER,
-	CONSTRAINT bridge_thematic_surface_pk PRIMARY KEY (id)
+	lod4_multi_surface_id INTEGER
 );
 
 DROP TABLE IF EXISTS citydb.bridge_opening CASCADE;
@@ -288,16 +283,13 @@ CREATE TABLE citydb.bridge_opening(
 	lod3_implicit_ref_point geometry(POINTZ,:srid),
 	lod4_implicit_ref_point geometry(POINTZ,:srid),
 	lod3_implicit_transformation VARCHAR(1000),
-	lod4_implicit_transformation VARCHAR(1000),
-	CONSTRAINT bridge_opening_pk PRIMARY KEY (id)
+	lod4_implicit_transformation VARCHAR(1000)
 );
 
 DROP TABLE IF EXISTS citydb.bridge_open_to_them_srf CASCADE;
 CREATE TABLE citydb.bridge_open_to_them_srf(
 	bridge_opening_id INTEGER NOT NULL,
-	bridge_thematic_surface_id INTEGER NOT NULL,
-	CONSTRAINT bridge_open_to_them_srf_pk PRIMARY KEY (bridge_opening_id,bridge_thematic_surface_id)
-
+	bridge_thematic_surface_id INTEGER NOT NULL
 );
 
 DROP TABLE IF EXISTS citydb.bridge_room CASCADE;
@@ -311,8 +303,7 @@ CREATE TABLE citydb.bridge_room(
 	usage_codespace VARCHAR(4000),
 	bridge_id INTEGER NOT NULL,
 	lod4_multi_surface_id INTEGER,
-	lod4_solid_id INTEGER,
-	CONSTRAINT bridge_room_pk PRIMARY KEY (id)
+	lod4_solid_id INTEGER
 );
 
 DROP TABLE IF EXISTS citydb.bridge_furniture CASCADE;
@@ -329,15 +320,13 @@ CREATE TABLE citydb.bridge_furniture(
 	lod4_other_geom geometry(GEOMETRYZ,:srid),
 	lod4_implicit_rep_id INTEGER,
 	lod4_implicit_ref_point geometry(POINTZ,:srid),
-	lod4_implicit_transformation VARCHAR(1000),
-	CONSTRAINT bridge_furniture_pk PRIMARY KEY (id)
+	lod4_implicit_transformation VARCHAR(1000)
 );
 
 DROP TABLE IF EXISTS citydb.address_to_bridge CASCADE;
 CREATE TABLE citydb.address_to_bridge(
-	bridge_id INTEGER,
-	address_id INTEGER,
-	CONSTRAINT address_to_bridge_pk PRIMARY KEY (bridge_id,address_id)
+	bridge_id INTEGER NOT NULL,
+	address_id INTEGER NOT NULL
 );
 
 
@@ -369,8 +358,7 @@ CREATE TABLE citydb.tunnel(
 	lod1_solid_id INTEGER,
 	lod2_solid_id INTEGER,
 	lod3_solid_id INTEGER,
-	lod4_solid_id INTEGER,
-	CONSTRAINT tunnel_pk PRIMARY KEY (id)
+	lod4_solid_id INTEGER
 );
 
 DROP TABLE IF EXISTS citydb.tunnel_installation CASCADE;
@@ -399,8 +387,7 @@ CREATE TABLE citydb.tunnel_installation(
 	lod4_implicit_ref_point geometry(POINTZ,:srid),
 	lod2_implicit_transformation VARCHAR(1000),
 	lod3_implicit_transformation VARCHAR(1000),
-	lod4_implicit_transformation VARCHAR(1000),
-	CONSTRAINT tunnel_installation_pk PRIMARY KEY (id)
+	lod4_implicit_transformation VARCHAR(1000)
 );
 
 DROP TABLE IF EXISTS citydb.tunnel_thematic_surface CASCADE;
@@ -412,8 +399,7 @@ CREATE TABLE citydb.tunnel_thematic_surface(
 	tunnel_installation_id INTEGER,
 	lod2_multi_surface_id INTEGER,
 	lod3_multi_surface_id INTEGER,
-	lod4_multi_surface_id INTEGER,
-	CONSTRAINT tunnel_thematic_surface_pk PRIMARY KEY (id)
+	lod4_multi_surface_id INTEGER
 );
 
 DROP TABLE IF EXISTS citydb.tunnel_opening CASCADE;
@@ -427,15 +413,13 @@ CREATE TABLE citydb.tunnel_opening(
 	lod3_implicit_ref_point geometry(POINTZ,:srid),
 	lod4_implicit_ref_point geometry(POINTZ,:srid),
 	lod3_implicit_transformation VARCHAR(1000),
-	lod4_implicit_transformation VARCHAR(1000),
-	CONSTRAINT tunnel_opening_pk PRIMARY KEY (id)
+	lod4_implicit_transformation VARCHAR(1000)
 );
 
 DROP TABLE IF EXISTS citydb.tunnel_open_to_them_srf CASCADE;
 CREATE TABLE citydb.tunnel_open_to_them_srf(
 	tunnel_opening_id INTEGER NOT NULL,
-	tunnel_thematic_surface_id INTEGER NOT NULL,
-	CONSTRAINT tunnel_open_to_them_srf_pk PRIMARY KEY (tunnel_opening_id,tunnel_thematic_surface_id)
+	tunnel_thematic_surface_id INTEGER NOT NULL
 );
 
 DROP TABLE IF EXISTS citydb.tunnel_hollow_space CASCADE;
@@ -449,8 +433,7 @@ CREATE TABLE citydb.tunnel_hollow_space(
 	usage_codespace VARCHAR(4000),
 	tunnel_id INTEGER NOT NULL,
 	lod4_multi_surface_id INTEGER,
-	lod4_solid_id INTEGER,
-	CONSTRAINT tunnel_hollow_space_pk PRIMARY KEY (id)
+	lod4_solid_id INTEGER
 );
 
 DROP TABLE IF EXISTS citydb.tunnel_furniture CASCADE;
@@ -467,8 +450,7 @@ CREATE TABLE citydb.tunnel_furniture(
 	lod4_other_geom geometry(GEOMETRYZ,:srid),
 	lod4_implicit_rep_id INTEGER,
 	lod4_implicit_ref_point geometry(POINTZ,:srid),
-	lod4_implicit_transformation VARCHAR(1000),
-	CONSTRAINT tunnel_furniture_pk PRIMARY KEY (id)
+	lod4_implicit_transformation VARCHAR(1000)
 );
 
 
@@ -479,8 +461,7 @@ CREATE TABLE citydb.tex_image(
 	tex_image_uri VARCHAR(4000),
 	tex_image_data BYTEA,
 	tex_mime_type VARCHAR(256),
-	tex_mime_type_codespace VARCHAR(4000),
-	CONSTRAINT tex_image_pk PRIMARY KEY (id)
+	tex_mime_type_codespace VARCHAR(4000)
 );
 
 
@@ -488,6 +469,5 @@ CREATE TABLE citydb.tex_image(
 DROP TABLE IF EXISTS citydb.grid_coverage CASCADE;
 CREATE TABLE citydb.grid_coverage(
 	id INTEGER NOT NULL DEFAULT nextval('citydb.grid_coverage_seq'::regclass),
-	rasterproperty RASTER,
-	CONSTRAINT grid_coverage_pk PRIMARY KEY (id)
+	rasterproperty RASTER
 );
