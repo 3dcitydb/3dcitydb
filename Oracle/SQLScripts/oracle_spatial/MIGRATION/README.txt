@@ -11,7 +11,7 @@
     - Enter the username for the accesses to be granted 
     - Enter the schema name on which the accesses to be granted 
 
-3. Execute @MIGRATE_DB_V2_V3.sql as your current user 
+3. Execute @MIGRATE_DB.sql as your current user 
 
     - Enter the schema name from which the data will be copied 
 
@@ -25,7 +25,7 @@ Let's assume that version 2.1 DB has UTM32 Coordinate System which corresponds t
 
     - After the database is created, you log on as a DBA User to be able to grant select accesses to this user for the schema which we will migrate from and run @GRANT_ACCESS.sql script. You give the values "3DCITYDB_TEST3" and "3DCITYDB_TEST2" as parameters. 
 
-    - When the script is finished, you log on with your username "3DCITYDB_TEST3" again and run the script @MIGRATE_DB_V2_V3.sql and give the schema name which the data will be copied as the parameter: "3DCITYDB_TEST2". 
+    - When the script is finished, you log on with your username "3DCITYDB_TEST3" again and run the script @MIGRATE_DB.sql and give the schema name which the data will be copied as the parameter: "3DCITYDB_TEST2". 
 
     - When the migration script is completed, you see a message "DB migration is completed successfully." on the console. 
 

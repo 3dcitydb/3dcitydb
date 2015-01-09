@@ -48,6 +48,16 @@ BEGIN
 END;
 /
 
+BEGIN
+	dbms_output.put_line('Migration related Packages, Procedures and Functions are being removed');
+END;
+/
+@@DROPTEMPOBJECTS.sql
+BEGIN
+	dbms_output.put_line('Removal of migration related Packages, Procedures and Functions is completed');
+END;
+/
+
 COMMIT;
 
 BEGIN

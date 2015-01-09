@@ -54,6 +54,7 @@ AS
     CURSOR surface_geometry_v2 IS select * from surface_geometry_v2 order by id;
     has_xlink NUMBER(1,0) := 0;
     is_solid NUMBER(1,0) := 0;
+    solid_coordinates SDO_GEOMETRY;
   BEGIN
     dbms_output.put_line('Surface_Geometry table is being copied...');
     for surface_geometry in surface_geometry_v2 loop
@@ -75,6 +76,11 @@ AS
           surface_geometry.IS_TRIANGULATED, surface_geometry.IS_XLINK,
           surface_geometry.IS_REVERSE, surface_geometry.GEOMETRY);
         ELSIF (is_solid = 1) THEN
+	   EXECUTE IMMEDIATE 'SELECT SDO_AGGR_UNION(
+                                    MDSYS.SDOAGGRTYPE(s.geometry, 1000)) 
+                             from surface_geometry_v2 s where root_id = ' || 
+                             surface_geometry.ROOT_ID || ' order by id' 
+                             INTO solid_coordinates;
           insert into surface_geometry
           (ID, GMLID, PARENT_ID, ROOT_ID, IS_SOLID, IS_COMPOSITE,
           IS_TRIANGULATED, IS_XLINK, IS_REVERSE, SOLID_GEOMETRY)
@@ -82,7 +88,7 @@ AS
           (surface_geometry.ID, surface_geometry.GMLID, surface_geometry.PARENT_ID,
           surface_geometry.ROOT_ID, surface_geometry.IS_SOLID, surface_geometry.IS_COMPOSITE,
           surface_geometry.IS_TRIANGULATED, surface_geometry.IS_XLINK,
-          surface_geometry.IS_REVERSE, surface_geometry.GEOMETRY);
+          surface_geometry.IS_REVERSE, solid_coordinates);
         ELSE
           insert into surface_geometry
           (ID, GMLID, PARENT_ID, ROOT_ID, IS_SOLID, IS_COMPOSITE,
@@ -218,7 +224,7 @@ AS
         LOD4_SOLID_ID)
         values
         (building.ID, building.BUILDING_PARENT_ID, building.BUILDING_ROOT_ID,
-        building.CLASS, building.FUNCTION, building.USAGE, building.YEAR_OF_CONSTRUCTION,
+        replace(building.CLASS,' ','--/\--'), replace(building.FUNCTION,' ','--/\--'), replace(building.USAGE,' ','--/\--'), building.YEAR_OF_CONSTRUCTION,
         building.YEAR_OF_DEMOLITION, building.ROOF_TYPE, building.MEASURED_HEIGHT, building.STOREYS_ABOVE_GROUND,
         building.STOREYS_BELOW_GROUND, building.STOREY_HEIGHTS_ABOVE_GROUND, building.STOREY_HEIGHTS_BELOW_GROUND,
         building.LOD1_TERRAIN_INTERSECTION, building.LOD2_TERRAIN_INTERSECTION, building.LOD3_TERRAIN_INTERSECTION,
@@ -367,7 +373,7 @@ AS
         (ID,CLASS,FUNCTION,USAGE,BUILDING_ID,LOD4_MULTI_SURFACE_ID,
         LOD4_SOLID_ID)
         values
-        (room.ID,room.CLASS,room.FUNCTION,room.USAGE,room.BUILDING_ID,
+        (room.ID,replace(room.CLASS,' ','--/\--'),replace(room.FUNCTION,' ','--/\--'),replace(room.USAGE,' ','--/\--'),room.BUILDING_ID,
         lod4MultiSurfaceID, lod4SolidID);
 
         -- Insert the name and the description of the room
@@ -405,8 +411,8 @@ AS
         (ID,CLASS,FUNCTION,USAGE,ROOM_ID,LOD4_BREP_ID,LOD4_IMPLICIT_REP_ID,
         LOD4_IMPLICIT_REF_POINT,LOD4_IMPLICIT_TRANSFORMATION)
         values
-        (building_furniture.ID,building_furniture.CLASS,building_furniture.FUNCTION,
-        building_furniture.USAGE,building_furniture.ROOM_ID,
+        (building_furniture.ID,replace(building_furniture.CLASS,' ','--/\--'),replace(building_furniture.FUNCTION,' ','--/\--'),
+        replace(building_furniture.USAGE,' ','--/\--'),building_furniture.ROOM_ID,
         building_furniture.LOD4_GEOMETRY_ID,building_furniture.LOD4_IMPLICIT_REP_ID,
         building_furniture.LOD4_IMPLICIT_REF_POINT,
         building_furniture.LOD4_IMPLICIT_TRANSFORMATION);
@@ -462,8 +468,8 @@ AS
         (ID,OBJECTCLASS_ID,CLASS,FUNCTION,USAGE,BUILDING_ID,ROOM_ID,
         LOD2_BREP_ID,LOD3_BREP_ID,LOD4_BREP_ID)
         values
-        (building_installation.ID,classID,building_installation.CLASS,
-        building_installation.FUNCTION,building_installation.USAGE,
+        (building_installation.ID,classID,replace(building_installation.CLASS,' ','--/\--'),
+        replace(building_installation.FUNCTION,' ','--/\--'),replace(building_installation.USAGE,' ','--/\--'),
         building_installation.BUILDING_ID,building_installation.ROOM_ID,
         building_installation.LOD2_GEOMETRY_ID,building_installation.LOD3_GEOMETRY_ID,
         building_installation.LOD4_GEOMETRY_ID);
@@ -536,7 +542,7 @@ AS
         LOD2_IMPLICIT_TRANSFORMATION,LOD3_IMPLICIT_TRANSFORMATION,
         LOD4_IMPLICIT_TRANSFORMATION)
         values
-        (city_furniture.ID,city_furniture.CLASS,city_furniture.FUNCTION,
+        (city_furniture.ID,replace(city_furniture.CLASS,' ','--/\--'),replace(city_furniture.FUNCTION,' ','--/\--'),
         city_furniture.LOD1_TERRAIN_INTERSECTION,city_furniture.LOD2_TERRAIN_INTERSECTION,
         city_furniture.LOD3_TERRAIN_INTERSECTION,city_furniture.LOD4_TERRAIN_INTERSECTION,
         city_furniture.LOD1_GEOMETRY_ID,city_furniture.LOD2_GEOMETRY_ID,
@@ -603,8 +609,8 @@ AS
         insert into cityobjectgroup
         (ID,CLASS,FUNCTION,USAGE,BREP_ID,OTHER_GEOM,PARENT_CITYOBJECT_ID)
         values
-        (cityobjectgroup.ID,cityobjectgroup.CLASS,cityobjectgroup.FUNCTION,
-        cityobjectgroup.USAGE,cityobjectgroup.SURFACE_GEOMETRY_ID,
+        (cityobjectgroup.ID,replace(cityobjectgroup.CLASS,' ','--/\--'),replace(cityobjectgroup.FUNCTION,' ','--/\--'),
+        replace(cityobjectgroup.USAGE,' ','--/\--'),cityobjectgroup.SURFACE_GEOMETRY_ID,
         cityobjectgroup.GEOMETRY,cityobjectgroup.PARENT_CITYOBJECT_ID);
 
         -- Insert the name and the description of the city furniture
@@ -686,8 +692,8 @@ AS
         LOD1_IMPLICIT_TRANSFORMATION,LOD2_IMPLICIT_TRANSFORMATION,
         LOD3_IMPLICIT_TRANSFORMATION,LOD4_IMPLICIT_TRANSFORMATION)
         values
-        (generic_cityobject.ID,generic_cityobject.CLASS,generic_cityobject.FUNCTION,
-        generic_cityobject.USAGE,generic_cityobject.LOD0_TERRAIN_INTERSECTION,
+        (generic_cityobject.ID,replace(generic_cityobject.CLASS,' ','--/\--'),replace(generic_cityobject.FUNCTION,' ','--/\--'),
+        replace(generic_cityobject.USAGE,' ','--/\--'),generic_cityobject.LOD0_TERRAIN_INTERSECTION,
         generic_cityobject.LOD1_TERRAIN_INTERSECTION,
         generic_cityobject.LOD2_TERRAIN_INTERSECTION,
         generic_cityobject.LOD3_TERRAIN_INTERSECTION,
@@ -771,7 +777,7 @@ AS
         (ID,CLASS,FUNCTION,USAGE,LOD0_MULTI_SURFACE_ID,LOD1_MULTI_SURFACE_ID,
         LOD2_MULTI_SURFACE_ID,LOD3_MULTI_SURFACE_ID,LOD4_MULTI_SURFACE_ID)
         values
-        (land_use.ID,land_use.CLASS,land_use.FUNCTION,land_use.USAGE,
+        (land_use.ID,replace(land_use.CLASS,' ','--/\--'),replace(land_use.FUNCTION,' ','--/\--'),replace(land_use.USAGE,' ','--/\--'),
         land_use.LOD0_MULTI_SURFACE_ID,land_use.LOD1_MULTI_SURFACE_ID,
         land_use.LOD2_MULTI_SURFACE_ID,land_use.LOD3_MULTI_SURFACE_ID,
         land_use.LOD4_MULTI_SURFACE_ID);
@@ -970,7 +976,7 @@ AS
         LOD1_MULTI_SOLID_ID, LOD2_MULTI_SOLID_ID, LOD3_MULTI_SOLID_ID,
         LOD4_MULTI_SOLID_ID)
         values
-        (plant_cover.ID,plant_cover.CLASS,plant_cover.FUNCTION,
+        (plant_cover.ID,replace(plant_cover.CLASS,' ','--/\--'),replace(plant_cover.FUNCTION,' ','--/\--'),
         plant_cover.AVERAGE_HEIGHT,lod1MultiSurfaceID,lod2MultiSurfaceID,
         lod3MultiSurfaceID,lod4MultiSurfaceID,lod1SolidID,lod2SolidID,
         lod3SolidID, lod4SolidID);
@@ -1130,8 +1136,8 @@ AS
         LOD1_IMPLICIT_TRANSFORMATION,LOD2_IMPLICIT_TRANSFORMATION,
         LOD3_IMPLICIT_TRANSFORMATION,LOD4_IMPLICIT_TRANSFORMATION)
         values
-        (solitary_vegetat_object.ID,solitary_vegetat_object.CLASS,
-        solitary_vegetat_object.SPECIES,solitary_vegetat_object.FUNCTION,
+        (solitary_vegetat_object.ID,replace(solitary_vegetat_object.CLASS,' ','--/\--'),
+        solitary_vegetat_object.SPECIES,replace(solitary_vegetat_object.FUNCTION,' ','--/\--'),
         solitary_vegetat_object.HEIGHT,solitary_vegetat_object.TRUNC_DIAMETER,
         solitary_vegetat_object.CROWN_DIAMETER, solitary_vegetat_object.LOD1_GEOMETRY_ID,
         solitary_vegetat_object.LOD2_GEOMETRY_ID,
@@ -1242,7 +1248,7 @@ AS
         (ID,OBJECTCLASS_ID,FUNCTION,USAGE,SURFACE_MATERIAL,LOD2_MULTI_SURFACE_ID,
         LOD3_MULTI_SURFACE_ID,LOD4_MULTI_SURFACE_ID,TRANSPORTATION_COMPLEX_ID)
         values
-        (traffic_area.ID,classID,traffic_area.FUNCTION,traffic_area.USAGE,
+        (traffic_area.ID,classID,replace(traffic_area.FUNCTION,' ','--/\--'),replace(traffic_area.USAGE,' ','--/\--'),
         traffic_area.SURFACE_MATERIAL,traffic_area.LOD2_MULTI_SURFACE_ID,
         traffic_area.LOD3_MULTI_SURFACE_ID,traffic_area.LOD4_MULTI_SURFACE_ID,
         traffic_area.TRANSPORTATION_COMPLEX_ID);
@@ -1299,8 +1305,8 @@ AS
         LOD1_MULTI_SURFACE_ID,LOD2_MULTI_SURFACE_ID,LOD3_MULTI_SURFACE_ID,
         LOD4_MULTI_SURFACE_ID)
         values
-        (transportation_complex.ID,classID,transportation_complex.FUNCTION,
-        transportation_complex.USAGE,transportation_complex.LOD0_NETWORK,
+        (transportation_complex.ID,classID,replace(transportation_complex.FUNCTION,' ','--/\--'),
+        replace(transportation_complex.USAGE,' ','--/\--'),transportation_complex.LOD0_NETWORK,
         transportation_complex.LOD1_MULTI_SURFACE_ID,
         transportation_complex.LOD2_MULTI_SURFACE_ID,
         transportation_complex.LOD3_MULTI_SURFACE_ID,
@@ -1362,7 +1368,7 @@ AS
         LOD0_MULTI_SURFACE_ID,LOD1_MULTI_SURFACE_ID,LOD1_SOLID_ID,
         LOD2_SOLID_ID,LOD3_SOLID_ID,LOD4_SOLID_ID)
         values
-        (waterbody.ID,waterbody.CLASS,waterbody.FUNCTION,waterbody.USAGE,
+        (waterbody.ID,replace(waterbody.CLASS,' ','--/\--'),replace(waterbody.FUNCTION,' ','--/\--'),replace(waterbody.USAGE,' ','--/\--'),
         waterbody.LOD0_MULTI_CURVE,waterbody.LOD1_MULTI_CURVE,
         waterbody.LOD0_MULTI_SURFACE_ID,waterbody.LOD1_MULTI_SURFACE_ID,
         waterbody.LOD1_SOLID_ID,waterbody.LOD2_SOLID_ID,
@@ -1451,11 +1457,17 @@ AS
     dbms_output.put_line('Surface_Geometry table is being updated...');
     for surface_geometry in surface_geometry_v3 loop        
         IF (surface_geometry.CITYOBJECT_ID IS NOT NULL) THEN
-          EXECUTE IMMEDIATE 'update surface_geometry set 
+	    EXECUTE IMMEDIATE 'update surface_geometry set 
                               CITYOBJECT_ID = :1 where PARENT_ID = :2'
                               USING surface_geometry.CITYOBJECT_ID, 
                               surface_geometry.ID;
         END IF;
+	 IF (surface_geometry.IS_SOLID = 1) THEN
+	    EXECUTE IMMEDIATE 'update surface_geometry set 
+                              CITYOBJECT_ID = :1 where ROOT_ID = :2'
+                              USING surface_geometry.CITYOBJECT_ID, 
+                              surface_geometry.ID;
+	 END IF;
     end loop;
     for surface_geometry_x in surface_geometry_xv3 loop        
         IF (surface_geometry_x.GEOMETRY IS NOT NULL) THEN
