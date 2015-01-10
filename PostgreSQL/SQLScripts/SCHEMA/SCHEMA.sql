@@ -2894,7 +2894,7 @@ CREATE TABLE citydb.tunnel_installation(
 -- ddl-end --
 -- object: tunnel_inst_objclass_fk | type: INDEX --
 -- DROP INDEX citydb.tunnel_inst_objclass_fk;
-CREATE INDEX tunnel_inst_objclass_fk ON citydb.tunnel_installation
+CREATE INDEX tunnel_inst_objclass_fkx ON citydb.tunnel_installation
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -4001,8 +4001,8 @@ CREATE INDEX bridge_const_lod4refpt_spx ON citydb.bridge_constr_element
 -- object: citydb.address_to_bridge | type: TABLE --
 -- DROP TABLE citydb.address_to_bridge;
 CREATE TABLE citydb.address_to_bridge(
-	bridge_id integer,
-	address_id integer,
+	bridge_id integer NOT NULL,
+	address_id integer NOT NULL,
 	CONSTRAINT address_to_bridge_pk PRIMARY KEY (bridge_id,address_id)
 
 );

@@ -3235,7 +3235,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="tunnel_installation_pk" type="pk-constr" factor="100" table="citydb.tunnel_installation">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
-	<index name="tunnel_inst_objclass_fk" table="citydb.tunnel_installation"
+	<index name="tunnel_inst_objclass_fkx" table="citydb.tunnel_installation"
 		 concurrent="false" unique="false" fast-update="false" buffering="false"
 		 index-type="btree" factor="0">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
@@ -4431,10 +4431,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="address_to_bridge">
 	<schema name="citydb"/>
 	<position x="4477" y="4772"/>
-	<column name="bridge_id">
+	<column name="bridge_id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="address_id">
+	<column name="address_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<constraint name="address_to_bridge_pk" type="pk-constr" factor="100" table="citydb.address_to_bridge">
