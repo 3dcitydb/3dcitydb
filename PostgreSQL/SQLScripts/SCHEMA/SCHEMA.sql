@@ -31,13 +31,13 @@ SET check_function_bodies = false;
 CREATE SCHEMA citydb;
 -- ddl-end --
 
--- object: postgis | type: EXTENSION --
--- DROP EXTENSION postgis CASCADE;
-CREATE EXTENSION postgis
-      WITH SCHEMA public;
-COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial types and functions';
--- ddl-end --
-
+-- -- object: postgis | type: EXTENSION --
+-- -- DROP EXTENSION postgis CASCADE;
+-- CREATE EXTENSION postgis
+--       WITH SCHEMA public;
+-- COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial types and functions';
+-- -- ddl-end --
+-- 
 -- object: citydb.citymodel_seq | type: SEQUENCE --
 -- DROP SEQUENCE citydb.citymodel_seq;
 CREATE SEQUENCE citydb.citymodel_seq

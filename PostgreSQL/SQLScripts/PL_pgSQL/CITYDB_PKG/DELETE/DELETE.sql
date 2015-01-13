@@ -2651,7 +2651,6 @@ BEGIN
            class_id = 46 THEN deleted_id := citydb_pkg.delete_transport_complex(co_id, schema_name);
       WHEN class_id = 47 OR 
            class_id = 48 THEN deleted_id := citydb_pkg.delete_traffic_area(co_id, schema_name);
-      WHEN class_id = 57 THEN deleted_id := citydb_pkg.delete_citymodel(co_id, delete_members, schema_name);
       WHEN class_id = 63 OR 
            class_id = 64 THEN deleted_id := citydb_pkg.delete_bridge(co_id, schema_name);
       WHEN class_id = 65 OR 
