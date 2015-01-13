@@ -48,6 +48,9 @@ SET client_min_messages TO WARNING;
 
 \set SRSNO :SRS_NO
 
+--// check if the PostGIS extension is available 
+SELECT postgis_version();
+
 --// create TABLES, SEQUENCES, CONSTRAINTS, INDEXES
 \echo
 \echo 'Setting up database schema of 3DCityDB instance ...'

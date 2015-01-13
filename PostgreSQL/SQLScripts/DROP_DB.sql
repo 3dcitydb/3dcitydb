@@ -42,8 +42,5 @@ DROP SCHEMA CITYDB CASCADE;
 --// update search_path
 SET search_path TO pg_catalog,public;
 
---// drop postgis extension
-DROP EXTENSION postgis CASCADE;
-
 \echo
 \echo '3DCityDB schema successfully removed!'
