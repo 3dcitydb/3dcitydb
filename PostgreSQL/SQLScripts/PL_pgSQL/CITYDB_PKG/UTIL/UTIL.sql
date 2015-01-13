@@ -204,7 +204,6 @@ LANGUAGE plpgsql;
 * @param ref_table name of referenced table
 * @param ref_column name of referencing column of referenced table
 * @param delete_param whether CASCADE or RESTRICT
-* @param deferrable_param whether set or not
 * @param schema_name name of schema of target constraints
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.update_table_constraint(
@@ -214,13 +213,12 @@ CREATE OR REPLACE FUNCTION citydb_pkg.update_table_constraint(
   ref_table TEXT,
   ref_column TEXT,
   delete_param TEXT DEFAULT 'CASCADE',
-  deferrable_param TEXT DEFAULT 'INITIALLY DEFERRED',
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS SETOF VOID AS 
 $$
 BEGIN
   EXECUTE format('ALTER TABLE %I.%I DROP CONSTRAINT %I, ADD CONSTRAINT %I FOREIGN KEY (%I) REFERENCES %I.%I (%I)
-                    ON UPDATE CASCADE ON DELETE ' || delete_param || ' ' || deferrable_param,
+                    ON UPDATE CASCADE ON DELETE ' || delete_param,
                     schema_name, table_name, fkey_name, fkey_name, column_name, schema_name, ref_table, ref_column);
 
   EXCEPTION
@@ -247,23 +245,20 @@ CREATE OR REPLACE FUNCTION citydb_pkg.update_schema_constraints(
 $$
 DECLARE
   delete_param TEXT := 'CASCADE';
-  deferrable_param TEXT;
 BEGIN
   IF on_delete_param <> 'CASCADE' THEN
     delete_param := 'RESTRICT';
-	deferrable_param := '';
     RAISE NOTICE 'Constraints are set to ON DELETE RESTRICT';
   ELSE
-    deferrable_param := 'INITIALLY DEFERRED';
     RAISE NOTICE 'Constraints are set to ON DELETE CASCADE';
   END IF;
 
-  EXECUTE 'SELECT citydb_pkg.update_table_constraint(tc.constraint_name, tc.table_name, kcu.column_name, ccu.table_name, ccu.column_name, $2, $3, tc.table_schema)
+  EXECUTE 'SELECT citydb_pkg.update_table_constraint(tc.constraint_name, tc.table_name, kcu.column_name, ccu.table_name, ccu.column_name, $2, tc.table_schema)
              FROM information_schema.table_constraints AS tc
              JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
              JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
-               WHERE constraint_type = ''FOREIGN KEY'' AND tc.table_schema = $1'
-               USING schema_name, delete_param, deferrable_param;
+               WHERE constraint_type = ''FOREIGN KEY'' AND tc.table_schema = $1 AND kcu.table_schema = $1'
+               USING schema_name, delete_param;
 END;
 $$
 LANGUAGE plpgsql;

@@ -125,7 +125,7 @@ AS
   FUNCTION drop_spatial_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION create_normal_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION drop_normal_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
-  FUNCTION get_index(table_name VARCHAR2, column_name VARCHAR2, tab_schema_name VARCHAR2 := USER) RETURN INDEX_OBJ;
+  FUNCTION get_index(table_name VARCHAR2, column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN INDEX_OBJ;
 END citydb_idx;
 /
 
@@ -520,20 +520,20 @@ AS
   * given the schema.table and column it indexes
   * 
   * @param table_name
-  * @param attribute_name
-  * @param tab_schema_name
+  * @param column_name
+  * @param schema_name
   * @return INDEX_OBJ
   ******************************************************************/
   FUNCTION get_index(
     table_name VARCHAR2, 
     column_name VARCHAR2,
-    tab_schema_name VARCHAR2 := USER
+    schema_name VARCHAR2 := USER
 	) RETURN INDEX_OBJ
   IS
     idx INDEX_OBJ;
   BEGIN
-    FOR rec IN (SELECT * FROM index_table WHERE schemaname = upper(tab_schema_name)) LOOP
-      IF rec.obj.attribute_name = upper(column_name) AND rec.obj.table_name = upper(table_name) THEN
+    FOR rec IN (SELECT * FROM index_table WHERE schemaname = upper(schema_name)) LOOP
+      IF rec.obj.attribute_name = upper(column_name) AND rec.obj.table_name = upper(table_name) AND rec.obj.schema_name = upper(schema_name) THEN
         idx := rec.obj;
         EXIT;
       END IF;

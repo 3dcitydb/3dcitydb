@@ -3445,7 +3445,6 @@ AS
            objectclass_id = 46 then deleted_id := delete_transport_complex(pid, schema_name);
       when objectclass_id = 47 or 
            objectclass_id = 48 then deleted_id := delete_traffic_area(pid, schema_name);
-      when objectclass_id = 57 then deleted_id := delete_citymodel(pid, delete_members, schema_name);
       when objectclass_id = 60 or 
            objectclass_id = 61 then deleted_id := delete_thematic_surface(pid, schema_name);
       when objectclass_id = 63 or 
@@ -3537,14 +3536,11 @@ AS
     cityobject_id number;
     seq_value number;
   begin
+    -- disable spatial indexes
+    citydb_idx.drop_spatial_indexes(schema_name);
+
     -- clear tables
-    open cityobject_cur for 'select id from ' || schema_name || '.cityobject';
-    loop
-      fetch cityobject_cur into cityobject_id;
-      exit when cityobject_cur%notfound;
-      dummy_id := delete_cityobject_cascade(cityobject_id, 0, schema_name);
-    end loop;
-    close cityobject_cur;
+    execute immediate 'delete from ' || schema_name || '.cityobject';
 
     dummy_ids := cleanup_appearances(0, schema_name);
     dummy_ids := cleanup_grid_coverages(schema_name);	
@@ -3647,6 +3643,9 @@ AS
     execute immediate 'alter sequence ' || schema_name || '.tex_image_seq increment by ' || (seq_value-1)*-1;
     execute immediate 'select ' || schema_name || '.tex_image_seq.nextval from dual';
     execute immediate 'alter sequence ' || schema_name || '.tex_image_seq increment by 1';
+
+    -- recreate spatial indexes
+    citydb_idx.create_spatial_indexes(schema_name);
 
   exception
     when others then

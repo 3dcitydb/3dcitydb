@@ -101,7 +101,7 @@ AS
   FUNCTION split(list VARCHAR2, delim VARCHAR2 := ',') RETURN STRARRAY;
   FUNCTION min(a NUMBER, b NUMBER) RETURN NUMBER;
   PROCEDURE update_schema_constraints(on_delete_param VARCHAR2 := 'CASCADE', schema_name VARCHAR2 := USER);
-  PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param VARCHAR2 := 'CASCADE', deferrable_param VARCHAR2 := 'INITIALLY DEFERRED', schema_name VARCHAR2 := USER);
+  PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param VARCHAR2 := 'CASCADE', schema_name VARCHAR2 := USER);
   FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER, schema_name VARCHAR2 := USER) RETURN ID_ARRAY;
   FUNCTION get_id_array_size(id_arr ID_ARRAY) RETURN NUMBER;
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
@@ -278,7 +278,6 @@ AS
   * @param ref_table name of referenced table
   * @param ref_column name of referencing column of referenced table
   * @param on_delete_param whether CASCADE or RESTRICT
-  * @param deferrable_param whether set or not
   * @param schema_name name of schema of target constraints
   ******************************************************************/
   PROCEDURE update_table_constraint(
@@ -288,7 +287,6 @@ AS
     ref_table VARCHAR2,
     ref_column VARCHAR2,
     on_delete_param VARCHAR2 := 'CASCADE',
-    deferrable_param VARCHAR2 := 'INITIALLY DEFERRED',
     schema_name VARCHAR2 := USER
     )
   IS
@@ -296,7 +294,7 @@ AS
     EXECUTE IMMEDIATE 'ALTER TABLE ' || schema_name || '.' || table_name || ' DROP CONSTRAINT ' || fkey_name;
     EXECUTE IMMEDIATE 'ALTER TABLE ' || schema_name || '.' || table_name || ' ADD CONSTRAINT ' || fkey_name || 
                          ' FOREIGN KEY (' || column_name || ') REFERENCES ' || schema_name || '.' || ref_table || '(' || ref_column || ')'
-                         || on_delete_param || ' ' || deferrable_param;
+                         || on_delete_param;
     EXCEPTION
       WHEN OTHERS THEN
         dbms_output.put_line('Error on constraint ' || fkey_name || ': ' || SQLERRM);
@@ -321,10 +319,8 @@ AS
   BEGIN
     IF on_delete_param <> 'CASCADE' THEN
       delete_param := '';
-      deferrable_param := '';
       dbms_output.put_line('Constraints are set to ON DELETE RESTRICT');
     ELSE
-      deferrable_param := 'INITIALLY DEFERRED';
       dbms_output.put_line('Constraints are set to ON DELETE CASCADE');
     END IF;
 
@@ -339,7 +335,7 @@ AS
                   AND ac2.constraint_name = acc2.constraint_name 
                   AND acc2.position = acc1.position     
                 WHERE acc1.owner = upper(schema_name) AND ac1.constraint_type = 'R') LOOP
-      update_table_constraint(rec.fkey, rec.t, rec.c, rec.ref_t, rec.ref_c, delete_param, deferrable_param);
+      update_table_constraint(rec.fkey, rec.t, rec.c, rec.ref_t, rec.ref_c, delete_param, schema_name);
     END LOOP;
   END;
 
