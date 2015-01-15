@@ -1,7 +1,5 @@
-3dcitydb
+3D City Database v3.0.0
 ========
-
-3D City Database version 3.0.0
 
 The 3D City Database version 3.0.0 is free software and comes 
 WITHOUT ANY WARRANTY. See the DISCLAIMER at the end 
@@ -37,12 +35,12 @@ COPYING and COPYING.LESSER or visit http://www.gnu.org/licenses/.
 2. Copyright
 ------------
 
-(c) 2012-2014  
+&copy 2012-2014  
 Chair of Geoinformatics (TUMGI)
 Technische Universität München, Germany
 http://www.gis.bv.tum.de
 
-(c) 2007-2012  
+&copy 2007-2012  
 Institute for Geodesy and Geoinformation Science (IGG)
 Technische Universität Berlin, Germany
 http://www.igg.tu-berlin.de
@@ -62,14 +60,14 @@ by the Open Geospatial Consortium (OGC).
 The 3D City Database has been realized as an Oracle 10G R2 Spatial relational
 database schema (or higher), supporting following key features:
 
-    * Complex thematic modelling
-    * Five different Levels of Detail (LODs)
-    * Appearance data
-    * Digital terrain models (DTMs)
-    * Representation of generic and prototypical 3D objects
-    * Free, also recursive aggregation of geo objects
-    * Flexible 3D geometries
-    * Version and history management
+* Complex thematic modelling
+* Five different Levels of Detail (LODs)
+* Appearance data
+* Digital terrain models (DTMs)
+* Representation of generic and prototypical 3D objects
+* Free, also recursive aggregation of geo objects
+* Flexible 3D geometries
+* Version and history management
 
 The 3D City Database is shipped as a collection of SQL scripts which allow
 for creating and dropping database instances.
@@ -100,9 +98,9 @@ distribution package. This script will start the setup procedure and invoke
 further scripts in the background.
 
 The setup procedure requires three mandatory user inputs:
-1) Spatial Reference Identifier for newly created geometry objects (SRID),
-2) corresponding GML conformant URN encoding for gml:srsName attributes, and
-3) decision whether the database instance should be versioning enabled.
+1. Spatial Reference Identifier for newly created geometry objects (SRID),
+2. corresponding GML conformant URN encoding for gml:srsName attributes, and
+3. decision whether the database instance should be versioning enabled.
 
 
 6. Database deletion
@@ -138,37 +136,37 @@ supported by the following cooperation partners:
 9. Developers
 -------------
 
-Claus Nagel <cnagel@virtualcitysystems.de>
-Felix Kunde <fkunde@virtualcitysystems.de>
-Zhihang Yao <zhihang.yao@tum.de>
-Thomas H. Kolbe <thomas.kolbe@tum.de>
-György Hudra <ghudra@moss.de>
-Arda Müftüoglu <amueftueoglu@moss.de>
-Javier Herreruela <javier.herreruela@tu-berlin.de>
-Alexandra Lorenz <alexandra.lorenz@tu-berlin.de>
-Gerhard König <gerhard.koenig@tu-berlin.de>
+* Claus Nagel <cnagel@virtualcitysystems.de>
+* Felix Kunde <fkunde@virtualcitysystems.de>
+* Zhihang Yao <zhihang.yao@tum.de>
+* Thomas H. Kolbe <thomas.kolbe@tum.de>
+* György Hudra <ghudra@moss.de>
+* Arda Müftüoglu <amueftueoglu@moss.de>
+* Javier Herreruela <javier.herreruela@tu-berlin.de>
+* Alexandra Lorenz <alexandra.lorenz@tu-berlin.de>
+* Gerhard König <gerhard.koenig@tu-berlin.de>
 
 
 10. Contact
 ----------
 
-thomas.kolbe@tum.de
-cnagel@virtualcitysystems.de
-pwillkomm@moss.de
+* thomas.kolbe@tum.de
+* cnagel@virtualcitysystems.de
+* pwillkomm@moss.de
 
 
 11. Websites
 ------------
 
 Official 3D City Database website: 
-http://www.3dcitydb.net/
+* http://www.3dcitydb.net/
 
 Related websites:
-https://github.com/3dcitydb/
-http://www.gis.bv.tum.de/
-http://www.citygml.org/
-http://www.citygmlwiki.org/
-http://www.opengeospatial.org/standards/citygml
+* https://github.com/3dcitydb/
+* http://www.gis.bv.tum.de/
+* http://www.citygml.org/
+* http://www.citygmlwiki.org/
+* http://www.opengeospatial.org/standards/citygml
 
 
 12. Disclaimer
