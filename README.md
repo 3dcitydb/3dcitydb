@@ -6,7 +6,7 @@ WITHOUT ANY WARRANTY. See the DISCLAIMER at the end
 of this document for more details. 
 
 
-0. Index
+Index
 --------
 
 1. License
@@ -35,12 +35,12 @@ COPYING and COPYING.LESSER or visit http://www.gnu.org/licenses/.
 2. Copyright
 ------------
 
-&copy 2012-2014  
+&copy; 2012-2014  
 Chair of Geoinformatics (TUMGI)
 Technische Universität München, Germany
 http://www.gis.bv.tum.de
 
-&copy 2007-2012  
+&copy; 2007-2012  
 Institute for Geodesy and Geoinformation Science (IGG)
 Technische Universität Berlin, Germany
 http://www.igg.tu-berlin.de
