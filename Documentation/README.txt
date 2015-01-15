@@ -1,6 +1,6 @@
-3D City Database version 3.0
+3D City Database version 3.0.0
 
-The 3D City Database version 3.0 is free software and comes 
+The 3D City Database version 3.0.0 is free software and comes 
 WITHOUT ANY WARRANTY. See the DISCLAIMER at the end 
 of this document for more details. 
 
@@ -25,7 +25,7 @@ of this document for more details.
 1. License
 ----------
 
-The 3D City Database version 3.0 is free software under the GNU Lesser 
+The 3D City Database version 3.0.0 is free software under the GNU Lesser 
 General Public License Version 3.0. See the file LICENSE for more details. 
 For a copy of the GNU Lesser General Public License see the files 
 COPYING and COPYING.LESSER or visit http://www.gnu.org/licenses/.
@@ -71,7 +71,7 @@ database schema (or higher), supporting following key features:
 The 3D City Database is shipped as a collection of SQL scripts which allow
 for creating and dropping database instances.
 
-The 3D City Database Version 3.0 was developed in collaboration of the Chair of 
+The 3D City Database Version 3.0.0 was developed in collaboration of the Chair of 
 Geoinformatics, Technische Universität München (TUMGI), virtualcitySYSTEMS GmbH, and 
 M.O.S.S. Computer Grafik Systeme GmbH. The previous version of the the 3D City Database 
 was implemented on behalf of the Berliner Senatsverwaltung für Wirtschaft, Arbeit und
@@ -84,9 +84,8 @@ at http://www.3dcitydb.net/.
 4. System requirements
 ----------------------
 
-* Oracle Spatial 10G R2
-* Oracle Spatial 11G R1
-* Oracle Spatial 11G R2 
+* Oracle Spatial 10g R2, 11g, 12c
+* PostgreSQL 9.1+ with PostGIS 2.0+
 
 
 5. Database setup
@@ -98,7 +97,7 @@ distribution package. This script will start the setup procedure and invoke
 further scripts in the background.
 
 The setup procedure requires three mandatory user inputs:
-1) Oracle Spatial Reference Identifier for newly created geometry objects (SRID),
+1) Spatial Reference Identifier for newly created geometry objects (SRID),
 2) corresponding GML conformant URN encoding for gml:srsName attributes, and
 3) decision whether the database instance should be versioning enabled.
 
@@ -121,7 +120,7 @@ on the project's website at http://www.3dcitydb.net/3dcitydb/documentation/
 8. Cooperation partners and supporters  
 --------------------------------------
 
-The development of the 3D City Database version 3.0 has been 
+The development of the 3D City Database version 3.0.0 has been 
 supported by the following cooperation partners:
 
 * Chair of Geoinformatics
@@ -137,10 +136,11 @@ supported by the following cooperation partners:
 -------------
 
 Claus Nagel <cnagel@virtualcitysystems.de>
-Zhihang Yao <zhihang.yao@tum.de>
 Felix Kunde <fkunde@virtualcitysystems.de>
+Zhihang Yao <zhihang.yao@tum.de>
 Thomas H. Kolbe <thomas.kolbe@tum.de>
 György Hudra <ghudra@moss.de>
+Arda Müftüoglu <amueftueoglu@moss.de>
 Javier Herreruela <javier.herreruela@tu-berlin.de>
 Alexandra Lorenz <alexandra.lorenz@tu-berlin.de>
 Gerhard König <gerhard.koenig@tu-berlin.de>
@@ -185,3 +185,4 @@ OPERATED BY TUMGI.
 IN NO EVENT WILL TUMGI BE LIABLE FOR ANY INDIRECT, PUNITIVE, SPECIAL, 
 INCIDENTAL OR CONSEQUENTIAL DAMAGES HOWEVER THEY MAY ARISE AND EVEN IF 
 TUMGI HAVE BEEN PREVIOUSLY ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
