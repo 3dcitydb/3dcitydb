@@ -3532,12 +3532,13 @@ AS
   is
     dummy_id number;
     dummy_ids id_array := id_array();
+    dummy_str strarray;
     cityobject_cur ref_cursor;
     cityobject_id number;
     seq_value number;
   begin
     -- disable spatial indexes
-    citydb_idx.drop_spatial_indexes(schema_name);
+    dummy_str := citydb_idx.drop_spatial_indexes(schema_name);
 
     -- clear tables
     execute immediate 'delete from ' || schema_name || '.cityobject';
@@ -3645,7 +3646,7 @@ AS
     execute immediate 'alter sequence ' || schema_name || '.tex_image_seq increment by 1';
 
     -- recreate spatial indexes
-    citydb_idx.create_spatial_indexes(schema_name);
+    dummy_str := citydb_idx.create_spatial_indexes(schema_name);
 
   exception
     when others then
