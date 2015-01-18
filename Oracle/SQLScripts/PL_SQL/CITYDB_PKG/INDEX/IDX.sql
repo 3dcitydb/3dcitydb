@@ -39,15 +39,14 @@ CREATE OR REPLACE TYPE INDEX_OBJ AS OBJECT
    type NUMBER(1),
    srid NUMBER,
    is_3d NUMBER(1, 0),
-   schema_name VARCHAR2(30),
      STATIC function construct_spatial_3d
-     (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0, schema_name VARCHAR2 := USER)
+     (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0)
      RETURN INDEX_OBJ,
      STATIC function construct_spatial_2d
-     (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0, schema_name VARCHAR2 := USER)
+     (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0)
      RETURN INDEX_OBJ,
      STATIC function construct_normal
-     (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0, schema_name VARCHAR2 := USER)
+     (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0)
      RETURN INDEX_OBJ
   );
 /
@@ -59,26 +58,25 @@ CREATE OR REPLACE TYPE INDEX_OBJ AS OBJECT
 ******************************************************************/
 CREATE OR REPLACE TYPE BODY INDEX_OBJ IS
   STATIC FUNCTION construct_spatial_3d
-  (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0, schema_name VARCHAR2 := USER)
+  (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0)
   RETURN INDEX_OBJ IS
   BEGIN
-    RETURN INDEX_OBJ(upper(index_name), upper(table_name), upper(attribute_name), 1, srid, 1, schema_name);
+    RETURN INDEX_OBJ(upper(index_name), upper(table_name), upper(attribute_name), 1, srid, 1);
   END;
   STATIC FUNCTION construct_spatial_2d
-  (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0, schema_name VARCHAR2 := USER)
+  (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0)
   RETURN INDEX_OBJ IS
   BEGIN
-    RETURN INDEX_OBJ(upper(index_name), upper(table_name), upper(attribute_name), 1, srid, 0, schema_name);
+    RETURN INDEX_OBJ(upper(index_name), upper(table_name), upper(attribute_name), 1, srid, 0);
   END;
   STATIC FUNCTION construct_normal
-  (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0, schema_name VARCHAR2 := USER)
+  (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0)
   RETURN INDEX_OBJ IS
   BEGIN
-    RETURN INDEX_OBJ(upper(index_name), upper(table_name), upper(attribute_name), 0, srid, 0, schema_name);
+    RETURN INDEX_OBJ(upper(index_name), upper(table_name), upper(attribute_name), 0, srid, 0);
   END;
 END;
 /
-
 
 /******************************************************************
 * INDEX_TABLE that holds INDEX_OBJ instances
@@ -86,8 +84,7 @@ END;
 ******************************************************************/
 CREATE TABLE INDEX_TABLE (
   ID          NUMBER PRIMARY KEY,
-  obj         INDEX_OBJ,
-  schemaname  VARCHAR2(100)
+  obj         INDEX_OBJ
 );
 
 CREATE SEQUENCE index_table_seq INCREMENT BY 1 START WITH 1 MINVALUE 1;
@@ -96,17 +93,14 @@ CREATE SEQUENCE index_table_seq INCREMENT BY 1 START WITH 1 MINVALUE 1;
 * Populate INDEX_TABLE with INDEX_OBJ instances
 * 
 ******************************************************************/
-INSERT INTO index_table (id, obj, schemaname) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('CITYOBJECT_ENVELOPE_SPX', 'CITYOBJECT', 'ENVELOPE'), USER);
-INSERT INTO index_table (id, obj, schemaname) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('SURFACE_GEOM_SPX', 'SURFACE_GEOMETRY', 'GEOMETRY'), USER);
-INSERT INTO index_table (id, obj, schemaname) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('SURFACE_GEOM_SOLID_SPX', 'SURFACE_GEOMETRY', 'SOLID_GEOMETRY'), USER);
-INSERT INTO index_table (id, obj, schemaname) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('CITYOBJECT_INX', 'CITYOBJECT', 'GMLID'), USER);
-INSERT INTO index_table (id, obj, schemaname) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('SURFACE_GEOM_INX', 'SURFACE_GEOMETRY', 'GMLID'), USER);
-INSERT INTO index_table (id, obj, schemaname) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('APPEARANCE_INX', 'APPEARANCE', 'GMLID'), USER);
-INSERT INTO index_table (id, obj, schemaname) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('SURFACE_DATA_INX', 'SURFACE_DATA', 'GMLID'), USER);
+INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('CITYOBJECT_ENVELOPE_SPX', 'CITYOBJECT', 'ENVELOPE'));
+INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('SURFACE_GEOM_SPX', 'SURFACE_GEOMETRY', 'GEOMETRY'));
+INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('SURFACE_GEOM_SOLID_SPX', 'SURFACE_GEOMETRY', 'SOLID_GEOMETRY'));
+INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('CITYOBJECT_INX', 'CITYOBJECT', 'GMLID'));
+INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('SURFACE_GEOM_INX', 'SURFACE_GEOMETRY', 'GMLID'));
+INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('APPEARANCE_INX', 'APPEARANCE', 'GMLID'));
+INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('SURFACE_DATA_INX', 'SURFACE_DATA', 'GMLID'));
 COMMIT;
-
-CREATE INDEX index_table_schema_idx ON index_table (schemaname);
-
 
 /*****************************************************************
 * PACKAGE citydb_idx
@@ -115,17 +109,17 @@ CREATE INDEX index_table_schema_idx ON index_table (schemaname);
 ******************************************************************/
 CREATE OR REPLACE PACKAGE citydb_idx
 AS
-  FUNCTION index_status(idx INDEX_OBJ) RETURN VARCHAR2;
+  FUNCTION index_status(idx INDEX_OBJ, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION index_status(table_name VARCHAR2, column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION status_spatial_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION status_normal_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
-  FUNCTION create_index(idx INDEX_OBJ, is_versioned BOOLEAN, params VARCHAR2 := '') RETURN VARCHAR2;
-  FUNCTION drop_index(idx INDEX_OBJ, is_versioned BOOLEAN) RETURN VARCHAR2;
+  FUNCTION create_index(idx INDEX_OBJ, is_versioned BOOLEAN, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
+  FUNCTION drop_index(idx INDEX_OBJ, is_versioned BOOLEAN, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION create_spatial_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION drop_spatial_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION create_normal_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION drop_normal_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
-  FUNCTION get_index(table_name VARCHAR2, column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN INDEX_OBJ;
+  FUNCTION get_index(table_name VARCHAR2, column_name VARCHAR2) RETURN INDEX_OBJ;
 END citydb_idx;
 /
 
@@ -138,17 +132,21 @@ AS
   * index_status
   * 
   * @param idx index to retrieve status from
+  * @param schema_name target schema to retrieve status from
   * @return VARCHAR2 string representation of status, may include
   *                  'DROPPED', 'VALID', 'FAILED', 'INVALID'
   ******************************************************************/
-  FUNCTION index_status(idx INDEX_OBJ) RETURN VARCHAR2
+  FUNCTION index_status(
+    idx INDEX_OBJ,
+    schema_name VARCHAR2 := USER
+    ) RETURN VARCHAR2
   IS
     status VARCHAR2(20);
   BEGIN
     IF idx.type = SPATIAL THEN
-      EXECUTE IMMEDIATE 'select upper(DOMIDX_OPSTATUS) from ALL_INDEXES where OWNER=:1 and INDEX_NAME=:2' INTO status USING idx.schema_name, idx.index_name;
+      EXECUTE IMMEDIATE 'select upper(DOMIDX_OPSTATUS) from ALL_INDEXES where OWNER=:1 and INDEX_NAME=:2' INTO status USING upper(schema_name), idx.index_name;
     ELSE
-      EXECUTE IMMEDIATE 'select upper(STATUS) from ALL_INDEXES where OWNER=:1 and INDEX_NAME=:2' INTO status USING idx.schema_name, idx.index_name;
+      EXECUTE IMMEDIATE 'select upper(STATUS) from ALL_INDEXES where OWNER=:1 and INDEX_NAME=:2' INTO status USING upper(schema_name), idx.index_name;
     END IF;
 
     RETURN status;
@@ -204,7 +202,7 @@ AS
   END;
 
   /*****************************************************************
-  * create_spatial_metadata
+  * create_spatial_metadata (private)
   * 
   * @param idx index to create metadata for
   * @param is_versioned TRUE if database table is version-enabled
@@ -256,18 +254,20 @@ AS
   * 
   * @param idx index to create
   * @param is_versioned TRUE if database table is version-enabled
+  * @param schema_name target schema where to create the index
   * @return VARCHAR2 sql error code, 0 for no errors
   ******************************************************************/
-  FUNCTION create_index(idx INDEX_OBJ,
+  FUNCTION create_index(
+    idx INDEX_OBJ,
     is_versioned BOOLEAN, 
-    params VARCHAR2 := ''
+    schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2
   IS
     create_ddl VARCHAR2(1000);
     table_name VARCHAR2(100);
     sql_err_code VARCHAR2(20);
   BEGIN    
-    IF index_status(idx) <> 'VALID' THEN
+    IF index_status(idx, schema_name) <> 'VALID' THEN
       sql_err_code := drop_index(idx, is_versioned);
 
       BEGIN
@@ -278,16 +278,19 @@ AS
           table_name := table_name || '_LTS';
         END IF;
 
-        create_ddl := 'CREATE INDEX ' || idx.index_name || ' ON ' || idx.schema_name || '.' || table_name || '(' || idx.attribute_name || ')';
+        create_ddl := 'CREATE INDEX ' || upper(schema_name) || '.' || idx.index_name || ' ON ' || upper(schema_name) || '.' || table_name || '(' || idx.attribute_name || ')';
 
+        -- we cannot create spatial metadata for different users 
         IF idx.type = SPATIAL THEN
-          create_spatial_metadata(idx, is_versioned);
+          IF upper(schema_name) = USER THEN
+            create_spatial_metadata(idx, is_versioned);
+          END IF;
           create_ddl := create_ddl || ' INDEXTYPE is MDSYS.SPATIAL_INDEX';
         END IF;
 
-        IF params <> '' THEN
-          create_ddl := create_ddl || ' ' || params;
-        END IF;
+        --IF params <> '' THEN
+        --  create_ddl := create_ddl || ' ' || params;
+        --END IF;
 
         EXECUTE IMMEDIATE create_ddl;
 
@@ -315,16 +318,18 @@ AS
   * 
   * @param idx index to drop
   * @param is_versioned TRUE if database table is version-enabled
+  * @param schema_name target schema where to drop the index
   * @return VARCHAR2 sql error code, 0 for no errors
   ******************************************************************/
   FUNCTION drop_index(
     idx INDEX_OBJ, 
-    is_versioned BOOLEAN
+    is_versioned BOOLEAN,
+    schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2
   IS
     index_name VARCHAR2(100);
   BEGIN
-    IF index_status(idx) <> 'DROPPED' THEN
+    IF index_status(idx, schema_name) <> 'DROPPED' THEN
       BEGIN
         index_name := idx.index_name;
 
@@ -333,7 +338,7 @@ AS
           index_name := index_name || '_LTS';
         END IF;
 
-        EXECUTE IMMEDIATE 'DROP INDEX ' || idx.schema_name || '.' || index_name;
+        EXECUTE IMMEDIATE 'DROP INDEX ' || upper(schema_name) || '.' || index_name;
 
         IF is_versioned THEN
           dbms_wm.COMMITDDL(idx.table_name);
@@ -372,11 +377,11 @@ AS
   BEGIN
     log := STRARRAY();
 
-    FOR rec IN (SELECT * FROM index_table WHERE schemaname = upper(schema_name)) LOOP
+    FOR rec IN (SELECT * FROM index_table) LOOP
       IF rec.obj.type = type THEN
-        sql_error_code := create_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name) = 'ON');
+        sql_error_code := create_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name) = 'ON', schema_name);
         log.extend;
-        log(log.count) := index_status(rec.obj) || ':' || rec.obj.index_name || ':' || rec.obj.schema_name || ':' || rec.obj.table_name || ':' || rec.obj.attribute_name || ':' || sql_error_code;
+        log(log.count) := index_status(rec.obj, schema_name) || ':' || rec.obj.index_name || ':' || upper(schema_name) || ':' || rec.obj.table_name || ':' || rec.obj.attribute_name || ':' || sql_error_code;
       END IF;
     END LOOP;
 
@@ -399,11 +404,11 @@ AS
   BEGIN
     log := STRARRAY();
     
-    FOR rec IN (SELECT * FROM index_table WHERE schemaname = upper(schema_name)) LOOP
+    FOR rec IN (SELECT * FROM index_table) LOOP
       IF rec.obj.type = type THEN
-        sql_error_code := drop_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name) = 'ON');
+        sql_error_code := drop_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name) = 'ON', schema_name);
         log.extend;
-        log(log.count) := index_status(rec.obj) || ':' || rec.obj.index_name || ':' || rec.obj.schema_name || ':' || rec.obj.table_name || ':' || rec.obj.attribute_name || ':' || sql_error_code;
+        log(log.count) := index_status(rec.obj, schema_name) || ':' || rec.obj.index_name || ':' || upper(schema_name) || ':' || rec.obj.table_name || ':' || rec.obj.attribute_name || ':' || sql_error_code;
       END IF;
     END LOOP; 
 
@@ -423,11 +428,11 @@ AS
   BEGIN
     log := STRARRAY();
 
-    FOR rec IN (SELECT * FROM index_table WHERE schemaname = upper(schema_name)) LOOP
+    FOR rec IN (SELECT * FROM index_table) LOOP
       IF rec.obj.type = SPATIAL THEN
-        status := index_status(rec.obj);
+        status := index_status(rec.obj, schema_name);
         log.extend;
-        log(log.count) := status || ':' || rec.obj.index_name || ':' || rec.obj.schema_name || ':' || rec.obj.table_name || ':' || rec.obj.attribute_name;
+        log(log.count) := status || ':' || rec.obj.index_name || ':' || upper(schema_name) || ':' || rec.obj.table_name || ':' || rec.obj.attribute_name;
       END IF;
     END LOOP;
 
@@ -447,11 +452,11 @@ AS
   BEGIN
     log := STRARRAY();
 
-    FOR rec IN (SELECT * FROM index_table WHERE schemaname = upper(schema_name)) LOOP
+    FOR rec IN (SELECT * FROM index_table) LOOP
       IF rec.obj.type = NORMAL THEN
-        status := index_status(rec.obj);
+        status := index_status(rec.obj, schema_name);
         log.extend;
-        log(log.count) := status || ':' || rec.obj.index_name || ':' || rec.obj.schema_name || ':' || rec.obj.table_name || ':' || rec.obj.attribute_name;
+        log(log.count) := status || ':' || rec.obj.index_name || ':' || upper(schema_name) || ':' || rec.obj.table_name || ':' || rec.obj.attribute_name;
       END IF;
     END LOOP;
 
@@ -469,7 +474,7 @@ AS
   IS
   BEGIN
     dbms_output.enable;
-    RETURN create_indexes(SPATIAL, upper(schema_name));
+    RETURN create_indexes(SPATIAL, schema_name);
   END;
 
   /*****************************************************************
@@ -483,7 +488,7 @@ AS
   IS
   BEGIN
     dbms_output.enable;
-    RETURN drop_indexes(SPATIAL, upper(schema_name));
+    RETURN drop_indexes(SPATIAL, schema_name);
   END;
 
   /*****************************************************************
@@ -497,7 +502,7 @@ AS
   IS
   BEGIN
     dbms_output.enable;
-    RETURN create_indexes(NORMAL, upper(schema_name));
+    RETURN create_indexes(NORMAL, schema_name);
   END;
 
   /*****************************************************************
@@ -511,7 +516,7 @@ AS
   IS
   BEGIN
     dbms_output.enable;
-    RETURN drop_indexes(NORMAL, upper(schema_name));
+    RETURN drop_indexes(NORMAL, schema_name);
   END;
 
   /*****************************************************************
@@ -521,19 +526,17 @@ AS
   * 
   * @param table_name
   * @param column_name
-  * @param schema_name
   * @return INDEX_OBJ
   ******************************************************************/
   FUNCTION get_index(
     table_name VARCHAR2, 
-    column_name VARCHAR2,
-    schema_name VARCHAR2 := USER
+    column_name VARCHAR2
 	) RETURN INDEX_OBJ
   IS
     idx INDEX_OBJ;
   BEGIN
-    FOR rec IN (SELECT * FROM index_table WHERE schemaname = upper(schema_name)) LOOP
-      IF rec.obj.attribute_name = upper(column_name) AND rec.obj.table_name = upper(table_name) AND rec.obj.schema_name = upper(schema_name) THEN
+    FOR rec IN (SELECT * FROM index_table) LOOP
+      IF rec.obj.attribute_name = upper(column_name) AND rec.obj.table_name = upper(table_name) THEN
         idx := rec.obj;
         EXIT;
       END IF;
