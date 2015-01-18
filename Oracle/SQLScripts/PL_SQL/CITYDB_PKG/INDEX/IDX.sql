@@ -179,7 +179,7 @@ AS
   BEGIN
     internal_table_name := table_name;
 
-    IF citydb_util.versioning_table(table_name) = 'ON' THEN
+    IF citydb_util.versioning_table(table_name, schema_name) = 'ON' THEN
       internal_table_name := table_name || '_LT';
     END IF;     
 
@@ -379,7 +379,7 @@ AS
 
     FOR rec IN (SELECT * FROM index_table) LOOP
       IF rec.obj.type = type THEN
-        sql_error_code := create_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name) = 'ON', schema_name);
+        sql_error_code := create_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name, schema_name) = 'ON', schema_name);
         log.extend;
         log(log.count) := index_status(rec.obj, schema_name) || ':' || rec.obj.index_name || ':' || upper(schema_name) || ':' || rec.obj.table_name || ':' || rec.obj.attribute_name || ':' || sql_error_code;
       END IF;
@@ -406,7 +406,7 @@ AS
     
     FOR rec IN (SELECT * FROM index_table) LOOP
       IF rec.obj.type = type THEN
-        sql_error_code := drop_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name) = 'ON', schema_name);
+        sql_error_code := drop_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name, schema_name) = 'ON', schema_name);
         log.extend;
         log(log.count) := index_status(rec.obj, schema_name) || ':' || rec.obj.index_name || ':' || upper(schema_name) || ':' || rec.obj.table_name || ':' || rec.obj.attribute_name || ':' || sql_error_code;
       END IF;
