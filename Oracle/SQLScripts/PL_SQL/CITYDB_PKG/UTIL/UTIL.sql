@@ -145,7 +145,7 @@ AS
   IS
     status USER_TABLES.STATUS%TYPE;
   BEGIN
-    EXECUTE IMMEDIATE 'SELECT status FROM all_table WHERE owner=:1 AND table_name=:2' INTO status USING upper(schema_name), upper(table_name) || '_LT';
+    EXECUTE IMMEDIATE 'SELECT status FROM all_tables WHERE owner=:1 AND table_name=:2' INTO status USING upper(schema_name), upper(table_name) || '_LT';
     RETURN 'ON';
   EXCEPTION
     WHEN others THEN
@@ -291,9 +291,9 @@ AS
     )
   IS
   BEGIN
-    EXECUTE IMMEDIATE 'ALTER TABLE ' || schema_name || '.' || table_name || ' DROP CONSTRAINT ' || fkey_name;
-    EXECUTE IMMEDIATE 'ALTER TABLE ' || schema_name || '.' || table_name || ' ADD CONSTRAINT ' || fkey_name || 
-                         ' FOREIGN KEY (' || column_name || ') REFERENCES ' || schema_name || '.' || ref_table || '(' || ref_column || ')'
+    EXECUTE IMMEDIATE 'ALTER TABLE ' || upper(schema_name) || '.' || table_name || ' DROP CONSTRAINT ' || fkey_name;
+    EXECUTE IMMEDIATE 'ALTER TABLE ' || upper(schema_name) || '.' || table_name || ' ADD CONSTRAINT ' || fkey_name || 
+                         ' FOREIGN KEY (' || column_name || ') REFERENCES ' || upper(schema_name) || '.' || ref_table || '(' || ref_column || ')'
                          || on_delete_param;
     EXCEPTION
       WHEN OTHERS THEN
