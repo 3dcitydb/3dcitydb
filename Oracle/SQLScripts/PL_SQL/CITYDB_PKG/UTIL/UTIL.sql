@@ -566,8 +566,6 @@ AS
       return null;
   end;
   
-  create or replace
-
   /*
   * code taken from https://gist.github.com/nathanvda/a61ab4b094c4c3429a39
   * Author: Simon Greener, Nathan Van der Auwera
@@ -986,7 +984,7 @@ AS
     offset => DBMS_LOB.GETLENGTH(v_result)+1,
     buffer => v_temp_string );
     return v_result;
-  End Sdo2GeoJson3D; 
+  End sdo2geojson3d; 
   
 END citydb_util;
 /
