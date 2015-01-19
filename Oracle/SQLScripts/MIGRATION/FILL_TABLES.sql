@@ -39,3 +39,4 @@ EXECUTE GEODB_MIGRATE_V2_V3.fillWaterBodyTable();
 EXECUTE GEODB_MIGRATE_V2_V3.fillWaterBoundarySurfaceTable();
 EXECUTE GEODB_MIGRATE_V2_V3.fillWaterbodToWaterbndSrfTable();
 EXECUTE GEODB_MIGRATE_V2_V3.updateSurfaceGeoTableCityObj();
+EXECUTE GEODB_MIGRATE_V2_V3.updateSolidGeometry();

@@ -41,6 +41,7 @@ AS
   PROCEDURE fillWaterBoundarySurfaceTable;
   PROCEDURE fillWaterbodToWaterbndSrfTable;
   PROCEDURE updateSurfaceGeoTableCityObj;
+  PROCEDURE updateSolidGeometry;
 END geodb_migrate_v2_v3;
 /
 
@@ -54,7 +55,6 @@ AS
     CURSOR surface_geometry_v2 IS select * from surface_geometry_v2 order by id;
     has_xlink NUMBER(1,0) := 0;
     is_solid NUMBER(1,0) := 0;
-    solid_coordinates SDO_GEOMETRY;
   BEGIN
     dbms_output.put_line('Surface_Geometry table is being copied...');
     for surface_geometry in surface_geometry_v2 loop
@@ -76,19 +76,14 @@ AS
           surface_geometry.IS_TRIANGULATED, surface_geometry.IS_XLINK,
           surface_geometry.IS_REVERSE, surface_geometry.GEOMETRY);
         ELSIF (is_solid = 1) THEN
-	   EXECUTE IMMEDIATE 'SELECT SDO_AGGR_UNION(
-                                    MDSYS.SDOAGGRTYPE(s.geometry, 1000)) 
-                             from surface_geometry_v2 s where root_id = ' || 
-                             surface_geometry.ROOT_ID || ' order by id' 
-                             INTO solid_coordinates;
           insert into surface_geometry
           (ID, GMLID, PARENT_ID, ROOT_ID, IS_SOLID, IS_COMPOSITE,
-          IS_TRIANGULATED, IS_XLINK, IS_REVERSE, SOLID_GEOMETRY)
+          IS_TRIANGULATED, IS_XLINK, IS_REVERSE)
           values
           (surface_geometry.ID, surface_geometry.GMLID, surface_geometry.PARENT_ID,
           surface_geometry.ROOT_ID, surface_geometry.IS_SOLID, surface_geometry.IS_COMPOSITE,
           surface_geometry.IS_TRIANGULATED, surface_geometry.IS_XLINK,
-          surface_geometry.IS_REVERSE, solid_coordinates);
+          surface_geometry.IS_REVERSE);
         ELSE
           insert into surface_geometry
           (ID, GMLID, PARENT_ID, ROOT_ID, IS_SOLID, IS_COMPOSITE,
@@ -1478,6 +1473,99 @@ AS
     end loop;
     dbms_output.put_line('Surface_Geometry table is updated.');
   end;
+  
+  PROCEDURE updateSolidGeometry
+   IS
+   j NUMBER := 1;
+   CURSOR surface_geometry_cursor IS select * from surface_geometry order by id;
+   is_solid NUMBER(1,0) := 0;
+   no_of_shapes NUMBER := 0;
+   solid_offset NUMBER := 1;
+   srid NUMBER := 0;
+   solid_geom SDO_GEOMETRY;
+   elem_info_counter NUMBER := 7;
+   ordinate_array_counter NUMBER := 1;  
+   solid_cursor SYS_REFCURSOR;
+   solid_key SDO_GEOMETRY;
+ BEGIN
+   EXECUTE IMMEDIATE 'select srid from user_sdo_geom_metadata
+                            where table_name = ''SURFACE_GEOMETRY'' and rownum = 1'
+                            INTO srid;
+   for surface_geometry_key in surface_geometry_cursor loop
+      EXECUTE IMMEDIATE 'select IS_SOLID from surface_geometry where
+                           ID = '||surface_geometry_key.ID INTO is_solid;
+      IF (is_solid = 1) THEN
+        solid_geom := mdsys.sdo_geometry (
+                3008, srid, null,
+                mdsys.sdo_elem_info_array (), mdsys.sdo_ordinate_array()
+                );
+                
+        -- dbms_output.put_line('solid_geometry start = ' || solid_geom.sdo_elem_info.count || ' : ' || solid_geom.sdo_ordinates.count);
+        
+        EXECUTE IMMEDIATE 'select COUNT(*) from surface_geometry where
+                            ROOT_ID = '||surface_geometry_key.ROOT_ID||
+                            ' and is_solid = 0 and is_composite = 0'
+                            INTO no_of_shapes;
+        
+        solid_geom.sdo_elem_info.extend(6);
+        solid_geom.sdo_elem_info(1) := 1;
+        solid_geom.sdo_elem_info(2) := 1007;
+        solid_geom.sdo_elem_info(3) := 1;
+        solid_geom.sdo_elem_info(4) := 1;
+        solid_geom.sdo_elem_info(5) := 1006;
+        solid_geom.sdo_elem_info(6) := no_of_shapes;
+
+        OPEN solid_cursor 
+        FOR 'SELECT geometry 
+                FROM surface_geometry where root_id = ' 
+                || surface_geometry_key.ROOT_ID || 
+                ' and is_solid = 0 and is_composite = 0';
+        LOOP
+           EXIT WHEN solid_cursor%NOTFOUND;
+           FETCH solid_cursor
+              INTO solid_key;
+           if (solid_key.sdo_elem_info is not null) then
+              j := 1;              
+              LOOP
+                solid_geom.sdo_elem_info.extend(3);
+                solid_geom.sdo_elem_info(elem_info_counter) := solid_offset;
+                solid_geom.sdo_elem_info(elem_info_counter+1) := solid_key.sdo_elem_info(j+1);
+                solid_geom.sdo_elem_info(elem_info_counter+2) := solid_key.sdo_elem_info(j+2);
+                elem_info_counter := elem_info_counter + 3;
+                j:=j+3;
+                exit when j>solid_key.sdo_elem_info.count;
+              END LOOP;
+            end if;
+            if (solid_key.sdo_ordinates is not null) then
+              j := 1;
+              LOOP
+                solid_geom.sdo_ordinates.extend(3);
+                solid_geom.sdo_ordinates(ordinate_array_counter) := solid_key.sdo_ordinates(j);
+                solid_geom.sdo_ordinates(ordinate_array_counter+1) := solid_key.sdo_ordinates(j+1);
+                solid_geom.sdo_ordinates(ordinate_array_counter+2) := solid_key.sdo_ordinates(j+2);
+                ordinate_array_counter := ordinate_array_counter + 3;
+                j:=j+3;
+                exit when j>solid_key.sdo_ordinates.count;
+              END LOOP;
+              solid_offset := solid_offset + (j - 1);
+            end if;
+        END LOOP;
+        CLOSE solid_cursor;
+	 
+	 update surface_geometry 
+        set solid_geometry = solid_geom 
+        where id = surface_geometry_key.ID;	 
+        
+        -- dbms_output.put_line('solid_geometry = ' || solid_geom.sdo_elem_info.count || ' : ' || solid_geom.sdo_ordinates.count);
+        solid_offset := 1;
+        no_of_shapes := 0;
+        elem_info_counter := 7;
+        ordinate_array_counter := 1;
+
+      END IF;
+      is_solid := 0;
+   end loop;
+ end;
 
 END geodb_migrate_v2_v3;
 /
