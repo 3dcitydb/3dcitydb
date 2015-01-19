@@ -27,6 +27,9 @@
 -- 1.0.0     2008-09-10   release version                             CNag
 --
 
+drop table index_table;
+drop sequence index_table_seq;
+
 /*****************************************************************
 * TYPE INDEX_OBJ
 * 
@@ -36,17 +39,18 @@ CREATE OR REPLACE TYPE INDEX_OBJ AS OBJECT
   (index_name VARCHAR2(30),
    table_name VARCHAR2(30),
    attribute_name VARCHAR2(30),
+   parameters VARCHAR2(256),
    type NUMBER(1),
    srid NUMBER,
    is_3d NUMBER(1, 0),
      STATIC function construct_spatial_3d
-     (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0)
+     (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, parameters VARCHAR2 := NULL, srid NUMBER := 0)
      RETURN INDEX_OBJ,
      STATIC function construct_spatial_2d
-     (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0)
+     (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, parameters VARCHAR2 := NULL, srid NUMBER := 0)
      RETURN INDEX_OBJ,
      STATIC function construct_normal
-     (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0)
+     (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, parameters VARCHAR2 := NULL, srid NUMBER := 0)
      RETURN INDEX_OBJ
   );
 /
@@ -58,22 +62,22 @@ CREATE OR REPLACE TYPE INDEX_OBJ AS OBJECT
 ******************************************************************/
 CREATE OR REPLACE TYPE BODY INDEX_OBJ IS
   STATIC FUNCTION construct_spatial_3d
-  (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0)
+  (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, parameters VARCHAR2 := NULL, srid NUMBER := 0)
   RETURN INDEX_OBJ IS
   BEGIN
-    RETURN INDEX_OBJ(upper(index_name), upper(table_name), upper(attribute_name), 1, srid, 1);
+    RETURN INDEX_OBJ(upper(index_name), upper(table_name), upper(attribute_name), parameters, 1, srid, 1);
   END;
   STATIC FUNCTION construct_spatial_2d
-  (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0)
+  (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, parameters VARCHAR2 := NULL, srid NUMBER := 0)
   RETURN INDEX_OBJ IS
   BEGIN
-    RETURN INDEX_OBJ(upper(index_name), upper(table_name), upper(attribute_name), 1, srid, 0);
+    RETURN INDEX_OBJ(upper(index_name), upper(table_name), upper(attribute_name), parameters, 1, srid, 0);
   END;
   STATIC FUNCTION construct_normal
-  (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, srid NUMBER := 0)
+  (index_name VARCHAR2, table_name VARCHAR2, attribute_name VARCHAR2, parameters VARCHAR2 := NULL, srid NUMBER := 0)
   RETURN INDEX_OBJ IS
   BEGIN
-    RETURN INDEX_OBJ(upper(index_name), upper(table_name), upper(attribute_name), 0, srid, 0);
+    RETURN INDEX_OBJ(upper(index_name), upper(table_name), upper(attribute_name), parameters, 0, srid, 0);
   END;
 END;
 /
@@ -93,9 +97,9 @@ CREATE SEQUENCE index_table_seq INCREMENT BY 1 START WITH 1 MINVALUE 1;
 * Populate INDEX_TABLE with INDEX_OBJ instances
 * 
 ******************************************************************/
-INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('CITYOBJECT_ENVELOPE_SPX', 'CITYOBJECT', 'ENVELOPE'));
-INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('SURFACE_GEOM_SPX', 'SURFACE_GEOMETRY', 'GEOMETRY'));
-INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('SURFACE_GEOM_SOLID_SPX', 'SURFACE_GEOMETRY', 'SOLID_GEOMETRY'));
+INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('CITYOBJECT_ENVELOPE_SPX', 'CITYOBJECT', 'ENVELOPE', 'PARALLEL'));
+INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('SURFACE_GEOM_SPX', 'SURFACE_GEOMETRY', 'GEOMETRY', 'PARALLEL'));
+INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('SURFACE_GEOM_SOLID_SPX', 'SURFACE_GEOMETRY', 'SOLID_GEOMETRY', 'PARAMETERS (''sdo_indx_dims=3'') PARALLEL'));
 INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('CITYOBJECT_INX', 'CITYOBJECT', 'GMLID'));
 INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('SURFACE_GEOM_INX', 'SURFACE_GEOMETRY', 'GMLID'));
 INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('APPEARANCE_INX', 'APPEARANCE', 'GMLID'));
@@ -288,9 +292,9 @@ AS
           create_ddl := create_ddl || ' INDEXTYPE is MDSYS.SPATIAL_INDEX';
         END IF;
 
-        --IF params <> '' THEN
-        --  create_ddl := create_ddl || ' ' || params;
-        --END IF;
+        IF idx.parameters is not null THEN
+          create_ddl := create_ddl || ' ' || idx.parameters;
+        END IF;
 
         EXECUTE IMMEDIATE create_ddl;
 
