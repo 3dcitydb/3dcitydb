@@ -27,9 +27,6 @@
 -- 1.0.0     2008-09-10   release version                             CNag
 --
 
-drop table index_table;
-drop sequence index_table_seq;
-
 /*****************************************************************
 * TYPE INDEX_OBJ
 * 
@@ -91,7 +88,7 @@ CREATE TABLE INDEX_TABLE (
   obj         INDEX_OBJ
 );
 
-CREATE SEQUENCE index_table_seq INCREMENT BY 1 START WITH 1 MINVALUE 1;
+CREATE SEQUENCE INDEX_TABLE_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1;
 
 /******************************************************************
 * Populate INDEX_TABLE with INDEX_OBJ instances
