@@ -12,14 +12,14 @@
 --              for more details.
 -------------------------------------------------------------------------------
 -- About:
---
+-- Script that contains the migration logic.
 --
 -------------------------------------------------------------------------------
 --
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 3.0.0     2014-12-28   release version                             FKun
+-- 1.0.0     2014-12-28   release version                             FKun
 --
 
 -- BUILDING module

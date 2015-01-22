@@ -12,14 +12,14 @@
 --              for more details.
 -------------------------------------------------------------------------------
 -- About:
---
---
+-- Script to add primary keys, foreign keys and check constraints to v3.0 tables.
+-- Sets also default values for ID columns that are using sequences.
 -------------------------------------------------------------------------------
 --
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 3.0.0     2014-12-28   release version                             FKun
+-- 1.0.0     2014-12-28   release version                             FKun
 --
 
 --// PRIMARY KEYS (and CHECKs)

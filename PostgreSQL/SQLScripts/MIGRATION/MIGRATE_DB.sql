@@ -12,14 +12,14 @@
 --              for more details.
 -------------------------------------------------------------------------------
 -- About:
---
---
+-- Top-level migration script that starts the migration process for a 3DCityDB 
+-- instance of v2.1.0 to v3.0.0
 -------------------------------------------------------------------------------
 --
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 3.0.0     2014-12-28   release version                             FKun
+-- 1.0.0     2014-12-28   release version                             FKun
 --
 
 -- This script is called from MIGRATE_DB.bat

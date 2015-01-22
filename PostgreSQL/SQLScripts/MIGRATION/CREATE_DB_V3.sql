@@ -12,14 +12,14 @@
 --              for more details.
 -------------------------------------------------------------------------------
 -- About:
---
---
+-- Script to create tables and sequences of a 3DCityDB instance that are new 
+-- in v3.0
 -------------------------------------------------------------------------------
 --
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 3.0.0     2014-12-28   release version                             FKun
+-- 1.0.0     2014-12-28   release version                             FKun
 --
 
 /*************************************************

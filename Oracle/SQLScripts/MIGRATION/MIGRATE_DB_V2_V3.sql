@@ -1,3 +1,29 @@
+-- MIGRATE_DB_V2_V3.sql
+--
+-- Author:     Arda Muftuoglu <amueftueoglu@moss.de>
+--             Felix Kunde <fkunde@virtualcitysystems.de>
+--
+-- Copyright:  (c) 2012-2014  Chair of Geoinformatics,
+--                            Technische Universität München, Germany
+--                            http://www.gis.bv.tum.de
+--
+--              This script is free software under the LGPL Version 2.1.
+--              See the GNU Lesser General Public License at
+--              http://www.gnu.org/copyleft/lgpl.html
+--              for more details.
+-------------------------------------------------------------------------------
+-- About:
+-- Creates an PL/SQL package 'CITYDB_MIGRATE_V2_V3' that contains functions
+-- and procedures to perform migration process
+-------------------------------------------------------------------------------
+--
+-- ChangeLog:
+--
+-- Version | Date       | Description                               | Author
+-- 1.0.0     2015-01-22   release version                             AM
+--                                                                    FKun
+--
+
 CREATE OR REPLACE PACKAGE citydb_migrate_v2_v3
 AS
   FUNCTION convertPolygonToSdoForm(polygon IN VARCHAR2) RETURN VARCHAR2;
@@ -1526,13 +1552,13 @@ AS
     dbms_output.put_line('Surface_Geometry table is being updated...');
     FOR surface_geometry IN surface_geometry_v3 LOOP        
         IF (surface_geometry.CITYOBJECT_ID IS NOT NULL) THEN
-	    EXECUTE IMMEDIATE 'update surface_geometry set 
+        EXECUTE IMMEDIATE 'update surface_geometry set 
                               CITYOBJECT_ID = :1 where PARENT_ID = :2'
                               USING surface_geometry.CITYOBJECT_ID, 
                               surface_geometry.ID;
         END IF;
-	 IF (surface_geometry.IS_SOLID = 1) THEN
-	    EXECUTE IMMEDIATE 'update surface_geometry set 
+      IF (surface_geometry.IS_SOLID = 1) THEN
+         EXECUTE IMMEDIATE 'update surface_geometry set 
                               CITYOBJECT_ID = :1 where ROOT_ID = :2'
                               USING surface_geometry.CITYOBJECT_ID, 
                               surface_geometry.ID;
@@ -1614,8 +1640,8 @@ AS
           solid_geom.sdo_elem_info.extend;
 
           -- set correct offset
-		  -- the following equation will always be 0 for the first position of one or more ELEM_INFO_ARRAYs
-		  IF (elem_count - (i + 2) / 3) = 0 THEN
+          -- the following equation will always be 0 for the first position of one or more ELEM_INFO_ARRAYs
+          IF (elem_count - (i + 2) / 3) = 0 THEN
             solid_geom.sdo_elem_info(solid_geom.sdo_elem_info.count) := solid_offset + sg_rec.geometry.sdo_elem_info(i);
             elem_count := elem_count + 1;
           ELSE
@@ -1630,8 +1656,8 @@ AS
             solid_geom.sdo_ordinates(solid_geom.sdo_ordinates.count) := sg_rec.geometry.sdo_ordinates(i);
           END LOOP;
           -- update offset
-		  solid_offset := solid_geom.sdo_ordinates.count;
-		END IF;
+          solid_offset := solid_geom.sdo_ordinates.count;
+        END IF;
 
         -- update sdo_elem_info of solid and reset elem_count
         solid_geom.sdo_elem_info(6) := solid_geom.sdo_elem_info(6) + sg_rec.geometry.sdo_elem_info.count / 3;

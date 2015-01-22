@@ -12,14 +12,15 @@
 --              for more details.
 -------------------------------------------------------------------------------
 -- About:
---
---
+-- Script that removes a 3DCityDB instance of v2.1.0 from the public schema
+-- and also drops the 'geodb_pkg' schema (incl. functions used during migration)
 -------------------------------------------------------------------------------
 --
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 3.0.0     2014-12-28   release version                             FKun
+-- 1.0.0     2014-12-28   release version                             FKun
+--
 
 SET client_min_messages TO WARNING;
 

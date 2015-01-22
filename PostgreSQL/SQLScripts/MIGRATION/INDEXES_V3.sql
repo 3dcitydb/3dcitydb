@@ -12,14 +12,14 @@
 --              for more details.
 -------------------------------------------------------------------------------
 -- About:
---
+-- Script to create indexes on v3.0 tables (copied from pgModeler script)
 --
 -------------------------------------------------------------------------------
 --
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 3.0.0     2014-12-28   release version                             FKun
+-- 1.0.0     2014-12-28   release version                             FKun
 --
 
 DROP INDEX IF EXISTS citydb.cityobject_member_fkx;

@@ -12,14 +12,14 @@
 --              for more details.
 -------------------------------------------------------------------------------
 -- About:
---
---
+-- Script that creates functions that are necessary for the migration process.
+-- They are stored within the 'geodb_pkg' schema of 3DCityDB v2.x
 -------------------------------------------------------------------------------
 --
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 3.0.0     2014-12-28   release version                             FKun
+-- 1.0.0     2014-12-28   release version                             FKun
 --
 
 CREATE OR REPLACE FUNCTION geodb_pkg.migrate_cityobject(
