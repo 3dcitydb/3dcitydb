@@ -51,7 +51,7 @@ BEGIN
 	dbms_output.put_line('Installing the package with functions and procedures for migration...');	
 END;
 /
-@@PACKAGES/CITYDB_MIGRATE_V2_V3.sql;
+@@MIGRATE_DB_V2_V3.sql;
 BEGIN
 	dbms_output.put_line('Packages installed.');	
 END;
