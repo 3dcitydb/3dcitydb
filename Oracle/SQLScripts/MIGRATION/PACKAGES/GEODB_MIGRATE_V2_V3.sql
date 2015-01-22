@@ -1,5 +1,7 @@
-CREATE OR REPLACE PACKAGE geodb_migrate_v2_v3
+CREATE OR REPLACE PACKAGE citydb_migrate_v2_v3
 AS
+  FUNCTION convertPolygonToSdoForm(polygon IN VARCHAR2) RETURN VARCHAR2;
+  FUNCTION convertVarcharToSDOGeom(polygon IN VARCHAR2) RETURN SDO_GEOMETRY;
   PROCEDURE fillSurfaceGeometryTable;
   PROCEDURE fillCityObjectTable;
   PROCEDURE fillCityModelTable;
@@ -42,12 +44,84 @@ AS
   PROCEDURE fillWaterbodToWaterbndSrfTable;
   PROCEDURE updateSurfaceGeoTableCityObj;
   PROCEDURE updateSolidGeometry;
-END geodb_migrate_v2_v3;
+  PROCEDURE updateSequences;
+END citydb_migrate_v2_v3;
 /
 
 CREATE OR REPLACE 
-PACKAGE BODY geodb_migrate_v2_v3
+PACKAGE BODY citydb_migrate_v2_v3
 AS
+  type ref_cursor is ref cursor;
+
+  FUNCTION convertPolygonToSdoForm(polygon IN VARCHAR2) RETURN VARCHAR2
+  IS
+    polygon_sdo VARCHAR2(4000);
+    polygon_temp VARCHAR2(4000);
+  BEGIN
+    IF (polygon IS NULL) THEN
+      RETURN NULL;
+    END IF;
+
+    FOR i IN 1 .. length(polygon) - length(REPLACE(polygon, ' ', '')) + 1 LOOP
+      polygon_temp := regexp_substr(polygon, '[^ ]+', 1, i);
+      -- When the number is exponential, convert it to decimal form
+      IF (INSTR(polygon_temp, 'E')) > 0 THEN        
+        EXECUTE IMMEDIATE 'select to_char('||polygon_temp||',''9.999999999999999999999999999999999999999999999999'') from dual' INTO polygon_temp;                        
+        polygon_temp := REPLACE(polygon_temp,'.','0.');        
+      END IF;
+      IF MOD(i,2) = 1 THEN
+          polygon_sdo := polygon_sdo || polygon_temp || ' ';
+      ELSE
+          polygon_sdo := polygon_sdo || polygon_temp || ',';
+      END IF;
+    END LOOP;
+    polygon_sdo := SUBSTR(polygon_sdo, 0, length(polygon_sdo) - 1);
+    RETURN polygon_sdo;
+  END;
+
+  FUNCTION convertVarcharToSDOGeom(polygon IN VARCHAR2) RETURN SDO_GEOMETRY
+  IS
+    polygon_converted CLOB;
+    polygon_temp VARCHAR2(4000);
+    counter NUMBER;
+    texture_coordinates SDO_GEOMETRY := NULL;
+  BEGIN
+    IF (polygon IS NULL) THEN
+      RETURN NULL;
+    END IF;
+    
+    polygon_converted := TO_CLOB('POLYGON(');    
+    -- dbms_output.put_line('polygon: '||polygon);
+    -- If semicolon exists, it means that more than one polygon exists
+    IF (INSTR(polygon, ';')) > 0 THEN
+      counter := length(polygon) - length(REPLACE(polygon, ';', '')) + 1;      
+      FOR i IN 1 .. counter LOOP
+        polygon_temp := regexp_substr(polygon, '[^;]+', 1, i);
+        IF (i = counter) THEN 
+          polygon_converted := polygon_converted || TO_CLOB('(') ||
+                             TO_CLOB(convertPolygonToSdoForm(polygon_temp)) || TO_CLOB(')');
+        ELSE
+          polygon_converted := polygon_converted || TO_CLOB('(') ||
+                             TO_CLOB(convertPolygonToSdoForm(polygon_temp)) || TO_CLOB('),');
+        END IF;                
+      END LOOP;      
+    ELSE
+      polygon_converted := polygon_converted || TO_CLOB('(');
+      polygon_converted := polygon_converted ||
+                           TO_CLOB(convertPolygonToSdoForm(polygon));
+      polygon_converted := polygon_converted || TO_CLOB(')');
+    END IF;
+    polygon_converted := polygon_converted || TO_CLOB(')');   
+    select SDO_GEOMETRY(polygon_converted) into texture_coordinates from dual;
+    RETURN texture_coordinates;
+
+--    EXCEPTION
+--    WHEN others THEN
+--      dbms_output.put_line('error: '||polygon);
+--      dbms_output.put_line('polygon: '||polygon);
+--      dbms_output.put_line('polygon_converted: '||polygon_converted);
+--      RETURN NULL;
+  END;
 
   PROCEDURE fillSurfaceGeometryTable
   IS
@@ -57,7 +131,7 @@ AS
     is_solid NUMBER(1,0) := 0;
   BEGIN
     dbms_output.put_line('Surface_Geometry table is being copied...');
-    for surface_geometry in surface_geometry_v2 loop
+    FOR surface_geometry IN surface_geometry_v2 LOOP
         --  if the parent has xlink = 1,
         -- then insert the geometry into the implicit geometry column
         IF (surface_geometry.PARENT_ID IS NOT NULL) THEN
@@ -96,9 +170,9 @@ AS
         END IF;
         has_xlink := 0;
         is_solid := 0;
-      end loop;
+      END LOOP;
       dbms_output.put_line('Surface_Geometry table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillCityObjectTable
   IS
@@ -106,7 +180,7 @@ AS
     CURSOR city_object_v2 IS select * from cityobject_v2 order by id;
   BEGIN
     dbms_output.put_line('CityObject table is being copied...');
-    for city_object in city_object_v2 loop
+    FOR city_object IN city_object_v2 LOOP
         insert into cityobject
         (ID, OBJECTCLASS_ID, GMLID, ENVELOPE, CREATION_DATE,
         TERMINATION_DATE, LAST_MODIFICATION_DATE, UPDATING_PERSON,
@@ -116,9 +190,9 @@ AS
         city_object.ENVELOPE, city_object.CREATION_DATE, city_object.TERMINATION_DATE,
         city_object.LAST_MODIFICATION_DATE, city_object.UPDATING_PERSON,
         city_object.REASON_FOR_UPDATE, city_object.LINEAGE, city_object.XML_SOURCE);
-    end loop;
+    END LOOP;
     dbms_output.put_line('CityObject table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillCityModelTable
   IS
@@ -132,7 +206,7 @@ AS
     TERMINATION_DATE, LAST_MODIFICATION_DATE, UPDATING_PERSON, REASON_FOR_UPDATE,
     LINEAGE from citymodel_v2;
     dbms_output.put_line('CityModel table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillAddressTable
   IS
@@ -140,7 +214,7 @@ AS
     dbms_output.put_line('Address table is being copied...');
     insert into address select * from address_v2;
     dbms_output.put_line('Address table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillBuildingTable
   IS
@@ -160,7 +234,7 @@ AS
     lod4SolidID NUMBER(10);
   BEGIN
     dbms_output.put_line('Building table is being copied...');
-    for building in buildings_v2 loop
+    FOR building IN buildings_v2 LOOP
         -- Check if the lod1-lod4 geometry ids are solid and/or multi surface
         -- Update the cityobject_id entry in surface_geometry table
         IF building.lod1_geometry_id IS NOT NULL THEN
@@ -248,9 +322,9 @@ AS
         lod2SolidID := NULL;
         lod3SolidID := NULL;
         lod4SolidID := NULL;
-    end loop;
+    END LOOP;
     dbms_output.put_line('Building table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillAddressToBuildingTable
   IS
@@ -258,7 +332,7 @@ AS
     dbms_output.put_line('Address_to_Building table is being copied...');
     insert into address_to_building select * from address_to_building_v2;
     dbms_output.put_line('Address_to_Building table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillAppearanceTable
   IS
@@ -270,7 +344,7 @@ AS
     select ID, GMLID, NAME, NAME_CODESPACE, DESCRIPTION, THEME,
     CITYMODEL_ID, CITYOBJECT_ID from appearance_v2;
     dbms_output.put_line('Appearance table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillSurfaceDataTable
   IS
@@ -280,7 +354,7 @@ AS
     texID NUMBER(10);
   BEGIN
     dbms_output.put_line('Surface_data table is being copied...');
-    for surface_data in surface_data_v2 loop
+    FOR surface_data IN surface_data_v2 LOOP
         -- Check Type
         IF surface_data.type IS NOT NULL THEN
            select id into classID from OBJECTCLASS where classname = surface_data.type;
@@ -316,9 +390,9 @@ AS
         surface_data.TEX_WRAP_MODE,surface_data.TEX_BORDER_COLOR,
         surface_data.GT_PREFER_WORLDFILE, surface_data.GT_ORIENTATION,
         surface_data.GT_REFERENCE_POINT);
-    end loop;
+    END LOOP;
     dbms_output.put_line('Surface_data table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillAppearToSurfaceDataTable
   IS
@@ -326,7 +400,7 @@ AS
     dbms_output.put_line('Appear_to_Surface_Data table is being copied...');
     insert into appear_to_surface_data select * from appear_to_surface_data_v2;
     dbms_output.put_line('Appear_to_Surface_Data table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillBreaklineReliefTable
   IS
@@ -334,7 +408,7 @@ AS
     dbms_output.put_line('Breakline_Relief table is being copied...');
     insert into breakline_relief select * from breakline_relief_v2;
     dbms_output.put_line('Breakline_Relief table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillRoomTable
   IS
@@ -345,7 +419,7 @@ AS
     lod4SolidID NUMBER(10);
   BEGIN
     dbms_output.put_line('Room table is being copied...');
-    for room in rooms_v2 loop
+    FOR room IN rooms_v2 LOOP
         -- Check if the lod4 geometry id is solid and/or multi surface
         -- Update the cityobject_id entry in surface_geometry table
         IF room.lod4_geometry_id IS NOT NULL THEN
@@ -383,9 +457,9 @@ AS
         isSolidLOD4 := NULL;
         lod4MultiSurfaceID := NULL;
         lod4SolidID := NULL;
-    end loop;
+    END LOOP;
     dbms_output.put_line('Room table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillBuildingFurnitureTable
   IS
@@ -393,7 +467,7 @@ AS
     CURSOR building_furniture_v2 IS select * from building_furniture_v2 order by id;
   BEGIN
     dbms_output.put_line('Building_Furniture table is being copied...');
-    for building_furniture in building_furniture_v2 loop
+    FOR building_furniture IN building_furniture_v2 LOOP
     
         -- Update the cityobject_id entry in surface_geometry table
         IF building_furniture.LOD4_GEOMETRY_ID IS NOT NULL THEN         
@@ -421,9 +495,9 @@ AS
         name_codespace = building_furniture.name_codespace,
         description = building_furniture.description
         where id = building_furniture.id;
-    end loop;
+    END LOOP;
     dbms_output.put_line('Building_Furniture table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillBuildingInstallationTable
   IS
@@ -432,7 +506,7 @@ AS
     classID NUMBER(10);
   BEGIN
     dbms_output.put_line('Building_Installation table is being copied...');
-    for building_installation in building_installation_v2 loop
+    FOR building_installation IN building_installation_v2 LOOP
         -- Check the id of the is_external type
         IF building_installation.is_external IS NOT NULL THEN
           IF building_installation.is_external = 1 THEN
@@ -477,9 +551,9 @@ AS
         name_codespace = building_installation.name_codespace,
         description = building_installation.description
         where id = building_installation.id;
-    end loop;
+    END LOOP;
     dbms_output.put_line('Building_Installation table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillImplicitGeometryTable
   IS
@@ -487,16 +561,16 @@ AS
     CURSOR implicit_geometry_v2 IS select * from implicit_geometry_v2 order by id;
   BEGIN
     dbms_output.put_line('Implicit_Geometry table is being copied...');
-    for implicit_geometry in implicit_geometry_v2 loop
+    FOR implicit_geometry IN implicit_geometry_v2 LOOP
         insert into implicit_geometry
         (ID,MIME_TYPE,REFERENCE_TO_LIBRARY,LIBRARY_OBJECT,RELATIVE_BREP_ID)
         values
         (implicit_geometry.ID,implicit_geometry.MIME_TYPE,
         implicit_geometry.REFERENCE_TO_LIBRARY,implicit_geometry.LIBRARY_OBJECT,
         implicit_geometry.RELATIVE_GEOMETRY_ID);
-    end loop;
+    END LOOP;
     dbms_output.put_line('Implicit_Geometry table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillCityFurnitureTable
   IS
@@ -504,7 +578,7 @@ AS
     CURSOR city_furniture_v2 IS select * from city_furniture_v2 order by id;
   BEGIN
     dbms_output.put_line('City_Furniture table is being copied...');
-    for city_furniture in city_furniture_v2 loop        
+    FOR city_furniture IN city_furniture_v2 LOOP        
         -- Update the cityobject_id entry in surface_geometry table
         IF city_furniture.LOD1_GEOMETRY_ID IS NOT NULL THEN         
            EXECUTE IMMEDIATE 'update surface_geometry set 
@@ -559,9 +633,9 @@ AS
         name_codespace = city_furniture.name_codespace,
         description = city_furniture.description
         where id = city_furniture.id;
-    end loop;
+    END LOOP;
     dbms_output.put_line('City_Furniture table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillCityObjectGenAttrTable
   IS
@@ -570,7 +644,7 @@ AS
            select * from cityobject_genericattrib_v2 order by id;
   BEGIN
     dbms_output.put_line('CityObject_GenericAttrib table is being copied...');
-    for cityobject_genericattrib in cityobject_genericattrib_v2 loop
+    FOR cityobject_genericattrib IN cityobject_genericattrib_v2 LOOP
         insert into cityobject_genericattrib
         (ID,ROOT_GENATTRIB_ID,ATTRNAME,DATATYPE,STRVAL,INTVAL,REALVAL,URIVAL,
         DATEVAL,GEOMVAL,BLOBVAL,CITYOBJECT_ID,SURFACE_GEOMETRY_ID)
@@ -582,9 +656,9 @@ AS
         cityobject_genericattrib.DATEVAL,cityobject_genericattrib.GEOMVAL,
         cityobject_genericattrib.BLOBVAL,cityobject_genericattrib.CITYOBJECT_ID,
         cityobject_genericattrib.SURFACE_GEOMETRY_ID);
-    end loop;
+    END LOOP;
     dbms_output.put_line('CityObject_GenericAttrib table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillCityObjectMemberTable
   IS
@@ -592,7 +666,7 @@ AS
     dbms_output.put_line('CityObject_Member table is being copied...');
     insert into cityobject_member select * from cityobject_member_v2;
     dbms_output.put_line('CityObject_Member table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillCityObjectGroupTable
   IS
@@ -600,7 +674,7 @@ AS
     CURSOR cityobjectgroup_v2 IS select * from cityobjectgroup_v2 order by id;
   BEGIN
     dbms_output.put_line('CityObjectGroup table is being copied...');
-    for cityobjectgroup in cityobjectgroup_v2 loop
+    FOR cityobjectgroup IN cityobjectgroup_v2 LOOP
         insert into cityobjectgroup
         (ID,CLASS,FUNCTION,USAGE,BREP_ID,OTHER_GEOM,PARENT_CITYOBJECT_ID)
         values
@@ -616,9 +690,9 @@ AS
         name_codespace = cityobjectgroup.name_codespace,
         description = cityobjectgroup.description
         where id = cityobjectgroup.id;
-    end loop;
+    END LOOP;
     dbms_output.put_line('CityObjectGroup table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillExternalReferenceTable
   IS
@@ -626,7 +700,7 @@ AS
     dbms_output.put_line('External_Reference table is being copied...');
     insert into external_reference select * from external_reference_v2;
     dbms_output.put_line('External_Reference table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillGeneralizationTable
   IS
@@ -634,7 +708,7 @@ AS
     dbms_output.put_line('Generalization table is being copied...');
     insert into generalization select * from generalization_v2;
     dbms_output.put_line('Generalization table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillGenericCityObjectTable
   IS
@@ -648,7 +722,7 @@ AS
     EXECUTE IMMEDIATE 'DROP INDEX GEN_OBJECT_LOD4TERR_SPX';
     EXECUTE IMMEDIATE 'DROP INDEX GEN_OBJECT_LOD4XGEOM_SPX'; 
         
-    for generic_cityobject in generic_cityobject_v2 loop
+    FOR generic_cityobject IN generic_cityobject_v2 LOOP
         -- Update the cityobject_id entry in surface_geometry table
         IF generic_cityobject.LOD0_GEOMETRY_ID IS NOT NULL THEN         
            EXECUTE IMMEDIATE 'update surface_geometry set 
@@ -717,14 +791,14 @@ AS
         name_codespace = generic_cityobject.name_codespace,
         description = generic_cityobject.description
         where id = generic_cityobject.id;
-    end loop;
+    END LOOP;
     -- Recreate the dropped invalid indexes
     EXECUTE IMMEDIATE 'CREATE INDEX GEN_OBJECT_LOD3XGEOM_SPX ON GENERIC_CITYOBJECT (LOD3_OTHER_GEOM) INDEXTYPE IS MDSYS.SPATIAL_INDEX';
     EXECUTE IMMEDIATE 'CREATE INDEX GEN_OBJECT_LOD4REFPNT_SPX ON GENERIC_CITYOBJECT (LOD4_IMPLICIT_REF_POINT) INDEXTYPE IS MDSYS.SPATIAL_INDEX';
     EXECUTE IMMEDIATE 'CREATE INDEX GEN_OBJECT_LOD4TERR_SPX ON GENERIC_CITYOBJECT (LOD4_TERRAIN_INTERSECTION) INDEXTYPE IS MDSYS.SPATIAL_INDEX';
     EXECUTE IMMEDIATE 'CREATE INDEX GEN_OBJECT_LOD4XGEOM_SPX ON GENERIC_CITYOBJECT (LOD4_OTHER_GEOM) INDEXTYPE IS MDSYS.SPATIAL_INDEX';
     dbms_output.put_line('Generic_CityObject table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillGroupToCityObject
   IS
@@ -732,7 +806,7 @@ AS
     dbms_output.put_line('Group_To_CityObject table is being copied...');
     insert into group_to_cityobject select * from group_to_cityobject_v2;
     dbms_output.put_line('Group_To_CityObject table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillLandUseTable
   IS
@@ -740,7 +814,7 @@ AS
     CURSOR land_use_v2 IS select * from land_use_v2 order by id;
   BEGIN
     dbms_output.put_line('Land_Use table is being copied...');
-    for land_use in land_use_v2 loop
+    FOR land_use IN land_use_v2 LOOP
         -- Update the cityobject_id entry in surface_geometry table
         IF land_use.LOD0_MULTI_SURFACE_ID IS NOT NULL THEN         
            EXECUTE IMMEDIATE 'update surface_geometry set 
@@ -785,9 +859,9 @@ AS
         name_codespace = land_use.name_codespace,
         description = land_use.description
         where id = land_use.id;
-    end loop;
+    END LOOP;
     dbms_output.put_line('Land_Use table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillMassPointReliefTable
   IS
@@ -795,7 +869,7 @@ AS
     dbms_output.put_line('MassPoint_Relief table is being copied...');
     insert into masspoint_relief select * from masspoint_relief_v2;
     dbms_output.put_line('MassPoint_Relief table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillOpeningTable
   IS
@@ -804,7 +878,7 @@ AS
     classID NUMBER(10);
   BEGIN
     dbms_output.put_line('Opening table is being copied...');
-    for opening in opening_v2 loop
+    FOR opening IN opening_v2 LOOP
         -- Check Type
         IF opening.type IS NOT NULL THEN
            select id into classID from OBJECTCLASS where classname = opening.type;
@@ -836,9 +910,9 @@ AS
         name_codespace = opening.name_codespace,
         description = opening.description
         where id = opening.id;
-    end loop;
+    END LOOP;
     dbms_output.put_line('Opening table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillThematicSurfaceTable
   IS
@@ -847,7 +921,7 @@ AS
     classID NUMBER(10);
   BEGIN
     dbms_output.put_line('Thematic_Surface table is being copied...');
-    for thematic_surface in thematic_surface_v2 loop
+    FOR thematic_surface IN thematic_surface_v2 LOOP
         -- Check Type
         IF thematic_surface.type IS NOT NULL THEN
            select id into classID from OBJECTCLASS where classname = thematic_surface.type;
@@ -887,9 +961,9 @@ AS
         name_codespace = thematic_surface.name_codespace,
         description = thematic_surface.description
         where id = thematic_surface.id;
-    end loop;
+    END LOOP;
     dbms_output.put_line('Thematic_Surface table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillOpeningToThemSurfaceTable
   IS
@@ -897,7 +971,7 @@ AS
     dbms_output.put_line('Opening_To_Them_Surface table is being copied...');
     insert into opening_to_them_surface select * from opening_to_them_surface_v2;
     dbms_output.put_line('Opening_To_Them_Surface table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillPlantCoverTable
   IS
@@ -917,7 +991,7 @@ AS
     lod4SolidID NUMBER(10);
   BEGIN
     dbms_output.put_line('Plant_Cover table is being copied...');
-    for plant_cover in plant_cover_v2 loop
+    FOR plant_cover IN plant_cover_v2 LOOP
         -- Check if the lod1-lod4 geometry ids are solid and/or multi surface
         IF plant_cover.lod1_geometry_id IS NOT NULL THEN
            select is_solid into isSolidLOD1 from surface_geometry_v2 where id = plant_cover.lod1_geometry_id;
@@ -997,9 +1071,9 @@ AS
         lod2SolidID := NULL;
         lod3SolidID := NULL;
         lod4SolidID := NULL;
-    end loop;
+    END LOOP;
     dbms_output.put_line('Plant_Cover table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillReliefComponentTable
   IS
@@ -1008,7 +1082,7 @@ AS
     classID NUMBER(10);
   BEGIN
     dbms_output.put_line('Relief_Component table is being copied...');
-    for relief_component in relief_component_v2 loop
+    FOR relief_component IN relief_component_v2 LOOP
         -- Fetch the objectclass id
         IF relief_component.id IS NOT NULL THEN
            select OBJECTCLASS_ID into classID from CITYOBJECT
@@ -1029,9 +1103,9 @@ AS
         name_codespace = relief_component.name_codespace,
         description = relief_component.description
         where id = relief_component.id;
-    end loop;
+    END LOOP;
     dbms_output.put_line('Relief_Component table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillRasterReliefTable
   IS
@@ -1040,7 +1114,7 @@ AS
     gridID NUMBER(10);
   BEGIN
     dbms_output.put_line('Raster_Relief table is being copied...');
-    for raster_relief in raster_relief_v2 loop
+    FOR raster_relief IN raster_relief_v2 LOOP
         -- Add the Raster Property into the Grid Coverage Table
         IF (raster_relief.RASTERPROPERTY IS NOT NULL) THEN
            gridID := GRID_COVERAGE_SEQ.NEXTVAL;
@@ -1055,9 +1129,9 @@ AS
         (ID,COVERAGE_ID)
         values
         (raster_relief.ID,gridID);
-    end loop;
+    END LOOP;
     dbms_output.put_line('Raster_Relief table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillReliefFeatToRelCompTable
   IS
@@ -1065,7 +1139,7 @@ AS
     dbms_output.put_line('Relief_Feat_To_Rel_Comp table is being copied...');
     insert into relief_feat_to_rel_comp select * from relief_feat_to_rel_comp_v2;
     dbms_output.put_line('Relief_Feat_To_Rel_Comp table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillReliefFeatureTable
   IS
@@ -1073,7 +1147,7 @@ AS
     CURSOR relief_feature_v2 IS select * from relief_feature_v2 order by id;
   BEGIN
     dbms_output.put_line('Relief_Feature table is being copied...');
-    for relief_feature in relief_feature_v2 loop
+    FOR relief_feature IN relief_feature_v2 LOOP
 
         insert into relief_feature
         (ID,LOD)
@@ -1088,9 +1162,9 @@ AS
         name_codespace = relief_feature.name_codespace,
         description = relief_feature.description
         where id = relief_feature.id;
-    end loop;
+    END LOOP;
     dbms_output.put_line('Relief_Feature table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillSolitaryVegetatObjectTable
   IS
@@ -1098,7 +1172,7 @@ AS
     CURSOR solitary_vegetat_object_v2 IS select * from solitary_vegetat_object_v2 order by id;
   BEGIN
     dbms_output.put_line('Solitary_Vegetat_Object table is being copied...');
-    for solitary_vegetat_object in solitary_vegetat_object_v2 loop
+    FOR solitary_vegetat_object IN solitary_vegetat_object_v2 LOOP
     
         -- Update the cityobject_id entry in surface_geometry table
         IF solitary_vegetat_object.LOD1_GEOMETRY_ID IS NOT NULL THEN         
@@ -1123,7 +1197,7 @@ AS
         END IF;
 
         insert into solitary_vegetat_object
-        (ID,CLASS,SPECIES,FUNCTION,HEIGHT,TRUNC_DIAMETER,CROWN_DIAMETER,
+        (ID,CLASS,SPECIES,FUNCTION,HEIGHT,TRUNK_DIAMETER,CROWN_DIAMETER,
         LOD1_BREP_ID,LOD2_BREP_ID,LOD3_BREP_ID,LOD4_BREP_ID,
         LOD1_IMPLICIT_REP_ID,LOD2_IMPLICIT_REP_ID,LOD3_IMPLICIT_REP_ID,
         LOD4_IMPLICIT_REP_ID,LOD1_IMPLICIT_REF_POINT,LOD2_IMPLICIT_REF_POINT,
@@ -1158,9 +1232,9 @@ AS
         name_codespace = solitary_vegetat_object.name_codespace,
         description = solitary_vegetat_object.description
         where id = solitary_vegetat_object.id;
-    end loop;
+    END LOOP;
     dbms_output.put_line('Solitary_Vegetat_Object table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillTextureParamTable
   IS
@@ -1168,7 +1242,7 @@ AS
     CURSOR textureparam_v2 IS select * from textureparam_v2 order by surface_geometry_id;
   BEGIN
     dbms_output.put_line('TextureParam table is being copied...');
-    for textureparam in textureparam_v2 loop
+    FOR textureparam IN textureparam_v2 LOOP
         insert into textureparam
         (SURFACE_GEOMETRY_ID,IS_TEXTURE_PARAMETRIZATION,WORLD_TO_TEXTURE,
         TEXTURE_COORDINATES,SURFACE_DATA_ID)
@@ -1177,16 +1251,16 @@ AS
         textureparam.WORLD_TO_TEXTURE,
         convertVarcharToSDOGeom(textureparam.TEXTURE_COORDINATES),
         textureparam.SURFACE_DATA_ID);
-    end loop;
+    END LOOP;
     dbms_output.put_line('TextureParam table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillTinReliefTable
   IS
     CURSOR tin_relief_v2 IS select * from tin_relief_v2 order by id;
   BEGIN
     dbms_output.put_line('Tin Relief table is being copied...');
-    for tin_relief in tin_relief_v2 loop
+    FOR tin_relief IN tin_relief_v2 LOOP
         -- Update the cityobject_id entry in surface_geometry table
         IF tin_relief.SURFACE_GEOMETRY_ID IS NOT NULL THEN         
            EXECUTE IMMEDIATE 'update surface_geometry set 
@@ -1201,9 +1275,9 @@ AS
         (tin_relief.ID,tin_relief.MAX_LENGTH,tin_relief.STOP_LINES, 
         tin_relief.BREAK_LINES,tin_relief.CONTROL_POINTS,
         tin_relief.SURFACE_GEOMETRY_ID);
-    end loop;
+    END LOOP;
     dbms_output.put_line('Tin Relief table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillTrafficAreaTable
   IS
@@ -1212,7 +1286,7 @@ AS
     classID NUMBER(10);
   BEGIN
     dbms_output.put_line('Traffic_Area table is being copied...');
-    for traffic_area in traffic_area_v2 loop
+    FOR traffic_area IN traffic_area_v2 LOOP
         -- Fetch the objectclass id
         IF traffic_area.is_auxiliary IS NOT NULL THEN
           IF traffic_area.is_auxiliary = 1 THEN
@@ -1256,9 +1330,9 @@ AS
         name_codespace = traffic_area.name_codespace,
         description = traffic_area.description
         where id = traffic_area.id;
-    end loop;
+    END LOOP;
     dbms_output.put_line('Traffic_Area table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillTransportationComplex
   IS
@@ -1267,7 +1341,7 @@ AS
     classID NUMBER(10);
   BEGIN
     dbms_output.put_line('Transportation_Complex table is being copied...');
-    for transportation_complex in transportation_complex_v2 loop
+    FOR transportation_complex IN transportation_complex_v2 LOOP
         -- Check Type
         IF transportation_complex.type IS NOT NULL THEN
            select id into classID from OBJECTCLASS where classname = transportation_complex.type;
@@ -1315,9 +1389,9 @@ AS
         name_codespace = transportation_complex.name_codespace,
         description = transportation_complex.description
         where id = transportation_complex.id;
-    end loop;
+    END LOOP;
     dbms_output.put_line('Transportation_Complex table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillWaterBodyTable
   IS
@@ -1325,7 +1399,7 @@ AS
     CURSOR waterbody_v2 IS select * from waterbody_v2 order by id;
   BEGIN
     dbms_output.put_line('WaterBody table is being copied...');
-    for waterbody in waterbody_v2 loop
+    FOR waterbody IN waterbody_v2 LOOP
         -- Update the cityobject_id entry in surface_geometry table
         IF waterbody.LOD0_MULTI_SURFACE_ID IS NOT NULL THEN         
            EXECUTE IMMEDIATE 'update surface_geometry set 
@@ -1377,9 +1451,9 @@ AS
         name_codespace = waterbody.name_codespace,
         description = waterbody.description
         where id = waterbody.id;
-    end loop;
+    END LOOP;
     dbms_output.put_line('WaterBody table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillWaterBoundarySurfaceTable
   IS
@@ -1388,7 +1462,7 @@ AS
     classID NUMBER(10);
   BEGIN
     dbms_output.put_line('WaterBoundary_Surface table is being copied...');
-    for waterboundary_surface in waterboundary_surface_v2 loop
+    FOR waterboundary_surface IN waterboundary_surface_v2 LOOP
         -- Check Type
         IF waterboundary_surface.type IS NOT NULL THEN
            select id into classID from OBJECTCLASS where classname = waterboundary_surface.type;
@@ -1427,9 +1501,9 @@ AS
         name_codespace = waterboundary_surface.name_codespace,
         description = waterboundary_surface.description
         where id = waterboundary_surface.id;
-    end loop;
+    END LOOP;
     dbms_output.put_line('WaterBoundary_Surface table copy is completed.');
-  end;
+  END;
 
   PROCEDURE fillWaterbodToWaterbndSrfTable
   IS
@@ -1437,20 +1511,20 @@ AS
     dbms_output.put_line('Waterbod_To_Waterbnd_Srf table is being copied...');
     insert into waterbod_to_waterbnd_srf select * from waterbod_to_waterbnd_srf_v2;
     dbms_output.put_line('Waterbod_To_Waterbnd_Srf table copy is completed.');
-  end;
+  END;
 
   PROCEDURE updateSurfaceGeoTableCityObj
   IS
     -- variables --    
     CURSOR surface_geometry_v3 IS select * from surface_geometry order by id;
-    CURSOR surface_geometry_xv3 IS select * from surface_geometry where parent_id in 
+    CURSOR surface_geometry_xv3 IS select * from surface_geometry where parent_id IN 
                                   (select s.id from 
                                   implicit_geometry i, surface_geometry s
                                   where i.relative_brep_id = s.id 
                                   and s.is_xlink = 0);
   BEGIN
     dbms_output.put_line('Surface_Geometry table is being updated...');
-    for surface_geometry in surface_geometry_v3 loop        
+    FOR surface_geometry IN surface_geometry_v3 LOOP        
         IF (surface_geometry.CITYOBJECT_ID IS NOT NULL) THEN
 	    EXECUTE IMMEDIATE 'update surface_geometry set 
                               CITYOBJECT_ID = :1 where PARENT_ID = :2'
@@ -1463,109 +1537,169 @@ AS
                               USING surface_geometry.CITYOBJECT_ID, 
                               surface_geometry.ID;
 	 END IF;
-    end loop;
-    for surface_geometry_x in surface_geometry_xv3 loop        
+    END LOOP;
+    FOR surface_geometry_x IN surface_geometry_xv3 LOOP        
         IF (surface_geometry_x.GEOMETRY IS NOT NULL) THEN
           EXECUTE IMMEDIATE 'update surface_geometry set IMPLICIT_GEOMETRY = :1, 
           GEOMETRY = null where ID = :2' 
           USING surface_geometry_x.GEOMETRY, surface_geometry_x.ID;
         END IF;
-    end loop;
+    END LOOP;
     dbms_output.put_line('Surface_Geometry table is updated.');
-  end;
+  END;
   
   PROCEDURE updateSolidGeometry
-   IS
-   j NUMBER := 1;
-   CURSOR surface_geometry_cursor IS select * from surface_geometry order by id;
-   is_solid NUMBER(1,0) := 0;
-   no_of_shapes NUMBER := 0;
-   solid_offset NUMBER := 1;
-   srid NUMBER := 0;
-   solid_geom SDO_GEOMETRY;
-   elem_info_counter NUMBER := 7;
-   ordinate_array_counter NUMBER := 1;  
-   solid_cursor SYS_REFCURSOR;
-   solid_key SDO_GEOMETRY;
- BEGIN
-   EXECUTE IMMEDIATE 'select srid from user_sdo_geom_metadata
-                            where table_name = ''SURFACE_GEOMETRY'' and rownum = 1'
-                            INTO srid;
-   for surface_geometry_key in surface_geometry_cursor loop
-      EXECUTE IMMEDIATE 'select IS_SOLID from surface_geometry where
-                           ID = '||surface_geometry_key.ID INTO is_solid;
-      IF (is_solid = 1) THEN
-        solid_geom := mdsys.sdo_geometry (
-                3008, srid, null,
-                mdsys.sdo_elem_info_array (), mdsys.sdo_ordinate_array()
-                );
-                
-        -- dbms_output.put_line('solid_geometry start = ' || solid_geom.sdo_elem_info.count || ' : ' || solid_geom.sdo_ordinates.count);
-        
-        EXECUTE IMMEDIATE 'select COUNT(*) from surface_geometry where
-                            ROOT_ID = '||surface_geometry_key.ROOT_ID||
-                            ' and is_solid = 0 and is_composite = 0'
-                            INTO no_of_shapes;
-        
+  IS
+    column_srid NUMBER;
+    surface_geometry_cur ref_cursor;
+    sg_rec surface_geometry%ROWTYPE;
+    solid_geom SDO_GEOMETRY;
+    root_element NUMBER := 0;
+    elem_count NUMBER := 1;
+    solid_offset NUMBER := 0;
+  BEGIN
+    select srid into column_srid from user_sdo_geom_metadata where table_name = 'SURFACE_GEOMETRY' and column_name = 'SOLID_GEOMETRY';
+
+    OPEN surface_geometry_cur FOR
+      'WITH get_roots AS (
+        SELECT root_id FROM surface_geometry WHERE is_solid = 1
+      )
+      SELECT sg.* FROM surface_geometry sg, get_roots r
+        WHERE sg.root_id = r.root_id AND sg.geometry IS NOT NULL ORDER BY sg.root_id';
+    LOOP
+      FETCH surface_geometry_cur INTO sg_rec;
+      EXIT WHEN surface_geometry_cur%NOTFOUND;
+
+      -- create a new solid when root_id changes
+      IF root_element <> sg_rec.root_id THEN
+
+        -- check if a solid has already been constructed
+        IF solid_geom IS NOT NULL THEN
+          -- update solid_geometry column
+          -- EXCEPTION is catched in order to insert correct solids
+          BEGIN 
+            UPDATE surface_geometry 
+              SET solid_geometry = solid_geom 
+              WHERE id = root_element;
+
+            EXCEPTION 
+              WHEN OTHERS THEN
+                dbms_output.put_line('Could not create solid for root_id ' || root_element || '. Error: ' || SQLERRM);
+          END;
+
+          -- reset variables that help construction the solid
+          solid_offset := 0;
+          solid_geom := NULL;
+        END IF;
+
+        -- construct an empty solid
+        root_element := sg_rec.root_id;
+        solid_geom := mdsys.sdo_geometry(
+                      3008, column_srid, null,
+                      mdsys.sdo_elem_info_array (), mdsys.sdo_ordinate_array ()
+                      );
+
         solid_geom.sdo_elem_info.extend(6);
         solid_geom.sdo_elem_info(1) := 1;
         solid_geom.sdo_elem_info(2) := 1007;
         solid_geom.sdo_elem_info(3) := 1;
         solid_geom.sdo_elem_info(4) := 1;
         solid_geom.sdo_elem_info(5) := 1006;
-        solid_geom.sdo_elem_info(6) := no_of_shapes;
-
-        OPEN solid_cursor 
-        FOR 'SELECT geometry 
-                FROM surface_geometry where root_id = ' 
-                || surface_geometry_key.ROOT_ID || 
-                ' and is_solid = 0 and is_composite = 0';
-        LOOP
-           EXIT WHEN solid_cursor%NOTFOUND;
-           FETCH solid_cursor
-              INTO solid_key;
-           if (solid_key.sdo_elem_info is not null) then
-              j := 1;              
-              LOOP
-                solid_geom.sdo_elem_info.extend(3);
-                solid_geom.sdo_elem_info(elem_info_counter) := solid_offset;
-                solid_geom.sdo_elem_info(elem_info_counter+1) := solid_key.sdo_elem_info(j+1);
-                solid_geom.sdo_elem_info(elem_info_counter+2) := solid_key.sdo_elem_info(j+2);
-                elem_info_counter := elem_info_counter + 3;
-                j:=j+3;
-                exit when j>solid_key.sdo_elem_info.count;
-              END LOOP;
-            end if;
-            if (solid_key.sdo_ordinates is not null) then
-              j := 1;
-              LOOP
-                solid_geom.sdo_ordinates.extend(3);
-                solid_geom.sdo_ordinates(ordinate_array_counter) := solid_key.sdo_ordinates(j);
-                solid_geom.sdo_ordinates(ordinate_array_counter+1) := solid_key.sdo_ordinates(j+1);
-                solid_geom.sdo_ordinates(ordinate_array_counter+2) := solid_key.sdo_ordinates(j+2);
-                ordinate_array_counter := ordinate_array_counter + 3;
-                j:=j+3;
-                exit when j>solid_key.sdo_ordinates.count;
-              END LOOP;
-              solid_offset := solid_offset + (j - 1);
-            end if;
-        END LOOP;
-        CLOSE solid_cursor;
-	 
-	 update surface_geometry 
-        set solid_geometry = solid_geom 
-        where id = surface_geometry_key.ID;	 
-        
-        -- dbms_output.put_line('solid_geometry = ' || solid_geom.sdo_elem_info.count || ' : ' || solid_geom.sdo_ordinates.count);
-        solid_offset := 1;
-        no_of_shapes := 0;
-        elem_info_counter := 7;
-        ordinate_array_counter := 1;
-
+        solid_geom.sdo_elem_info(6) := 0;
       END IF;
-      is_solid := 0;
-   end loop;
- end;
 
-END geodb_migrate_v2_v3;
+      IF (sg_rec.geometry.sdo_elem_info IS NOT NULL) THEN
+        -- fill elem_info_array
+        FOR i IN sg_rec.geometry.sdo_elem_info.FIRST .. sg_rec.geometry.sdo_elem_info.LAST LOOP
+          solid_geom.sdo_elem_info.extend;
+
+          -- set correct offset
+		  -- the following equation will always be 0 for the first position of one or more ELEM_INFO_ARRAYs
+		  IF (elem_count - (i + 2) / 3) = 0 THEN
+            solid_geom.sdo_elem_info(solid_geom.sdo_elem_info.count) := solid_offset + sg_rec.geometry.sdo_elem_info(i);
+            elem_count := elem_count + 1;
+          ELSE
+            solid_geom.sdo_elem_info(solid_geom.sdo_elem_info.count) := sg_rec.geometry.sdo_elem_info(i);
+          END IF;
+        END LOOP;
+
+        -- fill ordinates_array
+        IF (sg_rec.geometry.sdo_ordinates IS NOT NULL) THEN
+          FOR i IN sg_rec.geometry.sdo_ordinates.FIRST .. sg_rec.geometry.sdo_ordinates.LAST LOOP
+            solid_geom.sdo_ordinates.extend;
+            solid_geom.sdo_ordinates(solid_geom.sdo_ordinates.count) := sg_rec.geometry.sdo_ordinates(i);
+          END LOOP;
+          -- update offset
+		  solid_offset := solid_geom.sdo_ordinates.count;
+		END IF;
+
+        -- update sdo_elem_info of solid and reset elem_count
+        solid_geom.sdo_elem_info(6) := solid_geom.sdo_elem_info(6) + sg_rec.geometry.sdo_elem_info.count / 3;
+        elem_count := 1;
+      END IF;
+    END LOOP;
+    CLOSE surface_geometry_cur;
+  END;
+
+  PROCEDURE updateSequences
+  IS
+    -- variables --
+    CURSOR user_sequences_cursor IS 
+      select SUBSTR(sequence_name, 0, 
+      INSTR(sequence_name, '_SEQ')-1) as sequencename 
+      from user_sequences order by sequence_name;
+    sequence_val NUMBER(10) := 0;
+    corrected_table_name VARCHAR2(100);
+    query_str VARCHAR2(1000);
+    table_exists NUMBER(1) := 0;
+    column_exists NUMBER(10) := 0;
+  BEGIN    
+    FOR user_sequences IN user_sequences_cursor LOOP 
+      IF (user_sequences.sequencename IS NOT NULL) THEN
+        select count(table_name) into table_exists 
+        from user_tables where table_name = user_sequences.sequencename;
+        
+        select COUNT(*) INTO column_exists
+        from all_tab_cols
+        where table_name = user_sequences.sequencename and 
+        column_name = 'ID';
+        
+        IF (column_exists != 0) THEN
+          IF (table_exists = 1) THEN
+            query_str := 'select max(id) from '|| user_sequences.sequencename;
+            EXECUTE IMMEDIATE query_str into sequence_val;
+            -- dbms_output.put_line(user_sequences.sequencename || ':' || sequence_val);  
+            IF (sequence_val IS NOT NULL) THEN
+              -- dbms_output.put_line('DROP SEQUENCE ' || user_sequences.sequencename || '_SEQ');
+              -- dbms_output.put_line('CREATE SEQUENCE ' || user_sequences.sequencename || '_SEQ START WITH ' || (sequence_val + 1));
+              EXECUTE IMMEDIATE 'DROP SEQUENCE ' || user_sequences.sequencename || '_SEQ';
+              EXECUTE IMMEDIATE 'CREATE SEQUENCE ' || user_sequences.sequencename || '_SEQ START WITH ' || (sequence_val + 1);          
+            END IF;   
+          ELSE
+             query_str := 'select table_name from user_tables where table_name 
+              like ''%'
+              || user_sequences.sequencename ||
+              '%''';
+              -- dbms_output.put_line(query_str);
+              
+             EXECUTE IMMEDIATE query_str into corrected_table_name;
+             query_str := 'select max(id) from '|| corrected_table_name;
+             EXECUTE IMMEDIATE query_str into sequence_val;
+             -- dbms_output.put_line(user_sequences.sequencename || ':' || sequence_val); 
+             IF (sequence_val IS NOT NULL) THEN
+              -- dbms_output.put_line('DROP SEQUENCE ' || user_sequences.sequencename || '_SEQ');
+              -- dbms_output.put_line('CREATE SEQUENCE ' || user_sequences.sequencename || '_SEQ START WITH ' || (sequence_val + 1));
+              EXECUTE IMMEDIATE 'DROP SEQUENCE ' || user_sequences.sequencename || '_SEQ';
+              EXECUTE IMMEDIATE 'CREATE SEQUENCE ' || user_sequences.sequencename || '_SEQ START WITH ' || (sequence_val + 1);
+             END IF;
+          END IF;
+        END IF;
+      END IF;
+      sequence_val := 0;
+      query_str := 0;
+      table_exists := 0;
+      corrected_table_name := '';
+    END LOOP;
+  END;
+END citydb_migrate_v2_v3;
 /
