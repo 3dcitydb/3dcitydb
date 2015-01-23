@@ -1,26 +1,28 @@
--- MIGRATE_DB_V2_V3.sql
+-- GRANT_ACCESS.sql
 --
--- Author:     Arda Muftuoglu <amueftueoglu@moss.de>            
+-- Author:     Arda Muftuoglu <amueftueoglu@moss.de>
+--             Felix Kunde <fkunde@virtualcitysystems.de>
 --
--- Copyright:  (c) 2014, M.O.S.S. Computer Grafik Systeme GmbH
---						 Hohenbrunner Weg 13, D-82024 Taufkirchen
---						 Germany
--- 
+-- Copyright:  (c) 2012-2014  Chair of Geoinformatics,
+--                            Technische Universität München, Germany
+--                            http://www.gis.bv.tum.de
+--
 --              This script is free software under the LGPL Version 2.1.
 --              See the GNU Lesser General Public License at
 --              http://www.gnu.org/copyleft/lgpl.html
 --              for more details.
 -------------------------------------------------------------------------------
 -- About:
---
--- Migration script from Oracle 3DCityDB version 2.1 to version 3.0
+-- Script to grant reading access on a 3DCityDB instance of v2.1.0 to a user 
+-- with an installed version of the 3DCityDB v3.0.0
 -------------------------------------------------------------------------------
 --
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 1.0.0     2014-10-14   release version                             AM
--- 
+-- 1.0.0     2015-01-22   release version                             AM
+--                                                                    FKun
+--
 
 SET SERVEROUTPUT ON;
 ACCEPT SCHEMAINPUT PROMPT 'Enter the user name of 3DCityDB v3.0.0 instance : '
