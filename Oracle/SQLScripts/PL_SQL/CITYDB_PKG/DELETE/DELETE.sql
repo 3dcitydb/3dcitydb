@@ -26,6 +26,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                                    | Author
+-- 2.2.0     2015-02-10   added functions                                  FKun
 -- 2.1.0     2014-11-10   delete with returning id of deleted features     FKun
 -- 2.0.0     2014-10-10   extended for 3DCityDB V3                         GHud
 --                                                                         FKun
@@ -41,9 +42,10 @@ AS
   function delete_surface_geometry(pid number, clean_apps int := 0, schema_name varchar2 := user) return id_array;
   function delete_implicit_geometry(pid number, clean_apps int := 0, schema_name varchar2 := user) return number;
   function delete_grid_coverage(pid number, schema_name varchar2 := user) return number;
-  function delete_external_reference(pid number, schema_name varchar2 := user) return number;
   function delete_citymodel(pid number, delete_members int := 0, schema_name varchar2 := user) return number;
-  function delete_appearance(pid number, schema_name varchar2 := user) return number;
+  function delete_genericattrib(pid number, parent_id number, root_id number, delete_members int := 0, schema_name varchar2 := user) return number;
+  function delete_external_reference(pid number, schema_name varchar2 := user) return number;
+  function delete_appearance(pid number, cleanup int := 0, schema_name varchar2 := user) return number;
   function delete_surface_data(pid number, schema_name varchar2 := user) return number;
   function delete_cityobjectgroup(pid number, delete_members int := 0, schema_name varchar2 := user) return number;
   function delete_thematic_surface(pid number, schema_name varchar2 := user) return number;
@@ -105,7 +107,8 @@ AS
   function intern_delete_grid_coverage(pid number, schema_name varchar2 := user) return number;
   function intern_delete_cityobject(pid number, schema_name varchar2 := user) return number;
   function delete_citymodel(citymodel_rec citymodel%rowtype, delete_members int := 0, schema_name varchar2 := user) return number;
-  function delete_appearance(appearance_rec appearance%rowtype, schema_name varchar2 := user) return number;
+  function intern_delete_genericattrib(pid number, parent_id number, root_id number, delete_members int := 0, schema_name varchar2 := USER) return number;
+  function delete_appearance(appearance_rec appearance%rowtype, cleanup int := 0, schema_name varchar2 := user) return number;
   function delete_surface_data(surface_data_rec surface_data%rowtype, schema_name varchar2 := user) return number;
   function delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, delete_members int := 0, schema_name varchar2 := user) return number;
   function delete_thematic_surface(thematic_surface_rec thematic_surface%rowtype, schema_name varchar2 := user) return number;
@@ -320,7 +323,7 @@ AS
     loop
       fetch appearance_cur into appearance_rec;
       exit when appearance_cur%notfound;
-      dummy_id := delete_appearance(appearance_rec, schema_name);
+      dummy_id := delete_appearance(appearance_rec, 0, schema_name);
     end loop;
     close appearance_cur;
   exception
@@ -378,7 +381,7 @@ AS
     loop
       fetch appearance_cur into appearance_rec;
       exit when appearance_cur%notfound;
-      dummy_id := delete_appearance(appearance_rec, schema_name);
+      dummy_id := delete_appearance(appearance_rec, 0, schema_name);
     end loop;
     close appearance_cur;
   exception
@@ -396,6 +399,66 @@ AS
   exception
     when others then
       dbms_output.put_line('delete_citymodel (id: ' || citymodel_rec.id || '): ' || SQLERRM);
+  end;
+
+  /*
+    internal: delete from CITYOBJECT_GENERICATTRIB
+  */
+  function intern_delete_genericattrib(pid number, parent_id number, root_id number, delete_members int := 0, schema_name varchar2 := user) return number
+  is
+    genattrib_parent_id number;
+    genattrib_root_id number;
+    deleted_id number;
+    dummy_id number;
+    genattrib_set_cur ref_cursor;
+    genattrib_set_rec cityobject_genericattrib%rowtype;
+  begin
+    -- preserve nested elements
+    if delete_members = 0 then
+      begin
+        -- get correct parent_id and root_id
+        if (parent_id is null or parent_id = 0) and (root_id is null or root_id = 0) then
+          execute immediate 'select parent_genattrib_id, root_genattrib_id from ' || schema_name || '.cityobject_genericattrib WHERE id = :1'
+                               into genattrib_parent_id, genattrib_root_id using pid;
+        end if;
+
+        exception
+          when no_data_found then
+            null;
+      end;
+    end if;
+
+    genattrib_parent_id := parent_id;
+    genattrib_root_id := root_id;
+	
+    -- if the attribute to be deleted is a set, first handle nested attributes
+    open genattrib_set_cur for 'select * from ' || schema_name || '.cityobject_genericattrib where parent_genattrib_id=:1' using pid;
+    loop
+      fetch genattrib_set_cur into genattrib_set_rec;
+      exit when genattrib_set_cur%notfound;
+      dummy_id := intern_delete_genericattrib(genattrib_set_rec.id, pid, COALESCE(genattrib_root_id,genattrib_set_rec.id), delete_members, schema_name);
+    end loop;
+    close genattrib_set_cur;
+
+    -- now delete or update cityobject_genericattrib table
+    if delete_members <> 0 or (delete_members = 0 and (genattrib_parent_id is null or genattrib_parent_id = 0)) then
+      execute immediate 'delete from ' || schema_name || '.cityobject_genericattrib  where id=:1 returning id into :2' using pid, out deleted_id;
+    else
+      -- update set hierachies
+      if pid = genattrib_root_id then
+        execute immediate 'UPDATE ' || schema_name || '.cityobject_genericattrib SET parent_genattrib_id = NULL, root_genattrib_id = :1
+                             WHERE id = :2' using genattrib_root_id, pid;
+      else
+        execute immediate 'UPDATE ' || schema_name || '.cityobject_genericattrib SET parent_genattrib_id = :1, root_genattrib_id = :2
+                             WHERE id = :3' using genattrib_parent_id, root_id, pid;
+      end if;
+    end if;
+
+    return deleted_id;
+
+  exception
+    when others then
+      dbms_output.put_line('intern_delete_genericattrib (id: ' || pid || '): ' || SQLERRM);
   end;
 
   /*
@@ -425,12 +488,19 @@ AS
       dbms_output.put_line('pre_delete_appearance (id: ' || appearance_rec.id || '): ' || SQLERRM);
   end;
 
-  function delete_appearance(appearance_rec appearance%rowtype, schema_name varchar2 := user) return number
+  function delete_appearance(appearance_rec appearance%rowtype, cleanup int := 0, schema_name varchar2 := user) return number
   is
+    dummy_ids id_array := id_array();
     deleted_id number;
   begin
     pre_delete_appearance(appearance_rec, schema_name);
     execute immediate 'delete from ' || schema_name || '.appearance where id=:1 returning id into :2' using appearance_rec.id, out deleted_id;
+
+    if cleanup <> 0 then
+      -- cleanup texture images    
+      dummy_ids := cleanup_tex_images(schema_name);
+    end if;
+
     return deleted_id;
   exception
     when others then
@@ -2334,7 +2404,7 @@ AS
   
   /*
     PUBLIC API PROCEDURES
-  */  
+  */
   function delete_surface_geometry(pid number, clean_apps int := 0, schema_name varchar2 := user) return id_array
   is
     deleted_ids id_array := id_array();
@@ -2386,19 +2456,6 @@ AS
       dbms_output.put_line('delete_grid_coverage (id: ' || pid || '): ' || SQLERRM);
   end;
 
-  function delete_external_reference(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.external_reference where id=:1 returning id into :2' using pid, out deleted_id;
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_external_reference (id: ' || pid || '): ' || SQLERRM);
-  end; 
-
   function delete_citymodel(pid number, delete_members int := 0, schema_name varchar2 := user) return number
   is
     deleted_id number;
@@ -2416,8 +2473,34 @@ AS
     when others then
       dbms_output.put_line('delete_citymodel (id: ' || pid || '): ' || SQLERRM);
   end;
+
+  function delete_genericattrib(pid number, parent_id number, root_id number, delete_members int := 0, schema_name varchar2 := user) return number
+  is
+    deleted_id number;
+  begin
+    deleted_id := intern_delete_genericattrib(pid, parent_id, root_id, delete_members, schema_name);
+    return deleted_id;
+  exception
+    when no_data_found then
+      return deleted_id;
+    when others then
+      dbms_output.put_line('delete_genericattrib (id: ' || pid || '): ' || SQLERRM);
+  end;
+
+  function delete_external_reference(pid number, schema_name varchar2 := user) return number
+  is
+    deleted_id number;
+  begin
+    execute immediate 'delete from ' || schema_name || '.external_reference where id=:1 returning id into :2' using pid, out deleted_id;
+    return deleted_id;
+  exception
+    when no_data_found then
+      return deleted_id;
+    when others then
+      dbms_output.put_line('delete_external_reference (id: ' || pid || '): ' || SQLERRM);
+  end;
   
-  function delete_appearance(pid number, schema_name varchar2 := user) return number
+  function delete_appearance(pid number, cleanup int := 0, schema_name varchar2 := user) return number
   is
     deleted_id number;
     appearance_rec appearance%rowtype;
@@ -2426,7 +2509,7 @@ AS
       into appearance_rec
       using pid;
 
-    deleted_id := delete_appearance(appearance_rec, schema_name);
+    deleted_id := delete_appearance(appearance_rec, cleanup, schema_name);
     return deleted_id;
   exception
     when no_data_found then
@@ -3286,7 +3369,7 @@ AS
       loop
         fetch appearance_cur into appearance_rec;
         exit when appearance_cur%notfound;
-        deleted_id := delete_appearance(appearance_rec, schema_name);
+        deleted_id := delete_appearance(appearance_rec, 0, schema_name);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       end loop;
@@ -3297,7 +3380,7 @@ AS
       loop
         fetch appearance_cur into appearance_rec;
         exit when appearance_cur%notfound;
-        deleted_id := delete_appearance(appearance_rec, schema_name);
+        deleted_id := delete_appearance(appearance_rec, 0, schema_name);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       end loop;
