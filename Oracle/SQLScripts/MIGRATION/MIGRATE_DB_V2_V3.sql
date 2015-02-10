@@ -1665,6 +1665,20 @@ AS
       END IF;
     END LOOP;
     CLOSE surface_geometry_cur;
+
+    -- loop stops when last solid is complete but before the corresponding update is commited
+    -- therefore it has to be done here
+    IF solid_geom IS NOT NULL THEN
+      BEGIN 
+        UPDATE surface_geometry 
+          SET solid_geometry = solid_geom 
+          WHERE id = root_element;
+
+          EXCEPTION 
+            WHEN OTHERS THEN
+              dbms_output.put_line('Could not create solid for root_id ' || root_element || '. Error: ' || SQLERRM);
+      END;
+    END IF;
   END;
 
   PROCEDURE updateSequences
