@@ -25,6 +25,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                                    | Author
+-- 2.2.0     2015-02-10   added functions                                  FKun
 -- 2.1.0     2014-11-07   delete with returning id of deleted features     FKun
 -- 2.0.0     2014-10-10   complete revision for 3DCityDB V3                FKun
 -- 1.2.0     2013-08-08   extended to all thematic classes                 FKun
@@ -46,7 +47,7 @@
 *   cleanup_schema(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
 *   cleanup_tex_images(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
 *   delete_address(ad_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_appearance(app_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
+*   delete_appearance(app_id INTEGER, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_breakline_relief(blr INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_bridge(brd_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_bridge_constr_element(brdce_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
@@ -63,7 +64,9 @@
 *   delete_cityobject(co_id INTEGER, delete_members INTEGER DEFAULT 0, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_cityobject_cascade(co_id INTEGER, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_cityobjectgroup(cog_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
+*   delete_external_reference(ref_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_grid_coverage(gc_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
+*   delete_genericattrib(genattrib_id INTEGER, parent_id INTEGER, root_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_generic_cityobject(gco_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_implicit_geometry(ig_id INTEGER, clean_apps INTEGER := 0 INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_land_use(lu_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
@@ -154,7 +157,7 @@ BEGIN
   EXECUTE format('UPDATE %I.cityobjectgroup SET parent_cityobject_id=null WHERE parent_cityobject_id = %L', schema_name, co_id);
 
   -- delete local appearances of city object 
-  EXECUTE format('SELECT citydb_pkg.delete_appearance(id, %L) FROM %I.appearance WHERE cityobject_id = %L', schema_name, schema_name, co_id);
+  EXECUTE format('SELECT citydb_pkg.delete_appearance(id, 0, %L) FROM %I.appearance WHERE cityobject_id = %L', schema_name, schema_name, co_id);
 
   --// DELETE CITY OBJECT //--
   EXECUTE format('DELETE FROM %I.cityobject WHERE id = %L RETURNING id', schema_name, co_id) INTO deleted_id;
@@ -270,10 +273,92 @@ LANGUAGE plpgsql;
 
 
 /*
+delete from CITYOBJECT_GENERICATTRIB
+*/
+CREATE OR REPLACE FUNCTION citydb_pkg.delete_genericattrib(
+  genattrib_id INTEGER,
+  parent_id INTEGER,
+  root_id INTEGER,
+  delete_members INTEGER DEFAULT 0,
+  schema_name TEXT DEFAULT 'citydb'
+  ) RETURNS INTEGER AS
+$$
+DECLARE
+  genattrib_parent_id INTEGER;
+  genattrib_root_id INTEGER;
+  deleted_id INTEGER;
+BEGIN
+  -- preserve nested elements
+  IF delete_members = 0 THEN
+    -- get correct parent_id and root_id
+    IF (parent_id IS NULL OR parent_id = 0) AND (root_id IS NULL OR root_id = 0) THEN
+      EXECUTE format('SELECT parent_genattrib_id, root_genattrib_id FROM %I.cityobject_genericattrib WHERE id = %L',
+                        schema_name, genattrib_id) INTO genattrib_parent_id, genattrib_root_id;
+    END IF;
+  END IF;
+
+  genattrib_parent_id := parent_id;
+  genattrib_root_id := root_id;
+
+  --// PRE DELETE CITYOBJECT_GENERICATTRIB //--
+  -- if the attribute to be deleted is a set, first handle nested attributes
+  EXECUTE format('SELECT citydb_pkg.delete_genericattrib(id, %L, COALESCE(%L,id), %L, %L) 
+                    FROM %I.cityobject_genericattrib WHERE parent_genattrib_id = %L', 
+                    genattrib_id, genattrib_root_id, delete_members, schema_name, schema_name, genattrib_id);
+
+  --// DELETE or UPDATE CITYOBJECT_GENERICATTRIB //--
+  IF delete_members <> 0 OR (delete_members = 0 AND (genattrib_parent_id IS NULL OR genattrib_parent_id = 0)) THEN
+    EXECUTE format('DELETE FROM %I.cityobject_genericattrib WHERE id = %L RETURNING id', schema_name, genattrib_id) INTO deleted_id;
+  ELSE
+    -- update set hierachies
+    IF genattrib_id = genattrib_root_id THEN
+      EXECUTE format('UPDATE %I.cityobject_genericattrib SET parent_genattrib_id = NULL, root_genattrib_id = %L
+                        WHERE id = %L', schema_name, genattrib_root_id, genattrib_id);
+    ELSE
+      EXECUTE format('UPDATE %I.cityobject_genericattrib SET parent_genattrib_id = %L, root_genattrib_id = %L
+                        WHERE id = %L', schema_name, genattrib_parent_id, genattrib_root_id, genattrib_id);
+    END IF;
+  END IF;
+
+  RETURN deleted_id;
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      RAISE NOTICE 'delete_genericattrib (id: %): %', genattrib_id, SQLERRM;
+END; 
+$$ 
+LANGUAGE plpgsql;
+
+
+/*
+delete from EXTERNAL_REFERENCE
+*/
+CREATE OR REPLACE FUNCTION citydb_pkg.delete_external_reference(
+  ref_id INTEGER,
+  schema_name TEXT DEFAULT 'citydb'
+  ) RETURNS INTEGER AS
+$$
+DECLARE
+  deleted_id INTEGER;
+BEGIN
+  EXECUTE format('DELETE FROM %I.external_reference WHERE id = %L RETURNING id', schema_name, ref_id) INTO deleted_id;
+
+  RETURN deleted_id;
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      RAISE NOTICE 'delete_external_reference (id: %): %', ref_id, SQLERRM;
+END; 
+$$ 
+LANGUAGE plpgsql;
+
+
+/*
 delete from APPEARANCE
 */
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_appearance(
   app_id INTEGER,
+  cleanup INTEGER DEFAULT 0,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS INTEGER AS
 $$
@@ -293,6 +378,11 @@ BEGIN
   
   --// DELETE APPEARANCE //--
   EXECUTE format('DELETE FROM %I.appearance WHERE id = %L RETURNING id', schema_name, app_id) INTO deleted_id;
+
+  IF cleanup <> 0 THEN
+    -- delete tex images not referenced by surface data any more
+    EXECUTE 'SELECT citydb_pkg.cleanup_tex_images($1)' USING schema_name; 
+  END IF;
 
   RETURN deleted_id;
 
@@ -1539,7 +1629,7 @@ BEGIN
   EXECUTE format('DELETE FROM %I.cityobject_member WHERE citymodel_id = %L', schema_name, cm_id);
 
   -- delete appearances assigned to the city model
-  EXECUTE format('SELECT citydb_pkg.delete_appearance(id, %L) FROM %I.appearance WHERE cityobject_id = %L', 
+  EXECUTE format('SELECT citydb_pkg.delete_appearance(id, 0, %L) FROM %I.appearance WHERE cityobject_id = %L', 
                     schema_name, schema_name, cm_id);
 
   --// DELETE CITY MODEL //--
@@ -2491,7 +2581,7 @@ BEGIN
       'SELECT a.id FROM %I.appearance a 
          LEFT OUTER JOIN %I.appear_to_surface_data asd ON a.id=asd.appearance_id 
            WHERE a.cityobject_id IS NULL AND asd.appearance_id IS NULL', schema_name, schema_name) LOOP
-      deleted_id := citydb_pkg.delete_appearance(app_id, schema_name);
+      deleted_id := citydb_pkg.delete_appearance(app_id, 0, schema_name);
       RETURN NEXT deleted_id;
     END LOOP;
   ELSE
@@ -2499,7 +2589,7 @@ BEGIN
       'SELECT a.id FROM %I.appearance a 
          LEFT OUTER JOIN %I.appear_to_surface_data asd ON a.id=asd.appearance_id 
            WHERE asd.appearance_id IS NULL', schema_name, schema_name) LOOP
-      deleted_id := citydb_pkg.delete_appearance(app_id, schema_name);
+      deleted_id := citydb_pkg.delete_appearance(app_id, 0, schema_name);
       RETURN NEXT deleted_id;
     END LOOP;
   END IF;
