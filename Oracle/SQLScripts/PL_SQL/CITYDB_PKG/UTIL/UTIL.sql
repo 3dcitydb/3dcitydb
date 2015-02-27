@@ -105,6 +105,7 @@ AS
   FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER, schema_name VARCHAR2 := USER) RETURN ID_ARRAY;
   FUNCTION get_id_array_size(id_arr ID_ARRAY) RETURN NUMBER;
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
+  FUNCTION construct_solid(geom_root_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
   FUNCTION to_2d(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
   FUNCTION sdo2geojson3d(p_geometry in sdo_geometry, p_decimal_places in pls_integer default 2, p_compress_tags in pls_integer default 0, p_relative2mbr in pls_integer default 0) RETURN CLOB DETERMINISTIC;
 END citydb_util;
@@ -112,7 +113,8 @@ END citydb_util;
 
 CREATE OR REPLACE PACKAGE BODY citydb_util
 AS
-
+  type ref_cursor is ref cursor;
+  
   /*****************************************************************
   * citydb_version
   *
@@ -377,13 +379,7 @@ AS
     arr_count NUMBER := 0;
   BEGIN
     arr_count := id_arr.count;
-
     RETURN arr_count;
-
-    EXCEPTION
-      WHEN OTHERS THEN
-        dbms_output.put_line('An error occured when executing function "vcdb_util.get_id_array_size": ' || SQLERRM);
-        RETURN arr_count;
   END;
 
 
@@ -481,6 +477,108 @@ AS
     RETURN table_name;
   END;
   
+
+  /*****************************************************************
+  * construct_solid
+  *
+  * @param geom_root_id identifier to group geometries of a solid
+  * @param schema_name name of schema
+  * @RETURN SDO_GEOMETRY the constructed solid geometry
+  ******************************************************************/
+  FUNCTION construct_solid(
+    geom_root_id NUMBER,
+    schema_name VARCHAR2 := USER
+    ) RETURN SDO_GEOMETRY
+  IS
+    column_srid NUMBER;
+    geom_cur ref_cursor;
+    solid_part SDO_GEOMETRY;
+    solid_geom SDO_GEOMETRY;
+    elem_count NUMBER := 1;
+    solid_offset NUMBER := 0;
+    solid_null_ex EXCEPTION;
+    --solid_invalid_ex EXCEPTION;
+  BEGIN
+    SELECT srid INTO column_srid FROM user_sdo_geom_metadata WHERE table_name = 'SURFACE_GEOMETRY' AND column_name = 'SOLID_GEOMETRY';
+
+    OPEN geom_cur FOR 'SELECT geometry FROM ' || schema_name || '.surface_geometry
+                         WHERE (root_id = :1 OR parent_id = :2) 
+                           AND geometry IS NOT NULL ORDER BY id' USING geom_root_id, geom_root_id;
+    LOOP
+      FETCH geom_cur INTO solid_part;
+      EXIT WHEN geom_cur%NOTFOUND;
+
+      IF solid_geom IS NULL THEN
+        -- construct an empty solid
+        solid_geom := mdsys.sdo_geometry(
+                      3008, column_srid, null,
+                      mdsys.sdo_elem_info_array (), mdsys.sdo_ordinate_array ()
+                      );
+
+        solid_geom.sdo_elem_info.extend(6);
+        solid_geom.sdo_elem_info(1) := 1;
+        solid_geom.sdo_elem_info(2) := 1007;
+        solid_geom.sdo_elem_info(3) := 1;
+        solid_geom.sdo_elem_info(4) := 1;
+        solid_geom.sdo_elem_info(5) := 1006;
+        solid_geom.sdo_elem_info(6) := 0;
+      END IF;
+
+      IF (solid_part.sdo_elem_info IS NOT NULL) THEN
+        -- fill elem_info_array
+        FOR i IN solid_part.sdo_elem_info.FIRST .. solid_part.sdo_elem_info.LAST LOOP
+          solid_geom.sdo_elem_info.extend;
+
+          -- set correct offset
+          -- the following equation will always be 0 for the first position of one or more ELEM_INFO_ARRAYs
+          IF (elem_count - (i + 2) / 3) = 0 THEN
+            solid_geom.sdo_elem_info(solid_geom.sdo_elem_info.count) := solid_offset + solid_part.sdo_elem_info(i);
+            elem_count := elem_count + 1;
+          ELSE
+            solid_geom.sdo_elem_info(solid_geom.sdo_elem_info.count) := solid_part.sdo_elem_info(i);
+          END IF;
+        END LOOP;
+
+        -- fill ordinates_array
+        IF (solid_part.sdo_ordinates IS NOT NULL) THEN
+          FOR i IN solid_part.sdo_ordinates.FIRST .. solid_part.sdo_ordinates.LAST LOOP
+            solid_geom.sdo_ordinates.extend;
+            solid_geom.sdo_ordinates(solid_geom.sdo_ordinates.count) := solid_part.sdo_ordinates(i);
+          END LOOP;
+          -- update offset
+          solid_offset := solid_geom.sdo_ordinates.count;
+        END IF;
+
+        -- update sdo_elem_info of solid and reset elem_count
+        solid_geom.sdo_elem_info(6) := solid_geom.sdo_elem_info(6) + solid_part.sdo_elem_info.count / 3;
+        elem_count := 1;
+      END IF;
+    END LOOP;
+    CLOSE geom_cur;
+
+    -- loop stops when last solid is complete but before the corresponding update is commited
+    -- therefore it has to be done here
+    IF solid_geom IS NOT NULL THEN
+      --IF sdo_geom.validate_geometry(solid_geom, 0.001) = 'TRUE' THEN
+        RETURN solid_geom; 
+      /*ELSE
+        RAISE solid_invalid_ex;
+      END IF;*/
+    ELSE
+      RAISE solid_null_ex;
+    END IF;
+
+    EXCEPTION
+      WHEN solid_null_ex THEN
+        dbms_output.put_line('Empty solid. Propably no entries exist in the database for chosen ID');
+        RETURN NULL;
+      /*WHEN solid_invalid_ex THEN
+        dbms_output.put_line('Constructed solid is not valid.');
+        RETURN NULL;*/
+      WHEN OTHERS THEN
+        dbms_output.put_line('An error occured when executing function citydb_util.construct_solid. Error: ' || SQLERRM);
+  END;
+
 
   /*
   * code taken from http://forums.oracle.com/forums/thread.jspa?messageID=960492&#960492
