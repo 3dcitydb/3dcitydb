@@ -28,6 +28,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 3.0.0     2015-03-05   added support for Oracle Locator            ZYao
 -- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
 --                                                                    TKol
 --                                                                    CNag
@@ -48,6 +49,7 @@ accept SRSNO NUMBER DEFAULT 81989002 PROMPT 'Please enter a valid SRID (Berlin: 
 prompt Please enter the corresponding SRSName to be used in GML exports
 accept GMLSRSNAME CHAR DEFAULT 'urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783' prompt '  (Berlin: urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783): '
 accept VERSIONING CHAR DEFAULT 'no' PROMPT 'Shall versioning be enabled (yes/no, default is no): '
+accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Oracle Spaital(S)/Oracle Locator(L), default is S): '
 prompt
 prompt
 
@@ -58,16 +60,17 @@ VARIABLE BATCHFILE VARCHAR2(50);
 WHENEVER SQLERROR CONTINUE;
 
 BEGIN
-  :BATCHFILE := 'UTIL/CREATE_DB/HINT_ON_MISSING_SRS';
-END;
-/
-
-BEGIN
   SELECT SRID,CS_NAME INTO :SRID,:CS_NAME FROM MDSYS.CS_SRS
   WHERE SRID=&SRSNO;
 
   IF (:SRID = &SRSNO) THEN
-    :BATCHFILE := 'CREATE_DB2';
+	  IF NOT ('&DBVERSION'='L' or '&DBVERSION'='l' or '&DBVERSION'='S' or '&DBVERSION'='s') THEN
+		:BATCHFILE := 'UTIL/CREATE_DB/HINT_ON_MISSTYPING_DBVERSION';
+	  ELSE
+	  	:BATCHFILE := 'CREATE_DB2';
+	  END IF;
+  ELSE 
+  	:BATCHFILE := 'UTIL/CREATE_DB/HINT_ON_MISSING_SRS';
   END IF;
 END;
 /

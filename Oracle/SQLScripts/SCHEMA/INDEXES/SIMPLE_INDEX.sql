@@ -28,6 +28,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 3.0.0     2015-03-05   added support for Oracle Locator            ZYao
 -- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
 --                                                                    TKol
 --                                                                    CNag
@@ -319,7 +320,12 @@ CREATE INDEX PLANT_COVER_LOD4MSOLID_FKX ON PLANT_COVER (LOD4_MULTI_SOLID_ID);
 
 CREATE INDEX PLANT_COVER_LOD4MSRF_FKX ON PLANT_COVER (LOD4_MULTI_SURFACE_ID);
 
-CREATE INDEX RASTER_RELIEF_COVERAGE_FKX ON RASTER_RELIEF (COVERAGE_ID);
+BEGIN
+  IF ('&DBVERSION'='S' or '&DBVERSION'='s') THEN
+    EXECUTE IMMEDIATE 'CREATE INDEX RASTER_RELIEF_COVERAGE_FKX ON RASTER_RELIEF (COVERAGE_ID)';  
+  END IF;
+END;
+/
 
 CREATE INDEX RELIEF_COMP_OBJCLASS_FKX ON RELIEF_COMPONENT (OBJECTCLASS_ID);
 

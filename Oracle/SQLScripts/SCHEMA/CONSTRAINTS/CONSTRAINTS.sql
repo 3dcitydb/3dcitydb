@@ -28,6 +28,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 3.0.0     2015-03-05   added support for Oracle Locator            ZYao
 -- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
 --                                                                    TKol
 --                                                                    CNag
@@ -1743,27 +1744,31 @@ REFERENCES SURFACE_GEOMETRY
 )
 ENABLE;
 
-ALTER TABLE RASTER_RELIEF
-ADD CONSTRAINT RASTER_RELIEF_COMP_FK FOREIGN KEY
-(
-  ID 
-)
-REFERENCES RELIEF_COMPONENT
-(
-  ID 
-)
-ENABLE;
-
-ALTER TABLE RASTER_RELIEF
-ADD CONSTRAINT RASTER_RELIEF_COVERAGE_FK FOREIGN KEY
-(
-  COVERAGE_ID 
-)
-REFERENCES GRID_COVERAGE
-(
-  ID 
-)
-ENABLE;
+BEGIN
+  IF ('&DBVERSION'='S' or '&DBVERSION'='s') THEN
+    EXECUTE IMMEDIATE 'ALTER TABLE RASTER_RELIEF
+	ADD CONSTRAINT RASTER_RELIEF_COMP_FK FOREIGN KEY
+	(
+	  ID 
+	)
+	REFERENCES RELIEF_COMPONENT
+	(
+	  ID 
+	)
+	ENABLE';  
+	EXECUTE IMMEDIATE 'ALTER TABLE RASTER_RELIEF
+	ADD CONSTRAINT RASTER_RELIEF_COVERAGE_FK FOREIGN KEY
+	(
+	  COVERAGE_ID 
+	)
+	REFERENCES GRID_COVERAGE
+	(
+	  ID 
+	)
+	ENABLE';
+  END IF;
+END;
+/
 
 ALTER TABLE RELIEF_COMPONENT
 ADD CONSTRAINT RELIEF_COMP_CITYOBJECT_FK FOREIGN KEY

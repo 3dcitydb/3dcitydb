@@ -28,6 +28,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 3.0.0     2015-03-05   added support for Oracle Locator            ZYao
 -- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
 --                                                                    TKol
 --                                                                    CNag
@@ -77,7 +78,7 @@ END;
 /
 BEGIN
   IF ('&VERSIONING'='yes' OR '&VERSIONING'='YES' OR '&VERSIONING'='y' OR '&VERSIONING'='Y') THEN
-    :VERSIONBATCHFILE := 'ENABLE_VERSIONING.sql';
+    :VERSIONBATCHFILE := 'ENABLE_VERSIONING2.sql';
   END IF;
 END;
 /
