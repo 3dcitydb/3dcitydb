@@ -26,12 +26,29 @@
 -- 1.0.0     2014-10-10   release version                             FKun
 --                                                                    CNag
 --
+
+VARIABLE DELETE_FILE VARCHAR2(50);
+
 SELECT 'Creating packages ''citydb_util'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_delete_by_lineage'', ''citydb_delete'', and corresponding types' as message from DUAL;
 @@PL_SQL/CITYDB_PKG/UTIL/UTIL.sql;
 @@PL_SQL/CITYDB_PKG/INDEX/IDX.sql;
 @@PL_SQL/CITYDB_PKG/SRS/SRS.sql;
 @@PL_SQL/CITYDB_PKG/STATISTICS/STAT.sql;
-@@PL_SQL/CITYDB_PKG/DELETE/DELETE.sql;
+
+BEGIN
+  IF ('&DBVERSION'='S' or '&DBVERSION'='s') THEN
+    :DELETE_FILE := 'PL_SQL/CITYDB_PKG/DELETE/DELETE.sql';
+  ELSE
+    :DELETE_FILE := 'PL_SQL/CITYDB_PKG/DELETE/DELETE2.sql';
+  END IF;
+END;
+/
+
+-- Transfer the value from the bind variable to the substitution variable
+column mc new_value DELETE_FILE2 print
+select :DELETE_FILE mc from dual;
+@@&DELETE_FILE2;
+
 @@PL_SQL/CITYDB_PKG/DELETE/DELETE_BY_LINEAGE;
 SELECT 'Packages ''citydb_util'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_delete_by_lineage'', and ''citydb_delete'' created' as message from DUAL;
 

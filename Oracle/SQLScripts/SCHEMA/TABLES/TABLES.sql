@@ -1,4 +1,4 @@
--- BRIDGE_FURNITURE.sql
+-- TABLES.sql
 --
 -- Authors:     Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
 --              Zhihang Yao <zhihang.yao@tum.de>
