@@ -132,7 +132,7 @@ The 3D City Database v3.0 has been developed by and with the support from
 the following cooperation partners:
 
 * Chair of Geoinformatics, Technische Universität München
-  http://www.gis.bv.tum.de/
+  http://www.gis.bgu.tum.de/
 * virtualcitySYSTEMS GmbH, Berlin
   http://www.virtualcitysystems.de/
 * M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen
