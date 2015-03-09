@@ -96,7 +96,7 @@ package. The script will start the setup procedure and invoke additional
 scripts in the background.
 
 The execution of the script substantially differs for Oracle and PostgreSQL.
-Please refer to the PDF documentation of the 3D City Database for a
+Please refer to the documentation of the 3D City Database for a
 comprehensive step-by-step installation guide.
 
 The setup procedure requires the following mandatory user inputs:
