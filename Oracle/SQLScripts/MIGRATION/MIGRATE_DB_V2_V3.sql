@@ -2,8 +2,9 @@
 --
 -- Author:     Arda Muftuoglu <amueftueoglu@moss.de>
 --             Felix Kunde <fkunde@virtualcitysystems.de>
+--             Gyoergy Hudra <ghudra@moss.de>
 --
--- Copyright:  (c) 2012-2014  Chair of Geoinformatics,
+-- Copyright:  (c) 2012-2015  Chair of Geoinformatics,
 --                            Technische Universität München, Germany
 --                            http://www.gis.bv.tum.de
 --
@@ -22,6 +23,7 @@
 -- Version | Date       | Description                               | Author
 -- 1.0.0     2015-01-22   release version                             AM
 --                                                                    FKun
+--           2015-03-11   locator/spatial                             GHud
 --
 
 CREATE OR REPLACE PACKAGE citydb_migrate_v2_v3
@@ -57,7 +59,6 @@ AS
   PROCEDURE fillOpeningToThemSurfaceTable;
   PROCEDURE fillPlantCoverTable;
   PROCEDURE fillReliefComponentTable;
-  PROCEDURE fillRasterReliefTable;
   PROCEDURE fillReliefFeatToRelCompTable;
   PROCEDURE fillReliefFeatureTable;
   PROCEDURE fillSolitaryVegetatObjectTable;
@@ -74,8 +75,7 @@ AS
 END citydb_migrate_v2_v3;
 /
 
-CREATE OR REPLACE 
-PACKAGE BODY citydb_migrate_v2_v3
+CREATE OR REPLACE PACKAGE BODY citydb_migrate_v2_v3
 AS
   type ref_cursor is ref cursor;
 
@@ -1131,32 +1131,6 @@ AS
         where id = relief_component.id;
     END LOOP;
     dbms_output.put_line('Relief_Component table copy is completed.');
-  END;
-
-  PROCEDURE fillRasterReliefTable
-  IS
-    -- variables --
-    CURSOR raster_relief_v2 IS select * from raster_relief_v2 order by id;
-    gridID NUMBER(10);
-  BEGIN
-    dbms_output.put_line('Raster_Relief table is being copied...');
-    FOR raster_relief IN raster_relief_v2 LOOP
-        -- Add the Raster Property into the Grid Coverage Table
-        IF (raster_relief.RASTERPROPERTY IS NOT NULL) THEN
-           gridID := GRID_COVERAGE_SEQ.NEXTVAL;
-           insert into grid_coverage
-           (ID,RASTERPROPERTY)
-           values
-           (gridID,raster_relief.RASTERPROPERTY) ;
-        END IF;
-
-        -- Is the raster relief id the same as raster component id?
-        insert into raster_relief
-        (ID,COVERAGE_ID)
-        values
-        (raster_relief.ID,gridID);
-    END LOOP;
-    dbms_output.put_line('Raster_Relief table copy is completed.');
   END;
 
   PROCEDURE fillReliefFeatToRelCompTable

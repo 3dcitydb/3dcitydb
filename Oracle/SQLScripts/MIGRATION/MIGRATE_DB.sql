@@ -2,8 +2,9 @@
 --
 -- Author:     Arda Muftuoglu <amueftueoglu@moss.de>
 --             Felix Kunde <fkunde@virtualcitysystems.de>
+--             Gyoergy Hudra <ghudra@moss.de>
 --
--- Copyright:  (c) 2012-2014  Chair of Geoinformatics,
+-- Copyright:  (c) 2012-2015  Chair of Geoinformatics,
 --                            Technische Universität München, Germany
 --                            http://www.gis.bv.tum.de
 --
@@ -22,11 +23,21 @@
 -- Version | Date       | Description                               | Author
 -- 1.0.0     2015-01-22   release version                             AM
 --                                                                    FKun
+--           2015-03-11   locator/spatial, check version > 10.x       GHud
 -- 
 
 SET SERVEROUTPUT ON verify off;
 SET FEEDBACK OFF;
+
+BEGIN 
+	dbms_output.put_line('Oracle-Version: '||DBMS_DB_VERSION.VERSION||'.'||DBMS_DB_VERSION.RELEASE);
+END;
+/
+
 ACCEPT SCHEMAINPUT PROMPT 'Enter the user name of 3DCityDB v2.1.0 instance : '
+ACCEPT DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using in the v3.0.0 instance? (Spatial(S)/Locator(L), def. is S): '
+
+VARIABLE MGRPBATCHFILE VARCHAR2(50);
 
 BEGIN
 	dbms_output.put_line('Starting DB migration...');
@@ -42,7 +53,7 @@ BEGIN
 
 	FOR R IN (SELECT owner, table_name FROM all_tables WHERE owner=schema_name) LOOP
 		EXECUTE IMMEDIATE 'CREATE SYNONYM '||R.table_name||'_v2 FOR "'||schema_name||'".'||R.table_name;
-		-- dbms_output.put_line('CREATE SYNONYM '||R.table_name||'_v2 FOR "'||schema_name||'".'||R.table_name);
+		--dbms_output.put_line('CREATE SYNONYM '||R.table_name||'_v2 FOR "'||schema_name||'".'||R.table_name);
 	END LOOP;
 
 	dbms_output.put_line('Synonyms created.');
@@ -53,7 +64,28 @@ BEGIN
 	dbms_output.put_line('Installing the package with functions and procedures for migration...');	
 END;
 /
+
+-- Load the generic migration package
 @@MIGRATE_DB_V2_V3.sql;
+
+-- Load the license specific migration package
+BEGIN
+  :MGRPBATCHFILE := '../UTIL/CREATE_DB/DO_NOTHING.sql';
+END;
+/
+BEGIN
+  IF ('&DBVERSION'='S' or '&DBVERSION'='s') THEN
+    :MGRPBATCHFILE := 'MIGRATE_DB_V2_V3_Sptl';
+  END IF;
+END;
+/
+
+-- Transfer the value from the bind variable to the substitution variable
+column mc new_value MGRPBATCHFILE2 print
+select :MGRPBATCHFILE mc from dual;
+
+@@&MGRPBATCHFILE2
+
 BEGIN
 	dbms_output.put_line('Packages installed.');	
 END;
@@ -92,7 +124,12 @@ EXECUTE CITYDB_MIGRATE_V2_V3.fillThematicSurfaceTable();
 EXECUTE CITYDB_MIGRATE_V2_V3.fillOpeningToThemSurfaceTable();
 EXECUTE CITYDB_MIGRATE_V2_V3.fillPlantCoverTable();
 EXECUTE CITYDB_MIGRATE_V2_V3.fillReliefComponentTable();
-EXECUTE CITYDB_MIGRATE_V2_V3.fillRasterReliefTable();
+BEGIN
+  IF ('&DBVERSION'='S' or '&DBVERSION'='s') THEN
+    EXECUTE IMMEDIATE 'CALL CITYDB_MIGRATE_V2_V3_SPTL.fillRasterReliefTable()';  
+  END IF;
+END;
+/
 EXECUTE CITYDB_MIGRATE_V2_V3.fillReliefFeatureTable();
 EXECUTE CITYDB_MIGRATE_V2_V3.fillReliefFeatToRelCompTable();
 EXECUTE CITYDB_MIGRATE_V2_V3.fillSolitaryVegetatObjectTable();
@@ -104,7 +141,14 @@ EXECUTE CITYDB_MIGRATE_V2_V3.fillWaterBodyTable();
 EXECUTE CITYDB_MIGRATE_V2_V3.fillWaterBoundarySurfaceTable();
 EXECUTE CITYDB_MIGRATE_V2_V3.fillWaterbodToWaterbndSrfTable();
 EXECUTE CITYDB_MIGRATE_V2_V3.updateSurfaceGeoTableCityObj();
-EXECUTE CITYDB_MIGRATE_V2_V3.updateSolidGeometry();
+
+BEGIN
+  -- Update SolidGeometry if oracle version greater than 10.x 
+  IF ('10' < DBMS_DB_VERSION.VERSION) THEN
+    EXECUTE IMMEDIATE 'CALL CITYDB_MIGRATE_V2_V3.updateSolidGeometry()';  
+  END IF;
+END;
+/
 
 BEGIN
 	dbms_output.put_line('Data transfer is completed.');	
@@ -127,6 +171,9 @@ END;
 /
 BEGIN
 	EXECUTE IMMEDIATE 'DROP PACKAGE CITYDB_MIGRATE_V2_V3';
+  IF ('&DBVERSION'='S' or '&DBVERSION'='s') THEN
+  	EXECUTE IMMEDIATE 'DROP PACKAGE CITYDB_MIGRATE_V2_V3_Sptl';
+  END IF;
 	FOR R IN (SELECT synonym_name FROM user_synonyms) LOOP
 		EXECUTE IMMEDIATE 'DROP SYNONYM '||R.synonym_name;
 		-- dbms_output.put_line('drop synonym '||R.synonym_name);

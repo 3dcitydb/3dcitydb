@@ -1,32 +1,43 @@
-﻿== Migration steps from version 2.1 to version 3.0 ==
+== Migration steps from version 2.1 to version 3.0 ==
 
 1. Create the database v3 with @CREATE_DB.sql 
 
     - Enter the SRID for the database 
     - Enter the SRSName to be used 
     - Specify if the versioning shall be enabled 
+    - Specify the used oracle license (spatial / locator)
 
-2. Run the script @GRANT_ACCESS.sql as the DBA user 
+2. Run the script @GRANT_ACCESS.sql as v2.1 schema user 
 
-    - Enter the username for the accesses to be granted 
-    - Enter the schema name on which the accesses to be granted 
+    - Enter the schema name (v3) on which the accesses to be granted 
 
-3. Execute @MIGRATE_DB.sql as your current user 
+3. Execute @MIGRATE_DB.sql as your current (v3) user 
 
-    - Enter the schema name from which the data will be copied 
+    - Enter the schema name from which the data will be migrated 
+    - Specify the used oracle license (spatial / locator)
 
 Done! 
 
 Example: 
 
-Let's assume that version 2.1 DB has UTM32 Coordinate System which corresponds to SRID = 83032 and assume that the schema name which we will copy the data from is named as "3DCITYDB_TEST2" and your schema name is named as "3DCITYDB_TEST3". 
+Let's assume that version 2.1 DB has UTM32 Coordinate System which corresponds 
+to SRID = 83032 and assume that the schema name which we will copy the data 
+from is named as "3DCITYDB_TEST2" and your schema name is named as "3DCITYDB_TEST3". 
 
-    - First, you create a new user and run @CREATE_DB.sql script for version 3.0.0 on this schema. You give the SRID as "83032" and the corresponding SRSName and your choice about versioning. 
+    - First, you create a new user and run @CREATE_DB.sql script for version 
+      3.0.0 on this schema. You give the SRID as "83032" and the corresponding 
+      SRSName (urn:ogc:def:crs,crs:EPSG:6.12:25832,crs:EPSG:6.12:5783) and 
+      your choice about versioning and used oracle license (spatial / locator). 
 
-    - After the database is created, you log on as a DBA User to be able to grant select accesses to this user for the schema which we will migrate from and run @GRANT_ACCESS.sql script. You give the values "3DCITYDB_TEST3" and "3DCITYDB_TEST2" as parameters. 
+    - After the database is created, you log on to v2.1 schema user to be able to 
+      grant select accesses to this user for the schema which we will migrate 
+      from and run @GRANT_ACCESS.sql script. 
+      You give the value "3DCITYDB_TEST2" as parameter. 
 
-    - When the script is finished, you log on with your username "3DCITYDB_TEST3" again and run the script @MIGRATE_DB.sql and give the schema name which the data will be copied as the parameter: "3DCITYDB_TEST2". 
+    - When the script is finished, you log on with your username "3DCITYDB_TEST3" 
+      again and run the script @MIGRATE_DB.sql and give the schema name which the 
+      data will be copied as the parameter: "3DCITYDB_TEST2". 
+      Second paramater is the used oracle license (spatial / locator).
 
-    - When the migration script is completed, you see a message "DB migration is completed successfully." on the console. 
-
- 
+    - When the migration script is completed, you see a message 
+      "DB migration is completed successfully." on the console. 
