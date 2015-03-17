@@ -3,6 +3,7 @@
 -- Authors:     Javier Herreruela <javier.herreruela@tu-berlin.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
 --              Felix Kunde <fkunde@virtualcitysystems.de>
+--              Zhihang Yao <zhihang.yao@tum.de>
 --
 -- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
@@ -25,6 +26,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 3.0.0     2015-03-17   add Oracle Locator Support                  ZYao
 -- 2.0.7     2014-10-10   add elements of 3DCityDB v3.0               FKun
 -- 2.0.6     2010-06-03   bugfix for execute object rights in 2.0.6   JHer
 -- 2.0.3     2010-06-03   release version                             JHer
@@ -32,12 +34,14 @@
 --
 
 SET SERVEROUTPUT ON;
--- SET FEEDBACK ON
+SET VER OFF;
+SET FEEDBACK OFF;
 
 prompt
 prompt
 accept RO_USERNAME CHAR PROMPT 'Please enter a username for the read-only user: '
 accept SCHEMA_OWNER CHAR PROMPT 'Please enter the owner of the schema to which this user will have read-only access: '
+accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Oracle Spaital(S)/Oracle Locator(L), default is S): '
 prompt
 prompt
 
@@ -47,6 +51,7 @@ DECLARE
  v_role DBA_ROLES.ROLE%TYPE := null;
  
  RO_USER_ALREADY_EXISTS EXCEPTION;
+ DBVERSION_MISSING EXCEPTION;
 
 BEGIN
 
@@ -58,6 +63,11 @@ BEGIN
     dbms_output.put_line('Invalid schema owner!');
   END IF;
 
+  IF NOT ('&DBVERSION'='L' or '&DBVERSION'='l' or '&DBVERSION'='S' or '&DBVERSION'='s') THEN
+	dbms_output.put_line('Invalid database license! Please enter "L" for Oracle Locator or "S" for Oracle Spatial again!');
+	RAISE DBVERSION_MISSING;
+  END IF;
+  
   BEGIN  
     EXECUTE IMMEDIATE 'SELECT username FROM all_users WHERE username = :1' INTO v_schemaOwnerName USING upper('&SCHEMA_OWNER');
 
@@ -129,7 +139,12 @@ BEGIN
 --      EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.CITYDB_SRS to ' || v_role;	 
         EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.CITYDB_STAT to ' || v_role;
         EXECUTE IMMEDIATE 'grant execute on ' || upper('&SCHEMA_OWNER') || '.CITYDB_UTIL to ' || v_role;
-        EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.GRID_COVERAGE to ' || v_role;
+        
+        IF ('&DBVERSION'='S' or '&DBVERSION'='s') THEN
+	        EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.GRID_COVERAGE to ' || v_role;
+	        EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.GRID_COVERAGE_RDT to ' || v_role;
+		END IF;    
+		
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.GROUP_TO_CITYOBJECT to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.IMPLICIT_GEOMETRY to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.INDEX_TABLE to ' || v_role;
@@ -139,7 +154,11 @@ BEGIN
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.OPENING to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.OPENING_TO_THEM_SURFACE to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.PLANT_COVER to ' || v_role;
-        EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.RASTER_RELIEF to ' || v_role;
+        
+        IF ('&DBVERSION'='S' or '&DBVERSION'='s') THEN
+			EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.RASTER_RELIEF to ' || v_role;
+		END IF; 
+		
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.RELIEF_COMPONENT to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.RELIEF_FEATURE to ' || v_role;
         EXECUTE IMMEDIATE 'grant select on ' || upper('&SCHEMA_OWNER') || '.RELIEF_FEAT_TO_REL_COMP to ' || v_role;
@@ -201,7 +220,12 @@ BEGIN
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.EXTERNAL_REFERENCE for ' || v_schemaOwnerName || '.EXTERNAL_REFERENCE';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GENERALIZATION for ' || v_schemaOwnerName || '.GENERALIZATION';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GENERIC_CITYOBJECT for ' || v_schemaOwnerName || '.GENERIC_CITYOBJECT';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GRID_COVERAGE for ' || v_schemaOwnerName || '.GRID_COVERAGE';
+  
+  IF ('&DBVERSION'='S' or '&DBVERSION'='s') THEN
+	  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GRID_COVERAGE for ' || v_schemaOwnerName || '.GRID_COVERAGE';
+	  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GRID_COVERAGE_RDT for ' || v_schemaOwnerName || '.GRID_COVERAGE_RDT';
+  END IF;    
+  
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.GROUP_TO_CITYOBJECT for ' || v_schemaOwnerName || '.GROUP_TO_CITYOBJECT';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.IMPLICIT_GEOMETRY for ' || v_schemaOwnerName || '.IMPLICIT_GEOMETRY';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.INDEX_TABLE for ' || v_schemaOwnerName || '.INDEX_TABLE';
@@ -211,7 +235,11 @@ BEGIN
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.OPENING for ' || v_schemaOwnerName || '.OPENING';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.OPENING_TO_THEM_SURFACE for ' || v_schemaOwnerName || '.OPENING_TO_THEM_SURFACE';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.PLANT_COVER for ' || v_schemaOwnerName || '.PLANT_COVER';
-  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.RASTER_RELIEF for ' || v_schemaOwnerName || '.RASTER_RELIEF';
+  
+  IF ('&DBVERSION'='S' or '&DBVERSION'='s') THEN
+  	  EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.RASTER_RELIEF for ' || v_schemaOwnerName || '.RASTER_RELIEF';
+  END IF; 
+  
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.RELIEF_COMPONENT for ' || v_schemaOwnerName || '.RELIEF_COMPONENT';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.RELIEF_FEATURE for ' || v_schemaOwnerName || '.RELIEF_FEATURE';
   EXECUTE IMMEDIATE 'create or replace synonym ' || v_readOnlyName || '.RELIEF_FEAT_TO_REL_COMP for ' || v_schemaOwnerName || '.RELIEF_FEAT_TO_REL_COMP';
@@ -267,3 +295,6 @@ BEGIN
       dbms_output.put_line('create_ro_user.sql finished with errors');
 END;
 /
+
+SET VER ON;
+SET FEEDBACK ON;
