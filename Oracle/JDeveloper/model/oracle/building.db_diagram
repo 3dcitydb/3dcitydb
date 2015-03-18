@@ -432,7 +432,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:ADDRESS_TO_BUILDING_FK:N:TABLE:ADDRESS_TO_BUILDING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1485.0001220703125' y='670.97607421875'/>
       <waypoint x='1319.999755859375' y='670.97607421875'/>
@@ -867,7 +867,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BUILDING_PARENT_FK:N:TABLE:BUILDING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1390.79833984375' y='1980.0'/>
       <waypoint x='1390.79833984375' y='2035.3468017578125'/>
@@ -909,7 +909,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BUILDING_ROOT_FK:N:TABLE:BUILDING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1357.138671875' y='1980.0'/>
       <waypoint x='1357.138671875' y='2073.03955078125'/>
@@ -951,7 +951,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BLDG_INST_BUILDING_FK:N:TABLE:BUILDING_INSTALLATION:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1019.9999389648438' y='1372.5'/>
       <waypoint x='765.0' y='1372.5'/>
@@ -990,10 +990,10 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:ADDRESS_TO_BUILDING_FK1:N:TABLE:ADDRESS_TO_BUILDING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
-      <waypoint x='1231.85205078125' y='915.0'/>
-      <waypoint x='1231.85205078125' y='792.9520874023438'/>
+      <waypoint x='1209.821044921875' y='915.0'/>
+      <waypoint x='1209.821044921875' y='792.9520874023438'/>
     </contained>
     <contained xmi:type='DI:GraphNode' xmi:id='id98b11743-f5db-4015-a49c-261bccd7736e'>
       <anchorage xmi:id='id273fb62c-9259-4978-9f89-cae676d491dc' graphEdge='id1b7558fd-ccc2-48e5-9098-f44a51b6aaed id1c3f6be2-132c-4725-9954-d6361d645ed5 id3cf7e9dd-7f1e-4af9-b782-56b01543c949 id51be5451-e5e6-4456-808c-fbf82c1fe0a5 id611ef02b-2c84-46c6-be14-9bd93c41f8e3 id8e51ec63-33fe-4176-b0ae-6d5556b0acee id94d83259-8e27-4c9b-a1a5-5b40319b15f2 idb3a79ff1-1d1c-4398-aa7d-99228519e746'/>
@@ -1034,7 +1034,7 @@
             </contained>
             <contained xmi:type='DI:GraphNode' xmi:id='idde7002aa-0aaf-4caa-aefb-39993fe9d5a1'>
               <property key='id' value='ObjectText'/>
-              <property key='preferredWidth' value='267.0'/>
+              <property key='preferredWidth' value='293.75'/>
               <property key='visible' value='true'/>
               <property key='editable' value='true'/>
               <property key='fixedWidth' value='false'/>
@@ -1227,10 +1227,10 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BUILDING_CITYOBJECT_FK:N:TABLE:BUILDING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
-      <waypoint x='682.3170166015625' y='570.0'/>
-      <waypoint x='682.3170166015625' y='859.2052001953125'/>
+      <waypoint x='700.6761474609375' y='570.0'/>
+      <waypoint x='700.6761474609375' y='859.2052001953125'/>
       <waypoint x='1056.54248046875' y='859.2052001953125'/>
       <waypoint x='1056.54248046875' y='915.0'/>
     </contained>
@@ -1268,7 +1268,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BLDG_INST_CITYOBJECT_FK:N:TABLE:BUILDING_INSTALLATION:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='613.4722900390625' y='570.0'/>
       <waypoint x='613.4722900390625' y='975.0'/>
@@ -1703,7 +1703,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:OPENING_ADDRESS_FK:N:TABLE:OPENING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1646.77734375' y='786.9521484375'/>
       <waypoint x='1646.77734375' y='2685.30615234375'/>
@@ -1744,7 +1744,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:OPENING_CITYOBJECT_FK:N:TABLE:OPENING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='765.0000610351562' y='350.5881042480469'/>
       <waypoint x='1945.4339599609375' y='350.5881042480469'/>
@@ -1984,7 +1984,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:OPEN_TO_THEM_SURFACE_FK:N:TABLE:OPENING_TO_THEM_SURFACE:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-285.0' y='2365.97607421875'/>
       <waypoint x='269.99993896484375' y='2365.97607421875'/>
@@ -2221,7 +2221,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:THEM_SURFACE_BUILDING_FK:N:TABLE:THEMATIC_SURFACE:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1263.9189453125' y='1980.0'/>
       <waypoint x='1263.9189453125' y='2160.0'/>
@@ -2260,7 +2260,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:THEM_SURFACE_CITYOBJECT_FK:N:TABLE:THEMATIC_SURFACE:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='765.0000610351562' y='429.8597717285156'/>
       <waypoint x='1834.593994140625' y='429.8597717285156'/>
@@ -2301,7 +2301,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:OPEN_TO_THEM_SURFACE_FK1:N:TABLE:OPENING_TO_THEM_SURFACE:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1005.0' y='2365.97607421875'/>
       <waypoint x='720.0' y='2365.97607421875'/>
@@ -2538,7 +2538,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:ROOM_BUILDING_FK:N:TABLE:ROOM:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1156.533203125' y='1980.0'/>
       <waypoint x='1156.533203125' y='2019.6900634765625'/>
@@ -2547,7 +2547,7 @@
     </contained>
     <contained xmi:type='DI:GraphEdge' xmi:id='id8e51ec63-33fe-4176-b0ae-6d5556b0acee' anchor='id273fb62c-9259-4978-9f89-cae676d491dc idce93799e-12bc-4072-b30b-fc5c4758d2ee'>
       <contained xmi:type='DI:GraphNode' xmi:id='ida42be6ab-e38f-433e-abe9-7eaf4767f68b'>
-        <position x='-37.99652099609375' y='-29.403305053710938'/>
+        <position x='-25.019683837890625' y='-27.549484252929688'/>
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='sourcemultiplicity'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='id73d072e6-55d2-449f-b5ab-1e21aabea54c'>
@@ -2579,7 +2579,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:ROOM_CITYOBJECT_FK:N:TABLE:ROOM:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='450.0' y='343.688232421875'/>
       <waypoint x='-244.3820343017578' y='343.688232421875'/>
@@ -2588,7 +2588,7 @@
     </contained>
     <contained xmi:type='DI:GraphEdge' xmi:id='id80b19c49-14e8-4d2d-9979-e3bfec87b8a9' anchor='idce93799e-12bc-4072-b30b-fc5c4758d2ee id7787a914-cec8-4699-857e-d94d45b4c40d'>
       <contained xmi:type='DI:GraphNode' xmi:id='idf325b8bf-4aaa-4a5d-8338-58a2068622b8'>
-        <position x='-34.23569869995117' y='2.36328125'/>
+        <position x='-35.38120651245117' y='1.2177734375'/>
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='sourcemultiplicity'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='idba844d7c-d58c-4dfe-91ad-750f3d4dd704'>
@@ -2620,7 +2620,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:THEM_SURFACE_ROOM_FK:N:TABLE:THEMATIC_SURFACE:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='130.05322265625' y='1476.9521484375'/>
       <waypoint x='130.05322265625' y='2526.50244140625'/>
@@ -2644,7 +2644,7 @@
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='name'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='id22e29d77-cc1a-4843-be43-2e6db0876a64'>
-        <position x='-23.803192138671875' y='-21.05859375'/>
+        <position x='-22.657684326171875' y='-24.4951171875'/>
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='destinationmultiplicity'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='ideee22116-d203-4926-8fb6-67031e4f0f34'>
@@ -2660,7 +2660,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BLDG_INST_ROOM_FK:N:TABLE:BUILDING_INSTALLATION:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='199.35934448242188' y='1285.97607421875'/>
       <waypoint x='420.00006103515625' y='1285.97607421875'/>
@@ -2704,7 +2704,7 @@
             </contained>
             <contained xmi:type='DI:GraphNode' xmi:id='ided634a29-4dca-4745-bc26-db117a17b93a'>
               <property key='id' value='ObjectText'/>
-              <property key='preferredWidth' value='234.0'/>
+              <property key='preferredWidth' value='242.0'/>
               <property key='visible' value='true'/>
               <property key='editable' value='true'/>
               <property key='fixedWidth' value='false'/>
@@ -2897,7 +2897,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:SURFACE_GEOM_PARENT_FK:N:TABLE:SURFACE_GEOMETRY:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-639.6803588867188' y='1965.0'/>
       <waypoint x='-639.6803588867188' y='1991.39697265625'/>
@@ -2939,7 +2939,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:SURFACE_GEOM_ROOT_FK:N:TABLE:SURFACE_GEOMETRY:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-618.4078369140625' y='1965.0'/>
       <waypoint x='-618.4078369140625' y='2020.0008544921875'/>
@@ -2976,12 +2976,12 @@
       <property key='EdgeType' value='1'/>
       <property key='showCardinality' value='true'/>
       <property key='lineWidth' value='1.0'/>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='fontColor' value='#0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BUILDING_LOD1SOLID_FK:N:TABLE:BUILDING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-300.0001220703125' y='1863.06005859375'/>
       <waypoint x='359.9999084472656' y='1863.06005859375'/>
@@ -3017,12 +3017,12 @@
       <property key='EdgeType' value='1'/>
       <property key='showCardinality' value='true'/>
       <property key='lineWidth' value='1.0'/>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='fontColor' value='#0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BUILDING_LOD2SOLID_FK:N:TABLE:BUILDING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-300.0001220703125' y='1916.497314453125'/>
       <waypoint x='359.9999084472656' y='1916.497314453125'/>
@@ -3058,12 +3058,12 @@
       <property key='EdgeType' value='1'/>
       <property key='showCardinality' value='true'/>
       <property key='lineWidth' value='1.0'/>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='fontColor' value='#0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BUILDING_LOD3SOLID_FK:N:TABLE:BUILDING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-300.0001220703125' y='1901.2567138671875'/>
       <waypoint x='359.9999084472656' y='1901.2567138671875'/>
@@ -3099,12 +3099,12 @@
       <property key='EdgeType' value='1'/>
       <property key='showCardinality' value='true'/>
       <property key='lineWidth' value='1.0'/>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='fontColor' value='#0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BUILDING_LOD4SOLID_FK:N:TABLE:BUILDING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-300.0001220703125' y='1880.935791015625'/>
       <waypoint x='1019.9999389648438' y='1880.935791015625'/>
@@ -3143,7 +3143,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BLDG_INST_LOD2BREP_FK:N:TABLE:BUILDING_INSTALLATION:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-300.0001220703125' y='1597.5'/>
       <waypoint x='420.00006103515625' y='1597.5'/>
@@ -3182,7 +3182,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BLDG_INST_LOD3BREP_FK:N:TABLE:BUILDING_INSTALLATION:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-300.0001220703125' y='1626.228271484375'/>
       <waypoint x='420.00006103515625' y='1626.228271484375'/>
@@ -3221,7 +3221,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BLDG_INST_LOD4BREP_FK:N:TABLE:BUILDING_INSTALLATION:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-300.0001220703125' y='1568.771728515625'/>
       <waypoint x='420.00006103515625' y='1568.771728515625'/>
@@ -3260,7 +3260,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:THEM_SURFACE_LOD2MSRF_FK:N:TABLE:THEMATIC_SURFACE:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-334.15289306640625' y='1965.0'/>
       <waypoint x='-334.15289306640625' y='2052.819091796875'/>
@@ -3301,7 +3301,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:THEM_SURFACE_LOD3MSRF_FK:N:TABLE:THEMATIC_SURFACE:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-419.46356201171875' y='1965.0'/>
       <waypoint x='-419.46356201171875' y='2122.89501953125'/>
@@ -3342,7 +3342,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:THEM_SURFACE_LOD4MSRF_FK:N:TABLE:THEMATIC_SURFACE:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-376.1636047363281' y='1965.0'/>
       <waypoint x='-376.1636047363281' y='2087.056640625'/>
@@ -3378,15 +3378,15 @@
       <property key='EdgeType' value='1'/>
       <property key='showCardinality' value='true'/>
       <property key='lineWidth' value='1.0'/>
-      <property key='lineColor' value='#848484'/>
+      <property key='lineColor' value='#646464'/>
       <property key='fontColor' value='#0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:IMPLICIT_GEOM_BREP_FK:N:TABLE:IMPLICIT_GEOMETRY:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
-      <waypoint x='-558.0399169921875' y='1425.0001220703125'/>
-      <waypoint x='-558.0399169921875' y='825.0'/>
+      <waypoint x='-609.4454956054688' y='1425.0001220703125'/>
+      <waypoint x='-609.4454956054688' y='825.0'/>
     </contained>
     <contained xmi:type='DI:GraphEdge' xmi:id='id8c12f51f-58b8-4b1c-95b8-17da6dc5fb07' anchor='id3b2c40b6-114c-4064-95bf-1fbc62c8e317 id5ec0978e-7e06-4d24-8221-6a3ac0acc862'>
       <contained xmi:type='DI:GraphNode' xmi:id='ida7c56141-0c44-411c-861a-df868bfbdd33'>
@@ -3422,7 +3422,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:OPENING_LOD3MSRF_FK:N:TABLE:OPENING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-480.00006103515625' y='1965.0'/>
       <waypoint x='-480.00006103515625' y='2160.0'/>
@@ -3461,7 +3461,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:OPENING_LOD4MSRF_FK:N:TABLE:OPENING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-528.9681396484375' y='1965.0'/>
       <waypoint x='-528.9681396484375' y='2007.476806640625'/>
@@ -3497,12 +3497,12 @@
       <property key='EdgeType' value='1'/>
       <property key='showCardinality' value='true'/>
       <property key='lineWidth' value='1.0'/>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='fontColor' value='#0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:ROOM_LOD4SOLID_FK:N:TABLE:ROOM:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-324.2189636230469' y='1425.0001220703125'/>
       <waypoint x='-324.2189636230469' y='1331.199462890625'/>
@@ -3740,14 +3740,14 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BLDG_FURN_LOD4IMPL_FK:N:TABLE:BUILDING_FURNITURE:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-360.0' y='667.5'/>
       <waypoint x='-120.00007629394531' y='667.5'/>
     </contained>
     <contained xmi:type='DI:GraphEdge' xmi:id='idb3a79ff1-1d1c-4398-aa7d-99228519e746' anchor='id273fb62c-9259-4978-9f89-cae676d491dc id61f2fc28-a05f-4021-9911-6d04e67656f5'>
       <contained xmi:type='DI:GraphNode' xmi:id='id24d9241e-afa4-4217-9b5c-41549aa0c72d'>
-        <position x='-37.36241149902344' y='-31.39569091796875'/>
+        <position x='-26.239425659179688' y='-33.249542236328125'/>
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='sourcemultiplicity'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='ida7107dfb-730c-41d2-924b-2ffd5667944f'>
@@ -3779,7 +3779,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BLDG_FURN_CITYOBJECT_FK:N:TABLE:BUILDING_FURNITURE:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='450.0' y='487.5'/>
       <waypoint x='209.99989318847656' y='487.5'/>
@@ -3818,7 +3818,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BLDG_FURN_LOD4BREP_FK:N:TABLE:BUILDING_FURNITURE:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-390.25677490234375' y='1425.0001220703125'/>
       <waypoint x='-390.25677490234375' y='866.3184814453125'/>
@@ -3858,7 +3858,7 @@
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BLDG_FURN_ROOM_FK:N:TABLE:BUILDING_FURNITURE:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='39.679656982421875' y='1095.0'/>
       <waypoint x='39.679656982421875' y='945.47607421875'/>
@@ -3894,12 +3894,12 @@
       <property key='EdgeType' value='1'/>
       <property key='showCardinality' value='true'/>
       <property key='lineWidth' value='1.0'/>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='fontColor' value='#0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BUILDING_LOD0FOOTPRINT_FK:N:TABLE:BUILDING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-300.0001220703125' y='1954.37744140625'/>
       <waypoint x='1019.9999389648438' y='1954.37744140625'/>
@@ -3933,12 +3933,12 @@
       <property key='EdgeType' value='1'/>
       <property key='showCardinality' value='true'/>
       <property key='lineWidth' value='1.0'/>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='fontColor' value='#0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BUILDING_LOD0ROOFPRINT_FK:N:TABLE:BUILDING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-300.0001220703125' y='1934.57763671875'/>
       <waypoint x='1019.9999389648438' y='1934.57763671875'/>
@@ -3972,12 +3972,12 @@
       <property key='EdgeType' value='1'/>
       <property key='showCardinality' value='true'/>
       <property key='lineWidth' value='1.0'/>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='fontColor' value='#0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:THEM_SURFACE_BLDG_INST_FK:N:TABLE:THEMATIC_SURFACE:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='595.2269897460938' y='1770.0'/>
       <waypoint x='595.2269897460938' y='2221.31298828125'/>
@@ -4012,16 +4012,16 @@
       <property key='EdgeType' value='1'/>
       <property key='showCardinality' value='true'/>
       <property key='lineWidth' value='1.0'/>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='fontColor' value='#0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:OPENING_LOD4IMPL_FK:N:TABLE:OPENING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-675.0' y='667.5'/>
-      <waypoint x='-865.3287353515625' y='667.5'/>
-      <waypoint x='-865.3287353515625' y='2400.0'/>
+      <waypoint x='-842.6632080078125' y='667.5'/>
+      <waypoint x='-842.6632080078125' y='2400.0'/>
       <waypoint x='-660.0' y='2400.0'/>
     </contained>
     <contained xmi:type='DI:GraphEdge' xmi:id='id6946d2cd-8515-44c1-a8b6-2015ff150a4c' anchor='id9daa4783-d8d9-481a-a4e1-5a627b42fa18 id3ecd0c37-1f2d-46a8-a2d1-1c0e82a0ddd5'>
@@ -4042,7 +4042,7 @@
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='name'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='id75aec088-8e8b-471c-8899-af73395bfa83'>
-        <position x='-11.334228515625' y='-16.6158447265625'/>
+        <position x='-12.600433349609375' y='-19.14825439453125'/>
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='destinationmultiplicity'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='id9788e91f-c190-49a4-a2ab-448be96d11aa'>
@@ -4053,15 +4053,15 @@
       <property key='EdgeType' value='1'/>
       <property key='showCardinality' value='true'/>
       <property key='lineWidth' value='1.0'/>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='fontColor' value='#0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BLDG_INST_LOD2IMPL_FK:N:TABLE:BUILDING_INSTALLATION:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
-      <waypoint x='-451.189697265625' y='825.0'/>
-      <waypoint x='-451.189697265625' y='938.8251342773438'/>
+      <waypoint x='-495.2515869140625' y='825.0'/>
+      <waypoint x='-495.2515869140625' y='938.8251342773438'/>
       <waypoint x='519.67822265625' y='938.8251342773438'/>
       <waypoint x='519.67822265625' y='975.0'/>
     </contained>
@@ -4096,13 +4096,13 @@
       <property key='EdgeType' value='1'/>
       <property key='showStereotype' value='false'/>
       <property key='font' value='SansSerif,plain,11'/>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='fontColor' value='#0'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:OPENING_LOD3IMPL_FK:N:TABLE:OPENING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
-      <waypoint x='-675.0' y='636.0813598632812'/>
-      <waypoint x='-935.5042724609375' y='636.0813598632812'/>
+      <waypoint x='-675.0' y='601.1990356445312'/>
+      <waypoint x='-935.5042724609375' y='601.1990356445312'/>
       <waypoint x='-935.5042724609375' y='2445.904296875'/>
       <waypoint x='-660.0' y='2445.904296875'/>
     </contained>
@@ -4124,7 +4124,7 @@
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='name'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='id807721ae-cdcb-4c70-9f0a-5592599865df'>
-        <position x='7.317962646484375' y='-15.61077880859375'/>
+        <position x='8.58416748046875' y='-19.40936279296875'/>
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='destinationmultiplicity'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='id3d71f733-bc72-4709-8b1f-d9b2197095c4'>
@@ -4137,13 +4137,13 @@
       <property key='EdgeType' value='1'/>
       <property key='showStereotype' value='false'/>
       <property key='font' value='SansSerif,plain,11'/>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='fontColor' value='#0'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BLDG_INST_LOD3IMPL_FK:N:TABLE:BUILDING_INSTALLATION:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
-      <waypoint x='-485.25701904296875' y='825.0'/>
-      <waypoint x='-485.25701904296875' y='959.5028686523438'/>
+      <waypoint x='-545.8421020507812' y='825.0'/>
+      <waypoint x='-545.8421020507812' y='959.5028686523438'/>
       <waypoint x='463.5279846191406' y='959.5028686523438'/>
       <waypoint x='463.5279846191406' y='975.0'/>
     </contained>
@@ -4165,7 +4165,7 @@
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='name'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='ide80624a3-6c0c-4408-9a51-b74762135ab0'>
-        <position x='-13.30950927734375' y='-17.40447998046875'/>
+        <position x='-13.30950927734375' y='-21.20306396484375'/>
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='destinationmultiplicity'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='id68eaf81c-e934-443a-9a7f-0a56f5f4233d'>
@@ -4178,13 +4178,13 @@
       <property key='EdgeType' value='1'/>
       <property key='showStereotype' value='false'/>
       <property key='font' value='SansSerif,plain,11'/>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='fontColor' value='#0'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BLDG_INST_LOD4IMPL_FK:N:TABLE:BUILDING_INSTALLATION:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
-      <waypoint x='-420.77093505859375' y='825.0'/>
-      <waypoint x='-420.77093505859375' y='924.0369262695312'/>
+      <waypoint x='-448.30963134765625' y='825.0'/>
+      <waypoint x='-448.30963134765625' y='924.0369262695312'/>
       <waypoint x='569.050537109375' y='924.0369262695312'/>
       <waypoint x='569.050537109375' y='975.0'/>
     </contained>
@@ -4214,7 +4214,7 @@
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='destinationname'/>
       </contained>
       <property key='font' value='SansSerif,plain,11'/>
-      <property key='lineColor' value='#424242'/>
+      <property key='lineColor' value='#646464'/>
       <property key='showStereotype' value='false'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
@@ -4222,7 +4222,7 @@
       <property key='showCardinality' value='true'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BUILDING_LOD1MSRF_FK:N:TABLE:BUILDING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-300.0001220703125' y='1791.239501953125'/>
       <waypoint x='1019.9999389648438' y='1791.239501953125'/>
@@ -4253,7 +4253,7 @@
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='destinationname'/>
       </contained>
       <property key='font' value='SansSerif,plain,11'/>
-      <property key='lineColor' value='#424242'/>
+      <property key='lineColor' value='#646464'/>
       <property key='showStereotype' value='false'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
@@ -4261,7 +4261,7 @@
       <property key='showCardinality' value='true'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BUILDING_LOD2MSRF_FK:N:TABLE:BUILDING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-300.0001220703125' y='1811.349365234375'/>
       <waypoint x='1019.9999389648438' y='1811.349365234375'/>
@@ -4292,7 +4292,7 @@
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='destinationname'/>
       </contained>
       <property key='font' value='SansSerif,plain,11'/>
-      <property key='lineColor' value='#0'/>
+      <property key='lineColor' value='#646464'/>
       <property key='showStereotype' value='false'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
@@ -4300,7 +4300,7 @@
       <property key='showCardinality' value='true'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BUILDING_LOD3MSRF_FK:N:TABLE:BUILDING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-300.0001220703125' y='1827.14990234375'/>
       <waypoint x='1019.9999389648438' y='1827.14990234375'/>
@@ -4331,7 +4331,7 @@
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='destinationname'/>
       </contained>
       <property key='font' value='SansSerif,plain,11'/>
-      <property key='lineColor' value='#424242'/>
+      <property key='lineColor' value='#646464'/>
       <property key='showStereotype' value='false'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
@@ -4339,7 +4339,7 @@
       <property key='showCardinality' value='true'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BUILDING_LOD4MSRF_FK:N:TABLE:BUILDING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-300.0001220703125' y='1843.78076171875'/>
       <waypoint x='359.9999084472656' y='1843.78076171875'/>
@@ -4372,7 +4372,7 @@
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='destinationname'/>
       </contained>
       <property key='font' value='SansSerif,plain,11'/>
-      <property key='lineColor' value='#313131'/>
+      <property key='lineColor' value='#646464'/>
       <property key='showStereotype' value='false'/>
       <property key='EdgeType' value='1'/>
       <property key='fontColor' value='#0'/>
@@ -4380,7 +4380,7 @@
       <property key='showCardinality' value='true'/>
       <property key='showAssocName' value='false'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:ROOM_LOD4MSRF_FK:N:TABLE:ROOM:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-353.6412658691406' y='1425.0001220703125'/>
       <waypoint x='-353.6412658691406' y='1285.97607421875'/>
@@ -4388,7 +4388,7 @@
     </contained>
     <contained xmi:type='DI:GraphEdge' xmi:id='id611ef02b-2c84-46c6-be14-9bd93c41f8e3' anchor='id273fb62c-9259-4978-9f89-cae676d491dc id3b2c40b6-114c-4064-95bf-1fbc62c8e317'>
       <contained xmi:type='DI:GraphNode' xmi:id='idbb52738b-0a4d-43ee-bbee-46fbf0804c2d'>
-        <position x='-42.251129150390625' y='-29.024627685546875'/>
+        <position x='-29.274322509765625' y='-27.170791625976562'/>
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='sourcemultiplicity'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='ida468b3df-4416-42b1-b4e5-826889db3fc8'>
@@ -4417,10 +4417,10 @@
       <property key='showAssocName' value='false'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='fontColor' value='#0'/>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='showCardinality' value='true'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:SURFACE_GEOM_CITYOBJ_FK:N:TABLE:SURFACE_GEOMETRY:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='450.0' y='262.8222961425781'/>
       <waypoint x='-763.057861328125' y='262.8222961425781'/>
@@ -4659,7 +4659,7 @@
       <property key='lineWidth' value='1.0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:OBJECTCLASS_SUPERCLASS_FK:N:TABLE:OBJECTCLASS:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-1301.5919189453125' y='1280.176025390625'/>
       <waypoint x='-1301.5919189453125' y='1335.9818115234375'/>
@@ -4692,7 +4692,7 @@
         <position x='-21.359375' y='4.0'/>
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='destinationname'/>
       </contained>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='showCardinality' value='true'/>
       <property key='fontColor' value='#0'/>
@@ -4701,7 +4701,7 @@
       <property key='lineWidth' value='1.0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:THEM_SURFACE_OBJCLASS_FK:N:TABLE:THEMATIC_SURFACE:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-1197.75' y='1280.176025390625'/>
       <waypoint x='-1197.75' y='2843.442626953125'/>
@@ -4710,7 +4710,7 @@
     </contained>
     <contained xmi:type='DI:GraphEdge' xmi:id='ide32b32ce-f909-40cc-82ff-10052d0ddfe7' anchor='idaa7bb104-c3bc-4214-b94e-f89bccd9a7a8 id5ec0978e-7e06-4d24-8221-6a3ac0acc862'>
       <contained xmi:type='DI:GraphNode' xmi:id='iddcb86a78-da0e-46d0-acc0-64f9415f13b5'>
-        <position x='11.6011962890625' y='15.050796508789062'/>
+        <position x='7.9293212890625' y='11.379043579101562'/>
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='sourcemultiplicity'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='idc5136cfc-82b3-4bcf-b7b1-238a93cf1c10'>
@@ -4733,7 +4733,7 @@
         <position x='-21.359375' y='-25.47607421875'/>
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='destinationname'/>
       </contained>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='showCardinality' value='true'/>
       <property key='fontColor' value='#0'/>
@@ -4742,7 +4742,7 @@
       <property key='lineWidth' value='1.0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:OPENING_OBJECTCLASS_FK:N:TABLE:OPENING:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-1067.3912353515625' y='1280.176025390625'/>
       <waypoint x='-1067.3912353515625' y='2551.8173828125'/>
@@ -4750,7 +4750,7 @@
     </contained>
     <contained xmi:type='DI:GraphEdge' xmi:id='id1c3f6be2-132c-4725-9954-d6361d645ed5' anchor='idaa7bb104-c3bc-4214-b94e-f89bccd9a7a8 id273fb62c-9259-4978-9f89-cae676d491dc'>
       <contained xmi:type='DI:GraphNode' xmi:id='id5ecd3514-f85c-443b-96a6-a2c4941e7040'>
-        <position x='-14.00006103515625' y='-29.97607421875'/>
+        <position x='-25.01556396484375' y='-31.81201171875'/>
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='sourcemultiplicity'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='idc843f986-e368-4dc9-9137-52cebc128676'>
@@ -4782,7 +4782,7 @@
       <property key='lineWidth' value='1.0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:CITYOBJECT_OBJECTCLASS_FK:N:TABLE:CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-1110.034423828125' y='990.0'/>
       <waypoint x='-1110.034423828125' y='174.36093139648438'/>
@@ -4823,7 +4823,7 @@
     </contained>
     <contained xmi:type='DI:GraphEdge' xmi:id='id7646d413-7c76-4de1-a93a-52ff722091a9' anchor='idaa7bb104-c3bc-4214-b94e-f89bccd9a7a8 id3ecd0c37-1f2d-46a8-a2d1-1c0e82a0ddd5'>
       <contained xmi:type='DI:GraphNode' xmi:id='id7bb776ac-112a-4e39-8f75-43cc37d95997'>
-        <position x='4.0' y='-25.47607421875'/>
+        <position x='15.01544189453125' y='-27.3118896484375'/>
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='sourcemultiplicity'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='id4a99ebb8-82f3-4232-b2e3-0c37c967bc1f'>
@@ -4851,11 +4851,11 @@
       <property key='fontColor' value='#0'/>
       <property key='font' value='SansSerif,plain,11'/>
       <property key='showCardinality' value='true'/>
-      <property key='lineColor' value='#ff0000'/>
+      <property key='lineColor' value='#646464'/>
       <property key='EdgeType' value='1'/>
       <property key='showStereotype' value='false'/>
       <property key='lineWidth' value='1.0'/>
-      <property key='showRoleNames' value='true'/>
+      <property key='showRoleNames' value='false'/>
       <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:BLDG_INST_OBJECTCLASS_FK:N:TABLE:BUILDING_INSTALLATION:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='-1015.5001220703125' y='1057.5738525390625'/>
       <waypoint x='420.00006103515625' y='1057.5738525390625'/>
