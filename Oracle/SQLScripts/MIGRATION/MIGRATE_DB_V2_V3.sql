@@ -122,14 +122,16 @@ AS
     IF (INSTR(polygon, ';')) > 0 THEN
       counter := length(polygon) - length(REPLACE(polygon, ';', '')) + 1;      
       FOR i IN 1 .. counter LOOP
-        polygon_temp := regexp_substr(polygon, '[^;]+', 1, i);
-        IF (i = counter) THEN 
-          polygon_converted := polygon_converted || TO_CLOB('(') ||
-                             TO_CLOB(convertPolygonToSdoForm(polygon_temp)) || TO_CLOB(')');
-        ELSE
-          polygon_converted := polygon_converted || TO_CLOB('(') ||
-                             TO_CLOB(convertPolygonToSdoForm(polygon_temp)) || TO_CLOB('),');
-        END IF;                
+        polygon_temp := trim(regexp_substr(replace(polygon, ';', '; '), '[^;]+', 1, i));
+        IF polygon_temp IS NOT NULL THEN
+          IF (i = counter) THEN 
+            polygon_converted := polygon_converted || TO_CLOB('(') ||
+                               TO_CLOB(convertPolygonToSdoForm(polygon_temp)) || TO_CLOB(')');
+          ELSE
+            polygon_converted := polygon_converted || TO_CLOB('(') ||
+                               TO_CLOB(convertPolygonToSdoForm(polygon_temp)) || TO_CLOB('),');
+          END IF;
+        END IF;               
       END LOOP;      
     ELSE
       polygon_converted := polygon_converted || TO_CLOB('(');

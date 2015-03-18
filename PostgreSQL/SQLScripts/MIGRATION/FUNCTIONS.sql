@@ -74,25 +74,31 @@ DECLARE
   outer_ring GEOMETRY;
   inner_rings GEOMETRY[] := '{}';
 BEGIN
-  FOR ring_coords IN SELECT string_to_array(unnest(string_to_array($1, ';')),' ')::float[] LOOP
-    FOR i IN 0..array_length(ring_coords,1)/2-1 LOOP
-      point_list := array_append(point_list, ST_MakePoint(ring_coords[i*2+1], ring_coords[i*2+2]));
+  IF texcoord IS NOT NULL THEN
+    FOR ring_coords IN SELECT string_to_array(unnest(string_to_array($1, ';')),' ')::float[] LOOP
+      IF ring_coords IS NOT NULL AND array_length(ring_coords,1) > 0 THEN
+        FOR i IN 0..array_length(ring_coords,1)/2-1 LOOP
+          point_list := array_append(point_list, ST_MakePoint(ring_coords[i*2+1], ring_coords[i*2+2]));
+        END LOOP;
+
+        IF ring_count = 0 THEN
+          outer_ring := ST_MakeLine(point_list);
+        ELSE
+          inner_rings := array_append(inner_rings, ST_MakeLine(point_list));
+        END IF;
+
+        ring_count := ring_count + 1;
+        point_list := '{}';
+      END IF;
     END LOOP;
 
-    IF ring_count = 0 THEN
-      outer_ring := ST_MakeLine(point_list);
+    IF array_length(inner_rings,1) = 0 THEN
+      RETURN ST_MakePolygon(outer_ring);
     ELSE
-      inner_rings := array_append(inner_rings, ST_MakeLine(point_list));
+      RETURN ST_MakePolygon(outer_ring, inner_rings);
     END IF;
-
-    ring_count := ring_count + 1;
-    point_list := '{}';
-  END LOOP;
-	
-  IF array_length(inner_rings,1) = 0 THEN
-    RETURN ST_MakePolygon(outer_ring);
   ELSE
-    RETURN ST_MakePolygon(outer_ring, inner_rings);
+    RETURN NULL;
   END IF;
 END;
 $$
