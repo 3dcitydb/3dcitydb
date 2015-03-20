@@ -894,7 +894,7 @@ CREATE TABLE citydb.cityobject_genericattrib (
 -- APPEARANCE module
 DROP TABLE IF EXISTS citydb.appearance CASCADE;
 CREATE TABLE citydb.appearance AS
-  SELECT id, gmlid,	name, name_codespace, description, theme, citymodel_id, cityobject_id
+  SELECT id, gmlid, name, name_codespace, description, theme, citymodel_id, cityobject_id
     FROM public.appearance;
 
 DROP TABLE IF EXISTS citydb.surface_data CASCADE;
@@ -968,21 +968,8 @@ CREATE TABLE citydb.textureparam (
 	surface_data_id
     FROM public.textureparam;
 
--- create reference between surface_data and tex_image
-WITH tex_image_entry AS (
-  WITH tex_image_insert AS ( 
-    SELECT sd_v2.tex_image_uri, sd_v2.tex_image, sd_v2.tex_mime_type
-      FROM public.surface_data sd_v2, 
-           (SELECT min(id) AS sample_id FROM public.surface_data WHERE tex_image_uri IS NOT NULL GROUP BY tex_image_uri) sample
-      WHERE sd_v2.id = sample.sample_id
-  )
-  INSERT INTO citydb.tex_image (tex_image_uri, tex_image_data, tex_mime_type)
-    SELECT * FROM tex_image_insert RETURNING id AS texture_id, tex_image_uri AS texture_uri
-) 
-UPDATE citydb.surface_data sd_v3 SET tex_image_id = ref.texture_id
-  FROM public.surface_data s, tex_image_entry ref
-  WHERE sd_v3.id = s.id AND s.tex_image_uri = ref.texture_uri;
-
+-- new additional table for textures
+SELECT geodb_pkg.migrate_tex_image(:'texop');
 
 -- CORE module
 DROP TABLE IF EXISTS citydb.citymodel CASCADE;
@@ -1401,3 +1388,4 @@ SELECT setval('citydb.external_ref_seq', max(id)) FROM external_reference;
 SELECT setval('citydb.implicit_geometry_seq', max(id)) FROM implicit_geometry;
 SELECT setval('citydb.surface_data_seq', max(id)) FROM surface_data;
 SELECT setval('citydb.surface_geometry_seq', max(id)) FROM surface_geometry;
+SELECT setval('citydb.tex_image_seq', max(id)) FROM tex_image;

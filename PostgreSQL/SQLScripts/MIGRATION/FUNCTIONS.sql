@@ -40,33 +40,52 @@ END;
 $$
 LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION geodb_pkg.migrate_tex_image(surface_data_id INTEGER) RETURNS SETOF VOID AS
+
+CREATE OR REPLACE FUNCTION geodb_pkg.migrate_tex_image(op VARCHAR) RETURNS SETOF VOID AS
 $$
-DECLARE
-  texture_uri VARCHAR(4000);
-  texture BYTEA;
-  texture_mime_type VARCHAR(256);
-  texture_id INTEGER;
 BEGIN
-  EXECUTE 'SELECT tex_image_uri, tex_image, tex_mime_type FROM public.surface_data WHERE id = $1'
-             INTO texture_uri, texture, texture_mime_type USING surface_data_id;
+  DROP TABLE IF EXISTS citydb.tex_image CASCADE;
 
-  EXECUTE 'INSERT INTO citydb.tex_image (tex_image_uri, tex_image_data, tex_mime_type)
-             VALUES ($1, $2, $3) RETURNING id' INTO texture_id USING texture_uri, texture, texture_mime_type;
+  IF lower($1) <> 'yes' AND lower($1) <> 'y' THEN
+    -- migrate each tex_image from surface_data 1:1
+    CREATE TABLE citydb.tex_image(
+      id, tex_image_uri, tex_image_data, tex_mime_type,	tex_mime_type_codespace)
+    AS SELECT
+	  row_number() OVER () AS tid, tex_image_uri, tex_image, tex_mime_type,	NULL::varchar(4000)
+    FROM public.surface_data 
+      WHERE tex_image_uri IS NOT NULL
+      ORDER BY id;  
 
-  EXECUTE 'WITH surface_data_ref AS (
-             SELECT id FROM public.surface_data WHERE tex_image_uri = $1
-           )
-           UPDATE citydb.surface_data sd SET tex_image_id = $2
-             FROM surface_data_ref ref WHERE sd.id = ref.id' 
-           USING texture_uri, texture_id;
+    WITH texture_ref AS (
+      SELECT row_number() OVER () AS tid, id
+        FROM public.surface_data 
+          WHERE tex_image_uri IS NOT NULL
+          ORDER BY id
+    )  
+    UPDATE citydb.surface_data sd SET tex_image_id = t.tid
+      FROM texture_ref t WHERE sd.id = t.id;
+  ELSE
+    -- store same textures (= same tex_image_uri) only once in tex_image table
+    CREATE TABLE citydb.tex_image(
+      id, tex_image_uri, tex_image_data, tex_mime_type,	tex_mime_type_codespace)
+    AS SELECT 
+      row_number() OVER () AS tid, sd_v2.tex_image_uri, sd_v2.tex_image, sd_v2.tex_mime_type, NULL::varchar(4000)
+    FROM public.surface_data sd_v2, 
+      (SELECT min(id) AS sample_id FROM public.surface_data WHERE tex_image_uri IS NOT NULL GROUP BY tex_image_uri) sample
+    WHERE sd_v2.id = sample.sample_id;
+
+    UPDATE citydb.surface_data sd_v3 SET tex_image_id = t.id
+      FROM citydb.tex_image t, surface_data sd_v2
+      WHERE sd_v3.id = sd_v2.id AND sd_v2.tex_image_uri = t.tex_image_uri;
+  END IF;
 END;
 $$
 LANGUAGE plpgsql;
 
+
 CREATE OR REPLACE FUNCTION geodb_pkg.texCoordsToGeom(texcoord VARCHAR) RETURNS GEOMETRY AS
 $$
-DECLARE
+DECLARE 
   ring_count INTEGER := 0;
   ring_coords FLOAT[];
   i INTEGER;
@@ -80,7 +99,7 @@ BEGIN
         FOR i IN 0..array_length(ring_coords,1)/2-1 LOOP
           point_list := array_append(point_list, ST_MakePoint(ring_coords[i*2+1], ring_coords[i*2+2]));
         END LOOP;
-
+		
         IF ring_count = 0 THEN
           outer_ring := ST_MakeLine(point_list);
         ELSE
@@ -92,14 +111,14 @@ BEGIN
       END IF;
     END LOOP;
 
-    IF array_length(inner_rings,1) = 0 THEN
-      RETURN ST_MakePolygon(outer_ring);
-    ELSE
-      RETURN ST_MakePolygon(outer_ring, inner_rings);
-    END IF;
+    RETURN ST_MakePolygon(outer_ring, inner_rings);
   ELSE
     RETURN NULL;
   END IF;
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      RETURN NULL;
 END;
 $$
 LANGUAGE plpgsql;

@@ -29,11 +29,18 @@ SET client_min_messages TO WARNING;
 
 SELECT srid FROM database_srs \gset
 
--- alternative way for PostgreSQL versions pre 9.3 that have no \gset command
+--// alternative way for PostgreSQL versions pre 9.3 that have no \gset command
 --\echo 'Database SRID:'
 --SELECT srid FROM database_srs;
 --\prompt 'Please enter the EPSG code of the SRID used in the current database: ' srs_no
 --\set srid :srs_no
+
+--// In the previous version binary data of textures could be stored multiple times
+--// when referred to different entries in the surface_data tables (bad for texture atlases).
+--// This can be avoided in the new version because of a separated table for texture files.
+--// IMPORTANT: The user has to be sure, that no tex_image_uri is used for different textures!
+\prompt 'No texture URI is used for multiple texture files (yes (y)/unknown (n)): ' tex_opt
+\set texop :tex_opt
 
 --// create TABLES and SEQUENCES new in v3.0
 \echo

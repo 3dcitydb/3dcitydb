@@ -453,18 +453,6 @@ CREATE TABLE citydb.tunnel_furniture(
 	lod4_implicit_transformation VARCHAR(1000)
 );
 
-
--- additional table for textures
-DROP TABLE IF EXISTS citydb.tex_image CASCADE;
-CREATE TABLE citydb.tex_image(
-	id INTEGER NOT NULL DEFAULT nextval('citydb.tex_image_seq'::regclass),
-	tex_image_uri VARCHAR(4000),
-	tex_image_data BYTEA,
-	tex_mime_type VARCHAR(256),
-	tex_mime_type_codespace VARCHAR(4000)
-);
-
-
 -- global table for raster data
 DROP TABLE IF EXISTS citydb.grid_coverage CASCADE;
 CREATE TABLE citydb.grid_coverage(

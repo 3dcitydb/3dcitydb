@@ -164,7 +164,8 @@ ALTER TABLE citydb.surface_geometry
   ALTER COLUMN id SET DEFAULT nextval('citydb.surface_geometry_seq'::regclass);
 
 ALTER TABLE citydb.tex_image
-  ADD CONSTRAINT tex_image_pk PRIMARY KEY (id);
+  ADD CONSTRAINT tex_image_pk PRIMARY KEY (id),
+  ALTER COLUMN id SET DEFAULT nextval('citydb.tex_image_seq'::regclass);
 
 ALTER TABLE citydb.textureparam
   ADD CONSTRAINT textureparam_pk PRIMARY KEY (surface_geometry_id,surface_data_id);
