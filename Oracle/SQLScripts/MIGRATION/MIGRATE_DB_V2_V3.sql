@@ -37,7 +37,7 @@ AS
   PROCEDURE fillBuildingTable;
   PROCEDURE fillAddressToBuildingTable;
   PROCEDURE fillAppearanceTable;
-  PROCEDURE fillSurfaceDataTable;
+  PROCEDURE fillSurfaceDataTable(op CHAR);
   PROCEDURE fillAppearToSurfaceDataTable;
   PROCEDURE fillBreaklineReliefTable;
   PROCEDURE fillRoomTable;
@@ -143,12 +143,9 @@ AS
     select SDO_GEOMETRY(polygon_converted) into texture_coordinates from dual;
     RETURN texture_coordinates;
 
---    EXCEPTION
---    WHEN others THEN
---      dbms_output.put_line('error: '||polygon);
---      dbms_output.put_line('polygon: '||polygon);
---      dbms_output.put_line('polygon_converted: '||polygon_converted);
---      RETURN NULL;
+    EXCEPTION
+      WHEN others THEN
+        RETURN NULL;
   END;
 
   PROCEDURE fillSurfaceGeometryTable
@@ -374,10 +371,13 @@ AS
     dbms_output.put_line('Appearance table copy is completed.');
   END;
 
-  PROCEDURE fillSurfaceDataTable
+  PROCEDURE fillSurfaceDataTable(op CHAR)
   IS
     -- variables --
     CURSOR surface_data_v2 IS select * from surface_data_v2 order by id;
+    CURSOR tex_image_v2 IS select sd_v2.tex_image_uri, sd_v2.tex_image, sd_v2.tex_mime_type
+      FROM surface_data_v2 sd_v2, (SELECT min(id) AS sample_id FROM surface_data_v2 WHERE tex_image_uri IS NOT NULL GROUP BY tex_image_uri) sample
+        WHERE sd_v2.id = sample.sample_id;
     classID NUMBER(10);
     texID NUMBER(10);
   BEGIN
@@ -388,17 +388,19 @@ AS
            select id into classID from OBJECTCLASS where classname = surface_data.type;
         END IF;
 
-        -- Add the Tex into the Tex Table
-        -- ORDIMAGE to BLOB conversion via ordsys.ordimage.getContent
-        IF (surface_data.tex_image_uri IS NOT NULL
-            OR surface_data.tex_image IS NOT NULL
-            OR surface_data.tex_mime_type IS NOT NULL) THEN
-           texID := TEX_IMAGE_SEQ.NEXTVAL;
-           insert into tex_image
-           (ID, TEX_IMAGE_URI, TEX_IMAGE_DATA, TEX_MIME_TYPE)
-           values
-           (texID,surface_data.TEX_IMAGE_URI,
-           ordsys.ordimage.getContent(surface_data.TEX_IMAGE),surface_data.TEX_MIME_TYPE) ;
+        IF upper(op) <> 'YES' AND upper(op) <> 'Y' THEN
+            -- Add the Tex into the Tex Table
+            -- ORDIMAGE to BLOB conversion via ordsys.ordimage.getContent
+            IF (surface_data.tex_image_uri IS NOT NULL
+                OR surface_data.tex_image IS NOT NULL
+                OR surface_data.tex_mime_type IS NOT NULL) THEN
+                texID := TEX_IMAGE_SEQ.NEXTVAL;
+                insert into tex_image
+                (ID, TEX_IMAGE_URI, TEX_IMAGE_DATA, TEX_MIME_TYPE)
+                values
+                (texID,surface_data.TEX_IMAGE_URI,
+                ordsys.ordimage.getContent(surface_data.TEX_IMAGE),surface_data.TEX_MIME_TYPE) ;
+            END IF;
         END IF;
 
         -- Insert into with objectclass_id, tex id and without gmlid_codespace
@@ -420,6 +422,22 @@ AS
         surface_data.GT_REFERENCE_POINT);
     END LOOP;
     dbms_output.put_line('Surface_data table copy is completed.');
+
+    IF upper(op) = 'YES' OR upper(op) = 'Y' THEN
+        FOR sd_tex_image IN tex_image_v2 LOOP
+            texID := TEX_IMAGE_SEQ.NEXTVAL;
+            insert into tex_image
+            (ID, TEX_IMAGE_URI, TEX_IMAGE_DATA, TEX_MIME_TYPE)
+            values
+            (texID,sd_tex_image.TEX_IMAGE_URI,
+            ordsys.ordimage.getContent(sd_tex_image.TEX_IMAGE),sd_tex_image.TEX_MIME_TYPE) ;
+        END LOOP;
+
+        UPDATE surface_data sd_v3 SET tex_image_id = (
+            SELECT t.id FROM tex_image t, surface_data_v2 sd_v2
+                WHERE sd_v3.id = sd_v2.id AND sd_v2.tex_image_uri = t.tex_image_uri
+        );
+    END IF;
   END;
 
   PROCEDURE fillAppearToSurfaceDataTable

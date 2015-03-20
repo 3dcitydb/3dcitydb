@@ -35,7 +35,8 @@ END;
 /
 
 ACCEPT SCHEMAINPUT PROMPT 'Enter the user name of 3DCityDB v2.1.0 instance : '
-ACCEPT DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using in the v3.0.0 instance? (Spatial(S)/Locator(L), def. is S): '
+ACCEPT DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using in the v3.0.0 instance? (Spatial(S)/Locator(L), default is S): '
+ACCEPT TEXOP CHAR DEFAULT 'n' PROMPT 'No texture URI is used for multiple texture files (yes(y)/unknown(n), default is n): '
 
 VARIABLE MGRPBATCHFILE VARCHAR2(50);
 
@@ -102,7 +103,7 @@ EXECUTE CITYDB_MIGRATE_V2_V3.fillAddressTable();
 EXECUTE CITYDB_MIGRATE_V2_V3.fillBuildingTable();
 EXECUTE CITYDB_MIGRATE_V2_V3.fillAddressToBuildingTable();
 EXECUTE CITYDB_MIGRATE_V2_V3.fillAppearanceTable();
-EXECUTE CITYDB_MIGRATE_V2_V3.fillSurfaceDataTable;
+EXECUTE CITYDB_MIGRATE_V2_V3.fillSurfaceDataTable('&TEXOP');
 EXECUTE CITYDB_MIGRATE_V2_V3.fillAppearToSurfaceDataTable();
 EXECUTE CITYDB_MIGRATE_V2_V3.fillBreaklineReliefTable();
 EXECUTE CITYDB_MIGRATE_V2_V3.fillRoomTable();
@@ -125,7 +126,7 @@ EXECUTE CITYDB_MIGRATE_V2_V3.fillOpeningToThemSurfaceTable();
 EXECUTE CITYDB_MIGRATE_V2_V3.fillPlantCoverTable();
 EXECUTE CITYDB_MIGRATE_V2_V3.fillReliefComponentTable();
 BEGIN
-  IF ('&DBVERSION'='S' or '&DBVERSION'='s') THEN
+  IF (upper('&DBVERSION')='S') THEN
     EXECUTE IMMEDIATE 'CALL CITYDB_MIGRATE_V2_V3_SPTL.fillRasterReliefTable()';  
   END IF;
 END;
