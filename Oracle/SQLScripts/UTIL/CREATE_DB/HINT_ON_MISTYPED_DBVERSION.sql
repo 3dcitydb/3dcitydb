@@ -1,4 +1,4 @@
--- HINT_ON_MISSTYPING_DBVERSION.sql
+-- HINT_ON_MISTYPED_DBVERSION.sql
 --
 -- Authors:     Prof. Dr. Lutz Pluemer <pluemer@ikg.uni-bonn.de>
 --              Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
