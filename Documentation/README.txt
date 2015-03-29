@@ -1,4 +1,4 @@
-3D City Database - The Open Source CityGML Database
+﻿3D City Database - The Open Source CityGML Database
 
   This software is free software and is distributed in the hope
   that it will be useful, but WITHOUT ANY WARRANTY; without even
@@ -58,7 +58,7 @@ The 3D City Database has been realized as Oracle Spatial/Locator and
 PostgreSQL/PostGIS database schema, supporting following key features:
 
     * Full support for CityGML versions 2.0.0 and 1.0.0
-	* Complex thematic modelling
+    * Complex thematic modelling
     * Five different Levels of Detail (LODs)
     * Appearance information (textures and materials)
     * Digital terrain models (DTMs)
@@ -72,8 +72,8 @@ for creating and dropping database instances.
 The 3D City Database is an open source project and a joint development 
 of the cooperation partners:
     * Chair of Geoinformatics, Technische Universität München,
-	* virtualcitySYSTEMS GmbH, and 
-	* M.O.S.S. Computer Grafik Systeme GmbH. 
+    * virtualcitySYSTEMS GmbH, and 
+    * M.O.S.S. Computer Grafik Systeme GmbH. 
 
 In 2012, the 3D City Database received the Oracle Spatial Excellence Award
 for Education and Research.
