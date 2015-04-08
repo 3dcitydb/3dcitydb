@@ -1379,13 +1379,13 @@ UPDATE citydb.surface_geometry sg SET geometry = NULL, implicit_geometry = ST_Se
 
 
 -- update sequences
-SELECT setval('citydb.address_seq', max(id)) FROM address;
-SELECT setval('citydb.appearance_seq', max(id)) FROM appearance;
-SELECT setval('citydb.citymodel_seq', max(id)) FROM citymodel;
-SELECT setval('citydb.cityobject_genericatt_seq', max(id)) FROM cityobject_genericattrib;
-SELECT setval('citydb.cityobject_seq', max(id)) FROM cityobject;
-SELECT setval('citydb.external_ref_seq', max(id)) FROM external_reference;
-SELECT setval('citydb.implicit_geometry_seq', max(id)) FROM implicit_geometry;
-SELECT setval('citydb.surface_data_seq', max(id)) FROM surface_data;
-SELECT setval('citydb.surface_geometry_seq', max(id)) FROM surface_geometry;
-SELECT setval('citydb.tex_image_seq', max(id)) FROM tex_image;
+SELECT setval('citydb.address_seq', max(id)) FROM citydb.address;
+SELECT setval('citydb.appearance_seq', max(id)) FROM citydb.appearance;
+SELECT setval('citydb.citymodel_seq', max(id)) FROM citydb.citymodel;
+SELECT setval('citydb.cityobject_genericatt_seq', max(id)) FROM citydb.cityobject_genericattrib;
+SELECT setval('citydb.cityobject_seq', max(id)) FROM citydb.cityobject;
+SELECT setval('citydb.external_ref_seq', max(id)) FROM citydb.external_reference;
+SELECT setval('citydb.implicit_geometry_seq', max(id)) FROM citydb.implicit_geometry;
+SELECT setval('citydb.surface_data_seq', max(id)) FROM citydb.surface_data;
+SELECT setval('citydb.surface_geometry_seq', max(id)) FROM citydb.surface_geometry;
+SELECT setval('citydb.tex_image_seq', max(id)) FROM citydb.tex_image;
