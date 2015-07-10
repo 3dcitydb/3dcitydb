@@ -24,7 +24,7 @@
 -- 1.0.0     2015-01-22   release version                             AM
 --                                                                    FKun
 --           2015-03-11   locator/spatial                             GHud
--- 1.0.1     2015-07-07   optimization                                AM
+--
 
 CREATE OR REPLACE PACKAGE citydb_migrate_v2_v3
 AS
@@ -196,21 +196,27 @@ AS
         has_xlink := 0;
         is_solid := 0;
       END LOOP;
-      dbms_output.put_line('Surface_Geometry table copy is completed.' || SYSTIMESTAMP);
+      dbms_output.put_line('Surface_Geometry table copy is completed.');
   END;
 
   PROCEDURE fillCityObjectTable
   IS
+    -- variables --
+    CURSOR city_object_v2 IS select * from cityobject_v2 order by id;
   BEGIN
     dbms_output.put_line('CityObject table is being copied...');
-    insert into cityobject
+    FOR city_object IN city_object_v2 LOOP
+        insert into cityobject
         (ID, OBJECTCLASS_ID, GMLID, ENVELOPE, CREATION_DATE,
         TERMINATION_DATE, LAST_MODIFICATION_DATE, UPDATING_PERSON,
-        REASON_FOR_UPDATE, LINEAGE, XML_SOURCE) 
-	 select ID, CLASS_ID, GMLID, ENVELOPE, CREATION_DATE, 
-	 TERMINATION_DATE, LAST_MODIFICATION_DATE, UPDATING_PERSON,
-        REASON_FOR_UPDATE, LINEAGE, XML_SOURCE from cityobject_v2;	 
-    dbms_output.put_line('CityObject table copy is completed.' || SYSTIMESTAMP);
+        REASON_FOR_UPDATE, LINEAGE, XML_SOURCE)
+        values
+        (city_object.ID, city_object.CLASS_ID, city_object.GMLID,
+        city_object.ENVELOPE, city_object.CREATION_DATE, city_object.TERMINATION_DATE,
+        city_object.LAST_MODIFICATION_DATE, city_object.UPDATING_PERSON,
+        city_object.REASON_FOR_UPDATE, city_object.LINEAGE, city_object.XML_SOURCE);
+    END LOOP;
+    dbms_output.put_line('CityObject table copy is completed.');
   END;
 
   PROCEDURE fillCityModelTable
@@ -224,7 +230,7 @@ AS
     select ID, GMLID, NAME, NAME_CODESPACE, DESCRIPTION, ENVELOPE, CREATION_DATE,
     TERMINATION_DATE, LAST_MODIFICATION_DATE, UPDATING_PERSON, REASON_FOR_UPDATE,
     LINEAGE from citymodel_v2;
-    dbms_output.put_line('CityModel table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('CityModel table copy is completed.');
   END;
 
   PROCEDURE fillAddressTable
@@ -232,7 +238,7 @@ AS
   BEGIN
     dbms_output.put_line('Address table is being copied...');
     insert into address select * from address_v2;
-    dbms_output.put_line('Address table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Address table copy is completed.');
   END;
 
   PROCEDURE fillBuildingTable
@@ -342,7 +348,7 @@ AS
         lod3SolidID := NULL;
         lod4SolidID := NULL;
     END LOOP;
-    dbms_output.put_line('Building table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Building table copy is completed.');
   END;
 
   PROCEDURE fillAddressToBuildingTable
@@ -350,7 +356,7 @@ AS
   BEGIN
     dbms_output.put_line('Address_to_Building table is being copied...');
     insert into address_to_building select * from address_to_building_v2;
-    dbms_output.put_line('Address_to_Building table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Address_to_Building table copy is completed.');
   END;
 
   PROCEDURE fillAppearanceTable
@@ -362,7 +368,7 @@ AS
     CITYMODEL_ID, CITYOBJECT_ID)
     select ID, GMLID, NAME, NAME_CODESPACE, DESCRIPTION, THEME,
     CITYMODEL_ID, CITYOBJECT_ID from appearance_v2;
-    dbms_output.put_line('Appearance table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Appearance table copy is completed.');
   END;
 
   PROCEDURE fillSurfaceDataTable(op CHAR)
@@ -415,7 +421,8 @@ AS
         surface_data.GT_PREFER_WORLDFILE, surface_data.GT_ORIENTATION,
         surface_data.GT_REFERENCE_POINT);
     END LOOP;
-    
+    dbms_output.put_line('Surface_data table copy is completed.');
+
     IF upper(op) = 'YES' OR upper(op) = 'Y' THEN
         FOR sd_tex_image IN tex_image_v2 LOOP
             texID := TEX_IMAGE_SEQ.NEXTVAL;
@@ -431,7 +438,6 @@ AS
                 WHERE sd_v3.id = sd_v2.id AND sd_v2.tex_image_uri = t.tex_image_uri
         );
     END IF;
-    dbms_output.put_line('Surface_data table copy is completed.' || SYSTIMESTAMP);
   END;
 
   PROCEDURE fillAppearToSurfaceDataTable
@@ -439,7 +445,7 @@ AS
   BEGIN
     dbms_output.put_line('Appear_to_Surface_Data table is being copied...');
     insert into appear_to_surface_data select * from appear_to_surface_data_v2;
-    dbms_output.put_line('Appear_to_Surface_Data table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Appear_to_Surface_Data table copy is completed.');
   END;
 
   PROCEDURE fillBreaklineReliefTable
@@ -447,7 +453,7 @@ AS
   BEGIN
     dbms_output.put_line('Breakline_Relief table is being copied...');
     insert into breakline_relief select * from breakline_relief_v2;
-    dbms_output.put_line('Breakline_Relief table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Breakline_Relief table copy is completed.');
   END;
 
   PROCEDURE fillRoomTable
@@ -498,7 +504,7 @@ AS
         lod4MultiSurfaceID := NULL;
         lod4SolidID := NULL;
     END LOOP;
-    dbms_output.put_line('Room table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Room table copy is completed.');
   END;
 
   PROCEDURE fillBuildingFurnitureTable
@@ -536,7 +542,7 @@ AS
         description = building_furniture.description
         where id = building_furniture.id;
     END LOOP;
-    dbms_output.put_line('Building_Furniture table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Building_Furniture table copy is completed.');
   END;
 
   PROCEDURE fillBuildingInstallationTable
@@ -592,19 +598,25 @@ AS
         description = building_installation.description
         where id = building_installation.id;
     END LOOP;
-    dbms_output.put_line('Building_Installation table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Building_Installation table copy is completed.');
   END;
 
   PROCEDURE fillImplicitGeometryTable
   IS
+    -- variables --
+    CURSOR implicit_geometry_v2 IS select * from implicit_geometry_v2 order by id;
   BEGIN
-    dbms_output.put_line('Implicit_Geometry table is being copied...');    
-    insert into implicit_geometry
-        (ID,MIME_TYPE,REFERENCE_TO_LIBRARY,LIBRARY_OBJECT,RELATIVE_BREP_ID) 
-	 select ID,MIME_TYPE, REFERENCE_TO_LIBRARY,LIBRARY_OBJECT,
-        RELATIVE_GEOMETRY_ID from implicit_geometry_v2;
-    dbms_output.put_line('Implicit_Geometry table copy is completed.' || SYSTIMESTAMP);
-  END;  
+    dbms_output.put_line('Implicit_Geometry table is being copied...');
+    FOR implicit_geometry IN implicit_geometry_v2 LOOP
+        insert into implicit_geometry
+        (ID,MIME_TYPE,REFERENCE_TO_LIBRARY,LIBRARY_OBJECT,RELATIVE_BREP_ID)
+        values
+        (implicit_geometry.ID,implicit_geometry.MIME_TYPE,
+        implicit_geometry.REFERENCE_TO_LIBRARY,implicit_geometry.LIBRARY_OBJECT,
+        implicit_geometry.RELATIVE_GEOMETRY_ID);
+    END LOOP;
+    dbms_output.put_line('Implicit_Geometry table copy is completed.');
+  END;
 
   PROCEDURE fillCityFurnitureTable
   IS
@@ -668,19 +680,30 @@ AS
         description = city_furniture.description
         where id = city_furniture.id;
     END LOOP;
-    dbms_output.put_line('City_Furniture table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('City_Furniture table copy is completed.');
   END;
 
   PROCEDURE fillCityObjectGenAttrTable
   IS
+    -- variables --
+    CURSOR cityobject_genericattrib_v2 IS
+           select * from cityobject_genericattrib_v2 order by id;
   BEGIN
-    dbms_output.put_line('CityObject_GenericAttrib table is being copied...');   
-    insert into cityobject_genericattrib
+    dbms_output.put_line('CityObject_GenericAttrib table is being copied...');
+    FOR cityobject_genericattrib IN cityobject_genericattrib_v2 LOOP
+        insert into cityobject_genericattrib
         (ID,ROOT_GENATTRIB_ID,ATTRNAME,DATATYPE,STRVAL,INTVAL,REALVAL,URIVAL,
-        DATEVAL,GEOMVAL,BLOBVAL,CITYOBJECT_ID,SURFACE_GEOMETRY_ID) 
-	 select ID,ID,ATTRNAME,DATATYPE,STRVAL,INTVAL,REALVAL,URIVAL,
-        DATEVAL,GEOMVAL,BLOBVAL,CITYOBJECT_ID,SURFACE_GEOMETRY_ID from cityobject_genericattrib_v2;
-    dbms_output.put_line('CityObject_GenericAttrib table copy is completed.' || SYSTIMESTAMP);
+        DATEVAL,GEOMVAL,BLOBVAL,CITYOBJECT_ID,SURFACE_GEOMETRY_ID)
+        values
+        (cityobject_genericattrib.ID,cityobject_genericattrib.ID,
+        cityobject_genericattrib.ATTRNAME,cityobject_genericattrib.DATATYPE,
+        cityobject_genericattrib.STRVAL,cityobject_genericattrib.INTVAL,
+        cityobject_genericattrib.REALVAL,cityobject_genericattrib.URIVAL,
+        cityobject_genericattrib.DATEVAL,cityobject_genericattrib.GEOMVAL,
+        cityobject_genericattrib.BLOBVAL,cityobject_genericattrib.CITYOBJECT_ID,
+        cityobject_genericattrib.SURFACE_GEOMETRY_ID);
+    END LOOP;
+    dbms_output.put_line('CityObject_GenericAttrib table copy is completed.');
   END;
 
   PROCEDURE fillCityObjectMemberTable
@@ -688,7 +711,7 @@ AS
   BEGIN
     dbms_output.put_line('CityObject_Member table is being copied...');
     insert into cityobject_member select * from cityobject_member_v2;
-    dbms_output.put_line('CityObject_Member table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('CityObject_Member table copy is completed.');
   END;
 
   PROCEDURE fillCityObjectGroupTable
@@ -714,7 +737,7 @@ AS
         description = cityobjectgroup.description
         where id = cityobjectgroup.id;
     END LOOP;
-    dbms_output.put_line('CityObjectGroup table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('CityObjectGroup table copy is completed.');
   END;
 
   PROCEDURE fillExternalReferenceTable
@@ -722,7 +745,7 @@ AS
   BEGIN
     dbms_output.put_line('External_Reference table is being copied...');
     insert into external_reference select * from external_reference_v2;
-    dbms_output.put_line('External_Reference table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('External_Reference table copy is completed.');
   END;
 
   PROCEDURE fillGeneralizationTable
@@ -730,7 +753,7 @@ AS
   BEGIN
     dbms_output.put_line('Generalization table is being copied...');
     insert into generalization select * from generalization_v2;
-    dbms_output.put_line('Generalization table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Generalization table copy is completed.');
   END;
 
   PROCEDURE fillGenericCityObjectTable
@@ -820,7 +843,7 @@ AS
     EXECUTE IMMEDIATE 'CREATE INDEX GEN_OBJECT_LOD4REFPNT_SPX ON GENERIC_CITYOBJECT (LOD4_IMPLICIT_REF_POINT) INDEXTYPE IS MDSYS.SPATIAL_INDEX';
     EXECUTE IMMEDIATE 'CREATE INDEX GEN_OBJECT_LOD4TERR_SPX ON GENERIC_CITYOBJECT (LOD4_TERRAIN_INTERSECTION) INDEXTYPE IS MDSYS.SPATIAL_INDEX';
     EXECUTE IMMEDIATE 'CREATE INDEX GEN_OBJECT_LOD4XGEOM_SPX ON GENERIC_CITYOBJECT (LOD4_OTHER_GEOM) INDEXTYPE IS MDSYS.SPATIAL_INDEX';
-    dbms_output.put_line('Generic_CityObject table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Generic_CityObject table copy is completed.');
   END;
 
   PROCEDURE fillGroupToCityObject
@@ -828,7 +851,7 @@ AS
   BEGIN
     dbms_output.put_line('Group_To_CityObject table is being copied...');
     insert into group_to_cityobject select * from group_to_cityobject_v2;
-    dbms_output.put_line('Group_To_CityObject table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Group_To_CityObject table copy is completed.');
   END;
 
   PROCEDURE fillLandUseTable
@@ -883,7 +906,7 @@ AS
         description = land_use.description
         where id = land_use.id;
     END LOOP;
-    dbms_output.put_line('Land_Use table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Land_Use table copy is completed.');
   END;
 
   PROCEDURE fillMassPointReliefTable
@@ -891,7 +914,7 @@ AS
   BEGIN
     dbms_output.put_line('MassPoint_Relief table is being copied...');
     insert into masspoint_relief select * from masspoint_relief_v2;
-    dbms_output.put_line('MassPoint_Relief table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('MassPoint_Relief table copy is completed.');
   END;
 
   PROCEDURE fillOpeningTable
@@ -934,7 +957,7 @@ AS
         description = opening.description
         where id = opening.id;
     END LOOP;
-    dbms_output.put_line('Opening table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Opening table copy is completed.');
   END;
 
   PROCEDURE fillThematicSurfaceTable
@@ -947,7 +970,7 @@ AS
     FOR thematic_surface IN thematic_surface_v2 LOOP
         -- Check Type
         IF thematic_surface.type IS NOT NULL THEN
-           select id into classID from objectclass_v2 where classname = thematic_surface.type;
+           select id into classID from OBJECTCLASS where classname = thematic_surface.type;
         END IF;
         
         -- Update the cityobject_id entry in surface_geometry table
@@ -985,7 +1008,7 @@ AS
         description = thematic_surface.description
         where id = thematic_surface.id;
     END LOOP;
-    dbms_output.put_line('Thematic_Surface table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Thematic_Surface table copy is completed.');
   END;
 
   PROCEDURE fillOpeningToThemSurfaceTable
@@ -993,7 +1016,7 @@ AS
   BEGIN
     dbms_output.put_line('Opening_To_Them_Surface table is being copied...');
     insert into opening_to_them_surface select * from opening_to_them_surface_v2;
-    dbms_output.put_line('Opening_To_Them_Surface table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Opening_To_Them_Surface table copy is completed.');
   END;
 
   PROCEDURE fillPlantCoverTable
@@ -1095,7 +1118,7 @@ AS
         lod3SolidID := NULL;
         lod4SolidID := NULL;
     END LOOP;
-    dbms_output.put_line('Plant_Cover table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Plant_Cover table copy is completed.');
   END;
 
   PROCEDURE fillReliefComponentTable
@@ -1127,7 +1150,7 @@ AS
         description = relief_component.description
         where id = relief_component.id;
     END LOOP;
-    dbms_output.put_line('Relief_Component table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Relief_Component table copy is completed.');
   END;
 
   PROCEDURE fillReliefFeatToRelCompTable
@@ -1135,7 +1158,7 @@ AS
   BEGIN
     dbms_output.put_line('Relief_Feat_To_Rel_Comp table is being copied...');
     insert into relief_feat_to_rel_comp select * from relief_feat_to_rel_comp_v2;
-    dbms_output.put_line('Relief_Feat_To_Rel_Comp table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Relief_Feat_To_Rel_Comp table copy is completed.');
   END;
 
   PROCEDURE fillReliefFeatureTable
@@ -1160,7 +1183,7 @@ AS
         description = relief_feature.description
         where id = relief_feature.id;
     END LOOP;
-    dbms_output.put_line('Relief_Feature table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Relief_Feature table copy is completed.');
   END;
 
   PROCEDURE fillSolitaryVegetatObjectTable
@@ -1230,20 +1253,26 @@ AS
         description = solitary_vegetat_object.description
         where id = solitary_vegetat_object.id;
     END LOOP;
-    dbms_output.put_line('Solitary_Vegetat_Object table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Solitary_Vegetat_Object table copy is completed.');
   END;
 
   PROCEDURE fillTextureParamTable
   IS
+    -- variables --
+    CURSOR textureparam_v2 IS select * from textureparam_v2 order by surface_geometry_id;
   BEGIN
     dbms_output.put_line('TextureParam table is being copied...');
-    insert into textureparam
+    FOR textureparam IN textureparam_v2 LOOP
+        insert into textureparam
         (SURFACE_GEOMETRY_ID,IS_TEXTURE_PARAMETRIZATION,WORLD_TO_TEXTURE,
         TEXTURE_COORDINATES,SURFACE_DATA_ID)
-	 select SURFACE_GEOMETRY_ID,IS_TEXTURE_PARAMETRIZATION,
-        WORLD_TO_TEXTURE,convertVarcharToSDOGeom(TEXTURE_COORDINATES),
-        SURFACE_DATA_ID from textureparam_v2;
-    dbms_output.put_line('TextureParam table copy is completed.' || SYSTIMESTAMP);
+        values
+        (textureparam.SURFACE_GEOMETRY_ID,textureparam.IS_TEXTURE_PARAMETRIZATION,
+        textureparam.WORLD_TO_TEXTURE,
+        convertVarcharToSDOGeom(textureparam.TEXTURE_COORDINATES),
+        textureparam.SURFACE_DATA_ID);
+    END LOOP;
+    dbms_output.put_line('TextureParam table copy is completed.');
   END;
 
   PROCEDURE fillTinReliefTable
@@ -1267,7 +1296,7 @@ AS
         tin_relief.BREAK_LINES,tin_relief.CONTROL_POINTS,
         tin_relief.SURFACE_GEOMETRY_ID);
     END LOOP;
-    dbms_output.put_line('Tin Relief table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Tin Relief table copy is completed.');
   END;
 
   PROCEDURE fillTrafficAreaTable
@@ -1322,7 +1351,7 @@ AS
         description = traffic_area.description
         where id = traffic_area.id;
     END LOOP;
-    dbms_output.put_line('Traffic_Area table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Traffic_Area table copy is completed.');
   END;
 
   PROCEDURE fillTransportationComplex
@@ -1381,7 +1410,7 @@ AS
         description = transportation_complex.description
         where id = transportation_complex.id;
     END LOOP;
-    dbms_output.put_line('Transportation_Complex table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Transportation_Complex table copy is completed.');
   END;
 
   PROCEDURE fillWaterBodyTable
@@ -1443,7 +1472,7 @@ AS
         description = waterbody.description
         where id = waterbody.id;
     END LOOP;
-    dbms_output.put_line('WaterBody table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('WaterBody table copy is completed.');
   END;
 
   PROCEDURE fillWaterBoundarySurfaceTable
@@ -1493,7 +1522,7 @@ AS
         description = waterboundary_surface.description
         where id = waterboundary_surface.id;
     END LOOP;
-    dbms_output.put_line('WaterBoundary_Surface table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('WaterBoundary_Surface table copy is completed.');
   END;
 
   PROCEDURE fillWaterbodToWaterbndSrfTable
@@ -1501,7 +1530,7 @@ AS
   BEGIN
     dbms_output.put_line('Waterbod_To_Waterbnd_Srf table is being copied...');
     insert into waterbod_to_waterbnd_srf select * from waterbod_to_waterbnd_srf_v2;
-    dbms_output.put_line('Waterbod_To_Waterbnd_Srf table copy is completed.' || SYSTIMESTAMP);
+    dbms_output.put_line('Waterbod_To_Waterbnd_Srf table copy is completed.');
   END;
 
   PROCEDURE updateSurfaceGeoTableCityObj
@@ -1536,7 +1565,7 @@ AS
           USING surface_geometry_x.GEOMETRY, surface_geometry_x.ID;
         END IF;
     END LOOP;
-    dbms_output.put_line('Surface_Geometry table is updated.' || SYSTIMESTAMP);
+    dbms_output.put_line('Surface_Geometry table is updated.');
   END;
   
   PROCEDURE updateSolidGeometry

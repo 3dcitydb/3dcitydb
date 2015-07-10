@@ -35,7 +35,7 @@ END;
 /
 
 ACCEPT SCHEMAINPUT PROMPT 'Enter the user name of 3DCityDB v2.1.0 instance : '
-ACCEPT DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using in the v3.0.0 instance? (Spatial(S)/Locator(L), default is S): '
+ACCEPT DBVERSION CHAR DEFAULT 'S' PROMPT 'Which DB license are you using in the v3.0.0 instance? (Spatial(S)/Locator(L), default is S): '
 ACCEPT TEXOP CHAR DEFAULT 'n' PROMPT 'No texture URI is used for multiple texture files (yes(y)/unknown(n), default is n): '
 
 VARIABLE MGRPBATCHFILE VARCHAR2(50);
@@ -49,7 +49,7 @@ END;
 DECLARE
 	schema_name VARCHAR2(30) := upper('&SCHEMAINPUT');
 BEGIN
-	dbms_output.put_line('Starting DB migration...');
+	dbms_output.put_line('Starting DB migration... ' || SYSTIMESTAMP);
 	dbms_output.put_line('Creating Synonyms...');
 
 	FOR R IN (SELECT owner, table_name FROM all_tables WHERE owner=schema_name) LOOP
@@ -189,6 +189,6 @@ END;
 COMMIT;
 
 BEGIN
-	dbms_output.put_line('DB migration is completed.');	
+	dbms_output.put_line('DB migration is completed.' || SYSTIMESTAMP);	
 END;
 /
