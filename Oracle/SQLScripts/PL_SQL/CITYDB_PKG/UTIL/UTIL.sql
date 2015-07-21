@@ -3,7 +3,7 @@
 -- Authors:     Claus Nagel <cnagel@virtualcitysystems.de>
 --              Felix Kunde <fkunde@virtualcitysystems.de>
 --
--- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+-- Copyright:   (c) 2012-2015  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
 --                             http://www.gis.bv.tum.de
 --
@@ -25,6 +25,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 2.1.0     2015-07-21   added string2id_array function              FKun
 -- 2.0.0     2014-10-10   new version for 3DCityDB V3                 FKun
 -- 1.2.0     2013-08-29   added change_db_srid procedure              FKun
 -- 1.1.0     2011-07-28   update to 2.0.6                             CNag
@@ -103,6 +104,7 @@ AS
   PROCEDURE update_schema_constraints(on_delete_param VARCHAR2 := 'CASCADE', schema_name VARCHAR2 := USER);
   PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param VARCHAR2 := 'CASCADE', schema_name VARCHAR2 := USER);
   FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER, schema_name VARCHAR2 := USER) RETURN ID_ARRAY;
+  FUNCTION string2id_array(str VARCHAR2, delim VARCHAR2 := ',') RETURN ID_ARRAY;
   FUNCTION get_id_array_size(id_arr ID_ARRAY) RETURN NUMBER;
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
   FUNCTION construct_solid(geom_root_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
@@ -139,7 +141,7 @@ AS
   * @param table_name name of the unversioned table, i.e., omit
   *                   suffixes such as _LT
   * @param schema_name name of schema of target table
-  * @RETURN VARCHAR2 'ON' for version-enabled, 'OFF' otherwise
+  * @return VARCHAR2 'ON' for version-enabled, 'OFF' otherwise
   ******************************************************************/
   FUNCTION versioning_table(
     table_name VARCHAR2, 
@@ -159,7 +161,7 @@ AS
   * versioning_db
   *
   * @param schema_name name of schema
-  * @RETURN VARCHAR2 'ON' for version-enabled, 'PARTLY' and 'OFF'
+  * @return VARCHAR2 'ON' for version-enabled, 'PARTLY' and 'OFF'
   ******************************************************************/
   FUNCTION versioning_db(schema_name VARCHAR2 := USER) RETURN VARCHAR2
   IS
@@ -228,7 +230,7 @@ AS
   *
   * @param list string to be splitted
   * @param delim delimiter used for splitting, defaults to ','
-  * @RETURN STRARRAY array of strings containing split tokens                 
+  * @return STRARRAY array of strings containing split tokens                 
   ******************************************************************/
   FUNCTION split(list VARCHAR2, delim VARCHAR2 := ',') RETURN STRARRAY
   IS
@@ -257,7 +259,7 @@ AS
   *
   * @param a first number value
   * @param b second number value
-  * @RETURN NUMBER the smaller of the two input number values                
+  * @return NUMBER the smaller of the two input number values                
   ******************************************************************/
   FUNCTION min(a NUMBER, b NUMBER) RETURN NUMBER
   IS
@@ -348,6 +350,7 @@ AS
   * @param seq_name name of the sequence
   * @param count number of values to be queried from the sequence
   * @param schema_name name of schema of target sequence
+  * @return ID_ARRAY array of sequence values
   ******************************************************************/
   FUNCTION get_seq_values(
     seq_name VARCHAR2, 
@@ -362,17 +365,35 @@ AS
     RETURN seq_tbl;
   END;
 
+  /*****************************************************************
+  * string2id_array
+  *
+  * converts a string into an ID_ARRAY object
+  *      
+  * @param str string to be splitted
+  * @param delim delimiter used for splitting, defaults to ','
+  * @return ID_ARRAY array of number containing split tokens
+  ******************************************************************/
+  FUNCTION string2id_array(str VARCHAR2, delim VARCHAR2 := ',') RETURN ID_ARRAY
+  IS
+    arr ID_ARRAY;
+  BEGIN
+    EXECUTE IMMEDIATE 'WITH DATA AS (
+                         SELECT :1 AS str FROM dual
+                       )
+                       SELECT regexp_substr(str, ''[^:2]+'', 1, LEVEL) str
+                         FROM DATA CONNECT BY regexp_substr(str , ''[^:3]+'', 1, LEVEL) IS NOT NULL'
+                       BULK COLLECT INTO arr USING str, delim, delim;
+    RETURN arr;
+  END;
 
   /*****************************************************************
   * get_id_array_size
   *
-  * RETURN the size of a given ID_ARRAY object
-  *
-  * @param     @description       
-  * id_arr     passed ID_ARRAY object
-  *
-  * @return
-  * size of ID_ARRAY object
+  * returns the size of a given ID_ARRAY object
+  *      
+  * @param id_arr passed ID_ARRAY object
+  * @return size of ID_ARRAY object
   ******************************************************************/
   FUNCTION get_id_array_size(id_arr ID_ARRAY) RETURN NUMBER
   IS
@@ -387,7 +408,7 @@ AS
   * objectclass_id_to_table_name
   *
   * @param class_id objectclass_id identifier
-  * @RETURN VARCHAR2 name of table that stores objects referred 
+  * @return VARCHAR2 name of table that stores objects referred 
   *                  to the given objectclass_id
   ******************************************************************/
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2
@@ -483,7 +504,7 @@ AS
   *
   * @param geom_root_id identifier to group geometries of a solid
   * @param schema_name name of schema
-  * @RETURN SDO_GEOMETRY the constructed solid geometry
+  * @return SDO_GEOMETRY the constructed solid geometry
   ******************************************************************/
   FUNCTION construct_solid(
     geom_root_id NUMBER,
