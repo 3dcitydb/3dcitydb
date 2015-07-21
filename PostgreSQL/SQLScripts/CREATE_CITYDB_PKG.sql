@@ -3,7 +3,7 @@
 -- Authors:     Claus Nagel <cnagel@virtualcitysystems.de>
 --              Felix Kunde <fkunde@virtualcitysystems.de>
 --
--- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+-- Copyright:   (c) 2012-2015  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
 --                             http://www.gis.bv.tum.de
 --
@@ -17,22 +17,16 @@
 --              for more details.
 -------------------------------------------------------------------------------
 -- About:
--- Creates schema "citydb_pkg.*
+-- Creates schema "citydb_pkg" with stored procedures and utility tables
 -------------------------------------------------------------------------------
 --
 -- ChangeLog:
 --
--- Version | Date       | Description               | Author
--- 1.0.0     2012-05-21   release version             CNag
---                                                    FKun
+-- Version | Date       | Description                               | Author
+-- 2.1.0     2015-07-21   added citydb_envelope package               FKun
+-- 2.0.0     2014-10-10   minor updates for 3DCityDB V3               FKun
+-- 1.0.0     2008-09-10   release version                             CNag
 --
-
--------------------------------------------------------------------------------
--- Conversion-Report:
--- PACKAGES do not exist in PostgreSQL. 
--- Only within PostgreSQL Plus Advance Server from EnterpriseDB.
--- The use of schemas is proposed. Thus usage-rights may have to be set.
--------------------------------------------------------------------------------
 
 --// create CITYDB_PKG schema
 CREATE SCHEMA citydb_pkg;
@@ -42,5 +36,6 @@ CREATE SCHEMA citydb_pkg;
 \i PL_pgSQL/CITYDB_PKG/INDEX/IDX.sql
 \i PL_pgSQL/CITYDB_PKG/SRS/SRS.sql
 \i PL_pgSQL/CITYDB_PKG/STATISTICS/STAT.sql
+\i PL_pgSQL/CITYDB_PKG/ENVELOPE/ENVELOPE.sql
 \i PL_pgSQL/CITYDB_PKG/DELETE/DELETE.sql
 \i PL_pgSQL/CITYDB_PKG/DELETE/DELETE_BY_LINEAGE.sql
