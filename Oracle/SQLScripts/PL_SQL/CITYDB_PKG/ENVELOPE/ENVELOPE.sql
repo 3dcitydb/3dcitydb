@@ -224,7 +224,7 @@ AS
       bigD => NULL
     );
 
-    -- perform traslation to reference point
+    -- perform translation to reference point
     envelope := SDO_UTIL.AFFINETRANSFORMS(
       geometry => envelope,
       translation => 'TRUE',

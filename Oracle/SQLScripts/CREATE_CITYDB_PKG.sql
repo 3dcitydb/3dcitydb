@@ -35,7 +35,7 @@ SELECT 'Creating packages ''citydb_util'', ''citydb_idx'', ''citydb_srs'', ''cit
 @@PL_SQL/CITYDB_PKG/INDEX/IDX.sql;
 @@PL_SQL/CITYDB_PKG/SRS/SRS.sql;
 @@PL_SQL/CITYDB_PKG/STATISTICS/STAT.sql;
-@@PL_SQL/CITYDB_PKG/STATISTICS/ENVELOPE.sql;
+@@PL_SQL/CITYDB_PKG/ENVELOPE/ENVELOPE.sql;
 
 BEGIN
   IF ('&DBVERSION'='S' or '&DBVERSION'='s') THEN
