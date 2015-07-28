@@ -81,13 +81,17 @@ AS
   IS
     envelope SDO_GEOMETRY;
   BEGIN
-    envelope := MDSYS.SDO_GEOMETRY(3003,NULL,NULL,MDSYS.SDO_ELEM_INFO_ARRAY(1,1003,1),MDSYS.SDO_ORDINATE_ARRAY(
-      SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,1),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,2),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,3),
-      SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,1),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,2),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,3),
-      SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,1),SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,2),SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,3),
-      SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,1),SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,2),SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,3),
-      SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,1),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,2),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,3)
-      ));
+    IF box IS NULL THEN
+      RETURN NULL;
+    ELSE
+      envelope := MDSYS.SDO_GEOMETRY(3003,NULL,NULL,MDSYS.SDO_ELEM_INFO_ARRAY(1,1003,1),MDSYS.SDO_ORDINATE_ARRAY(
+        SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,1),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,2),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,3),
+        SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,1),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,2),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,3),
+        SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,1),SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,2),SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,3),
+        SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,1),SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,2),SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,3),
+        SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,1),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,2),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,3)
+        ));
+    END IF;
 
     RETURN envelope;
 
@@ -188,51 +192,53 @@ AS
        ) SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
       INTO envelope USING implicit_rep_id, implicit_rep_id;
 
-    anchor_pt := MDSYS.SDO_GEOMETRY(3001,NULL,MDSYS.SDO_POINT_TYPE(
+    IF envelope IS NOT NULL THEN
+      anchor_pt := MDSYS.SDO_GEOMETRY(3001,NULL,MDSYS.SDO_POINT_TYPE(
 	    envelope.sdo_ordinates(1),envelope.sdo_ordinates(2),envelope.sdo_ordinates(3)),NULL,NULL);
 
-    -- perform affine transformation by the given transformation matrix
-    envelope := SDO_UTIL.AFFINETRANSFORMS(
-      geometry => envelope,
-      translation => do_translation,
-      tx => params(4),
-      ty => params(8),
-      tz => params(12),
-      scaling => do_scaling,
-      psc1 => CASE WHEN do_scaling = 'TRUE' THEN anchor_pt ELSE NULL END,
-      sx => params(1),
-      sy => params(6),
-      sz => params(11),
-      rotation => do_rotation,
-      p1 => CASE WHEN do_rotation = 'TRUE' THEN anchor_pt ELSE NULL END,
-      line1 => NULL,
-      angle => rotate_angle,
-      dir => rotate_axis,
-      shearing => do_shearing,
-      shxy => 0.0,
-      shyx => 0.0,
-      shxz => 0.0,
-      shzx => 0.0,
-      shyz => 0.0,
-      shzy => 0.0,
-      reflection => do_reflection,
-      pref => CASE WHEN do_reflection = 'TRUE' THEN anchor_pt ELSE NULL END,
-      lineR => NULL,
-      dirR => reflection_axis,
-      planeR => 'FALSE',
-      n => NULL,
-      bigD => NULL
-    );
+      -- perform affine transformation by the given transformation matrix
+      envelope := SDO_UTIL.AFFINETRANSFORMS(
+        geometry => envelope,
+        translation => do_translation,
+        tx => params(4),
+        ty => params(8),
+        tz => params(12),
+        scaling => do_scaling,
+        psc1 => CASE WHEN do_scaling = 'TRUE' THEN anchor_pt ELSE NULL END,
+        sx => params(1),
+        sy => params(6),
+        sz => params(11),
+        rotation => do_rotation,
+        p1 => CASE WHEN do_rotation = 'TRUE' THEN anchor_pt ELSE NULL END,
+        line1 => NULL,
+        angle => rotate_angle,
+        dir => rotate_axis,
+        shearing => do_shearing,
+        shxy => 0.0,
+        shyx => 0.0,
+        shxz => 0.0,
+        shzx => 0.0,
+        shyz => 0.0,
+        shzy => 0.0,
+        reflection => do_reflection,
+        pref => CASE WHEN do_reflection = 'TRUE' THEN anchor_pt ELSE NULL END,
+        lineR => NULL,
+        dirR => reflection_axis,
+        planeR => 'FALSE',
+        n => NULL,
+        bigD => NULL
+      );
 
-    -- perform translation to reference point
-    envelope := SDO_UTIL.AFFINETRANSFORMS(
-      geometry => envelope,
-      translation => 'TRUE',
-      tx => ref_pt.sdo_point.x,
-      ty => ref_pt.sdo_point.y,
-      tz => ref_pt.sdo_point.z
-    );
-    
+      -- perform translation to reference point
+      envelope := SDO_UTIL.AFFINETRANSFORMS(
+        geometry => envelope,
+        translation => 'TRUE',
+        tx => ref_pt.sdo_point.x,
+        ty => ref_pt.sdo_point.y,
+        tz => ref_pt.sdo_point.z
+      );
+    END IF;
+
     RETURN envelope;
 
     EXCEPTION

@@ -125,15 +125,17 @@ BEGIN
        ) SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
     schema_nama, implicit_rep_id, schema_nama, schema_nama, implicit_rep_id) INTO envelope;
 
-  -- perform affine transformation against given transformation matrix
-  envelope := ST_Affine(envelope, 
-    params[1], params[2], params[3],
-    params[5], params[6], params[7],
-    params[9], params[10], params[11],
-    params[4], params[8], params[12]);
+  IF envelope IS NOT NULL THEN
+    -- perform affine transformation against given transformation matrix
+    envelope := ST_Affine(envelope, 
+      params[1], params[2], params[3],
+      params[5], params[6], params[7],
+      params[9], params[10], params[11],
+      params[4], params[8], params[12]);
 
-  -- perform translation to reference point
-  envelope := ST_Translate(envelope, ST_X(ref_pt), ST_Y(ref_pt), ST_Z(ref_pt));
+    -- perform translation to reference point
+    envelope := ST_Translate(envelope, ST_X(ref_pt), ST_Y(ref_pt), ST_Z(ref_pt));
+  END IF;
 
   RETURN envelope;
 
