@@ -379,7 +379,7 @@ AS
     arr ID_ARRAY;
   BEGIN
     EXECUTE IMMEDIATE 'WITH split_str AS (
-                         SELECT regexp_substr(:1, :2, LEVEL) AS str_parts FROM dual 
+                         SELECT regexp_substr(:1, :2, 1, LEVEL) AS str_parts FROM dual 
                            CONNECT BY regexp_substr(:3, :4, 1, LEVEL) IS NOT NULL
                        )
                        SELECT to_number(replace(str_parts,''.'','','')) FROM split_str'
