@@ -378,12 +378,12 @@ AS
   IS
     arr ID_ARRAY;
   BEGIN
-    EXECUTE IMMEDIATE 'WITH DATA AS (
-                         SELECT :1 AS str FROM dual
+    EXECUTE IMMEDIATE 'WITH split_str AS (
+                         SELECT regexp_substr(:1, :2, LEVEL) AS str_parts FROM dual 
+                           CONNECT BY regexp_substr(:3, :4, 1, LEVEL) IS NOT NULL
                        )
-                       SELECT regexp_substr(str, ''[^:2]+'', 1, LEVEL) str
-                         FROM DATA CONNECT BY regexp_substr(str , ''[^:3]+'', 1, LEVEL) IS NOT NULL'
-                       BULK COLLECT INTO arr USING str, delim, delim;
+                       SELECT to_number(replace(str_parts,''.'','','')) FROM split_str'
+                       BULK COLLECT INTO arr USING str, '[^'||delim||']+', str, '[^'||delim||']+';
     RETURN arr;
   END;
 
