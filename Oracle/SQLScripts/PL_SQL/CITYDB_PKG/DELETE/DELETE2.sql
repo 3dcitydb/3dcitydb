@@ -404,49 +404,50 @@ AS
   is
     genattrib_parent_id number;
     genattrib_root_id number;
+    is_set int := 7;
     deleted_id number;
     dummy_id number;
     genattrib_set_cur ref_cursor;
     genattrib_set_rec cityobject_genericattrib%rowtype;
   begin
-    -- preserve nested elements
-    if delete_members = 0 then
+    -- get correct parent_id and root_id
+    if (root_id is null or root_id = 0) then
       begin
-        -- get correct parent_id and root_id
-        if (parent_id is null or parent_id = 0) and (root_id is null or root_id = 0) then
-          execute immediate 'select parent_genattrib_id, root_genattrib_id from ' || schema_name || '.cityobject_genericattrib WHERE id = :1'
-                               into genattrib_parent_id, genattrib_root_id using pid;
-        end if;
+        execute immediate 'select parent_genattrib_id, root_genattrib_id, datatype
+                             from ' || schema_name || '.cityobject_genericattrib WHERE id = :1'
+                             into genattrib_parent_id, genattrib_root_id, is_set using pid;
 
         exception
           when no_data_found then
-            null;
+            return null;
       end;
+    else
+      genattrib_parent_id := parent_id;
+      genattrib_root_id := root_id;
     end if;
-
-    genattrib_parent_id := parent_id;
-    genattrib_root_id := root_id;
 	
     -- if the attribute to be deleted is a set, first handle nested attributes
-    open genattrib_set_cur for 'select * from ' || schema_name || '.cityobject_genericattrib where parent_genattrib_id=:1' using pid;
-    loop
-      fetch genattrib_set_cur into genattrib_set_rec;
-      exit when genattrib_set_cur%notfound;
-      dummy_id := intern_delete_genericattrib(genattrib_set_rec.id, pid, COALESCE(genattrib_root_id,genattrib_set_rec.id), delete_members, schema_name);
-    end loop;
-    close genattrib_set_cur;
+    if is_set = 7 then
+      open genattrib_set_cur for 'select * from ' || schema_name || '.cityobject_genericattrib where parent_genattrib_id=:1' using pid;
+      loop
+        fetch genattrib_set_cur into genattrib_set_rec;
+        exit when genattrib_set_cur%notfound;
+        dummy_id := intern_delete_genericattrib(genattrib_set_rec.id, pid, COALESCE(genattrib_root_id,genattrib_set_rec.id), delete_members, schema_name);
+      end loop;
+      close genattrib_set_cur;
+    end if;
 
     -- now delete or update cityobject_genericattrib table
     if delete_members <> 0 or (delete_members = 0 and (genattrib_parent_id is null or genattrib_parent_id = 0)) then
       execute immediate 'delete from ' || schema_name || '.cityobject_genericattrib  where id=:1 returning id into :2' using pid, out deleted_id;
     else
       -- update set hierachies
-      if pid = genattrib_root_id then
+      if genattrib_parent_id = genattrib_root_id then
         execute immediate 'UPDATE ' || schema_name || '.cityobject_genericattrib SET parent_genattrib_id = NULL, root_genattrib_id = :1
-                             WHERE id = :2' using genattrib_root_id, pid;
+                             WHERE id = :2' using pid, pid;
       else
         execute immediate 'UPDATE ' || schema_name || '.cityobject_genericattrib SET parent_genattrib_id = :1, root_genattrib_id = :2
-                             WHERE id = :3' using genattrib_parent_id, root_id, pid;
+                             WHERE id = :3' using genattrib_parent_id, genattrib_root_id, pid;
       end if;
     end if;
 

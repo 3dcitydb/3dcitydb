@@ -286,34 +286,35 @@ $$
 DECLARE
   genattrib_parent_id INTEGER;
   genattrib_root_id INTEGER;
+  is_set INTEGER := 7;
   deleted_id INTEGER;
 BEGIN
-  -- preserve nested elements
-  IF delete_members = 0 THEN
-    -- get correct parent_id and root_id
-    IF (parent_id IS NULL OR parent_id = 0) AND (root_id IS NULL OR root_id = 0) THEN
-      EXECUTE format('SELECT parent_genattrib_id, root_genattrib_id FROM %I.cityobject_genericattrib WHERE id = %L',
-                        schema_name, genattrib_id) INTO genattrib_parent_id, genattrib_root_id;
-    END IF;
+  -- get correct parent_id and root_id
+  IF (root_id IS NULL OR root_id = 0) THEN
+    EXECUTE format('SELECT parent_genattrib_id, root_genattrib_id, datatype
+                      FROM %I.cityobject_genericattrib WHERE id = %L',
+                      schema_name, genattrib_id) INTO genattrib_parent_id, genattrib_root_id, is_set;
+  ELSE
+    genattrib_parent_id := parent_id;
+    genattrib_root_id := root_id;
   END IF;
-
-  genattrib_parent_id := parent_id;
-  genattrib_root_id := root_id;
 
   --// PRE DELETE CITYOBJECT_GENERICATTRIB //--
   -- if the attribute to be deleted is a set, first handle nested attributes
-  EXECUTE format('SELECT citydb_pkg.delete_genericattrib(id, %L, COALESCE(%L,id), %L, %L) 
-                    FROM %I.cityobject_genericattrib WHERE parent_genattrib_id = %L', 
-                    genattrib_id, genattrib_root_id, delete_members, schema_name, schema_name, genattrib_id);
+  IF is_set = 7 THEN
+    EXECUTE format('SELECT citydb_pkg.delete_genericattrib(id, parent_genattrib_id, root_genattrib_id, %L, %L) 
+                      FROM %I.cityobject_genericattrib WHERE parent_genattrib_id = %L', 
+                      delete_members, schema_name, schema_name, genattrib_id);
+  END IF;
 
   --// DELETE or UPDATE CITYOBJECT_GENERICATTRIB //--
   IF delete_members <> 0 OR (delete_members = 0 AND (genattrib_parent_id IS NULL OR genattrib_parent_id = 0)) THEN
     EXECUTE format('DELETE FROM %I.cityobject_genericattrib WHERE id = %L RETURNING id', schema_name, genattrib_id) INTO deleted_id;
   ELSE
-    -- update set hierachies
-    IF genattrib_id = genattrib_root_id THEN
+    -- update set hierarchies
+    IF genattrib_parent_id = genattrib_root_id THEN
       EXECUTE format('UPDATE %I.cityobject_genericattrib SET parent_genattrib_id = NULL, root_genattrib_id = %L
-                        WHERE id = %L', schema_name, genattrib_root_id, genattrib_id);
+                        WHERE id = %L', schema_name, genattrib_id, genattrib_id);
     ELSE
       EXECUTE format('UPDATE %I.cityobject_genericattrib SET parent_genattrib_id = %L, root_genattrib_id = %L
                         WHERE id = %L', schema_name, genattrib_parent_id, genattrib_root_id, genattrib_id);
