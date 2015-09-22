@@ -525,7 +525,7 @@ BEGIN
     WHEN class_id = 19 THEN
       EXECUTE format('SELECT citydb_pkg.box2envelope(Box3D(rasterproperty)) AS envelope3d
                         FROM %I.grid_coverage grid, %I.raster_relief rast 
-                          WHERE rast.raster_id = grid.id AND rast.id = %L',
+                          WHERE rast.coverage_id = grid.id AND rast.id = %L',
                           schema_name, schema_name, co_id) INTO envelope;
   END CASE;
 

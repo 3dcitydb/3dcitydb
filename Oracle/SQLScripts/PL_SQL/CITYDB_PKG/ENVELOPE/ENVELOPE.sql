@@ -639,7 +639,7 @@ AS
           -- get spatial extent of raster relief
           EXECUTE IMMEDIATE 'SELECT grid.id, citydb_envelope.box2envelope(SDO_AGGR_MBR(grid.rasterproperty.spatialExtent)) AS envelope3d
                                FROM ' || schema_name || '.grid_coverage grid, ' || schema_name || '.raster_relief rast 
-                                 WHERE rast.rasteco_id = grid.id AND rast.id = :1'
+                                 WHERE rast.coverage_id = grid.id AND rast.id = :1'
                                  INTO grid_id, envelope USING co_id;
 
           EXCEPTION
