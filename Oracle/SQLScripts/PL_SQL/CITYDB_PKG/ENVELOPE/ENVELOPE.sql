@@ -235,7 +235,31 @@ AS
         translation => 'TRUE',
         tx => ref_pt.sdo_point.x,
         ty => ref_pt.sdo_point.y,
-        tz => ref_pt.sdo_point.z
+        tz => ref_pt.sdo_point.z,
+        scaling => 'FALSE',
+        psc1 => NULL,
+        sx => 0.0,
+        sy => 0.0,
+        sz => 0.0,
+        rotation => 'FALSE',
+        p1 => NULL,
+        line1 => NULL,
+        angle => 0.0,
+        dir => 0,
+        shearing => 'FALSE',
+        shxy => 0.0,
+        shyx => 0.0,
+        shxz => 0.0,
+        shzx => 0.0,
+        shyz => 0.0,
+        shzy => 0.0,
+        reflection => 'FALSE',
+        pref => NULL,
+        lineR => NULL,
+        dirR => 0,
+        planeR => 'FALSE',
+        n => NULL,
+        bigD => NULL
       );
     END IF;
 
