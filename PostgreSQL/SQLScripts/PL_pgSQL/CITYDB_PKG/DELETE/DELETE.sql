@@ -25,6 +25,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                                    | Author
+-- 2.3.0     2015-10-15   changed API for delete_genericattrib             FKun
 -- 2.2.0     2015-02-10   added functions                                  FKun
 -- 2.1.0     2014-11-07   delete with returning id of deleted features     FKun
 -- 2.0.0     2014-10-10   complete revision for 3DCityDB V3                FKun
@@ -66,7 +67,7 @@
 *   delete_cityobjectgroup(cog_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_external_reference(ref_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_grid_coverage(gc_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_genericattrib(genattrib_id INTEGER, parent_id INTEGER, root_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
+*   delete_genericattrib(genattrib_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER AS
 *   delete_generic_cityobject(gco_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_implicit_geometry(ig_id INTEGER, clean_apps INTEGER := 0 INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_land_use(lu_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
@@ -94,8 +95,7 @@
 *   delete_waterbody(wb_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   intern_delete_cityobject(co_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   intern_delete_surface_geometry(sg_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
-*   is_not_referenced(table_name TEXT, check_column TEXT, check_id INTEGER, not_column TEXT, 
-*     not_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS BOOLEAN
+*   is_not_referenced(table_name TEXT, check_column TEXT, check_id INTEGER, not_column TEXT, not_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS BOOLEAN
 ******************************************************************/
 
 /*
@@ -277,49 +277,53 @@ delete from CITYOBJECT_GENERICATTRIB
 */
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_genericattrib(
   genattrib_id INTEGER,
-  parent_id INTEGER,
-  root_id INTEGER,
   delete_members INTEGER DEFAULT 0,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS INTEGER AS
 $$
 DECLARE
   genattrib_parent_id INTEGER;
-  genattrib_root_id INTEGER;
-  is_set INTEGER := 7;
+  data_type INTEGER;
   deleted_id INTEGER;
 BEGIN
-  -- get correct parent_id and root_id
-  IF (root_id IS NULL OR root_id = 0) THEN
-    EXECUTE format('SELECT parent_genattrib_id, root_genattrib_id, datatype
-                      FROM %I.cityobject_genericattrib WHERE id = %L',
-                      schema_name, genattrib_id) INTO genattrib_parent_id, genattrib_root_id, is_set;
-  ELSE
-    genattrib_parent_id := parent_id;
-    genattrib_root_id := root_id;
-  END IF;
+  -- get parent_id and data type
+  EXECUTE format('SELECT parent_genattrib_id, datatype
+                    FROM %I.cityobject_genericattrib WHERE id = %L',
+                    schema_name, genattrib_id) INTO genattrib_parent_id, data_type;
 
   --// PRE DELETE CITYOBJECT_GENERICATTRIB //--
   -- if the attribute to be deleted is a set, first handle nested attributes
-  IF is_set = 7 THEN
-    EXECUTE format('SELECT citydb_pkg.delete_genericattrib(id, parent_genattrib_id, root_genattrib_id, %L, %L) 
-                      FROM %I.cityobject_genericattrib WHERE parent_genattrib_id = %L', 
-                      delete_members, schema_name, schema_name, genattrib_id);
-  END IF;
-
-  --// DELETE or UPDATE CITYOBJECT_GENERICATTRIB //--
-  IF delete_members <> 0 OR (delete_members = 0 AND (genattrib_parent_id IS NULL OR genattrib_parent_id = 0)) THEN
-    EXECUTE format('DELETE FROM %I.cityobject_genericattrib WHERE id = %L RETURNING id', schema_name, genattrib_id) INTO deleted_id;
-  ELSE
-    -- update set hierarchies
-    IF genattrib_parent_id = genattrib_root_id THEN
-      EXECUTE format('UPDATE %I.cityobject_genericattrib SET parent_genattrib_id = NULL, root_genattrib_id = %L
-                        WHERE id = %L', schema_name, genattrib_id, genattrib_id);
+  IF data_type = 7 THEN
+    IF delete_members <> 0 THEN
+      -- recursive delete of nested attributes
+      EXECUTE format('WITH RECURSIVE parts AS (
+                        SELECT id FROM %I.cityobject_genericattrib 
+                          WHERE parent_genattrib_id = %L
+                        UNION ALL
+                        SELECT part.id FROM %I.cityobject_genericattrib part, parts p 
+                          WHERE part.parent_genattrib_id = p.id
+                      )
+                      DELETE FROM %I.cityobject_genericattrib g USING parts p 
+                        WHERE g.id = p.id', 
+                        schema_name, genattrib_id, schema_name, schema_name);
     ELSE
-      EXECUTE format('UPDATE %I.cityobject_genericattrib SET parent_genattrib_id = %L, root_genattrib_id = %L
-                        WHERE id = %L', schema_name, genattrib_parent_id, genattrib_root_id, genattrib_id);
+      -- recursive update of nested attributes
+      EXECUTE format('WITH RECURSIVE parts (id, parent_id, root_id) AS (
+                        SELECT id, %L::integer AS parent_id, 
+                          CASE WHEN root_genattrib_id = %L THEN id ELSE root_genattrib_id END AS root_id
+                          FROM %I.cityobject_genericattrib WHERE parent_genattrib_id = %L
+                        UNION ALL
+                        SELECT part.id, part.parent_genattrib_id AS parent_id, p.root_id FROM %I.cityobject_genericattrib part, parts p 
+                          WHERE part.parent_genattrib_id = p.id
+                      )
+                      UPDATE %I.cityobject_genericattrib g SET parent_genattrib_id = p.parent_id, root_genattrib_id = p.root_id
+                        FROM parts p WHERE g.id = p.id',
+                        genattrib_parent_id, genattrib_id, schema_name, genattrib_id, schema_name, schema_name);
     END IF;
   END IF;
+
+  --// DELETE CITYOBJECT_GENERICATTRIB //--
+  EXECUTE format('DELETE FROM %I.cityobject_genericattrib WHERE id = %L RETURNING id', schema_name, genattrib_id) INTO deleted_id;
 
   RETURN deleted_id;
 

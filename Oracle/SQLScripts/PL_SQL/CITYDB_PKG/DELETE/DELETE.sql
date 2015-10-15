@@ -26,6 +26,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                                    | Author
+-- 2.3.0     2015-10-15   changed API for delete_genericattrib             FKun
 -- 2.2.0     2015-02-10   added functions                                  FKun
 -- 2.1.0     2014-11-10   delete with returning id of deleted features     FKun
 -- 2.0.0     2014-10-10   extended for 3DCityDB V3                         GHud
@@ -43,7 +44,7 @@ AS
   function delete_implicit_geometry(pid number, clean_apps int := 0, schema_name varchar2 := user) return number;
   function delete_grid_coverage(pid number, schema_name varchar2 := user) return number;
   function delete_citymodel(pid number, delete_members int := 0, schema_name varchar2 := user) return number;
-  function delete_genericattrib(pid number, parent_id number, root_id number, delete_members int := 0, schema_name varchar2 := user) return number;
+  function delete_genericattrib(pid number, delete_members int := 0, schema_name varchar2 := user) return number;
   function delete_external_reference(pid number, schema_name varchar2 := user) return number;
   function delete_appearance(pid number, cleanup int := 0, schema_name varchar2 := user) return number;
   function delete_surface_data(pid number, schema_name varchar2 := user) return number;
@@ -107,7 +108,7 @@ AS
   function intern_delete_grid_coverage(pid number, schema_name varchar2 := user) return number;
   function intern_delete_cityobject(pid number, schema_name varchar2 := user) return number;
   function delete_citymodel(citymodel_rec citymodel%rowtype, delete_members int := 0, schema_name varchar2 := user) return number;
-  function intern_delete_genericattrib(pid number, parent_id number, root_id number, delete_members int := 0, schema_name varchar2 := USER) return number;
+  function intern_delete_genericattrib(pid number, delete_members int := 0, schema_name varchar2 := USER) return number;
   function delete_appearance(appearance_rec appearance%rowtype, cleanup int := 0, schema_name varchar2 := user) return number;
   function delete_surface_data(surface_data_rec surface_data%rowtype, schema_name varchar2 := user) return number;
   function delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, delete_members int := 0, schema_name varchar2 := user) return number;
@@ -404,59 +405,54 @@ AS
   /*
     internal: delete from CITYOBJECT_GENERICATTRIB
   */
-  function intern_delete_genericattrib(pid number, parent_id number, root_id number, delete_members int := 0, schema_name varchar2 := user) return number
+  function intern_delete_genericattrib(pid number, delete_members int := 0, schema_name varchar2 := user) return number
   is
     genattrib_parent_id number;
-    genattrib_root_id number;
-    is_set int := 7;
+    data_type int;
     deleted_id number;
-    dummy_id number;
-    genattrib_set_cur ref_cursor;
-    genattrib_set_rec cityobject_genericattrib%rowtype;
   begin
-    -- get correct parent_id and root_id
-    if (root_id is null or root_id = 0) then
-      begin
-        execute immediate 'select parent_genattrib_id, root_genattrib_id, datatype
-                             from ' || schema_name || '.cityobject_genericattrib WHERE id = :1'
-                             into genattrib_parent_id, genattrib_root_id, is_set using pid;
+    -- get parent_id and data type
+    begin
+      execute immediate 'select parent_genattrib_id, datatype
+                           from ' || schema_name || '.cityobject_genericattrib WHERE id = :1'
+                           into genattrib_parent_id, data_type using pid;
 
-        exception
-          when no_data_found then
-            return null;
-      end;
-    else
-      genattrib_parent_id := parent_id;
-      genattrib_root_id := root_id;
-    end if;
-	
+      exception
+        when no_data_found then
+          return null;
+    end;
+
     -- if the attribute to be deleted is a set, first handle nested attributes
-    if is_set = 7 then
-      open genattrib_set_cur for 'select * from ' || schema_name || '.cityobject_genericattrib where parent_genattrib_id=:1' using pid;
-      loop
-        fetch genattrib_set_cur into genattrib_set_rec;
-        exit when genattrib_set_cur%notfound;
-        dummy_id := intern_delete_genericattrib(genattrib_set_rec.id, pid, COALESCE(genattrib_root_id,genattrib_set_rec.id), delete_members, schema_name);
-      end loop;
-      close genattrib_set_cur;
-    end if;
-
-    -- now delete or update cityobject_genericattrib table
-    if delete_members <> 0 or (delete_members = 0 and (genattrib_parent_id is null or genattrib_parent_id = 0)) then
-      execute immediate 'delete from ' || schema_name || '.cityobject_genericattrib  where id=:1 returning id into :2' using pid, out deleted_id;
-    else
-      -- update set hierachies
-      if genattrib_parent_id = genattrib_root_id then
-        execute immediate 'UPDATE ' || schema_name || '.cityobject_genericattrib SET parent_genattrib_id = NULL, root_genattrib_id = :1
-                             WHERE id = :2' using pid, pid;
+    if data_type = 7 then
+      if delete_members <> 0 then
+        -- recursive delete of nested attributes
+        execute immediate 'delete from ' || schema_name || '.cityobject_genericattrib where id in (
+                             select id from ' || schema_name || '.cityobject_genericattrib start with parent_genattrib_id = :1 
+                               connect by prior id = parent_genattrib_id)' using pid;
       else
-        execute immediate 'UPDATE ' || schema_name || '.cityobject_genericattrib SET parent_genattrib_id = :1, root_genattrib_id = :2
-                             WHERE id = :3' using genattrib_parent_id, genattrib_root_id, pid;
+        -- recursive update of nested attributes
+        execute immediate 'merge into ' || schema_name || '.cityobject_genericattrib g using (
+                             with parts (id, parent_id, root_id) as (
+                               select id, :1 as parent_id, 
+                                 case when root_genattrib_id = :2 then id else root_genattrib_id end as root_id
+                                 from ' || schema_name || '.cityobject_genericattrib 
+                                   where parent_genattrib_id = :3
+                               union all
+                               select part.id, part.parent_genattrib_id as parent_id, p.root_id 
+                                 from ' || schema_name || '.cityobject_genericattrib part, parts p 
+                                   where part.parent_genattrib_id = p.id
+                             )
+                             select id, parent_id, root_id from parts) ga_set
+                          on (g.id = ga_set.id) when matched then 
+                            update set g.parent_genattrib_id = ga_set.parent_id, g.root_genattrib_id = ga_set.root_id'
+                            using genattrib_parent_id, pid, pid;
       end if;
     end if;
 
-    return deleted_id;
+    -- now delete the attribute
+    execute immediate 'delete from ' || schema_name || '.cityobject_genericattrib  where id=:1 returning id into :2' using pid, out deleted_id;
 
+    return deleted_id;
   exception
     when others then
       dbms_output.put_line('intern_delete_genericattrib (id: ' || pid || '): ' || SQLERRM);
@@ -2475,11 +2471,11 @@ AS
       dbms_output.put_line('delete_citymodel (id: ' || pid || '): ' || SQLERRM);
   end;
 
-  function delete_genericattrib(pid number, parent_id number, root_id number, delete_members int := 0, schema_name varchar2 := user) return number
+  function delete_genericattrib(pid number, delete_members int := 0, schema_name varchar2 := user) return number
   is
     deleted_id number;
   begin
-    deleted_id := intern_delete_genericattrib(pid, parent_id, root_id, delete_members, schema_name);
+    deleted_id := intern_delete_genericattrib(pid, delete_members, schema_name);
     return deleted_id;
   exception
     when no_data_found then
