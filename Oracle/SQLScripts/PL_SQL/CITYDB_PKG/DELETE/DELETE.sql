@@ -510,8 +510,8 @@ AS
   procedure pre_delete_surface_data(surface_data_rec surface_data%rowtype, schema_name varchar2 := user)
   is
   begin
-      execute immediate 'delete from ' || schema_name || '.appear_to_surface_data where surface_data_id=:1' using surface_data_rec.id;
-      execute immediate 'delete from ' || schema_name || '.textureparam where surface_data_id=:1' using surface_data_rec.id;
+    execute immediate 'delete from ' || schema_name || '.textureparam where surface_data_id=:1' using surface_data_rec.id;
+    execute immediate 'delete from ' || schema_name || '.appear_to_surface_data where surface_data_id=:1' using surface_data_rec.id;
   exception
     when others then
       dbms_output.put_line('pre_delete_surface_data (id: ' || surface_data_rec.id || '): ' || SQLERRM);

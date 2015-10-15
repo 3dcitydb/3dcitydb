@@ -411,11 +411,11 @@ DECLARE
   deleted_id INTEGER;
 BEGIN
   --// PRE DELETE SURFACE DATA //--
-  -- delete references to appearance
-  EXECUTE format('DELETE FROM %I.appear_to_surface_data WHERE surface_data_id = %L', schema_name, sd_id);
-
   -- delete texture params
   EXECUTE format('DELETE FROM %I.textureparam WHERE surface_data_id = %L', schema_name, sd_id);
+
+  -- delete references to appearance
+  EXECUTE format('DELETE FROM %I.appear_to_surface_data WHERE surface_data_id = %L', schema_name, sd_id);
 
   --// DELETE SURFACE DATA //--
   EXECUTE format('DELETE FROM %I.surface_data WHERE id = %L RETURNING id', schema_name, sd_id) INTO deleted_id;
