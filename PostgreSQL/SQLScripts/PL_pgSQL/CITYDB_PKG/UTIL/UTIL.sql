@@ -196,14 +196,14 @@ LANGUAGE plpgsql;
 * update_table_constraint
 *
 * Removes a constraint to add it again with parameters
-* ON UPDATE CASCADE ON DELETE CASCADE or RESTRICT
+* ON UPDATE CASCADE ON DELETE CASCADE or NO ACTION
 *
 * @param fkey_name name of the foreign key that is updated 
 * @param table_name defines the table to which the constraint belongs to
 * @param column_name defines the column the constraint is relying on
 * @param ref_table name of referenced table
 * @param ref_column name of referencing column of referenced table
-* @param delete_param whether CASCADE or RESTRICT
+* @param delete_param whether CASCADE or NO ACTION
 * @param schema_name name of schema of target constraints
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.update_table_constraint(
@@ -235,7 +235,7 @@ LANGUAGE plpgsql;
 * calls update_table_constraint for updating all the constraints
 * in the specified schema
 *
-* @param on_delete_param whether CASCADE (default) or RESTRICT
+* @param on_delete_param whether CASCADE (default) or NO ACTION
 * @param schema_name name of schema of target constraints
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.update_schema_constraints(
@@ -247,8 +247,8 @@ DECLARE
   delete_param TEXT := 'CASCADE';
 BEGIN
   IF on_delete_param <> 'CASCADE' THEN
-    delete_param := 'RESTRICT';
-    RAISE NOTICE 'Constraints are set to ON DELETE RESTRICT';
+    delete_param := 'NO ACTION';
+    RAISE NOTICE 'Constraints are set to ON DELETE NO ACTION';
   ELSE
     RAISE NOTICE 'Constraints are set to ON DELETE CASCADE';
   END IF;

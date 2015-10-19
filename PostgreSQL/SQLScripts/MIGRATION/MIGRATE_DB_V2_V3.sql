@@ -894,13 +894,14 @@ CREATE TABLE citydb.cityobject_genericattrib (
 -- APPEARANCE module
 DROP TABLE IF EXISTS citydb.appearance CASCADE;
 CREATE TABLE citydb.appearance AS
-  SELECT id, gmlid, name, name_codespace, description, theme, citymodel_id, cityobject_id
+  SELECT id, gmlid, gmlid_codespace, name, name_codespace, description, theme, citymodel_id, cityobject_id
     FROM public.appearance;
 
 DROP TABLE IF EXISTS citydb.surface_data CASCADE;
 CREATE TABLE citydb.surface_data (
 	id,
 	gmlid,
+	gmlid_codespace,
 	name,
 	name_codespace,
 	description,
@@ -923,6 +924,7 @@ CREATE TABLE citydb.surface_data (
   AS SELECT
 	id,
 	gmlid,
+	gmlid_codespace,
 	name,
 	name_codespace,
 	description,
@@ -976,6 +978,7 @@ DROP TABLE IF EXISTS citydb.citymodel CASCADE;
 CREATE TABLE citydb.citymodel (
 	id,
 	gmlid,
+	gmlid_codespace,
 	name,
 	name_codespace,
 	description,
@@ -989,6 +992,7 @@ CREATE TABLE citydb.citymodel (
   AS SELECT
   	id,
 	gmlid,
+	gmlid_codespace,
 	name,
 	name_codespace,
 	description,
@@ -1006,6 +1010,7 @@ CREATE TABLE citydb.cityobject (
 	id,
 	objectclass_id,
 	gmlid,
+	gmlid_codespace,
 	name,
 	name_codespace,
 	description,
@@ -1023,6 +1028,7 @@ CREATE TABLE citydb.cityobject (
 	co.id,
 	co.class_id,
 	co.gmlid,
+	co.gmlid_codespace,
 	mco.co_name,
 	mco.co_name_codespace,
 	mco.co_description,
@@ -1053,6 +1059,7 @@ DROP TABLE IF EXISTS citydb.surface_geometry CASCADE;
 CREATE TABLE citydb.surface_geometry (
 	id,
 	gmlid,
+	gmlid_codespace,
 	parent_id,
 	root_id,
 	is_solid,
@@ -1067,6 +1074,7 @@ CREATE TABLE citydb.surface_geometry (
   AS SELECT
 	id,
 	gmlid,
+	gmlid_codespace,
 	parent_id,
 	root_id,
 	is_solid,
@@ -1113,8 +1121,32 @@ CREATE TABLE citydb.external_reference AS
     FROM public.external_reference;
 
 DROP TABLE IF EXISTS citydb.address CASCADE;
-CREATE TABLE citydb.address AS
-  SELECT id, street, house_number, po_box, zip_code, city, state, country, multi_point, xal_source
+CREATE TABLE citydb.address (
+	id,
+	gmlid,
+	gmlid_codespace,
+	street,
+	house_number,
+	po_box,
+	zip_code,
+	city,
+	state,
+	country,
+	multi_point,
+	xal_source	
+  AS SELECT
+	id,
+	('ID_'||id)::varchar(256),
+	NULL::varchar(1000),
+	street,
+	house_number,
+	po_box,
+	zip_code,
+	city,
+	state,
+	country,
+	multi_point,
+	xal_source
     FROM public.address;
 
 

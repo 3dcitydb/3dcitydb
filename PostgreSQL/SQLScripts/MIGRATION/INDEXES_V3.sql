@@ -407,6 +407,21 @@ CREATE INDEX gen_object_lod4refpnt_spx ON citydb.generic_cityobject
 	  lod4_implicit_ref_point
 	);
 
+DROP INDEX IF EXISTS citydb.address_inx;
+CREATE INDEX address_inx ON citydb.address
+	USING btree
+	(
+	  gmlid ASC NULLS LAST,
+	  gmlid_codespace
+	);
+
+DROP INDEX IF EXISTS citydb.address_point_spx;
+CREATE INDEX address_point_spx ON citydb.address
+	USING gist
+	(
+	  multi_point
+	);
+
 DROP INDEX IF EXISTS citydb.address_to_building_fkx;
 CREATE INDEX address_to_building_fkx ON citydb.address_to_building
 	USING btree
@@ -579,7 +594,7 @@ DROP INDEX IF EXISTS citydb.bldg_furn_lod4impl_fkx;
 CREATE INDEX bldg_furn_lod4impl_fkx ON citydb.building_furniture
 	USING btree
 	(
-	  lod4_implicit_rep_id
+	  lod4_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 
 DROP INDEX IF EXISTS citydb.bldg_furn_lod4refpt_spx;
@@ -1706,7 +1721,7 @@ DROP INDEX IF EXISTS citydb.tunnel_furn_lod4impl_fkx;
 CREATE INDEX tunnel_furn_lod4impl_fkx ON citydb.tunnel_furniture
 	USING btree
 	(
-	  lod4_implicit_rep_id
+	  lod4_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 
 DROP INDEX IF EXISTS citydb.tunnel_furn_lod4refpt_spx;
@@ -1860,7 +1875,7 @@ DROP INDEX IF EXISTS citydb.bridge_furn_lod4impl_fkx;
 CREATE INDEX bridge_furn_lod4impl_fkx ON citydb.bridge_furniture
 	USING btree
 	(
-	  lod4_implicit_rep_id
+	  lod4_implicit_rep_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 
 DROP INDEX IF EXISTS citydb.bridge_furn_lod4refpt_spx;
@@ -2287,7 +2302,8 @@ DROP INDEX IF EXISTS citydb.cityobject_inx;
 CREATE INDEX cityobject_inx ON citydb.cityobject
 	USING btree
 	(
-	  gmlid
+	  gmlid ASC NULLS LAST,
+	  gmlid_codespace
 	)	WITH (FILLFACTOR = 90);
 
 DROP INDEX IF EXISTS citydb.cityobject_objectclass_fkx;
@@ -2302,6 +2318,13 @@ CREATE INDEX cityobject_envelope_spx ON citydb.cityobject
 	USING gist
 	(
 	  envelope
+	);
+
+DROP INDEX IF EXISTS cityobject_lineage_inx;
+CREATE INDEX cityobject_lineage_inx ON citydb.cityobject
+	USING btree
+	(
+	  lineage ASC NULLS LAST
 	);
 
 DROP INDEX IF EXISTS citydb.appearance_inx;
@@ -2350,7 +2373,8 @@ DROP INDEX IF EXISTS citydb.surface_geom_inx;
 CREATE INDEX surface_geom_inx ON citydb.surface_geometry
 	USING btree
 	(
-	  gmlid
+	  gmlid ASC NULLS LAST,
+	  gmlid_codespace
 	)	WITH (FILLFACTOR = 90);
 
 DROP INDEX IF EXISTS citydb.surface_geom_parent_fkx;
@@ -2392,7 +2416,8 @@ DROP INDEX IF EXISTS citydb.surface_data_inx;
 CREATE INDEX surface_data_inx ON citydb.surface_data
 	USING btree
 	(
-	  gmlid
+	  gmlid ASC NULLS LAST,
+	  gmlid_codespace
 	)	WITH (FILLFACTOR = 90);
 
 DROP INDEX IF EXISTS citydb.surface_data_spx;
@@ -2414,6 +2439,14 @@ CREATE INDEX surface_data_tex_image_fkx ON citydb.surface_data
 	USING btree
 	(
 	  tex_image_id ASC NULLS LAST
+	);
+
+DROP INDEX IF EXISTS citydb.citymodel_inx;
+CREATE INDEX citymodel_inx ON citydb.citymodel
+	USING btree
+	(
+	  gmlid ASC NULLS LAST,
+	  gmlid_codespace
 	);
 
 DROP INDEX IF EXISTS citydb.citymodel_envelope_spx;
@@ -2441,14 +2474,14 @@ DROP INDEX IF EXISTS citydb.genericattrib_geom_fkx;
 CREATE INDEX genericattrib_geom_fkx ON citydb.cityobject_genericattrib
 	USING btree
 	(
-	  surface_geometry_id
+	  surface_geometry_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 
 DROP INDEX IF EXISTS citydb.genericattrib_cityobj_fkx;
 CREATE INDEX genericattrib_cityobj_fkx ON citydb.cityobject_genericattrib
 	USING btree
 	(
-	  cityobject_id
+	  cityobject_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 
 DROP INDEX IF EXISTS citydb.ext_ref_cityobject_fkx;
