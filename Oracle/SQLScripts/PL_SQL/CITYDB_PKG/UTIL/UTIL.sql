@@ -275,14 +275,14 @@ AS
   * update_table_constraint
   *
   * Removes a constraint to add it again with parameters
-  * ON UPDATE CASCADE ON DELETE CASCADE or RESTRICT
+  * ON UPDATE CASCADE ON DELETE CASCADE or NO ACTION
   *
   * @param fkey_name name of the foreign key that is updated 
   * @param table_name defines the table to which the constraint belongs to
   * @param column_name defines the column the constraint is relying on
   * @param ref_table name of referenced table
   * @param ref_column name of referencing column of referenced table
-  * @param on_delete_param whether CASCADE or RESTRICT
+  * @param on_delete_param whether CASCADE or NO ACTION
   * @param schema_name name of schema of target constraints
   ******************************************************************/
   PROCEDURE update_table_constraint(
@@ -296,6 +296,11 @@ AS
     )
   IS
   BEGIN
+    IF versioning_table(table_name, schema_name) = 'ON' OR versioning_table(ref_table, schema_name) = 'ON' THEN
+      dbms_output.put_line('Can not perform operation with version enabled tables.');
+      RETURN;
+    END IF;
+
     EXECUTE IMMEDIATE 'ALTER TABLE ' || upper(schema_name) || '.' || table_name || ' DROP CONSTRAINT ' || fkey_name;
     EXECUTE IMMEDIATE 'ALTER TABLE ' || upper(schema_name) || '.' || table_name || ' ADD CONSTRAINT ' || fkey_name || 
                          ' FOREIGN KEY (' || column_name || ') REFERENCES ' || upper(schema_name) || '.' || ref_table || '(' || ref_column || ')'
@@ -311,7 +316,7 @@ AS
   * calls update_table_constraint for updating all the constraints
   * in the user schema
   *
-  * @param on_delete_param whether CASCADE (default) or RESTRICT
+  * @param on_delete_param whether CASCADE (default) or NO ACTION
   * @param schema_name name of schema of target constraints
   ******************************************************************/
   PROCEDURE update_schema_constraints(
@@ -324,7 +329,7 @@ AS
   BEGIN
     IF on_delete_param <> 'CASCADE' THEN
       delete_param := '';
-      dbms_output.put_line('Constraints are set to ON DELETE RESTRICT');
+      dbms_output.put_line('Constraints are set to ON DELETE NO ACTION');
     ELSE
       dbms_output.put_line('Constraints are set to ON DELETE CASCADE');
     END IF;
