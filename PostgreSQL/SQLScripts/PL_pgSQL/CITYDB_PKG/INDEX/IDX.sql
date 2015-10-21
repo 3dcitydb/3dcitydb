@@ -3,7 +3,7 @@
 -- Authors:     Claus Nagel <cnagel@virtualcitysystems.de>
 --              Felix Kunde <fkunde@virtualcitysystems.de>
 --
--- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+-- Copyright:   (c) 2012-2015  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
 --                             http://www.gis.bv.tum.de
 --
@@ -23,10 +23,11 @@
 --
 -- ChangeLog:
 --
--- Version | Date       | Description                       | Author
--- 2.0.0     2014-10-10   new version for 3DCityDB V3         FKun
--- 1.0.0     2013-02-22   PostGIS version                     CNag
---                                                            FKun
+-- Version | Date       | Description                               | Author
+-- 2.0.1     2015-10-21   updated entries for index table             FKun
+-- 2.0.0     2014-10-10   new version for 3DCityDB V3                 FKun
+-- 1.0.0     2013-02-22   PostGIS version                             CNag
+--                                                                    FKun
 
 /*****************************************************************
 * CONTENT
@@ -159,10 +160,13 @@ CREATE TABLE citydb_pkg.INDEX_TABLE (
 INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_spatial_3d('cityobject_envelope_spx', 'cityobject', 'envelope'));
 INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_spatial_3d('surface_geom_spx', 'surface_geometry', 'geometry'));
 INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_spatial_3d('surface_geom_solid_spx', 'surface_geometry', 'solid_geometry'));
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('cityobject_inx', 'cityobject', 'gmlid'));
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('surface_geom_inx', 'surface_geometry', 'gmlid'));
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('appearance_inx', 'appearance', 'gmlid'));
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('surface_data_inx', 'surface_data', 'gmlid'));
+INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('cityobject_inx', 'cityobject', 'gmlid, gmlid_codespace'));
+INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('cityobject_lineage_inx', 'cityobject', 'lineage'));
+INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('surface_geom_inx', 'surface_geometry', 'gmlid, gmlid_codespace'));
+INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('appearance_inx', 'appearance', 'gmlid, gmlid_codespace'));
+INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('appearance_theme_inx', 'appearance', 'theme'));
+INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('surface_data_inx', 'surface_data', 'gmlid, gmlid_codespace'));
+INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('address_inx', 'address', 'gmlid, gmlid_codespace'));
 
 
 /*****************************************************************
@@ -267,7 +271,11 @@ BEGIN
 
     BEGIN
       IF idx.type = SPATIAL THEN
-        create_ddl := 'CREATE INDEX ' || idx.index_name || ' ON ' || schema_name || '.' || idx.table_name || ' USING GIST (' || idx.attribute_name || ' gist_geometry_ops_nd)';
+        IF idx.is_3d = 1 THEN
+          create_ddl := 'CREATE INDEX ' || idx.index_name || ' ON ' || schema_name || '.' || idx.table_name || ' USING GIST (' || idx.attribute_name || ' gist_geometry_ops_nd)';
+        ELSE
+          create_ddl := 'CREATE INDEX ' || idx.index_name || ' ON ' || schema_name || '.' || idx.table_name || ' USING GIST (' || idx.attribute_name || ' gist_geometry_ops_2d)';
+        END IF;
       ELSE
         create_ddl := 'CREATE INDEX ' || idx.index_name || ' ON ' || schema_name || '.' || idx.table_name || '(' || idx.attribute_name || ')';
       END IF;
