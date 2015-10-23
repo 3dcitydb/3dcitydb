@@ -272,19 +272,16 @@ BEGIN
     BEGIN
       IF idx.type = SPATIAL THEN
         IF idx.is_3d = 1 THEN
-          create_ddl := 'CREATE INDEX ' || idx.index_name || ' ON ' || schema_name || '.' || idx.table_name || ' USING GIST (' || idx.attribute_name || ' gist_geometry_ops_nd)';
+          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST ('|| idx.attribute_name || ' gist_geometry_ops_nd)',
+                            idx.index_name, schema_name, idx.table_name);
         ELSE
-          create_ddl := 'CREATE INDEX ' || idx.index_name || ' ON ' || schema_name || '.' || idx.table_name || ' USING GIST (' || idx.attribute_name || ' gist_geometry_ops_2d)';
+          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST ('|| idx.attribute_name || ' gist_geometry_ops_2d)',
+                            idx.index_name, schema_name, idx.table_name);
         END IF;
       ELSE
-        create_ddl := 'CREATE INDEX ' || idx.index_name || ' ON ' || schema_name || '.' || idx.table_name || '(' || idx.attribute_name || ')';
+        EXECUTE format('CREATE INDEX %I ON %I.%I USING BTREE ('|| idx.attribute_name || ' )',
+                          idx.index_name, schema_name, idx.table_name);
       END IF;
-
-      --IF params <> '' THEN
-      --  create_ddl := create_ddl || ' ' || params;
-      --END IF;
-
-      EXECUTE create_ddl;
 
       EXCEPTION
         WHEN OTHERS THEN
