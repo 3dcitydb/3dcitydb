@@ -16,6 +16,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 1.1.0     2015-10-23   added set_envelope procedures               FKun
 -- 1.0.0     2015-07-21   release version 3DCityDB v3.1               FKun
 --
 
@@ -24,6 +25,8 @@ AS
   FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY;
   FUNCTION get_envelope_cityobject(co_id NUMBER, objclass_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
   FUNCTION get_envelope_implicit_geometry(implicit_rep_id NUMBER, ref_pt SDO_GEOMETRY, transform4x4 VARCHAR2, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  PROCEDURE set_envelope_cityobject(co_id NUMBER, schema_name VARCHAR2 := USER);
+  PROCEDURE set_envelope_cityobjects(objclass_id NUMBER, only_if_null NUMBER := 1, schema_name VARCHAR2 := USER);
 END citydb_envelope;
 /
 
@@ -1953,6 +1956,59 @@ AS
     EXCEPTION
       WHEN OTHERS THEN
         dbms_output.put_line('An error occurred when executing function "get_envelope_cityobject": ' || SQLERRM);
+  END;
+
+
+  /*****************************************************************
+  * set_envelope_cityobject
+  *
+  * updates the envelope of a given city object
+  *
+  * @param        @description
+  * co_id         identifier for city object
+  * schema_name   name of schema
+  ******************************************************************/
+  PROCEDURE set_envelope_cityobject(co_id NUMBER, schema_name VARCHAR2 := USER)
+  IS
+  BEGIN
+    EXECUTE IMMEDIATE
+      'UPDATE ' || schema_name || '.cityobject SET envelope = citydb_envelope.get_envelope_cityobject(id, objectclass_id, :1)
+         WHERE id = :2' USING schema_name, co_id;
+
+    EXCEPTION
+      WHEN OTHERS THEN
+        dbms_output.put_line('An error occurred when executing function "citydb_envelope.set_envelope_cityobject": ' || SQLERRM);
+  END;
+
+
+  /*****************************************************************
+  * set_envelope_cityobjects
+  *
+  * updates envelopes for all city objects of a given objectclass
+  *
+  * @param        @description
+  * objclass_id   objectclass id
+  * only_if_null  if 1 (default) only empty rows of envelope column are updated
+  * schema_name   name of schema
+  ******************************************************************/
+  PROCEDURE set_envelope_cityobjects(
+    objclass_id NUMBER,
+    only_if_null NUMBER := 1,
+    schema_name VARCHAR2 := USER)
+  IS
+    filter VARCHAR2(30) := '';
+  BEGIN
+    IF only_if_null <> 0 THEN
+      filter := ' AND envelope IS NULL';
+    END IF;
+
+    EXECUTE IMMEDIATE
+      'UPDATE ' || schema_name || '.cityobject SET envelope = citydb_envelope.get_envelope_cityobject(id, objectclass_id, :1)
+         WHERE objectclass_id = :2' || filter USING schema_name, objclass_id;
+
+    EXCEPTION
+      WHEN OTHERS THEN
+        dbms_output.put_line('An error occurred when executing function "citydb_envelope.set_envelope_cityobjects": ' || SQLERRM);
   END;
 
 END citydb_envelope;

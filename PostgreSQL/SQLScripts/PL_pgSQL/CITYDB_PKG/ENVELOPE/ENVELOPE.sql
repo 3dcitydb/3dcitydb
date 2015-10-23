@@ -16,6 +16,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 1.1.0     2015-10-23   added set_envelope procedures               FKun
 -- 1.0.0     2015-07-21   release version 3DCityDB v3.1               FKun
 --
 
@@ -35,7 +36,7 @@
 *   get_envelope_building_furn(co_id NUMBER, schema_name VARCHAR2 := USER) RETURNS GEOMETRY;
 *   get_envelope_building_inst(co_id NUMBER, schema_name VARCHAR2 := USER) RETURNS GEOMETRY;
 *   get_envelope_city_furniture(co_id NUMBER, schema_name VARCHAR2 := USER) RETURNS GEOMETRY;
-*   get_envelope_cityobject(co_id INTEGER, schema_name VARCHAR DEFAULT 'citydb') RETURNS GEOMETRY;
+*   get_envelope_cityobject(co_id INTEGER, objclass_id INTEGER, schema_name VARCHAR DEFAULT 'citydb') RETURNS GEOMETRY;
 *   get_envelope_cityobjectgroup(co_id INTEGER, schema_name VARCHAR DEFAULT 'citydb') RETURNS GEOMETRY;
 *   get_envelope_land_use(co_id NUMBER, schema_name VARCHAR2 := USER) RETURNS GEOMETRY;
 *   get_envelope_generic_cityobj(co_id NUMBER, schema_name VARCHAR2 := USER) RETURNS GEOMETRY;
@@ -56,6 +57,8 @@
 *   get_envelope_tunnel_hspace(co_id NUMBER, schema_name VARCHAR2 := USER) RETURNS GEOMETRY;
 *   get_envelope_waterbody(co_id NUMBER, schema_name VARCHAR2 := USER) RETURNS GEOMETRY;
 *   get_envelope_waterbnd_surface(co_id NUMBER, schema_name VARCHAR2 := USER) RETURNS GEOMETRY;
+*   set_envelope_cityobject(co_id INTEGER, schema_name VARCHAR DEFAULT 'citydb') RETURNS SETOF VOID;
+*   set_envelope_cityobjects(objclass_id INTEGER, only_if_null INTEGER DEFAULT 1, schema_name VARCHAR DEFAULT 'citydb') RETURNS SETOF VOID;
 ******************************************************************/
 
 /*****************************************************************
@@ -1855,6 +1858,68 @@ BEGIN
   EXCEPTION
     WHEN OTHERS THEN
       RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_cityobject": %', SQLERRM;
+END;
+$$
+LANGUAGE plpgsql;
+
+
+/*****************************************************************
+* set_envelope_cityobject
+*
+* updates the envelope of a given city object
+*
+* @param        @description
+* co_id         identifier for city object
+* schema_name   name of schema
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.set_envelope_cityobject(
+  co_id INTEGER, 
+  schema_name VARCHAR DEFAULT 'citydb'
+  ) RETURNS SETOF VOID AS
+$$
+BEGIN
+  EXECUTE format(
+    'UPDATE %I.cityobject SET envelope = citydb_pkg.get_envelope_cityobject(id, objectclass_id, %L)
+       WHERE id = %L', schema_name, schema_name, co_id);
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.set_envelope_cityobject": %', SQLERRM;
+END;
+$$
+LANGUAGE plpgsql;
+
+
+/*****************************************************************
+* set_envelope_cityobjects
+*
+* updates envelopes for all city objects of a given objectclass
+*
+* @param        @description
+* objclass_id   objectclass id
+* only_if_null  if 1 (default) only empty rows of envelope column are updated
+* schema_name   name of schema
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.set_envelope_cityobjects(
+  objclass_id INTEGER,
+  only_if_null INTEGER DEFAULT 1,
+  schema_name VARCHAR DEFAULT 'citydb'
+  ) RETURNS SETOF VOID AS
+$$
+DECLARE
+  filter TEXT := '';
+BEGIN
+  IF only_if_null <> 0 THEN
+    filter := ' AND envelope IS NULL';
+  END IF;
+
+  EXECUTE format(
+    'UPDATE %I.cityobject SET envelope = citydb_pkg.get_envelope_cityobject(id, objectclass_id, %L)
+       WHERE objectclass_id = %L' || filter, schema_name, schema_name, objclass_id);
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.set_envelope_cityobjects": %', SQLERRM;
 END;
 $$
 LANGUAGE plpgsql;
