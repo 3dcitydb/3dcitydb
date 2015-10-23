@@ -113,9 +113,6 @@ DECLARE
   params DOUBLE PRECISION[ ] := '{}';
   envelope GEOMETRY;
 BEGIN
-  -- extract parameters of transformation matrix
-  params := string_to_array(transform4x4, ' ')::float8[];
-
   -- calculate bounding box for implicit geometry
   EXECUTE format(
     'WITH collect_geom AS (
@@ -128,14 +125,25 @@ BEGIN
        ) SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
     schema_nama, implicit_rep_id, schema_nama, schema_nama, implicit_rep_id) INTO envelope;
 
-  IF envelope IS NOT NULL THEN
-    -- perform affine transformation against given transformation matrix
-    envelope := ST_Affine(envelope, 
-      params[1], params[2], params[3],
-      params[5], params[6], params[7],
-      params[9], params[10], params[11],
-      params[4], params[8], params[12]);
+  IF transform4x4 IS NOT NULL THEN
+    -- extract parameters of transformation matrix
+    params := string_to_array(transform4x4, ' ')::float8[];
 
+    IF array_length(params, 1) < 12 THEN
+      RAISE EXCEPTION 'Malformed transformation matrix: %', transform4x4 USING HINT = '16 values are required';
+    ELSE
+      IF envelope IS NOT NULL THEN
+        -- perform affine transformation against given transformation matrix
+        envelope := ST_Affine(envelope, 
+          params[1], params[2], params[3],
+          params[5], params[6], params[7],
+          params[9], params[10], params[11],
+          params[4], params[8], params[12]);
+      END IF;
+    END IF;
+  END IF;
+
+  IF envelope IS NOT NULL AND ref_pt IS NOT NULL THEN
     -- perform translation to reference point
     envelope := ST_Translate(envelope, ST_X(ref_pt), ST_Y(ref_pt), ST_Z(ref_pt));
   END IF;
