@@ -1,4 +1,4 @@
--- MIGRATE_DB_V2_V3.sql
+-- MIGRATE_DB_V2_V3_pre-pg93.sql
 --
 -- Authors:     Felix Kunde <fkunde@virtualcitysystems.de>
 --
@@ -19,8 +19,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 1.1.0     2015-11-02   update for v3.1                             FKun
--- 1.0.0     2014-12-28   release version                             FKun
+-- 1.0.0     2015-10-20   release version                             FKun
 --
 
 -- BUILDING module
@@ -1026,25 +1025,44 @@ CREATE TABLE citydb.cityobject (
 	lineage,
 	xml_source)
   AS SELECT
-	co.id,
-	co.class_id,
-	co.gmlid,
-	co.gmlid_codespace,
-	mco.co_name,
-	mco.co_name_codespace,
-	mco.co_description,
-	co.envelope,
-	co.creation_date::timestamp with time zone,
-	co.termination_date::timestamp with time zone,
+	id,
+	class_id,
+	gmlid,
+	gmlid_codespace,
+    NULL::varchar(1000),
+    NULL::varchar(4000),
+    NULL::varchar(4000),
+	envelope,
+	creation_date::timestamp with time zone,
+	termination_date::timestamp with time zone,
 	NULL::varchar(256),
 	NULL::varchar(256),
-	co.last_modification_date::timestamp with time zone,
-	co.updating_person,
-	co.reason_for_update,
-	co.lineage,
-	co.xml_source
-	FROM public.cityobject co, geodb_pkg.migrate_cityobject(co.id, co.class_id) mco
-	WHERE co.id = mco.co_id;
+	last_modification_date::timestamp with time zone,
+	updating_person,
+	reason_for_update,
+	lineage,
+	xml_source
+	FROM public.cityobject;
+
+-- migrate columns 'name','name_codespace' and 'description'
+SELECT geodb_pkg.update_cityobject(4); -- land_use
+SELECT geodb_pkg.update_cityobject(5); -- generic_cityobject
+SELECT geodb_pkg.update_cityobject(7); -- solitary_vegetat_object
+SELECT geodb_pkg.update_cityobject(8); -- plant_cover';
+SELECT geodb_pkg.update_cityobject(9); -- waterbody
+SELECT geodb_pkg.update_cityobject(11); -- waterboundary_surface 
+SELECT geodb_pkg.update_cityobject(14); -- relief_feature
+SELECT geodb_pkg.update_cityobject(16); -- relief_component 
+SELECT geodb_pkg.update_cityobject(21); -- city_furniture
+SELECT geodb_pkg.update_cityobject(23); -- cityobjectgroup
+SELECT geodb_pkg.update_cityobject(26); -- building
+SELECT geodb_pkg.update_cityobject(27); -- building_installation
+SELECT geodb_pkg.update_cityobject(30); -- thematic_surface
+SELECT geodb_pkg.update_cityobject(38); -- opening
+SELECT geodb_pkg.update_cityobject(40); -- building_furniture
+SELECT geodb_pkg.update_cityobject(41); -- room
+SELECT geodb_pkg.update_cityobject(43); -- transportation_complex
+SELECT geodb_pkg.update_cityobject(47); -- traffic_area
 
 DROP TABLE IF EXISTS citydb.cityobject_member CASCADE;
 CREATE TABLE citydb.cityobject_member AS

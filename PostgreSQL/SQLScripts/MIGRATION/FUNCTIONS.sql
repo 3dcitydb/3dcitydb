@@ -41,6 +41,28 @@ $$
 LANGUAGE plpgsql;
 
 
+CREATE OR REPLACE FUNCTION geodb_pkg.update_cityobject(objectclass_id INTEGER) RETURNS SETOF VOID AS
+$$
+BEGIN
+  EXECUTE format(
+    'UPDATE citydb.cityobject SET 
+       name = sub.c_name, 
+       name_codespace = sub.c_name_codespace, 
+       description = sub.c_description
+     FROM 
+       (SELECT id AS c_id, 
+          name AS c_name, 
+          name_codespace AS c_name_codespace, 
+          description AS c_description
+        FROM public.%I
+       ) sub
+     WHERE id = sub.c_id', 
+     citydb_pkg.objectclass_id_to_table_name(objectclass_id));
+END;
+$$
+LANGUAGE plpgsql;
+
+
 CREATE OR REPLACE FUNCTION geodb_pkg.migrate_tex_image(op VARCHAR) RETURNS SETOF VOID AS
 $$
 BEGIN

@@ -1,4 +1,4 @@
--- MIGRATE_DB.sql
+-- MIGRATE_DB_pre-pg93.sql
 --
 -- Authors:     Felix Kunde <fkunde@virtualcitysystems.de>
 --
@@ -13,14 +13,13 @@
 -------------------------------------------------------------------------------
 -- About:
 -- Top-level migration script that starts the migration process for a 3DCityDB 
--- instance of v2.1.0 to v3.1.0 for PostgreSQL databases >= 9.3
+-- instance of v2.1.0 to v3.1.0 for PostgreSQL databases < 9.3
 -------------------------------------------------------------------------------
 --
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 1.1.0     2015-11-02   update for v3.1                             FKun
--- 1.0.0     2014-12-28   release version                             FKun
+-- 1.0.0     2015-11-02   release version                             FKun
 --
 
 -- This script is called from MIGRATE_DB.bat
@@ -28,7 +27,10 @@
 \pset footer off
 SET client_min_messages TO WARNING;
 
-SELECT srid FROM database_srs \gset
+\echo 'Database SRID:'
+SELECT srid FROM database_srs;
+\prompt 'Please enter the EPSG code of the SRID used in the current database: ' srs_no
+\set srid :srs_no
 
 --// In the previous version binary data of textures could be stored multiple times
 --// when referred to different entries in the surface_data tables (bad for texture atlases).
@@ -66,7 +68,7 @@ CREATE SCHEMA citydb_pkg;
 --// migrate TABLES from old to new schema
 \echo
 \echo 'Migrating database schema of 3DCityDB instance from v2.x to v3.0 ...'
-\i MIGRATE_DB_V2_V3.sql
+\i MIGRATE_DB_V2_V3_pre-pg93.sql
 
 --// adding CONSTRAINTS in new schema
 \echo
