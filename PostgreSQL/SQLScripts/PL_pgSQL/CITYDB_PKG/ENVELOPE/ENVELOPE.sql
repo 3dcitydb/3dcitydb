@@ -1904,12 +1904,12 @@ LANGUAGE plpgsql;
 * updates envelopes for all city objects of a given objectclass
 *
 * @param        @description
-* objclass_id   objectclass id
+* objclass_id   if 0 functions runs against every city object
 * only_if_null  if 1 (default) only empty rows of envelope column are updated
 * schema_name   name of schema
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.set_envelope_cityobjects(
-  objclass_id INTEGER,
+  objclass_id INTEGER DEFAULT 0,
   only_if_null INTEGER DEFAULT 1,
   schema_name VARCHAR DEFAULT 'citydb'
   ) RETURNS SETOF VOID AS
@@ -1917,13 +1917,18 @@ $$
 DECLARE
   filter TEXT := '';
 BEGIN
+  IF objclass_id <> 0 THEN
+    filter := ' WHERE objectclass_id = ' || $1;
+  END IF;
+
   IF only_if_null <> 0 THEN
-    filter := ' AND envelope IS NULL';
+    filter := CASE WHEN filter = '' THEN ' WHERE ' ELSE filter || ' AND ' END;
+    filter := filter || 'envelope IS NULL';
   END IF;
 
   EXECUTE format(
-    'UPDATE %I.cityobject SET envelope = citydb_pkg.get_envelope_cityobject(id, objectclass_id, %L)
-       WHERE objectclass_id = %L' || filter, schema_name, schema_name, objclass_id);
+    'UPDATE %I.cityobject SET envelope = citydb_pkg.get_envelope_cityobject(id, objectclass_id, %L)' || filter,
+       schema_name, schema_name);
 
   EXCEPTION
     WHEN OTHERS THEN

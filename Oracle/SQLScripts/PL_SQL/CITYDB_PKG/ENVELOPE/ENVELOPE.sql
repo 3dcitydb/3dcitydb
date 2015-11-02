@@ -25,13 +25,16 @@ AS
   FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY;
   FUNCTION get_envelope_cityobject(co_id NUMBER, objclass_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
   FUNCTION get_envelope_implicit_geometry(implicit_rep_id NUMBER, ref_pt SDO_GEOMETRY, transform4x4 VARCHAR2, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  PROCEDURE set_envelope_cityobjectgroup(group_id NUMBER, schema_name VARCHAR2 := USER);
   PROCEDURE set_envelope_cityobject(co_id NUMBER, schema_name VARCHAR2 := USER);
-  PROCEDURE set_envelope_cityobjects(objclass_id NUMBER, only_if_null NUMBER := 1, schema_name VARCHAR2 := USER);
+  PROCEDURE set_envelope_cityobjects(objclass_id NUMBER := 0, only_if_null NUMBER := 1, schema_name VARCHAR2 := USER);
 END citydb_envelope;
 /
 
 CREATE OR REPLACE PACKAGE BODY citydb_envelope
 AS
+  TYPE ref_cursor IS REF CURSOR;
+
   -- private functions specification
   FUNCTION get_envelope_bridge(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
   FUNCTION get_envelope_bridge_const_elem(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
@@ -807,7 +810,7 @@ AS
       WHEN NO_DATA_FOUND THEN
         RETURN NULL;
       WHEN OTHERS THEN
-       dbms_output.put_line('An error occurred when executing function "get_envelope_cityobjectgroup": ' || SQLERRM);
+        dbms_output.put_line('An error occurred when executing function "get_envelope_cityobjectgroup": ' || SQLERRM);
   END;
 
 
@@ -1971,6 +1974,31 @@ AS
 
 
   /*****************************************************************
+  * set_envelope_cityobjectgroup
+  *
+  * updates the envelope of a given city object group
+  *
+  * @param        @description
+  * group_id      identifier for city object group
+  * schema_name   name of schema
+  ******************************************************************/
+  PROCEDURE set_envelope_cityobjectgroup(group_id NUMBER, schema_name VARCHAR2 := USER)
+  IS
+    group_envelope SDO_GEOMETRY;
+  BEGIN
+    group_envelope := citydb_envelope.get_envelope_cityobject(group_id, 23, schema_name);
+
+    EXECUTE IMMEDIATE
+      'UPDATE ' || schema_name || '.cityobject SET envelope = :1
+         WHERE id = :2' USING group_envelope, group_id;
+
+    EXCEPTION
+      WHEN OTHERS THEN
+        dbms_output.put_line('An error occurred when executing function "citydb_envelope.set_envelope_cityobjectgroup": ' || SQLERRM);
+  END;
+
+
+  /*****************************************************************
   * set_envelope_cityobject
   *
   * updates the envelope of a given city object
@@ -1988,7 +2016,12 @@ AS
 
     EXCEPTION
       WHEN OTHERS THEN
-        dbms_output.put_line('An error occurred when executing function "citydb_envelope.set_envelope_cityobject": ' || SQLERRM);
+        -- for a city object group ORA-04091 (mutated table) and ORA-06503 would occur
+        IF SQLCODE = -6503 THEN
+          dbms_output.put_line('If given city object is a group, please use citydb_envelope.set_envelope_cityobjectgroup instead.');
+        ELSE
+          dbms_output.put_line('An error occurred when executing function "citydb_envelope.set_envelope_cityobject": ' || SQLERRM);
+        END IF;
   END;
 
 
@@ -1998,24 +2031,50 @@ AS
   * updates envelopes for all city objects of a given objectclass
   *
   * @param        @description
-  * objclass_id   objectclass id
+  * objclass_id   if 0 functions runs against every city object
   * only_if_null  if 1 (default) only empty rows of envelope column are updated
   * schema_name   name of schema
   ******************************************************************/
   PROCEDURE set_envelope_cityobjects(
-    objclass_id NUMBER,
+    objclass_id NUMBER := 0,
     only_if_null NUMBER := 1,
     schema_name VARCHAR2 := USER)
   IS
-    filter VARCHAR2(30) := '';
+    filter VARCHAR2(50) := '';
+    group_cur ref_cursor;
+    group_id NUMBER;
   BEGIN
-    IF only_if_null <> 0 THEN
-      filter := ' AND envelope IS NULL';
+    IF objclass_id <> 23 THEN
+      filter := ' WHERE objectclass_id != 23';
+
+      IF objclass_id <> 0 THEN
+        filter := filter || ' AND objectclass_id = ' || to_char(objclass_id);
+      END IF;
+    ELSE
+      filter := ' WHERE objectclass_id = 23';
     END IF;
 
-    EXECUTE IMMEDIATE
-      'UPDATE ' || schema_name || '.cityobject SET envelope = citydb_envelope.get_envelope_cityobject(id, objectclass_id, :1)
-         WHERE objectclass_id = :2' || filter USING schema_name, objclass_id;
+    IF only_if_null <> 0 THEN
+      filter := filter || ' AND envelope IS NULL';
+    END IF;
+
+    -- updating envelopes of city objects except groups
+    IF objclass_id <> 23 THEN
+      EXECUTE IMMEDIATE
+        'UPDATE ' || schema_name || '.cityobject SET envelope = citydb_envelope.get_envelope_cityobject(id, objectclass_id, :1)' || filter 
+           USING schema_name;
+    END IF;
+
+    -- updating envelopes of city object groups
+    IF objclass_id = 0 OR objclass_id = 23 THEN
+      OPEN group_cur FOR 'SELECT id FROM ' || schema_name || '.cityobject ' || filter;
+      LOOP
+        FETCH group_cur INTO group_id;
+        EXIT WHEN group_cur%notfound;
+	    citydb_envelope.set_envelope_cityobjectgroup(group_id, schema_name);
+      END LOOP;
+      CLOSE group_cur;
+    END IF;
 
     EXCEPTION
       WHEN OTHERS THEN
