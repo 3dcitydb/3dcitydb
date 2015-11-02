@@ -2044,14 +2044,10 @@ AS
     group_cur ref_cursor;
     group_id NUMBER;
   BEGIN
-    IF objclass_id <> 23 THEN
-      filter := ' WHERE objectclass_id != 23';
-
-      IF objclass_id <> 0 THEN
-        filter := filter || ' AND objectclass_id = ' || to_char(objclass_id);
-      END IF;
+    IF objclass_id <> 0 THEN
+      filter := ' WHERE objectclass_id = ' || to_char(objclass_id);
     ELSE
-      filter := ' WHERE objectclass_id = 23';
+      filter := ' WHERE objectclass_id != 23';      
     END IF;
 
     IF only_if_null <> 0 THEN
@@ -2067,11 +2063,11 @@ AS
 
     -- updating envelopes of city object groups
     IF objclass_id = 0 OR objclass_id = 23 THEN
-      OPEN group_cur FOR 'SELECT id FROM ' || schema_name || '.cityobject ' || filter;
+      OPEN group_cur FOR 'SELECT id FROM ' || schema_name || '.cityobject ' || replace(filter, '!=','=');
       LOOP
         FETCH group_cur INTO group_id;
         EXIT WHEN group_cur%notfound;
-	    citydb_envelope.set_envelope_cityobjectgroup(group_id, schema_name);
+        citydb_envelope.set_envelope_cityobjectgroup(group_id, schema_name);
       END LOOP;
       CLOSE group_cur;
     END IF;
