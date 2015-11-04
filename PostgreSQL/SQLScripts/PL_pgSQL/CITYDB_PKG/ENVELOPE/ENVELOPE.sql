@@ -16,7 +16,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 1.1.0     2015-10-23   added set_envelope procedures               FKun
+-- 1.1.0     2015-11-04   added set_envelope procedures               FKun
 -- 1.0.0     2015-07-21   release version 3DCityDB v3.1               FKun
 --
 
@@ -1872,6 +1872,62 @@ LANGUAGE plpgsql;
 
 
 /*****************************************************************
+* set_envelope_cityobjectgroup
+*
+* updates the envelope of a given city object group
+*
+* @param                 @description
+* group_id               identifier for city object group
+* only_if_null           if 1 (default) only empty rows of envelope column are updated
+* set_contained_groups   if 1 (default) contained groups are handled as well
+* schema_name            name of schema
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.set_envelope_cityobjectgroup(
+  group_id INTEGER,
+  only_if_null INTEGER DEFAULT 1,
+  set_contained_groups INTEGER DEFAULT 1,
+  schema_name VARCHAR DEFAULT 'citydb'
+  ) RETURNS SETOF VOID AS
+$$
+DECLARE
+  filter TEXT := '';
+BEGIN
+  IF only_if_null <> 0 THEN
+    filter := ' AND co.envelope IS NULL';
+  END IF;
+
+  -- first: set envelope for every group member that is a group
+  IF set_contained_groups <> 0 THEN
+    EXECUTE format(
+      'SELECT citydb_pkg.set_envelope_cityobjectgroup(co.id, %L, %L) 
+         FROM %I.cityobject co, %I.group_to_cityobject g2c 
+           WHERE co.id = g2c.cityobject_id
+             AND co.objectclass_id = 23
+             AND g2c.cityobjectgroup_id = %L ' || filter,
+             only_if_null, schema_name, schema_name, schema_name, group_id);
+  END IF;
+
+  -- second: set envelope for every group member that is no group
+  EXECUTE format(
+    'UPDATE %I.cityobject co SET envelope = citydb_pkg.get_envelope_cityobject(co.id, co.objectclass_id, %L)
+       FROM %I.group_to_cityobject g2c 
+         WHERE co.id = g2c.cityobject_id
+           AND co.objectclass_id != 23
+           AND g2c.cityobjectgroup_id = %L' || filter,
+           schema_name, schema_name, schema_name, group_id);
+
+  -- third: set envelope of group itself
+  PERFORM citydb_pkg.set_envelope_cityobject(group_id, schema_name);
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.set_envelope_cityobjectgroup": %', SQLERRM;
+END;
+$$
+LANGUAGE plpgsql;
+
+
+/*****************************************************************
 * set_envelope_cityobject
 *
 * updates the envelope of a given city object
@@ -1926,9 +1982,16 @@ BEGIN
     filter := filter || 'envelope IS NULL';
   END IF;
 
-  EXECUTE format(
-    'UPDATE %I.cityobject SET envelope = citydb_pkg.get_envelope_cityobject(id, objectclass_id, %L)' || filter,
-       schema_name, schema_name);
+  IF objclass_id <> 23 THEN
+    EXECUTE format(
+      'UPDATE %I.cityobject SET envelope = citydb_pkg.get_envelope_cityobject(id, objectclass_id, %L)' || filter,
+         schema_name, schema_name);
+  ELSE
+    -- updating envelopes of city object groups
+    EXECUTE format(
+      'SELECT citydb_pkg.set_envelope_cityobjectgroup(id, %L, 0, %L) FROM %I.cityobject' || filter,
+         only_if_null, schema_name, schema_name);
+  END IF;
 
   EXCEPTION
     WHEN OTHERS THEN

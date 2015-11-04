@@ -16,7 +16,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
--- 1.1.0     2015-10-23   added set_envelope procedures               FKun
+-- 1.1.0     2015-11-04   added set_envelope procedures               FKun
 -- 1.0.0     2015-07-21   release version 3DCityDB v3.1               FKun
 --
 
@@ -25,9 +25,9 @@ AS
   FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY;
   FUNCTION get_envelope_cityobject(co_id NUMBER, objclass_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
   FUNCTION get_envelope_implicit_geometry(implicit_rep_id NUMBER, ref_pt SDO_GEOMETRY, transform4x4 VARCHAR2, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  PROCEDURE set_envelope_cityobjectgroup(group_id NUMBER, schema_name VARCHAR2 := USER);
+  PROCEDURE set_envelope_cityobjectgroup(group_id NUMBER, only_if_null int := 1, set_contained_groups int := 1, set_contained_members int := 1, schema_name VARCHAR2 := USER);
   PROCEDURE set_envelope_cityobject(co_id NUMBER, schema_name VARCHAR2 := USER);
-  PROCEDURE set_envelope_cityobjects(objclass_id NUMBER := 0, only_if_null NUMBER := 1, schema_name VARCHAR2 := USER);
+  PROCEDURE set_envelope_cityobjects(objclass_id NUMBER := 0, only_if_null int := 1, schema_name VARCHAR2 := USER);
 END citydb_envelope;
 /
 
@@ -1978,16 +1978,57 @@ AS
   *
   * updates the envelope of a given city object group
   *
-  * @param        @description
-  * group_id      identifier for city object group
-  * schema_name   name of schema
+  * @param                 @description
+  * group_id               identifier for city object group
+  * only_if_null           if 1 (default) only empty rows of envelope column are updated
+  * set_contained_groups   if 1 (default) contained groups are handled as well
+  * set_contained_members  if 1 (default) contained members are handled as well,
+  * schema_name            name of schema
   ******************************************************************/
-  PROCEDURE set_envelope_cityobjectgroup(group_id NUMBER, schema_name VARCHAR2 := USER)
+  PROCEDURE set_envelope_cityobjectgroup(
+    group_id NUMBER,
+    only_if_null int := 1,
+    set_contained_groups int := 1,
+    set_contained_members int := 1,
+    schema_name VARCHAR2 := USER)
   IS
+    filter VARCHAR2(50) := '';
+    nested_group_cur ref_cursor;
+    nested_group_id NUMBER;
     group_envelope SDO_GEOMETRY;
   BEGIN
+    IF only_if_null <> 0 THEN
+      filter := ' AND co.envelope IS NULL';
+    END IF;
+
+    -- first: set envelope for every group member that is a group
+    IF set_contained_groups <> 0 THEN
+      OPEN nested_group_cur FOR 
+        'SELECT co.id FROM ' || schema_name || '.cityobject co, ' || schema_name || '.group_to_cityobject g2c 
+           WHERE co.id = g2c.cityobject_id AND co.objectclass_id = 23 AND g2c.cityobjectgroup_id = :1' USING group_id;
+      LOOP
+        FETCH nested_group_cur INTO nested_group_id;
+        EXIT WHEN nested_group_cur%notfound;
+        citydb_envelope.set_envelope_cityobjectgroup(nested_group_id, only_if_null, set_contained_groups, schema_name);
+      END LOOP;
+      CLOSE nested_group_cur;
+    END IF;
+
+    -- second: set envelope for every group member that is not a group
+    IF set_contained_members <> 0 THEN
+      EXECUTE IMMEDIATE
+        'UPDATE (
+           SELECT co.envelope, citydb_envelope.get_envelope_cityobject(co.id, co.objectclass_id, :1) AS geom
+             FROM ' || schema_name || '.cityobject co, ' || schema_name || '.group_to_cityobject g2c 
+             WHERE co.id = g2c.cityobject_id AND co.objectclass_id != 23 AND g2c.cityobjectgroup_id = :2' || filter || 
+        ') e
+        SET e.envelope = e.geom' USING schema_name, group_id;
+    END IF;
+
+    -- third: get envelope geometry for city object group
     group_envelope := citydb_envelope.get_envelope_cityobject(group_id, 23, schema_name);
 
+    -- fourth: set envelope of group itself
     EXECUTE IMMEDIATE
       'UPDATE ' || schema_name || '.cityobject SET envelope = :1
          WHERE id = :2' USING group_envelope, group_id;
@@ -2037,7 +2078,7 @@ AS
   ******************************************************************/
   PROCEDURE set_envelope_cityobjects(
     objclass_id NUMBER := 0,
-    only_if_null NUMBER := 1,
+    only_if_null int := 1,
     schema_name VARCHAR2 := USER)
   IS
     filter VARCHAR2(50) := '';
@@ -2047,7 +2088,7 @@ AS
     IF objclass_id <> 0 THEN
       filter := ' WHERE objectclass_id = ' || to_char(objclass_id);
     ELSE
-      filter := ' WHERE objectclass_id != 23';      
+      filter := ' WHERE objectclass_id != 23';
     END IF;
 
     IF only_if_null <> 0 THEN
@@ -2067,7 +2108,9 @@ AS
       LOOP
         FETCH group_cur INTO group_id;
         EXIT WHEN group_cur%notfound;
-        citydb_envelope.set_envelope_cityobjectgroup(group_id, schema_name);
+        -- no need to update nested groups (third parameter) as all groups are processed here
+        -- if objclass_id is 0 members will not be processed (fourth parameter) as they have already been updated
+        citydb_envelope.set_envelope_cityobjectgroup(group_id, only_if_null, 0, objclass_id, schema_name);
       END LOOP;
       CLOSE group_cur;
     END IF;
