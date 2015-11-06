@@ -1,16 +1,17 @@
-ï»¿-- ENVELOPE.sql
+-- ENVELOPE.sql
 --
 -- Authors:     Felix Kunde <fkunde@virtualcitysystems.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
 --
 -- Copyright:   (c) 2012-2015  Chair of Geoinformatics,
---                             Technische Universitaet Muenchen, Germany
+--                             Technische Universität München, Germany
 --                             http://www.gis.bv.tum.de
 --
 -------------------------------------------------------------------------------
 -- About:
--- This script provides functions to get an object's envelope (a diagonal cutting plane
--- inside a 3D bounding box).
+-- This script provides functions to calculate an object's envelope 
+-- (a diagonal cutting plane inside a 3D bounding box) and to store
+-- the result in the ENVELOPE column of CITYOBJECT
 --
 -------------------------------------------------------------------------------
 --
@@ -38,7 +39,7 @@
 *   get_envelope_building_furn(co_id NUMBER, set_envelope INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'citydb') RETURNS GEOMETRY;
 *   get_envelope_building_inst(co_id NUMBER, set_envelope INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'citydb') RETURNS GEOMETRY;
 *   get_envelope_city_furniture(co_id NUMBER, set_envelope INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'citydb') RETURNS GEOMETRY;
-*   get_envelope_cityobjectgroup(co_id INTEGER, set_envelope INTEGER DEFAULT 0, get_member_envelopes INTEGER DEFAULT 1, schema_name VARCHAR DEFAULT 'citydb') RETURNS GEOMETRY;
+*   get_envelope_cityobjectgroup(co_id INTEGER, set_envelope INTEGER DEFAULT 0, calc_member_envelopes INTEGER DEFAULT 1, schema_name VARCHAR DEFAULT 'citydb') RETURNS GEOMETRY;
 *   get_envelope_land_use(co_id NUMBER, set_envelope INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'citydb') RETURNS GEOMETRY;
 *   get_envelope_generic_cityobj(co_id NUMBER, set_envelope INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'citydb') RETURNS GEOMETRY;
 *   get_envelope_opening(co_id NUMBER, set_envelope INTEGER DEFAULT 0, schema_name VARCHAR DEFAULT 'citydb') RETURNS GEOMETRY;
@@ -711,6 +712,9 @@ LANGUAGE plpgsql;
 * @param        @description
 * co_id         identifier for city object group
 * set_envelope  if 1 (default = 0) the envelope column is updated
+* calc_member_envelopes if 1 (default) the envelope of group 
+*               members is calculated otherwise it is taken from
+*               the ENVELOPE column
 * schema_name   name of schema
 *
 * @return
@@ -719,7 +723,7 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_cityobjectgroup(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0,
-  get_member_envelopes INTEGER DEFAULT 1,
+  calc_member_envelopes INTEGER DEFAULT 1,
   schema_name VARCHAR DEFAULT 'citydb'
   ) RETURNS GEOMETRY AS
 $$
@@ -727,7 +731,7 @@ DECLARE
   query TEXT;
   envelope GEOMETRY;
 BEGIN
-  IF get_member_envelopes <> 0 THEN
+  IF calc_member_envelopes <> 0 THEN
     EXECUTE format(
       'WITH collect_geom AS (
          -- cityobjectgroup geometry
