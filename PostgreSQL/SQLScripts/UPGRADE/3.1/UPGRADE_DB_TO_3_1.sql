@@ -1,4 +1,4 @@
--- UPDATE_DB_TO_3_1.sql
+-- UPGRADE_DB_TO_3_1.sql
 --
 -- Authors:     Felix Kunde <fkunde@virtualcitysystems.de>
 --
@@ -47,7 +47,7 @@ ALTER TABLE citydb.surface_geometry
   ADD COLUMN gmlid_codespace VARCHAR(1000);
 
 ALTER TABLE citydb.address
-  ADD COLUMN gmlid VARCHAR(256);
+  ADD COLUMN gmlid VARCHAR(256),
   ADD COLUMN gmlid_codespace VARCHAR(1000);
 
 --// fill gmlid column in address table
