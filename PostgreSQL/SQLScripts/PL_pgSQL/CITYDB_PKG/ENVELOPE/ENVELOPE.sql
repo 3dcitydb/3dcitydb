@@ -4,7 +4,7 @@
 --              Claus Nagel <cnagel@virtualcitysystems.de>
 --
 -- Copyright:   (c) 2012-2015  Chair of Geoinformatics,
---                             Technische Universität München, Germany
+--                             Technische Universitaet Muenchen, Germany
 --                             http://www.gis.bv.tum.de
 --
 -------------------------------------------------------------------------------
@@ -2203,7 +2203,7 @@ LANGUAGE plpgsql;
 /*****************************************************************
 * get_envelope_cityobjects
 *
-* updates envelopes for all city objects of a given objectclass
+* creates envelopes for all city objects of a given objectclass
 *
 * @param        @description
 * objclass_id   if 0 functions runs against every city object
@@ -2245,20 +2245,45 @@ BEGIN
     groupFilter := groupFilter || 'objectclass_id = 23';
 
     filter := CASE WHEN filter = '' THEN ' WHERE ' ELSE filter || ' AND ' END;
-    filter := filter || 'objectclass_id <> 23';
+    filter := filter || 'objectclass_id IN (4, 5, 7, 8, 9, 14, 21, 25, 26, 42, 43, 44, 45, 46, 63, 64, 84, 85)';
 
+    -- first: work on top-level features not being groups
     EXECUTE format(
       'WITH collect_geom AS (
-         -- cityobject geometry
+         -- top-level feature geometry
            SELECT citydb_pkg.get_envelope_cityobject(id, objectclass_id, %L, %L) AS geom
-             FROM %I.cityobject' || filter || '
-         -- cityobject group
-         UNION ALL
-           SELECT citydb_pkg.get_envelope_cityobjectgroup(id, %L, 0, %L) AS geom
-             FROM %I.cityobject' || groupFilter || '
+             FROM %I.cityobject' || filter || '        
       )
       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-      set_envelope, schema_name, schema_name, set_envelope, schema_name, schema_name)
+      set_envelope, schema_name, schema_name)
+      into envelope;
+
+     -- second: work on city object groups
+    EXECUTE format(
+      'WITH collect_geom AS (
+         -- cityobject group
+           SELECT citydb_pkg.get_envelope_cityobjectgroup(id, %L, 0, %L) AS geom
+             FROM %I.cityobject' || groupFilter || '
+         -- current envelope
+         UNION ALL
+           SELECT %L AS geom
+      )
+      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
+      set_envelope, schema_name, schema_name, envelope)
+      INTO envelope;
+
+     -- third: work on remaining nested features not being groups
+     EXECUTE format(
+      'WITH collect_geom AS (
+         -- nested feature geometry
+           SELECT citydb_pkg.get_envelope_cityobject(id, objectclass_id, %L, %L) AS geom
+             FROM %I.cityobject WHERE envelope is NULL and objectclass_id <> 23
+         -- current envelope
+         UNION ALL
+           SELECT %L AS geom
+      )
+      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
+      set_envelope, schema_name, schema_name, envelope)
       INTO envelope;
   END IF;
 
