@@ -209,7 +209,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -291,7 +291,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -366,7 +366,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -408,7 +408,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -449,9 +449,9 @@ BEGIN
          SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
        UNION ALL
        -- water boundary surface geometry
-         SELECT citydb_pkg.get_envelope_waterbnd_surface(ws.id, %L, %L) AS geom
-           FROM %I.waterboundary_surface ws, %I.waterbod_to_waterbnd_srf wtw
-             WHERE ws.id = wtw.waterboundary_surface_id AND wtw.waterbody_id = %L
+         SELECT citydb_pkg.get_envelope_waterbnd_surface(wbs.id, %L, %L) AS geom
+           FROM %I.waterboundary_surface wbs, %I.waterbod_to_waterbnd_srf wb2wbs
+             WHERE wbs.id = wb2wbs.waterboundary_surface_id AND wb2wbs.waterbody_id = %L
       )
       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
     schema_name, co_id, set_envelope, schema_name, schema_name, schema_name, co_id)
@@ -459,7 +459,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -501,7 +501,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -548,7 +548,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -615,8 +615,13 @@ BEGIN
   END CASE;
 
   IF set_envelope <> 0 THEN
+    -- update envelope column of cityobject table
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+
+    -- update extent column of relief_component table
+    EXECUTE format(
+      'UPDATE %I.relief_component SET extent = ST_Force_2D(%L) WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -691,7 +696,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -727,7 +732,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_cityobjectgroup(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  query TEXT;
   envelope GEOMETRY;
 BEGIN
   IF calc_member_envelopes <> 0 THEN
@@ -766,7 +770,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
 
     -- group parent 
     EXECUTE format(
@@ -832,13 +836,13 @@ BEGIN
     
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
       
     -- interior rooms
     EXECUTE format(
       'SELECT citydb_pkg.get_envelope_room(id, %L, %L)
          FROM %I.room WHERE building_id = %L',
-      set_envelope, schema_name, schema_name,co_id); 
+      set_envelope, schema_name, schema_name, co_id); 
 
     -- interior thematic surfaces
     EXECUTE format(
@@ -924,7 +928,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -975,7 +979,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -1029,7 +1033,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -1083,7 +1087,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -1142,7 +1146,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -1195,7 +1199,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -1237,7 +1241,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -1300,7 +1304,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
 
     -- interior bridge rooms
     EXECUTE format(
@@ -1391,7 +1395,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -1442,7 +1446,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -1496,7 +1500,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -1550,7 +1554,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -1609,7 +1613,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -1689,7 +1693,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -1748,7 +1752,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
 
     -- interior hollow spaces
     EXECUTE format(
@@ -1839,7 +1843,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -1890,7 +1894,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -1944,7 +1948,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -1998,7 +2002,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -2057,7 +2061,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
   
   RETURN envelope;
@@ -2183,7 +2187,7 @@ BEGIN
 
   IF set_envelope <> 0 THEN
     EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
+      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
