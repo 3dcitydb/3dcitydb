@@ -11,16 +11,16 @@
 -- About:
 -- This script provides functions to calculate an object's envelope 
 -- (a diagonal cutting plane inside a 3D bounding box) and to store
--- the result in the ENVELOPE column of CITYOBJECT
+-- the result in the ENVELOPE column of CITYOBJECT.
 --
 -------------------------------------------------------------------------------
 --
 -- ChangeLog:
 --
--- Version | Date       | Description                               | Author
--- 1.2.0     2015-11-06   minor rework of get_envelope procedures     CNag
--- 1.1.0     2015-11-04   added set_envelope procedures               FKun
--- 1.0.0     2015-07-21   release version 3DCityDB v3.1               FKun
+-- Version | Date       | Description                                 | Author
+-- 1.2.0     2015-11-06   added set_envelope parameter for functions    CNag
+-- 1.1.0     2015-11-04   added set_envelope procedures                 FKun
+-- 1.0.0     2015-07-21   release version 3DCityDB v3.1                 FKun
 --
 
 /*****************************************************************
@@ -87,7 +87,7 @@ DECLARE
 BEGIN
   -- get reference system of 3DCityDB instance
   EXECUTE format('SELECT srid FROM %I.database_srs', schema_name) INTO db_srid;
-    
+
   EXECUTE format('SELECT ST_SetSRID(ST_MakePolygon(ST_MakeLine(
     ARRAY[
       ST_MakePoint(ST_XMin(%L), ST_YMin(%L), ST_ZMin(%L)),
@@ -211,7 +211,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -293,7 +293,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -368,7 +368,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -410,7 +410,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -461,7 +461,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -503,7 +503,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -550,7 +550,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -618,7 +618,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -693,7 +693,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -709,13 +709,12 @@ LANGUAGE plpgsql;
 *
 * returns the envelope of a given city object group
 *
-* @param        @description
-* co_id         identifier for city object group
-* set_envelope  if 1 (default = 0) the envelope column is updated
-* calc_member_envelopes if 1 (default) the envelope of group 
-*               members is calculated otherwise it is taken from
-*               the ENVELOPE column
-* schema_name   name of schema
+* @param                  @description
+* co_id                   identifier for city object group
+* set_envelope            if 1 (default = 0) the envelope column is updated
+* calc_member_envelopes   if 1 (default) the envelope of group members is calculated 
+*                         otherwise it is taken from the ENVELOPE column
+* schema_name             name of schema
 *
 * @return
 * aggregated envelope geometry of city object group
@@ -776,7 +775,7 @@ BEGIN
            WHERE co.id = g.parent_cityobject_id AND g.id = %L',
       set_envelope, schema_name, schema_name, schema_name, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1032,7 +1031,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1086,7 +1085,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1145,7 +1144,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1198,7 +1197,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1240,7 +1239,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1321,7 +1320,7 @@ BEGIN
          FROM %I.bridge_installation WHERE bridge_id = %L AND objectclass_id = 66',
       set_envelope, schema_name, schema_name, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1394,7 +1393,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1445,7 +1444,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1499,7 +1498,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1553,7 +1552,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1612,7 +1611,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1692,7 +1691,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1769,7 +1768,7 @@ BEGIN
          FROM %I.tunnel_installation WHERE tunnel_id = %L AND objectclass_id = 87',
       set_envelope, schema_name, schema_name, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1842,7 +1841,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1893,7 +1892,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -1947,7 +1946,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -2001,7 +2000,7 @@ BEGIN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L where id = %L', schema_name, envelope, co_id);
   END IF;
-  
+
   RETURN envelope;
 
   EXCEPTION
@@ -2227,7 +2226,7 @@ BEGIN
   IF objclass_id <> 0 THEN
     filter := CASE WHEN filter = '' THEN ' WHERE ' ELSE filter || ' AND ' END;
     filter := filter || 'objectclass_id = ' || $1;
-     
+
     EXECUTE format(
       'WITH collect_geom AS (
          -- cityobject geometry
@@ -2240,10 +2239,10 @@ BEGIN
   ELSE
     groupFilter := CASE WHEN filter = '' THEN ' WHERE ' ELSE filter || ' AND ' END;
     groupFilter := groupFilter || 'objectclass_id = 23';
-    
+
     filter := CASE WHEN filter = '' THEN ' WHERE ' ELSE filter || ' AND ' END;
     filter := filter || 'objectclass_id <> 23';
-  
+
     EXECUTE format(
       'WITH collect_geom AS (
          -- cityobject geometry
@@ -2257,7 +2256,6 @@ BEGIN
       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
       set_envelope, schema_name, schema_name, set_envelope, schema_name, schema_name)
       INTO envelope;
-    
   END IF;
 
   RETURN envelope;
