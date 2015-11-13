@@ -75,6 +75,7 @@ AS
   *
   * @param        @description
   * box           optimized box consisting only of two 3D point
+  * schema_name   name of schema
   *
   * @return
   * 3D envelope as diagonal cutting plane inside the given 3D bounding box
@@ -115,6 +116,21 @@ AS
   END;
 
 
+  /*****************************************************************
+  * update_bounds
+  *
+  * creates a new 3D envelope based on the two input geometries
+  *
+  * @param        @description
+  * old_box       an existing envelope
+  * new_box       a new envelope to merge with existing envelope
+  *               if bounds lie outside of first input parameter
+  * schema_name   name of schema
+  *
+  * @return
+  * 3D envelope as diagonal cutting plane inside the 3D bounding box formed by
+  * the two input envelopes consisting of 5 points (GTYPE:3003, ETYPE:1003)
+  ******************************************************************/
   FUNCTION update_bounds(
     old_box SDO_GEOMETRY,
     new_box SDO_GEOMETRY,
