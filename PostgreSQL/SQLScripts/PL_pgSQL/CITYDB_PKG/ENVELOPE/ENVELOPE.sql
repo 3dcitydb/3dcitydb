@@ -18,7 +18,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                                 | Author
--- 1.2.0     2015-11-06   added set_envelope parameter for functions    CNag
+-- 1.2.0     2015-11-11   added set_envelope parameter for functions    CNag
 -- 1.1.0     2015-11-04   added set_envelope procedures                 FKun
 -- 1.0.0     2015-07-21   release version 3DCityDB v3.1                 FKun
 --
@@ -85,20 +85,28 @@ DECLARE
   envelope GEOMETRY;
   db_srid INTEGER;
 BEGIN
-  -- get reference system of 3DCityDB instance
-  EXECUTE format('SELECT srid FROM %I.database_srs', schema_name) INTO db_srid;
+  IF box IS NULL THEN
+    RETURN NULL;
+  ELSE
+    -- get reference system of input geometry
+    IF ST_SRID(box) = 0 THEN
+      EXECUTE format('SELECT srid FROM %I.database_srs', schema_name) INTO db_srid;
+    ELSE
+      db_srid := ST_SRID(box);
+    END IF;
 
-  EXECUTE format('SELECT ST_SetSRID(ST_MakePolygon(ST_MakeLine(
-    ARRAY[
-      ST_MakePoint(ST_XMin(%L), ST_YMin(%L), ST_ZMin(%L)),
-      ST_MakePoint(ST_XMax(%L), ST_YMin(%L), ST_ZMin(%L)),
-      ST_MakePoint(ST_XMax(%L), ST_YMax(%L), ST_ZMax(%L)),
-      ST_MakePoint(ST_XMin(%L), ST_YMax(%L), ST_ZMax(%L)),
-      ST_MakePoint(ST_XMin(%L), ST_YMin(%L), ST_ZMin(%L))
-    ]
-  )), %L)',
-  box, box, box, box, box, box, box, box, box, box, box, box, box, box, box, db_srid)
-  INTO envelope;
+    EXECUTE format('SELECT ST_SetSRID(ST_MakePolygon(ST_MakeLine(
+      ARRAY[
+        ST_MakePoint(ST_XMin(%L), ST_YMin(%L), ST_ZMin(%L)),
+        ST_MakePoint(ST_XMax(%L), ST_YMin(%L), ST_ZMin(%L)),
+        ST_MakePoint(ST_XMax(%L), ST_YMax(%L), ST_ZMax(%L)),
+        ST_MakePoint(ST_XMin(%L), ST_YMax(%L), ST_ZMax(%L)),
+        ST_MakePoint(ST_XMin(%L), ST_YMin(%L), ST_ZMin(%L))
+      ]
+    )), %L)',
+    box, box, box, box, box, box, box, box, box, box, box, box, box, box, box, db_srid)
+    INTO envelope;
+  END IF;
 
   RETURN envelope;
 
@@ -475,15 +483,15 @@ LANGUAGE plpgsql;
 /*****************************************************************
 * get_envelope_waterbnd_surface
 *
-* returns the envelope of a given waterboundary surface
+* returns the envelope of a given water boundary surface
 *
 * @param        @description
-* co_id         identifier for waterboundary surface
+* co_id         identifier for water boundary surface
 * set_envelope  if 1 (default = 0) the envelope column is updated
 * schema_name   name of schema
 *
 * @return
-* aggregated envelope geometry of waterboundary surface
+* aggregated envelope geometry of water boundary surface
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_waterbnd_surface(
   co_id INTEGER, 
@@ -593,20 +601,24 @@ BEGIN
     class_id := objclass_id;
   END IF;
 
-  CASE 
+  CASE
+    -- get spatial extent of TIN relief
     WHEN class_id = 16 THEN 
       EXECUTE format('SELECT citydb_pkg.box2envelope(ST_3DExtent(sg.geometry)) AS envelope3d
                         FROM %I.surface_geometry sg, %I.tin_relief tin
                           WHERE tin.surface_geometry_id = sg.root_id AND tin.id = %L AND sg.geometry IS NOT NULL',
                           schema_name, schema_name, co_id) INTO envelope;
+    -- get spatial extent of masspoint relief
     WHEN class_id = 17 THEN
       EXECUTE format('SELECT citydb_pkg.box2envelope(ST_3DExtent(relief_points)) AS envelope3d
                         FROM %I.masspoint_relief WHERE id = %L',
                         schema_name, co_id) INTO envelope;
+    -- get spatial extent of breakline relief taking a union of ridge, valley and break lines
     WHEN class_id = 18 THEN
       EXECUTE format('SELECT citydb_pkg.box2envelope(ST_3DExtent(ST_Collect(ridge_or_valley_lines, break_lines))) AS envelope3d
                         FROM %I.breakline_relief WHERE id = %L',
                         schema_name, co_id) INTO envelope;
+    -- get spatial extent of raster relief
     WHEN class_id = 19 THEN
       EXECUTE format('SELECT citydb_pkg.box2envelope(Box3D(rasterproperty)) AS envelope3d
                         FROM %I.grid_coverage grid, %I.raster_relief rast 
@@ -615,13 +627,8 @@ BEGIN
   END CASE;
 
   IF set_envelope <> 0 THEN
-    -- update envelope column of cityobject table
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
-
-    -- update extent column of relief_component table
-    EXECUTE format(
-      'UPDATE %I.relief_component SET extent = ST_Force_2D(%L) WHERE id = %L', schema_name, envelope, co_id);
   END IF;
 
   RETURN envelope;
@@ -741,10 +748,10 @@ BEGIN
            SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
          UNION ALL
          -- other geometry
-           SELECT other_geom AS geom FROM %I.cityobjectgroup WHERE id = %L AND other_geom IS NOT NULL  
-         UNION ALL   
+           SELECT other_geom AS geom FROM %I.cityobjectgroup WHERE id = %L AND other_geom IS NOT NULL
+         UNION ALL
          -- group member geometry
-           SELECT citydb_pkg.get_envelope_cityobject(co.id, co.objectclass_id, %L, %L) AS geom 
+           SELECT citydb_pkg.get_envelope_cityobject(co.id, co.objectclass_id, %L, %L) AS geom
              FROM %I.cityobject co, %I.group_to_cityobject g2co 
                WHERE co.id = g2co.cityobject_id AND g2co.cityobjectgroup_id = %L
       )
@@ -757,10 +764,10 @@ BEGIN
            SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
          UNION ALL
          -- other geometry
-           SELECT other_geom AS geom FROM %I.cityobjectgroup WHERE id = %L AND other_geom IS NOT NULL  
-         UNION ALL   
+           SELECT other_geom AS geom FROM %I.cityobjectgroup WHERE id = %L AND other_geom IS NOT NULL
+         UNION ALL
          -- group member envelopes
-           SELECT co.envelope AS geom 
+           SELECT co.envelope AS geom
              FROM %I.cityobject co, %I.group_to_cityobject g2co 
                WHERE co.id = g2co.cityobject_id AND g2co.cityobjectgroup_id = %L
       )
@@ -822,32 +829,32 @@ BEGIN
            FROM %I.building WHERE building_root_id = %L AND building_parent_id IS NOT NULL
        UNION ALL
        -- building thematic surface geometry
-           SELECT citydb_pkg.get_envelope_thematic_surface(id, %L, %L) AS geom
-             FROM %I.thematic_surface WHERE building_id = %L AND objectclass_id in (33, 34, 35, 36, 60, 61)
+         SELECT citydb_pkg.get_envelope_thematic_surface(id, %L, %L) AS geom
+           FROM %I.thematic_surface WHERE building_id = %L AND objectclass_id IN (33, 34, 35, 36, 60, 61)
        UNION ALL
        -- building installation geometry
-           SELECT citydb_pkg.get_envelope_building_inst(id, %L, %L) AS geom
-             FROM %I.building_installation WHERE building_id = %L AND objectclass_id = 27     
+         SELECT citydb_pkg.get_envelope_building_inst(id, %L, %L) AS geom
+           FROM %I.building_installation WHERE building_id = %L AND objectclass_id = 27
       )
       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
     schema_name, co_id, set_envelope, schema_name, schema_name, co_id, set_envelope, schema_name, schema_name, co_id,
     set_envelope, schema_name, schema_name, co_id)
     INTO envelope;
-    
+
   IF set_envelope <> 0 THEN
     EXECUTE format(
       'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
-      
+
     -- interior rooms
     EXECUTE format(
       'SELECT citydb_pkg.get_envelope_room(id, %L, %L)
          FROM %I.room WHERE building_id = %L',
-      set_envelope, schema_name, schema_name, co_id); 
+      set_envelope, schema_name, schema_name, co_id);
 
     -- interior thematic surfaces
     EXECUTE format(
       'SELECT citydb_pkg.get_envelope_thematic_surface(id, %L, %L)
-         FROM %I.thematic_surface WHERE building_id = %L AND objectclass_id in (30, 31, 32)',
+         FROM %I.thematic_surface WHERE building_id = %L AND objectclass_id IN (30, 31, 32)',
       set_envelope, schema_name, schema_name, co_id);
 
     -- interior building installations
@@ -970,8 +977,8 @@ BEGIN
        UNION ALL
        -- opening geometry
          SELECT citydb_pkg.get_envelope_opening(o.id, %L, %L) AS geom
-           FROM %I.opening o, %I.opening_to_them_surface ots 
-             WHERE ots.thematic_surface_id = %L AND o.id = ots.opening_id      
+           FROM %I.opening o, %I.opening_to_them_surface o2ts 
+             WHERE o2ts.thematic_surface_id = %L AND o.id = o2ts.opening_id
       )
       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
     schema_name, co_id, set_envelope, schema_name, schema_name, schema_name, co_id)
@@ -1131,13 +1138,13 @@ BEGIN
          SELECT citydb_pkg.get_envelope_thematic_surface(id, %L, %L) AS geom
            FROM %I.thematic_surface WHERE room_id = %L
        UNION ALL
-       -- interior building installation geometry
-           SELECT citydb_pkg.get_envelope_building_inst(id, %L, %L) AS geom
-             FROM %I.building_installation WHERE room_id = %L
+       -- room installation geometry
+         SELECT citydb_pkg.get_envelope_building_inst(id, %L, %L) AS geom
+           FROM %I.building_installation WHERE room_id = %L
        UNION ALL
-       -- furniture geometry
-           SELECT citydb_pkg.get_envelope_building_furn(id, %L, %L) AS geom
-             FROM %I.building_furniture WHERE room_id = %L
+       -- building furniture geometry
+         SELECT citydb_pkg.get_envelope_building_furn(id, %L, %L) AS geom
+           FROM %I.building_furniture WHERE room_id = %L
       )
       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
     schema_name, co_id, set_envelope, schema_name, schema_name, co_id, set_envelope, schema_name, schema_name, co_id,
@@ -1191,7 +1198,7 @@ BEGIN
        UNION ALL
        -- traffic area geometry
          SELECT citydb_pkg.get_envelope_traffic_area(id, %L, %L) AS geom
-             FROM %I.traffic_area WHERE transportation_complex_id = %L
+           FROM %I.traffic_area WHERE transportation_complex_id = %L
       )
       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
     schema_name, co_id, schema_name, co_id, set_envelope, schema_name, schema_name, co_id)
@@ -1287,7 +1294,7 @@ BEGIN
        UNION ALL
        -- bridge thematic surface geometry
          SELECT citydb_pkg.get_envelope_bridge_them_srf(id, %L, %L) AS geom
-           FROM %I.bridge_thematic_surface WHERE bridge_id = %L AND objectclass_id in (71, 72, 73, 74, 75, 76)
+           FROM %I.bridge_thematic_surface WHERE bridge_id = %L AND objectclass_id IN (71, 72, 73, 74, 75, 76)
        UNION ALL
        -- bridge installation geometry
          SELECT citydb_pkg.get_envelope_bridge_inst(id, %L, %L) AS geom
@@ -1295,7 +1302,7 @@ BEGIN
        UNION ALL
        -- bridge construction element geometry
          SELECT citydb_pkg.get_envelope_bridge_const_elem(id, %L, %L) AS geom
-           FROM %I.bridge_constr_element WHERE bridge_id = %L           
+           FROM %I.bridge_constr_element WHERE bridge_id = %L
       )
       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
     schema_name, co_id, set_envelope, schema_name, schema_name, co_id, set_envelope, schema_name, schema_name, co_id,
@@ -1315,10 +1322,10 @@ BEGIN
     -- interior thematic surfaces
     EXECUTE format(
       'SELECT citydb_pkg.get_envelope_bridge_them_srf(id, %L, %L)
-         FROM %I.bridge_thematic_surface WHERE bridge_id = %L AND objectclass_id in (68, 69, 70)',
+         FROM %I.bridge_thematic_surface WHERE bridge_id = %L AND objectclass_id IN (68, 69, 70)',
       set_envelope, schema_name, schema_name, co_id);
 
-    -- interior bridge intallations
+    -- interior bridge installations
     EXECUTE format(
       'SELECT citydb_pkg.get_envelope_bridge_inst(id, %L, %L)
          FROM %I.bridge_installation WHERE bridge_id = %L AND objectclass_id = 66',
@@ -1437,8 +1444,8 @@ BEGIN
        UNION ALL
        -- opening geometry
          SELECT citydb_pkg.get_envelope_bridge_opening(o.id, %L, %L) AS geom
-           FROM %I.bridge_opening o, %I.bridge_open_to_them_srf ots 
-             WHERE ots.bridge_thematic_surface_id = %L AND o.id = ots.bridge_opening_id      
+           FROM %I.bridge_opening o, %I.bridge_open_to_them_srf o2ts 
+             WHERE o2ts.bridge_thematic_surface_id = %L AND o.id = o2ts.bridge_opening_id
       )
       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
     schema_name, co_id, set_envelope, schema_name, schema_name, schema_name, co_id)
@@ -1598,13 +1605,13 @@ BEGIN
          SELECT citydb_pkg.get_envelope_bridge_them_srf(id, %L, %L) AS geom
            FROM %I.bridge_thematic_surface WHERE bridge_room_id = %L
        UNION ALL
-       -- interior bridge installation geometry
+       -- bridge room installation geometry
          SELECT citydb_pkg.get_envelope_bridge_inst(id, %L, %L) AS geom
            FROM %I.bridge_installation WHERE bridge_room_id = %L
        UNION ALL
        -- bridge furniture geometry
-           SELECT citydb_pkg.get_envelope_bridge_furniture(id, %L, %L) AS geom
-             FROM %I.bridge_furniture WHERE bridge_room_id = %L
+         SELECT citydb_pkg.get_envelope_bridge_furniture(id, %L, %L) AS geom
+           FROM %I.bridge_furniture WHERE bridge_room_id = %L
       )
       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
     schema_name, co_id, set_envelope, schema_name, schema_name, co_id, set_envelope, schema_name, schema_name, co_id,
@@ -1739,7 +1746,7 @@ BEGIN
        UNION ALL
        -- tunnel thematic surface geometry
          SELECT citydb_pkg.get_envelope_tunnel_them_srf(id, %L, %L) AS geom
-           FROM %I.tunnel_thematic_surface WHERE tunnel_id = %L AND objectclass_id in (92, 93, 94, 95, 96, 97)
+           FROM %I.tunnel_thematic_surface WHERE tunnel_id = %L AND objectclass_id IN (92, 93, 94, 95, 96, 97)
        UNION ALL
        -- tunnel installation geometry
          SELECT citydb_pkg.get_envelope_tunnel_inst(id, %L, %L) AS geom
@@ -1763,7 +1770,7 @@ BEGIN
     -- interior thematic surfaces
     EXECUTE format(
       'SELECT citydb_pkg.get_envelope_tunnel_them_srf(id, %L, %L)
-         FROM %I.tunnel_thematic_surface WHERE tunnel_id = %L AND objectclass_id in (89, 90, 91)',
+         FROM %I.tunnel_thematic_surface WHERE tunnel_id = %L AND objectclass_id IN (89, 90, 91)',
       set_envelope, schema_name, schema_name, co_id);
 
     -- interior tunnel installations
@@ -1885,8 +1892,8 @@ BEGIN
        UNION ALL
        -- opening geometry
          SELECT citydb_pkg.get_envelope_tunnel_opening(o.id, %L, %L) AS geom
-           FROM %I.tunnel_opening o, %I.tunnel_open_to_them_srf ots 
-             WHERE ots.tunnel_thematic_surface_id = %L AND o.id = ots.tunnel_opening_id      
+           FROM %I.tunnel_opening o, %I.tunnel_open_to_them_srf o2ts 
+             WHERE o2ts.tunnel_thematic_surface_id = %L AND o.id = o2ts.tunnel_opening_id
       )
       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
     schema_name, co_id, set_envelope, schema_name, schema_name, schema_name, co_id)
@@ -2052,7 +2059,7 @@ BEGIN
        UNION ALL
        -- tunnel furniture geometry
          SELECT citydb_pkg.get_envelope_tunnel_furniture(id, %L, %L) AS geom
-           FROM %I.tunnel_furniture WHERE tunnel_hollow_space_id = %L           
+           FROM %I.tunnel_furniture WHERE tunnel_hollow_space_id = %L
       )
       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
     schema_name, co_id, set_envelope, schema_name, schema_name, co_id, set_envelope, schema_name, schema_name, co_id,
@@ -2185,11 +2192,6 @@ BEGIN
     RAISE NOTICE 'Can not get envelope of object with ID % and objectclass_id %.', co_id, class_id;
   END CASE;
 
-  IF set_envelope <> 0 THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
-  END IF;
-
   RETURN envelope;
 
   EXCEPTION
@@ -2220,7 +2222,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_cityobjects(
 $$
 DECLARE
   filter TEXT := '';
-  groupFilter TEXT := '';
+  group_filter TEXT := '';
   envelope GEOMETRY;
 BEGIN   
   IF only_if_null <> 0 THEN
@@ -2241,8 +2243,8 @@ BEGIN
       set_envelope, schema_name, schema_name)
       INTO envelope;
   ELSE
-    groupFilter := CASE WHEN filter = '' THEN ' WHERE ' ELSE filter || ' AND ' END;
-    groupFilter := groupFilter || 'objectclass_id = 23';
+    group_filter := CASE WHEN filter = '' THEN ' WHERE ' ELSE filter || ' AND ' END;
+    group_filter := group_filter || 'objectclass_id = 23';
 
     filter := CASE WHEN filter = '' THEN ' WHERE ' ELSE filter || ' AND ' END;
     filter := filter || 'objectclass_id IN (4, 5, 7, 8, 9, 14, 21, 25, 26, 42, 43, 44, 45, 46, 63, 64, 84, 85)';
@@ -2252,7 +2254,7 @@ BEGIN
       'WITH collect_geom AS (
          -- top-level feature geometry
            SELECT citydb_pkg.get_envelope_cityobject(id, objectclass_id, %L, %L) AS geom
-             FROM %I.cityobject' || filter || '        
+             FROM %I.cityobject' || filter || '
       )
       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
       set_envelope, schema_name, schema_name)
@@ -2263,7 +2265,7 @@ BEGIN
       'WITH collect_geom AS (
          -- cityobject group
            SELECT citydb_pkg.get_envelope_cityobjectgroup(id, %L, 0, %L) AS geom
-             FROM %I.cityobject' || groupFilter || '
+             FROM %I.cityobject' || group_filter || '
          -- current envelope
          UNION ALL
            SELECT %L AS geom
