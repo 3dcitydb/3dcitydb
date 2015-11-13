@@ -1,6 +1,7 @@
 -- ENVELOPE.sql
 --
 -- Authors:     Felix Kunde <fkunde@virtualcitysystems.de>
+--              Claus Nagel <cnagel@virtualcitysystems.de>
 --
 -- Copyright:   (c) 2012-2015  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
@@ -8,26 +9,58 @@
 --
 -------------------------------------------------------------------------------
 -- About:
--- This script provides functions to get an object's envelope (a diagonal cutting plane
--- inside a 3D bounding box). These functions belong to the citydb_envelope package.
+-- This script provides functions to calculate an object's envelope 
+-- (a diagonal cutting plane inside a 3D bounding box) and to store
+-- the result in the ENVELOPE column of CITYOBJECT.
 --
 -------------------------------------------------------------------------------
 --
 -- ChangeLog:
 --
--- Version | Date       | Description                               | Author
--- 1.1.0     2015-11-04   added set_envelope procedures               FKun
--- 1.0.0     2015-07-21   release version 3DCityDB v3.1               FKun
+-- Version | Date       | Description                                 | Author
+-- 1.2.0     2015-11-13   added set_envelope parameter for functions    FKun
+-- 1.1.0     2015-11-04   added set_envelope procedures                 FKun
+-- 1.0.0     2015-07-21   release version 3DCityDB v3.1                 FKun
 --
 
 CREATE OR REPLACE PACKAGE citydb_envelope
 AS
-  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_cityobject(co_id NUMBER, objclass_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION box2envelope(box SDO_GEOMETRY, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION update_bounds(old_box SDO_GEOMETRY, new_box SDO_GEOMETRY, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
   FUNCTION get_envelope_implicit_geometry(implicit_rep_id NUMBER, ref_pt SDO_GEOMETRY, transform4x4 VARCHAR2, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  PROCEDURE set_envelope_cityobjectgroup(group_id NUMBER, only_if_null int := 1, set_contained_groups int := 1, set_contained_members int := 1, schema_name VARCHAR2 := USER);
-  PROCEDURE set_envelope_cityobject(co_id NUMBER, schema_name VARCHAR2 := USER);
-  PROCEDURE set_envelope_cityobjects(objclass_id NUMBER := 0, only_if_null int := 1, schema_name VARCHAR2 := USER);
+  FUNCTION get_envelope_bridge(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_bridge_const_elem(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_bridge_furniture(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_bridge_inst(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_bridge_opening(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_bridge_them_srf(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_bridge_room(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_building(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_building_furn(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_building_inst(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_city_furniture(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_cityobjectgroup(co_id NUMBER, set_envelope int := 0, calc_member_envelopes int := 1, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_land_use(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_generic_cityobj(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_opening(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_plant_cover(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_relief_feature(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_relief_component(co_id NUMBER, objclass_id NUMBER, set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_room(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_solitary_veg_obj(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_thematic_surface(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_trans_complex(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_traffic_area(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_tunnel(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_tunnel_furniture(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_tunnel_inst(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_tunnel_opening(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_tunnel_them_srf(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_tunnel_hspace(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_waterbody(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_waterbnd_surface(co_id NUMBER,  set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_cityobject(co_id NUMBER, objclass_id NUMBER, set_envelope int := 0, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION get_envelope_cityobjects(objclass_id NUMBER := 0, set_envelope int := 0, only_if_null int := 1, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
 END citydb_envelope;
 /
 
@@ -35,42 +68,6 @@ CREATE OR REPLACE PACKAGE BODY citydb_envelope
 AS
   TYPE ref_cursor IS REF CURSOR;
 
-  -- private functions specification
-  FUNCTION get_envelope_bridge(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_bridge_const_elem(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_bridge_furniture(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_bridge_inst(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_bridge_opening(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_bridge_them_srf(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_bridge_room(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_building(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_building_furn(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_building_inst(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_city_furniture(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_cityobjectgroup(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_land_use(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_generic_cityobj(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_opening(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_plant_cover(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_relief_feature(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_relief_component(co_id NUMBER, objclass_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_room(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_solitary_veg_obj(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_thematic_surface(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_trans_complex(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_traffic_area(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_tunnel(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_tunnel_furniture(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_tunnel_inst(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_tunnel_opening(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_tunnel_them_srf(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_tunnel_hspace(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_waterbody(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-  FUNCTION get_envelope_waterbnd_surface(co_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
-
-  /*
-    PUBLIC FUNCTION (needed for get_envelope API)
-  */
   /*****************************************************************
   * box2envelope
   *
@@ -83,14 +80,25 @@ AS
   * 3D envelope as diagonal cutting plane inside the given 3D bounding box
   * consisting of 5 points (GTYPE:3003, ETYPE:1003)
   ******************************************************************/
-  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
+  FUNCTION box2envelope(
+    box SDO_GEOMETRY,
+    schema_name VARCHAR2 := USER
+    ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    db_srid NUMBER;
   BEGIN
     IF box IS NULL THEN
       RETURN NULL;
     ELSE
-      envelope := MDSYS.SDO_GEOMETRY(3003,NULL,NULL,MDSYS.SDO_ELEM_INFO_ARRAY(1,1003,1),MDSYS.SDO_ORDINATE_ARRAY(
+      -- get reference system of input geometry
+      IF box.sdo_srid IS NULL THEN
+        EXECUTE IMMEDIATE 'SELECT srid FROM ' || schema_name || '.database_srs' INTO db_srid;
+      ELSE
+        db_srid := box.sdo_srid;
+      END IF;
+
+      envelope := MDSYS.SDO_GEOMETRY(3003,db_srid,NULL,MDSYS.SDO_ELEM_INFO_ARRAY(1,1003,1),MDSYS.SDO_ORDINATE_ARRAY(
         SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,1),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,2),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,3),
         SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,1),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,2),SDO_GEOM.SDO_MIN_MBR_ORDINATE(box,3),
         SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,1),SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,2),SDO_GEOM.SDO_MAX_MBR_ORDINATE(box,3),
@@ -104,6 +112,65 @@ AS
     EXCEPTION
       WHEN OTHERS THEN
         dbms_output.put_line('An error occurred when executing function "citydb_envelope.box2envelope": ' || SQLERRM);
+  END;
+
+
+  FUNCTION update_bounds(
+    old_box SDO_GEOMETRY,
+    new_box SDO_GEOMETRY,
+    schema_name VARCHAR2 := USER
+    ) RETURN SDO_GEOMETRY
+  IS
+    updated_box SDO_GEOMETRY;
+    db_srid NUMBER;
+  BEGIN
+    IF old_box IS NULL AND new_box IS NULL THEN
+      RETURN NULL;
+    ELSE
+      IF old_box IS NULL THEN
+        RETURN new_box;
+      END IF;
+
+      IF new_box IS NULL THEN
+        RETURN old_box;
+      END IF;
+
+      -- get reference system of input geometry
+      IF old_box.sdo_srid IS NULL THEN
+        EXECUTE IMMEDIATE 'SELECT srid FROM ' || schema_name || '.database_srs' INTO db_srid;
+      ELSE
+        db_srid := old_box.sdo_srid;
+      END IF;
+
+      updated_box := MDSYS.SDO_GEOMETRY(3003,db_srid,NULL,MDSYS.SDO_ELEM_INFO_ARRAY(1,1003,1),MDSYS.SDO_ORDINATE_ARRAY(
+        -- first point
+        CASE WHEN old_box.sdo_ordinates(1) < new_box.sdo_ordinates(1) THEN old_box.sdo_ordinates(1) ELSE new_box.sdo_ordinates(1) END,
+        CASE WHEN old_box.sdo_ordinates(2) < new_box.sdo_ordinates(2) THEN old_box.sdo_ordinates(2) ELSE new_box.sdo_ordinates(2) END,
+        CASE WHEN old_box.sdo_ordinates(3) < new_box.sdo_ordinates(3) THEN old_box.sdo_ordinates(3) ELSE new_box.sdo_ordinates(3) END,
+        -- second point
+        CASE WHEN old_box.sdo_ordinates(4) > new_box.sdo_ordinates(4) THEN old_box.sdo_ordinates(4) ELSE new_box.sdo_ordinates(4) END,
+        CASE WHEN old_box.sdo_ordinates(5) < new_box.sdo_ordinates(5) THEN old_box.sdo_ordinates(5) ELSE new_box.sdo_ordinates(5) END,
+        CASE WHEN old_box.sdo_ordinates(6) < new_box.sdo_ordinates(6) THEN old_box.sdo_ordinates(6) ELSE new_box.sdo_ordinates(6) END,
+        -- third point
+        CASE WHEN old_box.sdo_ordinates(7) > new_box.sdo_ordinates(7) THEN old_box.sdo_ordinates(7) ELSE new_box.sdo_ordinates(7) END,
+        CASE WHEN old_box.sdo_ordinates(8) > new_box.sdo_ordinates(8) THEN old_box.sdo_ordinates(8) ELSE new_box.sdo_ordinates(8) END,
+        CASE WHEN old_box.sdo_ordinates(9) > new_box.sdo_ordinates(9) THEN old_box.sdo_ordinates(9) ELSE new_box.sdo_ordinates(9) END,
+        -- fourth point
+        CASE WHEN old_box.sdo_ordinates(10) < new_box.sdo_ordinates(10) THEN old_box.sdo_ordinates(10) ELSE new_box.sdo_ordinates(10) END,
+        CASE WHEN old_box.sdo_ordinates(11) > new_box.sdo_ordinates(11) THEN old_box.sdo_ordinates(11) ELSE new_box.sdo_ordinates(11) END,
+        CASE WHEN old_box.sdo_ordinates(12) > new_box.sdo_ordinates(12) THEN old_box.sdo_ordinates(12) ELSE new_box.sdo_ordinates(12) END,
+        -- fifth point
+        CASE WHEN old_box.sdo_ordinates(13) < new_box.sdo_ordinates(13) THEN old_box.sdo_ordinates(13) ELSE new_box.sdo_ordinates(13) END,
+        CASE WHEN old_box.sdo_ordinates(14) < new_box.sdo_ordinates(14) THEN old_box.sdo_ordinates(14) ELSE new_box.sdo_ordinates(14) END,
+        CASE WHEN old_box.sdo_ordinates(15) < new_box.sdo_ordinates(15) THEN old_box.sdo_ordinates(15) ELSE new_box.sdo_ordinates(15) END
+        ));
+    END IF;
+
+    RETURN updated_box;
+
+    EXCEPTION
+      WHEN OTHERS THEN
+        dbms_output.put_line('An error occurred when executing function "citydb_envelope.update_bounds": ' || SQLERRM);
   END;
 
 
@@ -150,9 +217,9 @@ AS
          UNION ALL
          -- relative brep geometry
            SELECT sg.implicit_geometry AS geom FROM ' || schema_name || '.surface_geometry sg, ' || schema_name || '.implicit_geometry ig 
-             WHERE sg.root_id = ig.relative_brep_id AND ig.id = :1 AND sg.implicit_geometry IS NOT NULL
-       ) SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING implicit_rep_id, implicit_rep_id;
+             WHERE sg.root_id = ig.relative_brep_id AND ig.id = :2 AND sg.implicit_geometry IS NOT NULL
+       ) SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:3) AS envelope3d FROM collect_geom'
+      INTO envelope USING implicit_rep_id, implicit_rep_id, schema_name;
 
     IF transform4x4 IS NOT NULL THEN
       -- extract parameters of transformation matrix
@@ -298,22 +365,29 @@ AS
   *
   * @param        @description
   * co_id         identifier for land use
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of land use
   ******************************************************************/
   FUNCTION get_envelope_land_use(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
   BEGIN
     EXECUTE IMMEDIATE 
-      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(sg.geometry)) AS envelope3d FROM ' || schema_name || '.surface_geometry sg
-         WHERE sg.cityobject_id = :1 AND sg.geometry IS NOT NULL'
-         INTO envelope USING co_id;
+      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(sg.geometry),:1) AS envelope3d FROM ' || schema_name || '.surface_geometry sg
+         WHERE sg.cityobject_id = :2 AND sg.geometry IS NOT NULL'
+         INTO envelope USING schema_name, co_id;
+
+    IF set_envelope <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -332,6 +406,7 @@ AS
   *
   * @param        @description
   * co_id         identifier for generic city object
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
@@ -339,6 +414,7 @@ AS
   ******************************************************************/
   FUNCTION get_envelope_generic_cityobj(
     co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
@@ -384,8 +460,13 @@ AS
            SELECT citydb_envelope.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, :15) AS geom 
              FROM ' || schema_name || '.generic_cityobject WHERE id = :16 AND lod4_implicit_rep_id IS NOT NULL
       )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, co_id, co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id;
+      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:17) AS envelope3d FROM collect_geom'
+      INTO envelope USING co_id, co_id, co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name;
+
+    IF set_envelope <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -404,6 +485,7 @@ AS
   *
   * @param        @description
   * co_id         identifier for solitary vegetation object
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
@@ -411,6 +493,7 @@ AS
   ******************************************************************/
   FUNCTION get_envelope_solitary_veg_obj(
     co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
@@ -449,8 +532,13 @@ AS
            SELECT citydb_envelope.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, :12) AS geom 
              FROM ' || schema_name || '.solitary_vegetat_object WHERE id = :13 AND lod4_implicit_rep_id IS NOT NULL
       )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id;
+      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:14) AS envelope3d FROM collect_geom'
+      INTO envelope USING co_id, co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name;
+
+    IF set_envelope <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -469,22 +557,29 @@ AS
   *
   * @param        @description
   * co_id         identifier for plant cover
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of plant cover
   ******************************************************************/
   FUNCTION get_envelope_plant_cover(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
   BEGIN
     EXECUTE IMMEDIATE 
-      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(sg.geometry)) AS envelope3d FROM ' || schema_name || '.surface_geometry sg
-         WHERE sg.cityobject_id = :1 AND sg.geometry IS NOT NULL'
-         INTO envelope USING co_id;
+      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(sg.geometry),:1) AS envelope3d FROM ' || schema_name || '.surface_geometry sg
+         WHERE sg.cityobject_id = :2 AND sg.geometry IS NOT NULL'
+         INTO envelope USING schema_name, co_id;
+
+    IF set_envelope <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -503,29 +598,49 @@ AS
   *
   * @param        @description
   * co_id         identifier for water body
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of water body
   ******************************************************************/
   FUNCTION get_envelope_waterbody(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
     EXECUTE IMMEDIATE 
-      'WITH collect_geom AS (
-         -- waterbody geometry
-           SELECT geometry AS geom FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :1 AND geometry IS NOT NULL
-         UNION ALL
-         -- water boundary surface geometry
-           SELECT sg.geometry AS geom FROM ' || schema_name || '.surface_geometry sg, ' || schema_name || '.waterboundary_surface wbs, ' || schema_name || '.waterbod_to_waterbnd_srf wb2wbs
-             WHERE sg.cityobject_id = wbs.id AND wbs.id = wb2wbs.waterboundary_surface_id AND wb2wbs.waterbody_id = :1 AND sg.geometry IS NOT NULL
-      )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, co_id;
+      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geometry),:1) AS envelope3d 
+         FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :2 AND geometry IS NOT NULL'
+         INTO envelope USING schema_name, co_id;
+
+    IF set_envelope <> 0 THEN
+      -- water boundary surfaces
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.waterboundary_surface wbs, ' || schema_name || '.waterbod_to_waterbnd_srf wb2wbs
+                                  WHERE wbs.id = wb2wbs.waterboundary_surface_id AND wb2wbs.waterbody_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_waterbnd_surface(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- water body
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    ELSE
+      EXECUTE IMMEDIATE 
+        'SELECT citydb_envelope.update_bounds(
+           :1, citydb_envelope.box2envelope(SDO_AGGR_MBR(citydb_envelope.get_envelope_waterbnd_surface(wbs.id, 0, :2)),:3)
+         ,:4) AS envelope3d FROM ' || schema_name || '.waterboundary_surface wbs, ' || schema_name || '.waterbod_to_waterbnd_srf wb2wbs
+           WHERE wbs.id = wb2wbs.waterboundary_surface_id AND wb2wbs.waterbody_id = :5'
+       INTO envelope USING envelope, schema_name, schema_name, schema_name, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -540,26 +655,33 @@ AS
   /*****************************************************************
   * get_envelope_waterbnd_surface
   *
-  * returns the envelope of a given waterboundary surface
+  * returns the envelope of a given water boundary surface
   *
   * @param        @description
-  * co_id         identifier for waterboundary surface
+  * co_id         identifier for water boundary surface
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
-  * aggregated envelope geometry of waterboundary surface
+  * aggregated envelope geometry of water boundary surface
   ******************************************************************/
   FUNCTION get_envelope_waterbnd_surface(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
   BEGIN
     EXECUTE IMMEDIATE 
-      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(sg.geometry)) AS envelope3d FROM ' || schema_name || '.surface_geometry sg
-         WHERE sg.cityobject_id = :1 AND sg.geometry IS NOT NULL'
-         INTO envelope USING co_id;
+      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(sg.geometry),:1) AS envelope3d FROM ' || schema_name || '.surface_geometry sg
+         WHERE sg.cityobject_id = :2 AND sg.geometry IS NOT NULL'
+         INTO envelope USING schema_name, co_id;
+
+    IF set_envelope <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -578,27 +700,44 @@ AS
   *
   * @param        @description
   * co_id         identifier for relief feature
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of relief feature
   ******************************************************************/
   FUNCTION get_envelope_relief_feature(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    relief_component_cur ref_cursor;
+    relief_component_rec relief_component%rowtype;
   BEGIN
-    -- try to generate envelope from relief components
-    EXECUTE IMMEDIATE
-      'WITH collect_geom AS (
-         SELECT citydb_envelope.get_envelope_cityobject(rc.id, rc.objectclass_id, :1) AS geom 
-           FROM ' || schema_name || '.relief_component rc, ' || schema_name || '.relief_feat_to_rel_comp rf2rc 
-             WHERE rc.id = rf2rc.relief_component_id AND rf2rc.relief_feature_id = :2
-      )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING schema_name, co_id;
+    IF set_envelope <> 0 THEN
+      -- relief components
+      OPEN relief_component_cur FOR 'SELECT rc.* FROM ' || schema_name || '.relief_component rc, ' || schema_name || '.relief_feat_to_rel_comp rf2rc 
+                                  WHERE rc.id = rf2rc.relief_component_id AND rf2rc.relief_feature_id = :1' USING co_id;
+      LOOP
+      FETCH relief_component_cur INTO relief_component_rec;
+      EXIT WHEN relief_component_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_relief_component(relief_component_rec.id, relief_component_rec.objectclass_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE relief_component_cur;
+
+      -- relief feature
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    ELSE
+      EXECUTE IMMEDIATE
+        'SELECT citydb_envelope.update_bounds(
+           :1, citydb_envelope.box2envelope(SDO_AGGR_MBR(citydb_envelope.get_envelope_relief_component(rc.id, rc.objectclass_id, 0, :2)),:3)
+        ,:4) AS envelope3d FROM ' || schema_name || '.relief_component rc, ' || schema_name || '.relief_feat_to_rel_comp rf2rc 
+          WHERE rc.id = rf2rc.relief_component_id AND rf2rc.relief_feature_id = :5'
+	      INTO envelope USING envelope, schema_name, schema_name, schema_name, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -619,6 +758,7 @@ AS
   * @param        @description
   * co_id         identifier for relief component
   * objclass_id   objectclass of city object
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
@@ -627,6 +767,7 @@ AS
   FUNCTION get_envelope_relief_component(
     co_id NUMBER,
     objclass_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
@@ -644,33 +785,33 @@ AS
     CASE 
       WHEN class_id = 16 THEN 
         BEGIN
-          -- generate convex hull of TIN relief
-          EXECUTE IMMEDIATE 'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(sg.geometry)) AS envelope3d
+          -- get spatial extent of TIN relief
+          EXECUTE IMMEDIATE 'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(sg.geometry),:1) AS envelope3d
                                FROM ' || schema_name || '.surface_geometry sg, ' || schema_name || '.tin_relief tin
-                                 WHERE tin.surface_geometry_id = sg.root_id AND tin.id = :1 AND sg.geometry IS NOT NULL'
-                                 INTO envelope USING co_id;
+                                 WHERE tin.surface_geometry_id = sg.root_id AND tin.id = :2 AND sg.geometry IS NOT NULL'
+                                 INTO envelope USING schema_name, co_id;
           EXCEPTION
             WHEN OTHERS THEN
               envelope := NULL;
         END;
       WHEN class_id = 17 THEN
         BEGIN
-          -- generate convex hull of masspoint relief
-          EXECUTE IMMEDIATE 'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(relief_points)) AS envelope3d
-                               FROM ' || schema_name || '.masspoint_relief WHERE id = :1'
-                               INTO envelope USING co_id;
+          -- get spatial extent of masspoint relief
+          EXECUTE IMMEDIATE 'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(relief_points),:1) AS envelope3d
+                               FROM ' || schema_name || '.masspoint_relief WHERE id = :2'
+                               INTO envelope USING schema_name, co_id;
           EXCEPTION
             WHEN OTHERS THEN
               envelope := NULL;
         END;
       WHEN class_id = 18 THEN
         BEGIN
-          -- generate convex hull of breakline relief taking a union of ridge, valley and break lines
+          -- get spatial extent of breakline relief taking a union of ridge, valley and break lines
           EXECUTE IMMEDIATE 'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(
-                               SDO_GEOM.SDO_UNION(SDO_AGGR_MBR(ridge_or_valley_lines), SDO_AGGR_MBR(br.break_lines)),0.001)
-                             ) AS envelope3d
-                             FROM ' || schema_name || '.breakline_relief WHERE id = :1'
-                             INTO envelope USING co_id;
+                               SDO_GEOM.SDO_UNION(SDO_AGGR_MBR(ridge_or_valley_lines), SDO_AGGR_MBR(break_lines)),0.001)
+                             ,:1) AS envelope3d
+                             FROM ' || schema_name || '.breakline_relief WHERE id = :2'
+                             INTO envelope USING schema_name, co_id;
           EXCEPTION
             WHEN OTHERS THEN
               envelope := NULL;
@@ -678,10 +819,10 @@ AS
       WHEN class_id = 19 THEN
         BEGIN
           -- get spatial extent of raster relief
-          EXECUTE IMMEDIATE 'SELECT grid.id, citydb_envelope.box2envelope(SDO_AGGR_MBR(grid.rasterproperty.spatialExtent)) AS envelope3d
+          EXECUTE IMMEDIATE 'SELECT grid.id, citydb_envelope.box2envelope(SDO_AGGR_MBR(grid.rasterproperty.spatialExtent),:1) AS envelope3d
                                FROM ' || schema_name || '.grid_coverage grid, ' || schema_name || '.raster_relief rast 
-                                 WHERE rast.coverage_id = grid.id AND rast.id = :1'
-                                 INTO grid_id, envelope USING co_id;
+                                 WHERE rast.coverage_id = grid.id AND rast.id = :2'
+                                 INTO grid_id, envelope USING schema_name, co_id;
 
           EXCEPTION
             WHEN OTHERS THEN
@@ -690,9 +831,9 @@ AS
                 EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.grid_coverage SET rasterproperty = sdo_geor.generateSpatialExtent(rasterproperty) 
                                      WHERE id = :1' USING grid_id;
 
-                EXECUTE IMMEDIATE 'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(rasterproperty.spatialExtent)) AS envelope3d
-                                     FROM ' || schema_name || '.grid_coverage WHERE id = :1'
-                                     INTO envelope USING grid_id;
+                EXECUTE IMMEDIATE 'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(rasterproperty.spatialExtent),:1) AS envelope3d
+                                     FROM ' || schema_name || '.grid_coverage WHERE id = :2'
+                                     INTO envelope USING schema_name, grid_id;
 
                 EXCEPTION
                   WHEN OTHERS THEN
@@ -700,6 +841,12 @@ AS
               END;
         END;
       END CASE;
+
+    IF set_envelope <> 0 THEN
+      -- update envelope column of cityobject table
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -718,13 +865,15 @@ AS
   *
   * @param        @description
   * co_id         identifier for city furniture
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of city furniture
   ******************************************************************/
   FUNCTION get_envelope_city_furniture(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
@@ -763,8 +912,13 @@ AS
            SELECT citydb_envelope.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, :12) AS geom 
              FROM ' || schema_name || '.city_furniture WHERE id = :13 AND lod4_implicit_rep_id IS NOT NULL
       )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id;
+      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:14) AS envelope3d FROM collect_geom'
+      INTO envelope USING co_id, co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name;
+
+    IF set_envelope <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -781,28 +935,78 @@ AS
   *
   * returns the envelope of a given city object group
   *
-  * @param        @description
-  * co_id         identifier for city object group
-  * schema_name   name of schema
+  * @param                  @description
+  * co_id                   identifier for city object group
+  * set_envelope            if 1 (default = 0) the envelope column is updated
+  * calc_member_envelopes   if 1 (default) the envelope of group members is calculated 
+  *                         otherwise it is taken from the ENVELOPE column
+  * schema_name             name of schema
   *
   * @return
   * aggregated envelope geometry of city object group
   ******************************************************************/
   FUNCTION get_envelope_cityobjectgroup(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
+    calc_member_envelopes int := 1,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    cityobject_cur ref_cursor;
+    cityobject_rec cityobject%rowtype;
+    parent_id NUMBER;
+    dummy_box SDO_GEOMETRY;
   BEGIN
     EXECUTE IMMEDIATE
       'WITH collect_geom AS (
-         SELECT citydb_envelope.get_envelope_cityobject(co.id, co.objectclass_id, :1) AS geom 
-           FROM ' || schema_name || '.cityobject co, ' || schema_name || '.group_to_cityobject g2co  
-             WHERE co.id = g2co.cityobject_id AND g2co.cityobjectgroup_id = :2
+         -- cityobjectgroup geometry
+           SELECT geometry AS geom FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :1 AND geometry IS NOT NULL
+       UNION ALL
+         -- other geometry
+           SELECT other_geom AS geom FROM ' || schema_name || '.cityobjectgroup WHERE id = :2 AND other_geom IS NOT NULL  
       )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING schema_name, co_id;
+      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:3) AS envelope3d FROM collect_geom'
+      INTO envelope USING co_id, co_id, schema_name;
+
+    IF calc_member_envelopes <> 0 THEN
+      IF set_envelope <> 0 THEN
+        OPEN cityobject_cur FOR 'SELECT co.* FROM ' || schema_name || '.cityobject co, ' || schema_name || '.group_to_cityobject g2co 
+                                   WHERE co.id = g2co.cityobject_id AND g2co.cityobjectgroup_id = :1' USING co_id;
+        LOOP
+          FETCH cityobject_cur INTO cityobject_rec;
+          EXIT WHEN cityobject_cur%notfound;
+          envelope := update_bounds(envelope, get_envelope_cityobject(cityobject_rec.id, cityobject_rec.objectclass_id, set_envelope, schema_name), schema_name);
+        END LOOP;
+        CLOSE cityobject_cur;
+      ELSE
+        EXECUTE IMMEDIATE 
+          'SELECT citydb_envelope.update_bounds(
+             :1, citydb_envelope.box2envelope(SDO_AGGR_MBR(citydb_envelope.get_envelope_cityobject(co.id, co.objectclass_id, 0, :2)),:3)
+          ,:4) AS envelope3d FROM ' || schema_name || '.cityobject co, ' || schema_name || '.group_to_cityobject g2co 
+            WHERE co.id = g2co.cityobject_id AND g2co.cityobjectgroup_id = :5'
+          INTO envelope USING envelope, schema_name, schema_name, schema_name, co_id;
+      END IF;
+    ELSE
+      EXECUTE IMMEDIATE 
+        'SELECT citydb_envelope.update_bounds(
+           :1, citydb_envelope.box2envelope(SDO_AGGR_MBR(co.envelope),:2)
+        ,:3) AS envelope3d FROM ' || schema_name || '.cityobject co, ' || schema_name || '.group_to_cityobject g2co 
+          WHERE co.id = g2co.cityobject_id AND g2co.cityobjectgroup_id = :4'
+        INTO envelope USING envelope, schema_name, schema_name, co_id;
+    END IF;
+
+    IF set_envelope <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+
+      -- group parent
+      EXECUTE IMMEDIATE
+        'SELECT parent_cityobject_id FROM ' || schema_name || '.cityobjectgroup WHERE id = :1'
+           INTO parent_id USING co_id;
+		   
+      dummy_box := get_envelope_cityobjectgroup(parent_id, set_envelope, calc_member_envelopes, schema_name);
+    END IF;
 
     RETURN envelope;
 
@@ -821,6 +1025,7 @@ AS
   *
   * @param        @description
   * co_id         identifier for building
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
@@ -828,35 +1033,98 @@ AS
   ******************************************************************/
   FUNCTION get_envelope_building(
     co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    dummy_box SDO_GEOMETRY;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
     EXECUTE IMMEDIATE 
-      'WITH collect_geom AS (
-         -- building geometry
-           SELECT geometry AS geom FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :1 AND geometry IS NOT NULL
-         UNION ALL
-         -- building part geometry
-           SELECT citydb_envelope.get_envelope_cityobject(id, 25, :2) AS geom
-             FROM ' || schema_name || '.building WHERE building_root_id = :3 AND building_parent_id IS NOT NULL
-         UNION ALL
-         -- building thematic surface geometry
-           SELECT sg.geometry AS geom FROM ' || schema_name || '.surface_geometry sg, ' || schema_name || '.thematic_surface ts
-             WHERE sg.cityobject_id = ts.id AND ts.building_id = :4 AND sg.geometry IS NOT NULL
-         UNION ALL
-         -- building installation geometry
-           SELECT citydb_envelope.get_envelope_cityobject(id, objectclass_id, :5) AS geom 
-             FROM ' || schema_name || '.building_installation WHERE building_id = :6
-         UNION ALL
-         -- building opening geometry
-           SELECT citydb_envelope.get_envelope_cityobject(o.id, o.objectclass_id, :7) AS geom 
-             FROM ' || schema_name || '.opening o, ' || schema_name || '.opening_to_them_surface o2ts, ' || schema_name || '.thematic_surface ts
-               WHERE o.id = o2ts.opening_id AND ts.id = o2ts.thematic_surface_id AND ts.building_id = :8
-      )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, schema_name, co_id, co_id, schema_name, co_id, schema_name, co_id;
+      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geometry),:1) AS envelope3d 
+         FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :2 AND geometry IS NOT NULL'
+         INTO envelope USING schema_name, co_id;
+
+    IF set_envelope <> 0 THEN
+      -- update building part envelopes
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.building WHERE building_root_id = :1 AND building_parent_id IS NOT NULL' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_building(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- thematic surface envelopes
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.thematic_surface WHERE building_id = :1 AND objectclass_id IN (33, 34, 35, 36, 60, 61)' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_thematic_surface(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- outer building installation
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.building_installation WHERE building_id = :1 AND objectclass_id = 27' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_building_inst(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- building
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+
+      -- interior rooms
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.room WHERE building_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        dummy_box := get_envelope_room(nested_feat_id, set_envelope, schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- interior thematic surfaces
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.thematic_surface WHERE building_id = :1 AND objectclass_id IN (30, 31, 32)' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        dummy_box := get_envelope_thematic_surface(nested_feat_id, set_envelope, schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- interior building installations
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.building_installation WHERE building_id = :1 AND objectclass_id = 28' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        dummy_box := get_envelope_building_inst(nested_feat_id, set_envelope, schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+    ELSE
+      EXECUTE IMMEDIATE
+        'WITH collect_geom AS (
+           -- building part geometry
+             SELECT citydb_envelope.get_envelope_building(id, 0, :1) AS geom
+               FROM ' || schema_name || '.building WHERE building_root_id = :2 AND building_parent_id IS NOT NULL
+           UNION ALL
+           -- building thematic surface geometry
+             SELECT citydb_envelope.get_envelope_thematic_surface(id, 0, :3) AS geom 
+               FROM ' || schema_name || '.thematic_surface WHERE building_id = :4 AND objectclass_id IN (33, 34, 35, 36, 60, 61)
+           UNION ALL
+           -- building installation geometry
+             SELECT citydb_envelope.get_envelope_building_inst(id, 0, :5) AS geom 
+               FROM ' || schema_name || '.building_installation WHERE building_id = :6 AND objectclass_id = 27
+        )
+        SELECT citydb_envelope.update_bounds(
+          :7, citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:8)
+        ,:9) AS envelope3d FROM collect_geom'
+        INTO envelope USING schema_name, co_id, schema_name, co_id, schema_name, co_id, envelope, schema_name, schema_name;
+    END IF;
 
     RETURN envelope;
 
@@ -875,6 +1143,7 @@ AS
   *
   * @param        @description
   * co_id         identifier for building installation
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
@@ -882,10 +1151,13 @@ AS
   ******************************************************************/
   FUNCTION get_envelope_building_inst(
     co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
     EXECUTE IMMEDIATE 
       'WITH collect_geom AS (
@@ -912,18 +1184,31 @@ AS
          -- lod4 implicit geometry
            SELECT citydb_envelope.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, :9) AS geom 
              FROM ' || schema_name || '.building_installation WHERE id = :10 AND lod4_implicit_rep_id IS NOT NULL
-         UNION ALL
-         -- thematic surface geometry
-           SELECT sg.geometry AS geom FROM ' || schema_name || '.surface_geometry sg, ' || schema_name || '.thematic_surface ts
-             WHERE sg.cityobject_id = ts.id AND ts.building_installation_id = :11 AND sg.geometry IS NOT NULL
-         UNION ALL
-         -- opening geometry
-           SELECT citydb_envelope.get_envelope_cityobject(o.id, o.objectclass_id, :12) AS geom 
-             FROM ' || schema_name || '.opening o, ' || schema_name || '.opening_to_them_surface o2ts, ' || schema_name || '.thematic_surface ts
-               WHERE o.id = o2ts.opening_id AND ts.id = o2ts.thematic_surface_id AND ts.building_installation_id = :13
       )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, co_id, schema_name, co_id;
+      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:11) AS envelope3d FROM collect_geom'
+      INTO envelope USING co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name;
+
+    IF set_envelope <> 0 THEN
+      -- thematic surfaces
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.thematic_surface WHERE building_installation_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_thematic_surface(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- building installation
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    ELSE
+      EXECUTE IMMEDIATE 
+        'SELECT citydb_envelope.update_bounds(
+           :1, citydb_envelope.box2envelope(SDO_AGGR_MBR(citydb_envelope.get_envelope_thematic_surface(id, 0, :2)),:3)
+         ,:4) AS envelope3d FROM ' || schema_name || '.thematic_surface
+           WHERE building_installation_id = :5'
+        INTO envelope USING envelope, schema_name, schema_name, schema_name, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -942,22 +1227,49 @@ AS
   *
   * @param        @description
   * co_id         identifier for thematic surface
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of thematic surface
   ******************************************************************/
   FUNCTION get_envelope_thematic_surface(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
     EXECUTE IMMEDIATE 
-      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(sg.geometry)) AS envelope3d FROM ' || schema_name || '.surface_geometry sg
-         WHERE sg.cityobject_id = :1 AND sg.geometry IS NOT NULL'
-         INTO envelope USING co_id;
+      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geometry),:1) AS envelope3d 
+         FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :2 AND geometry IS NOT NULL'
+         INTO envelope USING schema_name, co_id;
+
+    IF set_envelope <> 0 THEN
+      -- openings
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.opening o, ' || schema_name || '.opening_to_them_surface o2ts
+                                  WHERE o.id = o2ts.opening_id AND o2ts.thematic_surface_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_opening(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- thematic surface
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    ELSE
+      EXECUTE IMMEDIATE 
+        'SELECT citydb_envelope.update_bounds(
+           :1, citydb_envelope.box2envelope(SDO_AGGR_MBR(citydb_envelope.get_envelope_opening(o.id, 0, :2)),:3)
+         ,:4) AS envelope3d FROM ' || schema_name || '.opening o, ' || schema_name || '.opening_to_them_surface o2ts
+           WHERE o.id = o2ts.opening_id AND o2ts.thematic_surface_id = :5'
+       INTO envelope USING envelope, schema_name, schema_name, schema_name, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -976,13 +1288,15 @@ AS
   *
   * @param        @description
   * co_id         identifier for opening
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of opening
   ******************************************************************/
   FUNCTION get_envelope_opening(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
@@ -1001,8 +1315,13 @@ AS
            SELECT citydb_envelope.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, :4) AS geom 
              FROM ' || schema_name || '.opening WHERE id = :5 AND lod4_implicit_rep_id IS NOT NULL
       )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, schema_name, co_id, schema_name, co_id;
+      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:6) AS envelope3d FROM collect_geom'
+      INTO envelope USING co_id, schema_name, co_id, schema_name, co_id, schema_name;
+
+    IF set_envelope <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -1021,13 +1340,15 @@ AS
   *
   * @param        @description
   * co_id         identifier for building furniture
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of building furniture
   ******************************************************************/
   FUNCTION get_envelope_building_furn(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
@@ -1045,8 +1366,13 @@ AS
            SELECT citydb_envelope.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, :3) AS geom 
              FROM ' || schema_name || '.building_furniture WHERE id = :4 AND lod4_implicit_rep_id IS NOT NULL
       )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, co_id, schema_name, co_id;
+      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:5) AS envelope3d FROM collect_geom'
+      INTO envelope USING co_id, co_id, schema_name, co_id, schema_name;
+
+    IF set_envelope <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -1065,38 +1391,78 @@ AS
   *
   * @param        @description
   * co_id         identifier for room
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of room
   ******************************************************************/
   FUNCTION get_envelope_room(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
     EXECUTE IMMEDIATE 
-      'WITH collect_geom AS (
-         -- room geometry
-           SELECT geometry AS geom FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :1 AND geometry IS NOT NULL
-         UNION ALL
-         -- interior thematic surface geometry
-           SELECT sg.geometry AS geom FROM ' || schema_name || '.surface_geometry sg, ' || schema_name || '.thematic_surface ts
-             WHERE sg.cityobject_id = ts.id AND ts.room_id = :2 AND sg.geometry IS NOT NULL
-         UNION ALL
-         -- interior building installation geometry
-           SELECT citydb_envelope.get_envelope_cityobject(id, objectclass_id, :3) AS geom 
-             FROM ' || schema_name || '.building_installation WHERE room_id = :4
-         UNION ALL
-         -- room opening geometry
-           SELECT citydb_envelope.get_envelope_cityobject(o.id, o.objectclass_id, :5) AS geom 
-             FROM ' || schema_name || '.opening o, ' || schema_name || '.opening_to_them_surface o2ts, ' || schema_name || '.thematic_surface ts
-               WHERE o.id = o2ts.opening_id AND ts.id = o2ts.thematic_surface_id AND ts.room_id = :6
-      )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, co_id, schema_name, co_id, schema_name, co_id;
+      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geometry),:1) AS envelope3d 
+         FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :2 AND geometry IS NOT NULL'
+         INTO envelope USING schema_name, co_id;
+
+    IF set_envelope <> 0 THEN
+      -- thematic surfaces
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.thematic_surface WHERE room_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_thematic_surface(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- room installation
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.building_installation WHERE room_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_building_inst(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- building furniture
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.building_furniture WHERE room_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_building_furn(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- room
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    ELSE
+      EXECUTE IMMEDIATE 
+        'WITH collect_geom AS (
+          -- interior thematic surface geometry
+            SELECT citydb_envelope.get_envelope_thematic_surface(id, 0, :1) AS geom 
+              FROM ' || schema_name || '.thematic_surface WHERE room_id = :2
+          UNION ALL
+          -- room installation geometry
+            SELECT citydb_envelope.get_envelope_building_inst(id, 0, :3) AS geom 
+              FROM ' || schema_name || '.building_installation WHERE room_id = :4
+          UNION ALL
+          -- building furniture geometry
+            SELECT citydb_envelope.get_envelope_building_furn(id, 0, :5) AS geom
+              FROM ' || schema_name || '.building_furniture WHERE room_id = :6
+        )
+        SELECT citydb_envelope.update_bounds(
+          :7, citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:8)
+        ,:9) AS envelope3d FROM collect_geom'
+        INTO envelope USING schema_name, co_id, schema_name, co_id, schema_name, co_id, envelope, schema_name, schema_name;
+    END IF;
 
     RETURN envelope;
 
@@ -1115,17 +1481,21 @@ AS
   *
   * @param        @description
   * co_id         identifier for transportation complex
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of transportation complex
   ******************************************************************/
   FUNCTION get_envelope_trans_complex(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
     EXECUTE IMMEDIATE 
       'WITH collect_geom AS (
@@ -1134,13 +1504,30 @@ AS
          UNION ALL
          -- transportation complex geometry
            SELECT geometry AS geom FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :2 AND geometry IS NOT NULL
-         UNION ALL
-         -- traffic area geometry
-           SELECT sg.geometry AS geom FROM ' || schema_name || '.surface_geometry sg, ' || schema_name || '.traffic_area ta
-             WHERE sg.cityobject_id = ta.id AND ta.transportation_complex_id = :3 AND sg.geometry IS NOT NULL
       )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, co_id, co_id;
+      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:3) AS envelope3d FROM collect_geom'
+      INTO envelope USING co_id, co_id, schema_name;
+
+    IF set_envelope <> 0 THEN
+      -- traffic areas
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.traffic_area WHERE transportation_complex_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_traffic_area(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- transportation complex
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    ELSE
+      EXECUTE IMMEDIATE 
+        'SELECT citydb_envelope.update_bounds(
+           :1, citydb_envelope.box2envelope(SDO_AGGR_MBR(citydb_envelope.get_envelope_traffic_area(id, 0, :2)),:3)
+        ,:4) AS envelope3d FROM ' || schema_name || '.traffic_area WHERE transportation_complex_id = :5'
+        INTO envelope USING envelope, schema_name, schema_name, schema_name, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -1159,22 +1546,29 @@ AS
   *
   * @param        @description
   * co_id         identifier for traffic area
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of traffic area
   ******************************************************************/
   FUNCTION get_envelope_traffic_area(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
   BEGIN
     EXECUTE IMMEDIATE 
-      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(sg.geometry)) AS envelope3d FROM ' || schema_name || '.surface_geometry sg
-         WHERE sg.cityobject_id = :1 AND sg.geometry IS NOT NULL'
-         INTO envelope USING co_id;
+      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(sg.geometry),:1) AS envelope3d FROM ' || schema_name || '.surface_geometry sg
+         WHERE sg.cityobject_id = :2 AND sg.geometry IS NOT NULL'
+         INTO envelope USING schema_name, co_id;
+
+    IF set_envelope <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -1193,6 +1587,7 @@ AS
   *
   * @param        @description
   * co_id         identifier for bridge
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
@@ -1200,35 +1595,111 @@ AS
   ******************************************************************/
   FUNCTION get_envelope_bridge(
     co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    dummy_box SDO_GEOMETRY;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
     EXECUTE IMMEDIATE 
-      'WITH collect_geom AS (
-         -- bridge geometry
-           SELECT geometry AS geom FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :1 AND geometry IS NOT NULL
-         UNION ALL
-         -- bridge part geometry
-           SELECT citydb_envelope.get_envelope_cityobject(id, 63, :2) AS geom
-             FROM ' || schema_name || '.bridge WHERE bridge_root_id = :3 AND bridge_parent_id IS NOT NULL
-         UNION ALL
-         -- bridge thematic surface geometry
-           SELECT sg.geometry AS geom FROM ' || schema_name || '.surface_geometry sg, ' || schema_name || '.bridge_thematic_surface ts
-             WHERE sg.cityobject_id = ts.id AND ts.bridge_id = :4 AND sg.geometry IS NOT NULL
-         UNION ALL
-         -- bridge installation geometry
-           SELECT citydb_envelope.get_envelope_cityobject(id, objectclass_id, :5) AS geom 
-             FROM ' || schema_name || '.bridge_installation WHERE bridge_id = :6
-         UNION ALL
-         -- bridge opening geometry
-           SELECT citydb_envelope.get_envelope_cityobject(o.id, o.objectclass_id, :7) AS geom 
-             FROM ' || schema_name || '.bridge_opening o, ' || schema_name || '.bridge_open_to_them_srf o2ts, ' || schema_name || '.bridge_thematic_surface ts
-               WHERE o.id = o2ts.bridge_opening_id AND ts.id = o2ts.bridge_thematic_surface_id AND ts.bridge_id = :8
-      )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, schema_name, co_id, co_id, schema_name, co_id, schema_name, co_id;
+      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geometry),:1) AS envelope3d 
+         FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :2 AND geometry IS NOT NULL'
+         INTO envelope USING schema_name, co_id;
+
+    IF set_envelope <> 0 THEN
+      -- update bridge part envelopes
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.bridge WHERE bridge_root_id = :1 AND bridge_parent_id IS NOT NULL' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_bridge(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- thematic surface envelopes
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.bridge_thematic_surface WHERE bridge_id = :1 AND objectclass_id IN (71, 72, 73, 74, 75, 76)' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_bridge_them_srf(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- outer bridge installation
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.bridge_installation WHERE bridge_id = :1 AND objectclass_id = 65' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_bridge_inst(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- bridge construction element
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.bridge_constr_element WHERE bridge_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_bridge_const_elem(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- bridge
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+
+      -- interior bridge_rooms
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.bridge_room WHERE bridge_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        dummy_box := get_envelope_bridge_room(nested_feat_id, set_envelope, schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- interior thematic surfaces
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.bridge_thematic_surface WHERE bridge_id = :1 AND objectclass_id IN (68, 69, 70)' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        dummy_box := get_envelope_bridge_them_srf(nested_feat_id, set_envelope, schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- interior bridge installations
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.bridge_installation WHERE bridge_id = :1 AND objectclass_id = 66' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        dummy_box := get_envelope_bridge_inst(nested_feat_id, set_envelope, schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+    ELSE
+      EXECUTE IMMEDIATE
+        'WITH collect_geom AS (
+           -- bridge part geometry
+             SELECT citydb_envelope.get_envelope_bridge(id, 0, :1) AS geom
+               FROM ' || schema_name || '.bridge WHERE bridge_root_id = :2 AND bridge_parent_id IS NOT NULL
+           UNION ALL
+           -- bridge thematic surface geometry
+             SELECT citydb_envelope.get_envelope_bridge_them_srf(id, 0, :3) AS geom 
+               FROM ' || schema_name || '.bridge_thematic_surface WHERE bridge_id = :4 AND objectclass_id IN (71, 72, 73, 74, 75, 76)
+           UNION ALL
+           -- bridge installation geometry
+             SELECT citydb_envelope.get_envelope_bridge_inst(id, 0, :5) AS geom 
+               FROM ' || schema_name || '.bridge_installation WHERE bridge_id = :6 AND objectclass_id = 66
+           UNION ALL
+           -- bridge construction element geometry
+             SELECT citydb_envelope.get_envelope_bridge_const_elem(id, 0, :7) AS geom 
+               FROM ' || schema_name || '.bridge_installation WHERE bridge_id = :8
+        )
+        SELECT citydb_envelope.update_bounds(
+          :9, citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:10)
+        ,:11) AS envelope3d FROM collect_geom'
+        INTO envelope USING schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, envelope, schema_name, schema_name;
+    END IF;
 
     RETURN envelope;
 
@@ -1247,6 +1718,7 @@ AS
   *
   * @param        @description
   * co_id         identifier for bridge installation
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
@@ -1254,10 +1726,13 @@ AS
   ******************************************************************/
   FUNCTION get_envelope_bridge_inst(
     co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
     EXECUTE IMMEDIATE 
       'WITH collect_geom AS (
@@ -1284,18 +1759,32 @@ AS
          -- lod4 implicit geometry
            SELECT citydb_envelope.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, :9) AS geom 
              FROM ' || schema_name || '.bridge_installation WHERE id = :10 AND lod4_implicit_rep_id IS NOT NULL
-         UNION ALL
-         -- thematic surface geometry
-           SELECT sg.geometry AS geom FROM ' || schema_name || '.surface_geometry sg, ' || schema_name || '.bridge_thematic_surface ts
-             WHERE sg.cityobject_id = ts.id AND ts.bridge_installation_id = :11 AND sg.geometry IS NOT NULL
-         UNION ALL
-         -- opening geometry
-           SELECT citydb_envelope.get_envelope_cityobject(o.id, o.objectclass_id, :12) AS geom 
-             FROM ' || schema_name || '.bridge_opening o, ' || schema_name || '.bridge_open_to_them_srf o2ts, ' || schema_name || '.bridge_thematic_surface ts
-               WHERE o.id = o2ts.bridge_opening_id AND ts.id = o2ts.bridge_thematic_surface_id AND ts.bridge_installation_id = :13
       )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, co_id, schema_name, co_id;
+      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:11) AS envelope3d FROM collect_geom'
+      INTO envelope USING co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name;
+
+    IF set_envelope <> 0 THEN
+      -- thematic surfaces
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.bridge_thematic_surface WHERE bridge_installation_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_bridge_them_srf(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- bridge installation
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    ELSE
+      -- thematic surface geometry
+      EXECUTE IMMEDIATE 
+        'SELECT citydb_envelope.update_bounds(
+           :1, citydb_envelope.box2envelope(SDO_AGGR_MBR(citydb_envelope.get_envelope_bridge_them_srf(id, 0, :2)),:3)
+         ,:4) AS envelope3d FROM ' || schema_name || '.bridge_thematic_surface
+           WHERE bridge_installation_id = :5'
+        INTO envelope USING envelope, schema_name, schema_name, schema_name, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -1310,26 +1799,53 @@ AS
   /*****************************************************************
   * get_envelope_bridge_them_srf
   *
-  * returns the envelope of a given bridge thematic surface
+  * returns the envelope of a given thematic surface
   *
   * @param        @description
-  * co_id         identifier for bridge thematic surface
+  * co_id         identifier for thematic surface
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
-  * aggregated envelope geometry of bridge thematic surface
+  * aggregated envelope geometry of thematic surface
   ******************************************************************/
   FUNCTION get_envelope_bridge_them_srf(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
     EXECUTE IMMEDIATE 
-      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(sg.geometry)) AS envelope3d FROM ' || schema_name || '.surface_geometry sg
-         WHERE sg.cityobject_id = :1 AND sg.geometry IS NOT NULL'
-         INTO envelope USING co_id;
+      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geometry),:1) AS envelope3d 
+         FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :2 AND geometry IS NOT NULL'
+         INTO envelope USING schema_name, co_id;
+
+    IF set_envelope <> 0 THEN
+      -- bridge_openings
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.bridge_opening o, ' || schema_name || '.bridge_open_to_them_srf o2ts
+                                  WHERE o.id = o2ts.bridge_opening_id AND o2ts.bridge_thematic_surface_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_bridge_opening(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- thematic surface
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    ELSE
+      EXECUTE IMMEDIATE 
+        'SELECT citydb_envelope.update_bounds(
+           :1, citydb_envelope.box2envelope(SDO_AGGR_MBR(citydb_envelope.get_envelope_bridge_opening(o.id, 0, :2)),:3)
+         ,:4) AS envelope3d FROM ' || schema_name || '.bridge_opening o, ' || schema_name || '.bridge_open_to_them_srf o2ts
+           WHERE o.id = o2ts.bridge_opening_id AND o2ts.bridge_thematic_surface_id = :5'
+       INTO envelope USING envelope, schema_name, schema_name, schema_name, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -1348,13 +1864,15 @@ AS
   *
   * @param        @description
   * co_id         identifier for bridge opening
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of bridge opening
   ******************************************************************/
   FUNCTION get_envelope_bridge_opening(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
@@ -1362,7 +1880,7 @@ AS
   BEGIN
     EXECUTE IMMEDIATE 
       'WITH collect_geom AS (
-         -- opening geometry
+         -- bridge opening geometry
            SELECT geometry AS geom FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :1 AND geometry IS NOT NULL
          UNION ALL
          -- lod3 implicit geometry
@@ -1373,8 +1891,13 @@ AS
            SELECT citydb_envelope.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, :4) AS geom 
              FROM ' || schema_name || '.bridge_opening WHERE id = :5 AND lod4_implicit_rep_id IS NOT NULL
       )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, schema_name, co_id, schema_name, co_id;
+      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:6) AS envelope3d FROM collect_geom'
+      INTO envelope USING co_id, schema_name, co_id, schema_name, co_id, schema_name;
+
+    IF set_envelope <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -1393,13 +1916,15 @@ AS
   *
   * @param        @description
   * co_id         identifier for bridge furniture
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of bridge furniture
   ******************************************************************/
   FUNCTION get_envelope_bridge_furniture(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
@@ -1417,8 +1942,13 @@ AS
            SELECT citydb_envelope.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, :3) AS geom 
              FROM ' || schema_name || '.bridge_furniture WHERE id = :4 AND lod4_implicit_rep_id IS NOT NULL
       )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, co_id, schema_name, co_id;
+      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:5) AS envelope3d FROM collect_geom'
+      INTO envelope USING co_id, co_id, schema_name, co_id, schema_name;
+
+    IF set_envelope <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -1437,38 +1967,78 @@ AS
   *
   * @param        @description
   * co_id         identifier for bridge room
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of bridge room
   ******************************************************************/
   FUNCTION get_envelope_bridge_room(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
     EXECUTE IMMEDIATE 
-      'WITH collect_geom AS (
-         -- room geometry
-           SELECT geometry AS geom FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :1 AND geometry IS NOT NULL
-         UNION ALL
-         -- interior thematic surface geometry
-           SELECT sg.geometry AS geom FROM ' || schema_name || '.surface_geometry sg, ' || schema_name || '.bridge_thematic_surface ts
-             WHERE sg.cityobject_id = ts.id AND ts.bridge_room_id = :2 AND sg.geometry IS NOT NULL
-         UNION ALL
-         -- interior bridge installation geometry
-           SELECT citydb_envelope.get_envelope_cityobject(id, objectclass_id, :3) AS geom 
-             FROM ' || schema_name || '.bridge_installation WHERE bridge_room_id = :4
-         UNION ALL
-         -- room opening geometry
-           SELECT citydb_envelope.get_envelope_cityobject(o.id, o.objectclass_id, :5) AS geom 
-             FROM ' || schema_name || '.bridge_opening o, ' || schema_name || '.bridge_open_to_them_srf o2ts, ' || schema_name || '.bridge_thematic_surface ts
-               WHERE o.id = o2ts.bridge_opening_id AND ts.id = o2ts.bridge_thematic_surface_id AND ts.bridge_room_id = :6
-      )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, co_id, schema_name, co_id, schema_name, co_id;
+      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geometry),:1) AS envelope3d 
+         FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :2 AND geometry IS NOT NULL'
+         INTO envelope USING schema_name, co_id;
+
+    IF set_envelope <> 0 THEN
+      -- thematic surfaces
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.bridge_thematic_surface WHERE bridge_room_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_bridge_them_srf(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- bridge_room installation
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.bridge_installation WHERE bridge_room_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_bridge_inst(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- bridge furniture
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.bridge_furniture WHERE bridge_room_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_bridge_furniture(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- bridge_room
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    ELSE
+      EXECUTE IMMEDIATE 
+        'WITH collect_geom AS (
+          -- interior thematic surface geometry
+            SELECT citydb_envelope.get_envelope_bridge_them_srf(id, 0, :1) AS geom 
+              FROM ' || schema_name || '.bridge_thematic_surface WHERE bridge_room_id = :2
+          UNION ALL
+          -- bridge_room installation geometry
+            SELECT citydb_envelope.get_envelope_bridge_inst(id, 0, :3) AS geom 
+              FROM ' || schema_name || '.bridge_installation WHERE bridge_room_id = :4
+          UNION ALL
+          -- bridge furniture geometry
+            SELECT citydb_envelope.get_envelope_bridge_furniture(id, 0, :5) AS geom
+              FROM ' || schema_name || '.bridge_furniture WHERE bridge_room_id = :6
+        )
+        SELECT citydb_envelope.update_bounds(
+          :7, citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:8)
+        ,:9) AS envelope3d FROM collect_geom'
+        INTO envelope USING schema_name, co_id, schema_name, co_id, schema_name, co_id, envelope, schema_name, schema_name;
+    END IF;
 
     RETURN envelope;
 
@@ -1487,6 +2057,7 @@ AS
   *
   * @param        @description
   * co_id         identifier for bridge construction element
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
@@ -1494,10 +2065,13 @@ AS
   ******************************************************************/
   FUNCTION get_envelope_bridge_const_elem(
     co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
     EXECUTE IMMEDIATE 
       'WITH collect_geom AS (
@@ -1531,18 +2105,37 @@ AS
          -- lod4 implicit geometry
            SELECT citydb_envelope.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, :12) AS geom 
              FROM ' || schema_name || '.bridge_constr_element WHERE id = :13 AND lod4_implicit_rep_id IS NOT NULL
-         UNION ALL
-         -- thematic surface geometry
-           SELECT sg.geometry AS geom FROM ' || schema_name || '.surface_geometry sg, ' || schema_name || '.bridge_thematic_surface ts
-             WHERE sg.cityobject_id = ts.id AND ts.bridge_constr_element_id = :14 AND sg.geometry IS NOT NULL
-         UNION ALL
-         -- opening geometry
-           SELECT citydb_envelope.get_envelope_cityobject(o.id, o.objectclass_id, :15) AS geom 
-             FROM ' || schema_name || '.bridge_opening o, ' || schema_name || '.bridge_open_to_them_srf o2ts, ' || schema_name || '.bridge_thematic_surface ts
-               WHERE o.id = o2ts.bridge_opening_id AND ts.id = o2ts.bridge_thematic_surface_id AND ts.bridge_constr_element_id = :16
       )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, co_id, schema_name, co_id;
+      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:14) AS envelope3d FROM collect_geom'
+      INTO envelope USING co_id, co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name;
+
+    IF set_envelope <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    END IF;
+
+    IF set_envelope <> 0 THEN
+      -- thematic surfaces
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.bridge_thematic_surface WHERE bridge_constr_element_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_bridge_them_srf(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- bridge construction element
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    ELSE
+      -- thematic surface geometry
+      EXECUTE IMMEDIATE 
+        'SELECT citydb_envelope.update_bounds(
+           :1, citydb_envelope.box2envelope(SDO_AGGR_MBR(citydb_envelope.get_envelope_bridge_them_srf(id, 0, :2)),:3)
+         ,:4) AS envelope3d FROM ' || schema_name || '.bridge_thematic_surface
+           WHERE bridge_constr_element_id = :5'
+        INTO envelope USING envelope, schema_name, schema_name, schema_name, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -1561,6 +2154,7 @@ AS
   *
   * @param        @description
   * co_id         identifier for tunnel
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
@@ -1568,35 +2162,98 @@ AS
   ******************************************************************/
   FUNCTION get_envelope_tunnel(
     co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    dummy_box SDO_GEOMETRY;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
     EXECUTE IMMEDIATE 
-      'WITH collect_geom AS (
-         -- tunnel geometry
-           SELECT geometry AS geom FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :1 AND geometry IS NOT NULL
-         UNION ALL
-         -- tunnel part geometry
-           SELECT citydb_envelope.get_envelope_cityobject(id, 84, :2) AS geom
-             FROM ' || schema_name || '.tunnel WHERE tunnel_root_id = :3 AND tunnel_parent_id IS NOT NULL
-         UNION ALL
-         -- tunnel thematic surface geometry
-           SELECT sg.geometry AS geom FROM ' || schema_name || '.surface_geometry sg, ' || schema_name || '.tunnel_thematic_surface ts
-             WHERE sg.cityobject_id = ts.id AND ts.tunnel_id = :4 AND sg.geometry IS NOT NULL
-         UNION ALL
-         -- tunnel installation geometry
-           SELECT citydb_envelope.get_envelope_cityobject(id, objectclass_id, :5) AS geom 
-             FROM ' || schema_name || '.tunnel_installation WHERE tunnel_id = :6
-         UNION ALL
-         -- tunnel opening geometry
-           SELECT citydb_envelope.get_envelope_cityobject(o.id, o.objectclass_id, :7) AS geom 
-             FROM ' || schema_name || '.tunnel_opening o, ' || schema_name || '.tunnel_open_to_them_srf o2ts, ' || schema_name || '.tunnel_thematic_surface ts
-               WHERE o.id = o2ts.tunnel_opening_id AND ts.id = o2ts.tunnel_thematic_surface_id AND ts.tunnel_id = :8
-      )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, schema_name, co_id, co_id, schema_name, co_id, schema_name, co_id;
+      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geometry),:1) AS envelope3d 
+         FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :2 AND geometry IS NOT NULL'
+         INTO envelope USING schema_name, co_id;
+
+    IF set_envelope <> 0 THEN
+      -- update tunnel part envelopes
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.tunnel WHERE tunnel_root_id = :1 AND tunnel_parent_id IS NOT NULL' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_tunnel(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- thematic surface envelopes
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.tunnel_thematic_surface WHERE tunnel_id = :1 AND objectclass_id IN (92, 93, 94, 95, 96, 97)' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_tunnel_them_srf(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- outer tunnel installation
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.tunnel_installation WHERE tunnel_id = :1 AND objectclass_id = 86' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_tunnel_inst(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- tunnel
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+
+      -- interior hollow spaces
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.tunnel_hollow_space WHERE tunnel_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        dummy_box := get_envelope_tunnel_hspace(nested_feat_id, set_envelope, schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- interior thematic surfaces
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.tunnel_thematic_surface WHERE tunnel_id = :1 AND objectclass_id IN (89, 90, 91)' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        dummy_box := get_envelope_tunnel_them_srf(nested_feat_id, set_envelope, schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- interior tunnel installations
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.tunnel_installation WHERE tunnel_id = :1 AND objectclass_id = 87' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        dummy_box := get_envelope_tunnel_inst(nested_feat_id, set_envelope, schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+    ELSE
+      EXECUTE IMMEDIATE
+        'WITH collect_geom AS (
+           -- tunnel part geometry
+             SELECT citydb_envelope.get_envelope_tunnel(id, 0, :1) AS geom
+               FROM ' || schema_name || '.tunnel WHERE tunnel_root_id = :2 AND tunnel_parent_id IS NOT NULL
+           UNION ALL
+           -- tunnel thematic surface geometry
+             SELECT citydb_envelope.get_envelope_tunnel_them_srf(id, 0, :3) AS geom 
+               FROM ' || schema_name || '.tunnel_thematic_surface WHERE tunnel_id = :4 AND objectclass_id IN (92, 93, 94, 95, 96, 97)
+           UNION ALL
+           -- tunnel installation geometry
+             SELECT citydb_envelope.get_envelope_tunnel_inst(id, 0, :5) AS geom 
+               FROM ' || schema_name || '.tunnel_installation WHERE tunnel_id = :6 AND objectclass_id = 86
+        )
+        SELECT citydb_envelope.update_bounds(
+          :7, citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:8)
+        ,:9) AS envelope3d FROM collect_geom'
+        INTO envelope USING schema_name, co_id, schema_name, co_id, schema_name, co_id, envelope, schema_name, schema_name;
+    END IF;
 
     RETURN envelope;
 
@@ -1615,6 +2272,7 @@ AS
   *
   * @param        @description
   * co_id         identifier for tunnel installation
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
@@ -1622,10 +2280,13 @@ AS
   ******************************************************************/
   FUNCTION get_envelope_tunnel_inst(
     co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
     EXECUTE IMMEDIATE 
       'WITH collect_geom AS (
@@ -1652,18 +2313,32 @@ AS
          -- lod4 implicit geometry
            SELECT citydb_envelope.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, :9) AS geom 
              FROM ' || schema_name || '.tunnel_installation WHERE id = :10 AND lod4_implicit_rep_id IS NOT NULL
-         UNION ALL
-         -- thematic surface geometry
-           SELECT sg.geometry AS geom FROM ' || schema_name || '.surface_geometry sg, ' || schema_name || '.tunnel_thematic_surface ts
-             WHERE sg.cityobject_id = ts.id AND ts.tunnel_installation_id = :11 AND sg.geometry IS NOT NULL
-         UNION ALL
-         -- opening geometry
-           SELECT citydb_envelope.get_envelope_cityobject(o.id, o.objectclass_id, :12) AS geom 
-             FROM ' || schema_name || '.tunnel_opening o, ' || schema_name || '.tunnel_open_to_them_srf o2ts, ' || schema_name || '.tunnel_thematic_surface ts
-             WHERE o.id = o2ts.tunnel_opening_id AND ts.id = o2ts.tunnel_thematic_surface_id AND ts.tunnel_installation_id = :13
       )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, co_id, schema_name, co_id;
+      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:11) AS envelope3d FROM collect_geom'
+      INTO envelope USING co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name;
+
+    IF set_envelope <> 0 THEN
+      -- thematic surfaces
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.tunnel_thematic_surface WHERE tunnel_installation_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_tunnel_them_srf(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- tunnel installation
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    ELSE
+      -- thematic surface geometry
+      EXECUTE IMMEDIATE 
+        'SELECT citydb_envelope.update_bounds(
+           :1, citydb_envelope.box2envelope(SDO_AGGR_MBR(citydb_envelope.get_envelope_tunnel_them_srf(id, 0, :2)),:3)
+         ,:4) AS envelope3d FROM ' || schema_name || '.tunnel_thematic_surface
+           WHERE tunnel_installation_id = :5'
+        INTO envelope USING envelope, schema_name, schema_name, schema_name, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -1678,26 +2353,53 @@ AS
   /*****************************************************************
   * get_envelope_tunnel_them_srf
   *
-  * returns the envelope of a given tunnel thematic surface
+  * returns the envelope of a given thematic surface
   *
   * @param        @description
-  * co_id         identifier for tunnel thematic surface
+  * co_id         identifier for thematic surface
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
-  * aggregated envelope geometry of tunnel thematic surface
+  * aggregated envelope geometry of thematic surface
   ******************************************************************/
   FUNCTION get_envelope_tunnel_them_srf(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
     EXECUTE IMMEDIATE 
-      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(sg.geometry)) AS envelope3d FROM ' || schema_name || '.surface_geometry sg
-         WHERE sg.cityobject_id = :1 AND sg.geometry IS NOT NULL'
-         INTO envelope USING co_id;
+      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geometry),:1) AS envelope3d 
+         FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :2 AND geometry IS NOT NULL'
+         INTO envelope USING schema_name, co_id;
+
+    IF set_envelope <> 0 THEN
+      -- tunnel_openings
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.tunnel_opening o, ' || schema_name || '.tunnel_open_to_them_srf o2ts
+                                  WHERE o.id = o2ts.tunnel_opening_id AND o2ts.tunnel_thematic_surface_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_tunnel_opening(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- thematic surface
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    ELSE
+      EXECUTE IMMEDIATE 
+        'SELECT citydb_envelope.update_bounds(
+           :1, citydb_envelope.box2envelope(SDO_AGGR_MBR(citydb_envelope.get_envelope_tunnel_opening(o.id, 0, :2)),:3)
+         ,:4) AS envelope3d FROM ' || schema_name || '.tunnel_opening o, ' || schema_name || '.tunnel_open_to_them_srf o2ts
+           WHERE o.id = o2ts.tunnel_opening_id AND o2ts.tunnel_thematic_surface_id = :5'
+       INTO envelope USING envelope, schema_name, schema_name, schema_name, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -1716,13 +2418,15 @@ AS
   *
   * @param        @description
   * co_id         identifier for tunnel opening
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of tunnel opening
   ******************************************************************/
   FUNCTION get_envelope_tunnel_opening(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
@@ -1730,7 +2434,7 @@ AS
   BEGIN
     EXECUTE IMMEDIATE 
       'WITH collect_geom AS (
-         -- opening geometry
+         -- tunnel opening geometry
            SELECT geometry AS geom FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :1 AND geometry IS NOT NULL
          UNION ALL
          -- lod3 implicit geometry
@@ -1741,8 +2445,13 @@ AS
            SELECT citydb_envelope.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, :4) AS geom 
              FROM ' || schema_name || '.tunnel_opening WHERE id = :5 AND lod4_implicit_rep_id IS NOT NULL
       )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, schema_name, co_id, schema_name, co_id;
+      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:6) AS envelope3d FROM collect_geom'
+      INTO envelope USING co_id, schema_name, co_id, schema_name, co_id, schema_name;
+
+    IF set_envelope <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -1761,13 +2470,15 @@ AS
   *
   * @param        @description
   * co_id         identifier for tunnel furniture
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of tunnel furniture
   ******************************************************************/
   FUNCTION get_envelope_tunnel_furniture(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
@@ -1785,8 +2496,13 @@ AS
            SELECT citydb_envelope.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, :3) AS geom 
              FROM ' || schema_name || '.tunnel_furniture WHERE id = :4 AND lod4_implicit_rep_id IS NOT NULL
       )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, co_id, schema_name, co_id;
+      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:5) AS envelope3d FROM collect_geom'
+      INTO envelope USING co_id, co_id, schema_name, co_id, schema_name;
+
+    IF set_envelope <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    END IF;
 
     RETURN envelope;
 
@@ -1805,38 +2521,78 @@ AS
   *
   * @param        @description
   * co_id         identifier for tunnel hollow space
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
   * aggregated envelope geometry of tunnel hollow space
   ******************************************************************/
   FUNCTION get_envelope_tunnel_hspace(
-    co_id NUMBER, 
+    co_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
     EXECUTE IMMEDIATE 
-      'WITH collect_geom AS (
-         -- hollow space geometry
-           SELECT geometry AS geom FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :1 AND geometry IS NOT NULL
-         UNION ALL
-         -- interior thematic surface geometry
-           SELECT sg.geometry AS geom FROM ' || schema_name || '.surface_geometry sg, ' || schema_name || '.tunnel_thematic_surface ts
-             WHERE sg.cityobject_id = ts.id AND ts.tunnel_hollow_space_id = :2 AND sg.geometry IS NOT NULL
-         UNION ALL
-         -- interior tunnel installation geometry
-           SELECT citydb_envelope.get_envelope_cityobject(id, objectclass_id, :3) AS geom 
-             FROM ' || schema_name || '.tunnel_installation WHERE tunnel_hollow_space_id = :4
-         UNION ALL
-         -- hollow space opening geometry
-           SELECT citydb_envelope.get_envelope_cityobject(o.id, o.objectclass_id, :5) AS geom 
-             FROM ' || schema_name || '.tunnel_opening o, ' || schema_name || '.tunnel_open_to_them_srf o2ts, ' || schema_name || '.tunnel_thematic_surface ts
-             WHERE o.id = o2ts.tunnel_opening_id AND ts.id = o2ts.tunnel_thematic_surface_id AND ts.tunnel_hollow_space_id = :6
-      )
-      SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom)) AS envelope3d FROM collect_geom'
-      INTO envelope USING co_id, co_id, schema_name, co_id, schema_name, co_id;
+      'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geometry),:1) AS envelope3d 
+         FROM ' || schema_name || '.surface_geometry WHERE cityobject_id = :2 AND geometry IS NOT NULL'
+         INTO envelope USING schema_name, co_id;
+
+    IF set_envelope <> 0 THEN
+      -- thematic surfaces
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.tunnel_thematic_surface WHERE tunnel_hollow_space_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_tunnel_them_srf(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- hollow space installation
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.tunnel_installation WHERE tunnel_hollow_space_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_tunnel_inst(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- tunnel furniture
+      OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.tunnel_furniture WHERE tunnel_hollow_space_id = :1' USING co_id;
+      LOOP
+      FETCH nested_feat_cur INTO nested_feat_id;
+      EXIT WHEN nested_feat_cur%notfound;
+        envelope := update_bounds(envelope, get_envelope_tunnel_furniture(nested_feat_id, set_envelope, schema_name), schema_name);
+      END LOOP;
+      CLOSE nested_feat_cur;
+
+      -- hollow space
+      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                           USING envelope, co_id;
+    ELSE
+      EXECUTE IMMEDIATE 
+        'WITH collect_geom AS (
+          -- interior thematic surface geometry
+            SELECT citydb_envelope.get_envelope_tunnel_them_srf(id, 0, :1) AS geom 
+              FROM ' || schema_name || '.tunnel_thematic_surface WHERE tunnel_hollow_space_id = :2
+          UNION ALL
+          -- hollow space installation geometry
+            SELECT citydb_envelope.get_envelope_tunnel_inst(id, 0, :3) AS geom 
+              FROM ' || schema_name || '.tunnel_installation WHERE tunnel_hollow_space_id = :4
+          UNION ALL
+          -- tunnel furniture geometry
+            SELECT citydb_envelope.get_envelope_tunnel_furniture(id, 0, :5) AS geom
+              FROM ' || schema_name || '.tunnel_furniture WHERE tunnel_hollow_space_id = :6
+        )
+        SELECT citydb_envelope.update_bounds(
+          :7, citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:8)
+        ,:9) AS envelope3d FROM collect_geom'
+        INTO envelope USING schema_name, co_id, schema_name, co_id, schema_name, co_id, envelope, schema_name, schema_name;
+    END IF;
 
     RETURN envelope;
 
@@ -1848,9 +2604,6 @@ AS
   END;
 
 
-  /*
-    PUBLIC FUNCTION (part of get_envelope API)
-  */
   /*****************************************************************
   * get_envelope_cityobject
   *
@@ -1859,6 +2612,7 @@ AS
   * @param        @description
   * co_id         identifier for city object
   * objclass_id   objectclass of city object
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * schema_name   name of schema
   *
   * @return
@@ -1867,6 +2621,7 @@ AS
   FUNCTION get_envelope_cityobject(
     co_id NUMBER, 
     objclass_id NUMBER,
+    set_envelope int := 0,
     schema_name VARCHAR2 := USER
     ) RETURN SDO_GEOMETRY
   IS
@@ -1882,25 +2637,25 @@ AS
     END IF;
 
     CASE
-      WHEN class_id = 4 THEN envelope := get_envelope_land_use(co_id, schema_name);
-      WHEN class_id = 5 THEN envelope := get_envelope_generic_cityobj(co_id, schema_name);
-      WHEN class_id = 7 THEN envelope := get_envelope_solitary_veg_obj(co_id, schema_name);
-      WHEN class_id = 8 THEN envelope := get_envelope_plant_cover(co_id, schema_name);
-      WHEN class_id = 9 THEN envelope := get_envelope_waterbody(co_id, schema_name);
+      WHEN class_id = 4 THEN envelope := get_envelope_land_use(co_id, set_envelope, schema_name);
+      WHEN class_id = 5 THEN envelope := get_envelope_generic_cityobj(co_id, set_envelope, schema_name);
+      WHEN class_id = 7 THEN envelope := get_envelope_solitary_veg_obj(co_id, set_envelope, schema_name);
+      WHEN class_id = 8 THEN envelope := get_envelope_plant_cover(co_id, set_envelope, schema_name);
+      WHEN class_id = 9 THEN envelope := get_envelope_waterbody(co_id, set_envelope, schema_name);
       WHEN class_id = 11 OR
            class_id = 12 OR
-           class_id = 13 THEN envelope := get_envelope_waterbnd_surface(co_id, schema_name);
-      WHEN class_id = 14 THEN envelope := get_envelope_relief_feature(co_id, schema_name);
+           class_id = 13 THEN envelope := get_envelope_waterbnd_surface(co_id, set_envelope, schema_name);
+      WHEN class_id = 14 THEN envelope := get_envelope_relief_feature(co_id, set_envelope, schema_name);
       WHEN class_id = 16 OR
            class_id = 17 OR
            class_id = 18 OR
            class_id = 19 THEN envelope := get_envelope_relief_component(co_id, class_id, schema_name);
-      WHEN class_id = 21 THEN envelope := get_envelope_city_furniture(co_id, schema_name);
-      WHEN class_id = 23 THEN envelope := get_envelope_cityobjectgroup(co_id, schema_name);
+      WHEN class_id = 21 THEN envelope := get_envelope_city_furniture(co_id, set_envelope, schema_name);
+      WHEN class_id = 23 THEN envelope := get_envelope_cityobjectgroup(co_id, set_envelope, 1, schema_name);
       WHEN class_id = 25 OR
-           class_id = 26 THEN envelope := get_envelope_building(co_id, schema_name);
+           class_id = 26 THEN envelope := get_envelope_building(co_id, set_envelope, schema_name);
       WHEN class_id = 27 OR
-           class_id = 28 THEN envelope := get_envelope_building_inst(co_id, schema_name);
+           class_id = 28 THEN envelope := get_envelope_building_inst(co_id, set_envelope, schema_name);
       WHEN class_id = 30 OR
            class_id = 31 OR
            class_id = 32 OR
@@ -1909,21 +2664,21 @@ AS
            class_id = 35 OR
            class_id = 36 OR
            class_id = 60 OR
-           class_id = 61 THEN envelope := get_envelope_thematic_surface(co_id, schema_name);
+           class_id = 61 THEN envelope := get_envelope_thematic_surface(co_id, set_envelope, schema_name);
       WHEN class_id = 38 OR
-           class_id = 39 THEN envelope := get_envelope_opening(co_id, schema_name);
-      WHEN class_id = 40 THEN envelope := get_envelope_building_furn(co_id, schema_name);
-      WHEN class_id = 41 THEN envelope := get_envelope_room(co_id, schema_name);
+           class_id = 39 THEN envelope := get_envelope_opening(co_id, set_envelope, schema_name);
+      WHEN class_id = 40 THEN envelope := get_envelope_building_furn(co_id, set_envelope, schema_name);
+      WHEN class_id = 41 THEN envelope := get_envelope_room(co_id, set_envelope, schema_name);
       WHEN class_id = 43 OR
            class_id = 44 OR
            class_id = 45 OR
-           class_id = 46 THEN envelope := get_envelope_trans_complex(co_id, schema_name);
+           class_id = 46 THEN envelope := get_envelope_trans_complex(co_id, set_envelope, schema_name);
       WHEN class_id = 47 OR
-           class_id = 48 THEN envelope := get_envelope_traffic_area(co_id, schema_name);
+           class_id = 48 THEN envelope := get_envelope_traffic_area(co_id, set_envelope, schema_name);
       WHEN class_id = 63 OR
-           class_id = 64 THEN envelope := get_envelope_bridge(co_id, schema_name);
+           class_id = 64 THEN envelope := get_envelope_bridge(co_id, set_envelope, schema_name);
       WHEN class_id = 65 OR
-           class_id = 66 THEN envelope := get_envelope_bridge_inst(co_id, schema_name);
+           class_id = 66 THEN envelope := get_envelope_bridge_inst(co_id, set_envelope, schema_name);
       WHEN class_id = 68 OR
            class_id = 69 OR
            class_id = 70 OR
@@ -1932,16 +2687,16 @@ AS
            class_id = 73 OR
            class_id = 74 OR
            class_id = 75 OR
-           class_id = 76 THEN envelope := get_envelope_bridge_them_srf(co_id, schema_name);
+           class_id = 76 THEN envelope := get_envelope_bridge_them_srf(co_id, set_envelope, schema_name);
       WHEN class_id = 78 OR
-           class_id = 79 THEN envelope := get_envelope_bridge_opening(co_id, schema_name);
-      WHEN class_id = 80 THEN envelope := get_envelope_bridge_furniture(co_id, schema_name);
-      WHEN class_id = 81 THEN envelope := get_envelope_bridge_room(co_id, schema_name);
-      WHEN class_id = 82 THEN envelope := get_envelope_bridge_const_elem(co_id, schema_name);
+           class_id = 79 THEN envelope := get_envelope_bridge_opening(co_id, set_envelope, schema_name);
+      WHEN class_id = 80 THEN envelope := get_envelope_bridge_furniture(co_id, set_envelope, schema_name);
+      WHEN class_id = 81 THEN envelope := get_envelope_bridge_room(co_id, set_envelope, schema_name);
+      WHEN class_id = 82 THEN envelope := get_envelope_bridge_const_elem(co_id, set_envelope, schema_name);
       WHEN class_id = 84 OR
-           class_id = 85 THEN envelope := get_envelope_tunnel(co_id, schema_name);
+           class_id = 85 THEN envelope := get_envelope_tunnel(co_id, set_envelope, schema_name);
       WHEN class_id = 86 OR
-           class_id = 87 THEN envelope := get_envelope_tunnel_inst(co_id, schema_name);
+           class_id = 87 THEN envelope := get_envelope_tunnel_inst(co_id, set_envelope, schema_name);
       WHEN class_id = 89 OR
            class_id = 90 OR
            class_id = 91 OR
@@ -1950,20 +2705,14 @@ AS
            class_id = 94 OR
            class_id = 95 OR
            class_id = 96 OR
-           class_id = 97 THEN envelope := get_envelope_tunnel_them_srf(co_id, schema_name);
+           class_id = 97 THEN envelope := get_envelope_tunnel_them_srf(co_id, set_envelope, schema_name);
       WHEN class_id = 99 OR
-           class_id = 100 THEN envelope := get_envelope_tunnel_opening(co_id, schema_name);
-      WHEN class_id = 101 THEN envelope := get_envelope_tunnel_furniture(co_id, schema_name);
-      WHEN class_id = 102 THEN envelope := get_envelope_tunnel_hspace(co_id, schema_name);
+           class_id = 100 THEN envelope := get_envelope_tunnel_opening(co_id, set_envelope, schema_name);
+      WHEN class_id = 101 THEN envelope := get_envelope_tunnel_furniture(co_id, set_envelope, schema_name);
+      WHEN class_id = 102 THEN envelope := get_envelope_tunnel_hspace(co_id, set_envelope, schema_name);
     ELSE
       dbms_output.put_line('Can not get envelope of object with ID ' || to_char(co_id) || ' and objectclass_id ' || to_char(class_id) || '.');
     END CASE;
-
-    IF envelope IS NOT NULL THEN
-      -- get reference system of 3DCityDB instance
-      SELECT srid INTO db_srid FROM database_srs;
-      envelope.sdo_srid := db_srid;
-    END IF;
 
     RETURN envelope;
 
@@ -1974,150 +2723,112 @@ AS
 
 
   /*****************************************************************
-  * set_envelope_cityobjectgroup
-  *
-  * updates the envelope of a given city object group
-  *
-  * @param                 @description
-  * group_id               identifier for city object group
-  * only_if_null           if 1 (default) only empty rows of envelope column are updated
-  * set_contained_groups   if 1 (default) contained groups are handled as well
-  * set_contained_members  if 1 (default) contained members are handled as well,
-  * schema_name            name of schema
-  ******************************************************************/
-  PROCEDURE set_envelope_cityobjectgroup(
-    group_id NUMBER,
-    only_if_null int := 1,
-    set_contained_groups int := 1,
-    set_contained_members int := 1,
-    schema_name VARCHAR2 := USER)
-  IS
-    filter VARCHAR2(50) := '';
-    nested_group_cur ref_cursor;
-    nested_group_id NUMBER;
-    group_envelope SDO_GEOMETRY;
-  BEGIN
-    IF only_if_null <> 0 THEN
-      filter := ' AND co.envelope IS NULL';
-    END IF;
-
-    -- first: set envelope for every group member that is a group
-    IF set_contained_groups <> 0 THEN
-      OPEN nested_group_cur FOR 
-        'SELECT co.id FROM ' || schema_name || '.cityobject co, ' || schema_name || '.group_to_cityobject g2c 
-           WHERE co.id = g2c.cityobject_id AND co.objectclass_id = 23 AND g2c.cityobjectgroup_id = :1' USING group_id;
-      LOOP
-        FETCH nested_group_cur INTO nested_group_id;
-        EXIT WHEN nested_group_cur%notfound;
-        citydb_envelope.set_envelope_cityobjectgroup(nested_group_id, only_if_null, set_contained_groups, schema_name);
-      END LOOP;
-      CLOSE nested_group_cur;
-    END IF;
-
-    -- second: set envelope for every group member that is not a group
-    IF set_contained_members <> 0 THEN
-      EXECUTE IMMEDIATE
-        'UPDATE (
-           SELECT co.envelope, citydb_envelope.get_envelope_cityobject(co.id, co.objectclass_id, :1) AS geom
-             FROM ' || schema_name || '.cityobject co, ' || schema_name || '.group_to_cityobject g2c 
-             WHERE co.id = g2c.cityobject_id AND co.objectclass_id != 23 AND g2c.cityobjectgroup_id = :2' || filter || 
-        ') e
-        SET e.envelope = e.geom' USING schema_name, group_id;
-    END IF;
-
-    -- third: get envelope geometry for city object group
-    group_envelope := citydb_envelope.get_envelope_cityobject(group_id, 23, schema_name);
-
-    -- fourth: set envelope of group itself
-    EXECUTE IMMEDIATE
-      'UPDATE ' || schema_name || '.cityobject SET envelope = :1
-         WHERE id = :2' USING group_envelope, group_id;
-
-    EXCEPTION
-      WHEN OTHERS THEN
-        dbms_output.put_line('An error occurred when executing function "citydb_envelope.set_envelope_cityobjectgroup": ' || SQLERRM);
-  END;
-
-
-  /*****************************************************************
-  * set_envelope_cityobject
-  *
-  * updates the envelope of a given city object
-  *
-  * @param        @description
-  * co_id         identifier for city object
-  * schema_name   name of schema
-  ******************************************************************/
-  PROCEDURE set_envelope_cityobject(co_id NUMBER, schema_name VARCHAR2 := USER)
-  IS
-  BEGIN
-    EXECUTE IMMEDIATE
-      'UPDATE ' || schema_name || '.cityobject SET envelope = citydb_envelope.get_envelope_cityobject(id, objectclass_id, :1)
-         WHERE id = :2' USING schema_name, co_id;
-
-    EXCEPTION
-      WHEN OTHERS THEN
-        -- for a city object group ORA-04091 (mutated table) and ORA-06503 would occur
-        IF SQLCODE = -6503 THEN
-          dbms_output.put_line('If given city object is a group, please use citydb_envelope.set_envelope_cityobjectgroup instead.');
-        ELSE
-          dbms_output.put_line('An error occurred when executing function "citydb_envelope.set_envelope_cityobject": ' || SQLERRM);
-        END IF;
-  END;
-
-
-  /*****************************************************************
-  * set_envelope_cityobjects
+  * get_envelope_cityobjects
   *
   * updates envelopes for all city objects of a given objectclass
   *
   * @param        @description
   * objclass_id   if 0 functions runs against every city object
+  * set_envelope  if 1 (default = 0) the envelope column is updated
   * only_if_null  if 1 (default) only empty rows of envelope column are updated
   * schema_name   name of schema
   ******************************************************************/
-  PROCEDURE set_envelope_cityobjects(
+  FUNCTION get_envelope_cityobjects(
     objclass_id NUMBER := 0,
+    set_envelope int := 0,
     only_if_null int := 1,
-    schema_name VARCHAR2 := USER)
+    schema_name VARCHAR2 := USER
+    ) RETURN SDO_GEOMETRY
   IS
-    filter VARCHAR2(50) := '';
-    group_cur ref_cursor;
-    group_id NUMBER;
+    envelope SDO_GEOMETRY;
+    filter VARCHAR2(150) := '';
+    group_filter VARCHAR2(150) := '';
+    cityobject_cur ref_cursor;
+    cityobject_rec cityobject%rowtype;
+    nested_feat_cur ref_cursor;
+    nested_feat_id NUMBER;
   BEGIN
-    IF objclass_id <> 0 THEN
-      filter := ' WHERE objectclass_id = ' || to_char(objclass_id);
-    ELSE
-      filter := ' WHERE objectclass_id != 23';
-    END IF;
-
     IF only_if_null <> 0 THEN
-      filter := filter || ' AND envelope IS NULL';
+      filter := ' WHERE envelope IS NULL';
     END IF;
 
-    -- updating envelopes of city objects except groups
-    IF objclass_id <> 23 THEN
-      EXECUTE IMMEDIATE
-        'UPDATE ' || schema_name || '.cityobject SET envelope = citydb_envelope.get_envelope_cityobject(id, objectclass_id, :1)' || filter 
-           USING schema_name;
+    IF objclass_id <> 0 THEN
+      filter := CASE WHEN filter IS NULL THEN ' WHERE ' ELSE filter || ' AND ' END;
+      filter := filter || 'objectclass_id = ' || to_char(objclass_id);
+
+      IF set_envelope <> 0 THEN
+        OPEN cityobject_cur FOR 'SELECT * FROM ' || schema_name || '.cityobject' || filter;
+        LOOP
+          FETCH cityobject_cur INTO cityobject_rec;
+          EXIT WHEN cityobject_cur%notfound;
+          envelope := citydb_envelope.update_bounds(envelope, get_envelope_cityobject(cityobject_rec.id, cityobject_rec.objectclass_id, set_envelope, schema_name), schema_name);
+        END LOOP;
+        CLOSE cityobject_cur;
+      ELSE
+        EXECUTE IMMEDIATE
+          'SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(citydb_envelope.get_envelope_cityobject(id, objectclass_id, 0, :1)),:2) AS envelope3d 
+             FROM ' || schema_name || '.cityobject' || filter
+             INTO envelope USING schema_name, schema_name;
+      END IF;
+    ELSE
+      group_filter := CASE WHEN filter IS NULL THEN ' WHERE ' ELSE filter || ' AND ' END;
+      group_filter := group_filter || 'objectclass_id = 23';
+
+      filter := CASE WHEN filter IS NULL THEN ' WHERE ' ELSE filter || ' AND ' END;
+      filter := filter || 'objectclass_id IN (4, 5, 7, 8, 9, 14, 21, 25, 26, 42, 43, 44, 45, 46, 63, 64, 84, 85)';
+
+      IF set_envelope <> 0 THEN
+        -- first: update envelope for each top-level feature not being group
+        OPEN cityobject_cur FOR 'SELECT * FROM ' || schema_name || '.cityobject' || filter;
+        LOOP
+          FETCH cityobject_cur INTO cityobject_rec;
+          EXIT WHEN cityobject_cur%notfound;
+          envelope := citydb_envelope.update_bounds(envelope, get_envelope_cityobject(cityobject_rec.id, cityobject_rec.objectclass_id, set_envelope, schema_name), schema_name);
+        END LOOP;
+        CLOSE cityobject_cur;
+
+        -- second: work on city object groups
+        OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.cityobject' || group_filter;
+        LOOP
+          FETCH nested_feat_cur INTO nested_feat_id;
+          EXIT WHEN nested_feat_cur%notfound;
+          envelope := citydb_envelope.update_bounds(envelope, get_envelope_cityobjectgroup(nested_feat_id, set_envelope, 0, schema_name), schema_name);
+        END LOOP;
+        CLOSE nested_feat_cur;
+
+        -- third: work on remaining nested features not being groups
+        OPEN cityobject_cur FOR 'SELECT * FROM ' || schema_name || '.cityobject WHERE envelope IS NULL AND objectclass_id <> 23';
+        LOOP
+          FETCH cityobject_cur INTO cityobject_rec;
+          EXIT WHEN cityobject_cur%notfound;
+          envelope := citydb_envelope.update_bounds(envelope, get_envelope_cityobject(cityobject_rec.id, cityobject_rec.objectclass_id, set_envelope, schema_name), schema_name);
+        END LOOP;
+        CLOSE cityobject_cur;
+      ELSE
+        EXECUTE IMMEDIATE
+        'WITH collect_geom AS (
+           -- top-level feature geometry
+             SELECT citydb_envelope.get_envelope_cityobject(id, objectclass_id, 0, :1) AS geom
+               FROM ' || schema_name || '.cityobject' || filter || '
+           UNION ALL
+           -- cityobject group
+             SELECT citydb_envelope.get_envelope_cityobjectgroup(id, 0, 0, :2) AS geom
+               FROM ' || schema_name || '.cityobject' || group_filter || '
+           UNION ALL
+           -- remaining nested features
+             SELECT citydb_envelope.get_envelope_cityobject(id, objectclass_id, 0, :3) AS geom
+               FROM ' || schema_name || '.cityobject WHERE envelope IS NULL AND objectclass_id <> 23
+         )
+         SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:4) AS envelope3d FROM collect_geom'
+         INTO envelope USING schema_name, schema_name, schema_name, schema_name;
+      END IF;
     END IF;
 
-    -- updating envelopes of city object groups
-    IF objclass_id = 0 OR objclass_id = 23 THEN
-      OPEN group_cur FOR 'SELECT id FROM ' || schema_name || '.cityobject ' || replace(filter, '!=','=');
-      LOOP
-        FETCH group_cur INTO group_id;
-        EXIT WHEN group_cur%notfound;
-        -- no need to update nested groups (third parameter) as all groups are processed here
-        -- if objclass_id is 0 members will not be processed (fourth parameter) as they have already been updated
-        citydb_envelope.set_envelope_cityobjectgroup(group_id, only_if_null, 0, objclass_id, schema_name);
-      END LOOP;
-      CLOSE group_cur;
-    END IF;
+    RETURN envelope;
 
     EXCEPTION
       WHEN OTHERS THEN
-        dbms_output.put_line('An error occurred when executing function "citydb_envelope.set_envelope_cityobjects": ' || SQLERRM);
+        dbms_output.put_line('An error occurred when executing function "citydb_envelope.get_envelope_cityobjects": ' || SQLERRM);
   END;
 
 END citydb_envelope;
