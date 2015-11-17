@@ -211,7 +211,7 @@ AS
     schema_name VARCHAR2 := USER
   ) RETURN SDO_GEOMETRY
   IS
-    --db_srid NUMBER;
+    envelope SDO_GEOMETRY;
     params ID_ARRAY := ID_ARRAY();
     matrix_ex EXCEPTION;
     anchor_pt SDO_GEOMETRY;
@@ -223,7 +223,6 @@ AS
     do_shearing VARCHAR2(5) := 'TRUE';
     do_reflection VARCHAR2(5) := 'TRUE';
     reflection_axis NUMBER(1) := -1;
-    envelope SDO_GEOMETRY;
   BEGIN
     -- calculate bounding box for implicit geometry
     EXECUTE IMMEDIATE 
@@ -400,7 +399,7 @@ AS
          WHERE sg.cityobject_id = :2 AND sg.geometry IS NOT NULL'
          INTO envelope USING schema_name, co_id;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
                            USING envelope, co_id;
     END IF;
@@ -479,7 +478,7 @@ AS
       SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:17) AS envelope3d FROM collect_geom'
       INTO envelope USING co_id, co_id, co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
                            USING envelope, co_id;
     END IF;
@@ -551,7 +550,7 @@ AS
       SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:14) AS envelope3d FROM collect_geom'
       INTO envelope USING co_id, co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
                            USING envelope, co_id;
     END IF;
@@ -592,7 +591,7 @@ AS
          WHERE sg.cityobject_id = :2 AND sg.geometry IS NOT NULL'
          INTO envelope USING schema_name, co_id;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
                            USING envelope, co_id;
     END IF;
@@ -647,8 +646,10 @@ AS
       CLOSE nested_feat_cur;
 
       -- water body
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
     ELSE
       EXECUTE IMMEDIATE 
         'SELECT citydb_envelope.update_bounds(
@@ -694,7 +695,7 @@ AS
          WHERE sg.cityobject_id = :2 AND sg.geometry IS NOT NULL'
          INTO envelope USING schema_name, co_id;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
                            USING envelope, co_id;
     END IF;
@@ -732,7 +733,7 @@ AS
     relief_component_cur ref_cursor;
     relief_component_rec relief_component%rowtype;
   BEGIN
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       -- relief components
       OPEN relief_component_cur FOR 'SELECT rc.* FROM ' || schema_name || '.relief_component rc, ' || schema_name || '.relief_feat_to_rel_comp rf2rc 
                                   WHERE rc.id = rf2rc.relief_component_id AND rf2rc.relief_feature_id = :1' USING co_id;
@@ -744,8 +745,10 @@ AS
       CLOSE relief_component_cur;
 
       -- relief feature
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
     ELSE
       EXECUTE IMMEDIATE
         'SELECT citydb_envelope.update_bounds(
@@ -858,7 +861,7 @@ AS
         END;
       END CASE;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       -- update envelope column of cityobject table
       EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
                            USING envelope, co_id;
@@ -931,7 +934,7 @@ AS
       SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:14) AS envelope3d FROM collect_geom'
       INTO envelope USING co_id, co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
                            USING envelope, co_id;
     END IF;
@@ -1012,7 +1015,7 @@ AS
         INTO envelope USING envelope, schema_name, schema_name, co_id;
     END IF;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
                            USING envelope, co_id;
 
@@ -1092,8 +1095,10 @@ AS
       CLOSE nested_feat_cur;
 
       -- building
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
 
       -- interior rooms
       OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.room WHERE building_id = :1' USING co_id;
@@ -1215,8 +1220,10 @@ AS
       CLOSE nested_feat_cur;
 
       -- building installation
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
     ELSE
       EXECUTE IMMEDIATE 
         'SELECT citydb_envelope.update_bounds(
@@ -1276,8 +1283,10 @@ AS
       CLOSE nested_feat_cur;
 
       -- thematic surface
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
     ELSE
       EXECUTE IMMEDIATE 
         'SELECT citydb_envelope.update_bounds(
@@ -1334,7 +1343,7 @@ AS
       SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:6) AS envelope3d FROM collect_geom'
       INTO envelope USING co_id, schema_name, co_id, schema_name, co_id, schema_name;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
                            USING envelope, co_id;
     END IF;
@@ -1385,7 +1394,7 @@ AS
       SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:5) AS envelope3d FROM collect_geom'
       INTO envelope USING co_id, co_id, schema_name, co_id, schema_name;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
                            USING envelope, co_id;
     END IF;
@@ -1457,8 +1466,10 @@ AS
       CLOSE nested_feat_cur;
 
       -- room
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
     ELSE
       EXECUTE IMMEDIATE 
         'WITH collect_geom AS (
@@ -1535,8 +1546,10 @@ AS
       CLOSE nested_feat_cur;
 
       -- transportation complex
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
     ELSE
       EXECUTE IMMEDIATE 
         'SELECT citydb_envelope.update_bounds(
@@ -1581,7 +1594,7 @@ AS
          WHERE sg.cityobject_id = :2 AND sg.geometry IS NOT NULL'
          INTO envelope USING schema_name, co_id;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
                            USING envelope, co_id;
     END IF;
@@ -1663,8 +1676,10 @@ AS
       CLOSE nested_feat_cur;
 
       -- bridge
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
 
       -- interior bridge_rooms
       OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.bridge_room WHERE bridge_id = :1' USING co_id;
@@ -1790,8 +1805,10 @@ AS
       CLOSE nested_feat_cur;
 
       -- bridge installation
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
     ELSE
       -- thematic surface geometry
       EXECUTE IMMEDIATE 
@@ -1852,8 +1869,10 @@ AS
       CLOSE nested_feat_cur;
 
       -- thematic surface
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
     ELSE
       EXECUTE IMMEDIATE 
         'SELECT citydb_envelope.update_bounds(
@@ -1910,7 +1929,7 @@ AS
       SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:6) AS envelope3d FROM collect_geom'
       INTO envelope USING co_id, schema_name, co_id, schema_name, co_id, schema_name;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
                            USING envelope, co_id;
     END IF;
@@ -1961,7 +1980,7 @@ AS
       SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:5) AS envelope3d FROM collect_geom'
       INTO envelope USING co_id, co_id, schema_name, co_id, schema_name;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
                            USING envelope, co_id;
     END IF;
@@ -2033,8 +2052,10 @@ AS
       CLOSE nested_feat_cur;
 
       -- bridge_room
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
     ELSE
       EXECUTE IMMEDIATE 
         'WITH collect_geom AS (
@@ -2126,11 +2147,6 @@ AS
       INTO envelope USING co_id, co_id, co_id, co_id, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name;
 
     IF set_envelope <> 0 THEN
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
-    END IF;
-
-    IF set_envelope <> 0 THEN
       -- thematic surfaces
       OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.bridge_thematic_surface WHERE bridge_constr_element_id = :1' USING co_id;
       LOOP
@@ -2141,8 +2157,10 @@ AS
       CLOSE nested_feat_cur;
 
       -- bridge construction element
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
     ELSE
       -- thematic surface geometry
       EXECUTE IMMEDIATE 
@@ -2221,8 +2239,10 @@ AS
       CLOSE nested_feat_cur;
 
       -- tunnel
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
 
       -- interior hollow spaces
       OPEN nested_feat_cur FOR 'SELECT id FROM ' || schema_name || '.tunnel_hollow_space WHERE tunnel_id = :1' USING co_id;
@@ -2344,8 +2364,10 @@ AS
       CLOSE nested_feat_cur;
 
       -- tunnel installation
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
     ELSE
       -- thematic surface geometry
       EXECUTE IMMEDIATE 
@@ -2406,8 +2428,10 @@ AS
       CLOSE nested_feat_cur;
 
       -- thematic surface
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
     ELSE
       EXECUTE IMMEDIATE 
         'SELECT citydb_envelope.update_bounds(
@@ -2464,7 +2488,7 @@ AS
       SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:6) AS envelope3d FROM collect_geom'
       INTO envelope USING co_id, schema_name, co_id, schema_name, co_id, schema_name;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
                            USING envelope, co_id;
     END IF;
@@ -2515,7 +2539,7 @@ AS
       SELECT citydb_envelope.box2envelope(SDO_AGGR_MBR(geom),:5) AS envelope3d FROM collect_geom'
       INTO envelope USING co_id, co_id, schema_name, co_id, schema_name;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND envelope IS NOT NULL THEN
       EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
                            USING envelope, co_id;
     END IF;
@@ -2587,8 +2611,10 @@ AS
       CLOSE nested_feat_cur;
 
       -- hollow space
-      EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
-                           USING envelope, co_id;
+      IF envelope IS NOT NULL THEN
+        EXECUTE IMMEDIATE 'UPDATE ' || schema_name || '.cityobject SET envelope = :1 WHERE id = :2'
+                             USING envelope, co_id;
+      END IF;
     ELSE
       EXECUTE IMMEDIATE 
         'WITH collect_geom AS (
@@ -2646,7 +2672,7 @@ AS
     db_srid NUMBER;
   BEGIN
     -- fetching class_id if it is NULL
-    IF objclass_id IS NULL THEN
+    IF objclass_id IS NULL OR objclass_id = 0 THEN
       EXECUTE IMMEDIATE 'SELECT objectclass_id FROM '||schema_name||'.cityobject WHERE id = :1' INTO class_id USING co_id;
     ELSE
       class_id := objclass_id;
