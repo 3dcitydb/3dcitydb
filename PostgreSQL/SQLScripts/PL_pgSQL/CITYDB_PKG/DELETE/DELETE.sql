@@ -284,6 +284,8 @@ $$
 DECLARE
   genattrib_parent_id INTEGER;
   data_type INTEGER;
+  member_id INTEGER;
+  member_rec RECORD;
   deleted_id INTEGER;
 BEGIN
   -- get parent_id and data type
@@ -296,29 +298,36 @@ BEGIN
   IF data_type = 7 THEN
     IF delete_members <> 0 THEN
       -- recursive delete of nested attributes
-      EXECUTE format('WITH RECURSIVE parts AS (
-                        SELECT id FROM %I.cityobject_genericattrib 
-                          WHERE parent_genattrib_id = %L
-                        UNION ALL
-                        SELECT part.id FROM %I.cityobject_genericattrib part, parts p 
-                          WHERE part.parent_genattrib_id = p.id
-                      )
-                      DELETE FROM %I.cityobject_genericattrib g USING parts p 
-                        WHERE g.id = p.id', 
-                        schema_name, genattrib_id, schema_name, schema_name);
+      FOR member_id IN EXECUTE format(
+        'WITH RECURSIVE parts AS (
+           SELECT id FROM %I.cityobject_genericattrib 
+             WHERE parent_genattrib_id = %L
+           UNION ALL
+             SELECT part.id FROM %I.cityobject_genericattrib part, parts p 
+               WHERE part.parent_genattrib_id = p.id
+         ) SELECT id FROM parts', 
+         schema_name, genattrib_id, schema_name)
+      LOOP
+        EXECUTE format('DELETE FROM %I.cityobject_genericattrib WHERE id = %L', schema_name, member_id);
+      END LOOP;
     ELSE
       -- recursive update of nested attributes
-      EXECUTE format('WITH RECURSIVE parts (id, parent_id, root_id) AS (
-                        SELECT id, %L::integer AS parent_id, 
-                          CASE WHEN root_genattrib_id = %L THEN id ELSE root_genattrib_id END AS root_id
-                          FROM %I.cityobject_genericattrib WHERE parent_genattrib_id = %L
-                        UNION ALL
-                        SELECT part.id, part.parent_genattrib_id AS parent_id, p.root_id FROM %I.cityobject_genericattrib part, parts p 
-                          WHERE part.parent_genattrib_id = p.id
-                      )
-                      UPDATE %I.cityobject_genericattrib g SET parent_genattrib_id = p.parent_id, root_genattrib_id = p.root_id
-                        FROM parts p WHERE g.id = p.id',
-                        genattrib_parent_id, genattrib_id, schema_name, genattrib_id, schema_name, schema_name);
+      FOR member_rec IN EXECUTE format(
+        'WITH RECURSIVE parts (id, parent_id, root_id) AS (
+           SELECT id, %L::integer AS parent_id, 
+             CASE WHEN root_genattrib_id = %L THEN id ELSE root_genattrib_id END AS root_id
+             FROM %I.cityobject_genericattrib WHERE parent_genattrib_id = %L
+           UNION ALL
+             SELECT part.id, part.parent_genattrib_id AS parent_id, p.root_id FROM %I.cityobject_genericattrib part, parts p 
+               WHERE part.parent_genattrib_id = p.id
+         )
+         SELECT id, parent_id, root_id FROM parts',
+         genattrib_parent_id, genattrib_id, schema_name, genattrib_id, schema_name)
+      LOOP
+        EXECUTE format(
+          'UPDATE %I.cityobject_genericattrib SET parent_genattrib_id = %L, root_genattrib_id = %L WHERE id = %L',
+           schema_name, member_rec.parent_id, member_rec.root_id, member_rec.id);
+      END LOOP;
     END IF;
   END IF;
 
