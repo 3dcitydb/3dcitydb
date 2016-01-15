@@ -1,6 +1,6 @@
 -- STAT.sql
 --
--- Authors:     Felix Kunde <fkunde@virtualcitysystems.de>
+-- Authors:     Felix Kunde <felix-kunde@gmx.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
 --
 -- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
@@ -24,6 +24,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                          | Author
+-- 2.1.0     2016-01-15   removed dynamic SQL                    FKun
 -- 2.0.0     2014-10-10   complete revision for 3DCityDB V3      FKun
 -- 1.0.0     2013-02-22   PostGIS version                        CNag     
 --                                                               FKun
@@ -52,27 +53,28 @@ BEGIN
   report_header := array_append(report_header, '===================================================================');
   PERFORM array_append(report_header, '');
 
-  EXECUTE 'SELECT array_agg(t) FROM 
-             (SELECT ''#'' || upper(table_name) ||
-                (CASE WHEN length(table_name) < 7 THEN E''\t\t\t\t''
-                      WHEN length(table_name) > 6 AND length(table_name) < 15 THEN E''\t\t\t''
-                      WHEN length(table_name) > 14 AND length(table_name) < 23 THEN E''\t\t''
-                      WHEN length(table_name) > 22 THEN E''\t''
-                END)
-			 || citydb_pkg.table_content(table_name, table_schema) AS t 
-                FROM information_schema.tables WHERE table_schema = $1 
-                AND table_name != ''database_srs'' 
-                AND table_name != ''objectclass'' 
-                AND table_name NOT LIKE ''tmp_%''
-                ORDER BY table_name ASC
-              ) tab' INTO report USING schema_name;
+  SELECT array_agg(t) INTO report FROM (
+    SELECT '#' || upper(table_name) || (
+      CASE WHEN length(table_name) < 7 THEN E'\t\t\t\t'
+        WHEN length(table_name) > 6 AND length(table_name) < 15 THEN E'\t\t\t'
+        WHEN length(table_name) > 14 AND length(table_name) < 23 THEN E'\t\t'
+        WHEN length(table_name) > 22 THEN E'\t'
+      END
+      ) || citydb_pkg.table_content(table_name, table_schema) AS t 
+      FROM information_schema.tables
+        WHERE table_schema = schema_name 
+          AND table_name != 'database_srs' 
+          AND table_name != 'objectclass'
+          AND table_name NOT LIKE 'tmp_%'
+      ORDER BY table_name ASC
+    ) tab;
 
   report := array_cat(report_header,report);
   
   RETURN report;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STABLE;
 
 
 /*****************************************************************
@@ -93,4 +95,4 @@ BEGIN
   RETURN cnt;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STABLE;

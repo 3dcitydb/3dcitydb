@@ -1,7 +1,7 @@
 -- UTIL.sql
 --
 -- Authors:     Claus Nagel <cnagel@virtualcitysystems.de>
---              Felix Kunde <fkunde@virtualcitysystems.de>
+--              Felix Kunde <felix-kunde@gmx.de>
 --
 -- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
@@ -24,6 +24,8 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                                | Author
+-- 2.1.0     2016-01-15   removed dynamic SQL and changed function     FKun
+--                        parameters
 -- 2.0.0     2014-07-30   revision for 3DCityDB V3                     FKun
 -- 1.2.0     2013-08-29   minor changes to change_db_srid function     FKun
 -- 1.1.0     2013-02-22   PostGIS version                              FKun
@@ -84,7 +86,7 @@ BEGIN
   RETURN NEXT;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql IMMUTABLE;
 
 
 /*****************************************************************
@@ -99,11 +101,9 @@ CREATE OR REPLACE FUNCTION citydb_pkg.versioning_table(
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS TEXT AS 
 $$
-BEGIN
-  RETURN 'OFF';
-END;
+  SELECT 'OFF'::text;
 $$
-LANGUAGE plpgsql;
+LANGUAGE sql IMMUTABLE;
 
 
 /*****************************************************************
@@ -114,11 +114,9 @@ LANGUAGE plpgsql;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.versioning_db(schema_name TEXT DEFAULT 'citydb') RETURNS TEXT AS 
 $$
-BEGIN
-  RETURN 'OFF';
-END;
+  SELECT 'OFF'::text;
 $$
-LANGUAGE plpgsql;
+LANGUAGE sql IMMUTABLE;
 
 
 /*****************************************************************
@@ -132,14 +130,14 @@ CREATE OR REPLACE FUNCTION citydb_pkg.db_info(
   OUT schema_srid INTEGER, 
   OUT schema_gml_srs_name TEXT,
   OUT versioning TEXT
-  ) RETURNS RECORD AS 
+  ) AS 
 $$
 BEGIN
-  EXECUTE 'SELECT srid, gml_srs_name FROM database_srs' INTO schema_srid, schema_gml_srs_name;
+  SELECT srid, gml_srs_name INTO schema_srid, schema_gml_srs_name FROM database_srs;
   versioning := citydb_pkg.versioning_db(current_schema());
 END;
 $$ 
-LANGUAGE plpgsql IMMUTABLE;
+LANGUAGE plpgsql STABLE;
 
 
 /******************************************************************
@@ -158,15 +156,15 @@ CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata() RETURNS TABLE(
   ) AS 
 $$
 BEGIN
-  EXECUTE 'SELECT SRID, GML_SRS_NAME FROM DATABASE_SRS' INTO schema_srid, schema_gml_srs_name;
-  EXECUTE 'SELECT srtext FROM spatial_ref_sys WHERE SRID=$1' INTO wktext USING schema_srid;
+  SELECT srid, gml_srs_name INTO schema_srid, schema_gml_srs_name FROM database_srs;
+  SELECT srtext INTO wktext FROM spatial_ref_sys WHERE srid = schema_srid;
   coord_ref_sys_name := split_part(wktext, '"', 2);
   coord_ref_sys_kind := split_part(wktext, '[', 1);
   versioning := citydb_pkg.versioning_db();
   RETURN NEXT;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STABLE;
 
 
 /******************************************************************
@@ -189,7 +187,7 @@ BEGIN
   END IF;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql IMMUTABLE STRICT;
 
 
 /******************************************************************
@@ -253,12 +251,13 @@ BEGIN
     RAISE NOTICE 'Constraints are set to ON DELETE CASCADE';
   END IF;
 
-  EXECUTE 'SELECT citydb_pkg.update_table_constraint(tc.constraint_name, tc.table_name, kcu.column_name, ccu.table_name, ccu.column_name, $2, tc.table_schema)
-             FROM information_schema.table_constraints AS tc
-             JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
-             JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
-               WHERE constraint_type = ''FOREIGN KEY'' AND tc.table_schema = $1 AND kcu.table_schema = $1'
-               USING schema_name, delete_param;
+  PERFORM citydb_pkg.update_table_constraint(tc.constraint_name, tc.table_name, kcu.column_name, ccu.table_name, ccu.column_name, delete_param, tc.table_schema)
+    FROM information_schema.table_constraints AS tc
+    JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
+    JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
+      WHERE constraint_type = 'FOREIGN KEY' 
+        AND tc.table_schema = schema_name 
+        AND kcu.table_schema = schema_name;
 END;
 $$
 LANGUAGE plpgsql;
@@ -275,9 +274,13 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_seq_values(
   seq_name TEXT,
   seq_count INTEGER,
   schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS SETOF INTEGER AS $$
+  ) RETURNS SETOF INTEGER AS 
+$$
 BEGIN
-  RETURN QUERY EXECUTE 'SELECT nextval($1)::int FROM generate_series(1, $2)' USING schema_name || '.' || seq_name, seq_count;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name, true);
+
+  RETURN QUERY SELECT nextval($1)::int FROM generate_series(1, $2);
 END;
 $$
 LANGUAGE plpgsql;
@@ -293,7 +296,7 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION citydb_pkg.objectclass_id_to_table_name(class_id INTEGER) RETURNS TEXT AS
 $$
 DECLARE
-  table_name TEXT := '';
+  table_name TEXT;
 BEGIN
   CASE 
     WHEN class_id = 4 THEN table_name := 'land_use';
@@ -377,4 +380,4 @@ BEGIN
   RETURN table_name;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql IMMUTABLE STRICT;
