@@ -1,9 +1,9 @@
 -- SRS.sql
 --
--- Authors:     Felix Kunde <fkunde@virtualcitysystems.de>
+-- Authors:     Felix Kunde <felix-kunde@gmx.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
 --
--- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+-- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
 --                             http://www.gis.bv.tum.de
 --
@@ -24,6 +24,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                          | Author
+-- 1.1.0     2015-01-16   removed some dynamic SQL code          FKun
 -- 1.0.0     2014-10-22   new script for 3DCityDB V3             FKun
 --                                                               CNag
 --
@@ -54,16 +55,9 @@
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER AS 
 $$
-DECLARE
-  is_3d INTEGER := 0;
-BEGIN
-  EXECUTE 'SELECT 1 FROM spatial_ref_sys WHERE auth_srid=$1 AND srtext LIKE ''%UP]%''' 
-             INTO is_3d USING schema_srid;
-
-  RETURN is_3d;
-END;
+  SELECT 1 FROM spatial_ref_sys WHERE auth_srid = schema_srid AND srtext LIKE '%UP]%';
 $$
-LANGUAGE plpgsql;
+LANGUAGE sql STABLE;
 
 
 /******************************************************************
@@ -71,15 +65,14 @@ LANGUAGE plpgsql;
 *
 * @RETURN NUMERIC the boolean result encoded as NUMERIC: 0 = false, 1 = true                
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d() RETURNS INTEGER AS $$
-DECLARE
-  schema_srid INTEGER;
-BEGIN
-  EXECUTE 'SELECT srid from DATABASE_SRS' INTO schema_srid;
-  RETURN citydb_pkg.is_coord_ref_sys_3d(schema_srid);
-END;
+CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d() RETURNS INTEGER AS
 $$
-LANGUAGE plpgsql;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name, true);
+  
+  SELECT citydb_pkg.is_coord_ref_sys_3d(srid) FROM database_srs;
+$$
+LANGUAGE sql STABLE;
 
 
 /*******************************************************************
@@ -94,7 +87,7 @@ $$
 DECLARE
   schema_srid INTEGER;
 BEGIN
-  EXECUTE 'SELECT srid FROM spatial_ref_sys WHERE srid = $1' INTO schema_srid USING srsno;
+  SELECT srid INTO schema_srid FROM spatial_ref_sys WHERE srid = srsno;
 
   IF schema_srid IS NULL THEN
     RAISE EXCEPTION 'Table spatial_ref_sys does not contain the SRID %. Insert commands for missing SRIDs can be found at spatialreference.org', srsno;
@@ -104,7 +97,7 @@ BEGIN
   RETURN 'SRID ok';
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STABLE;
 
 
 /******************************************************************
@@ -127,7 +120,7 @@ BEGIN
   END IF;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STABLE;
 
 
 /*****************************************************************
@@ -155,19 +148,18 @@ DECLARE
   geometry_type TEXT;
 BEGIN
   -- check if a spatial index is defined for the column
-  EXECUTE 'SELECT pgc_i.relname AS idx_name 
-             FROM pg_class pgc_t, pg_class pgc_i, pg_index pgi, 
-                  pg_am pgam, pg_attribute pga, pg_namespace pgns
-             WHERE pgc_t.oid = pgi.indrelid
-               AND pgc_i.oid = pgi.indexrelid
-               AND pgam.oid = pgc_i.relam
-               AND pga.attrelid = pgc_i.oid
-               AND pgns.oid = pgc_i.relnamespace
-               AND pgns.nspname = $1
-               AND pgc_t.relname = $2
-               AND pga.attname = $3
-               AND pgam.amname = ''gist'''
-               INTO idx_name USING s_name, t_name, c_name;
+  SELECT pgc_i.relname INTO idx_name AS idx_name 
+    FROM pg_class pgc_t, pg_class pgc_i, pg_index pgi, 
+         pg_am pgam, pg_attribute pga, pg_namespace pgns
+      WHERE pgc_t.oid = pgi.indrelid
+        AND pgc_i.oid = pgi.indexrelid
+        AND pgam.oid = pgc_i.relam
+        AND pga.attrelid = pgc_i.oid
+        AND pgns.oid = pgc_i.relnamespace
+        AND pgns.nspname = s_name
+        AND pgc_t.relname = t_name
+        AND pga.attname = c_name
+        AND pgam.amname = 'gist';
 
   IF idx_name IS NOT NULL THEN 
     -- drop spatial index if exists
@@ -222,21 +214,24 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_schema_srid(
 DECLARE
   is_set_srs_info INTEGER;
 BEGIN
-  EXECUTE 'SELECT 1 FROM pg_tables WHERE schemaname = $1 AND tablename = ''database_srs'''
-             INTO is_set_srs_info USING schema_name;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
+  
+  SELECT 1 INTO is_set_srs_info FROM pg_tables 
+    WHERE schemaname = schema_name AND tablename = 'database_srs';
 
   IF is_set_srs_info IS NOT NULL THEN
     -- update entry in DATABASE_SRS table first
-    EXECUTE format('UPDATE %I.database_srs SET srid = %L, gml_srs_name = %L',
-                      schema_name, schema_srid, schema_gml_srs_name);
+    UPDATE database_srs SET srid = schema_srid, gml_srs_name = schema_gml_srs_name;
   END IF;
 
   -- change srid of each spatially enabled table
-  EXECUTE 'SELECT citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $2, type, f_table_schema) 
-             FROM geometry_columns WHERE f_table_schema = $3
-              AND f_geometry_column != ''implicit_geometry''
-              AND f_geometry_column != ''relative_other_geom''
-              AND f_geometry_column != ''texture_coordinates''' USING schema_srid, transform, schema_name;
+  PERFORM citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, schema_srid, transform, type, f_table_schema) 
+    FROM geometry_columns 
+      WHERE f_table_schema = schema_name
+        AND f_geometry_column != 'implicit_geometry'
+        AND f_geometry_column != 'relative_other_geom'
+        AND f_geometry_column != 'texture_coordinates';
 END;
 $$ 
 LANGUAGE plpgsql;
