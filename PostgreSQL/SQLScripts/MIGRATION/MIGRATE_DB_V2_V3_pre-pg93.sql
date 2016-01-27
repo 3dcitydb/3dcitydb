@@ -1152,7 +1152,7 @@ CREATE TABLE citydb.address (
 	state,
 	country,
 	multi_point,
-	xal_source	
+	xal_source)	
   AS SELECT
 	id,
 	('ID_'||id)::varchar(256),
