@@ -1,9 +1,9 @@
 -- ENVELOPE.sql
 --
--- Authors:     Felix Kunde <fkunde@virtualcitysystems.de>
+-- Authors:     Felix Kunde <felix-kunde@gmx.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
 --
--- Copyright:   (c) 2012-2015  Chair of Geoinformatics,
+-- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
 --                             Technische Universitaet Muenchen, Germany
 --                             http://www.gis.bv.tum.de
 --
@@ -18,6 +18,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                                 | Author
+-- 1.3.0     2016-01-27   removed most of dynamic SQL code              FKun
 -- 1.2.0     2015-11-11   added set_envelope parameter for functions    CNag
 -- 1.1.0     2015-11-04   added set_envelope procedures                 FKun
 -- 1.0.0     2015-07-21   release version 3DCityDB v3.1                 FKun
@@ -85,27 +86,28 @@ DECLARE
   envelope GEOMETRY;
   db_srid INTEGER;
 BEGIN
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
+
   IF box IS NULL THEN
     RETURN NULL;
   ELSE
     -- get reference system of input geometry
     IF ST_SRID(box) = 0 THEN
-      EXECUTE format('SELECT srid FROM %I.database_srs', schema_name) INTO db_srid;
+      SELECT srid INTO db_srid FROM database_srs;
     ELSE
       db_srid := ST_SRID(box);
     END IF;
 
-    EXECUTE format('SELECT ST_SetSRID(ST_MakePolygon(ST_MakeLine(
+    SELECT ST_SetSRID(ST_MakePolygon(ST_MakeLine(
       ARRAY[
-        ST_MakePoint(ST_XMin(%L), ST_YMin(%L), ST_ZMin(%L)),
-        ST_MakePoint(ST_XMax(%L), ST_YMin(%L), ST_ZMin(%L)),
-        ST_MakePoint(ST_XMax(%L), ST_YMax(%L), ST_ZMax(%L)),
-        ST_MakePoint(ST_XMin(%L), ST_YMax(%L), ST_ZMax(%L)),
-        ST_MakePoint(ST_XMin(%L), ST_YMin(%L), ST_ZMin(%L))
+        ST_MakePoint(ST_XMin(box), ST_YMin(box), ST_ZMin(box)),
+        ST_MakePoint(ST_XMax(box), ST_YMin(box), ST_ZMin(box)),
+        ST_MakePoint(ST_XMax(box), ST_YMax(box), ST_ZMax(box)),
+        ST_MakePoint(ST_XMin(box), ST_YMax(box), ST_ZMax(box)),
+        ST_MakePoint(ST_XMin(box), ST_YMin(box), ST_ZMin(box))
       ]
-    )), %L)',
-    box, box, box, box, box, box, box, box, box, box, box, box, box, box, box, db_srid)
-    INTO envelope;
+    )), db_srid) INTO envelope; 
   END IF;
 
   RETURN envelope;
@@ -143,17 +145,25 @@ DECLARE
   envelope GEOMETRY;
   params DOUBLE PRECISION[ ] := '{}';
 BEGIN
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
+
   -- calculate bounding box for implicit geometry
-  EXECUTE format(
-    'WITH collect_geom AS (
-         -- relative other geometry
-           SELECT relative_other_geom AS geom FROM %I.implicit_geometry WHERE id = %L AND relative_other_geom IS NOT NULL
-       UNION ALL
-         -- relative brep geometry
-           SELECT sg.implicit_geometry AS geom FROM %I.surface_geometry sg, %I.implicit_geometry ig 
-           WHERE sg.root_id = ig.relative_brep_id AND ig.id = %L AND sg.implicit_geometry IS NOT NULL
-       ) SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, implicit_rep_id, schema_name, schema_name, implicit_rep_id) INTO envelope;
+  WITH collect_geom AS (
+    -- relative other geometry
+    SELECT relative_other_geom AS geom 
+      FROM implicit_geometry 
+        WHERE id = implicit_rep_id 
+          AND relative_other_geom IS NOT NULL
+    UNION ALL
+    -- relative brep geometry
+    SELECT sg.implicit_geometry AS geom 
+      FROM surface_geometry sg, implicit_geometry ig 
+        WHERE sg.root_id = ig.relative_brep_id 
+          AND ig.id = implicit_rep_id 
+          AND sg.implicit_geometry IS NOT NULL
+  ) 
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO envelope FROM collect_geom;
 
   IF transform4x4 IS NOT NULL THEN
     -- extract parameters of transformation matrix
@@ -208,19 +218,21 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_land_use(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'SELECT citydb_pkg.box2envelope(ST_3DExtent(sg.geometry)) AS envelope3d FROM %I.surface_geometry sg
-       WHERE sg.cityobject_id = %L AND sg.geometry IS NOT NULL',
-       schema_name, co_id) INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geometry)) INTO bbox
+    FROM surface_geometry
+     WHERE cityobject_id = co_id
+       AND geometry IS NOT NULL;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -250,59 +262,57 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_generic_cityobj(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- generic cityobject geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- lod0 other geometry
-         SELECT lod0_other_geom AS geom FROM %I.generic_cityobject WHERE id = %L AND lod0_other_geom IS NOT NULL
-       UNION ALL
-       -- lod1 other geometry
-         SELECT lod1_other_geom AS geom FROM %I.generic_cityobject WHERE id = %L AND lod1_other_geom IS NOT NULL
-       UNION ALL
-       -- lod2 other geometry
-         SELECT lod2_other_geom AS geom FROM %I.generic_cityobject WHERE id = %L AND lod2_other_geom IS NOT NULL
-       UNION ALL
-       -- lod3 other geometry
-         SELECT lod3_other_geom AS geom FROM %I.generic_cityobject WHERE id = %L AND lod3_other_geom IS NOT NULL
-       UNION ALL
-       -- lod4 other geometry
-         SELECT lod4_other_geom AS geom FROM %I.generic_cityobject WHERE id = %L AND lod4_other_geom IS NOT NULL
-       UNION ALL
-       -- lod0 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod0_implicit_rep_id, lod0_implicit_ref_point, lod0_implicit_transformation, %L) AS geom 
-           FROM %I.generic_cityobject WHERE id = %L AND lod0_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod1 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation, %L) AS geom 
-           FROM %I.generic_cityobject WHERE id = %L AND lod1_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod2 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation, %L) AS geom 
-           FROM %I.generic_cityobject WHERE id = %L AND lod2_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod3 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, %L) AS geom 
-           FROM %I.generic_cityobject WHERE id = %L AND lod3_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod4 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, %L) AS geom 
-           FROM %I.generic_cityobject WHERE id = %L AND lod4_implicit_rep_id IS NOT NULL
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, 
-    schema_name, schema_name, co_id, schema_name, schema_name, co_id, schema_name, schema_name, co_id, schema_name, schema_name, co_id, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- generic cityobject geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- lod0 other geometry
+      SELECT lod0_other_geom AS geom FROM generic_cityobject WHERE id = co_id AND lod0_other_geom IS NOT NULL
+    UNION ALL
+    -- lod1 other geometry
+      SELECT lod1_other_geom AS geom FROM generic_cityobject WHERE id = co_id AND lod1_other_geom IS NOT NULL
+    UNION ALL
+    -- lod2 other geometry
+      SELECT lod2_other_geom AS geom FROM generic_cityobject WHERE id = co_id AND lod2_other_geom IS NOT NULL
+    UNION ALL
+    -- lod3 other geometry
+      SELECT lod3_other_geom AS geom FROM generic_cityobject WHERE id = co_id AND lod3_other_geom IS NOT NULL
+    UNION ALL
+    -- lod4 other geometry
+      SELECT lod4_other_geom AS geom FROM generic_cityobject WHERE id = co_id AND lod4_other_geom IS NOT NULL
+    UNION ALL
+    -- lod0 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod0_implicit_rep_id, lod0_implicit_ref_point, lod0_implicit_transformation, schema_name) AS geom 
+        FROM generic_cityobject WHERE id = co_id AND lod0_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod1 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation, schema_name) AS geom 
+        FROM generic_cityobject WHERE id = co_id AND lod1_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod2 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation, schema_name) AS geom 
+        FROM generic_cityobject WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod3 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, schema_name) AS geom 
+        FROM generic_cityobject WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod4 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, schema_name) AS geom 
+        FROM generic_cityobject WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -332,52 +342,50 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_solitary_veg_obj(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- solitary vegetation object geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- lod1 other geometry
-         SELECT lod1_other_geom AS geom FROM %I.solitary_vegetat_object WHERE id = %L AND lod1_other_geom IS NOT NULL
-       UNION ALL
-       -- lod2 other geometry
-         SELECT lod2_other_geom AS geom FROM %I.solitary_vegetat_object WHERE id = %L AND lod2_other_geom IS NOT NULL
-       UNION ALL
-       -- lod3 other geometry
-         SELECT lod3_other_geom AS geom FROM %I.solitary_vegetat_object WHERE id = %L AND lod3_other_geom IS NOT NULL
-       UNION ALL
-       -- lod4 other geometry
-         SELECT lod4_other_geom AS geom FROM %I.solitary_vegetat_object WHERE id = %L AND lod4_other_geom IS NOT NULL
-       UNION ALL
-       -- lod1 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation, %L) AS geom 
-           FROM %I.solitary_vegetat_object WHERE id = %L AND lod1_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod2 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation, %L) AS geom 
-           FROM %I.solitary_vegetat_object WHERE id = %L AND lod2_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod3 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, %L) AS geom 
-           FROM %I.solitary_vegetat_object WHERE id = %L AND lod3_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod4 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, %L) AS geom 
-           FROM %I.solitary_vegetat_object WHERE id = %L AND lod4_implicit_rep_id IS NOT NULL
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, 
-    schema_name, schema_name, co_id, schema_name, schema_name, co_id, schema_name, schema_name, co_id, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- solitary vegetation object geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- lod1 other geometry
+      SELECT lod1_other_geom AS geom FROM solitary_vegetat_object WHERE id = co_id AND lod1_other_geom IS NOT NULL
+    UNION ALL
+    -- lod2 other geometry
+      SELECT lod2_other_geom AS geom FROM solitary_vegetat_object WHERE id = co_id AND lod2_other_geom IS NOT NULL
+    UNION ALL
+    -- lod3 other geometry
+      SELECT lod3_other_geom AS geom FROM solitary_vegetat_object WHERE id = co_id AND lod3_other_geom IS NOT NULL
+    UNION ALL
+    -- lod4 other geometry
+      SELECT lod4_other_geom AS geom FROM solitary_vegetat_object WHERE id = co_id AND lod4_other_geom IS NOT NULL
+    UNION ALL
+    -- lod1 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation, schema_name) AS geom 
+        FROM solitary_vegetat_object WHERE id = co_id AND lod1_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod2 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation, schema_name) AS geom 
+        FROM solitary_vegetat_object WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod3 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, schema_name) AS geom 
+        FROM solitary_vegetat_object WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod4 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, schema_name) AS geom 
+        FROM solitary_vegetat_object WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -407,19 +415,21 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_plant_cover(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'SELECT citydb_pkg.box2envelope(ST_3DExtent(sg.geometry)) AS envelope3d FROM %I.surface_geometry sg
-       WHERE sg.cityobject_id = %L AND sg.geometry IS NOT NULL',
-       schema_name, co_id) INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geometry)) INTO bbox
+    FROM surface_geometry
+      WHERE cityobject_id = co_id 
+        AND geometry IS NOT NULL;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -449,28 +459,28 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_waterbody(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- waterbody geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- water boundary surface geometry
-         SELECT citydb_pkg.get_envelope_waterbnd_surface(wbs.id, %L, %L) AS geom
-           FROM %I.waterboundary_surface wbs, %I.waterbod_to_waterbnd_srf wb2wbs
-             WHERE wbs.id = wb2wbs.waterboundary_surface_id AND wb2wbs.waterbody_id = %L
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, set_envelope, schema_name, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- waterbody geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- water boundary surface geometry
+      SELECT citydb_pkg.get_envelope_waterbnd_surface(wbs.id, set_envelope, schema_name) AS geom
+        FROM waterboundary_surface wbs, waterbod_to_waterbnd_srf wb2wbs
+          WHERE wbs.id = wb2wbs.waterboundary_surface_id 
+            AND wb2wbs.waterbody_id = co_id
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -500,19 +510,21 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_waterbnd_surface(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'SELECT citydb_pkg.box2envelope(ST_3DExtent(sg.geometry)) AS envelope3d FROM %I.surface_geometry sg
-       WHERE sg.cityobject_id = %L AND sg.geometry IS NOT NULL',
-       schema_name, co_id) INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geometry)) INTO bbox
+    FROM surface_geometry
+      WHERE cityobject_id = co_id
+        AND geometry IS NOT NULL;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -542,24 +554,24 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_relief_feature(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  -- try to generate envelope from relief components
-  EXECUTE format(
-    'WITH collect_geom AS (
-       SELECT citydb_pkg.get_envelope_relief_component(rc.id, rc.objectclass_id, %L, %L) AS geom 
-         FROM %I.relief_component rc, %I.relief_feat_to_rel_comp rf2rc 
-           WHERE rc.id = rf2rc.relief_component_id AND rf2rc.relief_feature_id = %L
-    )
-    SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    set_envelope, schema_name, schema_name, schema_name, co_id) INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  -- try to generate envelope from relief components
+  WITH collect_geom AS (
+    SELECT citydb_pkg.get_envelope_relief_component(rc.id, rc.objectclass_id, set_envelope, schema_name) AS geom 
+      FROM relief_component rc, relief_feat_to_rel_comp rf2rc 
+        WHERE rc.id = rf2rc.relief_component_id AND rf2rc.relief_feature_id = co_id
+    )
+    SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -592,11 +604,14 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_relief_component(
 $$
 DECLARE
   class_id INTEGER;
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
+
   -- fetching class_id if it is NULL
   IF objclass_id = 0 THEN
-    EXECUTE format('SELECT objectclass_id FROM %I.cityobject WHERE id = %L', schema_name, co_id) INTO class_id;
+    SELECT objectclass_id INTO class_id FROM cityobject WHERE id = co_id;
   ELSE
     class_id := objclass_id;
   END IF;
@@ -604,34 +619,34 @@ BEGIN
   CASE
     -- get spatial extent of TIN relief
     WHEN class_id = 16 THEN 
-      EXECUTE format('SELECT citydb_pkg.box2envelope(ST_3DExtent(sg.geometry)) AS envelope3d
-                        FROM %I.surface_geometry sg, %I.tin_relief tin
-                          WHERE tin.surface_geometry_id = sg.root_id AND tin.id = %L AND sg.geometry IS NOT NULL',
-                          schema_name, schema_name, co_id) INTO envelope;
+      SELECT citydb_pkg.box2envelope(ST_3DExtent(sg.geometry)) INTO bbox
+        FROM surface_geometry sg, tin_relief tin
+          WHERE tin.surface_geometry_id = sg.root_id 
+            AND tin.id = co_id 
+            AND sg.geometry IS NOT NULL;
     -- get spatial extent of masspoint relief
     WHEN class_id = 17 THEN
-      EXECUTE format('SELECT citydb_pkg.box2envelope(ST_3DExtent(relief_points)) AS envelope3d
-                        FROM %I.masspoint_relief WHERE id = %L',
-                        schema_name, co_id) INTO envelope;
+      SELECT citydb_pkg.box2envelope(ST_3DExtent(relief_points)) INTO bbox
+        FROM masspoint_relief 
+          WHERE id = co_id;
     -- get spatial extent of breakline relief taking a union of ridge, valley and break lines
     WHEN class_id = 18 THEN
-      EXECUTE format('SELECT citydb_pkg.box2envelope(ST_3DExtent(ST_Collect(ridge_or_valley_lines, break_lines))) AS envelope3d
-                        FROM %I.breakline_relief WHERE id = %L',
-                        schema_name, co_id) INTO envelope;
+      SELECT citydb_pkg.box2envelope(ST_3DExtent(ST_Collect(ridge_or_valley_lines, break_lines))) INTO bbox
+        FROM breakline_relief
+          WHERE id = co_id;
     -- get spatial extent of raster relief
     WHEN class_id = 19 THEN
-      EXECUTE format('SELECT citydb_pkg.box2envelope(Box3D(rasterproperty)) AS envelope3d
-                        FROM %I.grid_coverage grid, %I.raster_relief rast 
-                          WHERE rast.coverage_id = grid.id AND rast.id = %L',
-                          schema_name, schema_name, co_id) INTO envelope;
+      SELECT citydb_pkg.box2envelope(Box3D(rasterproperty)) INTO bbox
+        FROM grid_coverage grid, raster_relief rast 
+          WHERE rast.coverage_id = grid.id 
+            AND rast.id = co_id;
   END CASE;
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -661,52 +676,50 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_city_furniture(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- city furniture geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- lod1 other geometry
-         SELECT lod1_other_geom AS geom FROM %I.city_furniture WHERE id = %L AND lod1_other_geom IS NOT NULL
-       UNION ALL
-       -- lod2 other geometry
-         SELECT lod2_other_geom AS geom FROM %I.city_furniture WHERE id = %L AND lod2_other_geom IS NOT NULL
-       UNION ALL
-       -- lod3 other geometry
-         SELECT lod3_other_geom AS geom FROM %I.city_furniture WHERE id = %L AND lod3_other_geom IS NOT NULL
-       UNION ALL
-       -- lod4 other geometry
-         SELECT lod4_other_geom AS geom FROM %I.city_furniture WHERE id = %L AND lod4_other_geom IS NOT NULL
-       UNION ALL
-       -- lod1 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation, %L) AS geom 
-           FROM %I.city_furniture WHERE id = %L AND lod1_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod2 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation, %L) AS geom 
-           FROM %I.city_furniture WHERE id = %L AND lod2_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod3 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, %L) AS geom 
-           FROM %I.city_furniture WHERE id = %L AND lod3_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod4 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, %L) AS geom 
-           FROM %I.city_furniture WHERE id = %L AND lod4_implicit_rep_id IS NOT NULL
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, 
-    schema_name, schema_name, co_id, schema_name, schema_name, co_id, schema_name, schema_name, co_id, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- city furniture geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- lod1 other geometry
+      SELECT lod1_other_geom AS geom FROM city_furniture WHERE id = co_id AND lod1_other_geom IS NOT NULL
+    UNION ALL
+    -- lod2 other geometry
+      SELECT lod2_other_geom AS geom FROM city_furniture WHERE id = co_id AND lod2_other_geom IS NOT NULL
+    UNION ALL
+    -- lod3 other geometry
+      SELECT lod3_other_geom AS geom FROM city_furniture WHERE id = co_id AND lod3_other_geom IS NOT NULL
+    UNION ALL
+    -- lod4 other geometry
+      SELECT lod4_other_geom AS geom FROM city_furniture WHERE id = co_id AND lod4_other_geom IS NOT NULL
+    UNION ALL
+    -- lod1 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation, schema_name) AS geom 
+        FROM city_furniture WHERE id = co_id AND lod1_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod2 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation, schema_name) AS geom 
+        FROM city_furniture WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod3 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, schema_name) AS geom 
+        FROM city_furniture WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod4 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, schema_name) AS geom 
+        FROM city_furniture WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -739,55 +752,58 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_cityobjectgroup(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
+
   IF calc_member_envelopes <> 0 THEN
-    EXECUTE format(
-      'WITH collect_geom AS (
-         -- cityobjectgroup geometry
-           SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-         UNION ALL
-         -- other geometry
-           SELECT other_geom AS geom FROM %I.cityobjectgroup WHERE id = %L AND other_geom IS NOT NULL
-         UNION ALL
-         -- group member geometry
-           SELECT citydb_pkg.get_envelope_cityobject(co.id, co.objectclass_id, %L, %L) AS geom
-             FROM %I.cityobject co, %I.group_to_cityobject g2co 
-               WHERE co.id = g2co.cityobject_id AND g2co.cityobjectgroup_id = %L
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-      schema_name, co_id, schema_name, co_id, set_envelope, schema_name, schema_name, schema_name, co_id) INTO envelope;
+    WITH collect_geom AS (
+      -- cityobjectgroup geometry
+        SELECT geometry AS geom FROM surface_geometry 
+          WHERE cityobject_id = co_id AND geometry IS NOT NULL
+      UNION ALL
+      -- other geometry
+        SELECT other_geom AS geom FROM cityobjectgroup 
+          WHERE id = co_id AND other_geom IS NOT NULL
+      UNION ALL
+      -- group member geometry
+        SELECT citydb_pkg.get_envelope_cityobject(co.id, co.objectclass_id, set_envelope, schema_name) AS geom
+          FROM cityobject co, group_to_cityobject g2co 
+            WHERE co.id = g2co.cityobject_id 
+              AND g2co.cityobjectgroup_id = co_id
+    )
+    SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
   ELSE
-    EXECUTE format(
-      'WITH collect_geom AS (
-         -- cityobjectgroup geometry
-           SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-         UNION ALL
-         -- other geometry
-           SELECT other_geom AS geom FROM %I.cityobjectgroup WHERE id = %L AND other_geom IS NOT NULL
-         UNION ALL
-         -- group member envelopes
-           SELECT co.envelope AS geom
-             FROM %I.cityobject co, %I.group_to_cityobject g2co 
-               WHERE co.id = g2co.cityobject_id AND g2co.cityobjectgroup_id = %L
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-      schema_name, co_id, schema_name, co_id, schema_name, schema_name, co_id) INTO envelope;
+    WITH collect_geom AS (
+      -- cityobjectgroup geometry
+        SELECT geometry AS geom FROM surface_geometry 
+          WHERE cityobject_id = co_id AND geometry IS NOT NULL
+      UNION ALL
+      -- other geometry
+        SELECT other_geom AS geom FROM cityobjectgroup 
+          WHERE id = co_id AND other_geom IS NOT NULL
+      UNION ALL
+      -- group member envelopes
+        SELECT co.envelope AS geom
+          FROM cityobject co, group_to_cityobject g2co 
+            WHERE co.id = g2co.cityobject_id 
+              AND g2co.cityobjectgroup_id = co_id
+    )
+    SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
   END IF;
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
 
     -- group parent 
-    EXECUTE format(
-      'SELECT citydb_pkg.get_envelope_cityobject(co.id, co.objectclass_id, %L, %L) 
-         FROM %I.cityobject co, %I.cityobjectgroup g
-           WHERE co.id = g.parent_cityobject_id AND g.id = %L',
-      set_envelope, schema_name, schema_name, schema_name, co_id);
+    PERFORM citydb_pkg.get_envelope_cityobject(co.id, co.objectclass_id, set_envelope, schema_name)
+      FROM cityobject co, cityobjectgroup g
+        WHERE co.id = g.parent_cityobject_id 
+          AND g.id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -817,57 +833,54 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_building(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- building geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- building part geometry
-         SELECT citydb_pkg.get_envelope_building(id, %L, %L) AS geom
-           FROM %I.building WHERE building_root_id = %L AND building_parent_id IS NOT NULL
-       UNION ALL
-       -- building thematic surface geometry
-         SELECT citydb_pkg.get_envelope_thematic_surface(id, %L, %L) AS geom
-           FROM %I.thematic_surface WHERE building_id = %L AND objectclass_id IN (33, 34, 35, 36, 60, 61)
-       UNION ALL
-       -- building installation geometry
-         SELECT citydb_pkg.get_envelope_building_inst(id, %L, %L) AS geom
-           FROM %I.building_installation WHERE building_id = %L AND objectclass_id = 27
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, set_envelope, schema_name, schema_name, co_id, set_envelope, schema_name, schema_name, co_id,
-    set_envelope, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
+
+  WITH collect_geom AS (
+    -- building geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- building part geometry
+      SELECT citydb_pkg.get_envelope_building(id, set_envelope, schema_name) AS geom
+        FROM building WHERE building_root_id = co_id AND building_parent_id IS NOT NULL
+    UNION ALL
+    -- building thematic surface geometry
+      SELECT citydb_pkg.get_envelope_thematic_surface(id, set_envelope, schema_name) AS geom
+        FROM thematic_surface WHERE building_id = co_id AND objectclass_id IN (33, 34, 35, 36, 60, 61)
+    UNION ALL
+    -- building installation geometry
+      SELECT citydb_pkg.get_envelope_building_inst(id, set_envelope, schema_name) AS geom
+        FROM building_installation WHERE building_id = co_id AND objectclass_id = 27
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
 
   IF set_envelope <> 0 THEN
     -- building
-    IF envelope IS NOT NULL THEN
-      EXECUTE format(
-        'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+    IF bbox IS NOT NULL THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
     END IF;
 
     -- interior rooms
-    EXECUTE format(
-      'SELECT citydb_pkg.get_envelope_room(id, %L, %L)
-         FROM %I.room WHERE building_id = %L',
-      set_envelope, schema_name, schema_name, co_id);
+    PERFORM citydb_pkg.get_envelope_room(id, set_envelope, schema_name)
+      FROM room 
+        WHERE building_id = co_id;
 
     -- interior thematic surfaces
-    EXECUTE format(
-      'SELECT citydb_pkg.get_envelope_thematic_surface(id, %L, %L)
-         FROM %I.thematic_surface WHERE building_id = %L AND objectclass_id IN (30, 31, 32)',
-      set_envelope, schema_name, schema_name, co_id);
+    PERFORM citydb_pkg.get_envelope_thematic_surface(id, set_envelope, schema_name)
+      FROM thematic_surface 
+        WHERE building_id = co_id 
+          AND objectclass_id IN (30, 31, 32);
 
     -- interior building installations
-    EXECUTE format(
-      'SELECT citydb_pkg.get_envelope_building_inst(id, %L, %L)
-         FROM %I.building_installation WHERE building_id = %L AND objectclass_id = 28',
-      set_envelope, schema_name, schema_name, co_id);
+    PERFORM citydb_pkg.get_envelope_building_inst(id, set_envelope, schema_name)
+      FROM building_installation 
+        WHERE building_id = co_id 
+          AND objectclass_id = 28;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -898,50 +911,47 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_building_inst(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- building installation geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- lod2 other geometry
-         SELECT lod2_other_geom AS geom FROM %I.building_installation WHERE id = %L AND lod2_other_geom IS NOT NULL
-       UNION ALL
-       -- lod3 other geometry
-         SELECT lod3_other_geom AS geom FROM %I.building_installation WHERE id = %L AND lod3_other_geom IS NOT NULL
-       UNION ALL
-       -- lod4 other geometry
-         SELECT lod4_other_geom AS geom FROM %I.building_installation WHERE id = %L AND lod4_other_geom IS NOT NULL
-       UNION ALL
-       -- lod2 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation, %L) AS geom 
-           FROM %I.building_installation WHERE id = %L AND lod2_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod3 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, %L) AS geom 
-           FROM %I.building_installation WHERE id = %L AND lod3_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod4 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, %L) AS geom 
-           FROM %I.building_installation WHERE id = %L AND lod4_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- thematic surface geometry
-         SELECT citydb_pkg.get_envelope_thematic_surface(id, %L, %L) AS geom
-           FROM %I.thematic_surface WHERE building_installation_id = %L 
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, 
-    schema_name, schema_name, co_id, schema_name, schema_name, co_id, schema_name, schema_name, co_id,
-    set_envelope, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- building installation geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- lod2 other geometry
+      SELECT lod2_other_geom AS geom FROM building_installation WHERE id = co_id AND lod2_other_geom IS NOT NULL
+    UNION ALL
+    -- lod3 other geometry
+      SELECT lod3_other_geom AS geom FROM building_installation WHERE id = co_id AND lod3_other_geom IS NOT NULL
+    UNION ALL
+    -- lod4 other geometry
+      SELECT lod4_other_geom AS geom FROM building_installation WHERE id = co_id AND lod4_other_geom IS NOT NULL
+    UNION ALL
+    -- lod2 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation, schema_name) AS geom 
+        FROM building_installation WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod3 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, schema_name) AS geom 
+        FROM building_installation WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod4 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, schema_name) AS geom 
+        FROM building_installation WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- thematic surface geometry
+      SELECT citydb_pkg.get_envelope_thematic_surface(id, set_envelope, schema_name) AS geom
+        FROM thematic_surface WHERE building_installation_id = co_id 
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -971,28 +981,28 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_thematic_surface(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS(
-       -- thematic surface geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- opening geometry
-         SELECT citydb_pkg.get_envelope_opening(o.id, %L, %L) AS geom
-           FROM %I.opening o, %I.opening_to_them_surface o2ts 
-             WHERE o2ts.thematic_surface_id = %L AND o.id = o2ts.opening_id
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, set_envelope, schema_name, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
+ 
+  WITH collect_geom AS(
+    -- thematic surface geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- opening geometry
+      SELECT citydb_pkg.get_envelope_opening(o.id, set_envelope, schema_name) AS geom
+        FROM opening o, opening_to_them_surface o2ts 
+          WHERE o2ts.thematic_surface_id = co_id 
+            AND o.id = o2ts.opening_id
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1022,31 +1032,30 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_opening(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- opening geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- lod3 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, %L) AS geom 
-           FROM %I.opening WHERE id = %L AND lod3_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod4 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, %L) AS geom 
-           FROM %I.opening WHERE id = %L AND lod4_implicit_rep_id IS NOT NULL
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, schema_name, schema_name, co_id, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- opening geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- lod3 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, schema_name) AS geom 
+        FROM opening WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod4 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, schema_name) AS geom 
+        FROM opening WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+    
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1076,31 +1085,29 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_building_furn(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-         -- building furniture geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- lod4 other geometry
-         SELECT lod4_other_geom AS geom FROM %I.building_furniture WHERE id = %L AND lod4_other_geom IS NOT NULL
-       UNION ALL
-       -- lod4 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, %L) AS geom 
-           FROM %I.building_furniture WHERE id = %L AND lod4_implicit_rep_id IS NOT NULL
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, schema_name, co_id,
-    schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- building furniture geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- lod4 other geometry
+      SELECT lod4_other_geom AS geom FROM building_furniture WHERE id = co_id AND lod4_other_geom IS NOT NULL
+    UNION ALL
+    -- lod4 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, schema_name) AS geom 
+        FROM building_furniture WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1130,36 +1137,34 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_room(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- room geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- interior thematic surface geometry
-         SELECT citydb_pkg.get_envelope_thematic_surface(id, %L, %L) AS geom
-           FROM %I.thematic_surface WHERE room_id = %L
-       UNION ALL
-       -- room installation geometry
-         SELECT citydb_pkg.get_envelope_building_inst(id, %L, %L) AS geom
-           FROM %I.building_installation WHERE room_id = %L
-       UNION ALL
-       -- building furniture geometry
-         SELECT citydb_pkg.get_envelope_building_furn(id, %L, %L) AS geom
-           FROM %I.building_furniture WHERE room_id = %L
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, set_envelope, schema_name, schema_name, co_id, set_envelope, schema_name, schema_name, co_id,
-    set_envelope, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- room geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- interior thematic surface geometry
+      SELECT citydb_pkg.get_envelope_thematic_surface(id, set_envelope, schema_name) AS geom
+        FROM thematic_surface WHERE room_id = co_id
+    UNION ALL
+    -- room installation geometry
+      SELECT citydb_pkg.get_envelope_building_inst(id, set_envelope, schema_name) AS geom
+        FROM building_installation WHERE room_id = co_id
+    UNION ALL
+    -- building furniture geometry
+      SELECT citydb_pkg.get_envelope_building_furn(id, set_envelope, schema_name) AS geom
+        FROM building_furniture WHERE room_id = co_id
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;    
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1189,30 +1194,29 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_trans_complex(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- lod0 road network geometry of transportation complex
-         SELECT lod0_network AS geom FROM %I.transportation_complex WHERE id = %L AND lod0_network IS NOT NULL
-       UNION ALL
-       -- transportation complex geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- traffic area geometry
-         SELECT citydb_pkg.get_envelope_traffic_area(id, %L, %L) AS geom
-           FROM %I.traffic_area WHERE transportation_complex_id = %L
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, schema_name, co_id, set_envelope, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- lod0 road network geometry of transportation complex
+      SELECT lod0_network AS geom FROM transportation_complex WHERE id = co_id AND lod0_network IS NOT NULL
+    UNION ALL
+    -- transportation complex geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- traffic area geometry
+      SELECT citydb_pkg.get_envelope_traffic_area(id, set_envelope, schema_name) AS geom
+        FROM traffic_area WHERE transportation_complex_id = co_id
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1242,19 +1246,21 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_traffic_area(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'SELECT citydb_pkg.box2envelope(ST_3DExtent(sg.geometry)) AS envelope3d FROM %I.surface_geometry sg
-       WHERE sg.cityobject_id = %L AND sg.geometry IS NOT NULL',
-       schema_name, co_id) INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geometry)) INTO bbox 
+    FROM surface_geometry
+      WHERE cityobject_id = co_id 
+        AND geometry IS NOT NULL;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1284,61 +1290,58 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- bridge geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- bridge part geometry
-         SELECT citydb_pkg.get_envelope_bridge(id, %L, %L) AS geom
-           FROM %I.bridge WHERE bridge_root_id = %L AND bridge_parent_id IS NOT NULL
-       UNION ALL
-       -- bridge thematic surface geometry
-         SELECT citydb_pkg.get_envelope_bridge_them_srf(id, %L, %L) AS geom
-           FROM %I.bridge_thematic_surface WHERE bridge_id = %L AND objectclass_id IN (71, 72, 73, 74, 75, 76)
-       UNION ALL
-       -- bridge installation geometry
-         SELECT citydb_pkg.get_envelope_bridge_inst(id, %L, %L) AS geom
-           FROM %I.bridge_installation WHERE bridge_id = %L AND objectclass_id = 65
-       UNION ALL
-       -- bridge construction element geometry
-         SELECT citydb_pkg.get_envelope_bridge_const_elem(id, %L, %L) AS geom
-           FROM %I.bridge_constr_element WHERE bridge_id = %L
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, set_envelope, schema_name, schema_name, co_id, set_envelope, schema_name, schema_name, co_id,
-    set_envelope, schema_name, schema_name, co_id, set_envelope, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
+
+  WITH collect_geom AS (
+    -- bridge geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- bridge part geometry
+      SELECT citydb_pkg.get_envelope_bridge(id, set_envelope, schema_name) AS geom
+        FROM bridge WHERE bridge_root_id = co_id AND bridge_parent_id IS NOT NULL
+    UNION ALL
+    -- bridge thematic surface geometry
+      SELECT citydb_pkg.get_envelope_bridge_them_srf(id, set_envelope, schema_name) AS geom
+        FROM bridge_thematic_surface WHERE bridge_id = co_id AND objectclass_id IN (71, 72, 73, 74, 75, 76)
+    UNION ALL
+    -- bridge installation geometry
+      SELECT citydb_pkg.get_envelope_bridge_inst(id, set_envelope, schema_name) AS geom
+        FROM bridge_installation WHERE bridge_id = co_id AND objectclass_id = 65
+    UNION ALL
+    -- bridge construction element geometry
+      SELECT citydb_pkg.get_envelope_bridge_const_elem(id, set_envelope, schema_name) AS geom
+        FROM bridge_constr_element WHERE bridge_id = co_id
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
 
   IF set_envelope <> 0 THEN
     -- bridge
-    IF envelope IS NOT NULL THEN
-      EXECUTE format(
-        'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+    IF bbox IS NOT NULL THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
     END IF;
 
     -- interior bridge rooms
-    EXECUTE format(
-      'SELECT citydb_pkg.get_envelope_bridge_room(id, %L, %L)
-         FROM %I.bridge_room WHERE bridge_id = %L',
-      set_envelope, schema_name, schema_name, co_id);
+    PERFORM citydb_pkg.get_envelope_bridge_room(id, set_envelope, schema_name)
+      FROM bridge_room 
+        WHERE bridge_id = co_id;
 
     -- interior thematic surfaces
-    EXECUTE format(
-      'SELECT citydb_pkg.get_envelope_bridge_them_srf(id, %L, %L)
-         FROM %I.bridge_thematic_surface WHERE bridge_id = %L AND objectclass_id IN (68, 69, 70)',
-      set_envelope, schema_name, schema_name, co_id);
+    PERFORM citydb_pkg.get_envelope_bridge_them_srf(id, set_envelope, schema_name)
+      FROM bridge_thematic_surface 
+        WHERE bridge_id = co_id 
+          AND objectclass_id IN (68, 69, 70);
 
     -- interior bridge installations
-    EXECUTE format(
-      'SELECT citydb_pkg.get_envelope_bridge_inst(id, %L, %L)
-         FROM %I.bridge_installation WHERE bridge_id = %L AND objectclass_id = 66',
-      set_envelope, schema_name, schema_name, co_id);
+    PERFORM citydb_pkg.get_envelope_bridge_inst(id, set_envelope, schema_name)
+      FROM bridge_installation 
+        WHERE bridge_id = co_id 
+          AND objectclass_id = 66;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1368,50 +1371,47 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_inst(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- bridge installation geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- lod2 other geometry
-         SELECT lod2_other_geom AS geom FROM %I.bridge_installation WHERE id = %L AND lod2_other_geom IS NOT NULL
-       UNION ALL
-       -- lod3 other geometry
-         SELECT lod3_other_geom AS geom FROM %I.bridge_installation WHERE id = %L AND lod3_other_geom IS NOT NULL
-       UNION ALL
-       -- lod4 other geometry
-         SELECT lod4_other_geom AS geom FROM %I.bridge_installation WHERE id = %L AND lod4_other_geom IS NOT NULL
-       UNION ALL
-       -- lod2 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation, %L) AS geom 
-           FROM %I.bridge_installation WHERE id = %L AND lod2_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod3 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, %L) AS geom 
-           FROM %I.bridge_installation WHERE id = %L AND lod3_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod4 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, %L) AS geom 
-           FROM %I.bridge_installation WHERE id = %L AND lod4_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- thematic surface geometry
-         SELECT citydb_pkg.get_envelope_bridge_them_srf(id, %L, %L) AS geom
-           FROM %I.bridge_thematic_surface WHERE bridge_installation_id = %L 
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, 
-    schema_name, schema_name, co_id, schema_name, schema_name, co_id, schema_name, schema_name, co_id,
-    set_envelope, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- bridge installation geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- lod2 other geometry
+      SELECT lod2_other_geom AS geom FROM bridge_installation WHERE id = co_id AND lod2_other_geom IS NOT NULL
+    UNION ALL
+    -- lod3 other geometry
+      SELECT lod3_other_geom AS geom FROM bridge_installation WHERE id = co_id AND lod3_other_geom IS NOT NULL
+    UNION ALL
+    -- lod4 other geometry
+      SELECT lod4_other_geom AS geom FROM bridge_installation WHERE id = co_id AND lod4_other_geom IS NOT NULL
+    UNION ALL
+    -- lod2 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation, schema_name) AS geom 
+        FROM bridge_installation WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod3 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, schema_name) AS geom 
+        FROM bridge_installation WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod4 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, schema_name) AS geom 
+        FROM bridge_installation WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- thematic surface geometry
+      SELECT citydb_pkg.get_envelope_bridge_them_srf(id, set_envelope, schema_name) AS geom
+        FROM bridge_thematic_surface WHERE bridge_installation_id = co_id 
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1441,28 +1441,28 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_them_srf(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS(
-       -- thematic surface geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- opening geometry
-         SELECT citydb_pkg.get_envelope_bridge_opening(o.id, %L, %L) AS geom
-           FROM %I.bridge_opening o, %I.bridge_open_to_them_srf o2ts 
-             WHERE o2ts.bridge_thematic_surface_id = %L AND o.id = o2ts.bridge_opening_id
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, set_envelope, schema_name, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS(
+    -- thematic surface geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- opening geometry
+      SELECT citydb_pkg.get_envelope_bridge_opening(o.id, set_envelope, schema_name) AS geom
+        FROM bridge_opening o, bridge_open_to_them_srf o2ts 
+          WHERE o2ts.bridge_thematic_surface_id = co_id 
+            AND o.id = o2ts.bridge_opening_id
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN 
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1492,31 +1492,30 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_opening(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- opening geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- lod3 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, %L) AS geom 
-           FROM %I.bridge_opening WHERE id = %L AND lod3_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod4 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, %L) AS geom 
-           FROM %I.bridge_opening WHERE id = %L AND lod4_implicit_rep_id IS NOT NULL
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, schema_name, schema_name, co_id, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- opening geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- lod3 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, schema_name) AS geom 
+        FROM bridge_opening WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod4 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, schema_name) AS geom 
+        FROM bridge_opening WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1546,31 +1545,29 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_furniture(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- bridge furniture geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- lod4 other geometry
-         SELECT lod4_other_geom AS geom FROM %I.bridge_furniture WHERE id = %L AND lod4_other_geom IS NOT NULL
-       UNION ALL
-       -- lod4 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, %L) AS geom 
-           FROM %I.bridge_furniture WHERE id = %L AND lod4_implicit_rep_id IS NOT NULL
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, schema_name, co_id,
-    schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- bridge furniture geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- lod4 other geometry
+      SELECT lod4_other_geom AS geom FROM bridge_furniture WHERE id = co_id AND lod4_other_geom IS NOT NULL
+    UNION ALL
+    -- lod4 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, schema_name) AS geom 
+        FROM bridge_furniture WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom; 
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1600,36 +1597,34 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_room(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- room geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- interior thematic surface geometry
-         SELECT citydb_pkg.get_envelope_bridge_them_srf(id, %L, %L) AS geom
-           FROM %I.bridge_thematic_surface WHERE bridge_room_id = %L
-       UNION ALL
-       -- bridge room installation geometry
-         SELECT citydb_pkg.get_envelope_bridge_inst(id, %L, %L) AS geom
-           FROM %I.bridge_installation WHERE bridge_room_id = %L
-       UNION ALL
-       -- bridge furniture geometry
-         SELECT citydb_pkg.get_envelope_bridge_furniture(id, %L, %L) AS geom
-           FROM %I.bridge_furniture WHERE bridge_room_id = %L
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, set_envelope, schema_name, schema_name, co_id, set_envelope, schema_name, schema_name, co_id,
-    set_envelope, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
+ 
+  WITH collect_geom AS (
+    -- room geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- interior thematic surface geometry
+      SELECT citydb_pkg.get_envelope_bridge_them_srf(id, set_envelope, schema_name) AS geom
+        FROM bridge_thematic_surface WHERE bridge_room_id = co_id
+    UNION ALL
+    -- bridge room installation geometry
+      SELECT citydb_pkg.get_envelope_bridge_inst(id, set_envelope, schema_name) AS geom
+        FROM bridge_installation WHERE bridge_room_id = co_id
+    UNION ALL
+    -- bridge furniture geometry
+      SELECT citydb_pkg.get_envelope_bridge_furniture(id, set_envelope, schema_name) AS geom
+        FROM bridge_furniture WHERE bridge_room_id = co_id
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1659,57 +1654,54 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_const_elem(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- bridge construction element geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- lod1 other geometry
-         SELECT lod1_other_geom AS geom FROM %I.bridge_constr_element WHERE id = %L AND lod2_other_geom IS NOT NULL
-       UNION ALL
-       -- lod2 other geometry
-         SELECT lod2_other_geom AS geom FROM %I.bridge_constr_element WHERE id = %L AND lod2_other_geom IS NOT NULL
-       UNION ALL
-       -- lod3 other geometry
-         SELECT lod3_other_geom AS geom FROM %I.bridge_constr_element WHERE id = %L AND lod3_other_geom IS NOT NULL
-       UNION ALL
-       -- lod4 other geometry
-         SELECT lod4_other_geom AS geom FROM %I.bridge_constr_element WHERE id = %L AND lod4_other_geom IS NOT NULL
-       UNION ALL
-       -- lod1 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation, %L) AS geom 
-           FROM %I.bridge_constr_element WHERE id = %L AND lod2_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod2 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation, %L) AS geom 
-           FROM %I.bridge_constr_element WHERE id = %L AND lod2_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod3 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, %L) AS geom 
-           FROM %I.bridge_constr_element WHERE id = %L AND lod3_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod4 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, %L) AS geom 
-           FROM %I.bridge_constr_element WHERE id = %L AND lod4_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- thematic surface geometry
-         SELECT citydb_pkg.get_envelope_bridge_them_srf(id, %L, %L) AS geom
-           FROM %I.bridge_thematic_surface WHERE bridge_constr_element_id = %L
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, 
-    schema_name, schema_name, co_id, schema_name, schema_name, co_id, schema_name, schema_name, co_id, schema_name, schema_name, co_id,
-    set_envelope, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- bridge construction element geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- lod1 other geometry
+      SELECT lod1_other_geom AS geom FROM bridge_constr_element WHERE id = co_id AND lod2_other_geom IS NOT NULL
+    UNION ALL
+    -- lod2 other geometry
+      SELECT lod2_other_geom AS geom FROM bridge_constr_element WHERE id = co_id AND lod2_other_geom IS NOT NULL
+    UNION ALL
+    -- lod3 other geometry
+      SELECT lod3_other_geom AS geom FROM bridge_constr_element WHERE id = co_id AND lod3_other_geom IS NOT NULL
+    UNION ALL
+    -- lod4 other geometry
+      SELECT lod4_other_geom AS geom FROM bridge_constr_element WHERE id = co_id AND lod4_other_geom IS NOT NULL
+    UNION ALL
+    -- lod1 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation, schema_name) AS geom 
+        FROM bridge_constr_element WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod2 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation, schema_name) AS geom 
+        FROM bridge_constr_element WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod3 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, schema_name) AS geom 
+        FROM bridge_constr_element WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod4 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, schema_name) AS geom 
+        FROM bridge_constr_element WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- thematic surface geometry
+      SELECT citydb_pkg.get_envelope_bridge_them_srf(id, set_envelope, schema_name) AS geom
+        FROM bridge_thematic_surface WHERE bridge_constr_element_id = co_id
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1739,57 +1731,54 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- tunnel geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- tunnel part geometry
-         SELECT citydb_pkg.get_envelope_tunnel(id, %L, %L) AS geom
-           FROM %I.tunnel WHERE tunnel_root_id = %L AND tunnel_parent_id IS NOT NULL
-       UNION ALL
-       -- tunnel thematic surface geometry
-         SELECT citydb_pkg.get_envelope_tunnel_them_srf(id, %L, %L) AS geom
-           FROM %I.tunnel_thematic_surface WHERE tunnel_id = %L AND objectclass_id IN (92, 93, 94, 95, 96, 97)
-       UNION ALL
-       -- tunnel installation geometry
-         SELECT citydb_pkg.get_envelope_tunnel_inst(id, %L, %L) AS geom
-           FROM %I.tunnel_installation WHERE tunnel_id = %L AND objectclass_id = 86
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, set_envelope, schema_name, schema_name, co_id, set_envelope, schema_name, schema_name, co_id,
-    set_envelope, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
+
+  WITH collect_geom AS (
+    -- tunnel geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- tunnel part geometry
+      SELECT citydb_pkg.get_envelope_tunnel(id, set_envelope, schema_name) AS geom
+        FROM tunnel WHERE tunnel_root_id = co_id AND tunnel_parent_id IS NOT NULL
+    UNION ALL
+    -- tunnel thematic surface geometry
+      SELECT citydb_pkg.get_envelope_tunnel_them_srf(id, set_envelope, schema_name) AS geom
+        FROM tunnel_thematic_surface WHERE tunnel_id = co_id AND objectclass_id IN (92, 93, 94, 95, 96, 97)
+    UNION ALL
+    -- tunnel installation geometry
+      SELECT citydb_pkg.get_envelope_tunnel_inst(id, set_envelope, schema_name) AS geom
+        FROM tunnel_installation WHERE tunnel_id = co_id AND objectclass_id = 86
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
 
   IF set_envelope <> 0 THEN
     -- tunnel
-    IF envelope IS NOT NULL THEN
-      EXECUTE format(
-        'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+    IF bbox IS NOT NULL THEN  
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
     END IF;
 
     -- interior hollow spaces
-    EXECUTE format(
-      'SELECT citydb_pkg.get_envelope_tunnel_hspace(id, %L, %L) 
-         FROM %I.tunnel_hollow_space WHERE tunnel_id = %L',
-      set_envelope, schema_name, schema_name, co_id);
+    PERFORM citydb_pkg.get_envelope_tunnel_hspace(id, set_envelope, schema_name) 
+      FROM tunnel_hollow_space 
+        WHERE tunnel_id = co_id;
 
     -- interior thematic surfaces
-    EXECUTE format(
-      'SELECT citydb_pkg.get_envelope_tunnel_them_srf(id, %L, %L)
-         FROM %I.tunnel_thematic_surface WHERE tunnel_id = %L AND objectclass_id IN (89, 90, 91)',
-      set_envelope, schema_name, schema_name, co_id);
+    PERFORM citydb_pkg.get_envelope_tunnel_them_srf(id, set_envelope, schema_name)
+      FROM tunnel_thematic_surface 
+        WHERE tunnel_id = co_id
+          AND objectclass_id IN (89, 90, 91);
 
     -- interior tunnel installations
-    EXECUTE format(
-      'SELECT citydb_pkg.get_envelope_tunnel_inst(id, %L, %L)
-         FROM %I.tunnel_installation WHERE tunnel_id = %L AND objectclass_id = 87',
-      set_envelope, schema_name, schema_name, co_id);
+    PERFORM citydb_pkg.get_envelope_tunnel_inst(id, set_envelope, schema_name)
+      FROM tunnel_installation 
+        WHERE tunnel_id = co_id
+          AND objectclass_id = 87;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1819,50 +1808,47 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel_inst(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- tunnel installation geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- lod2 other geometry
-         SELECT lod2_other_geom AS geom FROM %I.tunnel_installation WHERE id = %L AND lod2_other_geom IS NOT NULL
-       UNION ALL
-       -- lod3 other geometry
-         SELECT lod3_other_geom AS geom FROM %I.tunnel_installation WHERE id = %L AND lod3_other_geom IS NOT NULL
-       UNION ALL
-       -- lod4 other geometry
-         SELECT lod4_other_geom AS geom FROM %I.tunnel_installation WHERE id = %L AND lod4_other_geom IS NOT NULL
-       UNION ALL
-       -- lod2 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation, %L) AS geom 
-           FROM %I.tunnel_installation WHERE id = %L AND lod2_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod3 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, %L) AS geom 
-           FROM %I.tunnel_installation WHERE id = %L AND lod3_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod4 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, %L) AS geom 
-           FROM %I.tunnel_installation WHERE id = %L AND lod4_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- thematic surface geometry
-         SELECT citydb_pkg.get_envelope_tunnel_them_srf(id, %L, %L) AS geom
-           FROM %I.tunnel_thematic_surface WHERE tunnel_installation_id = %L
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, schema_name, co_id, schema_name, co_id, schema_name, co_id, 
-    schema_name, schema_name, co_id, schema_name, schema_name, co_id, schema_name, schema_name, co_id,
-    set_envelope, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- tunnel installation geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- lod2 other geometry
+      SELECT lod2_other_geom AS geom FROM tunnel_installation WHERE id = co_id AND lod2_other_geom IS NOT NULL
+    UNION ALL
+    -- lod3 other geometry
+      SELECT lod3_other_geom AS geom FROM tunnel_installation WHERE id = co_id AND lod3_other_geom IS NOT NULL
+    UNION ALL
+    -- lod4 other geometry
+      SELECT lod4_other_geom AS geom FROM tunnel_installation WHERE id = co_id AND lod4_other_geom IS NOT NULL
+    UNION ALL
+    -- lod2 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation, schema_name) AS geom 
+        FROM tunnel_installation WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod3 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, schema_name) AS geom 
+        FROM tunnel_installation WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod4 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, schema_name) AS geom 
+        FROM tunnel_installation WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- thematic surface geometry
+      SELECT citydb_pkg.get_envelope_tunnel_them_srf(id, set_envelope, schema_name) AS geom
+        FROM tunnel_thematic_surface WHERE tunnel_installation_id = co_id
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1892,28 +1878,28 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel_them_srf(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS(
-       -- thematic surface geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- opening geometry
-         SELECT citydb_pkg.get_envelope_tunnel_opening(o.id, %L, %L) AS geom
-           FROM %I.tunnel_opening o, %I.tunnel_open_to_them_srf o2ts 
-             WHERE o2ts.tunnel_thematic_surface_id = %L AND o.id = o2ts.tunnel_opening_id
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, set_envelope, schema_name, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS(
+    -- thematic surface geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- opening geometry
+      SELECT citydb_pkg.get_envelope_tunnel_opening(o.id, set_envelope, schema_name) AS geom
+        FROM tunnel_opening o, tunnel_open_to_them_srf o2ts 
+          WHERE o2ts.tunnel_thematic_surface_id = co_id 
+            AND o.id = o2ts.tunnel_opening_id
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1943,31 +1929,30 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel_opening(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- opening geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- lod3 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, %L) AS geom 
-           FROM %I.tunnel_opening WHERE id = %L AND lod3_implicit_rep_id IS NOT NULL
-       UNION ALL
-       -- lod4 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, %L) AS geom 
-           FROM %I.tunnel_opening WHERE id = %L AND lod4_implicit_rep_id IS NOT NULL
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, schema_name, schema_name, co_id, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- opening geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- lod3 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation, schema_name) AS geom 
+        FROM tunnel_opening WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
+    UNION ALL
+    -- lod4 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, schema_name) AS geom 
+        FROM tunnel_opening WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1997,31 +1982,29 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel_furniture(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- tunnel furniture geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- lod4 other geometry
-         SELECT lod4_other_geom AS geom FROM %I.tunnel_furniture WHERE id = %L AND lod4_other_geom IS NOT NULL
-       UNION ALL
-       -- lod4 implicit geometry
-         SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, %L) AS geom 
-           FROM %I.tunnel_furniture WHERE id = %L AND lod4_implicit_rep_id IS NOT NULL
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, schema_name, co_id,
-    schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- tunnel furniture geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- lod4 other geometry
+      SELECT lod4_other_geom AS geom FROM tunnel_furniture WHERE id = co_id AND lod4_other_geom IS NOT NULL
+    UNION ALL
+    -- lod4 implicit geometry
+      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation, schema_name) AS geom 
+        FROM tunnel_furniture WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -2051,36 +2034,34 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel_hspace(
   ) RETURNS GEOMETRY AS
 $$
 DECLARE
-  envelope GEOMETRY;
+  bbox GEOMETRY;
 BEGIN
-  EXECUTE format(
-    'WITH collect_geom AS (
-       -- hollow space geometry
-         SELECT geometry AS geom FROM %I.surface_geometry WHERE cityobject_id = %L AND geometry IS NOT NULL
-       UNION ALL
-       -- interior thematic surface geometry
-         SELECT citydb_pkg.get_envelope_tunnel_them_srf(id, %L, %L) AS geom
-           FROM %I.tunnel_thematic_surface WHERE tunnel_hollow_space_id = %L
-       UNION ALL
-       -- interior tunnel installation geometry
-         SELECT citydb_pkg.get_envelope_tunnel_inst(id, %L, %L) AS geom
-           FROM %I.tunnel_installation WHERE tunnel_hollow_space_id = %L
-       UNION ALL
-       -- tunnel furniture geometry
-         SELECT citydb_pkg.get_envelope_tunnel_furniture(id, %L, %L) AS geom
-           FROM %I.tunnel_furniture WHERE tunnel_hollow_space_id = %L
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-    schema_name, co_id, set_envelope, schema_name, schema_name, co_id, set_envelope, schema_name, schema_name, co_id,
-    set_envelope, schema_name, schema_name, co_id)
-    INTO envelope;
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
-  IF set_envelope <> 0 AND envelope IS NOT NULL THEN
-    EXECUTE format(
-      'UPDATE %I.cityobject SET envelope = %L WHERE id = %L', schema_name, envelope, co_id);
+  WITH collect_geom AS (
+    -- hollow space geometry
+      SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
+    UNION ALL
+    -- interior thematic surface geometry
+      SELECT citydb_pkg.get_envelope_tunnel_them_srf(id, set_envelope, schema_name) AS geom
+        FROM tunnel_thematic_surface WHERE tunnel_hollow_space_id = co_id
+    UNION ALL
+    -- interior tunnel installation geometry
+      SELECT citydb_pkg.get_envelope_tunnel_inst(id, set_envelope, schema_name) AS geom
+        FROM tunnel_installation WHERE tunnel_hollow_space_id = co_id
+    UNION ALL
+    -- tunnel furniture geometry
+      SELECT citydb_pkg.get_envelope_tunnel_furniture(id, set_envelope, schema_name) AS geom
+        FROM tunnel_furniture WHERE tunnel_hollow_space_id = co_id
+  )
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM collect_geom;
+
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN 
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
-  
-  RETURN envelope;
+
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -2116,9 +2097,14 @@ DECLARE
   envelope GEOMETRY;
   db_srid INTEGER;
 BEGIN
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
+
   -- fetching class_id if it is NULL
   IF objclass_id IS NULL OR objclass_id = 0 THEN
-    EXECUTE format('SELECT objectclass_id FROM %I.cityobject WHERE id = %L', schema_name, co_id) INTO class_id;
+    SELECT objectclass_id INTO class_id 
+      FROM cityobject 
+        WHERE id = co_id;
   ELSE
     class_id := objclass_id;
   END IF;
@@ -2232,25 +2218,27 @@ $$
 DECLARE
   filter TEXT := '';
   group_filter TEXT := '';
-  envelope GEOMETRY;
-BEGIN   
+  bbox GEOMETRY;
+BEGIN
+  -- update search_path
+  PERFORM set_config('search_path', schema_name || ',public', true);
+  
   IF only_if_null <> 0 THEN
     filter := ' WHERE envelope IS NULL';
   END IF;
 
   IF objclass_id <> 0 THEN
     filter := CASE WHEN filter = '' THEN ' WHERE ' ELSE filter || ' AND ' END;
-    filter := filter || 'objectclass_id = ' || $1;
+    filter := filter || 'objectclass_id = $1';
 
-    EXECUTE format(
+    EXECUTE
       'WITH collect_geom AS (
          -- cityobject geometry
-          SELECT citydb_pkg.get_envelope_cityobject(id, objectclass_id, %L, %L) AS geom
-            FROM %I.cityobject' || filter || '
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-      set_envelope, schema_name, schema_name)
-      INTO envelope;
+          SELECT citydb_pkg.get_envelope_cityobject(id, objectclass_id, $2, $3) AS geom
+            FROM cityobject' || filter || '
+       )
+       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) FROM collect_geom' 
+       INTO bbox USING objclass_id, set_envelope, schema_name;      
   ELSE
     group_filter := CASE WHEN filter = '' THEN ' WHERE ' ELSE filter || ' AND ' END;
     group_filter := group_filter || 'objectclass_id = 23';
@@ -2259,46 +2247,44 @@ BEGIN
     filter := filter || 'objectclass_id IN (4, 5, 7, 8, 9, 14, 21, 25, 26, 42, 43, 44, 45, 46, 63, 64, 84, 85)';
 
     -- first: work on top-level features not being groups
-    EXECUTE format(
+    EXECUTE
       'WITH collect_geom AS (
          -- top-level feature geometry
-           SELECT citydb_pkg.get_envelope_cityobject(id, objectclass_id, %L, %L) AS geom
-             FROM %I.cityobject' || filter || '
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-      set_envelope, schema_name, schema_name)
-      into envelope;
+           SELECT citydb_pkg.get_envelope_cityobject(id, objectclass_id, $1, $2) AS geom
+             FROM cityobject' || filter || '
+       )
+       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) FROM collect_geom'
+       INTO bbox USING set_envelope, schema_name;
 
-     -- second: work on city object groups
-    EXECUTE format(
+    -- second: work on city object groups
+    EXECUTE
       'WITH collect_geom AS (
          -- cityobject group
-           SELECT citydb_pkg.get_envelope_cityobjectgroup(id, %L, 0, %L) AS geom
-             FROM %I.cityobject' || group_filter || '
+           SELECT citydb_pkg.get_envelope_cityobjectgroup(id, $1, 0, $2) AS geom
+             FROM cityobject' || group_filter || '
          -- current envelope
          UNION ALL
-           SELECT %L AS geom
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-      set_envelope, schema_name, schema_name, envelope)
-      INTO envelope;
+           SELECT $3 AS geom
+       )
+       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) FROM collect_geom'
+       INTO bbox USING set_envelope, schema_name, bbox;
 
-     -- third: work on remaining nested features not being groups
-     EXECUTE format(
+
+    -- third: work on remaining nested features not being groups
+    EXECUTE
       'WITH collect_geom AS (
          -- nested feature geometry
-           SELECT citydb_pkg.get_envelope_cityobject(id, objectclass_id, %L, %L) AS geom
-             FROM %I.cityobject WHERE envelope is NULL and objectclass_id <> 23
+           SELECT citydb_pkg.get_envelope_cityobject(id, objectclass_id, $1, $2) AS geom
+             FROM cityobject WHERE envelope IS NULL AND objectclass_id <> 23
          -- current envelope
          UNION ALL
-           SELECT %L AS geom
-      )
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) AS envelope3d FROM collect_geom',
-      set_envelope, schema_name, schema_name, envelope)
-      INTO envelope;
+           SELECT $3 AS geom
+       )
+       SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) FROM collect_geom'
+       INTO bbox USING set_envelope, schema_name, bbox;   
   END IF;
 
-  RETURN envelope;
+  RETURN bbox;
 
   EXCEPTION
     WHEN OTHERS THEN
