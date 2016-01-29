@@ -66,6 +66,17 @@ BEGIN
 END;
 /
 
+-- Drop the existing indexes (non-spatial indexes)
+BEGIN
+	dbms_output.put_line('Indexes are being dropped...');	
+END;
+/
+@@DROP_INDEXES_V3.sql
+BEGIN
+	dbms_output.put_line('Indexes are dropped.');	
+END;
+/
+
 -- Load the generic migration package
 @@MIGRATE_DB_V2_V3.sql;
 
@@ -165,6 +176,29 @@ BEGIN
 	dbms_output.put_line('Sequence update is completed.');	
 END;
 /
+
+BEGIN
+	dbms_output.put_line('Indexes are being re-created...');	
+END;
+/
+-- Create the non-spatial indexes again
+@@CREATE_INDEXES_V3.sql
+BEGIN
+	dbms_output.put_line('Index re-creation is completed.');	
+END;
+/
+
+BEGIN
+	dbms_output.put_line('Constraints are being created...');	
+END;
+/
+-- Create the non-spatial indexes again
+@@CONSTRAINTS_V3.sql
+BEGIN
+	dbms_output.put_line('Constraints are created.');	
+END;
+/
+
 
 BEGIN
 	dbms_output.put_line('Migration related Packages, Procedures and Functions are being removed');
