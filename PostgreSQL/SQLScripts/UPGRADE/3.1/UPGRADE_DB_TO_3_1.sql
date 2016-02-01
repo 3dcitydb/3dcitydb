@@ -25,10 +25,10 @@ SET client_min_messages TO WARNING;
 \echo
 
 --// drop obsolete indexes
-DROP INDEX cityobject_inx;
-DROP INDEX appearance_inx;
-DROP INDEX surface_geom_inx;
-DROP INDEX surface_data_inx;
+DROP INDEX citydb.cityobject_inx;
+DROP INDEX citydb.appearance_inx;
+DROP INDEX citydb.surface_geom_inx;
+DROP INDEX citydb.surface_data_inx;
 
 --// add columns new in v3.1
 ALTER TABLE citydb.citymodel

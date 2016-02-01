@@ -1,4 +1,4 @@
-== Migration steps from version 2.1 to version 3.0 ==
+== Migration steps from version 2.1 to version 3.1 ==
 
 1. Create the database v3 with @CREATE_DB.sql 
 
@@ -15,6 +15,8 @@
 
     - Enter the schema name from which the data will be migrated 
     - Specify the used oracle license (spatial / locator)
+    
+4. Execute @UPGRADE_DB_TO_3_1.sql as your current (v3) user 
 
 Done! 
 
@@ -41,3 +43,6 @@ from is named as "3DCITYDB_TEST2" and your schema name is named as "3DCITYDB_TES
 
     - When the migration script is completed, you see a message 
       "DB migration is completed successfully." on the console. 
+      
+    - As the final step, the script @UPGRADE_DB_TO_3_1.sql must be run 
+      in order to bring the database to the version 3.1.
