@@ -67,18 +67,20 @@ LANGUAGE sql STABLE;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d() RETURNS INTEGER AS
 $$
+BEGIN
   -- update search_path
   PERFORM set_config('search_path', schema_name, true);
   
   SELECT citydb_pkg.is_coord_ref_sys_3d(srid) FROM database_srs;
+END;
 $$
-LANGUAGE sql STABLE;
+LANGUAGE plpgsql STABLE;
 
 
 /*******************************************************************
 * check_srid
 *
-* @param srsno     the chosen SRID to be further used in the database
+* @param srsno  the chosen SRID to be further used in the database
 *
 * @RETURN TEXT  status of srid check
 *******************************************************************/
