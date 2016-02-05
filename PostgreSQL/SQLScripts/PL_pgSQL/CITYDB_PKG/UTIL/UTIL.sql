@@ -278,7 +278,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_seq_values(
 $$
 BEGIN
   -- update search_path
-  PERFORM set_config('search_path', schema_name, true);
+  PERFORM set_config('search_path', schema_name || ',public', true);
 
   RETURN QUERY SELECT nextval($1)::int FROM generate_series(1, $2);
 END;
