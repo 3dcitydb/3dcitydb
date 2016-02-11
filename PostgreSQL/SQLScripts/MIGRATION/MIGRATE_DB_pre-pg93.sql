@@ -41,7 +41,7 @@ SELECT srid FROM database_srs;
 
 --// create TABLES and SEQUENCES new in v3.0
 \echo
-\echo 'Create tables and sequences of 3DCityDB instance that are new in v3.0 ...'
+\echo 'Create tables and sequences of 3DCityDB instance that are new in v3.1 ...'
 \i CREATE_DB_V3.sql
 
 --// fill tables OBJECTCLASS
@@ -67,17 +67,17 @@ CREATE SCHEMA citydb_pkg;
 
 --// migrate TABLES from old to new schema
 \echo
-\echo 'Migrating database schema of 3DCityDB instance from v2.x to v3.0 ...'
+\echo 'Migrating database schema of 3DCityDB instance from v2.x to v3.1 ...'
 \i MIGRATE_DB_V2_V3_pre-pg93.sql
 
 --// adding CONSTRAINTS in new schema
 \echo
-\echo 'Defining primary keys and foreign keys on v3.0 tables ...'
+\echo 'Defining primary keys and foreign keys on v3.1 tables ...'
 \i CONSTRAINTS_V3.sql
 
 --// creating INDEXES in new schema
 \echo
-\echo 'Creating indexes on v3.0 tables ...'
+\echo 'Creating indexes on v3.1 tables ...'
 \i INDEXES_V3.sql
 
 --// removing v2.x schema (if the user wants to)
