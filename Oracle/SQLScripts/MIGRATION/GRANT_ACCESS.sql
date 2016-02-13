@@ -13,8 +13,8 @@
 --              for more details.
 -------------------------------------------------------------------------------
 -- About:
--- Script to grant reading access on a 3DCityDB instance of v2.1.0 to a user 
--- with an installed version of the 3DCityDB v3.0.0
+-- Script to grant reading access on a 3DCityDB instance of v2.1 to a user 
+-- with an installed version of the 3DCityDB v3.1
 -------------------------------------------------------------------------------
 --
 -- ChangeLog:
@@ -25,7 +25,7 @@
 --
 
 SET SERVEROUTPUT ON;
-ACCEPT SCHEMAINPUT PROMPT 'Enter the user name of 3DCityDB v3.0.0 instance : '
+ACCEPT SCHEMAINPUT PROMPT 'Enter the user name of 3DCityDB v3.1 instance : '
 
 DECLARE
     schema_name_user VARCHAR2(30) := upper('&SCHEMAINPUT');

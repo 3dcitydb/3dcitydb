@@ -19,6 +19,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                               | Author
+-- 1.1.1     2016-02-10   bugfix                                      RRed 
 -- 1.1.0     2015-11-02   update for v3.1                             FKun
 -- 1.0.0     2014-12-28   release version                             FKun
 --
@@ -1134,7 +1135,7 @@ CREATE TABLE citydb.address (
 	state,
 	country,
 	multi_point,
-	xal_source	
+	xal_source)	
   AS SELECT
 	id,
 	('ID_'||id)::varchar(256),

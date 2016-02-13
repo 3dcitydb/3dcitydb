@@ -12,7 +12,7 @@
 --              for more details.
 -------------------------------------------------------------------------------
 -- About:
--- Script to add primary keys, foreign keys and check constraints to v3.0 tables.
+-- Script to add primary keys, foreign keys and check constraints to v3.0/v3.1 tables.
 -- Sets also default values for ID columns that are using sequences.
 -------------------------------------------------------------------------------
 --

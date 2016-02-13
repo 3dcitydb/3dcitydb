@@ -12,7 +12,7 @@
 --              for more details.
 -------------------------------------------------------------------------------
 -- About:
--- Script to create indexes on v3.0 tables (copied from pgModeler script)
+-- Script to create indexes on v3.0/v3.1 tables (copied from pgModeler script)
 --
 -------------------------------------------------------------------------------
 --

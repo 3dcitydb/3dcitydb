@@ -1,6 +1,6 @@
 == Migration steps from version 2.1 to version 3.1 ==
 
-1. Create the database v3 with @CREATE_DB.sql 
+1. Create the database v3.1 with @CREATE_DB.sql 
 
     - Enter the SRID for the database 
     - Enter the SRSName to be used 
@@ -9,14 +9,12 @@
 
 2. Run the script @GRANT_ACCESS.sql as v2.1 schema user 
 
-    - Enter the schema name (v3) on which the accesses to be granted 
+    - Enter the schema name (v3.1) on which the accesses to be granted 
 
-3. Execute @MIGRATE_DB.sql as your current (v3) user 
+3. Execute @MIGRATE_DB.sql as your current (v3.1) user 
 
     - Enter the schema name from which the data will be migrated 
     - Specify the used oracle license (spatial / locator)
-    
-4. Execute @UPGRADE_DB_TO_3_1.sql as your current (v3) user 
 
 Done! 
 
@@ -27,7 +25,7 @@ to SRID = 83032 and assume that the schema name which we will copy the data
 from is named as "3DCITYDB_TEST2" and your schema name is named as "3DCITYDB_TEST3". 
 
     - First, you create a new user and run @CREATE_DB.sql script for version 
-      3.0.0 on this schema. You give the SRID as "83032" and the corresponding 
+      3.1 on this schema. You give the SRID as "83032" and the corresponding 
       SRSName (urn:ogc:def:crs,crs:EPSG:6.12:25832,crs:EPSG:6.12:5783) and 
       your choice about versioning and used oracle license (spatial / locator). 
 
@@ -42,7 +40,4 @@ from is named as "3DCITYDB_TEST2" and your schema name is named as "3DCITYDB_TES
       Second parameter is the used oracle license (spatial / locator).
 
     - When the migration script is completed, you see a message 
-      "DB migration is completed successfully." on the console. 
-      
-    - As the final step, the script @UPGRADE_DB_TO_3_1.sql must be run 
-      in order to bring the database to the version 3.1.
+      "DB migration is completed successfully." on the console.

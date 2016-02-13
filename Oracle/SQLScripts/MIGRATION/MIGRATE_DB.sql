@@ -15,7 +15,7 @@
 -------------------------------------------------------------------------------
 -- About:
 -- Top-level migration script that starts the migration process for a 3DCityDB 
--- instance of v2.1.0 to v3.0.0
+-- instance of v2.1 to v3.1
 -------------------------------------------------------------------------------
 --
 -- ChangeLog:
@@ -34,8 +34,8 @@ BEGIN
 END;
 /
 
-ACCEPT SCHEMAINPUT PROMPT 'Enter the user name of 3DCityDB v2.1.0 instance : '
-ACCEPT DBVERSION CHAR DEFAULT 'S' PROMPT 'Which DB license are you using in the v3.0.0 instance? (Spatial(S)/Locator(L), default is S): '
+ACCEPT SCHEMAINPUT PROMPT 'Enter the user name of 3DCityDB v2.1 instance : '
+ACCEPT DBVERSION CHAR DEFAULT 'S' PROMPT 'Which DB license are you using in the v3.1 instance? (Spatial(S)/Locator(L), default is S): '
 ACCEPT TEXOP CHAR DEFAULT 'n' PROMPT 'No texture URI is used for multiple texture files (yes(y)/unknown(n), default is n): '
 
 VARIABLE MGRPBATCHFILE VARCHAR2(50);

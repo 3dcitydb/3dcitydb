@@ -229,8 +229,13 @@ AS
     EXECUTE IMMEDIATE 'DROP TABLE address CASCADE CONSTRAINTS';    
     EXECUTE IMMEDIATE '
     CREATE TABLE address 
-	AS SELECT * FROM address_v2';
+	AS SELECT ID, CAST(null AS VARCHAR2(256)) as GMLID, 
+                 CAST(null AS VARCHAR2(1000)) as GMLID_CODESPACE, 
+                 STREET, HOUSE_NUMBER, PO_BOX, ZIP_CODE, CITY, 
+                 STATE, COUNTRY, MULTI_POINT, XAL_SOURCE 
+       FROM address_v2';
     EXECUTE IMMEDIATE 'ALTER TABLE address ADD CONSTRAINT ADDRESS_PK PRIMARY KEY (ID) ENABLE';
+    EXECUTE IMMEDIATE 'UPDATE ADDRESS SET GMLID = (''ID_''||ID)';
     dbms_output.put_line('Address table copy is completed.' || SYSTIMESTAMP);
   END;
 
