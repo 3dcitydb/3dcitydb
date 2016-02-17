@@ -47,7 +47,7 @@ SET VER OFF
 
 prompt
 prompt DROP_DB procedure will be started
-accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Oracle Spaital(S)/Oracle Locator(L), default is S): '
+accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Oracle Spatial(S)/Oracle Locator(L), default is S): '
 prompt
 
 VARIABLE BATCHFILE VARCHAR2(50);
