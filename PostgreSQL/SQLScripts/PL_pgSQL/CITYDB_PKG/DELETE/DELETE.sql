@@ -1,10 +1,10 @@
 -- DELETE.sql
 --
--- Authors:     Felix Kunde <fkunde@virtualcitysystems.de>
+-- Authors:     Felix Kunde <felix-kunde@gmx.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
 --              György Hudra <hudra@moss.de>
 --
--- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+-- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
 --                             http://www.gis.bv.tum.de
 --

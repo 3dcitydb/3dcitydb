@@ -143,7 +143,8 @@ the following cooperation partners:
 --------------------
 
 Claus Nagel <cnagel@virtualcitysystems.de>
-Felix Kunde <fkunde@virtualcitysystems.de>
+Felix Kunde <felix-kunde@gmx.de>
+Richard Redweik <rredweik@virtualcitysystems.de>
 Zhihang Yao <zhihang.yao@tum.de>
 György Hudra <ghudra@moss.de>
 Arda Müftüoglu <amueftueoglu@moss.de>

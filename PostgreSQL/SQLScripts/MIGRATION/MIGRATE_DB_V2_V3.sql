@@ -1,8 +1,8 @@
 -- MIGRATE_DB_V2_V3.sql
 --
--- Authors:     Felix Kunde <fkunde@virtualcitysystems.de>
+-- Authors:     Felix Kunde <felix-kunde@gmx.de>
 --
--- Copyright:   (c) 2012-2015  Chair of Geoinformatics,
+-- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
 --                             Technische Universit�t M�nchen, Germany
 --                             http://www.gis.bv.tum.de
 --

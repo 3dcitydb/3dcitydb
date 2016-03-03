@@ -1,6 +1,6 @@
 -- SRS.sql
 --
--- Authors:     Felix Kunde <fkunde@virtualcitysystems.de>
+-- Authors:     Felix Kunde <felix-kunde@gmx.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
 --
 -- Copyright:   (c) 2007-2014  Institute for Geodesy and Geoinformation Science,
