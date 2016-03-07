@@ -5,7 +5,7 @@
 -- Model Author: Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
 --               Zhihang Yao <zhihang.yao@tum.de>
 --               Claus Nagel <cnagel@virtualcitysystems.de>
---               Felix Kunde <fkunde@virtualcitysystems.de>
+--               Felix Kunde <felix-kunde@gmx.de>
 --               Philipp Willkomm <pwillkomm@moss.de>
 --               Gerhard König <gerhard.koenig@tu-berlin.de>
 --               Alexandra Lorenz <di.alex.lorenz@googlemail.com>

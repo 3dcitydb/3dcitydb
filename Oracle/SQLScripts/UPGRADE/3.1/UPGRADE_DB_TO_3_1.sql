@@ -1,14 +1,14 @@
 -- UPGRADE_DB_TO_3_1.sql
 --
--- Authors:     Felix Kunde <fkunde@virtualcitysystems.de>
+-- Authors:     Felix Kunde <felix-kunde@gmx.de>
 --
--- Copyright:   (c) 2012-2015  Chair of Geoinformatics,
---                             Technische UniversitÃ¤t MÃ¼nchen, Germany
+-- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
+--                             Technische Universität München, Germany
 --                             http://www.gis.bv.tum.de
 --
 -------------------------------------------------------------------------------
 -- About:
--- Upgrade script to version 3.1 of the 3D City Database
+-- Upgrade script from version 3.0 to version 3.1 of the 3D City Database
 --
 -------------------------------------------------------------------------------
 --
@@ -16,18 +16,24 @@
 --
 -- Version | Date       | Description                               | Author
 -- 1.0.0     2015-11-05   release version                             FKun
+-- 1.0.1     2016-02-17   DROP INDEX statements added for             TKolbe 
+--                        ADDRESS_INX, CITYMODEL_INX.
+--                        Removed lines with "\" after normal SQL
+--                        statements (they are only necessary after
+--                        PL/SQL commands).
 --
 
 SET SERVEROUTPUT ON
 
 SELECT 'Starting 3D City Database upgrade...' as message from DUAL;
 
---// drop obsolete indexes
+--// drop indexes to be replaced
+DROP INDEX CITYMODEL_INX;
 DROP INDEX CITYOBJECT_INX;
 DROP INDEX APPEARANCE_INX;
 DROP INDEX SURFACE_GEOM_INX;
 DROP INDEX SURFACE_DATA_INX;
-/
+DROP INDEX ADDRESS_INX;
 
 --// add columns new in v3.1
 ALTER TABLE CITYMODEL
@@ -51,7 +57,6 @@ ALTER TABLE ADDRESS
 
 --// fill gmlid column in address table
 UPDATE ADDRESS SET GMLID = ('ID_'||ID);
-/
 
 --// create new indexes
 CREATE INDEX CITYMODEL_INX ON CITYMODEL (GMLID, GMLID_CODESPACE);
@@ -61,7 +66,6 @@ CREATE INDEX APPEARANCE_INX ON APPEARANCE (GMLID, GMLID_CODESPACE);
 CREATE INDEX SURFACE_GEOM_INX ON SURFACE_GEOMETRY (GMLID, GMLID_CODESPACE);
 CREATE INDEX SURFACE_DATA_INX ON SURFACE_DATA (GMLID, GMLID_CODESPACE);
 CREATE INDEX ADDRESS_INX ON ADDRESS (GMLID, GMLID_CODESPACE);
-/
 
 --// get SRID for spatial index
 VARIABLE SRID NUMBER;

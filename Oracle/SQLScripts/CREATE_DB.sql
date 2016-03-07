@@ -7,7 +7,7 @@
 --              Gerhard König <gerhard.koenig@tu-berlin.de>
 --              Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 --
--- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+-- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
 --                             http://www.gis.bv.tum.de
 --
@@ -49,7 +49,7 @@ accept SRSNO NUMBER DEFAULT 81989002 PROMPT 'Please enter a valid SRID (Berlin: 
 prompt Please enter the corresponding SRSName to be used in GML exports
 accept GMLSRSNAME CHAR DEFAULT 'urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783' prompt '  (Berlin: urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783): '
 accept VERSIONING CHAR DEFAULT 'no' PROMPT 'Shall versioning be enabled (yes/no, default is no): '
-accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Oracle Spaital(S)/Oracle Locator(L), default is S): '
+accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Oracle Spatial(S)/Oracle Locator(L), default is S): '
 prompt
 prompt
 

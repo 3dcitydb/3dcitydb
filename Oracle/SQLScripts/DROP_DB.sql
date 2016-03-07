@@ -7,7 +7,7 @@
 --              Gerhard König <gerhard.koenig@tu-berlin.de>
 --              Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 --
--- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+-- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
 --                             http://www.gis.bv.tum.de
 --
@@ -47,7 +47,7 @@ SET VER OFF
 
 prompt
 prompt DROP_DB procedure will be started
-accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Oracle Spaital(S)/Oracle Locator(L), default is S): '
+accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Oracle Spatial(S)/Oracle Locator(L), default is S): '
 prompt
 
 VARIABLE BATCHFILE VARCHAR2(50);

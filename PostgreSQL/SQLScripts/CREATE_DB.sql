@@ -3,12 +3,12 @@
 -- Authors:     Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
 --              Zhihang Yao <zhihang.yao@tum.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
---              Felix Kunde <fkunde@virtualcitysystems.de>
+--              Felix Kunde <felix-kunde@gmx.de>
 --              Philipp Willkomm <pwillkomm@moss.de>
 --              Gerhard König <gerhard.koenig@tu-berlin.de>
 --              Alexandra Lorenz <di.alex.lorenz@googlemail.com>
 --
--- Copyright:   (c) 2012-2014  Chair of Geoinformatics,
+-- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
 --                             http://www.gis.bv.tum.de
 --
