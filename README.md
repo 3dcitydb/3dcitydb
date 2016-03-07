@@ -35,7 +35,7 @@ COPYING and COPYING.LESSER or visit http://www.gnu.org/licenses/.
 2. Copyright
 ------------
 
-&copy; 2012-2014  
+&copy; 2012-2016 
 Chair of Geoinformatics (TUMGI)
 Technische Universität München, Germany
 http://www.gis.bv.tum.de
@@ -137,7 +137,8 @@ supported by the following cooperation partners:
 -------------
 
 * Claus Nagel <cnagel@virtualcitysystems.de>
-* Felix Kunde <fkunde@virtualcitysystems.de>
+* Richard Redweik <rredweik@virtualcitysystems.de>
+* Felix Kunde <felix-kunde@gmx.de>
 * Zhihang Yao <zhihang.yao@tum.de>
 * Thomas H. Kolbe <thomas.kolbe@tum.de>
 * György Hudra <ghudra@moss.de>
