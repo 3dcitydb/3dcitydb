@@ -897,7 +897,7 @@ BEGIN
   RETURN deleted_id;
 
   EXCEPTION
-	WHEN OTHERS THEN
+    WHEN OTHERS THEN
       RAISE NOTICE 'delete_relief_feature (id: %): %', rf_id, SQLERRM;
 END; 
 $$ 
