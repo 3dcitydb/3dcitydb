@@ -94,11 +94,37 @@
     </column>
   </columns>
   <constraints>
+    <constraint class="oracle.javatools.db.PKConstraint">
+      <name>BRIDGE_THEMATIC_SURFACE_PK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>BRIDGE_THEMATIC_SURFACE</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <indexID class="oracle.javatools.db.NameBasedID">
+        <name>BRIDGE_THEMATIC_SURFACE_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>BRIDGE_THEMATIC_SURFACE</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
+        <type>INDEX</type>
+      </indexID>
+    </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <name>BRD_THEM_SRF_BRD_CONST_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>ID</name>
+          <name>BRIDGE_CONSTR_ELEMENT_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>BRIDGE_THEMATIC_SURFACE</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
@@ -328,32 +354,6 @@
         </parent>
         <type>CONSTRAINT</type>
       </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.PKConstraint">
-      <name>BRIDGE_THEMATIC_SURFACE_PK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>BRIDGE_THEMATIC_SURFACE</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.NameBasedID">
-        <name>BRIDGE_THEMATIC_SURFACE_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>BRIDGE_THEMATIC_SURFACE</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>DEFAULTSCHEMA</schemaName>
-        <type>INDEX</type>
-      </indexID>
     </constraint>
   </constraints>
   <indexes>

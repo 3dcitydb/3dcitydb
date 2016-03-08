@@ -1,6 +1,7 @@
 -- UPGRADE_DB_TO_3_1.sql
 --
 -- Authors:     Felix Kunde <felix-kunde@gmx.de>
+--              Richard Redweik <rredweik@virtualcitysystems.de>
 --
 -- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
@@ -21,6 +22,8 @@
 --                        Removed lines with "\" after normal SQL
 --                        statements (they are only necessary after
 --                        PL/SQL commands).
+-- 1.0.2     2016-03-08   fixed Bug in Foreign Key                    RRed
+--                        "BRD_THEM_SRF_BRD_CONST_FK"
 --
 
 SET SERVEROUTPUT ON
@@ -96,5 +99,20 @@ SELECT 'Installing CITYDB packages...' as message from DUAL;
 @@../../PL_SQL/CITYDB_PKG/DELETE/DELETE.sql;
 @@../../PL_SQL/CITYDB_PKG/DELETE/DELETE_BY_LINEAGE.sql;
 SELECT 'CITYDB package installed.' as message from DUAL;
+
+--// Alter constraint: Fix foreign key bug.
+ALTER TABLE BRIDGE_THEMATIC_SURFACE
+DROP CONSTRAINT BRD_THEM_SRF_BRD_CONST_FK;
+
+ALTER TABLE BRIDGE_THEMATIC_SURFACE
+ADD CONSTRAINT BRD_THEM_SRF_BRD_CONST_FK FOREIGN KEY
+(
+  BRIDGE_CONSTR_ELEMENT_ID  
+)
+REFERENCES BRIDGE_CONSTR_ELEMENT
+(
+  ID 
+)
+ENABLE;
 
 SELECT '3D City Database upgrade complete!' as message from DUAL;
