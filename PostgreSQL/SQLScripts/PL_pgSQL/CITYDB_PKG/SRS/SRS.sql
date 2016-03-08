@@ -69,7 +69,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d() RETURNS INTEGER A
 $$
 BEGIN
   -- update search_path
-  PERFORM set_config('search_path', schema_name, true);
+  PERFORM set_config('search_path', schema_name || ',public', true);
   
   SELECT citydb_pkg.is_coord_ref_sys_3d(srid) FROM database_srs;
 END;
