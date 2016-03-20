@@ -17,11 +17,12 @@
 --
 -- ChangeLog:
 --
--- Version | Date       | Description                                 | Author
--- 1.3.0     2016-01-27   removed most of dynamic SQL code              FKun
--- 1.2.0     2015-11-11   added set_envelope parameter for functions    CNag
--- 1.1.0     2015-11-04   added set_envelope procedures                 FKun
--- 1.0.0     2015-07-21   release version 3DCityDB v3.1                 FKun
+-- Version | Date       | Description                                    | Author
+-- 1.3.1     2016-03-20   reset search_path by the end of each function    FKun
+-- 1.3.0     2016-01-27   removed most of dynamic SQL code                 FKun
+-- 1.2.0     2015-11-11   added set_envelope parameter for functions       CNag
+-- 1.1.0     2015-11-04   added set_envelope procedures                    FKun
+-- 1.0.0     2015-07-21   release version 3DCityDB v3.1                    FKun
 --
 
 /*****************************************************************
@@ -85,8 +86,10 @@ $$
 DECLARE
   envelope GEOMETRY;
   db_srid INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   IF box IS NULL THEN
@@ -109,6 +112,9 @@ BEGIN
       ]
     )), db_srid) INTO envelope; 
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN envelope;
 
@@ -144,8 +150,10 @@ $$
 DECLARE
   envelope GEOMETRY;
   params DOUBLE PRECISION[ ] := '{}';
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   -- calculate bounding box for implicit geometry
@@ -188,6 +196,9 @@ BEGIN
     envelope := ST_Translate(envelope, ST_X(ref_pt), ST_Y(ref_pt), ST_Z(ref_pt));
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN envelope;
 
   EXCEPTION
@@ -219,8 +230,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_land_use(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   SELECT citydb_pkg.box2envelope(ST_3DExtent(geometry)) INTO bbox
@@ -231,6 +244,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -263,8 +279,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_generic_cityobj(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -312,6 +330,9 @@ BEGIN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN bbox;
 
   EXCEPTION
@@ -343,8 +364,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_solitary_veg_obj(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -385,6 +408,9 @@ BEGIN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN bbox;
 
   EXCEPTION
@@ -416,8 +442,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_plant_cover(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   SELECT citydb_pkg.box2envelope(ST_3DExtent(geometry)) INTO bbox
@@ -428,6 +456,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -460,8 +491,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_waterbody(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -479,6 +512,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -511,8 +547,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_waterbnd_surface(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   SELECT citydb_pkg.box2envelope(ST_3DExtent(geometry)) INTO bbox
@@ -523,6 +561,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -555,8 +596,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_relief_feature(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   -- try to generate envelope from relief components
@@ -570,6 +613,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -605,8 +651,10 @@ $$
 DECLARE
   class_id INTEGER;
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   -- fetching class_id if it is NULL
@@ -646,6 +694,9 @@ BEGIN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN bbox;
 
   EXCEPTION
@@ -677,8 +728,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_city_furniture(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -719,6 +772,9 @@ BEGIN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN bbox;
 
   EXCEPTION
@@ -753,8 +809,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_cityobjectgroup(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   IF calc_member_envelopes <> 0 THEN
@@ -803,6 +861,9 @@ BEGIN
           AND g.id = co_id;
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN bbox;
 
   EXCEPTION
@@ -834,8 +895,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_building(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -880,6 +943,9 @@ BEGIN
           AND objectclass_id = 28;
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN bbox;
 
   EXCEPTION
@@ -912,8 +978,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_building_inst(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -951,6 +1019,9 @@ BEGIN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN bbox;
 
   EXCEPTION
@@ -982,8 +1053,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_thematic_surface(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
  
   WITH collect_geom AS(
@@ -1001,6 +1074,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -1033,8 +1109,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_opening(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -1054,6 +1132,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -1086,8 +1167,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_building_furn(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -1106,6 +1189,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -1138,8 +1224,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_room(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -1163,6 +1251,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -1195,8 +1286,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_trans_complex(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -1215,6 +1308,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -1247,8 +1343,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_traffic_area(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   SELECT citydb_pkg.box2envelope(ST_3DExtent(geometry)) INTO bbox 
@@ -1259,6 +1357,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -1291,8 +1392,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -1341,6 +1444,9 @@ BEGIN
           AND objectclass_id = 66;
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN bbox;
 
   EXCEPTION
@@ -1372,8 +1478,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_inst(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -1411,6 +1519,9 @@ BEGIN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN bbox;
 
   EXCEPTION
@@ -1442,8 +1553,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_them_srf(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS(
@@ -1461,6 +1574,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN 
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -1493,8 +1609,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_opening(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -1514,6 +1632,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -1546,8 +1667,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_furniture(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -1566,6 +1689,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -1598,8 +1724,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_room(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
  
   WITH collect_geom AS (
@@ -1623,6 +1751,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -1655,8 +1786,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_const_elem(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -1701,6 +1834,9 @@ BEGIN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN bbox;
 
   EXCEPTION
@@ -1732,8 +1868,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -1778,6 +1916,9 @@ BEGIN
           AND objectclass_id = 87;
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN bbox;
 
   EXCEPTION
@@ -1809,8 +1950,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel_inst(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -1848,6 +1991,9 @@ BEGIN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN bbox;
 
   EXCEPTION
@@ -1879,8 +2025,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel_them_srf(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS(
@@ -1898,6 +2046,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -1930,8 +2081,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel_opening(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -1951,6 +2104,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -1983,8 +2139,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel_furniture(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -2003,6 +2161,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -2035,8 +2196,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel_hspace(
 $$
 DECLARE
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   WITH collect_geom AS (
@@ -2060,6 +2223,9 @@ BEGIN
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN 
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 
@@ -2096,8 +2262,10 @@ DECLARE
   class_id INTEGER := 0;
   envelope GEOMETRY;
   db_srid INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
 
   -- fetching class_id if it is NULL
@@ -2187,6 +2355,9 @@ BEGIN
     RAISE NOTICE 'Can not get envelope of object with ID % and objectclass_id %.', co_id, class_id;
   END CASE;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN envelope;
 
   EXCEPTION
@@ -2219,8 +2390,10 @@ DECLARE
   filter TEXT := '';
   group_filter TEXT := '';
   bbox GEOMETRY;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
   
   IF only_if_null <> 0 THEN
@@ -2283,6 +2456,9 @@ BEGIN
        SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) FROM collect_geom'
        INTO bbox USING set_envelope, schema_name, bbox;   
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN bbox;
 

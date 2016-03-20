@@ -276,11 +276,17 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_seq_values(
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS SETOF INTEGER AS 
 $$
+DECLARE
+  path_setting TEXT;
 BEGIN
-  -- update search_path
-  PERFORM set_config('search_path', schema_name || ',public', true);
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
+  PERFORM set_config('search_path', schema_name, true);
 
   RETURN QUERY SELECT nextval($1)::int FROM generate_series(1, $2);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 END;
 $$
 LANGUAGE plpgsql;

@@ -26,6 +26,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                                    | Author
+-- 2.2.1     2016-03-20   reset search_path by the end of each function    FKun
 -- 2.2.0     2016-01-27   removed dynamic SQL code                         FKun
 -- 2.1.0     2014-11-07   delete with returning id of deleted features     FKun
 -- 2.0.0     2014-10-10   minor changes for 3DCityDB V3                    FKun
@@ -63,8 +64,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   building_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR building_id IN SELECT id FROM cityobject WHERE objectclass_id = 26 AND lineage = lineage_value
@@ -82,6 +85,9 @@ BEGIN
   PERFORM citydb_pkg.cleanup_implicit_geometries(1, schema_name);
   PERFORM citydb_pkg.cleanup_appearances(1, schema_name);
   PERFORM citydb_pkg.cleanup_citymodels(schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN;
 
@@ -101,8 +107,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   bridge_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR bridge_id IN SELECT id FROM cityobject WHERE objectclass_id = 64 AND lineage = lineage_value LOOP
@@ -119,6 +127,9 @@ BEGIN
   PERFORM citydb_pkg.cleanup_implicit_geometries(1, schema_name);
   PERFORM citydb_pkg.cleanup_appearances(1, schema_name);
   PERFORM citydb_pkg.cleanup_citymodels(schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN;
 
@@ -138,8 +149,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   tunnel_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR tunnel_id IN SELECT id FROM cityobject WHERE objectclass_id = 85 AND lineage = lineage_value LOOP
@@ -156,6 +169,9 @@ BEGIN
   PERFORM citydb_pkg.cleanup_implicit_geometries(1, schema_name);
   PERFORM citydb_pkg.cleanup_appearances(1, schema_name);
   PERFORM citydb_pkg.cleanup_citymodels(schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN;
 
@@ -175,8 +191,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   city_furniture_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR city_furniture_id IN SELECT id FROM cityobject WHERE objectclass_id = 21 AND lineage = lineage_value LOOP
@@ -193,6 +211,9 @@ BEGIN
   PERFORM citydb_pkg.cleanup_implicit_geometries(1, schema_name);
   PERFORM citydb_pkg.cleanup_appearances(1, schema_name);
   PERFORM citydb_pkg.cleanup_citymodels(schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN;
 
@@ -212,8 +233,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   generic_cityobject_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR generic_cityobject_id IN SELECT id FROM cityobject WHERE objectclass_id = 5 AND lineage = lineage_value LOOP
@@ -230,6 +253,9 @@ BEGIN
   PERFORM citydb_pkg.cleanup_implicit_geometries(1, schema_name);
   PERFORM citydb_pkg.cleanup_appearances(1, schema_name);
   PERFORM citydb_pkg.cleanup_citymodels(schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN;
 
@@ -249,8 +275,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   land_use_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR land_use_id IN SELECT id FROM cityobject WHERE objectclass_id = 4 AND lineage = lineage_value LOOP
@@ -266,6 +294,9 @@ BEGIN
   -- cleanup
   PERFORM citydb_pkg.cleanup_appearances(1, schema_name);
   PERFORM citydb_pkg.cleanup_citymodels(schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN;
 
@@ -285,8 +316,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   plant_cover_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR plant_cover_id IN SELECT id FROM cityobject WHERE objectclass_id = 8 AND lineage = lineage_value LOOP
@@ -302,6 +335,9 @@ BEGIN
   -- cleanup
   PERFORM citydb_pkg.cleanup_appearances(1, schema_name);
   PERFORM citydb_pkg.cleanup_citymodels(schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN;
 
@@ -321,8 +357,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   solitary_veg_obj_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR solitary_veg_obj_id IN SELECT id FROM cityobject WHERE objectclass_id = 7 AND lineage = lineage_value LOOP
@@ -339,6 +377,9 @@ BEGIN
   PERFORM citydb_pkg.cleanup_implicit_geometries(1, schema_name);
   PERFORM citydb_pkg.cleanup_appearances(1, schema_name);
   PERFORM citydb_pkg.cleanup_citymodels(schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN;
 
@@ -358,8 +399,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   transport_complex_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR transport_complex_id IN SELECT id FROM cityobject WHERE objectclass_id = 42 AND lineage = lineage_value LOOP
@@ -375,6 +418,9 @@ BEGIN
   -- cleanup
   PERFORM citydb_pkg.cleanup_appearances(1, schema_name);
   PERFORM citydb_pkg.cleanup_citymodels(schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN;
 
@@ -394,8 +440,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   waterbody_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR waterbody_id IN SELECT id FROM cityobject WHERE objectclass_id = 9 AND lineage = lineage_value LOOP
@@ -412,6 +460,8 @@ BEGIN
   PERFORM citydb_pkg.cleanup_appearances(1, schema_name);
   PERFORM citydb_pkg.cleanup_citymodels(schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN;
 
@@ -431,9 +481,11 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_cityobjectgroups(
 $$
 DECLARE
   deleted_id INTEGER;
+  path_setting TEXT;
   cityobjectgroup_id INTEGER;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR cityobjectgroup_id IN SELECT id FROM cityobject WHERE objectclass_id = 23 AND lineage = lineage_value LOOP
@@ -450,6 +502,9 @@ BEGIN
   PERFORM citydb_pkg.cleanup_implicit_geometries(1, schema_name);
   PERFORM citydb_pkg.cleanup_appearances(1, schema_name);
   PERFORM citydb_pkg.cleanup_citymodels(schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN;
 
@@ -469,8 +524,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   relief_feature_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR relief_feature_id IN SELECT id FROM cityobject WHERE objectclass_id = 14 AND lineage = lineage_value LOOP
@@ -486,6 +543,9 @@ BEGIN
   -- cleanup
   PERFORM citydb_pkg.cleanup_appearances(1, schema_name);
   PERFORM citydb_pkg.cleanup_citymodels(schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN;
 
@@ -506,8 +566,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   cityobject_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR cityobject_id IN SELECT id FROM cityobject WHERE lineage = lineage_value LOOP
@@ -524,6 +586,9 @@ BEGIN
   PERFORM citydb_pkg.cleanup_implicit_geometries(1, schema_name);
   PERFORM citydb_pkg.cleanup_appearances(1, schema_name);
   PERFORM citydb_pkg.cleanup_citymodels(schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN;
 

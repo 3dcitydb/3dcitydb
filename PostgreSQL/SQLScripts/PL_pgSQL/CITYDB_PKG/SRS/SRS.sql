@@ -67,11 +67,17 @@ LANGUAGE sql STABLE;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d() RETURNS INTEGER AS
 $$
+DECLARE
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
   
   SELECT citydb_pkg.is_coord_ref_sys_3d(srid) FROM database_srs;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 END;
 $$
 LANGUAGE plpgsql STABLE;
@@ -215,8 +221,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_schema_srid(
   ) RETURNS SETOF VOID AS $$
 DECLARE
   is_set_srs_info INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name || ',public', true);
   
   SELECT 1 INTO is_set_srs_info FROM pg_tables 
@@ -234,6 +242,9 @@ BEGIN
         AND f_geometry_column != 'implicit_geometry'
         AND f_geometry_column != 'relative_other_geom'
         AND f_geometry_column != 'texture_coordinates';
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 END;
 $$ 
 LANGUAGE plpgsql;

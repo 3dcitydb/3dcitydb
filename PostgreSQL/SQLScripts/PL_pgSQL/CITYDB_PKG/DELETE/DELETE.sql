@@ -25,6 +25,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                                    | Author
+-- 2.4.1     2016-03-20   reset search_path by the end of each function    FKun
 -- 2.4.0     2016-01-06   removed dynamic SQL code                         FKun
 -- 2.3.0     2015-10-15   changed API for delete_genericattrib             FKun
 -- 2.2.0     2015-02-10   added functions                                  FKun
@@ -108,8 +109,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.intern_delete_cityobject(
 $$
 DECLARE
   deleted_id INTEGER;
+  path_setting TEXT; 
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
   
   --// PRE DELETE CITY OBJECT //--
@@ -136,6 +139,9 @@ BEGIN
   --// DELETE CITY OBJECT //--
   DELETE FROM cityobject WHERE id = co_id RETURNING id INTO deleted_id;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -158,8 +164,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   surface_geometry_rec INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR surface_geometry_rec IN 
@@ -178,6 +186,9 @@ BEGIN
   IF clean_apps <> 0 THEN
     PERFORM citydb_pkg.cleanup_appearances(0, schema_name);
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN;
 
@@ -201,8 +212,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   rel_brep_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE IMPLICIT GEOMETRY //--
@@ -217,6 +230,9 @@ BEGIN
   IF rel_brep_id IS NOT NULL THEN
     PERFORM citydb_pkg.delete_surface_geometry(rel_brep_id, clean_apps, schema_name);
   END IF;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN deleted_id;
 
@@ -238,11 +254,16 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_grid_coverage(
 $$
 DECLARE
   deleted_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   DELETE FROM grid_coverage WHERE id = gc_id RETURNING id INTO deleted_id;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN deleted_id;
 
@@ -269,8 +290,10 @@ DECLARE
   data_type INTEGER;
   member_id INTEGER;
   member_rec RECORD;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   -- get parent_id and data type
@@ -316,6 +339,9 @@ BEGIN
   --// DELETE CITYOBJECT_GENERICATTRIB //--
   DELETE FROM cityobject_genericattrib WHERE id = genattrib_id RETURNING id INTO deleted_id;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -336,11 +362,16 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_external_reference(
 $$
 DECLARE
   deleted_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   DELETE FROM external_reference WHERE id = ref_id RETURNING id INTO deleted_id;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN deleted_id;
 
@@ -363,8 +394,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_appearance(
 $$
 DECLARE
   deleted_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE APPEARANCE //--
@@ -391,6 +424,9 @@ BEGIN
     PERFORM citydb_pkg.cleanup_tex_images(schema_name); 
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -411,8 +447,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_surface_data(
 $$
 DECLARE
   deleted_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE SURFACE DATA //--
@@ -424,6 +462,9 @@ BEGIN
 
   --// DELETE SURFACE DATA //--
   DELETE FROM surface_data WHERE id = sd_id RETURNING id INTO deleted_id;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN deleted_id;
 
@@ -447,8 +488,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_address(
 $$
 DECLARE
   deleted_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE ADDRESS //--
@@ -466,6 +509,9 @@ BEGIN
 
   --// DELETE ADDRESS //--
   DELETE FROM address WHERE id = ad_id RETURNING id INTO deleted_id;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN deleted_id;
 
@@ -492,8 +538,10 @@ DECLARE
   lu_lod2_id INTEGER;
   lu_lod3_id INTEGER;
   lu_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE LAND USE //--
@@ -526,6 +574,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(lu_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -551,8 +602,10 @@ DECLARE
   gco_lod2_id INTEGER;
   gco_lod3_id INTEGER;
   gco_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE GENERIC CITY OBJECT //--
@@ -585,6 +638,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(gco_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -609,8 +665,10 @@ DECLARE
   svo_lod2_id INTEGER;
   svo_lod3_id INTEGER;
   svo_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE SOLITARY VEGETATION OBJECT //--
@@ -640,6 +698,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(svo_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -668,8 +729,10 @@ DECLARE
   pc_lod2_msolid_id INTEGER;
   pc_lod3_msolid_id INTEGER;
   pc_lod4_msolid_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE PLANT COVER //--
@@ -713,6 +776,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(pc_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -739,8 +805,10 @@ DECLARE
   wb_lod2_solid_id INTEGER;
   wb_lod3_solid_id INTEGER;
   wb_lod4_solid_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE WATERBODY //--
@@ -793,6 +861,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(wb_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -816,8 +887,10 @@ DECLARE
   wbs_lod2_id INTEGER;
   wbs_lod3_id INTEGER;
   wbs_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE WATER BOUNDARY SURFACE //--
@@ -847,6 +920,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(wbs_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -867,8 +943,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_relief_feature(
 $$
 DECLARE
   deleted_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE RELIEF FEATURE //--
@@ -894,6 +972,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(rf_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -914,8 +995,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_relief_component(
 $$
 DECLARE
   deleted_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE RELIEF COMPONENT //--
@@ -934,6 +1017,9 @@ BEGIN
   --// POST DELETE RELIEF FEATURE //--
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(rc_id, schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN deleted_id;
 
@@ -955,12 +1041,17 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_masspoint_relief(
 $$
 DECLARE
   deleted_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// DELETE MASSPOINT RELIEF //--
   DELETE FROM masspoint_relief WHERE id = mpr_id RETURNING id INTO deleted_id;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN deleted_id;
 
@@ -982,12 +1073,17 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_breakline_relief(
 $$
 DECLARE
   deleted_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// DELETE BREAKLINE RELIEF //--
   DELETE FROM breakline_relief WHERE id = blr_id RETURNING id INTO deleted_id;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN deleted_id;
 
@@ -1010,8 +1106,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   geom_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE TIN RELIEF //--
@@ -1024,6 +1122,9 @@ BEGIN
   --// POST DELETE TIN RELIEF //--
   -- delete geometry
   PERFORM citydb_pkg.delete_surface_geometry(geom_id, 0, schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN deleted_id;
 
@@ -1046,8 +1147,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   cov_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE RATSER RELIEF //--
@@ -1060,6 +1163,9 @@ BEGIN
   --// POST DELETE RATSER RELIEF //--
   -- delete raster data
   PERFORM citydb_pkg.delete_grid_coverage(cov_id, schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN deleted_id;
 
@@ -1085,8 +1191,10 @@ DECLARE
   cf_lod2_id INTEGER;
   cf_lod3_id INTEGER;
   cf_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE CITY_FURNITURE //--
@@ -1116,6 +1224,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(cf_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -1138,8 +1249,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   geom_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE CITY OBJECT GROUP //--
@@ -1171,6 +1284,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(cog_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -1201,8 +1317,10 @@ DECLARE
   b_lod2_solid_id INTEGER;
   b_lod3_solid_id INTEGER;
   b_lod4_solid_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE BUILDING //--
@@ -1284,6 +1402,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(b_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -1307,8 +1428,10 @@ DECLARE
   bi_lod2_id INTEGER;
   bi_lod3_id INTEGER;
   bi_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE BUILDING INSTALLATION //--
@@ -1339,6 +1462,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(bi_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -1362,8 +1488,10 @@ DECLARE
   ts_lod2_id INTEGER;
   ts_lod3_id INTEGER;
   ts_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE THEMATIC SURFACE //--
@@ -1405,6 +1533,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(ts_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -1428,8 +1559,10 @@ DECLARE
   o_add_id INTEGER;
   o_lod3_id INTEGER;
   o_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE OPENING //--
@@ -1467,6 +1600,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(o_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -1488,8 +1624,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   bf_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE BUILDING FURNITURE //--
@@ -1508,6 +1646,9 @@ BEGIN
 
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(bf_id, schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN deleted_id;
 
@@ -1531,8 +1672,10 @@ DECLARE
   deleted_id INTEGER;
   r_lod4_msrf_id INTEGER;
   r_lod4_solid_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE ROOM //--
@@ -1568,6 +1711,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(r_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -1592,8 +1738,10 @@ DECLARE
   tc_lod2_id INTEGER;
   tc_lod3_id INTEGER;
   tc_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE TRANSPORTATION COMPLEX //--
@@ -1627,6 +1775,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(tc_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -1650,8 +1801,10 @@ DECLARE
   ta_lod2_id INTEGER;
   ta_lod3_id INTEGER;
   ta_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE TRAFFIC AREA //--
@@ -1678,6 +1831,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(ta_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -1699,8 +1855,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_citymodel(
 $$
 DECLARE
   deleted_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE CITY MODEL //--
@@ -1722,6 +1880,9 @@ BEGIN
 
   --// DELETE CITY MODEL //--
   DELETE FROM citymodel WHERE id = cm_id RETURNING id INTO deleted_id;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN deleted_id;
 
@@ -1751,8 +1912,10 @@ DECLARE
   brd_lod2_solid_id INTEGER;
   brd_lod3_solid_id INTEGER;
   brd_lod4_solid_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE BRIDGE //--
@@ -1831,6 +1994,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(brd_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
   
   EXCEPTION
@@ -1854,8 +2020,10 @@ DECLARE
   brdi_lod2_id INTEGER;
   brdi_lod3_id INTEGER;
   brdi_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE BRIDGE INSTALLATION //--
@@ -1886,6 +2054,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(brdi_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -1909,8 +2080,10 @@ DECLARE
   brdts_lod2_id INTEGER;
   brdts_lod3_id INTEGER;
   brdts_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE BRIDGE THEMATIC SURFACE //--
@@ -1952,6 +2125,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(brdts_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -1975,8 +2151,10 @@ DECLARE
   brdo_add_id INTEGER;
   brdo_lod3_id INTEGER;
   brdo_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE BRIDGE OPENING //--
@@ -2014,6 +2192,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(brdo_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -2035,8 +2216,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   brdf_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE BRIDGE FURNITURE //--
@@ -2055,6 +2238,9 @@ BEGIN
 
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(brdf_id, schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN deleted_id;
 
@@ -2078,8 +2264,10 @@ DECLARE
   deleted_id INTEGER;
   brdr_lod4_msrf_id INTEGER;
   brdr_lod4_solid_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE BRIDGE ROOM //--
@@ -2115,6 +2303,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(brdr_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -2139,8 +2330,10 @@ DECLARE
   brdce_lod2_id INTEGER;
   brdce_lod3_id INTEGER;
   brdce_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE BRIDGE CONSTRUCTION ELEMENT //--
@@ -2174,6 +2367,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(brdce_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -2202,8 +2398,10 @@ DECLARE
   tun_lod2_solid_id INTEGER;
   tun_lod3_solid_id INTEGER;
   tun_lod4_solid_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE TUNNEL //--
@@ -2263,6 +2461,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(tun_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -2286,8 +2487,10 @@ DECLARE
   tuni_lod2_id INTEGER;
   tuni_lod3_id INTEGER;
   tuni_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE TUNNEL INSTALLATION //--
@@ -2318,6 +2521,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(tuni_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -2341,8 +2547,10 @@ DECLARE
   tunts_lod2_id INTEGER;
   tunts_lod3_id INTEGER;
   tunts_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE TUNNEL THEMATIC SURFACE //--
@@ -2384,6 +2592,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(tunts_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -2406,8 +2617,10 @@ DECLARE
   deleted_id INTEGER;
   tuno_lod3_id INTEGER;
   tuno_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE TUNNEL OPENING //--
@@ -2434,6 +2647,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(tuno_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -2455,8 +2671,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   tunf_lod4_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE TUNNEL FURNITURE //--
@@ -2475,6 +2693,9 @@ BEGIN
 
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(tunf_id, schema_name);
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   RETURN deleted_id;
 
@@ -2498,8 +2719,10 @@ DECLARE
   deleted_id INTEGER;
   tunhs_lod4_msrf_id INTEGER;
   tunhs_lod4_solid_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   --// PRE DELETE TUNNEL HOLLOW SPACE //--
@@ -2535,6 +2758,9 @@ BEGIN
   -- delete city object
   PERFORM citydb_pkg.intern_delete_cityobject(tunhs_id, schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -2556,8 +2782,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   ig_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR ig_id IN 
@@ -2641,6 +2869,9 @@ BEGIN
     PERFORM citydb_pkg.cleanup_appearances(0, schema_name);
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN;
 
   EXCEPTION  
@@ -2655,14 +2886,20 @@ CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_grid_coverages(
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS SETOF INTEGER AS
 $$
+DECLARE
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   RETURN QUERY 
     SELECT citydb_pkg.delete_grid_coverage(gc.id, schema_name) FROM grid_coverage gc
       LEFT JOIN raster_relief rr ON rr.grid_coverage_id = gc.id
         WHERE sd.grid_coverage_id IS NULL;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   EXCEPTION  
     WHEN OTHERS THEN
@@ -2679,8 +2916,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   ti_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   FOR ti_id IN SELECT ti.id FROM tex_image ti
@@ -2691,6 +2930,9 @@ BEGIN
     DELETE FROM tex_image WHERE id = ti_id RETURNING id INTO deleted_id;
     RETURN NEXT deleted_id;
   END LOOP;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   EXCEPTION  
     WHEN OTHERS THEN
@@ -2708,8 +2950,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   app_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   -- global appearances are not related to a cityobject.
@@ -2745,6 +2989,9 @@ BEGIN
   -- delete tex images not referenced by surface data any more
   PERFORM citydb_pkg.cleanup_tex_images(schema_name);
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN;
 
   EXCEPTION  
@@ -2757,8 +3004,11 @@ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_addresses(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER AS
 $$
+DECLARE
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   RETURN QUERY 
@@ -2772,6 +3022,9 @@ BEGIN
           AND o.address_id IS NULL
           AND brdo.address_id IS NULL;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   EXCEPTION  
     WHEN OTHERS THEN
       RAISE NOTICE 'cleanup_addresses: %', SQLERRM;
@@ -2782,14 +3035,20 @@ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_cityobjectgroups(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER AS
 $$
+DECLARE
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_cityobjectgroup(g.id, 0, schema_name) FROM cityobjectgroup g 
       LEFT OUTER JOIN group_to_cityobject gtc ON g.id=gtc.cityobjectgroup_id 
         WHERE gtc.cityobject_id IS NULL;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   EXCEPTION  
     WHEN OTHERS THEN
@@ -2801,14 +3060,19 @@ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_citymodels(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER AS
 $$
+DECLARE
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
   PERFORM set_config('search_path', schema_name, true);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_citymodel(c.id, 0, schema_name) FROM citymodel c 
       LEFT OUTER JOIN cityobject_member cm ON c.id=cm.citymodel_id 
         WHERE cm.cityobject_id IS NULL;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   EXCEPTION  
     WHEN OTHERS THEN
@@ -2829,8 +3093,10 @@ $$
 DECLARE
   deleted_id INTEGER;
   class_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   SELECT objectclass_id INTO class_id FROM cityobject WHERE id = co_id;
@@ -2922,6 +3188,9 @@ BEGIN
     PERFORM citydb_pkg.cleanup_citymodels(schema_name);
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -2942,8 +3211,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_cityobject_cascade(
 $$
 DECLARE
   deleted_id INTEGER;
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   -- delete city object and all entries from other tables referencing the cityobject_id
@@ -2958,6 +3229,9 @@ BEGIN
     PERFORM citydb_pkg.cleanup_citymodels(schema_name);
   END IF;
 
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
+
   RETURN deleted_id;
 
   EXCEPTION
@@ -2971,8 +3245,11 @@ LANGUAGE plpgsql;
 -- truncates all tables
 CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_schema(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID AS
 $$
+DECLARE
+  path_setting TEXT;
 BEGIN
-  -- update search_path
+  -- set search_path for this session
+  path_setting := current_setting('search_path');
   PERFORM set_config('search_path', schema_name, true);
 
   -- clear tables
@@ -2994,6 +3271,9 @@ BEGIN
   ALTER SEQUENCE surface_data_seq RESTART;
   ALTER SEQUENCE surface_geometry_seq RESTART;
   ALTER SEQUENCE tex_image_seq RESTART;
+
+  -- reset search_path in case auto_commit is switched off
+  PERFORM set_config('search_path', path_setting, true);
 
   EXCEPTION
     WHEN OTHERS THEN
