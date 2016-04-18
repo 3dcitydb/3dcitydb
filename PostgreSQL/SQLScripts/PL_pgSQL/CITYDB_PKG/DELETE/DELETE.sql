@@ -25,6 +25,7 @@
 -- ChangeLog:
 --
 -- Version | Date       | Description                                    | Author
+-- 2.4.2     2016-04-18   removed delete_cityobject_cascade function       FKun
 -- 2.4.1     2016-03-20   reset search_path by the end of each function    FKun
 -- 2.4.0     2016-01-06   removed dynamic SQL code                         FKun
 -- 2.3.0     2015-10-15   changed API for delete_genericattrib             FKun
@@ -65,7 +66,6 @@
 *   delete_city_furniture(cf_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_citymodel(cm_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER 
 *   delete_cityobject(co_id INTEGER, delete_members INTEGER DEFAULT 0, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_cityobject_cascade(co_id INTEGER, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_cityobjectgroup(cog_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_external_reference(ref_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_grid_coverage(gc_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
@@ -3196,47 +3196,6 @@ BEGIN
   EXCEPTION
     WHEN OTHERS THEN
       RAISE NOTICE 'delete_cityobject (id: %): %', co_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
--- delete a cityobject using its foreign key relations
--- NOTE: all constraints have to be set to ON DELETE CASCADE (function: citydb_pkg.update_schema_constraints)
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_cityobject_cascade(
-  co_id INTEGER,
-  cleanup INTEGER DEFAULT 0,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  path_setting TEXT;
-BEGIN
-  -- set search_path for this session
-  path_setting := current_setting('search_path');
-  PERFORM set_config('search_path', schema_name, true);
-
-  -- delete city object and all entries from other tables referencing the cityobject_id
-  DELETE FROM cityobject WHERE id = co_id RETURNING id INTO deleted_id;
-
-  IF cleanup <> 0 THEN
-    PERFORM citydb_pkg.cleanup_implicit_geometries(1, schema_name);
-    PERFORM citydb_pkg.cleanup_appearances(1, schema_name);
-    PERFORM citydb_pkg.cleanup_grid_coverages(schema_name);
-    PERFORM citydb_pkg.cleanup_addresses(schema_name);
-    PERFORM citydb_pkg.cleanup_cityobjectgroups(schema_name);
-    PERFORM citydb_pkg.cleanup_citymodels(schema_name);
-  END IF;
-
-  -- reset search_path in case auto_commit is switched off
-  PERFORM set_config('search_path', path_setting, true);
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_cityobject_cascade (id: %): %', co_id, SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;

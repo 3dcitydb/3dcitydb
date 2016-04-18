@@ -85,7 +85,6 @@ AS
   function delete_tunnel_furniture(pid number, schema_name varchar2 := user) return number;
   function delete_tunnel_hollow_space(pid number, schema_name varchar2 := user) return number;
   function delete_cityobject(pid number, delete_members int := 0, cleanup int := 0, schema_name varchar2 := user) return number;
-  function delete_cityobject_cascade(pid number, cleanup int := 0, schema_name varchar2 := user) return number;
 
   function cleanup_appearances(only_global int :=1, schema_name varchar2 := user) return id_array;
   function cleanup_addresses(schema_name varchar2 := user) return id_array;
@@ -3581,33 +3580,7 @@ AS
       dbms_output.put_line('delete_cityobject (id: ' || pid || '): ' || SQLERRM);
   end;
 
-  -- delete a cityobject using its foreign key relations
-  -- NOTE: all constraints have to be set to ON DELETE CASCADE (function: citydb_util.update_schema_constraints)
-  function delete_cityobject_cascade(pid number, cleanup int := 0, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    dummy_ids id_array := id_array();
-  begin
-    -- delete cityobject and all entries from other tables referencing the cityobject_id
-    execute immediate 'delete from ' || schema_name || '.cityobject where id = :1 returning id into :2' using pid, out deleted_id;
-
-    if cleanup <> 0 then
-      dummy_ids := cleanup_implicit_geometries(1, schema_name);
-      dummy_ids := cleanup_appearances(0, schema_name);
-      dummy_ids := cleanup_grid_coverages(schema_name);
-      dummy_ids := cleanup_addresses(schema_name);
-      dummy_ids := cleanup_cityobjectgroups(schema_name);
-      dummy_ids := cleanup_citymodels(schema_name);
-    end if;
-
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_cityobject_cascade (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  -- delete all cityobjects using their foreign key relations
-  -- NOTE: all constraints have to be set to ON DELETE CASCADE (function: citydb_pkg.update_schema_constraints)
+  -- truncates all tables
   procedure cleanup_schema(schema_name varchar2 := user)
   is
     dummy_id number;
@@ -3621,12 +3594,64 @@ AS
     dummy_str := citydb_idx.drop_spatial_indexes(schema_name);
 
     -- clear tables
-    execute immediate 'delete from ' || schema_name || '.cityobject';
-
-    dummy_ids := cleanup_appearances(0, schema_name);
-    dummy_ids := cleanup_grid_coverages(schema_name);	
-    dummy_ids := cleanup_addresses(schema_name);
-    dummy_ids := cleanup_citymodels(schema_name);
+    execute immediate 'truncate table ' || schema_name || '.address_to_building';
+    execute immediate 'truncate table ' || schema_name || '.address_to_bridge';
+    execute immediate 'truncate table ' || schema_name || '.address';
+    execute immediate 'truncate table ' || schema_name || '.opening_to_them_surface';
+    execute immediate 'truncate table ' || schema_name || '.opening';
+    execute immediate 'truncate table ' || schema_name || '.thematic_surface';
+    execute immediate 'truncate table ' || schema_name || '.building_installation';
+    execute immediate 'truncate table ' || schema_name || '.building_furniture';
+    execute immediate 'truncate table ' || schema_name || '.room';
+    execute immediate 'truncate table ' || schema_name || '.building';
+    execute immediate 'truncate table ' || schema_name || '.bridge_open_to_them_srf';
+    execute immediate 'truncate table ' || schema_name || '.bridge_opening';
+    execute immediate 'truncate table ' || schema_name || '.bridge_thematic_surface';
+    execute immediate 'truncate table ' || schema_name || '.bridge_constr_element';
+    execute immediate 'truncate table ' || schema_name || '.bridge_installation';
+    execute immediate 'truncate table ' || schema_name || '.bridge_furniture';
+    execute immediate 'truncate table ' || schema_name || '.bridge_room';
+    execute immediate 'truncate table ' || schema_name || '.bridge';
+    execute immediate 'truncate table ' || schema_name || '.tunnel_open_to_them_srf';
+    execute immediate 'truncate table ' || schema_name || '.tunnel_opening';
+    execute immediate 'truncate table ' || schema_name || '.tunnel_thematic_surface';
+    execute immediate 'truncate table ' || schema_name || '.tunnel_installation';
+    execute immediate 'truncate table ' || schema_name || '.tunnel_furniture';
+    execute immediate 'truncate table ' || schema_name || '.tunnel_hollow_space';
+    execute immediate 'truncate table ' || schema_name || '.tunnel';
+    execute immediate 'truncate table ' || schema_name || '.city_furniture';
+    execute immediate 'truncate table ' || schema_name || '.cityobjectgroup';
+    execute immediate 'truncate table ' || schema_name || '.group_to_cityobject';
+    execute immediate 'truncate table ' || schema_name || '.generic_cityobject';
+    execute immediate 'truncate table ' || schema_name || '.land_use';
+    execute immediate 'truncate table ' || schema_name || '.breakline_relief';
+    execute immediate 'truncate table ' || schema_name || '.masspoint_relief';
+    execute immediate 'truncate table ' || schema_name || '.raster_relief';
+    execute immediate 'truncate table ' || schema_name || '.tin_relief';
+    execute immediate 'truncate table ' || schema_name || '.relief_feat_to_rel_comp';
+    execute immediate 'truncate table ' || schema_name || '.relief_component';
+    execute immediate 'truncate table ' || schema_name || '.relief_feature';
+    execute immediate 'truncate table ' || schema_name || '.plant_cover';
+    execute immediate 'truncate table ' || schema_name || '.solitary_vegetat_object';
+    execute immediate 'truncate table ' || schema_name || '.traffic_area';
+    execute immediate 'truncate table ' || schema_name || '.transportation_complex';
+    execute immediate 'truncate table ' || schema_name || '.waterbod_to_waterbnd_srf';
+    execute immediate 'truncate table ' || schema_name || '.waterboundary_surface';
+    execute immediate 'truncate table ' || schema_name || '.waterbody';
+    execute immediate 'truncate table ' || schema_name || '.grid_coverage';
+    execute immediate 'truncate table ' || schema_name || '.textureparam';
+    execute immediate 'truncate table ' || schema_name || '.appear_to_surface_data';
+    execute immediate 'truncate table ' || schema_name || '.surface_data';
+    execute immediate 'truncate table ' || schema_name || '.tex_image';
+    execute immediate 'truncate table ' || schema_name || '.appearance';
+    execute immediate 'truncate table ' || schema_name || '.implicit_geomtery';
+    execute immediate 'truncate table ' || schema_name || '.surface_geometry';
+    execute immediate 'truncate table ' || schema_name || '.cityobject_genericattrib';
+    execute immediate 'truncate table ' || schema_name || '.external_reference';
+    execute immediate 'truncate table ' || schema_name || '.generalization';
+    execute immediate 'truncate table ' || schema_name || '.cityobject_member';
+    execute immediate 'truncate table ' || schema_name || '.cityobject';
+    execute immediate 'truncate table ' || schema_name || '.citymodel';
 
     -- reset sequences
     execute immediate 'select ' || schema_name || '.address_seq.nextval from dual' into seq_value;
