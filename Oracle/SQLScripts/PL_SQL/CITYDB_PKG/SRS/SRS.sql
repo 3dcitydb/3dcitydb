@@ -33,6 +33,7 @@ CREATE OR REPLACE PACKAGE citydb_srs
 AS
   FUNCTION transform_or_null(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
   FUNCTION is_coord_ref_sys_3d(srid NUMBER) RETURN NUMBER;
+  FUNCTION check_srid(srsno INTEGER DEFAULT 0) RETURN VARCHAR;
   FUNCTION is_db_coord_ref_sys_3d RETURN NUMBER;
   PROCEDURE change_schema_srid(schema_srid NUMBER, schema_gml_srs_name VARCHAR2, transform NUMBER := 0);
   FUNCTION get_dim(t_name VARCHAR, c_name VARCHAR) RETURN NUMBER;
@@ -77,6 +78,32 @@ AS
     return is_3d;
   END;
   
+  /*******************************************************************
+  * check_srid
+  *
+  * @param srsno     the chosen SRID to be further used in the database
+  *
+  * @RETURN VARCHAR  status of srid check
+  *******************************************************************/
+  FUNCTION check_srid(srsno INTEGER DEFAULT 0) RETURN VARCHAR
+  IS
+    schema_srid INTEGER;
+    unknown_srs_ex EXCEPTION;
+  BEGIN
+    EXECUTE IMMEDIATE 'SELECT COUNT(SRID) FROM MDSYS.CS_SRS WHERE SRID=:1' INTO schema_srid USING srsno;
+
+    IF schema_srid = 0 THEN
+      RAISE unknown_srs_ex;
+    END IF;
+
+    RETURN 'SRID ok';
+
+    EXCEPTION
+      WHEN unknown_srs_ex THEN
+        dbms_output.put_line('Table MDSYS.CS_SRS does not contain the SRID ' || srsno);
+        RETURN 'SRID not ok';
+  END;
+
   /*****************************************************************
   * is_db_coord_ref_sys_3d
   *
@@ -204,15 +231,20 @@ AS
     )
   IS
   BEGIN
-    -- update entry in DATABASE_SRS table first
-    UPDATE DATABASE_SRS SET SRID = schema_srid, GML_SRS_NAME = schema_gml_srs_name;
-    COMMIT;
+    IF citydb_srs.check_srid(schema_srid) <> 'SRID ok' THEN
+       DBMS_OUTPUT.PUT_LINE ('Your chosen SRID was not found in the MDSYS.CS_SRS table!');
+    ELSE
+      -- update entry in DATABASE_SRS table first
+      UPDATE DATABASE_SRS SET SRID = schema_srid, GML_SRS_NAME = schema_gml_srs_name;
+      COMMIT;
 
-    -- change srid of each spatially enabled table
-    FOR rec IN (SELECT table_name AS t, column_name AS c, get_dim(table_name, column_name) AS dim
-                  FROM user_sdo_geom_metadata) LOOP
-      change_column_srid(rec.t, rec.c, rec.dim, schema_srid, transform);
-    END LOOP;
+      -- change srid of each spatially enabled table
+      FOR rec IN (SELECT table_name AS t, column_name AS c, get_dim(table_name, column_name) AS dim
+                    FROM user_sdo_geom_metadata) LOOP
+        change_column_srid(rec.t, rec.c, rec.dim, schema_srid, transform);
+      END LOOP;
+      DBMS_OUTPUT.PUT_LINE ('Schema SRID sucessfully changed.');
+    END IF;
   END;
   
 END citydb_srs;

@@ -222,6 +222,9 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_schema_srid(
 DECLARE
   is_set_srs_info INTEGER;
 BEGIN
+
+  EXECUTE 'SELECT citydb_pkg.check_srid($1)' USING schema_srid;
+  
   EXECUTE 'SELECT 1 FROM pg_tables WHERE schemaname = $1 AND tablename = ''database_srs'''
              INTO is_set_srs_info USING schema_name;
 
