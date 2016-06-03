@@ -2,6 +2,7 @@
 --
 -- Authors:     Felix Kunde <felix-kunde@gmx.de>
 --              Claus Nagel <cnagel@virtualcitysystems.de>
+--              Richard Redweik <rredweik@virtualcitysystems.de>
 --
 -- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
 --                             Technische Universität München, Germany
@@ -17,13 +18,15 @@
 --              for more details.
 -------------------------------------------------------------------------------
 -- About:
--- Creates methods ragarding the spatial reference system of the 3DCityDB instance. 
+-- Creates methods regarding the spatial reference system of the 3DCityDB instance.
 --
 -------------------------------------------------------------------------------
 --
 -- ChangeLog:
 --
 -- Version | Date       | Description                          | Author
+-- 1.0.1     2016-06-03   Check if SRID is valid before          RRed
+--                        changing SRID.
 -- 1.0.0     2014-10-22   new script for 3DCityDB V3             FKun
 --                                                               CNag
 --
@@ -52,13 +55,15 @@
 * @param schema_srid the SRID of the coordinate system to be checked
 * @RETURN NUMERIC the boolean result encoded as NUMERIC: 0 = false, 1 = true                
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER AS 
+CREATE OR REPLACE FUNCTION citydb_pkg.is_coord_ref_sys_3d(schema_srid INTEGER)
+  RETURNS INTEGER AS
 $$
 DECLARE
   is_3d INTEGER := 0;
 BEGIN
-  EXECUTE 'SELECT 1 FROM spatial_ref_sys WHERE auth_srid=$1 AND srtext LIKE ''%UP]%''' 
-             INTO is_3d USING schema_srid;
+  EXECUTE 'SELECT 1 FROM spatial_ref_sys WHERE auth_srid=$1 AND srtext LIKE ''%UP]%'''
+  INTO is_3d
+  USING schema_srid;
 
   RETURN is_3d;
 END;
@@ -71,11 +76,13 @@ LANGUAGE plpgsql;
 *
 * @RETURN NUMERIC the boolean result encoded as NUMERIC: 0 = false, 1 = true                
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d() RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d()
+  RETURNS INTEGER AS $$
 DECLARE
   schema_srid INTEGER;
 BEGIN
-  EXECUTE 'SELECT srid from DATABASE_SRS' INTO schema_srid;
+  EXECUTE 'SELECT srid from DATABASE_SRS'
+  INTO schema_srid;
   RETURN citydb_pkg.is_coord_ref_sys_3d(schema_srid);
 END;
 $$
@@ -89,14 +96,18 @@ LANGUAGE plpgsql;
 *
 * @RETURN TEXT  status of srid check
 *******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.check_srid(srsno INTEGER DEFAULT 0) RETURNS TEXT AS
+CREATE OR REPLACE FUNCTION citydb_pkg.check_srid(srsno INTEGER DEFAULT 0)
+  RETURNS TEXT AS
 $$
 DECLARE
   schema_srid INTEGER;
 BEGIN
-  EXECUTE 'SELECT srid FROM spatial_ref_sys WHERE srid = $1' INTO schema_srid USING srsno;
+  EXECUTE 'SELECT srid FROM spatial_ref_sys WHERE srid = $1'
+  INTO schema_srid
+  USING srsno;
 
-  IF schema_srid IS NULL THEN
+  IF schema_srid IS NULL
+  THEN
     RAISE EXCEPTION 'Table spatial_ref_sys does not contain the SRID %. Insert commands for missing SRIDs can be found at spatialreference.org', srsno;
     RETURN 'SRID not ok';
   END IF;
@@ -115,12 +126,14 @@ LANGUAGE plpgsql;
 * @RETURN GEOMETRY the transformed geometry representation                
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.transform_or_null(
-  geom GEOMETRY, 
+  geom GEOMETRY,
   srid INTEGER
-  ) RETURNS GEOMETRY AS 
+)
+  RETURNS GEOMETRY AS
 $$
 BEGIN
-  IF geom IS NOT NULL THEN
+  IF geom IS NOT NULL
+  THEN
     RETURN ST_Transform(geom, srid);
   ELSE
     RETURN NULL;
@@ -141,17 +154,18 @@ LANGUAGE plpgsql;
 * @param s_name name of schema
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.change_column_srid(
-  t_name TEXT, 
-  c_name TEXT,
-  dim INTEGER,
+  t_name      TEXT,
+  c_name      TEXT,
+  dim         INTEGER,
   schema_srid INTEGER,
-  transform INTEGER DEFAULT 0,
-  geom_type TEXT DEFAULT 'GEOMETRY',
-  s_name TEXT DEFAULT 'citydb'
-  ) RETURNS SETOF VOID AS 
+  transform   INTEGER DEFAULT 0,
+  geom_type   TEXT DEFAULT 'GEOMETRY',
+  s_name      TEXT DEFAULT 'citydb'
+)
+  RETURNS SETOF VOID AS
 $$
 DECLARE
-  idx_name TEXT;
+  idx_name      TEXT;
   geometry_type TEXT;
 BEGIN
   -- check if a spatial index is defined for the column
@@ -167,16 +181,20 @@ BEGIN
                AND pgc_t.relname = $2
                AND pga.attname = $3
                AND pgam.amname = ''gist'''
-               INTO idx_name USING s_name, t_name, c_name;
+  INTO idx_name
+  USING s_name, t_name, c_name;
 
-  IF idx_name IS NOT NULL THEN 
+  IF idx_name IS NOT NULL
+  THEN
     -- drop spatial index if exists
     EXECUTE format('DROP INDEX %I.%I', s_name, idx_name);
   END IF;
 
-  IF transform <> 0 THEN
+  IF transform <> 0
+  THEN
     -- construct correct geometry type
-    IF dim < 3 THEN
+    IF dim < 3
+    THEN
       geometry_type := geom_type;
     ELSE
       geometry_type := geom_type || 'Z';
@@ -184,22 +202,25 @@ BEGIN
 
     -- coordinates of existent geometries will be transformed
     EXECUTE format('ALTER TABLE %I.%I ALTER COLUMN %I TYPE geometry(%I,%L) USING ST_Transform(%I,%L)',
-                      s_name, t_name, c_name, geometry_type, schema_srid, c_name, schema_srid);
+                   s_name, t_name, c_name, geometry_type, schema_srid, c_name, schema_srid);
   ELSE
     -- only metadata of geometry columns is updated, coordinates keep unchanged
     PERFORM UpdateGeometrySRID(s_name, t_name, c_name, schema_srid);
   END IF;
 
-  IF idx_name IS NOT NULL THEN 
+  IF idx_name IS NOT NULL
+  THEN
     -- recreate spatial index again
-    IF dim < 3 THEN
+    IF dim < 3
+    THEN
       EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I)', idx_name, s_name, t_name, c_name);
     ELSE
-      EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_nd )', idx_name, s_name, t_name, c_name);
+      EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_nd )', idx_name, s_name, t_name,
+                     c_name);
     END IF;
   END IF;
 END;
-$$ 
+$$
 LANGUAGE plpgsql;
 
 
@@ -214,24 +235,29 @@ LANGUAGE plpgsql;
 * @param schema name       name of schema
 *******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.change_schema_srid(
-  schema_srid INTEGER, 
+  schema_srid         INTEGER,
   schema_gml_srs_name TEXT,
-  transform INTEGER DEFAULT 0,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS SETOF VOID AS $$
+  transform           INTEGER DEFAULT 0,
+  schema_name         TEXT DEFAULT 'citydb'
+)
+  RETURNS SETOF VOID AS $$
 DECLARE
   is_set_srs_info INTEGER;
 BEGIN
 
-  EXECUTE 'SELECT citydb_pkg.check_srid($1)' USING schema_srid;
-  
-  EXECUTE 'SELECT 1 FROM pg_tables WHERE schemaname = $1 AND tablename = ''database_srs'''
-             INTO is_set_srs_info USING schema_name;
+  -- check if user selected valid srid
+  EXECUTE 'SELECT citydb_pkg.check_srid($1)'
+  USING schema_srid;
 
-  IF is_set_srs_info IS NOT NULL THEN
+  EXECUTE 'SELECT 1 FROM pg_tables WHERE schemaname = $1 AND tablename = ''database_srs'''
+  INTO is_set_srs_info
+  USING schema_name;
+
+  IF is_set_srs_info IS NOT NULL
+  THEN
     -- update entry in DATABASE_SRS table first
     EXECUTE format('UPDATE %I.database_srs SET srid = %L, gml_srs_name = %L',
-                      schema_name, schema_srid, schema_gml_srs_name);
+                   schema_name, schema_srid, schema_gml_srs_name);
   END IF;
 
   -- change srid of each spatially enabled table
@@ -239,7 +265,8 @@ BEGIN
              FROM geometry_columns WHERE f_table_schema = $3
               AND f_geometry_column != ''implicit_geometry''
               AND f_geometry_column != ''relative_other_geom''
-              AND f_geometry_column != ''texture_coordinates''' USING schema_srid, transform, schema_name;
+              AND f_geometry_column != ''texture_coordinates'''
+  USING schema_srid, transform, schema_name;
 END;
-$$ 
+$$
 LANGUAGE plpgsql;
