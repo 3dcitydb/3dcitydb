@@ -17,3 +17,15 @@ PostgreSQL/PostGIS database schema, supporting following key features:
  * Flexible 3D geometries
 
 The 3D City Database comes as a collection of SQL scripts that allow for creating and dropping database instances.
+
+License
+-------
+The 3D City Database is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0). See the `LICENSE` file for more details.
+
+Note that releases of the software before version 3.3.0 continue to be licensed under GNU LGPL 3.0. To request a previous release of the 3D City Database under Apache License 2.0 create a GitHub issue.
+
+Latest release
+--------------
+The latest stable release of the 3D City Database is 3.2.0.
+
+Download the SQL scripts and documentation [here](https://github.com/3dcitydb/3dcitydb/archive/v3.2.0.zip). Previous releases are available from the [releases section](https://github.com/3dcitydb/3dcitydb/releases).
