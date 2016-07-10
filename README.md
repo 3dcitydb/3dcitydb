@@ -37,7 +37,7 @@ System requirements
 
 Documentation
 -------------
-A complete and comprehensive documentation on the 3D City Database and its tool is available with the software and [online](http://www.3dcitydb.org/3dcitydb/documentation/).
+A complete and comprehensive documentation on the 3D City Database and its tools is available with the software and [online](http://www.3dcitydb.org/3dcitydb/documentation/).
 
 Contributing
 ------------
