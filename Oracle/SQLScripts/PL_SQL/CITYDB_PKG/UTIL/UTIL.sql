@@ -129,7 +129,7 @@ AS
     version_ret := DB_VERSION_TABLE();
     version_ret.extend;
 
-    version_tmp := DB_VERSION_OBJ('3.2.0', 3, 2, 0);
+    version_tmp := DB_VERSION_OBJ('3.3.0', 3, 3, 0);
 
     version_ret(version_ret.count) := version_tmp;
     RETURN version_ret;
