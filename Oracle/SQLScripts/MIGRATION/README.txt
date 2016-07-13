@@ -1,5 +1,3 @@
-Test
-
 == Migration steps from version 2.1 to version 3.1 ==
 
 1. Create the database v3.1 with @CREATE_DB.sql 
