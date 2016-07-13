@@ -3580,7 +3580,7 @@ AS
       dbms_output.put_line('delete_cityobject (id: ' || pid || '): ' || SQLERRM);
   end;
 
-  -- truncates all tables
+  -- truncates all tables and reset sequences
   procedure cleanup_schema(schema_name varchar2 := user)
   is
     dummy_id number;
