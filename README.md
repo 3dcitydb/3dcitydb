@@ -1,190 +1,61 @@
-3D City Database v3.0.0
-========
+3D City Database
+================
+The 3D City Database is a free 3D geo database to store, represent, and manage virtual 3D city models on top of a standard spatial relational database. The database model contains semantically rich, hierarchically structured, multi-scale urban objects facilitating complex GIS modeling and analysis tasks, far beyond visualization. In 2012, the 3D City Database received the Oracle Spatial Excellence Award for Education and Research.
 
-The 3D City Database version 3.0.0 is free software and comes 
-WITHOUT ANY WARRANTY. See the DISCLAIMER at the end 
-of this document for more details. 
+The schema of the 3D City Database is based on the [OGC City Geography Markup Language (CityGML)](http://www.opengeospatial.org/standards/citygml), an international standard for representing and exchanging virtual 3D city models issued by the [Open Geospatial Consortium (OGC)](http://www.opengeospatial.org/).
 
+The 3D City Database has been realized as Oracle Spatial/Locator and
+PostgreSQL/PostGIS database schema, supporting following key features:
 
-Index
---------
+ * Full support for CityGML versions 2.0.0 and 1.0.0
+ * Complex thematic modelling
+ * Five different Levels of Detail (LODs)
+ * Appearance information (textures and materials)
+ * Digital terrain models (DTMs)
+ * Representation of generic and prototypical 3D objects
+ * Free, also recursive aggregation of geo objects
+ * Flexible 3D geometries
 
-1. License
-2. Copyright
-3. About
-4. System requirements
-5. Database setup
-6. Database deletion
-7. Documentation
-8. Cooperation partners and supporters
-9. Developers
-10. Contact
-11. Websites
-12. Disclaimer
+The 3D City Database comes as a collection of SQL scripts that allow for creating and dropping database instances.
 
+License
+-------
+The 3D City Database is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0). See the `LICENSE` file for more details.
 
-1. License
-----------
+Note that releases of the software before version 3.3.0 continue to be licensed under GNU LGPL 3.0. To request a previous release of the 3D City Database under Apache License 2.0 create a GitHub issue.
 
-The 3D City Database version 3.0.0 is free software under the GNU Lesser 
-General Public License Version 3.0. See the file LICENSE for more details. 
-For a copy of the GNU Lesser General Public License see the files 
-COPYING and COPYING.LESSER or visit http://www.gnu.org/licenses/.
-
-
-2. Copyright
-------------
-
-&copy; 2012-2016 
-Chair of Geoinformatics (TUMGI)
-Technische Universität München, Germany
-http://www.gis.bv.tum.de
-
-&copy; 2007-2012  
-Institute for Geodesy and Geoinformation Science (IGG)
-Technische Universität Berlin, Germany
-http://www.igg.tu-berlin.de
-
-3. About
---------
-
-The 3D City Database is a free 3D geo database to store, represent, and
-manage virtual 3D city models on top of a standard spatial relational
-database. The database model contains semantically rich, hierarchically
-structured, multi-scale urban objects facilitating complex GIS modeling and
-analysis tasks, far beyond visualization. The schema of the 3D City Database
-is based on the City Geography Markup Language (CityGML), an international
-standard for representing and exchanging virtual 3D city models issued
-by the Open Geospatial Consortium (OGC).
-
-The 3D City Database has been realized as an Oracle 10G R2 Spatial relational
-database schema (or higher), supporting following key features:
-
-* Complex thematic modelling
-* Five different Levels of Detail (LODs)
-* Appearance data
-* Digital terrain models (DTMs)
-* Representation of generic and prototypical 3D objects
-* Free, also recursive aggregation of geo objects
-* Flexible 3D geometries
-* Version and history management
-
-The 3D City Database is shipped as a collection of SQL scripts which allow
-for creating and dropping database instances.
-
-The 3D City Database Version 3.0.0 was developed in collaboration of the Chair of 
-Geoinformatics, Technische Universität München (TUMGI), virtualcitySYSTEMS GmbH, and 
-M.O.S.S. Computer Grafik Systeme GmbH. The previous version of the the 3D City Database 
-was implemented on behalf of the Berliner Senatsverwaltung für Wirtschaft, Arbeit und
-Frauen and the Berlin Partner GmbH. The development is continuing the work of the Institute 
-for Geodesy and Geoinformation Science (IGG), TU Berlin, and the Institute for Cartography and 
-Geoinformation (IKG), University of Bonn. Please find the previous versions of the database 
-at http://www.3dcitydb.net/.
-
-
-4. System requirements
-----------------------
-
-* Oracle Spatial 10g R2, 11g, 12c
-* PostgreSQL 9.1+ with PostGIS 2.0+
-
-
-5. Database setup
------------------
-
-To create a new database instance of the 3D City Database call the SQL script 
-"CREATE_DB.sql" which can be found in the top-level SQL folder of the 
-distribution package. This script will start the setup procedure and invoke 
-further scripts in the background.
-
-The setup procedure requires three mandatory user inputs:
-1. Spatial Reference Identifier for newly created geometry objects (SRID),
-2. corresponding GML conformant URN encoding for gml:srsName attributes, and
-3. decision whether the database instance should be versioning enabled.
-
-
-6. Database deletion
---------------------
-
-To drop an existing database instance of the 3D City Database call the SQL script
-"DROP_DB.sql" which can be found in the top-level SQL folder of the 
-distribution package.
-
-
-7. Documentation
-----------------
-
-A comprehensive documentation on the 3D City Database can be found
-on the project's website at http://www.3dcitydb.net/3dcitydb/documentation/ 
-
-
-8. Cooperation partners and supporters  
---------------------------------------
-
-The development of the 3D City Database version 3.0.0 has been 
-supported by the following cooperation partners:
-
-* Chair of Geoinformatics
-  Technische Universität München, Germany
-  http://www.gis.bv.tum.de
-* virtualcitySYSTEMS GmbH, Berlin
-  http://www.virtualcitysystems.de/  
-* M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen
-  http://www.moss.de/  
-
-  
-9. Developers
--------------
-
-* Claus Nagel <cnagel@virtualcitysystems.de>
-* Richard Redweik <rredweik@virtualcitysystems.de>
-* Felix Kunde <felix-kunde@gmx.de>
-* Zhihang Yao <zhihang.yao@tum.de>
-* Thomas H. Kolbe <thomas.kolbe@tum.de>
-* György Hudra <ghudra@moss.de>
-* Arda Müftüoglu <amueftueoglu@moss.de>
-* Javier Herreruela <javier.herreruela@tu-berlin.de>
-* Alexandra Lorenz <alexandra.lorenz@tu-berlin.de>
-* Gerhard König <gerhard.koenig@tu-berlin.de>
-
-
-10. Contact
-----------
-
-* thomas.kolbe@tum.de
-* cnagel@virtualcitysystems.de
-* pwillkomm@moss.de
-
-
-11. Websites
-------------
-
-Official 3D City Database website: 
-* http://www.3dcitydb.net/
-
-Related websites:
-* https://github.com/3dcitydb/
-* http://www.gis.bv.tum.de/
-* http://www.citygml.org/
-* http://www.citygmlwiki.org/
-* http://www.opengeospatial.org/standards/citygml
-
-
-12. Disclaimer
+Latest release
 --------------
+The latest stable release of the 3D City Database is 3.2.0.
 
-THIS SOFTWARE IS PROVIDED BY TUMGI "AS IS" AND "WITH ALL FAULTS." 
-TUMGI MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY KIND CONCERNING THE 
-QUALITY, SAFETY OR SUITABILITY OF THE SOFTWARE, EITHER EXPRESSED OR 
-IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OF 
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+Download the SQL scripts and documentation [here](https://github.com/3dcitydb/3dcitydb/archive/v3.2.0.zip). Previous releases are available from the [releases section](https://github.com/3dcitydb/3dcitydb/releases).
 
-TUMGI MAKES NO REPRESENTATIONS OR WARRANTIES AS TO THE TRUTH, ACCURACY OR 
-COMPLETENESS OF ANY STATEMENTS, INFORMATION OR MATERIALS CONCERNING THE 
-SOFTWARE THAT IS CONTAINED ON AND WITHIN ANY OF THE WEBSITES OWNED AND 
-OPERATED BY TUMGI.
+System requirements
+-------------------
+* Oracle DBMS >= 10g R2 with Spatial or Locator option
+* PostgreSQL DBMS >= 9.1 with PostGIS extension >= 2.0
 
-IN NO EVENT WILL TUMGI BE LIABLE FOR ANY INDIRECT, PUNITIVE, SPECIAL, 
-INCIDENTAL OR CONSEQUENTIAL DAMAGES HOWEVER THEY MAY ARISE AND EVEN IF 
-TUMGI HAVE BEEN PREVIOUSLY ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+Documentation
+-------------
+A complete and comprehensive documentation on the 3D City Database and its tools is available with the software and [online](http://www.3dcitydb.org/3dcitydb/documentation/).
 
+Contributing
+------------
+* To file bugs found in the software create a GitHub issue.
+* To contribute code for fixing filed issues create a pull request with the issue id.
+* To propose a new feature create a GitHub issue and open a discussion.
+
+Cooperation partners and supporters  
+-----------------------------------
+
+The 3D City Database has been developed by and with the support from the following cooperation partners:
+
+* [Chair of Geoinformatics, Technical University of Munich](https://www.gis.bgu.tum.de/)
+* [virtualcitySYSTEMS GmbH, Berlin](http://www.virtualcitysystems.de/)
+* [M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen](http://www.moss.de/)
+
+More information
+----------------
+[OGC CityGML](http://www.opengeospatial.org/standards/citygml) is an open data model and XML-based format for the storage and exchange of semantic 3D city models. It is an application schema for the [Geography Markup Language version 3.1.1 (GML3)](http://www.opengeospatial.org/standards/gml), the extendible international standard for spatial data exchange issued by the Open Geospatial Consortium (OGC) and the ISO TC211. The aim of the development of CityGML is to reach a common definition of the basic entities, attributes, and relations of a 3D city model.
+
+CityGML is an international OGC standard and can be used free of charge.
