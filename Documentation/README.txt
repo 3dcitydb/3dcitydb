@@ -26,17 +26,19 @@
 1. License
 ----------
 
-The 3D City Database is free software under  
-the GNU Lesser General Public License Version 3.0. See the file 
-LICENSE.txt for more details. For a copy of the GNU Lesser General 
-Public License see the files COPYING.txt and COPYING.LESSER.txt or 
-visit http://www.gnu.org/licenses/.
+The 3D City Database is licensed under the [Apache License, Version 2.0]
+(http://www.apache.org/licenses/LICENSE-2.0). 
+See the `LICENSE.txt` file for more details.
+
+Note that releases of the software before version 3.3.0 continue to be 
+licensed under GNU LGPL 3.0. To request a previous release of the 
+3D City Database under Apache License 2.0 create a GitHub issue.
 
 
 2. Copyright
 ------------
 
-(C) 2013 - 2015
+(C) 2013 - 2016
 Chair of Geoinformatics
 Technische Universität München, Germany
 http://www.gis.bgu.tum.de/

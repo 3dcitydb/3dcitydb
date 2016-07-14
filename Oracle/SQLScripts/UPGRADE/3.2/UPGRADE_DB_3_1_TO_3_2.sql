@@ -1,28 +1,28 @@
--- UPGRADE_DB_TO_3_1.sql
---
--- Authors:     Felix Kunde <felix-kunde@gmx.de>
---              Zhihang Yao <zhihang.yao@tum.de>
---
--- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
---                             Technische Universität München, Germany
---                             http://www.gis.bv.tum.de
---
--------------------------------------------------------------------------------
--- About:
--- Upgrade script from version 3.1 to version 3.2 of the 3D City Database
---
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.1     2016-03-24   update to version 3.2            			  ZYao 
--- 1.0.1     2016-02-17   DROP INDEX statements added for             TKolbe 
---                        ADDRESS_INX, CITYMODEL_INX.
---                        Removed lines with "\" after normal SQL
---                        statements (they are only necessary after
---                        PL/SQL commands).
--- 1.0.0     2015-11-05   release version                             FKun
+-- 3D City Database - The Open Source CityGML Database
+-- http://www.3dcitydb.org/
+-- 
+-- Copyright 2013 - 2016
+-- Chair of Geoinformatics
+-- Technical University of Munich, Germany
+-- https://www.gis.bgu.tum.de/
+-- 
+-- The 3D City Database is jointly developed with the following
+-- cooperation partners:
+-- 
+-- virtualcitySYSTEMS GmbH, Berlin <http://www.virtualcitysystems.de/>
+-- M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
+-- 
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+-- 
+--     http://www.apache.org/licenses/LICENSE-2.0
+--     
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
 --
 
 SET SERVEROUTPUT ON
