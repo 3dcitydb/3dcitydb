@@ -24,17 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- Script to add primary keys, foreign keys and check constraints to v3.0/v3.1 tables.
--- Sets also default values for ID columns that are using sequences.
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.0     2014-12-28   release version                             FKun
---
 
 --// PRIMARY KEYS (and CHECKs)
 ALTER TABLE citydb.address

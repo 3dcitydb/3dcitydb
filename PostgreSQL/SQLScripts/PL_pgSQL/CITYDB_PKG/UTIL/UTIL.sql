@@ -24,21 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- Creates package utility methods for applications.
---
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                                | Author
--- 2.0.0     2014-07-30   revision for 3DCityDB V3                     FKun
--- 1.2.0     2013-08-29   minor changes to change_db_srid function     FKun
--- 1.1.0     2013-02-22   PostGIS version                              FKun
---                                                                     CNag
--- 1.0.0     2008-09-10   release version                              CNag
---
 
 /*****************************************************************
 * CONTENT

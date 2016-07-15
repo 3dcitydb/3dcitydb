@@ -24,14 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.2     2015-11-05   update to version 3.1                       FKun
--- 1.0.1     2011-07-28   update to version 2.0.6                     CNag
--- 1.0.0     2011-05-16   release version                             JHer
---
 
 SET SERVEROUTPUT ON;
 

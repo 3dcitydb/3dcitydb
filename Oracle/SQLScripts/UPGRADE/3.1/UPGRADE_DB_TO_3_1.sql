@@ -24,23 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- Upgrade script from version 3.0 to version 3.1 of the 3D City Database
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.0     2015-11-05   release version                             FKun
--- 1.0.1     2016-02-17   DROP INDEX statements added for             TKolbe 
---                        ADDRESS_INX, CITYMODEL_INX.
---                        Removed lines with "\" after normal SQL
---                        statements (they are only necessary after
---                        PL/SQL commands).
--- 1.0.2     2016-03-08   fixed Bug in Foreign Key                    RRed
---                        "BRD_THEM_SRF_BRD_CONST_FK"
---
 
 SET SERVEROUTPUT ON
 

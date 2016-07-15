@@ -24,12 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.0     2015-03-05   added support for Oracle Locator            ZYao
---
 
 SET FEEDBACK OFF
 

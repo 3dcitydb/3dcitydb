@@ -24,19 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- Database generated with pgModeler (PostgreSQL Database Modeler).
--- pgModeler  version: 0.8.0
--- PostgreSQL version: 9.4
--- Project Site: pgmodeler.com.br
--- Model Author: Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---               Zhihang Yao <zhihang.yao@tum.de>
---               Claus Nagel <cnagel@virtualcitysystems.de>
---               Felix Kunde <felix-kunde@gmx.de>
---               Philipp Willkomm <pwillkomm@moss.de>
---               Gerhard König <gerhard.koenig@tu-berlin.de>
---               Alexandra Lorenz <di.alex.lorenz@googlemail.com>
-
 
 -- Database creation must be done outside an multicommand file.
 -- These commands were put in this file only for convenience.

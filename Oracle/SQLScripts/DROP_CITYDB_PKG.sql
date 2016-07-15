@@ -24,14 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 2.1.0     2015-07-21   added citydb_envelope package               FKun
--- 2.0.0     2014-10-10   minor updates for 3DCityDB V3               FKun
--- 1.0.0     2008-09-10   release version                             CNag
---
 
 SELECT 'Deleting packages ''citydb_util'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', ''citydb_delete'' and corresponding types' as message from DUAL;
 

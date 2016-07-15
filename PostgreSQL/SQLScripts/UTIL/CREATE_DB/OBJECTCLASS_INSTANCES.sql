@@ -24,21 +24,7 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
---                                                                    TKol
---                                                                    FKun
---                                                                    CNag
---                                                                    PWil
--- 2.0.0     2012-05-21   PostGIS version                             FKun
---                                                                    TKol	
---                                                                    GKoe
---                                                                    CNag
---                                                                    ASta
---
+
 DELETE FROM citydb.OBJECTCLASS;
 
 INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )

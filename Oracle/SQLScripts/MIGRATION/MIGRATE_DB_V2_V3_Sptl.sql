@@ -24,12 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.0     2015-03-11   locator/spatial                             GHud
---
 
 CREATE OR REPLACE PACKAGE citydb_migrate_v2_v3_sptl
 AS

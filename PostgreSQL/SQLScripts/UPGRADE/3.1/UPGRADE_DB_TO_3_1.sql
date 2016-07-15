@@ -24,17 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- Upgrade script to version 3.1 of the 3D City Database
---
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.0     2015-11-05   release version                             FKun
---
 
 SET client_min_messages TO WARNING;
 

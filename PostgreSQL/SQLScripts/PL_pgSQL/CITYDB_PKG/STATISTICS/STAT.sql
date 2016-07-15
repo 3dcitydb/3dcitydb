@@ -24,19 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- Creates method for creating database statistics.
---
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                          | Author
--- 2.0.0     2014-10-10   complete revision for 3DCityDB V3      FKun
--- 1.0.0     2013-02-22   PostGIS version                        CNag     
---                                                               FKun
---
 
 /*****************************************************************
 * CONTENT

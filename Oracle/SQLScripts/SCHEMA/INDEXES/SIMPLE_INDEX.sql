@@ -24,21 +24,7 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 3.1.0     2015-11-06   update to version 3.1                       ZYao
--- 3.0.0     2015-03-05   added support for Oracle Locator            ZYao
--- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
---                                                                    TKol
---                                                                    CNag
---                                                                    PWil
--- 2.0.0     2007-11-23   release version                             TKol
---                                                                    GKoe
---                                                                    CNag
---                                                                    ALor
---
+
 CREATE INDEX ADDRESS_INX ON ADDRESS (GMLID, GMLID_CODESPACE);
 
 CREATE INDEX ADDRESS_TO_BRIDGE_FKX ON ADDRESS_TO_BRIDGE (ADDRESS_ID);

@@ -24,17 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- Top-level migration script that starts the migration process for a 3DCityDB 
--- instance of v2.1.0 to v3.1.0 for PostgreSQL databases < 9.3
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.0     2015-11-02   release version                             FKun
---
 
 -- This script is called from MIGRATE_DB.bat
 \set ON_ERROR_STOP ON

@@ -24,19 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- Script that creates functions that are necessary for the migration process.
--- They are stored within the 'geodb_pkg' schema of 3DCityDB v2.x
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.1     2016-02-24   Fix: Replace spaces around                  RRed
---                        seperation string (--/\--)
--- 1.0.0     2014-12-28   release version                             FKun
---
 
 CREATE OR REPLACE FUNCTION geodb_pkg.migrate_cityobject(
   INOUT co_id INTEGER,

@@ -24,14 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.0     2015-01-22   release version                             AM
---                                                                    FKun
---           2015-03-11   locator/spatial, check version > 10.x       GHud
--- 
 
 SET SERVEROUTPUT ON verify off;
 SET FEEDBACK OFF;

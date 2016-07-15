@@ -24,24 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- All functions are part of the citydb_pkg.schema and DELETE-"Package" 
---
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                                    | Author
--- 2.3.0     2015-10-15   changed API for delete_genericattrib             FKun
--- 2.2.0     2015-02-10   added functions                                  FKun
--- 2.1.0     2014-11-07   delete with returning id of deleted features     FKun
--- 2.0.0     2014-10-10   complete revision for 3DCityDB V3                FKun
--- 1.2.0     2013-08-08   extended to all thematic classes                 FKun
---                                                                         GHud
--- 1.1.0     2012-02-22   some performance improvements                    CNag
--- 1.0.0     2011-02-11   release version                                  CNag
---
 
 /*****************************************************************
 * CONTENT

@@ -23,21 +23,7 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
---
--------------------------------------------------------------------------------
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 3.0.0     2015-03-05   added support for Oracle Locator            ZYao
--- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
---                                                                    TKol
---                                                                    CNag
---                                                                    PWil
--- 2.0.1     2008-06-28   log message included                        TKol
--- 2.0.0     2007-11-23   release version                             TKol
---                                                                    GKoe
---                                                                    CNag
---
+-- 
 
 SELECT 'EnableVersioning procedure is working, that takes a while.' as message from DUAL;
 

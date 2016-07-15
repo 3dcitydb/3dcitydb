@@ -24,17 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- Script to create tables and sequences of a 3DCityDB instance that are new 
--- in v3.0/v3.1
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.0     2014-12-28   release version                             FKun
---
 
 /*************************************************
 * create citydb schema

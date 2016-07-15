@@ -24,21 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- This script provides functions to calculate an object's envelope 
--- (a diagonal cutting plane inside a 3D bounding box) and to store
--- the result in the ENVELOPE column of CITYOBJECT.
---
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                                 | Author
--- 1.2.0     2015-11-13   added set_envelope parameter for functions    FKun
--- 1.1.0     2015-11-04   added set_envelope procedures                 FKun
--- 1.0.0     2015-07-21   release version 3DCityDB v3.1                 FKun
---
 
 CREATE OR REPLACE PACKAGE citydb_envelope
 AS

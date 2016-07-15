@@ -24,23 +24,7 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 3.0.0     2015-03-05   added support for Oracle Locator            ZYao
--- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
---                                                                    TKol
---                                                                    CNag
---                                                                    PWil
--- 2.0.1     2008-06-28   versioning is enabled depending on var      TKol
--- 2.0.0     2007-11-23   release version                             TKol
---                                                                    GKoe
---                                                                    CNag
---                                                                    ALor
---
 
---
 SET SERVEROUTPUT ON
 SET FEEDBACK ON
 SET VER OFF

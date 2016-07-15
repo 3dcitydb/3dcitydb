@@ -24,17 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.1       2007-01-28   release version                             LPlu
---                                                                    TKol
---                                                                    GGro
---                                                                    JSch
---                                                                    VStr
---                                                                    APot
---
 
 SET FEEDBACK OFF
 

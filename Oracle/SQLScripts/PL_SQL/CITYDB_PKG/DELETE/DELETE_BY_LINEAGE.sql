@@ -24,20 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- ChangeLog:
---
--- Version | Date       | Description                                    | Author
--- 2.1.0     2014-11-10   delete with returning id of deleted features     FKun
--- 2.0.0     2014-10-10   extended for 3DCityDB V3                         GHud
---                                                                         FKun
---                                                                         CNag
--- 1.3.0     2013-08-08   extended to all thematic classes                 GHud
---                                                                         FKun
--- 1.2.0     2012-02-22   minor changes                                    CNag
--- 1.1.0     2011-02-11   moved to new DELETE functionality                CNag
--- 1.0.0     2008-09-10   release version                                  ASta
---
 
 CREATE OR REPLACE PACKAGE citydb_delete_by_lineage
 AS

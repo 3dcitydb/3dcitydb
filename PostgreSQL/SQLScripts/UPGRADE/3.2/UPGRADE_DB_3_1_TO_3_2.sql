@@ -24,18 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- Upgrade script from version 3.1 to 3.2 of the 3D City Database
---
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.1     2016-03-24   release version                             ZYao
--- 1.0.0     2015-11-05   release version                             FKun
---
 
 SET client_min_messages TO WARNING;
 

@@ -24,20 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- Creates package "citydb_srs" containing methods regarding the spatial reference
--- system of the 3DCityDB instance.
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.1     2016-06-03   Added function check_srid()                 RRed
---                        and use it in change_schema_srid()
--- 1.0.0     2014-10-10   new script for 3DCityDB V3                  FKun
---                                                                    CNag
---
 
 /*****************************************************************
 * PACKAGE citydb_util

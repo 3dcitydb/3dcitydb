@@ -24,17 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- Script to create indexes on v3.0/v3.1 tables (copied from pgModeler script)
---
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.0     2014-12-28   release version                             FKun
---
 
 DROP INDEX IF EXISTS citydb.cityobject_member_fkx;
 CREATE INDEX cityobject_member_fkx ON citydb.cityobject_member

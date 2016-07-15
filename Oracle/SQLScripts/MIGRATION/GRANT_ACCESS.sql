@@ -24,13 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.0     2015-01-22   release version                             AM
---                                                                    FKun
---
 
 SET SERVEROUTPUT ON;
 ACCEPT SCHEMAINPUT PROMPT 'Enter the user name of 3DCityDB v3.1 instance : '

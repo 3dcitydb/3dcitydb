@@ -24,21 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- Script that contains the migration logic.
---
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.1.2     2016-02-24   Fix: Replace spaces around                  RRed
---                        seperation string (--/\--)
--- 1.1.1     2016-02-10   bugfix                                      RRed
--- 1.1.0     2015-11-02   update for v3.1                             FKun
--- 1.0.0     2014-12-28   release version                             FKun
---
 
 -- BUILDING module
 DROP TABLE IF EXISTS citydb.building CASCADE;

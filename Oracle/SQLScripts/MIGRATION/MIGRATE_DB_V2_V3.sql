@@ -24,17 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.0     2015-01-22   release version                             AM
---                                                                    FKun
---           2015-03-11   locator/spatial                             GHud
--- 1.0.1     2015-07-07   optimization                                AM
--- 1.0.2     2016-01-21   optimization with create table              AM
--- 1.0.3     2016-02-24   Fix: Fix: Replace spaces around             RRed
---                        seperation string (--/\--)
 
 CREATE OR REPLACE PACKAGE citydb_migrate_v2_v3
 AS

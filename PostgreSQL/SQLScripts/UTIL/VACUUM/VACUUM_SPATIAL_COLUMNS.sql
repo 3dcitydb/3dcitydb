@@ -24,18 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- forces PostgreSQL to collect table statistics on spatial columns
--- to use spatial indexes
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 2.0.0     2014-01-07   new version for 3DCityDB V3                 FKun
--- 1.0.0     2012-06-22   PostGIS version                             FKun
---
 
 VACUUM ANALYSE breakline_relief (ridge_or_valley_lines);
 VACUUM ANALYSE breakline_relief (break_lines);

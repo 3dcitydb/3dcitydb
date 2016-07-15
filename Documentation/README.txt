@@ -26,13 +26,11 @@
 1. License
 ----------
 
-The 3D City Database is licensed under the [Apache License, Version 2.0]
-(http://www.apache.org/licenses/LICENSE-2.0). 
-See the `LICENSE.txt` file for more details.
-
-Note that releases of the software before version 3.3.0 continue to be 
-licensed under GNU LGPL 3.0. To request a previous release of the 
-3D City Database under Apache License 2.0 create a GitHub issue.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this software except in compliance with the License.
+You may obtain a copy of the License at
+ 
+    http://www.apache.org/licenses/LICENSE-2.0
 
 
 2. Copyright
@@ -40,8 +38,8 @@ licensed under GNU LGPL 3.0. To request a previous release of the
 
 (C) 2013 - 2016
 Chair of Geoinformatics
-Technische Universität München, Germany
-http://www.gis.bgu.tum.de/
+Technical University of Munich, Germany
+https://www.gis.bgu.tum.de/
 
 
 3. About
@@ -68,7 +66,7 @@ PostgreSQL/PostGIS database schema, supporting following key features:
     * Free, also recursive aggregation of geo objects
     * Flexible 3D geometries
 	
-The 3D City Database v3.0 comes as a collection of SQL scripts that allow
+The 3D City Database comes as a collection of SQL scripts that allow
 for creating and dropping database instances.
 
 The 3D City Database is an open source project and a joint development 
@@ -122,19 +120,19 @@ comprehensive step-by-step guide.
 7. Documentation
 ----------------
 
-A comprehensive documentation on the 3D City Database is provided in the
-distribution package and can be downloaded from the project's website at
+A complete and comprehensive documentation on the 3D City Database is provided
+in the distribution package and can be downloaded from the project's website at
 http://www.3dcitydb.org/3dcitydb/documentation/ 
 
 
 8. Cooperation partners and supporters  
 --------------------------------------
 
-The 3D City Database v3.0 has been developed by and with the support from
+The 3D City Database has been developed by and with the support from
 the following cooperation partners:
 
-* Chair of Geoinformatics, Technische Universität München
-  http://www.gis.bgu.tum.de/
+* Chair of Geoinformatics, Technical University of Munich
+  https://www.gis.bgu.tum.de/
 * virtualcitySYSTEMS GmbH, Berlin
   http://www.virtualcitysystems.de/
 * M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen

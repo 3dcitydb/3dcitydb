@@ -24,19 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- About:
--- Creates package "citydb_idx" containing utility methods for creating/droping
--- spatial/normal indexes on versioned/unversioned tables.
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 2.0.1     2015-10-21   updated entries for index table             FKun
--- 2.0.0     2014-07-30   new version for 3DCityDB V3                 FKun
--- 1.0.0     2008-09-10   release version                             CNag
---
 
 /*****************************************************************
 * TYPE INDEX_OBJ
