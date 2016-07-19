@@ -38,7 +38,7 @@
 *   delete_land_uses(lineage_value TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
 *   delete_plant_covers(lineage_value TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
 *   delete_relief_features(lineage_value TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
-*   delete_soltary_veg_objs(lineage_value TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
+*   delete_solitary_veg_objs(lineage_value TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
 *   delete_transport_complexes(lineage_value TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
 *   delete_tunnels(lineage_value TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
 *   delete_waterbodies(lineage_value TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
@@ -280,22 +280,22 @@ $$
 LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_soltary_veg_objs(
+CREATE OR REPLACE FUNCTION citydb_pkg.delete_solitary_veg_objs(
   lineage_value TEXT, 
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS SETOF INTEGER AS
 $$
 DECLARE
   deleted_id INTEGER;
-  soltary_veg_obj_id INTEGER;
+  solitary_veg_obj_id INTEGER;
 BEGIN
-  FOR soltary_veg_obj_id IN EXECUTE format('SELECT id FROM %I.cityobject WHERE objectclass_id = 8 AND lineage = %L', schema_name, lineage_value) LOOP
+  FOR solitary_veg_obj_id IN EXECUTE format('SELECT id FROM %I.cityobject WHERE objectclass_id = 7 AND lineage = %L', schema_name, lineage_value) LOOP
     BEGIN
-      deleted_id := citydb_pkg.delete_soltary_veg_obj(soltary_veg_obj_id, schema_name);
+      deleted_id := citydb_pkg.delete_solitary_veg_obj(solitary_veg_obj_id, schema_name);
       RETURN NEXT deleted_id;
       EXCEPTION
         WHEN OTHERS THEN
-          RAISE NOTICE 'delete_soltary_veg_objs: deletion of soltary_vegetation_object with ID % threw %', soltary_veg_obj_id, SQLERRM;
+          RAISE NOTICE 'delete_solitary_veg_objs: deletion of solitary_vegetation_object with ID % threw %', solitary_veg_obj_id, SQLERRM;
     END;
   END LOOP;
 
@@ -308,7 +308,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'delete_soltary_veg_objs: %', SQLERRM;
+      RAISE NOTICE 'delete_solitary_veg_objs: %', SQLERRM;
 END;
 $$
 LANGUAGE plpgsql;

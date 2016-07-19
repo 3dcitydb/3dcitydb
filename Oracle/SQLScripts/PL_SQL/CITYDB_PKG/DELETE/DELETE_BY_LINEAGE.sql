@@ -291,7 +291,7 @@ AS
     solitary_veg_obj_cur ref_cursor;
     solitary_veg_obj_id number;
   begin
-    open solitary_veg_obj_cur for 'select id from '|| schema_name || '.cityobject where objectclass_id=8 and lineage = :1' using lineage_value;
+    open solitary_veg_obj_cur for 'select id from '|| schema_name || '.cityobject where objectclass_id=7 and lineage = :1' using lineage_value;
     loop
       fetch solitary_veg_obj_cur into solitary_veg_obj_id;
       exit when solitary_veg_obj_cur%notfound;
