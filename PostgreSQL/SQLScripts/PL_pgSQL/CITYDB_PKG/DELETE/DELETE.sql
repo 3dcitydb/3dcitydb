@@ -53,7 +53,6 @@
 *   delete_city_furniture(cf_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_citymodel(cm_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER 
 *   delete_cityobject(co_id INTEGER, delete_members INTEGER DEFAULT 0, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_cityobject_cascade(co_id INTEGER, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_cityobjectgroup(cog_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_external_reference(ref_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_grid_coverage(gc_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
@@ -2796,39 +2795,6 @@ BEGIN
   EXCEPTION
     WHEN OTHERS THEN
       RAISE NOTICE 'delete_cityobject (id: %): %', co_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
--- delete a cityobject using its foreign key relations
--- NOTE: all constraints have to be set to ON DELETE CASCADE (function: citydb_pkg.update_schema_constraints)
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_cityobject_cascade(
-  co_id INTEGER,
-  cleanup INTEGER DEFAULT 0,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-BEGIN
-  -- delete city object and all entries from other tables referencing the cityobject_id
-  EXECUTE format('DELETE FROM %I.cityobject WHERE id = %L RETURNING id', schema_name, co_id) INTO deleted_id;
-
-  IF cleanup <> 0 THEN
-    EXECUTE 'SELECT citydb_pkg.cleanup_implicit_geometries(1, $1)' USING schema_name;
-    EXECUTE 'SELECT citydb_pkg.cleanup_appearances(1, $1)' USING schema_name;
-    EXECUTE 'SELECT citydb_pkg.cleanup_grid_coverages($1)' USING schema_name;
-    EXECUTE 'SELECT citydb_pkg.cleanup_addresses($1)' USING schema_name;
-    EXECUTE 'SELECT citydb_pkg.cleanup_cityobjectgroups($1)' USING schema_name;
-    EXECUTE 'SELECT citydb_pkg.cleanup_citymodels($1)' USING schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_cityobject_cascade (id: %): %', co_id, SQLERRM;
 END; 
 $$ 
 LANGUAGE plpgsql;
