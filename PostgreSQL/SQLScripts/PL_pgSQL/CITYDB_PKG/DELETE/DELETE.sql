@@ -2518,8 +2518,8 @@ DECLARE
   gc_id INTEGER;
 BEGIN
   FOR gc_id IN EXECUTE format('SELECT gc.id FROM %I.grid_coverage gc
-                                 LEFT JOIN %I.raster_relief rr ON rr.grid_coverage_id = gc.id
-                                 WHERE sd.grid_coverage_id IS NULL', schema_name, schema_name) LOOP
+                                 LEFT JOIN %I.raster_relief rr ON rr.coverage_id = gc.id
+                                 WHERE rr.coverage_id IS NULL', schema_name, schema_name) LOOP
     --// DELETE GRID COVERAGE //--
     EXECUTE format('DELETE FROM %I.grid_coverage WHERE id = %L RETURNING id', schema_name, gc_id) INTO deleted_id;
     RETURN NEXT deleted_id;
