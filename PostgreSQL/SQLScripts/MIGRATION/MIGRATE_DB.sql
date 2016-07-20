@@ -59,6 +59,7 @@ CREATE SCHEMA citydb_pkg;
 \i ./../PL_pgSQL/CITYDB_PKG/STATISTICS/STAT.sql
 \i ./../PL_pgSQL/CITYDB_PKG/DELETE/DELETE.sql
 \i ./../PL_pgSQL/CITYDB_PKG/DELETE/DELETE_BY_LINEAGE.sql
+\i ./../PL_pgSQL/CITYDB_PKG/ENVELOPE/ENVELOPE.sql
 
 --// create FUNCTIONS necessary for migration process
 \echo
