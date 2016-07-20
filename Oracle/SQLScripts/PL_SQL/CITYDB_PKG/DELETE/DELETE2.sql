@@ -361,7 +361,7 @@ AS
 
     execute immediate 'delete from ' || schema_name || '.cityobject_member where citymodel_id=:1' using citymodel_rec.id;
 
-    open appearance_cur for 'select * from ' || schema_name || '.appearance where cityobject_id=:1' using citymodel_rec.id;
+    open appearance_cur for 'select * from ' || schema_name || '.appearance where citymodel_id=:1' using citymodel_rec.id;
     loop
       fetch appearance_cur into appearance_rec;
       exit when appearance_cur%notfound;

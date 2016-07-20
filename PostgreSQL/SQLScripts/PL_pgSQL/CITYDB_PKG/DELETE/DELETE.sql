@@ -39,7 +39,7 @@
 *   cleanup_tex_images(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
 *   delete_address(ad_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_appearance(app_id INTEGER, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_breakline_relief(blr INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
+*   delete_breakline_relief(blr_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_bridge(brd_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_bridge_constr_element(brdce_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_bridge_furniture(brdf_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
@@ -64,7 +64,7 @@
 *   delete_masspoint_relief(mpr_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_opening(o_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_plant_cover(pc_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_raster_relief(rr INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
+*   delete_raster_relief(rr_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_relief_component(rc_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_relief_feature(rf_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_room(r_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
@@ -72,7 +72,7 @@
 *   delete_surface_data(sd_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_surface_geometry(sg_id INTEGER, clean_apps INTEGER := 0 INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_thematic_surface(ts_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_tin_relief(tr INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
+*   delete_tin_relief(tr_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_traffic_area(ta_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_transport_complex(tc_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_tunnel(tun_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
@@ -80,7 +80,7 @@
 *   delete_tunnel_hollow_space(tunhs_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_tunnel_installation(tuni_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_tunnel_opening(tuno_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_tunnel_them_srf(tuntd_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
+*   delete_tunnel_them_srf(tunts_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_waterbnd_surface(wbs_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_waterbody(wb_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   intern_delete_cityobject(co_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
@@ -1633,7 +1633,7 @@ BEGIN
   EXECUTE format('DELETE FROM %I.cityobject_member WHERE citymodel_id = %L', schema_name, cm_id);
 
   -- delete appearances assigned to the city model
-  EXECUTE format('SELECT citydb_pkg.delete_appearance(id, 0, %L) FROM %I.appearance WHERE cityobject_id = %L', 
+  EXECUTE format('SELECT citydb_pkg.delete_appearance(id, 0, %L) FROM %I.appearance WHERE citymodel_id = %L', 
                     schema_name, schema_name, cm_id);
 
   --// DELETE CITY MODEL //--
