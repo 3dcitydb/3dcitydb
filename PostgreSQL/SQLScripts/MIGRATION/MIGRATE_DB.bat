@@ -1,4 +1,4 @@
-REM Shell script to migrate an instance of the 3D City Database from v2.x to v3.1
+REM Shell script to migrate an instance of the 3D City Database from v2.x to v3.3
 REM on PostgreSQL/PostGIS >= 9.3
 
 REM Provide your database details here
@@ -11,7 +11,7 @@ set PGBIN=path_to_psql
 REM cd to path of the shell script
 cd /d %~dp0
 
-REM Run MIGRATE_DB.sql to migrate the 3D City Database instance from v2.x to v3.1
+REM Run MIGRATE_DB.sql to migrate the 3D City Database instance from v2.x to v3.3
 "%PGBIN%\psql" -d "%CITYDB%" -f "MIGRATE_DB.sql"
 
 pause

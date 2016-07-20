@@ -26,7 +26,7 @@
 --
 
 SET SERVEROUTPUT ON;
-ACCEPT SCHEMAINPUT PROMPT 'Enter the user name of 3DCityDB v3.1 instance : '
+ACCEPT SCHEMAINPUT PROMPT 'Enter the user name of 3DCityDB v3.3 instance : '
 
 DECLARE
     schema_name_user VARCHAR2(30) := upper('&SCHEMAINPUT');
