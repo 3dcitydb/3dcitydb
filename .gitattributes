@@ -1,0 +1,3 @@
+# Always convert line endings in shell scripts (.bat and .sh)
+*.bat 		eol=crlf
+*.sh 		eol=lf
