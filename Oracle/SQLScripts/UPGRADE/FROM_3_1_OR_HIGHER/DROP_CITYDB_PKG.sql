@@ -76,6 +76,7 @@ BEGIN
   drop_user_object_if_exists('Package', 'citydb_idx');
   drop_user_object_if_exists('Package', 'citydb_srs');
   drop_user_object_if_exists('Package', 'citydb_stat');
+  drop_user_object_if_exists('Package', 'citydb_envelope');
   drop_user_object_if_exists('Package', 'citydb_delete_by_lineage');
   drop_user_object_if_exists('Package', 'citydb_delete');
 
