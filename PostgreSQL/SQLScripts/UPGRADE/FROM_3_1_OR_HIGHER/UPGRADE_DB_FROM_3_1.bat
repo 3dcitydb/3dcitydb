@@ -1,5 +1,5 @@
 REM Shell script to upgrade an instance of the 3D City Database
-REM on PostgreSQL/PostGIS to version 3.3 from version 3.1 or higher
+REM on PostgreSQL/PostGIS from version 3.1 or higher to 3.3
 
 REM Provide your database details here
 set PGPORT=5432
