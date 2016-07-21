@@ -69,7 +69,6 @@ CREATE INDEX surface_geom_inx ON citydb.surface_geometry (gmlid, gmlid_codespace
 CREATE INDEX surface_data_inx ON citydb.surface_data (gmlid, gmlid_codespace);
 CREATE INDEX address_inx ON citydb.address (gmlid, gmlid_codespace);
 CREATE INDEX address_point_spx ON citydb.address USING gist (multi_point);
-CREATE INDEX grid_coverage_spx ON citydb.grid_coverage USING gist (ST_ConvexHull(rasterproperty));
 
 --// drop old versions of CITYDB_PKG
 DROP SCHEMA CITYDB_PKG CASCADE;
