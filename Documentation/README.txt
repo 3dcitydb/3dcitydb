@@ -1,9 +1,11 @@
-﻿3D City Database - The Open Source CityGML Database
+3D City Database - The Open Source CityGML Database
 
-  This software is free software and is distributed in the hope
-  that it will be useful, but WITHOUT ANY WARRANTY; without even
-  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-  PURPOSE. See the LICENSE.txt file for more details.
+Version 3.3
+
+  This software is free software and is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 
 
 0. Index
