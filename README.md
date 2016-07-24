@@ -18,6 +18,11 @@ PostgreSQL/PostGIS database schema, supporting following key features:
 
 The 3D City Database comes as a collection of SQL scripts that allow for creating and dropping database instances.
 
+Who's using the 3D City Database?
+---------------------------------
+
+The 3D City Database is in use in real life production systems in many places around the world such as Berlin, Potsdam, Hamburg, Munich, Frankfurt, Dresden, Rotterdam, Vienna, Helsinki, Singapore, Zurich and is also being used in a number of research projects. The companies [virtualcitySYSTEMS](http://www.virtualcitysystems.de/) and [M.O.S.S.](https://www.moss.de/), who are also partners in development, use the 3D City Database at the core of their commercial products and services to create, maintain, visualize, transform, and export virtual 3D city models. Furthermore, the state mapping agencies of the federal states in Germany store and manage the state-wide collected 3D building models (approx. 51 million building models) in CityGML LOD1 and LOD2 using the 3D City Database. 
+
 License
 -------
 The 3D City Database is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0). See the `LICENSE` file for more details.
