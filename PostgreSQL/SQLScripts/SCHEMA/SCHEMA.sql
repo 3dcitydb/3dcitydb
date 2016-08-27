@@ -27,9 +27,9 @@
 
 -- Database creation must be done outside an multicommand file.
 -- These commands were put in this file only for convenience.
--- -- object: "3DCityDB_v3.0" | type: DATABASE --
--- -- DROP DATABASE IF EXISTS "3DCityDB_v3.0";
--- CREATE DATABASE "3DCityDB_v3.0"
+-- -- object: "3DCityDB_v3.3" | type: DATABASE --
+-- -- DROP DATABASE IF EXISTS "3DCityDB_v3.3";
+-- CREATE DATABASE "3DCityDB_v3.3"
 -- 	ENCODING = 'UTF8'
 -- 	TABLESPACE = pg_default
 -- 	OWNER = postgres
@@ -5930,6 +5930,13 @@ REFERENCES citydb.implicit_geometry (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: bridge_cityobject_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.bridge DROP CONSTRAINT IF EXISTS bridge_cityobject_fk CASCADE;
+ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: bridge_parent_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.bridge DROP CONSTRAINT IF EXISTS bridge_parent_fk CASCADE;
 ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_parent_fk FOREIGN KEY (bridge_parent_id)
@@ -6433,5 +6440,3 @@ ALTER TABLE citydb.external_reference ADD CONSTRAINT ext_ref_cityobject_fk FOREI
 REFERENCES citydb.cityobject (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
-
-

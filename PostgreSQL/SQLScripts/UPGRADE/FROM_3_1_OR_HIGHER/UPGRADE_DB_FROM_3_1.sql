@@ -31,6 +31,12 @@ SET client_min_messages TO WARNING;
 \set ON_ERROR_STOP ON
 \echo
 
+--// add missing foreign key
+ALTER TABLE citydb.bridge
+  ADD CONSTRAINT bridge_cityobject_fk FOREIGN KEY (id)
+    REFERENCES citydb.cityobject (id) MATCH FULL
+    ON DELETE NO ACTION ON UPDATE CASCADE;
+
 --// drop old versions of CITYDB_PKG
 DROP SCHEMA CITYDB_PKG CASCADE;
 
