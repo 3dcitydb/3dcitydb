@@ -24,13 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 3.0.0     2014-01-08   new script for 3DCityDB V3                  FKun
--- 2.0.0     2011-12-11   PostGIS version                             FKun
---
 
 SET client_min_messages TO WARNING;
 

@@ -24,17 +24,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--------------------------------------------------------------------------------
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 3.0.0     2014-02-24   new script for 3DCityDB V3                  FKun	   
--- 2.0.0     2012-05-21   PostGIS version                             FKun
---                                                                    TKol
---                                                                    GKoe
---                                                                    CNag
---                                                                    ASta
---
 
 -- This script is called from CREATE_DB.bat
 \pset footer off
