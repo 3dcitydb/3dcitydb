@@ -70,6 +70,12 @@ CREATE INDEX surface_data_inx ON citydb.surface_data (gmlid, gmlid_codespace);
 CREATE INDEX address_inx ON citydb.address (gmlid, gmlid_codespace);
 CREATE INDEX address_point_spx ON citydb.address USING gist (multi_point);
 
+--// add missing foreign key
+ALTER TABLE citydb.bridge
+  ADD CONSTRAINT bridge_cityobject_fk FOREIGN KEY (id)
+    REFERENCES citydb.cityobject (id) MATCH FULL
+    ON DELETE NO ACTION ON UPDATE CASCADE;
+
 --// drop old versions of CITYDB_PKG
 DROP SCHEMA CITYDB_PKG CASCADE;
 
