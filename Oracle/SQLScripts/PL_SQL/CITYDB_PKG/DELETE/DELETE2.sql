@@ -1,41 +1,28 @@
--- DELETE.sql
---
--- Authors:     Claus Nagel <cnagel@virtualcitysystems.de>
---              Felix Kunde <felix-kunde@gmx.de>
---              György Hudra <ghudra@moss.de>
---
--- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
---                             Technische Universität München, Germany
---                             http://www.gis.bv.tum.de
---
---              (c) 2007-2012  Institute for Geodesy and Geoinformation Science,
---                             Technische Universität Berlin, Germany
---                             http://www.igg.tu-berlin.de
---
---              This skript is free software under the LGPL Version 3.0.
---              See the GNU Lesser General Public License at
---              http://www.gnu.org/copyleft/lgpl.html
---              for more details.
--------------------------------------------------------------------------------
--- About:
+-- 3D City Database - The Open Source CityGML Database
+-- http://www.3dcitydb.org/
 -- 
---
---
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                                    | Author
--- 2.3.0     2015-10-15   changed API for delete_genericattrib             FKun
--- 2.2.0     2015-02-10   added functions                                  FKun
--- 2.1.0     2014-11-10   delete with returning id of deleted features     FKun
--- 2.0.0     2014-10-10   extended for 3DCityDB V3                         GHud
---                                                                         FKun
---                                                                         CNag
--- 1.2.0     2013-08-08   extended to all thematic classes                 GHud
---                                                                         FKun
--- 1.1.0     2012-02-22   some performance improvements                    CNag
--- 1.0.0     2011-02-11   release version                                  CNag
+-- Copyright 2013 - 2016
+-- Chair of Geoinformatics
+-- Technical University of Munich, Germany
+-- https://www.gis.bgu.tum.de/
+-- 
+-- The 3D City Database is jointly developed with the following
+-- cooperation partners:
+-- 
+-- virtualcitySYSTEMS GmbH, Berlin <http://www.virtualcitysystems.de/>
+-- M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
+-- 
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+-- 
+--     http://www.apache.org/licenses/LICENSE-2.0
+--     
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
 --
 
 CREATE OR REPLACE PACKAGE citydb_delete
@@ -84,7 +71,6 @@ AS
   function delete_tunnel_furniture(pid number, schema_name varchar2 := user) return number;
   function delete_tunnel_hollow_space(pid number, schema_name varchar2 := user) return number;
   function delete_cityobject(pid number, delete_members int := 0, cleanup int := 0, schema_name varchar2 := user) return number;
-  function delete_cityobject_cascade(pid number, cleanup int := 0, schema_name varchar2 := user) return number;
 
   function cleanup_appearances(only_global int :=1, schema_name varchar2 := user) return id_array;
   function cleanup_addresses(schema_name varchar2 := user) return id_array;
@@ -374,7 +360,7 @@ AS
 
     execute immediate 'delete from ' || schema_name || '.cityobject_member where citymodel_id=:1' using citymodel_rec.id;
 
-    open appearance_cur for 'select * from ' || schema_name || '.appearance where cityobject_id=:1' using citymodel_rec.id;
+    open appearance_cur for 'select * from ' || schema_name || '.appearance where citymodel_id=:1' using citymodel_rec.id;
     loop
       fetch appearance_cur into appearance_rec;
       exit when appearance_cur%notfound;
@@ -2441,11 +2427,11 @@ AS
       dbms_output.put_line('delete_citymodel (id: ' || pid || '): ' || SQLERRM);
   end;
 
-  function delete_genericattrib(pid number, parent_id number, root_id number, delete_members int := 0, schema_name varchar2 := user) return number
+  function delete_genericattrib(pid number, delete_members int := 0, schema_name varchar2 := user) return number
   is
     deleted_id number;
   begin
-    deleted_id := intern_delete_genericattrib(pid, parent_id, root_id, delete_members, schema_name);
+    deleted_id := intern_delete_genericattrib(pid, delete_members, schema_name);
     return deleted_id;
   exception
     when no_data_found then
@@ -3509,50 +3495,74 @@ AS
       dbms_output.put_line('delete_cityobject (id: ' || pid || '): ' || SQLERRM);
   end;
 
-  -- delete a cityobject using its foreign key relations
-  -- NOTE: all constraints have to be set to ON DELETE CASCADE (function: citydb_util.update_schema_constraints)
-  function delete_cityobject_cascade(pid number, cleanup int := 0, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    dummy_ids id_array := id_array();
-  begin
-    -- delete cityobject and all entries from other tables referencing the cityobject_id
-    execute immediate 'delete from ' || schema_name || '.cityobject where id = :1 returning id into :2' using pid, out deleted_id;
-
-    if cleanup <> 0 then
-      dummy_ids := cleanup_implicit_geometries(1, schema_name);
-      dummy_ids := cleanup_appearances(0, schema_name);
-      dummy_ids := cleanup_addresses(schema_name);
-      dummy_ids := cleanup_cityobjectgroups(schema_name);
-      dummy_ids := cleanup_citymodels(schema_name);
-    end if;
-
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_cityobject_cascade (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  -- delete all cityobjects using their foreign key relations
-  -- NOTE: all constraints have to be set to ON DELETE CASCADE (function: citydb_pkg.update_schema_constraints)
+  -- truncates all tables and reset sequences
   procedure cleanup_schema(schema_name varchar2 := user)
   is
-    dummy_id number;
-    dummy_ids id_array := id_array();
     dummy_str strarray;
-    cityobject_cur ref_cursor;
-    cityobject_id number;
     seq_value number;
   begin
     -- disable spatial indexes
     dummy_str := citydb_idx.drop_spatial_indexes(schema_name);
 
     -- clear tables
+    execute immediate 'delete from ' || schema_name || '.address_to_building';
+    execute immediate 'delete from ' || schema_name || '.address_to_bridge';
+    execute immediate 'delete from ' || schema_name || '.opening_to_them_surface';
+    execute immediate 'delete from ' || schema_name || '.bridge_open_to_them_srf';
+    execute immediate 'delete from ' || schema_name || '.tunnel_open_to_them_srf';
+    execute immediate 'delete from ' || schema_name || '.group_to_cityobject';
+    execute immediate 'delete from ' || schema_name || '.waterbod_to_waterbnd_srf';
+    execute immediate 'delete from ' || schema_name || '.relief_feat_to_rel_comp';
+    execute immediate 'delete from ' || schema_name || '.appear_to_surface_data';
+    execute immediate 'delete from ' || schema_name || '.opening';
+    execute immediate 'delete from ' || schema_name || '.thematic_surface';
+    execute immediate 'delete from ' || schema_name || '.building_installation';
+    execute immediate 'delete from ' || schema_name || '.building_furniture';
+    execute immediate 'delete from ' || schema_name || '.room';
+    execute immediate 'delete from ' || schema_name || '.building';
+    execute immediate 'delete from ' || schema_name || '.bridge_opening';
+    execute immediate 'delete from ' || schema_name || '.bridge_thematic_surface';
+    execute immediate 'delete from ' || schema_name || '.bridge_constr_element';
+    execute immediate 'delete from ' || schema_name || '.bridge_installation';
+    execute immediate 'delete from ' || schema_name || '.bridge_furniture';
+    execute immediate 'delete from ' || schema_name || '.bridge_room';
+    execute immediate 'delete from ' || schema_name || '.bridge';
+    execute immediate 'delete from ' || schema_name || '.address';
+    execute immediate 'delete from ' || schema_name || '.tunnel_opening';
+    execute immediate 'delete from ' || schema_name || '.tunnel_thematic_surface';
+    execute immediate 'delete from ' || schema_name || '.tunnel_installation';
+    execute immediate 'delete from ' || schema_name || '.tunnel_furniture';
+    execute immediate 'delete from ' || schema_name || '.tunnel_hollow_space';
+    execute immediate 'delete from ' || schema_name || '.tunnel';
+    execute immediate 'delete from ' || schema_name || '.city_furniture';
+    execute immediate 'delete from ' || schema_name || '.cityobjectgroup';
+    execute immediate 'delete from ' || schema_name || '.generic_cityobject';
+    execute immediate 'delete from ' || schema_name || '.land_use';
+    execute immediate 'delete from ' || schema_name || '.breakline_relief';
+    execute immediate 'delete from ' || schema_name || '.masspoint_relief';
+    execute immediate 'delete from ' || schema_name || '.raster_relief';
+    execute immediate 'delete from ' || schema_name || '.tin_relief';
+    execute immediate 'delete from ' || schema_name || '.relief_component';
+    execute immediate 'delete from ' || schema_name || '.relief_feature';
+    execute immediate 'delete from ' || schema_name || '.grid_coverage';
+    execute immediate 'delete from ' || schema_name || '.plant_cover';
+    execute immediate 'delete from ' || schema_name || '.solitary_vegetat_object';
+    execute immediate 'delete from ' || schema_name || '.traffic_area';
+    execute immediate 'delete from ' || schema_name || '.transportation_complex';
+    execute immediate 'delete from ' || schema_name || '.waterboundary_surface';
+    execute immediate 'delete from ' || schema_name || '.waterbody';
+    execute immediate 'delete from ' || schema_name || '.textureparam';
+    execute immediate 'delete from ' || schema_name || '.surface_data';
+    execute immediate 'delete from ' || schema_name || '.tex_image';
+    execute immediate 'delete from ' || schema_name || '.appearance';
+    execute immediate 'delete from ' || schema_name || '.implicit_geometry';
+    execute immediate 'delete from ' || schema_name || '.surface_geometry';
+    execute immediate 'delete from ' || schema_name || '.cityobject_genericattrib';
+    execute immediate 'delete from ' || schema_name || '.external_reference';
+    execute immediate 'delete from ' || schema_name || '.generalization';
+    execute immediate 'delete from ' || schema_name || '.cityobject_member';
     execute immediate 'delete from ' || schema_name || '.cityobject';
-
-    dummy_ids := cleanup_appearances(0, schema_name);	
-    dummy_ids := cleanup_addresses(schema_name);
-    dummy_ids := cleanup_citymodels(schema_name);
+    execute immediate 'delete from ' || schema_name || '.citymodel';
 
     -- reset sequences
     execute immediate 'select ' || schema_name || '.address_seq.nextval from dual' into seq_value;

@@ -1,21 +1,35 @@
--- Database generated with pgModeler (PostgreSQL Database Modeler).
--- pgModeler  version: 0.8.0
--- PostgreSQL version: 9.4
--- Project Site: pgmodeler.com.br
--- Model Author: Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---               Zhihang Yao <zhihang.yao@tum.de>
---               Claus Nagel <cnagel@virtualcitysystems.de>
---               Felix Kunde <felix-kunde@gmx.de>
---               Philipp Willkomm <pwillkomm@moss.de>
---               Gerhard König <gerhard.koenig@tu-berlin.de>
---               Alexandra Lorenz <di.alex.lorenz@googlemail.com>
-
+-- 3D City Database - The Open Source CityGML Database
+-- http://www.3dcitydb.org/
+-- 
+-- Copyright 2013 - 2016
+-- Chair of Geoinformatics
+-- Technical University of Munich, Germany
+-- https://www.gis.bgu.tum.de/
+-- 
+-- The 3D City Database is jointly developed with the following
+-- cooperation partners:
+-- 
+-- virtualcitySYSTEMS GmbH, Berlin <http://www.virtualcitysystems.de/>
+-- M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
+-- 
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+-- 
+--     http://www.apache.org/licenses/LICENSE-2.0
+--     
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
+--
 
 -- Database creation must be done outside an multicommand file.
 -- These commands were put in this file only for convenience.
--- -- object: "3DCityDB_v3.0" | type: DATABASE --
--- -- DROP DATABASE IF EXISTS "3DCityDB_v3.0";
--- CREATE DATABASE "3DCityDB_v3.0"
+-- -- object: "3DCityDB_v3.3" | type: DATABASE --
+-- -- DROP DATABASE IF EXISTS "3DCityDB_v3.3";
+-- CREATE DATABASE "3DCityDB_v3.3"
 -- 	ENCODING = 'UTF8'
 -- 	TABLESPACE = pg_default
 -- 	OWNER = postgres
@@ -5916,6 +5930,13 @@ REFERENCES citydb.implicit_geometry (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: bridge_cityobject_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.bridge DROP CONSTRAINT IF EXISTS bridge_cityobject_fk CASCADE;
+ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_cityobject_fk FOREIGN KEY (id)
+REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: bridge_parent_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.bridge DROP CONSTRAINT IF EXISTS bridge_parent_fk CASCADE;
 ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_parent_fk FOREIGN KEY (bridge_parent_id)
@@ -6419,5 +6440,3 @@ ALTER TABLE citydb.external_reference ADD CONSTRAINT ext_ref_cityobject_fk FOREI
 REFERENCES citydb.cityobject (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
-
-

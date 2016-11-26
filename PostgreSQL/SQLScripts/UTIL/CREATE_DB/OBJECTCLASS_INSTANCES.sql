@@ -1,45 +1,30 @@
--- OBJECTCLASS_INSTANCES.sql
+-- 3D City Database - The Open Source CityGML Database
+-- http://www.3dcitydb.org/
+-- 
+-- Copyright 2013 - 2016
+-- Chair of Geoinformatics
+-- Technical University of Munich, Germany
+-- https://www.gis.bgu.tum.de/
+-- 
+-- The 3D City Database is jointly developed with the following
+-- cooperation partners:
+-- 
+-- virtualcitySYSTEMS GmbH, Berlin <http://www.virtualcitysystems.de/>
+-- M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
+-- 
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+-- 
+--     http://www.apache.org/licenses/LICENSE-2.0
+--     
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
 --
--- Authors:     Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---              Zhihang Yao <zhihang.yao@tum.de>
---              Claus Nagel <cnagel@virtualcitysystems.de>
---              Felix Kunde <felix-kunde@gmx.de>
---              Philipp Willkomm <pwillkomm@moss.de>
---              Gerhard König <gerhard.koenig@tu-berlin.de>
---              Alexandra Lorenz <di.alex.lorenz@googlemail.com>
---
--- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
---                             Technische Universität München, Germany
---                             http://www.gis.bv.tum.de
---
---              (c) 2007-2012  Institute for Geodesy and Geoinformation Science,
---                             Technische Universität Berlin, Germany
---                             http://www.igg.tu-berlin.de
---
---              This skript is free software under the LGPL Version 2.1.
---              See the GNU Lesser General Public License at
---              http://www.gnu.org/copyleft/lgpl.html
---              for more details.
--------------------------------------------------------------------------------
--- About:
---
---
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 3.0.0     2013-12-06   new version for 3DCityDB V3                 ZYao
---                                                                    TKol
---                                                                    FKun
---                                                                    CNag
---                                                                    PWil
--- 2.0.0     2012-05-21   PostGIS version                             FKun
---                                                                    TKol	
---                                                                    GKoe
---                                                                    CNag
---                                                                    ASta
---
+
 DELETE FROM citydb.OBJECTCLASS;
 
 INSERT INTO citydb.OBJECTCLASS ( ID , CLASSNAME , SUPERCLASS_ID )

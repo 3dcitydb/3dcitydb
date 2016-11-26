@@ -1,25 +1,28 @@
--- MIGRATE_DB_pre-pg93.sql
---
--- Authors:     Felix Kunde <felix-kunde@gmx.de>
---
--- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
---                             Technische Universität München, Germany
---                             http://www.gis.bv.tum.de
---
---              This skript is free software under the LGPL Version 2.1.
---              See the GNU Lesser General Public License at
---              http://www.gnu.org/copyleft/lgpl.html
---              for more details.
--------------------------------------------------------------------------------
--- About:
--- Top-level migration script that starts the migration process for a 3DCityDB 
--- instance of v2.1.0 to v3.1.0 for PostgreSQL databases < 9.3
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.0     2015-11-02   release version                             FKun
+-- 3D City Database - The Open Source CityGML Database
+-- http://www.3dcitydb.org/
+-- 
+-- Copyright 2013 - 2016
+-- Chair of Geoinformatics
+-- Technical University of Munich, Germany
+-- https://www.gis.bgu.tum.de/
+-- 
+-- The 3D City Database is jointly developed with the following
+-- cooperation partners:
+-- 
+-- virtualcitySYSTEMS GmbH, Berlin <http://www.virtualcitysystems.de/>
+-- M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
+-- 
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+-- 
+--     http://www.apache.org/licenses/LICENSE-2.0
+--     
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
 --
 
 -- This script is called from MIGRATE_DB.bat
@@ -41,7 +44,7 @@ SELECT srid FROM database_srs;
 
 --// create TABLES and SEQUENCES new in v3.0
 \echo
-\echo 'Create tables and sequences of 3DCityDB instance that are new in v3.1 ...'
+\echo 'Create tables and sequences of 3DCityDB instance that are new in v3.3 ...'
 \i CREATE_DB_V3.sql
 
 --// fill tables OBJECTCLASS
@@ -57,6 +60,7 @@ CREATE SCHEMA citydb_pkg;
 \i ./../PL_pgSQL/CITYDB_PKG/INDEX/IDX.sql
 \i ./../PL_pgSQL/CITYDB_PKG/SRS/SRS.sql
 \i ./../PL_pgSQL/CITYDB_PKG/STATISTICS/STAT.sql
+\i ./../PL_pgSQL/CITYDB_PKG/ENVELOPE/ENVELOPE.sql
 \i ./../PL_pgSQL/CITYDB_PKG/DELETE/DELETE.sql
 \i ./../PL_pgSQL/CITYDB_PKG/DELETE/DELETE_BY_LINEAGE.sql
 
@@ -67,17 +71,17 @@ CREATE SCHEMA citydb_pkg;
 
 --// migrate TABLES from old to new schema
 \echo
-\echo 'Migrating database schema of 3DCityDB instance from v2.x to v3.1 ...'
+\echo 'Migrating database schema of 3DCityDB instance from v2.x to v3.3 ...'
 \i MIGRATE_DB_V2_V3_pre-pg93.sql
 
 --// adding CONSTRAINTS in new schema
 \echo
-\echo 'Defining primary keys and foreign keys on v3.1 tables ...'
+\echo 'Defining primary keys and foreign keys on v3.3 tables ...'
 \i CONSTRAINTS_V3.sql
 
 --// creating INDEXES in new schema
 \echo
-\echo 'Creating indexes on v3.1 tables ...'
+\echo 'Creating indexes on v3.3 tables ...'
 \i INDEXES_V3.sql
 
 --// removing v2.x schema (if the user wants to)

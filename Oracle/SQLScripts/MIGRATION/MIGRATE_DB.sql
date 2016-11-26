@@ -1,30 +1,29 @@
--- MIGRATE_DB.sql
---
--- Author:     Arda Muftuoglu <amueftueoglu@moss.de>
---             Felix Kunde <felix-kunde@gmx.de>
---             Gyoergy Hudra <ghudra@moss.de>
---
--- Copyright:  (c) 2012-2016  Chair of Geoinformatics,
---                            Technische Universität München, Germany
---                            http://www.gis.bv.tum.de
---
---              This script is free software under the LGPL Version 2.1.
---              See the GNU Lesser General Public License at
---              http://www.gnu.org/copyleft/lgpl.html
---              for more details.
--------------------------------------------------------------------------------
--- About:
--- Top-level migration script that starts the migration process for a 3DCityDB 
--- instance of v2.1 to v3.1
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.0.0     2015-01-22   release version                             AM
---                                                                    FKun
---           2015-03-11   locator/spatial, check version > 10.x       GHud
+-- 3D City Database - The Open Source CityGML Database
+-- http://www.3dcitydb.org/
 -- 
+-- Copyright 2013 - 2016
+-- Chair of Geoinformatics
+-- Technical University of Munich, Germany
+-- https://www.gis.bgu.tum.de/
+-- 
+-- The 3D City Database is jointly developed with the following
+-- cooperation partners:
+-- 
+-- virtualcitySYSTEMS GmbH, Berlin <http://www.virtualcitysystems.de/>
+-- M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
+-- 
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+-- 
+--     http://www.apache.org/licenses/LICENSE-2.0
+--     
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
+--
 
 SET SERVEROUTPUT ON verify off;
 SET FEEDBACK OFF;
@@ -35,21 +34,19 @@ END;
 /
 
 ACCEPT SCHEMAINPUT PROMPT 'Enter the user name of 3DCityDB v2.1 instance : '
-ACCEPT DBVERSION CHAR DEFAULT 'S' PROMPT 'Which DB license are you using in the v3.1 instance? (Spatial(S)/Locator(L), default is S): '
+ACCEPT DBVERSION CHAR DEFAULT 'S' PROMPT 'Which DB license are you using in the v3.3 instance? (Spatial(S)/Locator(L), default is S): '
 ACCEPT TEXOP CHAR DEFAULT 'n' PROMPT 'No texture URI is used for multiple texture files (yes(y)/unknown(n), default is n): '
 
 VARIABLE MGRPBATCHFILE VARCHAR2(50);
 
 BEGIN
-	dbms_output.put_line('Starting DB migration...');
-	dbms_output.put_line('Creating Synonyms...');
+	dbms_output.put_line('Starting DB migration... ' || SYSTIMESTAMP);
 END;
 /
 
 DECLARE
 	schema_name VARCHAR2(30) := upper('&SCHEMAINPUT');
 BEGIN
-	dbms_output.put_line('Starting DB migration... ' || SYSTIMESTAMP);
 	dbms_output.put_line('Creating Synonyms...');
 
 	FOR R IN (SELECT owner, table_name FROM all_tables WHERE owner=schema_name) LOOP

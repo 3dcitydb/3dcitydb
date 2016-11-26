@@ -1,6 +1,33 @@
-== Migration steps from version 2.1 to version 3.1 ==
+-- 3D City Database - The Open Source CityGML Database
+-- http://www.3dcitydb.org/
+-- 
+-- Copyright 2013 - 2016
+-- Chair of Geoinformatics
+-- Technical University of Munich, Germany
+-- https://www.gis.bgu.tum.de/
+-- 
+-- The 3D City Database is jointly developed with the following
+-- cooperation partners:
+-- 
+-- virtualcitySYSTEMS GmbH, Berlin <http://www.virtualcitysystems.de/>
+-- M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
+-- 
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+-- 
+--     http://www.apache.org/licenses/LICENSE-2.0
+--     
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
+--
 
-1. Create the database v3.1 with @CREATE_DB.sql 
+== Migration steps from version 2.1 to version 3.3 ==
+
+1. Create the database v3.3 with @CREATE_DB.sql 
 
     - Enter the SRID for the database 
     - Enter the SRSName to be used 
@@ -9,9 +36,9 @@
 
 2. Run the script @GRANT_ACCESS.sql as v2.1 schema user 
 
-    - Enter the schema name (v3.1) on which the accesses to be granted 
+    - Enter the schema name (v3.3) on which the accesses to be granted 
 
-3. Execute @MIGRATE_DB.sql as your current (v3.1) user 
+3. Execute @MIGRATE_DB.sql as your current (v3.3) user 
 
     - Enter the schema name from which the data will be migrated 
     - Specify the used oracle license (spatial / locator)
@@ -25,7 +52,7 @@ to SRID = 83032 and assume that the schema name which we will copy the data
 from is named as "3DCITYDB_TEST2" and your schema name is named as "3DCITYDB_TEST3". 
 
     - First, you create a new user and run @CREATE_DB.sql script for version 
-      3.1 on this schema. You give the SRID as "83032" and the corresponding 
+      3.3 on this schema. You give the SRID as "83032" and the corresponding 
       SRSName (urn:ogc:def:crs,crs:EPSG:6.12:25832,crs:EPSG:6.12:5783) and 
       your choice about versioning and used oracle license (spatial / locator). 
 

@@ -3,9 +3,9 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.0" last-position="750,368" last-zoom="0.5"
+<dbmodel pgmodeler-ver="0.8.0" last-position="0,1" last-zoom="0.15"
 	 default-owner="postgres">
-<database name="3DCityDB_v3.0" encoding="UTF8">
+<database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
 	<tablespace name="pg_default"/>
 </database>
@@ -136,7 +136,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="cityobject_member">
 	<schema name="citydb"/>
 	<tag name="core_module"/>
-	<position x="3067.78" y="395.161"/>
+	<position x="2919.26" y="784.545"/>
 	<column name="citymodel_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -158,7 +158,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="generalization">
 	<schema name="citydb"/>
 	<tag name="core_module"/>
-	<position x="2780.61" y="551.883"/>
+	<position x="2834.3" y="1241.2"/>
 	<column name="cityobject_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -180,7 +180,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="cityobjectgroup">
 	<schema name="citydb"/>
 	<tag name="city_object_group_module"/>
-	<position x="3668.23" y="506.361"/>
+	<position x="3611.14" y="625.884"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -219,7 +219,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="group_to_cityobject">
 	<schema name="citydb"/>
 	<tag name="city_object_group_module"/>
-	<position x="3188.67" y="635.527"/>
+	<position x="3593.64" y="1046.85"/>
 	<column name="cityobject_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -237,7 +237,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="database_srs">
 	<schema name="citydb"/>
 	<tag name="global"/>
-	<position x="549.281" y="283.161"/>
+	<position x="687.11" y="320.493"/>
 	<column name="srid" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -252,7 +252,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="objectclass">
 	<schema name="citydb"/>
 	<tag name="global"/>
-	<position x="2032.56" y="877.556"/>
+	<position x="1967.35" y="2224.83"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -277,7 +277,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="city_furniture">
 	<schema name="citydb"/>
 	<tag name="city_furniture_module"/>
-	<position x="497.75" y="2561.94"/>
+	<position x="719.762" y="3045.54"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -386,7 +386,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="generic_cityobject">
 	<schema name="citydb"/>
 	<tag name="generics_module"/>
-	<position x="1437.3" y="62"/>
+	<position x="1407.7" y="40.5794"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -513,7 +513,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="address_to_building">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="3822.54" y="4760.76"/>
+	<position x="3628.83" y="5505.94"/>
 	<column name="building_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -528,7 +528,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="building">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="3506.63" y="3687.09"/>
+	<position x="3528.71" y="3246.96"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -651,7 +651,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="building_furniture">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="2192.66" y="5010.92"/>
+	<position x="2719.35" y="4578.87"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -699,7 +699,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="building_installation">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="1819.56" y="4274.95"/>
+	<position x="2730.21" y="3310.26"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -783,7 +783,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="opening">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="2980.01" y="4857.15"/>
+	<position x="3584.18" y="5020.06"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -825,7 +825,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="opening_to_them_surface">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="3087.12" y="4610.91"/>
+	<position x="3677.85" y="4822.22"/>
 	<column name="opening_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -840,7 +840,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="room">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="2439.32" y="4439.62"/>
+	<position x="2725.72" y="4161.71"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -879,7 +879,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="thematic_surface">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="3077.36" y="4223.16"/>
+	<position x="3690.59" y="4422.94"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -926,7 +926,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="textureparam">
 	<schema name="citydb"/>
 	<tag name="appearance_module"/>
-	<position x="4071.56" y="1148.65"/>
+	<position x="4411.93" y="1240.85"/>
 	<column name="surface_geometry_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -950,7 +950,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="appear_to_surface_data">
 	<schema name="citydb"/>
 	<tag name="appearance_module"/>
-	<position x="4349.06" y="454.149"/>
+	<position x="4528.35" y="512.878"/>
 	<column name="surface_data_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -965,7 +965,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="breakline_relief">
 	<schema name="citydb"/>
 	<tag name="relief_module"/>
-	<position x="5738.4" y="1913.49"/>
+	<position x="5701.56" y="1934.81"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -983,7 +983,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="masspoint_relief">
 	<schema name="citydb"/>
 	<tag name="relief_module"/>
-	<position x="5716.56" y="1763.52"/>
+	<position x="5734.38" y="1807.51"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -998,7 +998,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="relief_component">
 	<schema name="citydb"/>
 	<tag name="relief_module"/>
-	<position x="5191.57" y="1799.02"/>
+	<position x="5018.73" y="1808.34"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1022,7 +1022,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="relief_feat_to_rel_comp">
 	<schema name="citydb"/>
 	<tag name="relief_module"/>
-	<position x="5207.23" y="1613.19"/>
+	<position x="5054.16" y="1643.4"/>
 	<column name="relief_component_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1037,7 +1037,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="relief_feature">
 	<schema name="citydb"/>
 	<tag name="relief_module"/>
-	<position x="4904.06" y="1628.19"/>
+	<position x="5139.44" y="1525.97"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1055,7 +1055,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tin_relief">
 	<schema name="citydb"/>
 	<tag name="relief_module"/>
-	<position x="5661.89" y="2082.72"/>
+	<position x="5617.05" y="1364.04"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1085,7 +1085,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="transportation_complex">
 	<schema name="citydb"/>
 	<tag name="transportation_module"/>
-	<position x="5687.75" y="2325.06"/>
+	<position x="5118.91" y="2473.05"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1133,7 +1133,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="traffic_area">
 	<schema name="citydb"/>
 	<tag name="transportation_module"/>
-	<position x="5687.75" y="2713.15"/>
+	<position x="5064.24" y="2041.14"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1184,7 +1184,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="land_use">
 	<schema name="citydb"/>
 	<tag name="land_use_module"/>
-	<position x="63.2262" y="1384.39"/>
+	<position x="203.408" y="1582.89"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1229,7 +1229,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="plant_cover">
 	<schema name="citydb"/>
 	<tag name="vegetation_module"/>
-	<position x="68.2581" y="1679.31"/>
+	<position x="203.734" y="1957.81"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1289,7 +1289,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="solitary_vegetat_object">
 	<schema name="citydb"/>
 	<tag name="vegetation_module"/>
-	<position x="47.4091" y="2091.29"/>
+	<position x="158.441" y="2496.59"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1403,7 +1403,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="waterbody">
 	<schema name="citydb"/>
 	<tag name="waterbody_module"/>
-	<position x="523.179" y="1053.82"/>
+	<position x="510.067" y="1087.02"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1457,7 +1457,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="waterbod_to_waterbnd_srf">
 	<schema name="citydb"/>
 	<tag name="waterbody_module"/>
-	<position x="471.036" y="868.966"/>
+	<position x="84.8167" y="764.602"/>
 	<column name="waterboundary_surface_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1472,7 +1472,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="waterboundary_surface">
 	<schema name="citydb"/>
 	<tag name="waterbody_module"/>
-	<position x="984.143" y="877.136"/>
+	<position x="771.906" y="764.241"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1502,7 +1502,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="raster_relief">
 	<schema name="citydb"/>
 	<tag name="relief_module"/>
-	<position x="5641.22" y="1617.39"/>
+	<position x="5727.04" y="1637.38"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1520,7 +1520,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tunnel">
 	<schema name="citydb"/>
 	<tag name="tunnel_module"/>
-	<position x="1202.11" y="3231.68"/>
+	<position x="1861.27" y="4837.22"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1607,7 +1607,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tunnel_open_to_them_srf">
 	<schema name="citydb"/>
 	<tag name="tunnel_module"/>
-	<position x="1176.01" y="4339.24"/>
+	<position x="938.456" y="5453.48"/>
 	<column name="tunnel_opening_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1622,7 +1622,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tunnel_hollow_space">
 	<schema name="citydb"/>
 	<tag name="tunnel_module"/>
-	<position x="480.159" y="4088.12"/>
+	<position x="113.373" y="4877.75"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1661,7 +1661,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tunnel_thematic_surface">
 	<schema name="citydb"/>
 	<tag name="tunnel_module"/>
-	<position x="1312.19" y="3973.99"/>
+	<position x="899.249" y="4469.78"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1701,7 +1701,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tunnel_opening">
 	<schema name="citydb"/>
 	<tag name="tunnel_module"/>
-	<position x="1072.51" y="4560.65"/>
+	<position x="878.032" y="5691.82"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1740,7 +1740,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tunnel_installation">
 	<schema name="citydb"/>
 	<tag name="tunnel_module"/>
-	<position x="40.9091" y="3624.2"/>
+	<position x="81.815" y="4081.52"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1824,7 +1824,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tunnel_furniture">
 	<schema name="citydb"/>
 	<tag name="tunnel_module"/>
-	<position x="384.39" y="4482.24"/>
+	<position x="97.6031" y="5214.95"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1872,7 +1872,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="4908.57" y="3251.4"/>
+	<position x="4657.65" y="4919.99"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1962,7 +1962,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge_furniture">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="5527.43" y="4595.15"/>
+	<position x="6027.33" y="4632.16"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2010,7 +2010,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge_installation">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="5730.9" y="3357.62"/>
+	<position x="5321.9" y="3322.25"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2094,7 +2094,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge_opening">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="4580.34" y="4853.32"/>
+	<position x="5312.4" y="5752.07"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2136,7 +2136,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge_open_to_them_srf">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="5126.65" y="4848.93"/>
+	<position x="5334.79" y="5011.17"/>
 	<column name="bridge_opening_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2151,7 +2151,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge_room">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="5688.61" y="4158.09"/>
+	<position x="6067.22" y="4093.83"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2190,7 +2190,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge_thematic_surface">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="4866.53" y="4374.82"/>
+	<position x="5359.91" y="4294.52"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2226,7 +2226,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge_constr_element">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="4196.9" y="3550.81"/>
+	<position x="6053.77" y="2878.77"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2331,7 +2331,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="address_to_bridge">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="4398.39" y="4517.72"/>
+	<position x="4089.92" y="5562.74"/>
 	<column name="bridge_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2353,7 +2353,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="cityobject">
 	<schema name="citydb"/>
 	<tag name="core_module"/>
-	<position x="2714.56" y="2155.6"/>
+	<position x="2757.19" y="2692.32"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.cityobject_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2413,7 +2413,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="appearance">
 	<schema name="citydb"/>
 	<tag name="appearance_module"/>
-	<position x="4294.56" y="130.149"/>
+	<position x="4472.38" y="174.907"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.appearance_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2449,7 +2449,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="implicit_geometry">
 	<schema name="citydb"/>
 	<tag name="core_module"/>
-	<position x="4304.99" y="1408.22"/>
+	<position x="2791.63" y="1478.22"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.implicit_geometry_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2476,7 +2476,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="surface_geometry">
 	<schema name="citydb"/>
 	<tag name="global"/>
-	<position x="3558.97" y="1402.42"/>
+	<position x="3621.11" y="1711.58"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.surface_geometry_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2527,7 +2527,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="address">
 	<schema name="citydb"/>
 	<tag name="core_module"/>
-	<position x="3895.58" y="5060.02"/>
+	<position x="3555.12" y="5789.04"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.address_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2572,7 +2572,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="surface_data">
 	<schema name="citydb"/>
 	<tag name="appearance_module"/>
-	<position x="4292.06" y="644.649"/>
+	<position x="4447.31" y="687.936"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.surface_data_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2647,7 +2647,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="citymodel">
 	<schema name="citydb"/>
 	<tag name="core_module"/>
-	<position x="2609.55" y="99.216"/>
+	<position x="2813.59" y="300.325"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.citymodel_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2695,7 +2695,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="cityobject_genericattrib">
 	<schema name="citydb"/>
 	<tag name="generics_module"/>
-	<position x="2041.22" y="211.383"/>
+	<position x="2098.48" y="544.161"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.cityobject_genericatt_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2752,7 +2752,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="external_reference">
 	<schema name="citydb"/>
 	<tag name="core_module"/>
-	<position x="2499.94" y="381.55"/>
+	<position x="2799.53" y="976.399"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.external_ref_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2776,7 +2776,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tex_image">
 	<schema name="citydb"/>
 	<tag name="appearance_module"/>
-	<position x="4854.89" y="867.716"/>
+	<position x="5210.18" y="959.435"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.tex_image_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2800,7 +2800,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="grid_coverage">
 	<schema name="citydb"/>
 	<tag name="global"/>
-	<position x="4939.47" y="1306.89"/>
+	<position x="5853.37" y="1162.61"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.grid_coverage_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -6794,6 +6794,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
+<constraint name="bridge_cityobject_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.cityobject" table="citydb.bridge">
+	<columns names="id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
 <constraint name="bridge_parent_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.bridge" table="citydb.bridge">
 	<columns names="bridge_parent_id" ref-type="src-columns"/>
@@ -7230,8 +7236,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.cityobject_member"
 	 dst-table="citydb.cityobject"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="2731.93" y="838.329"/>
+	<position x="2732.33" y="2712.14"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="25.1848" y="-53.8273"/>
+		<position x="130.586" y="3.70092"/>
 	</label>
 </relationship>
 
@@ -7239,8 +7252,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.cityobject_member"
 	 dst-table="citydb.citymodel"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="2730.6" y="819.663"/>
+	<position x="2727.99" y="337.996"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="110.962" y="-13.5916"/>
+		<position x="98.2683" y="22.7133"/>
 	</label>
 </relationship>
 
@@ -7248,6 +7268,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.generalization"
 	 dst-table="citydb.cityobject"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="3291.84" y="1285.28"/>
+	<position x="3302.61" y="2703.75"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
 	<label ref-type="name-label">
 		<position x="0" y="0"/>
 	</label>
@@ -7256,24 +7283,67 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_cityobjectgroup_cityobject" type="relfk"
 	 src-table="citydb.cityobjectgroup"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="3491.3" y="741.739"/>
+	<position x="3506.96" y="2706.96"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="-17.6079" y="-23.0022"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-130.299" y="-26.8778"/>
+	</label>
+</relationship>
 
 <relationship name="rel_cityobjectgroup_surface_geometry" type="relfk"
 	 src-table="citydb.cityobjectgroup"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="3511.3" y="786.087"/>
+	<position x="3516.87" y="1735.77"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="7.15387" y="-21.7617"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-67.4687" y="-58.6263"/>
+	</label>
+</relationship>
 
 <relationship name="rel_group_to_cityobject_cityobject" type="relfk"
 	 src-table="citydb.group_to_cityobject"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="3534.78" y="1080.87"/>
+	<position x="3537.78" y="2713.05"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-55.9918" y="3.44476"/>
+	</label>
+</relationship>
 
 <relationship name="rel_group_to_cityobject_cityobjectgroup" type="relfk"
 	 src-table="citydb.group_to_cityobject"
 	 dst-table="citydb.cityobjectgroup"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="4092.43" y="1098"/>
+	<position x="4092.43" y="663.552"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="17.4916" y="29.9623"/>
+	</label>
+	<label ref-type="dst-label">
+		<position x="4.93155" y="-16.8727"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="-112.415" y="3.1074"/>
+		<position x="10.8091" y="13.5959"/>
 	</label>
 </relationship>
 
@@ -7282,9 +7352,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.objectclass"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="2327.56" y="912.836"/>
-	<position x="2327.56" y="867.556"/>
-	<position x="2222.56" y="867.556"/>
+		<position x="2366.35" y="2266.11"/>
+	<position x="2366.35" y="2214.83"/>
+	<position x="2226.68" y="2214.83"/>
 	</line>
 	<label ref-type="name-label">
 		<position x="0" y="0"/>
@@ -7294,65 +7364,141 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_city_furniture_cityobject" type="relfk"
 	 src-table="citydb.city_furniture"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1324.15" y="3080.32"/>
+	<position x="1325.06" y="2746.68"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="-116.409" y="-43.541"/>
+	</label>
+</relationship>
 
 <relationship name="rel_city_furniture_surface_geometry" type="relfk"
 	 src-table="citydb.city_furniture"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1351.32" y="3305.77"/>
+	<position x="1342.6" y="1797"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_city_furniture_implicit_geometry" type="relfk"
 	 src-table="citydb.city_furniture"
 	 dst-table="citydb.implicit_geometry"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="1385.76" y="3448"/>
+	<position x="1368.7" y="1495.65"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="3.64136" y="0.276123"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="-19.4349" y="-56.1423"/>
+		<position x="83.3603" y="-55.8486"/>
 	</label>
 </relationship>
 
 <relationship name="rel_generic_cityobject_cityobject" type="relfk"
 	 src-table="citydb.generic_cityobject"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="2687.83" y="73.9131"/>
+	<position x="2703.24" y="2709.41"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-132.524" y="-41.404"/>
+	</label>
+</relationship>
 
 <relationship name="rel_generic_cityobject_surface_geometry" type="relfk"
 	 src-table="citydb.generic_cityobject"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="2047.99" y="329.107"/>
+	<position x="2053.26" y="1750.33"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="161.142" y="-4.51517"/>
+	</label>
+</relationship>
 
 <relationship name="rel_generic_cityobject_implicit_geometry" type="relfk"
 	 src-table="citydb.generic_cityobject"
 	 dst-table="citydb.implicit_geometry"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="2016.87" y="506.885"/>
+	<position x="2022.61" y="1498.26"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="105.836" y="8.94127"/>
+		<position x="173.142" y="-13.8485"/>
 	</label>
 </relationship>
 
 <relationship name="rel_address_to_building_address" type="relfk"
 	 src-table="citydb.address_to_building"
 	 dst-table="citydb.address"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4026.87" y="5560.22"/>
+	<position x="4029.1" y="5799.11"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="-137.357" y="-26.404"/>
+	</label>
+</relationship>
 
 <relationship name="rel_address_to_building_building" type="relfk"
 	 src-table="citydb.address_to_building"
 	 dst-table="citydb.building"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4325.76" y="5538"/>
+	<position x="4311.32" y="3281.33"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_building_cityobject" type="relfk"
 	 src-table="citydb.building"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="3386.87" y="3273.05"/>
+	<position x="3386.87" y="2738.5"/>
+	</line>
+</relationship>
 
 <relationship name="consist_of_building_part" type="relfk"
 	 src-table="citydb.building"
 	 dst-table="citydb.building"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="3938.74" y="4040.37"/>
-	<position x="3938.74" y="3677.09"/>
-	<position x="3788.04" y="3677.09"/>
+		<position x="4115.71" y="3669.84"/>
+	<position x="4115.71" y="3236.96"/>
+	<position x="3913.38" y="3236.96"/>
 	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
 	<label ref-type="dst-label">
 		<position x="0" y="0"/>
 	</label>
@@ -7365,6 +7511,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.building"
 	 dst-table="citydb.surface_geometry"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="4180.35" y="3870.08"/>
+	<position x="4174.65" y="1815.78"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
 	<label ref-type="name-label">
 		<position x="27.404" y="-51.2721"/>
 	</label>
@@ -7373,12 +7526,30 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_building_furniture_cityobject" type="relfk"
 	 src-table="citydb.building_furniture"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="2579.93" y="4599.67"/>
+	<position x="2586.87" y="2746.68"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-25.8173" y="-51.4304"/>
+	</label>
+</relationship>
 
 <relationship name="room_interior_furniture" type="relfk"
 	 src-table="citydb.building_furniture"
 	 dst-table="citydb.room"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="2647.22" y="4740.67"/>
+	<position x="2651.3" y="4200"/>
+	</line>
+	<label ref-type="dst-label">
+		<position x="-8.37839" y="-1.55694"/>
+	</label>
 	<label ref-type="name-label">
 		<position x="0" y="0"/>
 	</label>
@@ -7387,29 +7558,71 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_building_furniture_surface_geometry" type="relfk"
 	 src-table="citydb.building_furniture"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4271.6" y="4756.33"/>
+	<position x="4250.3" y="1796.05"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_building_furniture_implicit_geometry" type="relfk"
 	 src-table="citydb.building_furniture"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1863.93" y="4779.67"/>
+	<position x="1857.39" y="1521.74"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="-529.948" y="1.27942"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="159.309" y="-1.84852"/>
+	</label>
+</relationship>
 
 <relationship name="rel_building_installation_cityobject" type="relfk"
 	 src-table="citydb.building_installation"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="2642.6" y="3333"/>
+	<position x="2642.33" y="2755.77"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="-535.475" y="-7.4372"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-64.0241" y="0.151377"/>
+	</label>
+</relationship>
 
 <relationship name="rel_building_installation_objectclass" type="relfk"
 	 src-table="citydb.building_installation"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="2561.74" y="3361.74"/>
+	<position x="2567.93" y="2281"/>
+	</line>
+</relationship>
 
 <relationship name="outer_interior_building_installation" type="relfk"
 	 src-table="citydb.building_installation"
 	 dst-table="citydb.building"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="3387.78" y="3486.68"/>
+	<position x="3387.78" y="3285.77"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="2.02485" y="-12.6238"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="0" y="0"/>
+		<position x="-4.20597" y="-2.66687"/>
 	</label>
 </relationship>
 
@@ -7417,6 +7630,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.building_installation"
 	 dst-table="citydb.room"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="2648.7" y="3507.83"/>
+	<position x="2647.93" y="4178.33"/>
+	</line>
+	<label ref-type="dst-label">
+		<position x="-10.458" y="-20.3184"/>
+	</label>
 	<label ref-type="name-label">
 		<position x="0" y="0"/>
 	</label>
@@ -7425,69 +7645,159 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_building_installation_surface_geometry" type="relfk"
 	 src-table="citydb.building_installation"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="3486.96" y="3542.61"/>
+	<position x="3477.99" y="1759.11"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="95.0433" y="-53.9485"/>
+	</label>
+</relationship>
 
 <relationship name="rel_building_installation_implicit_geometry" type="relfk"
 	 src-table="citydb.building_installation"
 	 dst-table="citydb.implicit_geometry"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="1906.6" y="3635.67"/>
+	<position x="1901.26" y="1526.33"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="-536.808" y="-1.43732"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="-148.648" y="-33.6701"/>
+		<position x="176.976" y="-49.1819"/>
 	</label>
 </relationship>
 
 <relationship name="rel_opening_cityobject" type="relfk"
 	 src-table="citydb.opening"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="3304.1" y="5050.08"/>
+	<position x="3300.51" y="2737.59"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="27.4542" y="-6.63587"/>
+	</label>
+</relationship>
 
 <relationship name="rel_opening_objectclass" type="relfk"
 	 src-table="citydb.opening"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="2522.85" y="5070.08"/>
+	<position x="2510.6" y="2283.67"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0.905061" y="-3.66029"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-102.524" y="-4.35764"/>
+	</label>
+</relationship>
 
 <relationship name="rel_opening_address" type="relfk"
 	 src-table="citydb.opening"
 	 dst-table="citydb.address"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="3486.87" y="5091.33"/>
+	<position x="3489.1" y="5816.89"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="-3.01182" y="-2.76353"/>
+	</label>
+</relationship>
 
 <relationship name="rel_opening_surface_geometry" type="relfk"
 	 src-table="citydb.opening"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4296.6" y="5116.33"/>
+	<position x="4274.92" y="1789.9"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_opening_implicit_geometry" type="relfk"
 	 src-table="citydb.opening"
 	 dst-table="citydb.implicit_geometry"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="2490.35" y="5150.08"/>
+	<position x="2482.6" y="1525"/>
+	</line>
 	<label ref-type="src-label">
 		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-126.358" y="-2.51524"/>
 	</label>
 </relationship>
 
 <relationship name="rel_opening_to_them_surface_opening" type="relfk"
 	 src-table="citydb.opening_to_them_surface"
 	 dst-table="citydb.opening"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="3484.1" y="4860.08"/>
+	<position x="3486.6" y="5041.33"/>
+	</line>
+</relationship>
 
 <relationship name="rel_opening_to_them_surface_thematic_surface" type="relfk"
 	 src-table="citydb.opening_to_them_surface"
 	 dst-table="citydb.thematic_surface"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="4077.85" y="4873.83"/>
+	<position x="4079.1" y="4457.58"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="1.89165" y="-6.08724"/>
+	</label>
+	<label ref-type="dst-label">
+		<position x="0.651658" y="-11.307"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="12.1907" y="19.9725"/>
+		<position x="194.431" y="-24.6645"/>
 	</label>
 </relationship>
 
 <relationship name="rel_room_cityobject" type="relfk"
 	 src-table="citydb.room"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="2618.26" y="4191.3"/>
+	<position x="2615.06" y="2751.23"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="-491.319" y="13.5947"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-16.4869" y="-6.24524"/>
+	</label>
+</relationship>
 
 <relationship name="interior_room" type="relfk"
 	 src-table="citydb.room"
 	 dst-table="citydb.building"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="3332.85" y="4317.58"/>
+	<position x="3330.51" y="3279.41"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
 	<label ref-type="name-label">
 		<position x="0" y="0"/>
 	</label>
@@ -7496,24 +7806,58 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_room_surface_geometry" type="relfk"
 	 src-table="citydb.room"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4207.85" y="4350.08"/>
+	<position x="4201.07" y="1808.36"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="7.68842" y="13.4429"/>
+	</label>
+</relationship>
 
 <relationship name="rel_thematic_surface_cityobject" type="relfk"
 	 src-table="citydb.thematic_surface"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="3459.1" y="4453.83"/>
+	<position x="3455.97" y="2738.5"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-44.6908" y="5.48463"/>
+	</label>
+</relationship>
 
 <relationship name="rel_thematic_surface_objectclass" type="relfk"
 	 src-table="citydb.thematic_surface"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="2542.6" y="4466.33"/>
+	<position x="2537.26" y="2282.33"/>
+	</line>
+</relationship>
 
 <relationship name="building_bounded_by" type="relfk"
 	 src-table="citydb.thematic_surface"
 	 dst-table="citydb.building"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="3429.1" y="4487.58"/>
+	<position x="3421.6" y="3291.33"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="dst-label">
+		<position x="0" y="0"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="-76.5502" y="-0.619273"/>
+		<position x="4.2258" y="-50.2236"/>
 	</label>
 </relationship>
 
@@ -7521,6 +7865,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.thematic_surface"
 	 dst-table="citydb.room"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="3396.87" y="4507.59"/>
+	<position x="3395.06" y="4198.5"/>
+	</line>
+	<label ref-type="dst-label">
+		<position x="6.35517" y="1.10957"/>
+	</label>
 	<label ref-type="name-label">
 		<position x="0" y="0"/>
 	</label>
@@ -7530,8 +7881,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.thematic_surface"
 	 dst-table="citydb.building_installation"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="3365.97" y="4525.77"/>
+	<position x="3362.33" y="3343.96"/>
+	</line>
+	<label ref-type="dst-label">
+		<position x="1.8584" y="-4.77051"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="0" y="0"/>
+		<position x="9.85079" y="1.65141"/>
 	</label>
 </relationship>
 
@@ -7539,6 +7897,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.thematic_surface"
 	 dst-table="citydb.surface_geometry"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="4242.85" y="4568.83"/>
+	<position x="4224.15" y="1802.21"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="348.502" y="4.443"/>
+	</label>
 	<label ref-type="name-label">
 		<position x="-49.0383" y="-51.4661"/>
 	</label>
@@ -7547,31 +7912,73 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_textureparam_surface_geometry" type="relfk"
 	 src-table="citydb.textureparam"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4229.1" y="1275.77"/>
+	<position x="4232.43" y="1739.11"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="2.57347" y="5.78344"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="140.852" y="-51.2096"/>
+	</label>
+</relationship>
 
 <relationship name="rel_textureparam_surface_data" type="relfk"
 	 src-table="citydb.textureparam"
 	 dst-table="citydb.surface_data"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4946.87" y="1348"/>
+	<position x="4946.87" y="723.552"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="7.11028" y="19.32"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="68.2255" y="17.2765"/>
+	</label>
+</relationship>
 
 <relationship name="rel_appear_to_surface_data_surface_data" type="relfk"
 	 src-table="citydb.appear_to_surface_data"
 	 dst-table="citydb.surface_data"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4369.1" y="549.107"/>
+	<position x="4370.21" y="722.44"/>
+	</line>
+	<label ref-type="dst-label">
+		<position x="-7.43818" y="27.1215"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="58.1403" y="4.1516"/>
+	</label>
+</relationship>
 
 <relationship name="rel_appear_to_surface_data_appearance" type="relfk"
 	 src-table="citydb.appear_to_surface_data"
 	 dst-table="citydb.appearance"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="4946.87" y="565.774"/>
+	<position x="4945.76" y="207.996"/>
+	</line>
 	<label ref-type="name-label">
-		<position x="-128.925" y="-13.5976"/>
+		<position x="162.534" y="2.38676"/>
 	</label>
 </relationship>
 
 <relationship name="rel_breakline_relief_relief_component" type="relfk"
 	 src-table="citydb.breakline_relief"
 	 dst-table="citydb.relief_component"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="5541.32" y="1969.11"/>
+	<position x="5540.21" y="1850.22"/>
+	</line>
+</relationship>
 
 <relationship name="rel_masspoint_relief_relief_component" type="relfk"
 	 src-table="citydb.masspoint_relief"
@@ -7581,14 +7988,29 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_relief_component_cityobject" type="relfk"
 	 src-table="citydb.relief_component"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4981.32" y="1850.22"/>
+	<position x="4980.21" y="2716.89"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="-61.1369" y="-0.292419"/>
+	</label>
+</relationship>
 
 <relationship name="rel_relief_component_objectclass" type="relfk"
 	 src-table="citydb.relief_component"
 	 dst-table="citydb.objectclass"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="4864.65" y="1862.44"/>
+	<position x="4860.21" y="2234.67"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="-11.9839" y="-59.4639"/>
+		<position x="-140.024" y="-41.9591"/>
 	</label>
 </relationship>
 
@@ -7596,8 +8018,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.relief_feat_to_rel_comp"
 	 dst-table="citydb.relief_component"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="4982.43" y="1678"/>
+	<position x="4982.43" y="1838"/>
+	</line>
 	<label ref-type="name-label">
-		<position x="-127.178" y="-0.689872"/>
+		<position x="-136.413" y="-55.8485"/>
 	</label>
 </relationship>
 
@@ -7605,64 +8031,164 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.relief_feat_to_rel_comp"
 	 dst-table="citydb.relief_feature"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="5415.55" y="1695.7"/>
+	<position x="5414.22" y="1561.03"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="10.972" y="22.3416"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="-32.4731" y="-66.4112"/>
+		<position x="-167.858" y="-37.8485"/>
 	</label>
 </relationship>
 
 <relationship name="rel_relief_feature_cityobject" type="relfk"
 	 src-table="citydb.relief_feature"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4960.21" y="1562.44"/>
+	<position x="4960.21" y="2711.33"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="-120.026" y="-40.2892"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tin_relief_relief_component" type="relfk"
 	 src-table="citydb.tin_relief"
 	 dst-table="citydb.relief_component"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="5509.1" y="1399.11"/>
+	<position x="5509.1" y="1819.11"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="51.8835" y="3.27397"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tin_relief_surface_geometry" type="relfk"
 	 src-table="citydb.tin_relief"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4934.65" y="1508"/>
+	<position x="4935.76" y="1753.56"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="-132.191" y="-17.1819"/>
+	</label>
+</relationship>
 
 <relationship name="rel_transportation_complex_objectclass" type="relfk"
 	 src-table="citydb.transportation_complex"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4884.65" y="2523.56"/>
+	<position x="4886.87" y="2255.78"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-148.521" y="-48.6296"/>
+	</label>
+</relationship>
 
 <relationship name="rel_transportation_complex_cityobject" type="relfk"
 	 src-table="citydb.transportation_complex"
 	 dst-table="citydb.cityobject"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="5043.54" y="2508"/>
+	<position x="5042.43" y="2729.11"/>
+	</line>
 	<label ref-type="name-label">
-		<position x="21.154" y="-53.0951"/>
+		<position x="-79.6349" y="-56.4035"/>
 	</label>
 </relationship>
 
 <relationship name="rel_transportation_complex_surface_geometry" type="relfk"
 	 src-table="citydb.transportation_complex"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4916.87" y="2694.67"/>
+	<position x="4912.43" y="1776.89"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="10.0362" y="5.69008"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-65.6332" y="-50.2953"/>
+	</label>
+</relationship>
 
 <relationship name="rel_traffic_area_cityobject" type="relfk"
 	 src-table="citydb.traffic_area"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="5016.87" y="2074.67"/>
+	<position x="5015.76" y="2722.44"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-55.3538" y="2.48536"/>
+	</label>
+</relationship>
 
 <relationship name="rel_traffic_area_objectclass" type="relfk"
 	 src-table="citydb.traffic_area"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4886.87" y="2092.44"/>
+	<position x="4885.76" y="2244.67"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-114.798" y="-25.2924"/>
+	</label>
+</relationship>
 
 <relationship name="rel_traffic_area_surface_geometry" type="relfk"
 	 src-table="citydb.traffic_area"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4936.87" y="2273.56"/>
+	<position x="4934.65" y="1761.33"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="140.868" y="-27.5157"/>
+	</label>
+</relationship>
 
 <relationship name="rel_traffic_area_transportation_complex" type="relfk"
 	 src-table="citydb.traffic_area"
 	 dst-table="citydb.transportation_complex"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="5635.76" y="2309.11"/>
+	<position x="5637.99" y="2508"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="4.11865" y="-16.2851"/>
+	</label>
+	<label ref-type="dst-label">
+		<position x="10.1183" y="20.4714"/>
+	</label>
 	<label ref-type="name-label">
 		<position x="0" y="0"/>
 	</label>
@@ -7671,49 +8197,110 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_land_use_cityobject" type="relfk"
 	 src-table="citydb.land_use"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1075.76" y="1615.77"/>
+	<position x="1079.6" y="2721.23"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_land_use_surface_geometry" type="relfk"
 	 src-table="citydb.land_use"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="63.2804" y="-58.2295"/>
+	</label>
+</relationship>
 
 <relationship name="rel_plant_cover_cityobject" type="relfk"
 	 src-table="citydb.plant_cover"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1051.84" y="1989.9"/>
+	<position x="1053.24" y="2727.59"/>
+	</line>
+</relationship>
 
 <relationship name="rel_plant_cover_surface_geometry" type="relfk"
 	 src-table="citydb.plant_cover"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1210.3" y="2217.59"/>
+	<position x="1209.26" y="1779.67"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="130.668" y="1.07453"/>
+	</label>
+</relationship>
 
 <relationship name="rel_solitary_vegetat_object_cityobject" type="relfk"
 	 src-table="citydb.solitary_vegetat_object"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="856.875" y="2531.23"/>
+	<position x="856.875" y="2739.41"/>
+	</line>
+</relationship>
 
 <relationship name="rel_solitary_vegetat_object_surface_geometry" type="relfk"
 	 src-table="citydb.solitary_vegetat_object"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1234.63" y="2818.57"/>
+	<position x="1233.26" y="1789"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="148.091" y="4.1513"/>
+	</label>
+</relationship>
 
 <relationship name="rel_solitary_vegetat_object_implicit_geometry" type="relfk"
 	 src-table="citydb.solitary_vegetat_object"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1405.4" y="2964.73"/>
+	<position x="1398.26" y="1500.87"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_waterbody_cityobject" type="relfk"
 	 src-table="citydb.waterbody"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1179.1" y="1123.55"/>
+	<position x="1183.24" y="2713.05"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_waterbody_surface_geometry" type="relfk"
 	 src-table="citydb.waterbody"
 	 dst-table="citydb.surface_geometry"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="1115.76" y="1329.11"/>
+	<position x="1113.04" y="1766.96"/>
+	</line>
 	<label ref-type="src-label">
 		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="313.995" y="-19.2007"/>
 	</label>
 </relationship>
 
@@ -7722,7 +8309,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.waterboundary_surface"
 	 src-required="false" dst-required="false">
 	<label ref-type="name-label">
-		<position x="46.2634" y="-63.0904"/>
+		<position x="47.3611" y="-74.021"/>
 	</label>
 </relationship>
 
@@ -7734,24 +8321,57 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_waterboundary_surface_cityobject" type="relfk"
 	 src-table="citydb.waterboundary_surface"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1307.99" y="799.107"/>
+	<position x="1325.06" y="2708.5"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="156.614" y="-39.5821"/>
+	</label>
+</relationship>
 
 <relationship name="rel_waterboundary_surface_objectclass" type="relfk"
 	 src-table="citydb.waterboundary_surface"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1281.32" y="817.996"/>
+	<position x="1297.26" y="2247.89"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="-227.284" y="8.32919"/>
+	</label>
+</relationship>
 
 <relationship name="rel_waterboundary_surface_surface_geometry" type="relfk"
 	 src-table="citydb.waterboundary_surface"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1260" y="1758.26"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="133.87" y="-50.2424"/>
+	</label>
+</relationship>
 
 <relationship name="rel_raster_relief_relief_component" type="relfk"
 	 src-table="citydb.raster_relief"
 	 dst-table="citydb.relief_component"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="5537.99" y="1673.56"/>
+	<position x="5539.1" y="1825.78"/>
+	</line>
 	<label ref-type="name-label">
-		<position x="104.086" y="-12.79"/>
+		<position x="95.3091" y="4.15149"/>
 	</label>
 </relationship>
 
@@ -7759,6 +8379,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.raster_relief"
 	 dst-table="citydb.grid_coverage"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="6208.76" y="1706.82"/>
+	<position x="6209.57" y="1197.39"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0.710331" y="-3.56056"/>
+	</label>
 	<label ref-type="name-label">
 		<position x="27.262" y="-49.4522"/>
 	</label>
@@ -7767,38 +8394,69 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_tunnel_cityobject" type="relfk"
 	 src-table="citydb.tunnel"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="2435.93" y="4861"/>
+	<position x="2437.78" y="2747.59"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-79.8751" y="1.57085"/>
+	</label>
+</relationship>
 
 <relationship name="consist_of_tunnel_part" type="relfk"
 	 src-table="citydb.tunnel"
 	 dst-table="citydb.tunnel"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="1604.22" y="3500.96"/>
-	<position x="1604.22" y="3221.68"/>
-	<position x="1463.52" y="3221.68"/>
+		<position x="2410.27" y="5159.3"/>
+	<position x="2410.27" y="4827.22"/>
+	<position x="2220.6" y="4827.22"/>
 	</line>
 	<label ref-type="name-label">
-		<position x="0" y="0"/>
+		<position x="102.641" y="19.7661"/>
 	</label>
 </relationship>
 
 <relationship name="rel_tunnel_surface_geometry" type="relfk"
 	 src-table="citydb.tunnel"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="2459.93" y="5249"/>
+	<position x="2453.26" y="1814.33"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_open_to_them_srf_tunnel_opening" type="relfk"
 	 src-table="citydb.tunnel_open_to_them_srf"
 	 dst-table="citydb.tunnel_opening"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="817.993" y="5489.9"/>
+	<position x="819.532" y="5728.36"/>
+	</line>
+</relationship>
 
 <relationship name="rel_tunnel_open_to_them_srf_tunnel_thematic_surface" type="relfk"
 	 src-table="citydb.tunnel_open_to_them_srf"
 	 dst-table="citydb.tunnel_thematic_surface"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="788.763" y="5506.82"/>
+	<position x="781.319" y="4504.66"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="4.01153" y="9.83084"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="141.177" y="30.3905"/>
+		<position x="216.283" y="-42.7717"/>
 	</label>
 </relationship>
 
@@ -7806,6 +8464,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.tunnel_hollow_space"
 	 dst-table="citydb.cityobject"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="1627.22" y="4899.7"/>
+	<position x="1622.33" y="2763.05"/>
+	</line>
 	<label ref-type="name-label">
 		<position x="105.176" y="-1.80725"/>
 	</label>
@@ -7815,32 +8477,73 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.tunnel_hollow_space"
 	 dst-table="citydb.tunnel"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="1480.78" y="5024.73"/>
+	<position x="1480.21" y="4875.77"/>
+	</line>
 	<label ref-type="name-label">
-		<position x="0" y="0"/>
+		<position x="-105.37" y="-26.6179"/>
 	</label>
 </relationship>
 
 <relationship name="rel_tunnel_hollow_space_surface_geometry" type="relfk"
 	 src-table="citydb.tunnel_hollow_space"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1653.89" y="5055.7"/>
+	<position x="1657.26" y="1817"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="144.048" y="-54.602"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_thematic_surface_cityobject" type="relfk"
 	 src-table="citydb.tunnel_thematic_surface"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1533.54" y="4504.66"/>
+	<position x="1530.51" y="2757.59"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_thematic_surface_objectclass" type="relfk"
 	 src-table="citydb.tunnel_thematic_surface"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1563.54" y="4522.44"/>
+	<position x="1558.6" y="2266.33"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="9.32108" y="6.63152"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="45.745" y="-57.3872"/>
+	</label>
+</relationship>
 
 <relationship name="tunnel_bounded_by" type="relfk"
 	 src-table="citydb.tunnel_thematic_surface"
 	 dst-table="citydb.tunnel"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="1480.21" y="4541.33"/>
+	<position x="1480.21" y="4854.66"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="-104.949" y="-26.9661"/>
+		<position x="-97.9308" y="-33.175"/>
 	</label>
 </relationship>
 
@@ -7848,8 +8551,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.tunnel_thematic_surface"
 	 dst-table="citydb.tunnel_hollow_space"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="739.097" y="4556.89"/>
+	<position x="738.597" y="4891.67"/>
+	</line>
 	<label ref-type="name-label">
-		<position x="0" y="0"/>
+		<position x="45.1746" y="5.66116"/>
 	</label>
 </relationship>
 
@@ -7857,51 +8564,118 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.tunnel_thematic_surface"
 	 dst-table="citydb.tunnel_installation"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="709.097" y="4570.22"/>
+	<position x="707.986" y="4120.22"/>
+	</line>
 	<label ref-type="name-label">
-		<position x="0" y="0"/>
+		<position x="137.268" y="-0.702289"/>
 	</label>
 </relationship>
 
 <relationship name="rel_tunnel_thematic_surface_surface_geometry" type="relfk"
 	 src-table="citydb.tunnel_thematic_surface"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1597.99" y="4610.22"/>
+	<position x="1591.93" y="1810.33"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_opening_cityobject" type="relfk"
 	 src-table="citydb.tunnel_opening"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1744.15" y="5723.75"/>
+	<position x="1742.33" y="2773.05"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_opening_objectclass" type="relfk"
 	 src-table="citydb.tunnel_opening"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1770.3" y="5743.75"/>
+	<position x="1767.93" y="2269"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="123.392" y="1.52656"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_opening_surface_geometry" type="relfk"
 	 src-table="citydb.tunnel_opening"
 	 dst-table="citydb.surface_geometry"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="1804.15" y="5771.44"/>
+	<position x="1793.26" y="1829"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="-62.2951" y="-48.5064"/>
+		<position x="159.283" y="-22.0025"/>
 	</label>
 </relationship>
 
 <relationship name="rel_tunnel_opening_implicit_geometry" type="relfk"
 	 src-table="citydb.tunnel_opening"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1833.38" y="5806.82"/>
+	<position x="1818.26" y="1517.39"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_installation_cityobject" type="relfk"
 	 src-table="citydb.tunnel_installation"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1427.99" y="4110.22"/>
+	<position x="1425.97" y="2754.86"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="72.0707" y="1.51011"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_installation_objectclass" type="relfk"
 	 src-table="citydb.tunnel_installation"
 	 dst-table="citydb.objectclass"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="1452.43" y="4133.55"/>
+	<position x="1450.6" y="2258.33"/>
+	</line>
 	<label ref-type="src-label">
 		<position x="0" y="0"/>
+	</label>
+	<label ref-type="dst-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="92.9757" y="-59.6948"/>
 	</label>
 </relationship>
 
@@ -7909,8 +8683,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.tunnel_installation"
 	 dst-table="citydb.tunnel"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="667.986" y="4261.33"/>
+	<position x="670.597" y="4857"/>
+	</line>
 	<label ref-type="name-label">
-		<position x="0" y="0"/>
+		<position x="68.2164" y="-52.8031"/>
 	</label>
 </relationship>
 
@@ -7918,56 +8696,116 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.tunnel_installation"
 	 dst-table="citydb.tunnel_hollow_space"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="640.208" y="4279.11"/>
+	<position x="642.597" y="4891.67"/>
+	</line>
+	<label ref-type="dst-label">
+		<position x="0" y="0"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="89.1825" y="-9.15394"/>
+		<position x="62.9129" y="-5.18052"/>
 	</label>
 </relationship>
 
 <relationship name="rel_tunnel_installation_surface_geometry" type="relfk"
 	 src-table="citydb.tunnel_installation"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1477.7" y="4304.72"/>
+	<position x="1471.93" y="1803.67"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_installation_implicit_geometry" type="relfk"
 	 src-table="citydb.tunnel_installation"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1510.01" y="4415.49"/>
+	<position x="1506.09" y="1507.83"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_furniture_cityobject" type="relfk"
 	 src-table="citydb.tunnel_furniture"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1676.55" y="5241.03"/>
+	<position x="1672.33" y="2768.5"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-89.0086" y="-55.3271"/>
+	</label>
+</relationship>
 
 <relationship name="tunnel_interior_furniture" type="relfk"
 	 src-table="citydb.tunnel_furniture"
 	 dst-table="citydb.tunnel_hollow_space"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="40.2078" y="5376.89"/>
+	<position x="40.2078" y="4912.44"/>
+	</line>
 	<label ref-type="name-label">
-		<position x="0" y="0"/>
+		<position x="104.495" y="9.15789"/>
 	</label>
 </relationship>
 
 <relationship name="rel_tunnel_furniture_surface_geometry" type="relfk"
 	 src-table="citydb.tunnel_furniture"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1700.55" y="5385.03"/>
+	<position x="1686.6" y="1823.67"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="157.206" y="-42.0024"/>
+	</label>
+</relationship>
 
 <relationship name="rel_tunnel_furniture_implicit_geometry" type="relfk"
 	 src-table="citydb.tunnel_furniture"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1723.22" y="5421.03"/>
+	<position x="1715.65" y="1513.91"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="124.752" y="1.19473"/>
+	</label>
+</relationship>
 
 <relationship name="consist_of_bridge_part" type="relfk"
 	 src-table="citydb.bridge"
 	 dst-table="citydb.bridge"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="5310.68" y="3526.68"/>
-	<position x="5310.68" y="3241.4"/>
-	<position x="5169.97" y="3241.4"/>
+		<position x="5206.65" y="5249.27"/>
+	<position x="5206.65" y="4909.99"/>
+	<position x="5016.98" y="4909.99"/>
 	</line>
 	<label ref-type="name-label">
-		<position x="0" y="0"/>
+		<position x="-28.8014" y="-0.745261"/>
 	</label>
 </relationship>
 
@@ -7975,6 +8813,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.bridge"
 	 dst-table="citydb.surface_geometry"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="4471.32" y="5356.89"/>
+	<position x="4467.99" y="1800.22"/>
+	</line>
 	<label ref-type="src-label">
 		<position x="0" y="0"/>
 	</label>
@@ -7983,41 +8825,98 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_bridge_furniture_cityobject" type="relfk"
 	 src-table="citydb.bridge_furniture"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4555.76" y="4662.44"/>
+	<position x="4559.1" y="2755.78"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="122.865" y="-35.8474"/>
+	</label>
+</relationship>
 
 <relationship name="bridge_room_interior_furniture" type="relfk"
 	 src-table="citydb.bridge_furniture"
 	 dst-table="citydb.bridge_room"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="6610.21" y="4792.44"/>
+	<position x="6611.32" y="4129.11"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="2.12973" y="-0.410523"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="0" y="0"/>
+		<position x="-136.024" y="-13.0707"/>
 	</label>
 </relationship>
 
 <relationship name="rel_bridge_furniture_surface_geometry" type="relfk"
 	 src-table="citydb.bridge_furniture"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4534.65" y="4811.33"/>
+	<position x="4535.76" y="1799.11"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="38.5338" y="-56.4019"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_furniture_implicit_geometry" type="relfk"
 	 src-table="citydb.bridge_furniture"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4512.43" y="4848"/>
+	<position x="4511.32" y="1530.22"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_installation_cityobject" type="relfk"
 	 src-table="citydb.bridge_installation"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4781.32" y="3358"/>
+	<position x="4782.43" y="2739.11"/>
+	</line>
+</relationship>
 
 <relationship name="rel_bridge_installation_objectclass" type="relfk"
 	 src-table="citydb.bridge_installation"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4754.65" y="3378"/>
+	<position x="4754.65" y="2269.11"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="outer_interior_bridge_installation" type="relfk"
 	 src-table="citydb.bridge_installation"
 	 dst-table="citydb.bridge"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="5271.32" y="3502.44"/>
+	<position x="5274.65" y="4934.67"/>
+	</line>
 	<label ref-type="src-label">
 		<position x="0" y="0"/>
 	</label>
@@ -8027,47 +8926,108 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.bridge_installation"
 	 dst-table="citydb.bridge_room"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="5903.54" y="3519.11"/>
+	<position x="5911.32" y="4120.22"/>
+	</line>
 	<label ref-type="name-label">
-		<position x="-80.5061" y="-12.6674"/>
+		<position x="26.698" y="-53.0708"/>
 	</label>
 </relationship>
 
 <relationship name="rel_bridge_installation_surface_geometry" type="relfk"
 	 src-table="citydb.bridge_installation"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4726.87" y="3560.22"/>
+	<position x="4729.1" y="1788"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="38.5518" y="-54.4744"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_installation_implicit_geometry" type="relfk"
 	 src-table="citydb.bridge_installation"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4704.65" y="3665.78"/>
+	<position x="4703.54" y="1522.44"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-51.3558" y="-55.2918"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_opening_cityobject" type="relfk"
 	 src-table="citydb.bridge_opening"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4441.32" y="5783.56"/>
+	<position x="4446.87" y="2766.89"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_opening_objectclass" type="relfk"
 	 src-table="citydb.bridge_opening"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4422.43" y="5801.33"/>
+	<position x="4423.54" y="2281.33"/>
+	</line>
+</relationship>
 
 <relationship name="rel_bridge_opening_address" type="relfk"
 	 src-table="citydb.bridge_opening"
 	 dst-table="citydb.address"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="112.798" y="-14.3377"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_opening_surface_geometry" type="relfk"
 	 src-table="citydb.bridge_opening"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4399.1" y="5848"/>
+	<position x="4391.32" y="1802.44"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="73.0845" y="-51.9575"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_opening_implicit_geometry" type="relfk"
 	 src-table="citydb.bridge_opening"
 	 dst-table="citydb.implicit_geometry"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="4374.65" y="5886.89"/>
+	<position x="4365.76" y="1536.89"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="61.9019" y="2.48597"/>
+		<position x="2.53375" y="3.59483"/>
 	</label>
 </relationship>
 
@@ -8075,6 +9035,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.bridge_open_to_them_srf"
 	 dst-table="citydb.bridge_opening"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="5892.43" y="5045.78"/>
+	<position x="5894.65" y="5785.77"/>
+	</line>
 	<label ref-type="name-label">
 		<position x="28.5404" y="-69.3466"/>
 	</label>
@@ -8083,14 +9047,26 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_bridge_open_to_them_srf_bridge_thematic_surface" type="relfk"
 	 src-table="citydb.bridge_open_to_them_srf"
 	 dst-table="citydb.bridge_thematic_surface"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="5800.21" y="5063.56"/>
+	<position x="5800.21" y="4329.11"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="-203.802" y="-4.18196"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_room_cityobject" type="relfk"
 	 src-table="citydb.bridge_room"
 	 dst-table="citydb.cityobject"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="4680.21" y="4126.89"/>
+	<position x="4682.43" y="2744.67"/>
+	</line>
 	<label ref-type="name-label">
-		<position x="52.4056" y="-52.3373"/>
+		<position x="52.4058" y="-52.3374"/>
 	</label>
 </relationship>
 
@@ -8098,6 +9074,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.bridge_room"
 	 dst-table="citydb.bridge"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="5979.1" y="4254.67"/>
+	<position x="5982.43" y="4956.89"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
 	<label ref-type="name-label">
 		<position x="-5.44556" y="-52.3114"/>
 	</label>
@@ -8106,12 +9089,27 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_bridge_room_surface_geometry" type="relfk"
 	 src-table="citydb.bridge_room"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4651.32" y="4278"/>
+	<position x="4663.54" y="1793.56"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-1.85746" y="-53.6287"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_thematic_surface_cityobject" type="relfk"
 	 src-table="citydb.bridge_thematic_surface"
 	 dst-table="citydb.cityobject"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="4625.76" y="4326.89"/>
+	<position x="4636.87" y="2749.11"/>
+	</line>
 	<label ref-type="src-label">
 		<position x="0" y="0"/>
 	</label>
@@ -8121,8 +9119,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.bridge_thematic_surface"
 	 dst-table="citydb.objectclass"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="4604.65" y="4346.89"/>
+	<position x="4615.76" y="2276.89"/>
+	</line>
 	<label ref-type="src-label">
 		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="99.4227" y="1.37259"/>
 	</label>
 </relationship>
 
@@ -8130,11 +9135,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.bridge_thematic_surface"
 	 dst-table="citydb.bridge"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="5296.87" y="4363.56"/>
+	<position x="5297.99" y="4940.22"/>
+	</line>
 	<label ref-type="src-label">
 		<position x="0" y="0"/>
 	</label>
 	<label ref-type="name-label">
-		<position x="-33.8271" y="79.9407"/>
+		<position x="-89.6909" y="-36.4043"/>
 	</label>
 </relationship>
 
@@ -8142,8 +9151,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.bridge_thematic_surface"
 	 dst-table="citydb.bridge_room"
 	 src-required="false" dst-required="false">
-	<label ref-type="name-label">
+	<line>
+		<position x="5910.21" y="4382.44"/>
+	<position x="5910.21" y="4135.78"/>
+	</line>
+	<label ref-type="dst-label">
 		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-112.691" y="-44.1819"/>
 	</label>
 </relationship>
 
@@ -8151,8 +9167,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.bridge_thematic_surface"
 	 dst-table="citydb.bridge_installation"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="5885.76" y="4401.33"/>
+	<position x="5879.1" y="3356.89"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="72.412" y="9.49862"/>
+		<position x="66.1424" y="3.04018"/>
 	</label>
 </relationship>
 
@@ -8160,49 +9183,116 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.bridge_thematic_surface"
 	 dst-table="citydb.bridge_constr_element"
 	 src-required="false" dst-required="false">
-	<label ref-type="name-label">
+	<line>
+		<position x="5932.43" y="4418"/>
+	<position x="5927.99" y="2926.89"/>
+	</line>
+	<label ref-type="src-label">
 		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="15.6421" y="-0.292969"/>
 	</label>
 </relationship>
 
 <relationship name="rel_bridge_thematic_surface_surface_geometry" type="relfk"
 	 src-table="citydb.bridge_thematic_surface"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4581.32" y="4452.44"/>
+	<position x="4575.76" y="1795.78"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_constr_element_cityobject" type="relfk"
 	 src-table="citydb.bridge_constr_element"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="5045.76" y="2909.11"/>
+	<position x="5042.43" y="2735.78"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-88.1892" y="-59.1826"/>
+	</label>
+</relationship>
 
 <relationship name="outer_bridge_construction" type="relfk"
 	 src-table="citydb.bridge_constr_element"
 	 dst-table="citydb.bridge"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="5954.65" y="3038"/>
+	<position x="5956.87" y="4950.22"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="dst-label">
+		<position x="16.4741" y="17.7554"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="-83.1149" y="-8.81191"/>
+		<position x="106.198" y="-11.4042"/>
 	</label>
 </relationship>
 
 <relationship name="rel_bridge_constr_element_surface_geometry" type="relfk"
 	 src-table="citydb.bridge_constr_element"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4831.32" y="3160.22"/>
+	<position x="4836.87" y="1783.56"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="rel_bridge_constr_element_implicit_geometry" type="relfk"
 	 src-table="citydb.bridge_constr_element"
 	 dst-table="citydb.implicit_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4804.65" y="3305.78"/>
+	<position x="4811.32" y="1513.56"/>
+	</line>
+	<label ref-type="dst-label">
+		<position x="4.77632" y="5.93445"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-127.524" y="-0.851851"/>
+	</label>
+</relationship>
 
 <relationship name="rel_address_to_bridge_address" type="relfk"
 	 src-table="citydb.address_to_bridge"
 	 dst-table="citydb.address"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4047.99" y="5615.77"/>
+	<position x="4051.32" y="5814.66"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="121.643" y="-7.5152"/>
+	</label>
+</relationship>
 
 <relationship name="rel_address_to_bridge_bridge" type="relfk"
 	 src-table="citydb.address_to_bridge"
 	 dst-table="citydb.bridge"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="4494.65" y="5594.66"/>
+	<position x="4494.65" y="4968"/>
+	</line>
 	<label ref-type="name-label">
 		<position x="13.4787" y="-60.7956"/>
 	</label>
@@ -8211,12 +9301,31 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_cityobject_objectclass" type="relfk"
 	 src-table="citydb.cityobject"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="2598.69" y="2718.5"/>
+	<position x="2595.93" y="2274.33"/>
+	</line>
+</relationship>
 
 <relationship name="rel_appearance_cityobject" type="relfk"
 	 src-table="citydb.appearance"
 	 dst-table="citydb.cityobject"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4114.65" y="354.663"/>
+	<position x="4113.24" y="2713.05"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="dst-label">
+		<position x="12.0504" y="37.3468"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-110.876" y="-49.9991"/>
+	</label>
+</relationship>
 
 <relationship name="appearance_member" type="relfk"
 	 src-table="citydb.appearance"
@@ -8230,16 +9339,24 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_implicit_geometry_surface_geometry" type="relfk"
 	 src-table="citydb.implicit_geometry"
 	 dst-table="citydb.surface_geometry"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="3421.72" y="1584.82"/>
+	<position x="3422.43" y="1740.22"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="161.395" y="-42.3118"/>
+	</label>
+</relationship>
 
 <relationship name="brep_member" type="relfk"
 	 src-table="citydb.surface_geometry"
 	 dst-table="citydb.surface_geometry"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="3883.77" y="1533.7"/>
-	<position x="3883.77" y="1392.42"/>
-	<position x="3768.83" y="1392.42"/>
+		<position x="4051.11" y="1868.06"/>
+	<position x="4051.11" y="1701.58"/>
+	<position x="3901.11" y="1701.58"/>
 	</line>
 	<label ref-type="name-label">
 		<position x="116.982" y="3.74361"/>
@@ -8250,29 +9367,45 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.surface_geometry"
 	 dst-table="citydb.cityobject"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="3556.87" y="1980.32"/>
+	<position x="3563.24" y="2717.59"/>
+	</line>
 	<label ref-type="dst-label">
-		<position x="0" y="0"/>
+		<position x="9.69751" y="63.229"/>
 	</label>
 </relationship>
 
 <relationship name="rel_surface_data_tex_image" type="relfk"
 	 src-table="citydb.surface_data"
 	 dst-table="citydb.tex_image"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="28.1246" y="-60.0422"/>
+	</label>
+</relationship>
 
 <relationship name="rel_surface_data_objectclass" type="relfk"
 	 src-table="citydb.surface_data"
 	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4299.1" y="849.107"/>
+	<position x="4304.65" y="2230.22"/>
+	</line>
+	<label ref-type="name-label">
+		<position x="114.031" y="-1.95959"/>
+	</label>
+</relationship>
 
 <relationship name="generic_attribute_set" type="relfk"
 	 src-table="citydb.cityobject_genericattrib"
 	 dst-table="citydb.cityobject_genericattrib"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="2407.22" y="342.663"/>
-	<position x="2407.22" y="201.383"/>
-	<position x="2278.55" y="201.383"/>
+		<position x="2605.48" y="700.641"/>
+	<position x="2605.48" y="534.161"/>
+	<position x="2429.81" y="534.161"/>
 	</line>
 	<label ref-type="name-label">
 		<position x="0" y="0"/>
@@ -8283,8 +9416,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.cityobject_genericattrib"
 	 dst-table="citydb.surface_geometry"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="2653.54" y="831.329"/>
+	<position x="2654.78" y="1745.22"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0.181885" y="-15.1419"/>
+	</label>
 	<label ref-type="name-label">
-		<position x="-68.5597" y="6.14977"/>
+		<position x="-26.0494" y="-49.951"/>
 	</label>
 </relationship>
 
@@ -8292,6 +9432,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.cityobject_genericattrib"
 	 dst-table="citydb.cityobject"
 	 src-required="false" dst-required="false">
+	<line>
+		<position x="2624.65" y="851.329"/>
+	<position x="2623.24" y="2712.14"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="5.42494" y="0.246057"/>
+	</label>
 	<label ref-type="name-label">
 		<position x="-57.3535" y="-1.93841"/>
 	</label>
@@ -8301,9 +9448,29 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="citydb.external_reference"
 	 dst-table="citydb.cityobject"
 	 src-required="false" dst-required="false">
-	<label ref-type="name-label">
-		<position x="-64.4724" y="2.29642"/>
+	<line>
+		<position x="3313.38" y="1082.21"/>
+	<position x="3319.6" y="2713.05"/>
+	</line>
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
 	</label>
+	<label ref-type="dst-label">
+		<position x="23.8151" y="13.8174"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="-140.559" y="-32.8063"/>
+	</label>
+</relationship>
+
+<relationship name="rel_bridge_cityobject" type="relfk"
+	 src-table="citydb.bridge"
+	 dst-table="citydb.cityobject"
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="4491.32" y="4955.78"/>
+	<position x="4485.76" y="2761.33"/>
+	</line>
 </relationship>
 
 </dbmodel>

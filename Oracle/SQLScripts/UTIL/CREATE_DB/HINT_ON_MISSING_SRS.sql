@@ -1,49 +1,33 @@
--- HINT_ON_MISSING_SRS.sql
---
--- Authors:     Prof. Dr. Lutz Pluemer <pluemer@ikg.uni-bonn.de>
---              Prof. Dr. Thomas H. Kolbe <thomas.kolbe@tum.de>
---              Dr. Gerhard Groeger <groeger@ikg.uni-bonn.de>
---              Joerg Schmittwilken <schmittwilken@ikg.uni-bonn.de>
---              Viktor Stroh <stroh@ikg.uni-bonn.de>
---              Dr. Andreas Poth <poth@lat-lon.de>
-
--- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
---                             Technische Universität München, Germany
---                             http://www.gis.bv.tum.de
---
---              (c) 2007-2012  Institute for Geodesy and Geoinformation Science,
---                             Technische Universität Berlin, Germany
---                             http://www.igg.tu-berlin.de
-
---              (c) 2004-2007  Institute for Cartography and Geoinformation,
---                             Universität Bonn, Germany
---                             http://www.ikg.uni-bonn.de
-
---              (c) 2005-2007  lat/lon GmbH, Germany
---                             http://www.lat-lon.de
---
---              This skript is free software under the LGPL Version 2.1.
---              See the GNU Lesser General Public License at
---              http://www.gnu.org/copyleft/lgpl.html
---              for more details.
--------------------------------------------------------------------------------
--- About:
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                               | Author
--- 1.1       2007-01-28   release version                             LPlu
---                                                                    TKol
---                                                                    GGro
---                                                                    JSch
---                                                                    VStr
---                                                                    APot
+-- 3D City Database - The Open Source CityGML Database
+-- http://www.3dcitydb.org/
+-- 
+-- Copyright 2013 - 2016
+-- Chair of Geoinformatics
+-- Technical University of Munich, Germany
+-- https://www.gis.bgu.tum.de/
+-- 
+-- The 3D City Database is jointly developed with the following
+-- cooperation partners:
+-- 
+-- virtualcitySYSTEMS GmbH, Berlin <http://www.virtualcitysystems.de/>
+-- M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
+-- 
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+-- 
+--     http://www.apache.org/licenses/LICENSE-2.0
+--     
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
 --
 
 SET FEEDBACK OFF
 
 prompt Your chosen SRID wasn't found in the MDSYS.CS_SRS table! 
-prompt If You want to use this db schema for storing the DHDN Soldner-Berlin data
+prompt If you want to use this db schema for storing the DHDN Soldner-Berlin data
 prompt please execute as user SYS (with SYSDBA option) 
 prompt SQL script "UTIL/SRS/SOLDNER_BERLIN_SRS.sql"

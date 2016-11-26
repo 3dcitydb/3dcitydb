@@ -1,40 +1,28 @@
--- DELETE_BY_LINEAGE.sql
---
--- Authors:     Claus Nagel <cnagel@virtualcitysystems.de>
---              Felix Kunde <felix-kunde@gmx.de>
---              György Hudra <ghudra@moss.de>
---
--- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
---                             Technische Universität München, Germany
---                             http://www.gis.bv.tum.de
---
---              (c) 2007-2012  Institute for Geodesy and Geoinformation Science,
---                             Technische Universität Berlin, Germany
---                             http://www.igg.tu-berlin.de
---
---              This skript is free software under the LGPL Version 3.0.
---              See the GNU Lesser General Public License at
---              http://www.gnu.org/copyleft/lgpl.html
---              for more details.
--------------------------------------------------------------------------------
--- About:
+-- 3D City Database - The Open Source CityGML Database
+-- http://www.3dcitydb.org/
 -- 
---
---
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                                    | Author
--- 2.1.0     2014-11-10   delete with returning id of deleted features     FKun
--- 2.0.0     2014-10-10   extended for 3DCityDB V3                         GHud
---                                                                         FKun
---                                                                         CNag
--- 1.3.0     2013-08-08   extended to all thematic classes                 GHud
---                                                                         FKun
--- 1.2.0     2012-02-22   minor changes                                    CNag
--- 1.1.0     2011-02-11   moved to new DELETE functionality                CNag
--- 1.0.0     2008-09-10   release version                                  ASta
+-- Copyright 2013 - 2016
+-- Chair of Geoinformatics
+-- Technical University of Munich, Germany
+-- https://www.gis.bgu.tum.de/
+-- 
+-- The 3D City Database is jointly developed with the following
+-- cooperation partners:
+-- 
+-- virtualcitySYSTEMS GmbH, Berlin <http://www.virtualcitysystems.de/>
+-- M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
+-- 
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+-- 
+--     http://www.apache.org/licenses/LICENSE-2.0
+--     
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
 --
 
 CREATE OR REPLACE PACKAGE citydb_delete_by_lineage
@@ -303,7 +291,7 @@ AS
     solitary_veg_obj_cur ref_cursor;
     solitary_veg_obj_id number;
   begin
-    open solitary_veg_obj_cur for 'select id from '|| schema_name || '.cityobject where objectclass_id=8 and lineage = :1' using lineage_value;
+    open solitary_veg_obj_cur for 'select id from '|| schema_name || '.cityobject where objectclass_id=7 and lineage = :1' using lineage_value;
     loop
       fetch solitary_veg_obj_cur into solitary_veg_obj_id;
       exit when solitary_veg_obj_cur%notfound;
