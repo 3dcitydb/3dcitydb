@@ -1,28 +1,28 @@
--- ENVELOPE.sql
---
--- Authors:     Felix Kunde <felix-kunde@gmx.de>
---              Claus Nagel <cnagel@virtualcitysystems.de>
---
--- Copyright:   (c) 2012-2016  Chair of Geoinformatics,
---                             Technische Universitaet Muenchen, Germany
---                             http://www.gis.bv.tum.de
---
--------------------------------------------------------------------------------
--- About:
--- This script provides functions to calculate an object's envelope 
--- (a diagonal cutting plane inside a 3D bounding box) and to store
--- the result in the ENVELOPE column of CITYOBJECT.
---
--------------------------------------------------------------------------------
---
--- ChangeLog:
---
--- Version | Date       | Description                                    | Author
--- 1.3.1     2016-03-20   reset search_path by the end of each function    FKun
--- 1.3.0     2016-01-27   removed most of dynamic SQL code                 FKun
--- 1.2.0     2015-11-11   added set_envelope parameter for functions       CNag
--- 1.1.0     2015-11-04   added set_envelope procedures                    FKun
--- 1.0.0     2015-07-21   release version 3DCityDB v3.1                    FKun
+-- 3D City Database - The Open Source CityGML Database
+-- http://www.3dcitydb.org/
+-- 
+-- Copyright 2013 - 2016
+-- Chair of Geoinformatics
+-- Technical University of Munich, Germany
+-- https://www.gis.bgu.tum.de/
+-- 
+-- The 3D City Database is jointly developed with the following
+-- cooperation partners:
+-- 
+-- virtualcitySYSTEMS GmbH, Berlin <http://www.virtualcitysystems.de/>
+-- M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
+-- 
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+-- 
+--     http://www.apache.org/licenses/LICENSE-2.0
+--     
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
 --
 
 /*****************************************************************
