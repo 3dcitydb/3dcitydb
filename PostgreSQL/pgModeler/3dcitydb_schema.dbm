@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.0" last-position="0,1" last-zoom="0.15"
+<dbmodel pgmodeler-ver="0.8.0" last-position="0,0" last-zoom="0.15"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -2792,7 +2792,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="tex_mime_type_codespace">
 		<type name="character varying" length="4000"/>
 	</column>
-	<constraint name="tex_image_pk" type="pk-constr" factor="10" table="citydb.tex_image">
+	<constraint name="tex_image_pk" type="pk-constr" factor="100" table="citydb.tex_image">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>

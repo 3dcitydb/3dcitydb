@@ -1401,7 +1401,7 @@ CREATE TABLE citydb.tex_image(
 	tex_mime_type character varying(256),
 	tex_mime_type_codespace character varying(4000),
 	CONSTRAINT tex_image_pk PRIMARY KEY (id)
-	 WITH (FILLFACTOR = 10)
+	 WITH (FILLFACTOR = 100)
 
 );
 -- ddl-end --
