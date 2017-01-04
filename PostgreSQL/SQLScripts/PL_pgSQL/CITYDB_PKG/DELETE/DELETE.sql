@@ -388,16 +388,16 @@ BEGIN
 
   --// PRE DELETE APPEARANCE //--
   -- delete surface data not being referenced by appearances any more
-  PERFORM 'WITH get_ref_surface_data AS (
-    SELECT surface_data_id FROM appear_to_surface_data
-      WHERE appearance_id = app_id
-  ), ref_to_other_app AS (
-    SELECT a2sd.surface_data_id FROM appear_to_surface_data a2sd, get_ref_surface_data g
-      WHERE a2sd.surface_data_id = g.surface_data_id AND appearance_id <> app_id
-  )
-  SELECT citydb_pkg.delete_surface_data(surface_data_id, schema_name) 
-    FROM get_ref_surface_data WHERE NOT EXISTS
-      (SELECT surface_data_id FROM ref_to_other_app)';
+  PERFORM citydb_pkg.delete_surface_data(a2sd.surface_data_id, schema_name) 
+     FROM appear_to_surface_data a2sd
+     LEFT JOIN (
+       SELECT surface_data_id 
+         FROM appear_to_surface_data
+         WHERE appearance_id <> app_id
+     ) t
+     ON a2sd.surface_data_id = t.surface_data_id
+     WHERE a2sd.appearance_id = app_id
+       AND t.surface_data_id IS NULL;
 
   -- delete references to surface data
   DELETE FROM appear_to_surface_data WHERE appearance_id = app_id;
@@ -799,16 +799,16 @@ BEGIN
 
   --// PRE DELETE WATERBODY //--
   -- delete water boundary surfaces being not referenced from waterbodies any more
-  PERFORM 'WITH get_ref_surface AS (
-    SELECT waterboundary_surface_id FROM waterbod_to_waterbnd_srf
-      WHERE waterbody_id = wb_id
-  ), ref_to_other_waterbody AS (
-    SELECT wb2wbs.waterboundary_surface_id FROM waterbod_to_waterbnd_srf wb2wbs, get_ref_surface g
-      WHERE wb2wbs.waterboundary_surface_id = g.waterboundary_surface_id AND waterbody_id <> wb_id
-  )
-  SELECT citydb_pkg.delete_waterbnd_surface(waterboundary_surface_id, schema_name) 
-    FROM get_ref_surface WHERE NOT EXISTS
-      (SELECT waterboundary_surface_id FROM ref_to_other_waterbody)';
+  PERFORM citydb_pkg.delete_waterbnd_surface(wb2wbs.waterboundary_surface_id, schema_name) 
+     FROM waterbod_to_waterbnd_srf wb2wbs
+     LEFT JOIN (
+       SELECT waterboundary_surface_id 
+         FROM waterbod_to_waterbnd_srf
+         WHERE waterbody_id <> wb_id
+     ) t
+     ON wb2wbs.waterboundary_surface_id = t.waterboundary_surface_id
+     WHERE wb2wbs.waterbody_id = wb_id
+       AND t.waterboundary_surface_id IS NULL;
 	  
   -- delete reference to water boundary surface 
   DELETE FROM waterbod_to_waterbnd_srf WHERE waterbody_id = wb_id;
@@ -937,16 +937,16 @@ BEGIN
 
   --// PRE DELETE RELIEF FEATURE //--
   -- delete relief component(s) being not referenced from relief fetaures any more
-  PERFORM 'WITH get_ref_component AS (
-    SELECT relief_component_id FROM relief_feat_to_rel_comp
-      WHERE relief_feature_id = rf_id
-  ), ref_to_other_feature AS (
-    SELECT rf2rc.relief_component_id FROM relief_feat_to_rel_comp rf2rc, get_ref_component g
-      WHERE rf2rc.relief_component_id = g.relief_component_id AND relief_feature_id <> rf_id
-  )
-  SELECT citydb_pkg.delete_relief_component(relief_component_id, schema_name) 
-    FROM get_ref_component WHERE NOT EXISTS
-      (SELECT relief_component_id FROM ref_to_other_feature)';
+  PERFORM citydb_pkg.delete_relief_component(rf2rc.relief_component_id, schema_name) 
+     FROM relief_feat_to_rel_comp rf2rc
+     LEFT JOIN (
+       SELECT relief_component_id 
+         FROM relief_feat_to_rel_comp
+         WHERE relief_feature_id <> rf_id
+     ) t
+     ON rf2rc.relief_component_id = t.relief_component_id
+     WHERE rf2rc.relief_feature_id = rf_id
+       AND t.relief_component_id IS NULL;
 
   -- delete reference to relief_component
   DELETE FROM relief_feat_to_rel_comp WHERE relief_feature_id = rf_id;
@@ -1327,16 +1327,16 @@ BEGIN
     FROM room WHERE building_id = b_id;
 
   -- delete address(es) being not referenced from buildings any more
-  PERFORM 'WITH get_ref_address AS (
-    SELECT address_id FROM address_to_building
-      WHERE building_id = b_id
-  ), ref_to_other_building AS (
-    SELECT ad2b.address_id FROM address_to_building ad2b, get_ref_address g
-      WHERE ad2b.address_id = g.address_id AND building_id <> b_id
-  )
-  SELECT citydb_pkg.delete_address(address_id, schema_name) 
-    FROM get_ref_address WHERE NOT EXISTS
-      (SELECT address_id FROM ref_to_other_building)';
+  PERFORM citydb_pkg.delete_address(ad2b.address_id, schema_name) 
+     FROM address_to_building ad2b
+     LEFT JOIN (
+       SELECT address_id 
+         FROM address_to_building
+         WHERE building_id <> b_id
+     ) t
+     ON ad2b.address_id = t.address_id
+     WHERE ad2b.building_id = b_id
+       AND t.address_id IS NULL;
 
   -- delete reference to address
   DELETE FROM address_to_building WHERE building_id = b_id;
@@ -1482,16 +1482,16 @@ BEGIN
 
   --// PRE DELETE THEMATIC SURFACE //--
   -- delete opening(s) not being referenced by a thematic surface any more
-  PERFORM 'WITH get_ref_opening AS (
-    SELECT opening_id FROM opening_to_them_surface
-      WHERE thematic_surface_id = ts_id
-  ), ref_to_other_surface AS (
-    SELECT o2ts.opening_id FROM opening_to_them_surface o2ts, get_ref_opening g
-      WHERE o2ts.opening_id = g.opening_id AND thematic_surface_id <> ts_id
-  )
-  SELECT citydb_pkg.delete_opening(opening_id, schema_name) 
-    FROM get_ref_opening WHERE NOT EXISTS
-      (SELECT opening_id FROM ref_to_other_surface)';
+  PERFORM citydb_pkg.delete_opening(o2ts.opening_id, schema_name) 
+     FROM opening_to_them_surface o2ts
+     LEFT JOIN (
+       SELECT opening_id 
+         FROM opening_to_them_surface
+         WHERE thematic_surface_id <> ts_id
+     ) t
+     ON o2ts.opening_id = t.opening_id
+     WHERE o2ts.thematic_surface_id = ts_id
+       AND t.opening_id IS NULL;
 
   -- delete reference to opening
   DELETE FROM opening_to_them_surface WHERE thematic_surface_id = ts_id;
@@ -1926,16 +1926,16 @@ BEGIN
     FROM bridge_room WHERE bridge_id = brd_id;
 
   -- delete address(es) being not referenced from bridges any more
-  PERFORM 'WITH get_ref_address AS (
-    SELECT address_id FROM address_to_bridge
-      WHERE bridge_id = brd_id
-  ), ref_to_other_bridge AS (
-    SELECT ad2brd.address_id FROM address_to_bridge ad2brd, get_ref_address g
-      WHERE ad2brd.address_id = g.address_id AND bridge_id <> brd_id
-  )
-  SELECT citydb_pkg.delete_address(address_id, schema_name) 
-    FROM get_ref_address WHERE NOT EXISTS
-      (SELECT address_id FROM ref_to_other_bridge)';
+  PERFORM citydb_pkg.delete_address(ad2brd.address_id, schema_name) 
+     FROM address_to_bridge ad2brd
+     LEFT JOIN (
+       SELECT address_id 
+         FROM address_to_bridge
+         WHERE building_id <> brd_id
+     ) t
+     ON ad2brd.address_id = t.address_id
+     WHERE ad2brd.building_id = brd_id
+       AND t.address_id IS NULL;
 
   -- delete reference to address
   DELETE FROM address_to_bridge WHERE bridge_id = brd_id;
@@ -2074,16 +2074,16 @@ BEGIN
 
   --// PRE DELETE BRIDGE THEMATIC SURFACE //--
   -- delete opening(s) not being referenced by a bridge thematic surface any more
-  PERFORM 'WITH get_ref_opening AS (
-    SELECT bridge_opening_id FROM bridge_open_to_them_srf
-      WHERE bridge_thematic_surface_id = brdts_id
-  ), ref_to_other_surface AS (
-    SELECT brdo2ts.bridge_opening_id FROM bridge_open_to_them_srf brdo2ts, get_ref_opening g
-      WHERE brdo2ts.bridge_opening_id = g.bridge_opening_id AND bridge_thematic_surface_id <> brdts_id
-  )
-  SELECT citydb_pkg.delete_bridge_opening(bridge_opening_id, schema_name) 
-    FROM get_ref_opening WHERE NOT EXISTS
-      (SELECT bridge_opening_id FROM ref_to_other_surface)';
+  PERFORM citydb_pkg.delete_bridge_opening(brdo2ts.bridge_opening_id, schema_name) 
+     FROM bridge_open_to_them_srf brdo2ts
+     LEFT JOIN (
+       SELECT bridge_opening_id 
+         FROM bridge_open_to_them_srf
+         WHERE bridge_thematic_surface_id <> brdts_id
+     ) t
+     ON brdo2ts.bridge_opening_id = t.bridge_opening_id
+     WHERE brdo2ts.bridge_thematic_surface_id = brdts_id
+       AND t.bridge_opening_id IS NULL;
 
   -- delete reference to opening
   DELETE FROM bridge_open_to_them_srf WHERE bridge_thematic_surface_id = brdts_id;
@@ -2541,16 +2541,16 @@ BEGIN
 
   --// PRE DELETE TUNNEL THEMATIC SURFACE //--
   -- delete opening(s) not being referenced by a tunnel thematic surface any more
-  PERFORM 'WITH get_ref_opening AS (
-    SELECT tunnel_opening_id FROM tunnel_open_to_them_srf
-      WHERE tunnel_thematic_surface_id = tunts_id
-  ), ref_to_other_surface AS (
-    SELECT tuno2ts.tunnel_opening_id FROM tunnel_open_to_them_srf tuno2ts, get_ref_opening g
-      WHERE tuno2ts.tunnel_opening_id = g.tunnel_opening_id AND tunnel_thematic_surface_id <> tunts_id
-  )
-  SELECT citydb_pkg.delete_tunnel_opening(tunnel_opening_id, schema_name) 
-    FROM get_ref_opening WHERE NOT EXISTS
-      (SELECT tunnel_opening_id FROM ref_to_other_surface)';
+  PERFORM citydb_pkg.delete_tunnel_opening(tuno2ts.tunnel_opening_id, schema_name) 
+     FROM tunnel_open_to_them_srf tuno2ts
+     LEFT JOIN (
+       SELECT tunnel_opening_id 
+         FROM tunnel_open_to_them_srf
+         WHERE tunnel_thematic_surface_id <> tunts_id
+     ) t
+     ON tuno2ts.tunnel_opening_id = t.tunnel_opening_id
+     WHERE tuno2ts.tunnel_thematic_surface_id = tunts_id
+       AND t.tunnel_opening_id IS NULL;
 
   -- delete reference to opening
   DELETE FROM tunnel_open_to_them_srf WHERE tunnel_thematic_surface_id = tunts_id;
