@@ -558,7 +558,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(lu_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(lu_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -622,7 +624,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(gco_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(gco_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -682,7 +686,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(svo_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(svo_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -760,7 +766,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(pc_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(pc_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -845,7 +853,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(wb_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(wb_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -904,7 +914,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(wbs_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(wbs_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -956,7 +968,9 @@ BEGIN
 
   --// POST DELETE RELIEF FEATURE //--
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(rf_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(rf_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -1002,7 +1016,9 @@ BEGIN
 
   --// POST DELETE RELIEF FEATURE //--
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(rc_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(rc_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -1208,7 +1224,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(cf_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(cf_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -1268,7 +1286,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(cog_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(cog_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -1386,7 +1406,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(b_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(b_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -1446,7 +1468,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(bi_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(bi_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -1517,7 +1541,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(ts_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(ts_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -1584,7 +1610,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(o_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(o_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -1631,7 +1659,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(bf_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(bf_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -1695,7 +1725,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(r_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(r_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -1759,7 +1791,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(tc_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(tc_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -1815,7 +1849,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(ta_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(ta_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -1978,7 +2014,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(brd_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(brd_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -2038,7 +2076,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(brdi_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(brdi_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -2109,7 +2149,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(brdts_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(brdts_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -2176,7 +2218,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(brdo_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(brdo_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -2223,7 +2267,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(brdf_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(brdf_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -2287,7 +2333,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(brdr_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(brdr_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -2351,7 +2399,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(brdce_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(brdce_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -2445,7 +2495,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(tun_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(tun_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -2505,7 +2557,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(tuni_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(tuni_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -2576,7 +2630,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(tunts_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(tunts_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -2631,7 +2687,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(tuno_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(tuno_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -2678,7 +2736,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(tunf_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(tunf_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
@@ -2742,7 +2802,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  PERFORM citydb_pkg.intern_delete_cityobject(tunhs_id, schema_name);
+  IF deleted_id IS NOT NULL THEN
+    PERFORM citydb_pkg.intern_delete_cityobject(tunhs_id, schema_name);
+  END IF;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
