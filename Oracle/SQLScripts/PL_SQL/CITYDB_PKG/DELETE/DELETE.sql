@@ -33,7 +33,7 @@ AS
   function delete_citymodel(pid number, delete_members int := 0, schema_name varchar2 := user) return number;
   function delete_genericattrib(pid number, delete_members int := 0, schema_name varchar2 := user) return number;
   function delete_external_reference(pid number, schema_name varchar2 := user) return number;
-  function delete_appearance(pid number, cleanup int := 0, schema_name varchar2 := user) return number;
+  function delete_appearance(pid number, schema_name varchar2 := user) return number;
   function delete_surface_data(pid number, schema_name varchar2 := user) return number;
   function delete_cityobjectgroup(pid number, delete_members int := 0, schema_name varchar2 := user) return number;
   function delete_thematic_surface(pid number, schema_name varchar2 := user) return number;
@@ -95,7 +95,7 @@ AS
   function intern_delete_cityobject(pid number, schema_name varchar2 := user) return number;
   function delete_citymodel(citymodel_rec citymodel%rowtype, delete_members int := 0, schema_name varchar2 := user) return number;
   function intern_delete_genericattrib(pid number, delete_members int := 0, schema_name varchar2 := USER) return number;
-  function delete_appearance(appearance_rec appearance%rowtype, cleanup int := 0, schema_name varchar2 := user) return number;
+  function delete_appearance(appearance_rec appearance%rowtype, schema_name varchar2 := user) return number;
   function delete_surface_data(surface_data_rec surface_data%rowtype, schema_name varchar2 := user) return number;
   function delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, delete_members int := 0, schema_name varchar2 := user) return number;
   function delete_thematic_surface(thematic_surface_rec thematic_surface%rowtype, schema_name varchar2 := user) return number;
@@ -138,6 +138,7 @@ AS
   procedure pre_delete_citymodel(citymodel_rec citymodel%rowtype, delete_members int := 0, schema_name varchar2 := user);
   procedure pre_delete_appearance(appearance_rec appearance%rowtype, schema_name varchar2 := user);
   procedure pre_delete_surface_data(surface_data_rec surface_data%rowtype, schema_name varchar2 := user);
+  procedure post_delete_surface_data(surface_data_rec surface_data%rowtype, schema_name varchar2 := user);
   procedure pre_delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, delete_members int := 0, schema_name varchar2 := user);
   procedure post_delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, schema_name varchar2 := user);
   procedure pre_delete_thematic_surface(thematic_surface_rec thematic_surface%rowtype, schema_name varchar2 := user);
@@ -310,7 +311,7 @@ AS
     loop
       fetch appearance_cur into appearance_rec;
       exit when appearance_cur%notfound;
-      dummy_id := delete_appearance(appearance_rec, 0, schema_name);
+      dummy_id := delete_appearance(appearance_rec, schema_name);
     end loop;
     close appearance_cur;
   exception
@@ -368,7 +369,7 @@ AS
     loop
       fetch appearance_cur into appearance_rec;
       exit when appearance_cur%notfound;
-      dummy_id := delete_appearance(appearance_rec, 0, schema_name);
+      dummy_id := delete_appearance(appearance_rec, schema_name);
     end loop;
     close appearance_cur;
   exception
@@ -471,19 +472,13 @@ AS
       dbms_output.put_line('pre_delete_appearance (id: ' || appearance_rec.id || '): ' || SQLERRM);
   end;
 
-  function delete_appearance(appearance_rec appearance%rowtype, cleanup int := 0, schema_name varchar2 := user) return number
+  function delete_appearance(appearance_rec appearance%rowtype, schema_name varchar2 := user) return number
   is
     dummy_ids id_array := id_array();
     deleted_id number;
   begin
     pre_delete_appearance(appearance_rec, schema_name);
     execute immediate 'delete from ' || schema_name || '.appearance where id=:1 returning id into :2' using appearance_rec.id, out deleted_id;
-
-    if cleanup <> 0 then
-      -- cleanup texture images    
-      dummy_ids := cleanup_tex_images(schema_name);
-    end if;
-
     return deleted_id;
   exception
     when others then
@@ -509,10 +504,22 @@ AS
   begin
     pre_delete_surface_data(surface_data_rec, schema_name);
     execute immediate 'delete from ' || schema_name || '.surface_data where id=:1 returning id into :2' using surface_data_rec.id, out deleted_id;
+    post_delete_surface_data(surface_data_rec, schema_name);
     return deleted_id;
   exception
     when others then
       dbms_output.put_line('delete_surface_data (id: ' || surface_data_rec.id || '): ' || SQLERRM);
+  end;
+
+  procedure post_delete_surface_data(surface_data_rec surface_data%rowtype, schema_name varchar2 := user)
+  is
+  begin
+    execute immediate 'delete from ' || schema_name || '.tex_image where id=:1 and not exists (
+                         select tex_image_id from ' || schema_name || '.surface_data where tex_image_id = :2)' 
+                         using surface_data_rec.tex_image_id, surface_data_rec.tex_image_id;
+  exception
+    when others then
+      dbms_output.put_line('post_delete_surface_data (id: ' || surface_data_rec.id || '): ' || SQLERRM);
   end;
 
   /*
@@ -2483,7 +2490,7 @@ AS
       dbms_output.put_line('delete_external_reference (id: ' || pid || '): ' || SQLERRM);
   end;
   
-  function delete_appearance(pid number, cleanup int := 0, schema_name varchar2 := user) return number
+  function delete_appearance(pid number, schema_name varchar2 := user) return number
   is
     deleted_id number;
     appearance_rec appearance%rowtype;
@@ -2492,7 +2499,7 @@ AS
       into appearance_rec
       using pid;
 
-    deleted_id := delete_appearance(appearance_rec, cleanup, schema_name);
+    deleted_id := delete_appearance(appearance_rec, schema_name);
     return deleted_id;
   exception
     when no_data_found then
@@ -3352,7 +3359,7 @@ AS
       loop
         fetch appearance_cur into appearance_rec;
         exit when appearance_cur%notfound;
-        deleted_id := delete_appearance(appearance_rec, 0, schema_name);
+        deleted_id := delete_appearance(appearance_rec, schema_name);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       end loop;
@@ -3363,7 +3370,7 @@ AS
       loop
         fetch appearance_cur into appearance_rec;
         exit when appearance_cur%notfound;
-        deleted_id := delete_appearance(appearance_rec, 0, schema_name);
+        deleted_id := delete_appearance(appearance_rec, schema_name);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       end loop;

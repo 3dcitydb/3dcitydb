@@ -38,7 +38,7 @@
 *   cleanup_schema(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
 *   cleanup_tex_images(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
 *   delete_address(ad_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_appearance(app_id INTEGER, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
+*   delete_appearance(app_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_breakline_relief(blr_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_bridge(brd_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   delete_bridge_constr_element(brdce_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
@@ -120,7 +120,7 @@ BEGIN
   UPDATE cityobjectgroup SET parent_cityobject_id = NULL WHERE parent_cityobject_id = co_id;
 
   -- delete local appearances of city object
-  PERFORM citydb_pkg.delete_appearance(id, 0, schema_name) FROM appearance WHERE cityobject_id = co_id;
+  PERFORM citydb_pkg.delete_appearance(id, schema_name) FROM appearance WHERE cityobject_id = co_id;
 
   --// DELETE CITY OBJECT //--
   DELETE FROM cityobject WHERE id = co_id RETURNING id INTO deleted_id;
@@ -374,7 +374,6 @@ delete from APPEARANCE
 */
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_appearance(
   app_id INTEGER,
-  cleanup INTEGER DEFAULT 0,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS INTEGER AS
 $$
@@ -405,11 +404,6 @@ BEGIN
   --// DELETE APPEARANCE //--
   DELETE FROM appearance WHERE id = app_id RETURNING id INTO deleted_id;
 
-  IF cleanup <> 0 THEN
-    -- delete tex images not referenced by surface data any more
-    PERFORM citydb_pkg.cleanup_tex_images(schema_name); 
-  END IF;
-
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
 
@@ -433,6 +427,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_surface_data(
 $$
 DECLARE
   deleted_id INTEGER;
+  tex_id INTEGER;
   path_setting TEXT;
 BEGIN
   -- set search_path for this session
@@ -447,14 +442,20 @@ BEGIN
   DELETE FROM appear_to_surface_data WHERE surface_data_id = sd_id;
 
   --// DELETE SURFACE DATA //--
-  DELETE FROM surface_data WHERE id = sd_id RETURNING id INTO deleted_id;
+  DELETE FROM surface_data WHERE id = sd_id RETURNING id, tex_image_id INTO deleted_id, tex_id;
+
+  --// POST DELETE SURFACE DATA //--
+  DELETE FROM tex_image ti USING (
+      SELECT tex_id
+    ) t
+    LEFT JOIN surface_data sd ON sd.tex_image_id = t.tex_id
+    WHERE ti.id = t.tex_id
+      AND sd.tex_image_id IS NULL;
 
   -- reset search_path in case auto_commit is switched off
   PERFORM set_config('search_path', path_setting, true);
 
   RETURN deleted_id;
-
-  -- to delete entries in TEX_IMAGE table use citydb_pkg.cleanup_tex_images('schema_name')
 
   EXCEPTION
     WHEN OTHERS THEN
@@ -1898,7 +1899,7 @@ BEGIN
   DELETE FROM cityobject_member WHERE citymodel_id = cm_id;
 
   -- delete appearances assigned to the city model
-  PERFORM citydb_pkg.delete_appearance(id, 0, schema_name) FROM appearance WHERE citymodel_id = cm_id;
+  PERFORM citydb_pkg.delete_appearance(id, schema_name) FROM appearance WHERE citymodel_id = cm_id;
 
   --// DELETE CITY MODEL //--
   DELETE FROM citymodel WHERE id = cm_id RETURNING id INTO deleted_id;
@@ -3020,7 +3021,7 @@ BEGIN
         LEFT OUTER JOIN appear_to_surface_data asd ON a.id=asd.appearance_id 
           WHERE a.cityobject_id IS NULL AND asd.appearance_id IS NULL
     LOOP
-      deleted_id := citydb_pkg.delete_appearance(app_id, 0, schema_name);
+      deleted_id := citydb_pkg.delete_appearance(app_id, schema_name);
       RETURN NEXT deleted_id;
     END LOOP;
   ELSE
@@ -3029,7 +3030,7 @@ BEGIN
         LEFT OUTER JOIN appear_to_surface_data asd ON a.id=asd.appearance_id 
           WHERE asd.appearance_id IS NULL
     LOOP
-      deleted_id := citydb_pkg.delete_appearance(app_id, 0, schema_name);
+      deleted_id := citydb_pkg.delete_appearance(app_id, schema_name);
       RETURN NEXT deleted_id;
     END LOOP;
   END IF;
