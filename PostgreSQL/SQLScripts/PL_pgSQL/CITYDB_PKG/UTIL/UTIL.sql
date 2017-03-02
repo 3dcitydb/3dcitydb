@@ -29,21 +29,21 @@
 * CONTENT
 *
 * FUNCTIONS:
-*   citydb_version() RETURNS TABLE(
-*     citydb_version TEXT, 
-*     major_version INTEGER, 
-*     minor_version INTEGER, 
-*     minor_revision INTEGER
-*     )
+*   citydb_version( 
+*     OUT version TEXT, 
+*     OUT major_version INTEGER, 
+*     OUT minor_version INTEGER, 
+*     OUT minor_revision INTEGER
+*     ) RETURNS RECORD
 *   db_info(OUT schema_srid INTEGER, OUT schema_gml_srs_name TEXT, OUT versioning TEXT) RETURNS RECORD
-*   db_metadata() RETURNS TABLE(
-*     srid INTEGER, 
-*     gml_srs_name TEXT, 
-*     coord_ref_sys_name TEXT, 
-*     coord_ref_sys_kind TEXT,
-*     wktext TEXT,
-*     versioning TEXT
-*     )
+*   db_metadata(
+*     OUT schema_srid INTEGER, 
+*     OUT schema_gml_srs_name TEXT, 
+*     OUT coord_ref_sys_name TEXT, 
+*     OUT coord_ref_sys_kind TEXT,
+*     OUT wktext TEXT,  
+*     OUT versioning TEXT
+*     ) RETURNS RECORD
 *   get_seq_values(seq_name TEXT, seq_count INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
 *   min(a NUMERIC, b NUMERIC) RETURNS NUMERIC
 *   objectclass_id_to_table_name(class_id INTEGER) RETURNS TEXT
@@ -63,22 +63,20 @@
 *   minor_version - minor version number of 3DCityDB instance
 *   minor_revision - minor revision number of 3DCityDB instance
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.citydb_version() RETURNS TABLE( 
-  version TEXT, 
-  major_version INTEGER, 
-  minor_version INTEGER, 
-  minor_revision INTEGER
-  ) AS 
+CREATE OR REPLACE FUNCTION citydb_pkg.citydb_version( 
+  OUT version TEXT, 
+  OUT major_version INTEGER, 
+  OUT minor_version INTEGER, 
+  OUT minor_revision INTEGER
+  ) RETURNS RECORD AS 
 $$
-BEGIN
-  version := '3.3.0'; 
-  major_version := 3;
-  minor_version := 3;
-  minor_revision := 0;
-  RETURN NEXT;
-END;
+SELECT 
+  '3.3.0'::text AS version, 
+  3 AS major_version, 
+  3 AS minor_version, 
+  0 AS minor_revision;
 $$
-LANGUAGE plpgsql IMMUTABLE;
+LANGUAGE sql IMMUTABLE;
 
 
 /*****************************************************************
@@ -93,7 +91,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.versioning_table(
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS TEXT AS 
 $$
-  SELECT 'OFF'::text;
+SELECT 'OFF'::text;
 $$
 LANGUAGE sql IMMUTABLE;
 
@@ -106,7 +104,7 @@ LANGUAGE sql IMMUTABLE;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.versioning_db(schema_name TEXT DEFAULT 'citydb') RETURNS TEXT AS 
 $$
-  SELECT 'OFF'::text;
+SELECT 'OFF'::text;
 $$
 LANGUAGE sql IMMUTABLE;
 
@@ -124,12 +122,13 @@ CREATE OR REPLACE FUNCTION citydb_pkg.db_info(
   OUT versioning TEXT
   ) AS 
 $$
-BEGIN
-  SELECT srid, gml_srs_name INTO schema_srid, schema_gml_srs_name FROM database_srs;
-  versioning := citydb_pkg.versioning_db(current_schema());
-END;
+SELECT 
+  srid AS schema_srid,
+  gml_srs_name AS schema_gml_srs_name,
+  citydb_pkg.versioning_db(current_schema()) AS versioning
+FROM database_srs;
 $$ 
-LANGUAGE plpgsql STABLE;
+LANGUAGE sql STABLE;
 
 
 /******************************************************************
@@ -138,25 +137,26 @@ LANGUAGE plpgsql STABLE;
 * @RETURN TABLE with columns SRID, GML_SRS_NAME, COORD_REF_SYS_NAME, 
 *               COORD_REF_SYS_KIND, VERSIONING
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata() RETURNS TABLE(
-  schema_srid INTEGER, 
-  schema_gml_srs_name TEXT, 
-  coord_ref_sys_name TEXT, 
-  coord_ref_sys_kind TEXT,
-  wktext TEXT,  
-  versioning TEXT
-  ) AS 
+CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(
+  OUT schema_srid INTEGER, 
+  OUT schema_gml_srs_name TEXT, 
+  OUT coord_ref_sys_name TEXT, 
+  OUT coord_ref_sys_kind TEXT,
+  OUT wktext TEXT,  
+  OUT versioning TEXT
+  ) RETURNS RECORD AS 
 $$
-BEGIN
-  SELECT srid, gml_srs_name INTO schema_srid, schema_gml_srs_name FROM database_srs;
-  SELECT srtext INTO wktext FROM spatial_ref_sys WHERE srid = schema_srid;
-  coord_ref_sys_name := split_part(wktext, '"', 2);
-  coord_ref_sys_kind := split_part(wktext, '[', 1);
-  versioning := citydb_pkg.versioning_db();
-  RETURN NEXT;
-END;
+SELECT 
+  d.srid AS schema_srid, 
+  d.gml_srs_name AS schema_gml_srs_name, 
+  split_part(s.srtext, '"', 2) AS coord_ref_sys_name,
+  split_part(s.srtext, '[', 1) AS coord_ref_sys_kind,
+  s.srtext AS wktext,
+  citydb_pkg.versioning_db() AS versioning
+FROM database_srs d, spatial_ref_sys s 
+  WHERE d.srid = s.srid;
 $$
-LANGUAGE plpgsql STABLE;
+LANGUAGE sql STABLE;
 
 
 /******************************************************************
@@ -171,15 +171,9 @@ CREATE OR REPLACE FUNCTION citydb_pkg.min(
   b NUMERIC
   ) RETURNS NUMERIC AS 
 $$
-BEGIN
-  IF a < b THEN
-    RETURN a;
-  ELSE
-    RETURN b;
-  END IF;
-END;
+SELECT LEAST($1,$2);
 $$
-LANGUAGE plpgsql IMMUTABLE STRICT;
+LANGUAGE sql IMMUTABLE;
 
 
 /******************************************************************
@@ -208,15 +202,14 @@ CREATE OR REPLACE FUNCTION citydb_pkg.update_table_constraint(
 $$
 BEGIN
   EXECUTE format('ALTER TABLE %I.%I DROP CONSTRAINT %I, ADD CONSTRAINT %I FOREIGN KEY (%I) REFERENCES %I.%I (%I)
-                    ON UPDATE CASCADE ON DELETE ' || delete_param,
-                    schema_name, table_name, fkey_name, fkey_name, column_name, schema_name, ref_table, ref_column);
+                    ON UPDATE CASCADE ON DELETE ' || $6, $7, $2, $1, $1, $3, $7, $4, $5);
 
   EXCEPTION
     WHEN OTHERS THEN
       RAISE NOTICE 'Error on constraint %: %', fkey_name, SQLERRM;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /******************************************************************
@@ -236,7 +229,7 @@ $$
 DECLARE
   delete_param TEXT := 'CASCADE';
 BEGIN
-  IF on_delete_param <> 'CASCADE' THEN
+  IF $1 <> 'CASCADE' THEN
     delete_param := 'NO ACTION';
     RAISE NOTICE 'Constraints are set to ON DELETE NO ACTION';
   ELSE
@@ -248,11 +241,11 @@ BEGIN
     JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
     JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
       WHERE constraint_type = 'FOREIGN KEY' 
-        AND tc.table_schema = schema_name 
-        AND kcu.table_schema = schema_name;
+        AND tc.table_schema = $2 
+        AND kcu.table_schema = $2;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -273,7 +266,7 @@ DECLARE
 BEGIN
   -- set search_path for this session
   path_setting := current_setting('search_path');
-  PERFORM set_config('search_path', schema_name, true);
+  PERFORM set_config('search_path', $3, true);
 
   RETURN QUERY SELECT nextval($1)::int FROM generate_series(1, $2);
 
@@ -281,7 +274,7 @@ BEGIN
   PERFORM set_config('search_path', path_setting, true);
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -293,89 +286,83 @@ LANGUAGE plpgsql;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.objectclass_id_to_table_name(class_id INTEGER) RETURNS TEXT AS
 $$
-DECLARE
-  table_name TEXT;
-BEGIN
-  CASE 
-    WHEN class_id = 4 THEN table_name := 'land_use';
-    WHEN class_id = 5 THEN table_name := 'generic_cityobject';
-    WHEN class_id = 7 THEN table_name := 'solitary_vegetat_object';
-    WHEN class_id = 8 THEN table_name := 'plant_cover';
-    WHEN class_id = 9 THEN table_name := 'waterbody';
-    WHEN class_id = 11 OR 
-         class_id = 12 OR 
-         class_id = 13 THEN table_name := 'waterboundary_surface';
-    WHEN class_id = 14 THEN table_name := 'relief_feature';
-    WHEN class_id = 16 OR 
-         class_id = 17 OR 
-         class_id = 18 OR 
-         class_id = 19 THEN table_name := 'relief_component';
-    WHEN class_id = 21 THEN table_name := 'city_furniture';
-    WHEN class_id = 23 THEN table_name := 'cityobjectgroup';
-    WHEN class_id = 25 OR 
-         class_id = 26 THEN table_name := 'building';
-    WHEN class_id = 27 OR 
-         class_id = 28 THEN table_name := 'building_installation';
-    WHEN class_id = 30 OR 
-         class_id = 31 OR 
-         class_id = 32 OR 
-         class_id = 33 OR 
-         class_id = 34 OR 
-         class_id = 35 OR
-         class_id = 36 OR
-         class_id = 60 OR
-         class_id = 61 THEN table_name := 'thematic_surface';
-    WHEN class_id = 38 OR 
-         class_id = 39 THEN table_name := 'opening';
-    WHEN class_id = 40 THEN table_name := 'building_furniture';
-    WHEN class_id = 41 THEN table_name := 'room';
-    WHEN class_id = 43 OR 
-         class_id = 44 OR 
-         class_id = 45 OR 
-         class_id = 46 THEN table_name := 'transportation_complex';
-    WHEN class_id = 47 OR 
-         class_id = 48 THEN table_name := 'traffic_area';
-    WHEN class_id = 57 THEN table_name := 'citymodel';
-    WHEN class_id = 63 OR
-         class_id = 64 THEN table_name := 'bridge';
-    WHEN class_id = 65 OR
-         class_id = 66 THEN table_name := 'bridge_installation';
-    WHEN class_id = 68 OR 
-         class_id = 69 OR 
-         class_id = 70 OR 
-         class_id = 71 OR 
-         class_id = 72 OR
-         class_id = 73 OR
-         class_id = 74 OR
-         class_id = 75 OR
-         class_id = 76 THEN table_name := 'bridge_thematic_surface';
-    WHEN class_id = 78 OR 
-         class_id = 79 THEN table_name := 'bridge_opening';		 
-    WHEN class_id = 80 THEN table_name := 'bridge_furniture';
-    WHEN class_id = 81 THEN table_name := 'bridge_room';
-    WHEN class_id = 82 THEN table_name := 'bridge_constr_element';
-    WHEN class_id = 84 OR
-         class_id = 85 THEN table_name := 'tunnel';
-    WHEN class_id = 86 OR
-         class_id = 87 THEN table_name := 'tunnel_installation';
-    WHEN class_id = 88 OR 
-         class_id = 89 OR 
-         class_id = 90 OR 
-         class_id = 91 OR 
-         class_id = 92 OR
-         class_id = 93 OR
-         class_id = 94 OR
-         class_id = 95 OR
-         class_id = 96 THEN table_name := 'tunnel_thematic_surface';
-    WHEN class_id = 99 OR 
-         class_id = 100 THEN table_name := 'tunnel_opening';		 
-    WHEN class_id = 101 THEN table_name := 'tunnel_furniture';
-    WHEN class_id = 102 THEN table_name := 'tunnel_hollow_space';
+SELECT CASE 
+  WHEN $1 = 4 THEN 'land_use'
+  WHEN $1 = 5 THEN 'generic_cityobject'
+  WHEN $1 = 7 THEN 'solitary_vegetat_object'
+  WHEN $1 = 8 THEN 'plant_cover'
+  WHEN $1 = 9 THEN 'waterbody'
+  WHEN $1 = 11 OR 
+       $1 = 12 OR 
+       $1 = 13 THEN 'waterboundary_surface'
+  WHEN $1 = 14 THEN 'relief_feature'
+  WHEN $1 = 16 OR 
+       $1 = 17 OR 
+       $1 = 18 OR 
+       $1 = 19 THEN 'relief_component'
+  WHEN $1 = 21 THEN 'city_furniture'
+  WHEN $1 = 23 THEN 'cityobjectgroup'
+  WHEN $1 = 25 OR 
+       $1 = 26 THEN 'building'
+  WHEN $1 = 27 OR 
+       $1 = 28 THEN 'building_installation'
+  WHEN $1 = 30 OR 
+       $1 = 31 OR 
+       $1 = 32 OR 
+       $1 = 33 OR 
+       $1 = 34 OR 
+       $1 = 35 OR
+       $1 = 36 OR
+       $1 = 60 OR
+       $1 = 61 THEN 'thematic_surface'
+  WHEN $1 = 38 OR 
+       $1 = 39 THEN 'opening'
+  WHEN $1 = 40 THEN 'building_furniture'
+  WHEN $1 = 41 THEN 'room'
+  WHEN $1 = 43 OR 
+       $1 = 44 OR 
+       $1 = 45 OR 
+       $1 = 46 THEN 'transportation_complex'
+  WHEN $1 = 47 OR 
+       $1 = 48 THEN 'traffic_area'
+  WHEN $1 = 57 THEN 'citymodel'
+  WHEN $1 = 63 OR
+       $1 = 64 THEN 'bridge'
+  WHEN $1 = 65 OR
+       $1 = 66 THEN 'bridge_installation'
+  WHEN $1 = 68 OR 
+       $1 = 69 OR 
+       $1 = 70 OR 
+       $1 = 71 OR 
+       $1 = 72 OR
+       $1 = 73 OR
+       $1 = 74 OR
+       $1 = 75 OR
+       $1 = 76 THEN 'bridge_thematic_surface'
+  WHEN $1 = 78 OR 
+       $1 = 79 THEN 'bridge_opening'		 
+  WHEN $1 = 80 THEN 'bridge_furniture'
+  WHEN $1 = 81 THEN 'bridge_room'
+  WHEN $1 = 82 THEN 'bridge_constr_element'
+  WHEN $1 = 84 OR
+       $1 = 85 THEN 'tunnel'
+  WHEN $1 = 86 OR
+       $1 = 87 THEN 'tunnel_installation'
+  WHEN $1 = 88 OR 
+       $1 = 89 OR 
+       $1 = 90 OR 
+       $1 = 91 OR 
+       $1 = 92 OR
+       $1 = 93 OR
+       $1 = 94 OR
+       $1 = 95 OR
+       $1 = 96 THEN 'tunnel_thematic_surface'
+  WHEN $1 = 99 OR 
+       $1 = 100 THEN 'tunnel_opening'		 
+  WHEN $1 = 101 THEN 'tunnel_furniture'
+  WHEN $1 = 102 THEN 'tunnel_hollow_space'
   ELSE
-    RAISE NOTICE 'Table name unknown.';
-  END CASE;
-  
-  RETURN table_name;
-END;
+    'Unknown table'
+  END;
 $$
-LANGUAGE plpgsql IMMUTABLE STRICT;
+LANGUAGE sql IMMUTABLE STRICT;

@@ -29,13 +29,12 @@
 * CONTENT
 *
 * FUNCTIONS:
-*   change_column_srid(t_name TEXT, c_name TEXT, dim INTEGER, schema_srid INTEGER, transform INTEGER DEFAULT 0, geom_type TEXT DEFAULT 'GEOMETRY', s_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
+*   change_column_srid(table_name TEXT, column_name TEXT, dim INTEGER, schema_srid INTEGER, transform INTEGER DEFAULT 0, geom_type TEXT DEFAULT 'GEOMETRY', schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   change_schema_srid(schema_srid INTEGER, schema_gml_srs_name TEXT, transform INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   check_srid(srsno INTEGER DEFAULT 0) RETURNS TEXT
 *   is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER
-*   is_db_coord_ref_sys_3d() RETURNS INTEGER
+*   is_db_coord_ref_sys_3d(schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   transform_or_null(geom GEOMETRY, srid INTEGER) RETURNS GEOMETRY
-
 ******************************************************************/
 
 /******************************************************************
@@ -51,9 +50,9 @@
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER AS
 $$
-  SELECT 1 FROM spatial_ref_sys WHERE auth_srid = schema_srid AND srtext LIKE '%UP]%';
+  SELECT 1 FROM spatial_ref_sys WHERE auth_srid = $1 AND srtext LIKE '%UP]%';
 $$
-LANGUAGE sql STABLE;
+LANGUAGE sql STABLE STRICT;
 
 
 /******************************************************************
@@ -61,14 +60,14 @@ LANGUAGE sql STABLE;
 *
 * @RETURN NUMERIC the boolean result encoded as NUMERIC: 0 = false, 1 = true                
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d() RETURNS INTEGER AS
+CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d(schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER AS
 $$
 DECLARE
   path_setting TEXT;
 BEGIN
   -- set search_path for this session
   path_setting := current_setting('search_path');
-  PERFORM set_config('search_path', schema_name || ',public', true);
+  PERFORM set_config('search_path', $1 || ',public', true);
   
   SELECT citydb_pkg.is_coord_ref_sys_3d(srid) FROM database_srs;
 
@@ -76,7 +75,7 @@ BEGIN
   PERFORM set_config('search_path', path_setting, true);
 END;
 $$
-LANGUAGE plpgsql STABLE;
+LANGUAGE plpgsql STABLE STRICT;
 
 
 /*******************************************************************
@@ -92,7 +91,7 @@ $$
 DECLARE
   schema_srid INTEGER;
 BEGIN
-  SELECT srid INTO schema_srid FROM spatial_ref_sys WHERE srid = srsno;
+  SELECT srid INTO schema_srid FROM spatial_ref_sys WHERE srid = $1;
 
   IF schema_srid IS NULL
   THEN
@@ -103,7 +102,7 @@ BEGIN
   RETURN 'SRID ok';
 END;
 $$
-LANGUAGE plpgsql STABLE;
+LANGUAGE plpgsql STABLE STRICT;
 
 
 /******************************************************************
@@ -121,13 +120,13 @@ $$
 BEGIN
   IF geom IS NOT NULL
   THEN
-    RETURN ST_Transform(geom, srid);
+    RETURN ST_Transform($1, $2);
   ELSE
     RETURN NULL;
   END IF;
 END;
 $$
-LANGUAGE plpgsql STABLE;
+LANGUAGE plpgsql STABLE STRICT;
 
 
 /*****************************************************************
@@ -141,17 +140,17 @@ LANGUAGE plpgsql STABLE;
 * @param s_name name of schema
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.change_column_srid(
-  t_name      TEXT,
-  c_name      TEXT,
-  dim         INTEGER,
+  table_name TEXT,
+  column_name TEXT,
+  dim INTEGER,
   schema_srid INTEGER,
-  transform   INTEGER DEFAULT 0,
-  geom_type   TEXT DEFAULT 'GEOMETRY',
-  s_name      TEXT DEFAULT 'citydb'
+  transform INTEGER DEFAULT 0,
+  geom_type TEXT DEFAULT 'GEOMETRY',
+  schema_name TEXT DEFAULT 'citydb'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
-  idx_name      TEXT;
+  idx_name TEXT;
   geometry_type TEXT;
 BEGIN
   -- check if a spatial index is defined for the column
@@ -163,49 +162,48 @@ BEGIN
         AND pgam.oid = pgc_i.relam
         AND pga.attrelid = pgc_i.oid
         AND pgns.oid = pgc_i.relnamespace
-        AND pgns.nspname = s_name
-        AND pgc_t.relname = t_name
-        AND pga.attname = c_name
+        AND pgns.nspname = $7
+        AND pgc_t.relname = $1
+        AND pga.attname = $2
         AND pgam.amname = 'gist';
 
   IF idx_name IS NOT NULL
   THEN
     -- drop spatial index if exists
-    EXECUTE format('DROP INDEX %I.%I', s_name, idx_name);
+    EXECUTE format('DROP INDEX %I.%I', $7, idx_name);
   END IF;
 
-  IF transform <> 0
+  IF $5 <> 0
   THEN
     -- construct correct geometry type
-    IF dim < 3
+    IF $3 < 3
     THEN
-      geometry_type := geom_type;
+      geometry_type := $6;
     ELSE
-      geometry_type := geom_type || 'Z';
+      geometry_type := $6 || 'Z';
     END IF;
 
     -- coordinates of existent geometries will be transformed
     EXECUTE format('ALTER TABLE %I.%I ALTER COLUMN %I TYPE geometry(%I,%L) USING ST_Transform(%I,%L)',
-                   s_name, t_name, c_name, geometry_type, schema_srid, c_name, schema_srid);
+                     $7, $1, $2, geometry_type, $4, $2, $4);
   ELSE
     -- only metadata of geometry columns is updated, coordinates keep unchanged
-    PERFORM UpdateGeometrySRID(s_name, t_name, c_name, schema_srid);
+    PERFORM UpdateGeometrySRID($7, $1, $2, $4);
   END IF;
 
   IF idx_name IS NOT NULL
   THEN
     -- recreate spatial index again
-    IF dim < 3
+    IF $3 < 3
     THEN
-      EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I)', idx_name, s_name, t_name, c_name);
+      EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I)', idx_name, $7, $1, $2);
     ELSE
-      EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_nd )', idx_name, s_name, t_name,
-                     c_name);
+      EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_nd )', idx_name, $7, $1, $2);
     END IF;
   END IF;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*******************************************************************
@@ -219,10 +217,10 @@ LANGUAGE plpgsql;
 * @param schema name       name of schema
 *******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.change_schema_srid(
-  schema_srid         INTEGER,
+  schema_srid INTEGER,
   schema_gml_srs_name TEXT,
-  transform           INTEGER DEFAULT 0,
-  schema_name         TEXT DEFAULT 'citydb'
+  transform INTEGER DEFAULT 0,
+  schema_name TEXT DEFAULT 'citydb'
   ) RETURNS SETOF VOID AS $$
 DECLARE
   is_set_srs_info INTEGER;
@@ -230,24 +228,24 @@ DECLARE
 BEGIN
   -- set search_path for this session
   path_setting := current_setting('search_path');
-  PERFORM set_config('search_path', schema_name || ',public', true);
+  PERFORM set_config('search_path', $4 || ',public', true);
 
   -- check if user selected valid srid
   -- will raise an exception if not
-  SELECT citydb_pkg.check_srid(schema_srid);
+  PERFORM citydb_pkg.check_srid($1);
   
   SELECT 1 INTO is_set_srs_info FROM pg_tables 
-    WHERE schemaname = schema_name AND tablename = 'database_srs';
+    WHERE schemaname = $4 AND tablename = 'database_srs';
 
   IF is_set_srs_info IS NOT NULL THEN
     -- update entry in DATABASE_SRS table first
-    UPDATE database_srs SET srid = schema_srid, gml_srs_name = schema_gml_srs_name;
+    UPDATE database_srs SET srid = $1, gml_srs_name = $2;
   END IF;
 
   -- change srid of each spatially enabled table
-  PERFORM citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, schema_srid, transform, type, f_table_schema) 
+  PERFORM citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $3, type, f_table_schema) 
     FROM geometry_columns 
-      WHERE f_table_schema = schema_name
+      WHERE f_table_schema = $4
         AND f_geometry_column != 'implicit_geometry'
         AND f_geometry_column != 'relative_other_geom'
         AND f_geometry_column != 'texture_coordinates';
@@ -256,4 +254,4 @@ BEGIN
   PERFORM set_config('search_path', path_setting, true);
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
