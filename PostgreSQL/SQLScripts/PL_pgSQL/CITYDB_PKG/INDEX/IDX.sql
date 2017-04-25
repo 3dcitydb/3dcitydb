@@ -81,7 +81,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.construct_spatial_3d(
   crs INTEGER DEFAULT 0
   ) RETURNS citydb_pkg.INDEX_OBJ AS 
 $$
-SELECT ($1, $2, $3, 1, $4, 1)::INDEX_OBJ;
+SELECT ($1, $2, $3, 1, $4, 1)::citydb_pkg.INDEX_OBJ;
 $$
 LANGUAGE 'sql' IMMUTABLE STRICT;
 
@@ -92,7 +92,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.construct_spatial_2d(
   crs INTEGER DEFAULT 0
   ) RETURNS citydb_pkg.INDEX_OBJ AS 
 $$
-SELECT ($1, $2, $3, 1, $4, 0)::INDEX_OBJ;
+SELECT ($1, $2, $3, 1, $4, 0)::citydb_pkg.INDEX_OBJ;
 $$
 LANGUAGE 'sql' IMMUTABLE STRICT;
 
@@ -103,7 +103,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.construct_normal(
   crs INTEGER DEFAULT 0
   ) RETURNS citydb_pkg.INDEX_OBJ AS
 $$
-SELECT ($1, $2, $3, 0, $4, 0)::INDEX_OBJ;
+SELECT ($1, $2, $3, 0, $4, 0)::citydb_pkg.INDEX_OBJ;
 $$
 LANGUAGE 'sql' IMMUTABLE STRICT;
 
