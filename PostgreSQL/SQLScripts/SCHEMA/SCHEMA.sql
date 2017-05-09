@@ -127,6 +127,7 @@ CREATE SEQUENCE citydb.surface_geometry_seq
 -- DROP TABLE IF EXISTS citydb.cityobjectgroup CASCADE;
 CREATE TABLE citydb.cityobjectgroup(
 	id integer NOT NULL,
+	objectclass_id integer,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -169,8 +170,11 @@ CREATE TABLE citydb.database_srs(
 -- DROP TABLE IF EXISTS citydb.objectclass CASCADE;
 CREATE TABLE citydb.objectclass(
 	id integer NOT NULL,
+	is_ade_class numeric,
 	classname character varying(256),
+	tablename character varying(30),
 	superclass_id integer,
+	baseclass_id integer,
 	CONSTRAINT objectclass_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -193,6 +197,7 @@ CREATE SEQUENCE citydb.implicit_geometry_seq
 -- DROP TABLE IF EXISTS citydb.city_furniture CASCADE;
 CREATE TABLE citydb.city_furniture(
 	id integer NOT NULL,
+	objectclass_id integer,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -245,6 +250,7 @@ CREATE SEQUENCE citydb.cityobject_genericatt_seq
 -- DROP TABLE IF EXISTS citydb.generic_cityobject CASCADE;
 CREATE TABLE citydb.generic_cityobject(
 	id integer NOT NULL,
+	objectclass_id integer,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -314,6 +320,7 @@ CREATE TABLE citydb.address_to_building(
 -- DROP TABLE IF EXISTS citydb.building CASCADE;
 CREATE TABLE citydb.building(
 	id integer NOT NULL,
+	objectclass_id integer,
 	building_parent_id integer,
 	building_root_id integer,
 	class character varying(256),
@@ -361,6 +368,7 @@ CREATE TABLE citydb.building(
 -- DROP TABLE IF EXISTS citydb.building_furniture CASCADE;
 CREATE TABLE citydb.building_furniture(
 	id integer NOT NULL,
+	objectclass_id integer,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -448,6 +456,7 @@ CREATE TABLE citydb.opening_to_them_surface(
 -- DROP TABLE IF EXISTS citydb.room CASCADE;
 CREATE TABLE citydb.room(
 	id integer NOT NULL,
+	objectclass_id integer,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -508,6 +517,7 @@ CREATE SEQUENCE citydb.surface_data_seq
 -- DROP TABLE IF EXISTS citydb.textureparam CASCADE;
 CREATE TABLE citydb.textureparam(
 	surface_geometry_id integer NOT NULL,
+	objectclass_id integer,
 	is_texture_parametrization numeric,
 	world_to_texture character varying(1000),
 	texture_coordinates geometry(POLYGON),
@@ -533,6 +543,7 @@ CREATE TABLE citydb.appear_to_surface_data(
 -- DROP TABLE IF EXISTS citydb.breakline_relief CASCADE;
 CREATE TABLE citydb.breakline_relief(
 	id integer NOT NULL,
+	objectclass_id integer,
 	ridge_or_valley_lines geometry(MULTILINESTRINGZ),
 	break_lines geometry(MULTILINESTRINGZ),
 	CONSTRAINT breakline_relief_pk PRIMARY KEY (id)
@@ -545,6 +556,7 @@ CREATE TABLE citydb.breakline_relief(
 -- DROP TABLE IF EXISTS citydb.masspoint_relief CASCADE;
 CREATE TABLE citydb.masspoint_relief(
 	id integer NOT NULL,
+	objectclass_id integer,
 	relief_points geometry(MULTIPOINTZ),
 	CONSTRAINT masspoint_relief_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
@@ -581,6 +593,7 @@ CREATE TABLE citydb.relief_feat_to_rel_comp(
 -- DROP TABLE IF EXISTS citydb.relief_feature CASCADE;
 CREATE TABLE citydb.relief_feature(
 	id integer NOT NULL,
+	objectclass_id integer,
 	lod numeric,
 	CONSTRAINT relief_feature_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100),
@@ -593,6 +606,7 @@ CREATE TABLE citydb.relief_feature(
 -- DROP TABLE IF EXISTS citydb.tin_relief CASCADE;
 CREATE TABLE citydb.tin_relief(
 	id integer NOT NULL,
+	objectclass_id integer,
 	max_length double precision,
 	max_length_unit character varying(4000),
 	stop_lines geometry(MULTILINESTRINGZ),
@@ -654,6 +668,7 @@ CREATE TABLE citydb.traffic_area(
 -- DROP TABLE IF EXISTS citydb.land_use CASCADE;
 CREATE TABLE citydb.land_use(
 	id integer NOT NULL,
+	objectclass_id integer,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -675,6 +690,7 @@ CREATE TABLE citydb.land_use(
 -- DROP TABLE IF EXISTS citydb.plant_cover CASCADE;
 CREATE TABLE citydb.plant_cover(
 	id integer NOT NULL,
+	objectclass_id integer,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -701,6 +717,7 @@ CREATE TABLE citydb.plant_cover(
 -- DROP TABLE IF EXISTS citydb.solitary_vegetat_object CASCADE;
 CREATE TABLE citydb.solitary_vegetat_object(
 	id integer NOT NULL,
+	objectclass_id integer,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -745,6 +762,7 @@ CREATE TABLE citydb.solitary_vegetat_object(
 -- DROP TABLE IF EXISTS citydb.waterbody CASCADE;
 CREATE TABLE citydb.waterbody(
 	id integer NOT NULL,
+	objectclass_id integer,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -796,6 +814,7 @@ CREATE TABLE citydb.waterboundary_surface(
 -- DROP TABLE IF EXISTS citydb.raster_relief CASCADE;
 CREATE TABLE citydb.raster_relief(
 	id integer NOT NULL,
+	objectclass_id integer,
 	raster_uri character varying(4000),
 	coverage_id integer,
 	CONSTRAINT raster_relief_pk PRIMARY KEY (id)
@@ -808,6 +827,7 @@ CREATE TABLE citydb.raster_relief(
 -- DROP TABLE IF EXISTS citydb.tunnel CASCADE;
 CREATE TABLE citydb.tunnel(
 	id integer NOT NULL,
+	objectclass_id integer,
 	tunnel_parent_id integer,
 	tunnel_root_id integer,
 	class character varying(256),
@@ -854,6 +874,7 @@ CREATE TABLE citydb.tunnel_open_to_them_srf(
 -- DROP TABLE IF EXISTS citydb.tunnel_hollow_space CASCADE;
 CREATE TABLE citydb.tunnel_hollow_space(
 	id integer NOT NULL,
+	objectclass_id integer,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -955,6 +976,7 @@ CREATE TABLE citydb.tunnel_installation(
 -- DROP TABLE IF EXISTS citydb.tunnel_furniture CASCADE;
 CREATE TABLE citydb.tunnel_furniture(
 	id integer NOT NULL,
+	objectclass_id integer,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -977,6 +999,7 @@ CREATE TABLE citydb.tunnel_furniture(
 -- DROP TABLE IF EXISTS citydb.bridge CASCADE;
 CREATE TABLE citydb.bridge(
 	id integer NOT NULL,
+	objectclass_id integer,
 	bridge_parent_id integer,
 	bridge_root_id integer,
 	class character varying(256),
@@ -1013,6 +1036,7 @@ CREATE TABLE citydb.bridge(
 -- DROP TABLE IF EXISTS citydb.bridge_furniture CASCADE;
 CREATE TABLE citydb.bridge_furniture(
 	id integer NOT NULL,
+	objectclass_id integer,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -1100,6 +1124,7 @@ CREATE TABLE citydb.bridge_open_to_them_srf(
 -- DROP TABLE IF EXISTS citydb.bridge_room CASCADE;
 CREATE TABLE citydb.bridge_room(
 	id integer NOT NULL,
+	objectclass_id integer,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -1137,6 +1162,7 @@ CREATE TABLE citydb.bridge_thematic_surface(
 -- DROP TABLE IF EXISTS citydb.bridge_constr_element CASCADE;
 CREATE TABLE citydb.bridge_constr_element(
 	id integer NOT NULL,
+	objectclass_id integer,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -1227,6 +1253,7 @@ CREATE TABLE citydb.cityobject(
 -- DROP TABLE IF EXISTS citydb.appearance CASCADE;
 CREATE TABLE citydb.appearance(
 	id integer NOT NULL DEFAULT nextval('citydb.appearance_seq'::regclass),
+	objectclass_id integer,
 	gmlid character varying(256),
 	gmlid_codespace varchar(1000),
 	name character varying(1000),
@@ -1245,6 +1272,7 @@ CREATE TABLE citydb.appearance(
 -- DROP TABLE IF EXISTS citydb.implicit_geometry CASCADE;
 CREATE TABLE citydb.implicit_geometry(
 	id integer NOT NULL DEFAULT nextval('citydb.implicit_geometry_seq'::regclass),
+	objectclass_id integer,
 	mime_type character varying(256),
 	reference_to_library character varying(4000),
 	library_object bytea,
@@ -1283,6 +1311,7 @@ CREATE TABLE citydb.surface_geometry(
 -- DROP TABLE IF EXISTS citydb.address CASCADE;
 CREATE TABLE citydb.address(
 	id integer NOT NULL DEFAULT nextval('citydb.address_seq'::regclass),
+	objectclass_id integer,
 	gmlid varchar(256),
 	gmlid_codespace varchar(1000),
 	street character varying(1000),
@@ -1304,13 +1333,13 @@ CREATE TABLE citydb.address(
 -- DROP TABLE IF EXISTS citydb.surface_data CASCADE;
 CREATE TABLE citydb.surface_data(
 	id integer NOT NULL DEFAULT nextval('citydb.surface_data_seq'::regclass),
+	objectclass_id integer,
 	gmlid character varying(256),
 	gmlid_codespace varchar(1000),
 	name character varying(1000),
 	name_codespace character varying(4000),
 	description character varying(4000),
 	is_front numeric,
-	objectclass_id integer,
 	x3d_shininess double precision,
 	x3d_transparency double precision,
 	x3d_ambient_intensity double precision,
@@ -1335,6 +1364,7 @@ CREATE TABLE citydb.surface_data(
 -- DROP TABLE IF EXISTS citydb.citymodel CASCADE;
 CREATE TABLE citydb.citymodel(
 	id integer NOT NULL DEFAULT nextval('citydb.citymodel_seq'::regclass),
+	objectclass_id integer,
 	gmlid character varying(256),
 	gmlid_codespace varchar(1000),
 	name character varying(1000),
@@ -4600,6 +4630,361 @@ CREATE INDEX address_point_spx ON citydb.address
 	);
 -- ddl-end --
 
+-- object: citydb.schema | type: TABLE --
+-- DROP TABLE IF EXISTS citydb.schema CASCADE;
+CREATE TABLE citydb.schema(
+	id integer NOT NULL,
+	is_root_schema numeric,
+	name character varying(1000),
+	namespace_uri character varying(4000),
+	db_prefix character varying(10),
+	version character varying(50),
+	xml_prefix character varying(50),
+	xml_schema_location character varying(4000),
+	xml_schemafile bytea,
+	xml_schemafile_type character varying(256),
+	xml_schemamapping_file text,
+	drop_db_script text,
+	CONSTRAINT schema_pk PRIMARY KEY (id)
+	 WITH (FILLFACTOR = 100)
+
+);
+-- ddl-end --
+
+-- object: citydb.schema_to_objectclass | type: TABLE --
+-- DROP TABLE IF EXISTS citydb.schema_to_objectclass CASCADE;
+CREATE TABLE citydb.schema_to_objectclass(
+	schema_id integer NOT NULL,
+	objectclass_id integer NOT NULL,
+	CONSTRAINT schema_to_objectclass_pk PRIMARY KEY (schema_id,objectclass_id)
+	 WITH (FILLFACTOR = 100)
+
+);
+-- ddl-end --
+
+-- object: schema_to_objectclass_fkx1 | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.schema_to_objectclass_fkx1 CASCADE;
+CREATE INDEX schema_to_objectclass_fkx1 ON citydb.schema_to_objectclass
+	USING btree
+	(
+	  schema_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: schema_to_objectclass_fkx2 | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.schema_to_objectclass_fkx2 CASCADE;
+CREATE INDEX schema_to_objectclass_fkx2 ON citydb.schema_to_objectclass
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: objectclass_baseclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.objectclass_baseclass_fkx CASCADE;
+CREATE INDEX objectclass_baseclass_fkx ON citydb.objectclass
+	USING btree
+	(
+	  baseclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: citydb.schema_referencing | type: TABLE --
+-- DROP TABLE IF EXISTS citydb.schema_referencing CASCADE;
+CREATE TABLE citydb.schema_referencing(
+	local_id integer NOT NULL,
+	referencing_id integer NOT NULL,
+	CONSTRAINT schema_referencing_pk PRIMARY KEY (local_id,referencing_id)
+	 WITH (FILLFACTOR = 100)
+
+);
+-- ddl-end --
+
+-- object: schema_referencing_fkx1 | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.schema_referencing_fkx1 CASCADE;
+CREATE INDEX schema_referencing_fkx1 ON citydb.schema_referencing
+	USING btree
+	(
+	  local_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: schema_referencing_fkx2 | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.schema_referencing_fkx2 CASCADE;
+CREATE INDEX schema_referencing_fkx2 ON citydb.schema_referencing
+	USING btree
+	(
+	  referencing_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: citydb.schema_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS citydb.schema_seq CASCADE;
+CREATE SEQUENCE citydb.schema_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+
+-- object: citydb.objectclass_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS citydb.objectclass_seq CASCADE;
+CREATE SEQUENCE citydb.objectclass_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 10000
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+
+-- object: address_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.address_objclass_fkx CASCADE;
+CREATE INDEX address_objclass_fkx ON citydb.address
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: appearance_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.appearance_objclass_fkx CASCADE;
+CREATE INDEX appearance_objclass_fkx ON citydb.appearance
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: breakline_rel_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.breakline_rel_objclass_fkx CASCADE;
+CREATE INDEX breakline_rel_objclass_fkx ON citydb.breakline_relief
+	USING btree
+	(
+	  objectclass_id
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: bridge_objectclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.bridge_objectclass_fkx CASCADE;
+CREATE INDEX bridge_objectclass_fkx ON citydb.bridge
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: bridge_constr_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.bridge_constr_objclass_fkx CASCADE;
+CREATE INDEX bridge_constr_objclass_fkx ON citydb.bridge_constr_element
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: bridge_furn_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.bridge_furn_objclass_fkx CASCADE;
+CREATE INDEX bridge_furn_objclass_fkx ON citydb.bridge_furniture
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: bridge_room_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.bridge_room_objclass_fkx CASCADE;
+CREATE INDEX bridge_room_objclass_fkx ON citydb.bridge_room
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: building_objectclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.building_objectclass_fkx CASCADE;
+CREATE INDEX building_objectclass_fkx ON citydb.building
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: bldg_furn_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.bldg_furn_objclass_fkx CASCADE;
+CREATE INDEX bldg_furn_objclass_fkx ON citydb.building_furniture
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: city_furn_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.city_furn_objclass_fkx CASCADE;
+CREATE INDEX city_furn_objclass_fkx ON citydb.city_furniture
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: citymodel_objectclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.citymodel_objectclass_fkx CASCADE;
+CREATE INDEX citymodel_objectclass_fkx ON citydb.citymodel
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: group_objectclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.group_objectclass_fkx CASCADE;
+CREATE INDEX group_objectclass_fkx ON citydb.cityobjectgroup
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: gen_object_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.gen_object_objclass_fkx CASCADE;
+CREATE INDEX gen_object_objclass_fkx ON citydb.generic_cityobject
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: implicit_geom_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.implicit_geom_objclass_fkx CASCADE;
+CREATE INDEX implicit_geom_objclass_fkx ON citydb.implicit_geometry
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: land_use_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.land_use_objclass_fkx CASCADE;
+CREATE INDEX land_use_objclass_fkx ON citydb.land_use
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: masspoint_rel_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.masspoint_rel_objclass_fkx CASCADE;
+CREATE INDEX masspoint_rel_objclass_fkx ON citydb.masspoint_relief
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: plant_cover_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.plant_cover_objclass_fkx CASCADE;
+CREATE INDEX plant_cover_objclass_fkx ON citydb.plant_cover
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: raster_relief_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.raster_relief_objclass_fkx CASCADE;
+CREATE INDEX raster_relief_objclass_fkx ON citydb.raster_relief
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: relief_feat_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.relief_feat_objclass_fkx CASCADE;
+CREATE INDEX relief_feat_objclass_fkx ON citydb.relief_feature
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: "ROOM_OBJECTCLASS_FKX" | type: INDEX --
+-- DROP INDEX IF EXISTS citydb."ROOM_OBJECTCLASS_FKX" CASCADE;
+CREATE INDEX "ROOM_OBJECTCLASS_FKX" ON citydb.room
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: sol_veg_obj_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.sol_veg_obj_objclass_fkx CASCADE;
+CREATE INDEX sol_veg_obj_objclass_fkx ON citydb.solitary_vegetat_object
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: texparam_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.texparam_objclass_fkx CASCADE;
+CREATE INDEX texparam_objclass_fkx ON citydb.textureparam
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: tin_relief_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.tin_relief_objclass_fkx CASCADE;
+CREATE INDEX tin_relief_objclass_fkx ON citydb.tin_relief
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: tunnel_objectclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.tunnel_objectclass_fkx CASCADE;
+CREATE INDEX tunnel_objectclass_fkx ON citydb.tunnel
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: tunnel_furn_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.tunnel_furn_objclass_fkx CASCADE;
+CREATE INDEX tunnel_furn_objclass_fkx ON citydb.tunnel_furniture
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: tun_hspace_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.tun_hspace_objclass_fkx CASCADE;
+CREATE INDEX tun_hspace_objclass_fkx ON citydb.tunnel_hollow_space
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: waterbody_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.waterbody_objclass_fkx CASCADE;
+CREATE INDEX waterbody_objclass_fkx ON citydb.waterbody
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
 -- object: cityobject_member_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.cityobject_member DROP CONSTRAINT IF EXISTS cityobject_member_fk CASCADE;
 ALTER TABLE citydb.cityobject_member ADD CONSTRAINT cityobject_member_fk FOREIGN KEY (cityobject_id)
@@ -4649,6 +5034,13 @@ REFERENCES citydb.cityobject (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: group_objectclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.cityobjectgroup DROP CONSTRAINT IF EXISTS group_objectclass_fk CASCADE;
+ALTER TABLE citydb.cityobjectgroup ADD CONSTRAINT group_objectclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: group_to_cityobject_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.group_to_cityobject DROP CONSTRAINT IF EXISTS group_to_cityobject_fk CASCADE;
 ALTER TABLE citydb.group_to_cityobject ADD CONSTRAINT group_to_cityobject_fk FOREIGN KEY (cityobject_id)
@@ -4666,6 +5058,13 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- object: objectclass_superclass_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.objectclass DROP CONSTRAINT IF EXISTS objectclass_superclass_fk CASCADE;
 ALTER TABLE citydb.objectclass ADD CONSTRAINT objectclass_superclass_fk FOREIGN KEY (superclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: objectclass_baseclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.objectclass DROP CONSTRAINT IF EXISTS objectclass_baseclass_fk CASCADE;
+ALTER TABLE citydb.objectclass ADD CONSTRAINT objectclass_baseclass_fk FOREIGN KEY (baseclass_id)
 REFERENCES citydb.objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
@@ -4730,6 +5129,13 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE citydb.city_furniture DROP CONSTRAINT IF EXISTS city_furn_lod4impl_fk CASCADE;
 ALTER TABLE citydb.city_furniture ADD CONSTRAINT city_furn_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
 REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: city_furn_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.city_furniture DROP CONSTRAINT IF EXISTS city_furn_objclass_fk CASCADE;
+ALTER TABLE citydb.city_furniture ADD CONSTRAINT city_furn_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
@@ -4807,6 +5213,13 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE citydb.generic_cityobject DROP CONSTRAINT IF EXISTS gen_object_lod4impl_fk CASCADE;
 ALTER TABLE citydb.generic_cityobject ADD CONSTRAINT gen_object_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
 REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: gen_object_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.generic_cityobject DROP CONSTRAINT IF EXISTS gen_object_objclass_fk CASCADE;
+ALTER TABLE citydb.generic_cityobject ADD CONSTRAINT gen_object_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
@@ -4915,6 +5328,13 @@ REFERENCES citydb.surface_geometry (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: building_objectclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.building DROP CONSTRAINT IF EXISTS building_objectclass_fk CASCADE;
+ALTER TABLE citydb.building ADD CONSTRAINT building_objectclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: bldg_furn_cityobject_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.building_furniture DROP CONSTRAINT IF EXISTS bldg_furn_cityobject_fk CASCADE;
 ALTER TABLE citydb.building_furniture ADD CONSTRAINT bldg_furn_cityobject_fk FOREIGN KEY (id)
@@ -4940,6 +5360,13 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE citydb.building_furniture DROP CONSTRAINT IF EXISTS bldg_furn_lod4impl_fk CASCADE;
 ALTER TABLE citydb.building_furniture ADD CONSTRAINT bldg_furn_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
 REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: bldg_furn_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.building_furniture DROP CONSTRAINT IF EXISTS bldg_furn_objclass_fk CASCADE;
+ALTER TABLE citydb.building_furniture ADD CONSTRAINT bldg_furn_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
@@ -5104,6 +5531,13 @@ REFERENCES citydb.surface_geometry (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: room_objectclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.room DROP CONSTRAINT IF EXISTS room_objectclass_fk CASCADE;
+ALTER TABLE citydb.room ADD CONSTRAINT room_objectclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: them_surface_cityobject_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.thematic_surface DROP CONSTRAINT IF EXISTS them_surface_cityobject_fk CASCADE;
 ALTER TABLE citydb.thematic_surface ADD CONSTRAINT them_surface_cityobject_fk FOREIGN KEY (id)
@@ -5174,6 +5608,13 @@ REFERENCES citydb.surface_data (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: texparam_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.textureparam DROP CONSTRAINT IF EXISTS texparam_objclass_fk CASCADE;
+ALTER TABLE citydb.textureparam ADD CONSTRAINT texparam_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: app_to_surf_data_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.appear_to_surface_data DROP CONSTRAINT IF EXISTS app_to_surf_data_fk CASCADE;
 ALTER TABLE citydb.appear_to_surface_data ADD CONSTRAINT app_to_surf_data_fk FOREIGN KEY (surface_data_id)
@@ -5195,10 +5636,24 @@ REFERENCES citydb.relief_component (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: breakline_rel_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.breakline_relief DROP CONSTRAINT IF EXISTS breakline_rel_objclass_fk CASCADE;
+ALTER TABLE citydb.breakline_relief ADD CONSTRAINT breakline_rel_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: masspoint_relief_comp_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.masspoint_relief DROP CONSTRAINT IF EXISTS masspoint_relief_comp_fk CASCADE;
 ALTER TABLE citydb.masspoint_relief ADD CONSTRAINT masspoint_relief_comp_fk FOREIGN KEY (id)
 REFERENCES citydb.relief_component (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: masspoint_rel_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.masspoint_relief DROP CONSTRAINT IF EXISTS masspoint_rel_objclass_fk CASCADE;
+ALTER TABLE citydb.masspoint_relief ADD CONSTRAINT masspoint_rel_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
@@ -5237,6 +5692,13 @@ REFERENCES citydb.cityobject (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: relief_feat_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.relief_feature DROP CONSTRAINT IF EXISTS relief_feat_objclass_fk CASCADE;
+ALTER TABLE citydb.relief_feature ADD CONSTRAINT relief_feat_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: tin_relief_comp_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.tin_relief DROP CONSTRAINT IF EXISTS tin_relief_comp_fk CASCADE;
 ALTER TABLE citydb.tin_relief ADD CONSTRAINT tin_relief_comp_fk FOREIGN KEY (id)
@@ -5248,6 +5710,13 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE citydb.tin_relief DROP CONSTRAINT IF EXISTS tin_relief_geom_fk CASCADE;
 ALTER TABLE citydb.tin_relief ADD CONSTRAINT tin_relief_geom_fk FOREIGN KEY (surface_geometry_id)
 REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: tin_relief_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.tin_relief DROP CONSTRAINT IF EXISTS tin_relief_objclass_fk CASCADE;
+ALTER TABLE citydb.tin_relief ADD CONSTRAINT tin_relief_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
@@ -5377,6 +5846,13 @@ REFERENCES citydb.surface_geometry (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: land_use_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.land_use DROP CONSTRAINT IF EXISTS land_use_objclass_fk CASCADE;
+ALTER TABLE citydb.land_use ADD CONSTRAINT land_use_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: plant_cover_cityobject_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.plant_cover DROP CONSTRAINT IF EXISTS plant_cover_cityobject_fk CASCADE;
 ALTER TABLE citydb.plant_cover ADD CONSTRAINT plant_cover_cityobject_fk FOREIGN KEY (id)
@@ -5437,6 +5913,13 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE citydb.plant_cover DROP CONSTRAINT IF EXISTS plant_cover_lod4msolid_fk CASCADE;
 ALTER TABLE citydb.plant_cover ADD CONSTRAINT plant_cover_lod4msolid_fk FOREIGN KEY (lod4_multi_solid_id)
 REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: plant_cover_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.plant_cover DROP CONSTRAINT IF EXISTS plant_cover_objclass_fk CASCADE;
+ALTER TABLE citydb.plant_cover ADD CONSTRAINT plant_cover_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
@@ -5503,6 +5986,13 @@ REFERENCES citydb.implicit_geometry (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: sol_veg_obj_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.solitary_vegetat_object DROP CONSTRAINT IF EXISTS sol_veg_obj_objclass_fk CASCADE;
+ALTER TABLE citydb.solitary_vegetat_object ADD CONSTRAINT sol_veg_obj_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: waterbody_cityobject_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.waterbody DROP CONSTRAINT IF EXISTS waterbody_cityobject_fk CASCADE;
 ALTER TABLE citydb.waterbody ADD CONSTRAINT waterbody_cityobject_fk FOREIGN KEY (id)
@@ -5549,6 +6039,13 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE citydb.waterbody DROP CONSTRAINT IF EXISTS waterbody_lod4solid_fk CASCADE;
 ALTER TABLE citydb.waterbody ADD CONSTRAINT waterbody_lod4solid_fk FOREIGN KEY (lod4_solid_id)
 REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: waterbody_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.waterbody DROP CONSTRAINT IF EXISTS waterbody_objclass_fk CASCADE;
+ALTER TABLE citydb.waterbody ADD CONSTRAINT waterbody_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
@@ -5612,6 +6109,13 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE citydb.raster_relief DROP CONSTRAINT IF EXISTS raster_relief_coverage_fk CASCADE;
 ALTER TABLE citydb.raster_relief ADD CONSTRAINT raster_relief_coverage_fk FOREIGN KEY (coverage_id)
 REFERENCES citydb.grid_coverage (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: raster_relief_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.raster_relief DROP CONSTRAINT IF EXISTS raster_relief_objclass_fk CASCADE;
+ALTER TABLE citydb.raster_relief ADD CONSTRAINT raster_relief_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
@@ -5692,6 +6196,13 @@ REFERENCES citydb.surface_geometry (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: tunnel_objectclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.tunnel DROP CONSTRAINT IF EXISTS tunnel_objectclass_fk CASCADE;
+ALTER TABLE citydb.tunnel ADD CONSTRAINT tunnel_objectclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: tun_open_to_them_srf_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.tunnel_open_to_them_srf DROP CONSTRAINT IF EXISTS tun_open_to_them_srf_fk CASCADE;
 ALTER TABLE citydb.tunnel_open_to_them_srf ADD CONSTRAINT tun_open_to_them_srf_fk FOREIGN KEY (tunnel_opening_id)
@@ -5731,6 +6242,13 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE citydb.tunnel_hollow_space DROP CONSTRAINT IF EXISTS tun_hspace_lod4solid_fk CASCADE;
 ALTER TABLE citydb.tunnel_hollow_space ADD CONSTRAINT tun_hspace_lod4solid_fk FOREIGN KEY (lod4_solid_id)
 REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: tun_hspace_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.tunnel_hollow_space DROP CONSTRAINT IF EXISTS tun_hspace_objclass_fk CASCADE;
+ALTER TABLE citydb.tunnel_hollow_space ADD CONSTRAINT tun_hspace_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
@@ -5930,6 +6448,13 @@ REFERENCES citydb.implicit_geometry (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: tunnel_furn_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.tunnel_furniture DROP CONSTRAINT IF EXISTS tunnel_furn_objclass_fk CASCADE;
+ALTER TABLE citydb.tunnel_furniture ADD CONSTRAINT tunnel_furn_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: bridge_cityobject_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.bridge DROP CONSTRAINT IF EXISTS bridge_cityobject_fk CASCADE;
 ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_cityobject_fk FOREIGN KEY (id)
@@ -6007,6 +6532,13 @@ REFERENCES citydb.surface_geometry (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: bridge_objectclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.bridge DROP CONSTRAINT IF EXISTS bridge_objectclass_fk CASCADE;
+ALTER TABLE citydb.bridge ADD CONSTRAINT bridge_objectclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: bridge_furn_cityobject_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.bridge_furniture DROP CONSTRAINT IF EXISTS bridge_furn_cityobject_fk CASCADE;
 ALTER TABLE citydb.bridge_furniture ADD CONSTRAINT bridge_furn_cityobject_fk FOREIGN KEY (id)
@@ -6032,6 +6564,13 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE citydb.bridge_furniture DROP CONSTRAINT IF EXISTS bridge_furn_lod4impl_fk CASCADE;
 ALTER TABLE citydb.bridge_furniture ADD CONSTRAINT bridge_furn_lod4impl_fk FOREIGN KEY (lod4_implicit_rep_id)
 REFERENCES citydb.implicit_geometry (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: bridge_furn_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.bridge_furniture DROP CONSTRAINT IF EXISTS bridge_furn_objclass_fk CASCADE;
+ALTER TABLE citydb.bridge_furniture ADD CONSTRAINT bridge_furn_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
@@ -6196,6 +6735,13 @@ REFERENCES citydb.surface_geometry (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: "BRIDGE_ROOM_OBJCLASS_FK" | type: CONSTRAINT --
+-- ALTER TABLE citydb.bridge_room DROP CONSTRAINT IF EXISTS "BRIDGE_ROOM_OBJCLASS_FK" CASCADE;
+ALTER TABLE citydb.bridge_room ADD CONSTRAINT "BRIDGE_ROOM_OBJCLASS_FK" FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: brd_them_srf_cityobj_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.bridge_thematic_surface DROP CONSTRAINT IF EXISTS brd_them_srf_cityobj_fk CASCADE;
 ALTER TABLE citydb.bridge_thematic_surface ADD CONSTRAINT brd_them_srf_cityobj_fk FOREIGN KEY (id)
@@ -6329,6 +6875,13 @@ REFERENCES citydb.implicit_geometry (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: bridge_constr_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.bridge_constr_element DROP CONSTRAINT IF EXISTS bridge_constr_objclass_fk CASCADE;
+ALTER TABLE citydb.bridge_constr_element ADD CONSTRAINT bridge_constr_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: address_to_bridge_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.address_to_bridge DROP CONSTRAINT IF EXISTS address_to_bridge_fk CASCADE;
 ALTER TABLE citydb.address_to_bridge ADD CONSTRAINT address_to_bridge_fk FOREIGN KEY (address_id)
@@ -6364,10 +6917,24 @@ REFERENCES citydb.citymodel (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: appearance_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.appearance DROP CONSTRAINT IF EXISTS appearance_objclass_fk CASCADE;
+ALTER TABLE citydb.appearance ADD CONSTRAINT appearance_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: implicit_geom_brep_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.implicit_geometry DROP CONSTRAINT IF EXISTS implicit_geom_brep_fk CASCADE;
 ALTER TABLE citydb.implicit_geometry ADD CONSTRAINT implicit_geom_brep_fk FOREIGN KEY (relative_brep_id)
 REFERENCES citydb.surface_geometry (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: implicit_geom_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.implicit_geometry DROP CONSTRAINT IF EXISTS implicit_geom_objclass_fk CASCADE;
+ALTER TABLE citydb.implicit_geometry ADD CONSTRAINT implicit_geom_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
@@ -6392,6 +6959,13 @@ REFERENCES citydb.cityobject (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: address_objectclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.address DROP CONSTRAINT IF EXISTS address_objectclass_fk CASCADE;
+ALTER TABLE citydb.address ADD CONSTRAINT address_objectclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: surface_data_tex_image_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.surface_data DROP CONSTRAINT IF EXISTS surface_data_tex_image_fk CASCADE;
 ALTER TABLE citydb.surface_data ADD CONSTRAINT surface_data_tex_image_fk FOREIGN KEY (tex_image_id)
@@ -6402,6 +6976,13 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- object: surface_data_objclass_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.surface_data DROP CONSTRAINT IF EXISTS surface_data_objclass_fk CASCADE;
 ALTER TABLE citydb.surface_data ADD CONSTRAINT surface_data_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: citymodel_objectclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.citymodel DROP CONSTRAINT IF EXISTS citymodel_objectclass_fk CASCADE;
+ALTER TABLE citydb.citymodel ADD CONSTRAINT citymodel_objectclass_fk FOREIGN KEY (objectclass_id)
 REFERENCES citydb.objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
@@ -6438,5 +7019,33 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE citydb.external_reference DROP CONSTRAINT IF EXISTS ext_ref_cityobject_fk CASCADE;
 ALTER TABLE citydb.external_reference ADD CONSTRAINT ext_ref_cityobject_fk FOREIGN KEY (cityobject_id)
 REFERENCES citydb.cityobject (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: schema_to_objectclass_fk1 | type: CONSTRAINT --
+-- ALTER TABLE citydb.schema_to_objectclass DROP CONSTRAINT IF EXISTS schema_to_objectclass_fk1 CASCADE;
+ALTER TABLE citydb.schema_to_objectclass ADD CONSTRAINT schema_to_objectclass_fk1 FOREIGN KEY (schema_id)
+REFERENCES citydb.schema (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: schema_to_objectclass_fk2 | type: CONSTRAINT --
+-- ALTER TABLE citydb.schema_to_objectclass DROP CONSTRAINT IF EXISTS schema_to_objectclass_fk2 CASCADE;
+ALTER TABLE citydb.schema_to_objectclass ADD CONSTRAINT schema_to_objectclass_fk2 FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: schema_referencing_fk1 | type: CONSTRAINT --
+-- ALTER TABLE citydb.schema_referencing DROP CONSTRAINT IF EXISTS schema_referencing_fk1 CASCADE;
+ALTER TABLE citydb.schema_referencing ADD CONSTRAINT schema_referencing_fk1 FOREIGN KEY (local_id)
+REFERENCES citydb.schema (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: schema_referencing_fk2 | type: CONSTRAINT --
+-- ALTER TABLE citydb.schema_referencing DROP CONSTRAINT IF EXISTS schema_referencing_fk2 CASCADE;
+ALTER TABLE citydb.schema_referencing ADD CONSTRAINT schema_referencing_fk2 FOREIGN KEY (referencing_id)
+REFERENCES citydb.schema (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
