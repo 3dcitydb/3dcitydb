@@ -1447,6 +1447,30 @@ CREATE TABLE citydb.grid_coverage(
 );
 -- ddl-end --
 
+-- object: citydb.schema_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS citydb.schema_seq CASCADE;
+CREATE SEQUENCE citydb.schema_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+
+-- object: citydb.objectclass_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS citydb.objectclass_seq CASCADE;
+CREATE SEQUENCE citydb.objectclass_seq
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 10000
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+
 -- object: cityobject_member_fkx | type: INDEX --
 -- DROP INDEX IF EXISTS citydb.cityobject_member_fkx CASCADE;
 CREATE INDEX cityobject_member_fkx ON citydb.cityobject_member
@@ -4633,8 +4657,8 @@ CREATE INDEX address_point_spx ON citydb.address
 -- object: citydb.schema | type: TABLE --
 -- DROP TABLE IF EXISTS citydb.schema CASCADE;
 CREATE TABLE citydb.schema(
-	id integer NOT NULL,
-	is_root_schema numeric,
+	id integer NOT NULL DEFAULT nextval('citydb.schema_seq'::regclass),
+	is_ade_root numeric,
 	name character varying(1000),
 	namespace_uri character varying(4000),
 	db_prefix character varying(10),
@@ -4692,9 +4716,9 @@ CREATE INDEX objectclass_baseclass_fkx ON citydb.objectclass
 -- object: citydb.schema_referencing | type: TABLE --
 -- DROP TABLE IF EXISTS citydb.schema_referencing CASCADE;
 CREATE TABLE citydb.schema_referencing(
-	local_id integer NOT NULL,
+	referenced_id integer NOT NULL,
 	referencing_id integer NOT NULL,
-	CONSTRAINT schema_referencing_pk PRIMARY KEY (local_id,referencing_id)
+	CONSTRAINT schema_referencing_pk PRIMARY KEY (referenced_id,referencing_id)
 	 WITH (FILLFACTOR = 100)
 
 );
@@ -4705,7 +4729,7 @@ CREATE TABLE citydb.schema_referencing(
 CREATE INDEX schema_referencing_fkx1 ON citydb.schema_referencing
 	USING btree
 	(
-	  local_id ASC NULLS LAST
+	  referenced_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
@@ -4716,30 +4740,6 @@ CREATE INDEX schema_referencing_fkx2 ON citydb.schema_referencing
 	(
 	  referencing_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
--- ddl-end --
-
--- object: citydb.schema_seq | type: SEQUENCE --
--- DROP SEQUENCE IF EXISTS citydb.schema_seq CASCADE;
-CREATE SEQUENCE citydb.schema_seq
-	INCREMENT BY 1
-	MINVALUE 0
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 1
-	NO CYCLE
-	OWNED BY NONE;
--- ddl-end --
-
--- object: citydb.objectclass_seq | type: SEQUENCE --
--- DROP SEQUENCE IF EXISTS citydb.objectclass_seq CASCADE;
-CREATE SEQUENCE citydb.objectclass_seq
-	INCREMENT BY 1
-	MINVALUE 0
-	MAXVALUE 2147483647
-	START WITH 10000
-	CACHE 1
-	NO CYCLE
-	OWNED BY NONE;
 -- ddl-end --
 
 -- object: address_objclass_fkx | type: INDEX --
@@ -7038,7 +7038,7 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- object: schema_referencing_fk1 | type: CONSTRAINT --
 -- ALTER TABLE citydb.schema_referencing DROP CONSTRAINT IF EXISTS schema_referencing_fk1 CASCADE;
-ALTER TABLE citydb.schema_referencing ADD CONSTRAINT schema_referencing_fk1 FOREIGN KEY (local_id)
+ALTER TABLE citydb.schema_referencing ADD CONSTRAINT schema_referencing_fk1 FOREIGN KEY (referenced_id)
 REFERENCES citydb.schema (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --

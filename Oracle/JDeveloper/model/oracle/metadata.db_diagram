@@ -582,7 +582,7 @@
             </contained>
             <contained xmi:type='DI:GraphNode' xmi:id='id64207fbd-d446-423e-aa40-f8ed8178f2b0'>
               <property xmi:type='DI:Property' key='id' value='ObjectText'/>
-              <property xmi:type='DI:Property' key='preferredWidth' value='314.35938'/>
+              <property xmi:type='DI:Property' key='preferredWidth' value='344.35938'/>
               <property xmi:type='DI:Property' key='visible' value='true'/>
               <property xmi:type='DI:Property' key='editable' value='true'/>
               <property xmi:type='DI:Property' key='fixedWidth' value='false'/>
@@ -697,7 +697,7 @@
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='sourcemultiplicity'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='id2639abc4-ec4f-4a4a-af56-23fdd2d8036a'>
-        <position xmi:type='DI:Point' x='-61.51275634765625' y='-26.62200927734375'/>
+        <position xmi:type='DI:Point' x='-88.51275634765625' y='-38.62200927734375'/>
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='sourcename'/>
       </contained>
       <contained xmi:type='DI:GraphNode' xmi:id='id877276fa-e360-4e3b-b4c7-20c2b1eb84e3'>

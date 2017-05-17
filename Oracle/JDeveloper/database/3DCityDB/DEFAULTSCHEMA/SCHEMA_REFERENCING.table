@@ -3,7 +3,7 @@
   <name>SCHEMA_REFERENCING</name>
   <columns>
     <column>
-      <name>LOCAL_ID</name>
+      <name>REFERENCED_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <typeName>NUMBER</typeName>
@@ -22,11 +22,47 @@
     </column>
   </columns>
   <constraints>
+    <constraint class="oracle.javatools.db.PKConstraint">
+      <name>SCHEMA_REFERENCING_PK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>REFERENCED_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>SCHEMA_REFERENCING</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>REFERENCING_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>SCHEMA_REFERENCING</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <indexID class="oracle.javatools.db.NameBasedID">
+        <name>SCHEMA_REFERENCING_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>SCHEMA_REFERENCING</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
+        <type>INDEX</type>
+      </indexID>
+    </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <name>SCHEMA_REFERENCING_FK1</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>LOCAL_ID</name>
+          <name>REFERENCED_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>SCHEMA_REFERENCING</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
@@ -76,49 +112,13 @@
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
-    <constraint class="oracle.javatools.db.PKConstraint">
-      <name>SCHEMA_REFERENCING_PK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>LOCAL_ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>SCHEMA_REFERENCING</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>REFERENCING_ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>SCHEMA_REFERENCING</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.NameBasedID">
-        <name>SCHEMA_REFERENCING_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>SCHEMA_REFERENCING</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>DEFAULTSCHEMA</schemaName>
-        <type>INDEX</type>
-      </indexID>
-    </constraint>
   </constraints>
   <indexes>
     <index>
       <name>SCHEMA_REFERENCING_FKX1</name>
       <columnExpressions>
         <columnExpression>
-          <expressionSource>LOCAL_ID</expressionSource>
+          <expressionSource>REFERENCED_ID</expressionSource>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -144,7 +144,7 @@
       <name>SCHEMA_REFERENCING_PK</name>
       <columnExpressions>
         <columnExpression>
-          <expressionSource>LOCAL_ID</expressionSource>
+          <expressionSource>REFERENCED_ID</expressionSource>
           <orderType>ASC</orderType>
         </columnExpression>
         <columnExpression>

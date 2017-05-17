@@ -12,7 +12,7 @@
       <notNull>true</notNull>
     </column>
     <column>
-      <name>IS_ROOT_SCHEMA</name>
+      <name>IS_ADE_ROOT</name>
       <dataTypeUsage>
         <attributeValues>
           <entry>
