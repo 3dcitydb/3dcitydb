@@ -4987,7 +4987,7 @@ CREATE INDEX waterbody_objclass_fkx ON citydb.waterbody
 CREATE TABLE citydb.ade(
 	id integer NOT NULL DEFAULT nextval('citydb.ade_seq'::regclass),
 	name character varying(1000) NOT NULL,
-	namespace_uri character varying(4000),
+	description character varying(4000),
 	version character varying(50),
 	db_prefix character varying(10) NOT NULL,
 	xml_schemamapping_file text,

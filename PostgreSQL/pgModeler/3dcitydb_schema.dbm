@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="14045,9694" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="14158,9384" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -6090,7 +6090,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="name" not-null="true">
 		<type name="character varying" length="1000"/>
 	</column>
-	<column name="namespace_uri">
+	<column name="description">
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="version">
