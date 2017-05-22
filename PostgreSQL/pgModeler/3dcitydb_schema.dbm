@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="18305,12626" last-zoom="1.05"
+<dbmodel pgmodeler-ver="0.8.2" last-position="14045,9694" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -2909,8 +2909,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="citydb"/>
 </sequence>
 
-<sequence name="objectclass_seq"
-	 start="10000" increment="1"
+<sequence name="ade_seq"
+	 start="1" increment="1"
 	 min-value="0" max-value="2147483647"
 	 cache="1" cycle="false">
 	<schema name="citydb"/>
@@ -5765,22 +5765,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true" sequence="citydb.schema_seq">
 		<type name="integer"/>
 	</column>
-	<column name="is_ade_root">
+	<column name="is_ade_root" not-null="true">
 		<type name="numeric" precision="0"/>
 	</column>
-	<column name="name">
-		<type name="character varying" length="1000"/>
-	</column>
-	<column name="namespace_uri">
-		<type name="character varying" length="4000"/>
-	</column>
-	<column name="db_prefix">
-		<type name="character varying" length="10"/>
-	</column>
-	<column name="version">
+	<column name="citygml_version" not-null="true">
 		<type name="character varying" length="50"/>
 	</column>
-	<column name="xml_prefix">
+	<column name="xml_namespace_uri" not-null="true">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="xml_namespace_prefix" not-null="true">
 		<type name="character varying" length="50"/>
 	</column>
 	<column name="xml_schema_location">
@@ -5792,11 +5786,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="xml_schemafile_type">
 		<type name="character varying" length="256"/>
 	</column>
-	<column name="xml_schemamapping_file">
-		<type name="text"/>
-	</column>
-	<column name="drop_db_script">
-		<type name="text"/>
+	<column name="ade_id">
+		<type name="integer"/>
 	</column>
 	<constraint name="schema_pk" type="pk-constr" factor="100" table="citydb.schema">
 		<columns names="id" ref-type="src-columns"/>
@@ -5813,7 +5804,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<constraint name="schema_to_objectclass_pk" type="pk-constr" table="citydb.schema_to_objectclass">
+	<constraint name="schema_to_objectclass_pk" type="pk-constr" factor="100" table="citydb.schema_to_objectclass">
 		<columns names="schema_id,objectclass_id" ref-type="src-columns"/>
 	</constraint>
 </table>
@@ -5845,11 +5836,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="schema_referencing">
 	<schema name="citydb"/>
 	<tag name="global"/>
-	<position x="19680" y="13180"/>
-	<column name="referenced_id" not-null="true">
+	<position x="19480" y="13180"/>
+	<column name="referencing_id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="referencing_id" not-null="true">
+	<column name="referenced_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<constraint name="schema_referencing_pk" type="pk-constr" factor="100" table="citydb.schema_referencing">
@@ -6088,6 +6079,42 @@ CAUTION: Do not modify this file unless you know what you are doing.
 			<column name="objectclass_id"/>
 		</idxelement>
 </index>
+
+<table name="ade">
+	<schema name="citydb"/>
+	<tag name="global"/>
+	<position x="19900" y="13160"/>
+	<column name="id" not-null="true" sequence="citydb.ade_seq">
+		<type name="integer"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="character varying" length="1000"/>
+	</column>
+	<column name="namespace_uri">
+		<type name="character varying" length="4000"/>
+	</column>
+	<column name="version">
+		<type name="character varying" length="50"/>
+	</column>
+	<column name="db_prefix" not-null="true">
+		<type name="character varying" length="10"/>
+	</column>
+	<column name="xml_schemamapping_file">
+		<type name="text"/>
+	</column>
+	<column name="drop_db_script">
+		<type name="text"/>
+	</column>
+	<column name="creation_date">
+		<type name="timestamp with time zone" with-timezone="true"/>
+	</column>
+	<column name="creation_person">
+		<type name="character varying" length="256"/>
+	</column>
+	<constraint name="ade_pk" type="pk-constr" factor="100" table="citydb.ade">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
 
 <constraint name="cityobject_member_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.cityobject" table="citydb.cityobject_member">
@@ -7835,6 +7862,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
+<constraint name="schema_ade_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.ade" table="citydb.schema">
+	<columns names="ade_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
 <constraint name="schema_to_objectclass_fk1" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.schema" table="citydb.schema_to_objectclass">
 	<columns names="schema_id" ref-type="src-columns"/>
@@ -7849,13 +7882,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <constraint name="schema_referencing_fk1" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.schema" table="citydb.schema_referencing">
-	<columns names="referenced_id" ref-type="src-columns"/>
+	<columns names="referencing_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="schema_referencing_fk2" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.schema" table="citydb.schema_referencing">
-	<columns names="referencing_id" ref-type="src-columns"/>
+	<columns names="referenced_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -10311,6 +10344,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_waterbody_objectclass" type="relfk"
 	 src-table="citydb.waterbody"
 	 dst-table="citydb.objectclass"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_schema_schema_cp" type="relfk"
+	 src-table="citydb.schema"
+	 dst-table="citydb.ade"
 	 src-required="false" dst-required="false"/>
 
 </dbmodel>

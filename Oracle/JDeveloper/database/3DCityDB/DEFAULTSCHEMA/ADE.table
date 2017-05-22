@@ -1,6 +1,6 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <table xmlns="http://xmlns.oracle.com/jdeveloper/1211/offlinedb">
-  <name>SCHEMA</name>
+  <name>ADE</name>
   <columns>
     <column>
       <name>ID</name>
@@ -12,31 +12,12 @@
       <notNull>true</notNull>
     </column>
     <column>
-      <name>IS_ADE_ROOT</name>
-      <dataTypeUsage>
-        <attributeValues>
-          <entry>
-            <key>precision</key>
-            <value class="java.lang.String">1</value>
-          </entry>
-          <entry>
-            <key>scale</key>
-            <value class="java.lang.Integer">0</value>
-          </entry>
-        </attributeValues>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <typeName>NUMBER</typeName>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>true</notNull>
-    </column>
-    <column>
-      <name>CITYGML_VERSION</name>
+      <name>NAME</name>
       <dataTypeUsage>
         <attributeValues>
           <entry>
             <key>size</key>
-            <value class="java.lang.Long">50</value>
+            <value class="java.lang.Integer">1000</value>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -46,7 +27,7 @@
       <notNull>true</notNull>
     </column>
     <column>
-      <name>XML_NAMESPACE_URI</name>
+      <name>DESCRIPTION</name>
       <dataTypeUsage>
         <attributeValues>
           <entry>
@@ -58,10 +39,10 @@
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>true</notNull>
+      <notNull>false</notNull>
     </column>
     <column>
-      <name>XML_NAMESPACE_PREFIX</name>
+      <name>VERSION</name>
       <dataTypeUsage>
         <attributeValues>
           <entry>
@@ -73,52 +54,67 @@
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
       </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <name>DB_PREFIX</name>
+      <dataTypeUsage>
+        <attributeValues>
+          <entry>
+            <key>size</key>
+            <value class="java.lang.Integer">10</value>
+          </entry>
+        </attributeValues>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <typeName>VARCHAR2</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
       <notNull>true</notNull>
     </column>
     <column>
-      <name>XML_SCHEMA_LOCATION</name>
+      <name>XML_SCHEMAMAPPING_FILE</name>
+      <dataTypeUsage>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <typeName>CLOB</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <name>DROP_DB_SCRIPT</name>
+      <dataTypeUsage>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <typeName>CLOB</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <name>CREATION_DATE</name>
+      <dataTypeUsage>
+        <attributeValues>
+          <entry>
+            <key>time_zone</key>
+            <value class="java.lang.String">TIME ZONE</value>
+          </entry>
+        </attributeValues>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <typeName>TIMESTAMP</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
+      <name>CREATION_PERSON</name>
       <dataTypeUsage>
         <attributeValues>
           <entry>
             <key>size</key>
-            <value class="java.lang.Long">4000</value>
+            <value class="java.lang.Long">256</value>
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <typeName>VARCHAR2</typeName>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <name>XML_SCHEMAFILE</name>
-      <dataTypeUsage>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <typeName>BLOB</typeName>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <name>XML_SCHEMAFILE_TYPE</name>
-      <dataTypeUsage>
-        <attributeValues>
-          <entry>
-            <key>size</key>
-            <value class="java.lang.Integer">256</value>
-          </entry>
-        </attributeValues>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <typeName>VARCHAR2</typeName>
-        </dataTypeID>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-    </column>
-    <column>
-      <name>ADE_ID</name>
-      <dataTypeUsage>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
       <notNull>false</notNull>
@@ -126,12 +122,12 @@
   </columns>
   <constraints>
     <constraint class="oracle.javatools.db.PKConstraint">
-      <name>SCHEMA_PK</name>
+      <name>ADE_PK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
           <name>ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
-            <name>SCHEMA</name>
+            <name>ADE</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
             <type>TABLE</type>
           </parent>
@@ -141,32 +137,6 @@
       </columnIDs>
       <enabled>true</enabled>
       <indexID class="oracle.javatools.db.NameBasedID">
-        <name>SCHEMA_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>SCHEMA</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>DEFAULTSCHEMA</schemaName>
-        <type>INDEX</type>
-      </indexID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <name>SCHEMA_ADE_FK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>ADE_ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>SCHEMA</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <referenceID class="oracle.javatools.db.NameBasedID">
         <name>ADE_PK</name>
         <parent class="oracle.javatools.db.NameBasedID">
           <name>ADE</name>
@@ -174,13 +144,13 @@
           <type>TABLE</type>
         </parent>
         <schemaName>DEFAULTSCHEMA</schemaName>
-        <type>CONSTRAINT</type>
-      </referenceID>
+        <type>INDEX</type>
+      </indexID>
     </constraint>
   </constraints>
   <indexes>
     <index>
-      <name>SCHEMA_PK</name>
+      <name>ADE_PK</name>
       <columnExpressions>
         <columnExpression>
           <expressionSource>ID</expressionSource>

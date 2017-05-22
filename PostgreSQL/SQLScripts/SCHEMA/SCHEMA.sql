@@ -1459,13 +1459,13 @@ CREATE SEQUENCE citydb.schema_seq
 	OWNED BY NONE;
 -- ddl-end --
 
--- object: citydb.objectclass_seq | type: SEQUENCE --
--- DROP SEQUENCE IF EXISTS citydb.objectclass_seq CASCADE;
-CREATE SEQUENCE citydb.objectclass_seq
+-- object: citydb.ade_seq | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS citydb.ade_seq CASCADE;
+CREATE SEQUENCE citydb.ade_seq
 	INCREMENT BY 1
 	MINVALUE 0
 	MAXVALUE 2147483647
-	START WITH 10000
+	START WITH 1
 	CACHE 1
 	NO CYCLE
 	OWNED BY NONE;
@@ -4658,17 +4658,14 @@ CREATE INDEX address_point_spx ON citydb.address
 -- DROP TABLE IF EXISTS citydb.schema CASCADE;
 CREATE TABLE citydb.schema(
 	id integer NOT NULL DEFAULT nextval('citydb.schema_seq'::regclass),
-	is_ade_root numeric,
-	name character varying(1000),
-	namespace_uri character varying(4000),
-	db_prefix character varying(10),
-	version character varying(50),
-	xml_prefix character varying(50),
+	is_ade_root numeric NOT NULL,
+	citygml_version character varying(50) NOT NULL,
+	xml_namespace_uri character varying(4000) NOT NULL,
+	xml_namespace_prefix character varying(50) NOT NULL,
 	xml_schema_location character varying(4000),
 	xml_schemafile bytea,
 	xml_schemafile_type character varying(256),
-	xml_schemamapping_file text,
-	drop_db_script text,
+	ade_id integer,
 	CONSTRAINT schema_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -4716,8 +4713,8 @@ CREATE INDEX objectclass_baseclass_fkx ON citydb.objectclass
 -- object: citydb.schema_referencing | type: TABLE --
 -- DROP TABLE IF EXISTS citydb.schema_referencing CASCADE;
 CREATE TABLE citydb.schema_referencing(
-	referenced_id integer NOT NULL,
 	referencing_id integer NOT NULL,
+	referenced_id integer NOT NULL,
 	CONSTRAINT schema_referencing_pk PRIMARY KEY (referenced_id,referencing_id)
 	 WITH (FILLFACTOR = 100)
 
@@ -4983,6 +4980,24 @@ CREATE INDEX waterbody_objclass_fkx ON citydb.waterbody
 	(
 	  objectclass_id ASC NULLS LAST
 	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: citydb.ade | type: TABLE --
+-- DROP TABLE IF EXISTS citydb.ade CASCADE;
+CREATE TABLE citydb.ade(
+	id integer NOT NULL DEFAULT nextval('citydb.ade_seq'::regclass),
+	name character varying(1000) NOT NULL,
+	namespace_uri character varying(4000),
+	version character varying(50),
+	db_prefix character varying(10) NOT NULL,
+	xml_schemamapping_file text,
+	drop_db_script text,
+	creation_date timestamp with time zone,
+	creation_person character varying(256),
+	CONSTRAINT ade_pk PRIMARY KEY (id)
+	 WITH (FILLFACTOR = 100)
+
+);
 -- ddl-end --
 
 -- object: cityobject_member_fk | type: CONSTRAINT --
@@ -7022,6 +7037,13 @@ REFERENCES citydb.cityobject (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: schema_ade_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.schema DROP CONSTRAINT IF EXISTS schema_ade_fk CASCADE;
+ALTER TABLE citydb.schema ADD CONSTRAINT schema_ade_fk FOREIGN KEY (ade_id)
+REFERENCES citydb.ade (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: schema_to_objectclass_fk1 | type: CONSTRAINT --
 -- ALTER TABLE citydb.schema_to_objectclass DROP CONSTRAINT IF EXISTS schema_to_objectclass_fk1 CASCADE;
 ALTER TABLE citydb.schema_to_objectclass ADD CONSTRAINT schema_to_objectclass_fk1 FOREIGN KEY (schema_id)
@@ -7038,14 +7060,14 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- object: schema_referencing_fk1 | type: CONSTRAINT --
 -- ALTER TABLE citydb.schema_referencing DROP CONSTRAINT IF EXISTS schema_referencing_fk1 CASCADE;
-ALTER TABLE citydb.schema_referencing ADD CONSTRAINT schema_referencing_fk1 FOREIGN KEY (referenced_id)
+ALTER TABLE citydb.schema_referencing ADD CONSTRAINT schema_referencing_fk1 FOREIGN KEY (referencing_id)
 REFERENCES citydb.schema (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: schema_referencing_fk2 | type: CONSTRAINT --
 -- ALTER TABLE citydb.schema_referencing DROP CONSTRAINT IF EXISTS schema_referencing_fk2 CASCADE;
-ALTER TABLE citydb.schema_referencing ADD CONSTRAINT schema_referencing_fk2 FOREIGN KEY (referencing_id)
+ALTER TABLE citydb.schema_referencing ADD CONSTRAINT schema_referencing_fk2 FOREIGN KEY (referenced_id)
 REFERENCES citydb.schema (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --

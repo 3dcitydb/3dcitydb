@@ -835,7 +835,7 @@
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='SYMBOLIC'/>
         <size height='120.0' width='270.0'/>
       </contained>
-      <position x='240.0' y='45.0'/>
+      <position x='-135.0' y='75.0'/>
       <property key='ShowSequencePropertiesCompartment' value='true'/>
       <property key='ShowSchema' value='false'/>
       <property key='alternatingRowColor' value='false'/>
@@ -857,7 +857,7 @@
       <property key='EvenRowColor' value='#eef2f5'/>
       <property key='HeaderVisible' value='false'/>
       <property key='fontColor' value='#0'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:SEQUENCE:OBJECTCLASS_SEQ:SCHEMA:DEFAULTSCHEMA:DBObjectName:OBJECTCLASS_SEQ:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c' presentation='SYMBOLIC'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:SEQUENCE:ADE_SEQ:SCHEMA:DEFAULTSCHEMA:DBObjectName:ADE_SEQ:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c' presentation='SYMBOLIC'/>
       <size height='120.0' width='270.0'/>
     </contained>
     <contained xmi:type='DI:GraphNode' xmi:id='idbaa11040-40ab-4651-98a8-f3d001ffd051'>
@@ -901,7 +901,7 @@
         <semanticModel xmi:type='DI:SimpleSemanticModelBridge' typeInfo='SYMBOLIC'/>
         <size height='120.0' width='285.0'/>
       </contained>
-      <position x='-150.0' y='45.0'/>
+      <position x='225.0' y='75.0'/>
       <property key='EvenRowColor' value='#eef2f5'/>
       <property key='ShowVerticalGridLines' value='false'/>
       <property key='MinValue' value='true'/>

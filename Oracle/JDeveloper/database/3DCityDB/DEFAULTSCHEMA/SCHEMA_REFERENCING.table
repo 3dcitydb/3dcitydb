@@ -3,7 +3,7 @@
   <name>SCHEMA_REFERENCING</name>
   <columns>
     <column>
-      <name>REFERENCED_ID</name>
+      <name>REFERENCING_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <typeName>NUMBER</typeName>
@@ -12,7 +12,7 @@
       <notNull>true</notNull>
     </column>
     <column>
-      <name>REFERENCING_ID</name>
+      <name>REFERENCED_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
           <typeName>NUMBER</typeName>
@@ -26,7 +26,7 @@
       <name>SCHEMA_REFERENCING_PK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>REFERENCED_ID</name>
+          <name>REFERENCING_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>SCHEMA_REFERENCING</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
@@ -36,7 +36,7 @@
           <type>COLUMN</type>
         </columnID>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>REFERENCING_ID</name>
+          <name>REFERENCED_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>SCHEMA_REFERENCING</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
@@ -62,7 +62,7 @@
       <name>SCHEMA_REFERENCING_FK1</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>REFERENCED_ID</name>
+          <name>REFERENCING_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>SCHEMA_REFERENCING</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
@@ -89,7 +89,7 @@
       <name>SCHEMA_REFERENCING_FK2</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>REFERENCING_ID</name>
+          <name>REFERENCED_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>SCHEMA_REFERENCING</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
@@ -118,7 +118,7 @@
       <name>SCHEMA_REFERENCING_FKX1</name>
       <columnExpressions>
         <columnExpression>
-          <expressionSource>REFERENCED_ID</expressionSource>
+          <expressionSource>REFERENCING_ID</expressionSource>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -131,7 +131,7 @@
       <name>SCHEMA_REFERENCING_FKX2</name>
       <columnExpressions>
         <columnExpression>
-          <expressionSource>REFERENCING_ID</expressionSource>
+          <expressionSource>REFERENCED_ID</expressionSource>
         </columnExpression>
       </columnExpressions>
       <indexType>NORMAL</indexType>
@@ -144,11 +144,11 @@
       <name>SCHEMA_REFERENCING_PK</name>
       <columnExpressions>
         <columnExpression>
-          <expressionSource>REFERENCED_ID</expressionSource>
+          <expressionSource>REFERENCING_ID</expressionSource>
           <orderType>ASC</orderType>
         </columnExpression>
         <columnExpression>
-          <expressionSource>REFERENCING_ID</expressionSource>
+          <expressionSource>REFERENCED_ID</expressionSource>
           <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>
