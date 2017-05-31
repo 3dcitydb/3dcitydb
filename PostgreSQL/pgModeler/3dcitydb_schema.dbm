@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="14158,9384" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="14157,9383" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -6086,6 +6086,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<position x="19900" y="13160"/>
 	<column name="id" not-null="true" sequence="citydb.ade_seq">
 		<type name="integer"/>
+	</column>
+	<column name="adeid" not-null="true">
+		<type name="character varying" length="256"/>
 	</column>
 	<column name="name" not-null="true">
 		<type name="character varying" length="1000"/>

@@ -4986,6 +4986,7 @@ CREATE INDEX waterbody_objclass_fkx ON citydb.waterbody
 -- DROP TABLE IF EXISTS citydb.ade CASCADE;
 CREATE TABLE citydb.ade(
 	id integer NOT NULL DEFAULT nextval('citydb.ade_seq'::regclass),
+	adeid character varying(256) NOT NULL,
 	name character varying(1000) NOT NULL,
 	description character varying(4000),
 	version character varying(50),
