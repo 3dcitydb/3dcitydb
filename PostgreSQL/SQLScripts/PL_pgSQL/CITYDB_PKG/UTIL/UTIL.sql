@@ -71,10 +71,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.citydb_version() RETURNS TABLE(
   ) AS 
 $$
 BEGIN
-  version := '3.3.0'; 
+  version := '3.3.1'; 
   major_version := 3;
   minor_version := 3;
-  minor_revision := 0;
+  minor_revision := 1;
   RETURN NEXT;
 END;
 $$
