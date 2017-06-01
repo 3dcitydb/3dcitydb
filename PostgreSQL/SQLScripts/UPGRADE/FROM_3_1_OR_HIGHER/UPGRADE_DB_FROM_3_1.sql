@@ -32,10 +32,25 @@ SET client_min_messages TO WARNING;
 \echo
 
 --// add missing foreign key
-ALTER TABLE citydb.bridge
-  ADD CONSTRAINT bridge_cityobject_fk FOREIGN KEY (id)
-    REFERENCES citydb.cityobject (id) MATCH FULL
-    ON DELETE NO ACTION ON UPDATE CASCADE;
+DO
+$$
+DECLARE
+  version record;
+BEGIN
+  version := citydb_pkg.citydb_version();
+  
+  IF version.major_version = 3 AND version.minor_version < 3 THEN
+    ALTER TABLE citydb.bridge
+	  ADD CONSTRAINT bridge_cityobject_fk FOREIGN KEY (id)
+	  REFERENCES citydb.cityobject (id) MATCH FULL
+	  ON DELETE NO ACTION ON UPDATE CASCADE;
+  END IF;
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      RAISE '%', SQLERRM;
+END;
+$$;
 
 --// drop old versions of CITYDB_PKG
 DROP SCHEMA CITYDB_PKG CASCADE;
