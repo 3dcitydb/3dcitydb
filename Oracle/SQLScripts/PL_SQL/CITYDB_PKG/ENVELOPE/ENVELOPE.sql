@@ -214,17 +214,8 @@ AS
   ) RETURN SDO_GEOMETRY
   IS
     envelope SDO_GEOMETRY;
-    params ID_ARRAY := ID_ARRAY();
+    params ID_ARRAY;
     matrix_ex EXCEPTION;
-    anchor_pt SDO_GEOMETRY;
-    do_translation VARCHAR2(5) := 'TRUE';
-    do_scaling VARCHAR2(5) := 'TRUE';
-    do_rotation VARCHAR2(5) := 'TRUE';
-    rotate_angle NUMBER := 0;
-    rotate_axis NUMBER(1) := -1;
-    do_shearing VARCHAR2(5) := 'TRUE';
-    do_reflection VARCHAR2(5) := 'TRUE';
-    reflection_axis NUMBER(1) := -1;
   BEGIN
     -- calculate bounding box for implicit geometry
     EXECUTE IMMEDIATE 
@@ -241,127 +232,33 @@ AS
     IF transform4x4 IS NOT NULL THEN
       -- extract parameters of transformation matrix
       params := citydb_util.string2id_array(transform4x4, ' ');
-
+      
       IF params.count < 12 THEN
         RAISE matrix_ex;
-      ELSE
-        -- check if translation is part of transformation matrix
-        IF params(4) = 0.0 AND params(8) = 0.0 AND params(12) = 0.0 THEN
-          do_translation := 'FALSE';
-        END IF;
-
-        -- check if scaling is part of transformation matrix
-        IF params(1) = 1.0 AND params(6) = 1.0 AND params(11) = 1.0 THEN
-          do_scaling := 'FALSE';
-        END IF;
-
-        -- check if rotation is part of transformation matrix
-        IF (params(5) = (params(2) * -1)) AND (params(5) != 0.0 OR params(2) != 0.0) THEN
-          rotate_angle := ASIN(params(5));
-          rotate_axis := 2; -- rotate about z-axis
-        ELSIF (params(9) = (params(3) * -1)) AND (params(9) != 0.0 OR params(3) != 0.0) THEN
-          rotate_angle := ASIN(params(9));
-          rotate_axis := 1; -- rotate about y-axis
-        ELSIF (params(10) = (params(7) * -1)) AND (params(10) != 0.0 OR params(7) != 0.0) THEN
-          rotate_angle := ASIN(params(10));
-          rotate_axis := 0; -- rotate about x-axis
-        END IF;
-
-        IF rotate_axis = -1 THEN
-          do_rotation := 'FALSE';
-        END IF;
-
-        -- check if shearing is part of transformation matrix (not supported at the moment)
-        do_shearing := 'FALSE';
-
-        -- check if reflection is part of transformation matrix
-        IF params(1) != -1.0 AND params(6) != -1.0 AND params(11) != -1.0 THEN
-          do_reflection := 'FALSE';
-        ELSE
-          IF params(1) != -1.0 THEN
-            reflection_axis := 0; -- yz plane
-          ELSIF params(5) != -1.0 THEN
-            reflection_axis := 1; -- xz plane
-          ELSIF params(5) != -1.0 THEN
-            reflection_axis := 2; -- xy plane
-          END IF;
-        END IF;
-
-        IF envelope IS NOT NULL THEN
-          anchor_pt := MDSYS.SDO_GEOMETRY(3001,NULL,MDSYS.SDO_POINT_TYPE(
-	        envelope.sdo_ordinates(1),envelope.sdo_ordinates(2),envelope.sdo_ordinates(3)),NULL,NULL);
-
-          -- perform affine transformation by the given transformation matrix
-          envelope := SDO_UTIL.AFFINETRANSFORMS(
-            geometry => envelope,
-            translation => do_translation,
-            tx => params(4),
-            ty => params(8),
-            tz => params(12),
-            scaling => do_scaling,
-            psc1 => CASE WHEN do_scaling = 'TRUE' THEN anchor_pt ELSE NULL END,
-            sx => params(1),
-            sy => params(6),
-            sz => params(11),
-            rotation => do_rotation,
-            p1 => CASE WHEN do_rotation = 'TRUE' THEN anchor_pt ELSE NULL END,
-            line1 => NULL,
-            angle => rotate_angle,
-            dir => rotate_axis,
-            shearing => do_shearing,
-            shxy => 0.0,
-            shyx => 0.0,
-            shxz => 0.0,
-            shzx => 0.0,
-            shyz => 0.0,
-            shzy => 0.0,
-            reflection => do_reflection,
-            pref => CASE WHEN do_reflection = 'TRUE' THEN anchor_pt ELSE NULL END,
-            lineR => NULL,
-            dirR => reflection_axis,
-            planeR => 'FALSE',
-            n => NULL,
-            bigD => NULL
-          );
-        END IF;
       END IF;
+    ELSE
+      params := ID_ARRAY(
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1);
     END IF;
-
-    IF envelope IS NOT NULL AND ref_pt IS NOT NULL THEN
-      -- perform translation to reference point
-      envelope := SDO_UTIL.AFFINETRANSFORMS(
-        geometry => envelope,
-        translation => 'TRUE',
-        tx => ref_pt.sdo_point.x,
-        ty => ref_pt.sdo_point.y,
-        tz => ref_pt.sdo_point.z,
-        scaling => 'FALSE',
-        psc1 => NULL,
-        sx => 0.0,
-        sy => 0.0,
-        sz => 0.0,
-        rotation => 'FALSE',
-        p1 => NULL,
-        line1 => NULL,
-        angle => 0.0,
-        dir => 0,
-        shearing => 'FALSE',
-        shxy => 0.0,
-        shyx => 0.0,
-        shxz => 0.0,
-        shzx => 0.0,
-        shyz => 0.0,
-        shzy => 0.0,
-        reflection => 'FALSE',
-        pref => NULL,
-        lineR => NULL,
-        dirR => 0,
-        planeR => 'FALSE',
-        n => NULL,
-        bigD => NULL
-      );
+    
+    IF ref_pt IS NOT NULL THEN
+      params(4) := params(4) + ref_pt.sdo_point.x;
+      params(8) := params(8) + ref_pt.sdo_point.y;
+      params(12) := params(12) + ref_pt.sdo_point.z;
     END IF;
-
+      
+    IF envelope IS NOT NULL THEN
+      envelope := citydb_util.st_affine(
+        envelope,
+        params(1), params(2), params(3),
+        params(5), params(6), params(7),
+        params(9), params(10), params(11),
+        params(4), params(8), params(12));
+    END IF;
+    
     RETURN envelope;
 
     EXCEPTION

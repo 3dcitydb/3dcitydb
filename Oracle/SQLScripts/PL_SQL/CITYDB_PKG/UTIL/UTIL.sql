@@ -103,6 +103,7 @@ AS
   FUNCTION construct_solid(geom_root_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
   FUNCTION to_2d(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
   FUNCTION sdo2geojson3d(p_geometry in sdo_geometry, p_decimal_places in pls_integer default 2, p_compress_tags in pls_integer default 0, p_relative2mbr in pls_integer default 0) RETURN CLOB DETERMINISTIC;
+  FUNCTION ST_Affine(p_geometry IN mdsys.sdo_geometry, p_a IN NUMBER, p_b IN NUMBER, p_c IN NUMBER, p_d IN NUMBER, p_e IN NUMBER, p_f IN NUMBER, p_g IN NUMBER, p_h IN NUMBER, p_i IN NUMBER, p_xoff IN NUMBER, p_yoff IN NUMBER, p_zoff IN NUMBER) RETURN mdsys.sdo_geometry deterministic;
 END citydb_util;
 /
 
@@ -122,7 +123,7 @@ AS
     version_ret := DB_VERSION_TABLE();
     version_ret.extend;
 
-    version_tmp := DB_VERSION_OBJ('3.3.0', 3, 3, 0);
+    version_tmp := DB_VERSION_OBJ('3.3.1', 3, 3, 1);
 
     version_ret(version_ret.count) := version_tmp;
     RETURN version_ret;
@@ -1108,7 +1109,146 @@ AS
     offset => DBMS_LOB.GETLENGTH(v_result)+1,
     buffer => v_temp_string );
     return v_result;
-  End sdo2geojson3d; 
+  End sdo2geojson3d;
+  
+  /* ----------------------------------------------------------------------------------------
+  * Applies a 3d affine transformation to the geometry to do things like translate, rotate, scale in one step.
+  * To apply a 2D affine transformation only supply a, b, d, e, xoff, yoff
+  * 
+  * @return     : newGeom  : MDSYS.SDO_GEOMETRY : Transformed input geometry.
+  *
+  * @param      : p_geom  : MDSYS.SDO_GEOMETRY : The geometry to transform.
+  * @param      : a, b, c, d, e, f, g, h, i, xoff, yoff, zoff :
+  *               Represent the transformation matrix
+  *                 / a  b  c  xoff \
+  *                 | d  e  f  yoff |
+  *                 | g  h  i  zoff |
+  *                 \ 0  0  0     1 /
+  *               and the vertices are transformed as follows:
+  *                 x' = a*x + b*y + c*z + xoff
+  *                 y' = d*x + e*y + f*z + yoff
+  *                 z' = g*x + h*y + i*z + zoff
+  *
+  * Adapted from https://spatialdbadvisor.com/oracle_spatial_tips_tricks/296/affine-wrappers-for-sdo_utilaffine
+  **/
+  FUNCTION ST_Affine(
+    p_geometry IN mdsys.sdo_geometry,
+    p_a IN NUMBER,
+    p_b IN NUMBER,
+    p_c IN NUMBER,
+    p_d IN NUMBER,
+    p_e IN NUMBER,
+    p_f IN NUMBER,
+    p_g IN NUMBER,
+    p_h IN NUMBER,
+    p_i IN NUMBER,
+    p_xoff IN NUMBER,
+    p_yoff IN NUMBER,
+    p_zoff IN NUMBER) RETURN mdsys.sdo_geometry
+  IS
+    -- Transformation matrix is represented by:
+    -- / a  b  c  xoff \
+    -- | d  e  f  yoff |
+    -- | g  h  i  zoff |
+    -- \ 0  0  0     1 /
+    --
+    -- For 2D only need to supply: a, b, d, e, xoff, yoff
+    v_A SYS.UTL_NLA_ARRAY_DBL := SYS.UTL_NLA_ARRAY_DBL(
+      p_a, p_d, NVL(p_g, 0), 0,
+      p_b, p_e, NVL(p_h,0), 0,
+      NVL(p_c, 0), NVL(p_f, 0), NVL(p_i, 1), 0,
+      p_xoff, p_yoff, NVL(p_zoff, 0), 1); -- column wise 4x4 matrix A
+      
+    v_x SYS.UTL_NLA_ARRAY_DBL; -- vector x to be transformed
+    v_y SYS.UTL_NLA_ARRAY_DBL; -- result vector y = Ax
+    
+    -- Geometry variables
+    v_dims PLS_Integer;
+    v_ord PLS_Integer;
+    v_sdo_point mdsys.sdo_point_type;
+    v_trans_point mdsys.sdo_point_type;
+    v_vertices mdsys.vertex_set_type;
+    v_ordinates mdsys.sdo_ordinate_array;
+    
+    -- exceptions
+    NULL_GEOMETRY  EXCEPTION;
+    NULL_PARAMETER EXCEPTION;
+
+    FUNCTION TransformPoint(
+      p_x IN NUMBER,
+      p_y IN NUMBER,
+      p_z IN NUMBER) RETURN mdsys.sdo_point_type
+    IS
+    BEGIN
+      v_x := SYS.UTL_NLA_ARRAY_DBL(p_x, p_y, p_z, 1);
+      v_y := SYS.UTL_NLA_ARRAY_DBL();
+      
+      --  Vertices are transformed as follows:
+      --  x' = a*x + b*y + c*z + xoff
+      --  y' = d*x + e*y + f*z + yoff
+      --  z' = g*x + h*y + i*z + zoff
+      SYS.UTL_NLA.BLAS_GEMV(
+        trans  => 'N',
+        m      => 4,
+        n      => 4,
+        alpha  => 1,
+        a      => v_A,
+        lda    => 4,
+        x      => v_x,
+        incx   => 1,
+        beta   => 0,
+        y      => v_y,
+        incy   => 1,
+        pack   => 'C');
+      
+      RETURN mdsys.sdo_point_type(v_y(1), v_y(2), v_y(3));
+    END TransformPoint;
+    
+  BEGIN
+    IF p_geometry IS NULL THEN
+      raise NULL_GEOMETRY;
+    END IF;
+    
+    IF p_a IS NULL OR p_b IS NULL OR p_d IS NULL OR p_e IS NULL OR p_xoff IS NULL OR p_yoff IS NULL THEN
+      raise NULL_PARAMETER;
+    END IF;
+    
+    -- Transform a point in the geometry object
+    IF p_geometry.sdo_point IS NOT NULL THEN
+      v_sdo_point := TransformPoint(p_geometry.sdo_point.x, p_geometry.sdo_point.y, p_geometry.sdo_point.z);
+    END IF;
+    
+    -- Transform coordinates of the geometry object
+    v_dims := p_geometry.get_dims();
+    IF p_geometry.sdo_ordinates IS NOT NULL THEN
+      v_ordinates := mdsys.sdo_ordinate_array();
+      v_ordinates.EXTEND(p_geometry.sdo_ordinates.COUNT);
+      v_ord := 1;
+      
+      -- Loop around coordinates and apply matrix to them.
+      v_vertices := mdsys.sdo_util.getVertices(p_geometry);
+      FOR v_id IN v_vertices.FIRST..v_vertices.LAST
+      LOOP
+        v_trans_point := TransformPoint(v_vertices(v_id).x, v_vertices(v_id).y, NVL(v_vertices(v_id).z, 0));
+        v_ordinates(v_ord) := v_trans_point.x;
+        v_ord := v_ord + 1;
+        v_ordinates(v_ord) := v_trans_point.y;
+        v_ord := v_ord + 1;
+        IF v_dims >= 3 THEN
+          v_ordinates(v_ord) := v_trans_point.z;
+          v_ord := v_ord + 1;
+        END IF;
+      END LOOP;
+    END IF;
+    
+    RETURN mdsys.sdo_geometry(p_geometry.sdo_gtype, p_geometry.sdo_srid, v_sdo_point, p_geometry.sdo_elem_info, v_ordinates);
+    
+  EXCEPTION
+    WHEN NULL_GEOMETRY THEN
+      raise_application_error(-20120, 'Input geometry must not be null', TRUE);
+    WHEN NULL_PARAMETER THEN
+      raise_application_error(-20127, 'Input parameters must not be null', TRUE);
+  END ST_Affine;
   
 END citydb_util;
 /
