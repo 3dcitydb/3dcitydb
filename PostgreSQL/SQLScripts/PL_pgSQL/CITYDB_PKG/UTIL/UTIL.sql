@@ -44,7 +44,7 @@
 *     OUT wktext TEXT,  
 *     OUT versioning TEXT
 *     ) RETURNS RECORD
-*   get_seq_values(seq_name TEXT, seq_count INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
+*   get_seq_values(seq_name TEXT, seq_count INTEGER) RETURNS SETOF INTEGER
 *   min(a NUMERIC, b NUMERIC) RETURNS NUMERIC
 *   objectclass_id_to_table_name(class_id INTEGER) RETURNS TEXT
 *   update_schema_constraints(on_delete_param TEXT DEFAULT 'CASCADE', schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
@@ -126,7 +126,8 @@ SELECT
   srid AS schema_srid,
   gml_srs_name AS schema_gml_srs_name,
   citydb_pkg.versioning_db(current_schema()) AS versioning
-FROM database_srs;
+FROM
+  database_srs;
 $$ 
 LANGUAGE sql STABLE;
 
@@ -153,8 +154,11 @@ SELECT
   split_part(s.srtext, '[', 1) AS coord_ref_sys_kind,
   s.srtext AS wktext,
   citydb_pkg.versioning_db() AS versioning
-FROM database_srs d, spatial_ref_sys s 
-  WHERE d.srid = s.srid;
+FROM 
+  database_srs d,
+  spatial_ref_sys s 
+WHERE
+  d.srid = s.srid;
 $$
 LANGUAGE sql STABLE;
 
@@ -257,24 +261,12 @@ LANGUAGE plpgsql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_seq_values(
   seq_name TEXT,
-  seq_count INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
+  seq_count INTEGER
   ) RETURNS SETOF INTEGER AS 
 $$
-DECLARE
-  path_setting TEXT;
-BEGIN
-  -- set search_path for this session
-  path_setting := current_setting('search_path');
-  PERFORM set_config('search_path', $3, true);
-
-  RETURN QUERY SELECT nextval($1)::int FROM generate_series(1, $2);
-
-  -- reset search_path in case auto_commit is switched off
-  PERFORM set_config('search_path', path_setting, true);
-END;
+SELECT nextval($1)::int FROM generate_series(1, $2);
 $$
-LANGUAGE plpgsql STRICT;
+LANGUAGE sql STRICT;
 
 
 /*****************************************************************
