@@ -50,7 +50,7 @@
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER AS
 $$
-  SELECT 1 FROM spatial_ref_sys WHERE auth_srid = $1 AND srtext LIKE '%UP]%';
+SELECT 1 FROM spatial_ref_sys WHERE auth_srid = $1 AND srtext LIKE '%UP]%';
 $$
 LANGUAGE sql STABLE STRICT;
 
@@ -63,16 +63,14 @@ LANGUAGE sql STABLE STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d(schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER AS
 $$
 DECLARE
-  path_setting TEXT;
-BEGIN
-  -- set search_path for this session
-  path_setting := current_setting('search_path');
-  PERFORM set_config('search_path', $1 || ',public', true);
-  
-  SELECT citydb_pkg.is_coord_ref_sys_3d(srid) FROM database_srs;
+  is_3d INTEGER := 0;
+BEGIN  
+  EXECUTE format(
+    'SELECT COALESCE(citydb_pkg.is_coord_ref_sys_3d(srid),0) FROM %I.database_srs', schema_name
+  )
+  INTO is_3d;
 
-  -- reset search_path in case auto_commit is switched off
-  PERFORM set_config('search_path', path_setting, true);
+  RETURN is_3d;
 END;
 $$
 LANGUAGE plpgsql STABLE STRICT;
@@ -126,7 +124,7 @@ BEGIN
   END IF;
 END;
 $$
-LANGUAGE plpgsql STABLE STRICT;
+LANGUAGE plpgsql STABLE;
 
 
 /*****************************************************************
