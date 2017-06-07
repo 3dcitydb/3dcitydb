@@ -26,8 +26,15 @@
 --
 
 SET SERVEROUTPUT ON
+SET FEEDBACK ON
+SET VER OFF
 
-SELECT 'Starting 3D City Database upgrade...' as message from DUAL;
+VARIABLE DELETE_FILE VARCHAR2(50);
+
+prompt
+prompt Starting 3D City Database upgrade...
+accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Oracle Spatial(S)/Oracle Locator(L), default is S): '
+prompt
 
 --// drop indexes to be replaced
 DROP INDEX CITYMODEL_INX;
@@ -94,7 +101,21 @@ SELECT 'Installing CITYDB packages...' as message from DUAL;
 @@../../PL_SQL/CITYDB_PKG/SRS/SRS.sql;
 @@../../PL_SQL/CITYDB_PKG/STATISTICS/STAT.sql;
 @@../../PL_SQL/CITYDB_PKG/ENVELOPE/ENVELOPE.sql;
-@@../../PL_SQL/CITYDB_PKG/DELETE/DELETE.sql;
+
+BEGIN
+  IF ('&DBVERSION'='S' or '&DBVERSION'='s') THEN
+    :DELETE_FILE := '../../PL_SQL/CITYDB_PKG/DELETE/DELETE.sql';
+  ELSE
+    :DELETE_FILE := '../../PL_SQL/CITYDB_PKG/DELETE/DELETE2.sql';
+  END IF;
+END;
+/
+
+-- Transfer the value from the bind variable to the substitution variable
+column mc new_value DELETE_FILE2 print
+select :DELETE_FILE mc from dual;
+@@&DELETE_FILE2;
+
 @@../../PL_SQL/CITYDB_PKG/DELETE/DELETE_BY_LINEAGE.sql;
 SELECT 'CITYDB package installed.' as message from DUAL;
 
