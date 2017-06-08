@@ -34,6 +34,27 @@
 ******************************************************************/
 
 /*****************************************************************
+* table_content
+*
+* @param schema_name name of schema
+* @param table_name name of table
+* @RETURN INTEGER number of entries in table
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.table_content(
+  table_name TEXT,
+  schema_name TEXT DEFAULT 'citydb'
+  ) RETURNS INTEGER AS $$
+DECLARE
+  cnt INTEGER;  
+BEGIN
+  EXECUTE format('SELECT count(*) FROM %I.%I', $2, $1) INTO cnt;
+  RETURN cnt;
+END;
+$$
+LANGUAGE plpgsql STABLE STRICT;
+
+
+/*****************************************************************
 * table_contents
 *
 * @param schema_name name of schema
@@ -70,24 +91,3 @@ FROM (
 ) t
 $$
 LANGUAGE sql STABLE STRICT;
-
-
-/*****************************************************************
-* table_content
-*
-* @param schema_name name of schema
-* @param table_name name of table
-* @RETURN INTEGER number of entries in table
-******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.table_content(
-  table_name TEXT,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS $$
-DECLARE
-  cnt INTEGER;  
-BEGIN
-  EXECUTE format('SELECT count(*) FROM %I.%I', $2, $1) INTO cnt;
-  RETURN cnt;
-END;
-$$
-LANGUAGE plpgsql STABLE STRICT;

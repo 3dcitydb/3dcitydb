@@ -32,13 +32,30 @@
 ******************************************************************/
 CREATE OR REPLACE PACKAGE citydb_stat
 AS
-  FUNCTION table_contents(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION table_content(table_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN NUMBER;
+  FUNCTION table_contents(schema_name VARCHAR2 := USER) RETURN STRARRAY;
 END citydb_stat;
 /
 
 CREATE OR REPLACE PACKAGE BODY citydb_stat
 AS
+  /*****************************************************************
+  * table_content
+  *
+  * @param table_name name of table
+  * @param schema_name name of schema
+  * @RETURN INTEGER number of entries in table
+  ******************************************************************/
+  FUNCTION table_content(
+    table_name VARCHAR2,
+    schema_name VARCHAR2 := USER
+  ) RETURN NUMBER
+  IS
+    cnt NUMBER;  
+  BEGIN
+    EXECUTE IMMEDIATE 'SELECT count(*) FROM ' || schema_name || '.' || table_name INTO cnt;
+    RETURN cnt;
+  END;
 
   /*****************************************************************
   * table_contents
@@ -99,24 +116,6 @@ AS
     EXECUTE IMMEDIATE 'SELECT :1 MULTISET UNION :2 FROM dual' INTO report USING report_header, report;
 
     RETURN report;
-  END;
-
-  /*****************************************************************
-  * table_content
-  *
-  * @param table_name name of table
-  * @param schema_name name of schema
-  * @RETURN INTEGER number of entries in table
-  ******************************************************************/
-  FUNCTION table_content(
-    table_name VARCHAR2,
-    schema_name VARCHAR2 := USER
-  ) RETURN NUMBER
-  IS
-    cnt NUMBER;  
-  BEGIN
-    EXECUTE IMMEDIATE 'SELECT count(*) FROM ' || schema_name || '.' || table_name INTO cnt;
-    RETURN cnt;
   END;
 
 END citydb_stat;
