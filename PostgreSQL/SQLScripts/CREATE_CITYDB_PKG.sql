@@ -25,6 +25,10 @@
 -- limitations under the License.
 --
 
+\pset footer off
+SET client_min_messages TO WARNING;
+\set ON_ERROR_STOP ON
+
 --// create CITYDB_PKG schema
 CREATE SCHEMA citydb_pkg;
 
