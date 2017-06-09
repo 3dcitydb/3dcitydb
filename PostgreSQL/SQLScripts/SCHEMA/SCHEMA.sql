@@ -175,6 +175,7 @@ CREATE TABLE citydb.objectclass(
 	tablename character varying(30),
 	superclass_id integer,
 	baseclass_id integer,
+	ade_id integer,
 	CONSTRAINT objectclass_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -5075,14 +5076,21 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE citydb.objectclass DROP CONSTRAINT IF EXISTS objectclass_superclass_fk CASCADE;
 ALTER TABLE citydb.objectclass ADD CONSTRAINT objectclass_superclass_fk FOREIGN KEY (superclass_id)
 REFERENCES citydb.objectclass (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: objectclass_baseclass_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.objectclass DROP CONSTRAINT IF EXISTS objectclass_baseclass_fk CASCADE;
 ALTER TABLE citydb.objectclass ADD CONSTRAINT objectclass_baseclass_fk FOREIGN KEY (baseclass_id)
 REFERENCES citydb.objectclass (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: objectclass_ade_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.objectclass DROP CONSTRAINT IF EXISTS objectclass_ade_fk CASCADE;
+ALTER TABLE citydb.objectclass ADD CONSTRAINT objectclass_ade_fk FOREIGN KEY (ade_id)
+REFERENCES citydb.ade (id) MATCH FULL
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: city_furn_cityobject_fk | type: CONSTRAINT --
@@ -7042,33 +7050,33 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE citydb.schema DROP CONSTRAINT IF EXISTS schema_ade_fk CASCADE;
 ALTER TABLE citydb.schema ADD CONSTRAINT schema_ade_fk FOREIGN KEY (ade_id)
 REFERENCES citydb.ade (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: schema_to_objectclass_fk1 | type: CONSTRAINT --
 -- ALTER TABLE citydb.schema_to_objectclass DROP CONSTRAINT IF EXISTS schema_to_objectclass_fk1 CASCADE;
 ALTER TABLE citydb.schema_to_objectclass ADD CONSTRAINT schema_to_objectclass_fk1 FOREIGN KEY (schema_id)
 REFERENCES citydb.schema (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: schema_to_objectclass_fk2 | type: CONSTRAINT --
 -- ALTER TABLE citydb.schema_to_objectclass DROP CONSTRAINT IF EXISTS schema_to_objectclass_fk2 CASCADE;
 ALTER TABLE citydb.schema_to_objectclass ADD CONSTRAINT schema_to_objectclass_fk2 FOREIGN KEY (objectclass_id)
 REFERENCES citydb.objectclass (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: schema_referencing_fk1 | type: CONSTRAINT --
 -- ALTER TABLE citydb.schema_referencing DROP CONSTRAINT IF EXISTS schema_referencing_fk1 CASCADE;
 ALTER TABLE citydb.schema_referencing ADD CONSTRAINT schema_referencing_fk1 FOREIGN KEY (referencing_id)
 REFERENCES citydb.schema (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: schema_referencing_fk2 | type: CONSTRAINT --
 -- ALTER TABLE citydb.schema_referencing DROP CONSTRAINT IF EXISTS schema_referencing_fk2 CASCADE;
 ALTER TABLE citydb.schema_referencing ADD CONSTRAINT schema_referencing_fk2 FOREIGN KEY (referenced_id)
 REFERENCES citydb.schema (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --

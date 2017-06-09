@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="14157,9383" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="14205,9649" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -272,6 +272,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer"/>
 	</column>
 	<column name="baseclass_id">
+		<type name="integer"/>
+	</column>
+	<column name="ade_id">
 		<type name="integer"/>
 	</column>
 	<constraint name="objectclass_pk" type="pk-constr" factor="100" table="citydb.objectclass">
@@ -6180,14 +6183,20 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="objectclass_superclass_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.objectclass" table="citydb.objectclass">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.objectclass" table="citydb.objectclass">
 	<columns names="superclass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="objectclass_baseclass_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.objectclass" table="citydb.objectclass">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.objectclass" table="citydb.objectclass">
 	<columns names="baseclass_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="objectclass_ade_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.ade" table="citydb.objectclass">
+	<columns names="ade_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -7866,31 +7875,31 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="schema_ade_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.ade" table="citydb.schema">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.ade" table="citydb.schema">
 	<columns names="ade_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="schema_to_objectclass_fk1" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.schema" table="citydb.schema_to_objectclass">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.schema" table="citydb.schema_to_objectclass">
 	<columns names="schema_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="schema_to_objectclass_fk2" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.objectclass" table="citydb.schema_to_objectclass">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.objectclass" table="citydb.schema_to_objectclass">
 	<columns names="objectclass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="schema_referencing_fk1" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.schema" table="citydb.schema_referencing">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.schema" table="citydb.schema_referencing">
 	<columns names="referencing_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="schema_referencing_fk2" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.schema" table="citydb.schema_referencing">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.schema" table="citydb.schema_referencing">
 	<columns names="referenced_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -8015,7 +8024,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.objectclass"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="19122" y="13135.7"/>
+		<position x="19122" y="13141.3"/>
 	<position x="19122" y="13071"/>
 	<position x="19015.3" y="13071"/>
 	</line>
@@ -10351,6 +10360,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_schema_schema_cp" type="relfk"
 	 src-table="citydb.schema"
+	 dst-table="citydb.ade"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_objectclass_ade" type="relfk"
+	 src-table="citydb.objectclass"
 	 dst-table="citydb.ade"
 	 src-required="false" dst-required="false"/>
 

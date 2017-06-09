@@ -166,6 +166,7 @@
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
+      <onDeleteAction>CASCADE</onDeleteAction>
       <referenceID class="oracle.javatools.db.NameBasedID">
         <name>ADE_PK</name>
         <parent class="oracle.javatools.db.NameBasedID">
