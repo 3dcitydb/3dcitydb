@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="14205,9649" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="14204,11170" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -2498,9 +2498,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true" default-value="nextval('citydb.appearance_seq'::regclass)">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
-		<type name="integer"/>
-	</column>
 	<column name="gmlid">
 		<type name="character varying" length="256"/>
 	</column>
@@ -2535,9 +2532,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="core_module"/>
 	<position x="19640" y="12320"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.implicit_geometry_seq'::regclass)">
-		<type name="integer"/>
-	</column>
-	<column name="objectclass_id">
 		<type name="integer"/>
 	</column>
 	<column name="mime_type">
@@ -2618,9 +2612,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true" default-value="nextval('citydb.address_seq'::regclass)">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
-		<type name="integer"/>
-	</column>
 	<column name="gmlid">
 		<type name="varchar" length="256"/>
 	</column>
@@ -2665,9 +2656,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<position x="21280" y="11520"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.surface_data_seq'::regclass)">
 		<type name="integer"/>
-	</column>
-	<column name="objectclass_id">
-		<type name="integer" length="30"/>
 	</column>
 	<column name="gmlid">
 		<type name="character varying" length="256"/>
@@ -2739,9 +2727,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="core_module"/>
 	<position x="19660" y="11120"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.citymodel_seq'::regclass)">
-		<type name="integer"/>
-	</column>
-	<column name="objectclass_id">
 		<type name="integer"/>
 	</column>
 	<column name="gmlid">
@@ -5651,14 +5636,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<index name="surface_data_objclass_fkx" table="citydb.surface_data"
-	 concurrent="false" unique="false" fast-update="false" buffering="false"
-	 index-type="btree" factor="0">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="objectclass_id"/>
-		</idxelement>
-</index>
-
 <index name="surface_data_tex_image_fkx" table="citydb.surface_data"
 	 concurrent="false" unique="false" fast-update="false" buffering="false"
 	 index-type="btree" factor="0">
@@ -5867,22 +5844,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<index name="address_objclass_fkx" table="citydb.address"
-	 concurrent="false" unique="false" fast-update="false" buffering="false"
-	 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="objectclass_id"/>
-		</idxelement>
-</index>
-
-<index name="appearance_objclass_fkx" table="citydb.appearance"
-	 concurrent="false" unique="false" fast-update="false" buffering="false"
-	 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="objectclass_id"/>
-		</idxelement>
-</index>
-
 <index name="breakline_rel_objclass_fkx" table="citydb.breakline_relief"
 	 concurrent="false" unique="false" fast-update="false" buffering="false"
 	 index-type="btree" factor="90">
@@ -5947,14 +5908,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<index name="citymodel_objectclass_fkx" table="citydb.citymodel"
-	 concurrent="false" unique="false" fast-update="false" buffering="false"
-	 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="objectclass_id"/>
-		</idxelement>
-</index>
-
 <index name="group_objectclass_fkx" table="citydb.cityobjectgroup"
 	 concurrent="false" unique="false" fast-update="false" buffering="false"
 	 index-type="btree" factor="90">
@@ -5964,14 +5917,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </index>
 
 <index name="gen_object_objclass_fkx" table="citydb.generic_cityobject"
-	 concurrent="false" unique="false" fast-update="false" buffering="false"
-	 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="objectclass_id"/>
-		</idxelement>
-</index>
-
-<index name="implicit_geom_objclass_fkx" table="citydb.implicit_geometry"
 	 concurrent="false" unique="false" fast-update="false" buffering="false"
 	 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
@@ -7784,21 +7729,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="appearance_objclass_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.objectclass" table="citydb.appearance">
-	<columns names="objectclass_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
 <constraint name="implicit_geom_brep_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.surface_geometry" table="citydb.implicit_geometry">
 	<columns names="relative_brep_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="implicit_geom_objclass_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.objectclass" table="citydb.implicit_geometry">
-	<columns names="objectclass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -7820,27 +7753,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="address_objectclass_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.objectclass" table="citydb.address">
-	<columns names="objectclass_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
 <constraint name="surface_data_tex_image_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.tex_image" table="citydb.surface_data">
 	<columns names="tex_image_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="surface_data_objclass_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.objectclass" table="citydb.surface_data">
-	<columns names="objectclass_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="citymodel_objectclass_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.objectclass" table="citydb.citymodel">
-	<columns names="objectclass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -10110,22 +10025,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</label>
 </relationship>
 
-<relationship name="rel_surface_data_objectclass" type="relfk"
-	 src-table="citydb.surface_data"
-	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false">
-	<line>
-		<position x="21120" y="11640"/>
-	<position x="21120" y="13060"/>
-	</line>
-	<label ref-type="src-label">
-		<position x="0" y="0"/>
-	</label>
-	<label ref-type="name-label">
-		<position x="114.031" y="-1.95959"/>
-	</label>
-</relationship>
-
 <relationship name="generic_attribute_set" type="relfk"
 	 src-table="citydb.cityobject_genericattrib"
 	 dst-table="citydb.cityobject_genericattrib"
@@ -10223,16 +10122,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.schema"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_address_objectclass" type="relfk"
-	 src-table="citydb.address"
-	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="rel_appearance_objectclass" type="relfk"
-	 src-table="citydb.appearance"
-	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
-
 <relationship name="rel_breakline_relief_objectclass" type="relfk"
 	 src-table="citydb.breakline_relief"
 	 dst-table="citydb.objectclass"
@@ -10273,11 +10162,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.objectclass"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_citymodel_objectclass" type="relfk"
-	 src-table="citydb.citymodel"
-	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
-
 <relationship name="rel_cityobjectgroup_objectclass" type="relfk"
 	 src-table="citydb.cityobjectgroup"
 	 dst-table="citydb.objectclass"
@@ -10285,11 +10169,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_generic_cityobject_objectclass" type="relfk"
 	 src-table="citydb.generic_cityobject"
-	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="rel_implicit_geometry_objectclass" type="relfk"
-	 src-table="citydb.implicit_geometry"
 	 dst-table="citydb.objectclass"
 	 src-required="false" dst-required="false"/>
 
