@@ -304,6 +304,15 @@
       </properties>
     </column>
     <column>
+      <name>OBJECTCLASS_ID</name>
+      <dataTypeUsage>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+    </column>
+    <column>
       <name>X3D_SHININESS</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -923,6 +932,58 @@
     </column>
   </columns>
   <constraints>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <name>SURFACE_DATA_OBJCLASS_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>OBJECTCLASS_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>SURFACE_DATA</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.NameBasedID">
+        <name>OBJECTCLASS_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>OBJECTCLASS</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <name>SURFACE_DATA_TEX_IMAGE_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>TEX_IMAGE_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>SURFACE_DATA</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <referenceID class="oracle.javatools.db.NameBasedID">
+        <name>TEX_IMAGE_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>TEX_IMAGE</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
       <name>SURFACE_DATA_PK</name>
       <columnIDs>
@@ -967,32 +1028,6 @@
           </value>
         </entry>
       </properties>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <name>SURFACE_DATA_TEX_IMAGE_FK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>TEX_IMAGE_ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>SURFACE_DATA</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <onDeleteAction>NO_ACTION</onDeleteAction>
-      <referenceID class="oracle.javatools.db.NameBasedID">
-        <name>TEX_IMAGE_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>TEX_IMAGE</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <type>CONSTRAINT</type>
-      </referenceID>
     </constraint>
   </constraints>
   <indexes>
@@ -1044,6 +1079,19 @@
           </value>
         </entry>
       </properties>
+      <schema>
+        <name>DEFAULTSCHEMA</name>
+      </schema>
+      <systemGenerated>false</systemGenerated>
+    </index>
+    <index>
+      <name>SURFACE_DATA_OBJCLASS_FKX</name>
+      <columnExpressions>
+        <columnExpression>
+          <expressionSource>OBJECTCLASS_ID</expressionSource>
+        </columnExpression>
+      </columnExpressions>
+      <indexType>NORMAL</indexType>
       <schema>
         <name>DEFAULTSCHEMA</name>
       </schema>

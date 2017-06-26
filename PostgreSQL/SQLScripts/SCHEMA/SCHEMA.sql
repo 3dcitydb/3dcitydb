@@ -1337,6 +1337,7 @@ CREATE TABLE citydb.surface_data(
 	name_codespace character varying(4000),
 	description character varying(4000),
 	is_front numeric,
+	objectclass_id integer,
 	x3d_shininess double precision,
 	x3d_transparency double precision,
 	x3d_ambient_intensity double precision,
@@ -4952,6 +4953,15 @@ CREATE TABLE citydb.ade(
 );
 -- ddl-end --
 
+-- object: surface_data_objclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS citydb.surface_data_objclass_fkx CASCADE;
+CREATE INDEX surface_data_objclass_fkx ON citydb.surface_data
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	);
+-- ddl-end --
+
 -- object: cityobject_member_fk | type: CONSTRAINT --
 -- ALTER TABLE citydb.cityobject_member DROP CONSTRAINT IF EXISTS cityobject_member_fk CASCADE;
 ALTER TABLE citydb.cityobject_member ADD CONSTRAINT cityobject_member_fk FOREIGN KEY (cityobject_id)
@@ -6923,6 +6933,13 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE citydb.surface_data DROP CONSTRAINT IF EXISTS surface_data_tex_image_fk CASCADE;
 ALTER TABLE citydb.surface_data ADD CONSTRAINT surface_data_tex_image_fk FOREIGN KEY (tex_image_id)
 REFERENCES citydb.tex_image (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: surface_data_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE citydb.surface_data DROP CONSTRAINT IF EXISTS surface_data_objclass_fk CASCADE;
+ALTER TABLE citydb.surface_data ADD CONSTRAINT surface_data_objclass_fk FOREIGN KEY (objectclass_id)
+REFERENCES citydb.objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 

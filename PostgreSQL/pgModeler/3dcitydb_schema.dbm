@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="14204,11170" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="14203,11169" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -2674,6 +2674,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="is_front">
 		<type name="numeric" precision="0"/>
+	</column>
+	<column name="objectclass_id">
+		<type name="integer"/>
 	</column>
 	<column name="x3d_shininess">
 		<type name="double precision"/>
@@ -6067,6 +6070,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
+<index name="surface_data_objclass_fkx" table="citydb.surface_data"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="objectclass_id"/>
+		</idxelement>
+</index>
+
 <constraint name="cityobject_member_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.cityobject" table="citydb.cityobject_member">
 	<columns names="cityobject_id" ref-type="src-columns"/>
@@ -7756,6 +7767,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <constraint name="surface_data_tex_image_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.tex_image" table="citydb.surface_data">
 	<columns names="tex_image_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="surface_data_objclass_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.objectclass" table="citydb.surface_data">
+	<columns names="objectclass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -10245,6 +10262,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_objectclass_ade" type="relfk"
 	 src-table="citydb.objectclass"
 	 dst-table="citydb.ade"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_surface_data_objectclass" type="relfk"
+	 src-table="citydb.surface_data"
+	 dst-table="citydb.objectclass"
 	 src-required="false" dst-required="false"/>
 
 </dbmodel>
