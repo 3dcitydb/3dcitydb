@@ -29,8 +29,10 @@
 * CONTENT
 *
 * FUNCTIONS:
-*   change_column_srid(table_name TEXT, column_name TEXT, dim INTEGER, schema_srid INTEGER, transform INTEGER DEFAULT 0, geom_type TEXT DEFAULT 'GEOMETRY', schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
-*   change_schema_srid(schema_srid INTEGER, schema_gml_srs_name TEXT, transform INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
+*   change_column_srid(table_name TEXT, column_name TEXT, dim INTEGER, schema_srid INTEGER,
+*     transform INTEGER DEFAULT 0, geom_type TEXT DEFAULT 'GEOMETRY', schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
+*   change_schema_srid(schema_srid INTEGER, schema_gml_srs_name TEXT,
+*     transform INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   check_srid(srsno INTEGER DEFAULT 0) RETURNS TEXT
 *   is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER
 *   is_db_coord_ref_sys_3d(schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
@@ -91,8 +93,7 @@ DECLARE
 BEGIN
   SELECT srid INTO schema_srid FROM spatial_ref_sys WHERE srid = $1;
 
-  IF schema_srid IS NULL
-  THEN
+  IF schema_srid IS NULL THEN
     RAISE EXCEPTION 'Table spatial_ref_sys does not contain the SRID %. Insert commands for missing SRIDs can be found at spatialreference.org', srsno;
     RETURN 'SRID not ok';
   END IF;
@@ -116,8 +117,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.transform_or_null(
   ) RETURNS GEOMETRY AS
 $$
 BEGIN
-  IF geom IS NOT NULL
-  THEN
+  IF geom IS NOT NULL THEN
     RETURN ST_Transform($1, $2);
   ELSE
     RETURN NULL;
@@ -130,12 +130,13 @@ LANGUAGE plpgsql STABLE;
 /*****************************************************************
 * change_column_srid
 *
-* @param t_name name of table
-* @param c_name name of spatial column
+* @param table_name name of table
+* @param column_name name of spatial column
 * @param dim dimension of geometry
 * @param schema_srid the SRID of the coordinate system to be further used in the database
 * @param transform 1 if existing data shall be transformed, 0 if not
-* @param s_name name of schema
+* @param geom_type the geometry type of the given spatial column
+* @param schema_name name of schema
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.change_column_srid(
   table_name TEXT,
@@ -149,36 +150,41 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_column_srid(
 $$
 DECLARE
   idx_name TEXT;
+  opclass_param TEXT;
   geometry_type TEXT;
 BEGIN
   -- check if a spatial index is defined for the column
-  SELECT pgc_i.relname INTO idx_name AS idx_name 
-    FROM pg_class pgc_t, pg_class pgc_i, pg_index pgi, 
-         pg_am pgam, pg_attribute pga, pg_namespace pgns
-      WHERE pgc_t.oid = pgi.indrelid
-        AND pgc_i.oid = pgi.indexrelid
-        AND pgam.oid = pgc_i.relam
-        AND pga.attrelid = pgc_i.oid
-        AND pgns.oid = pgc_i.relnamespace
-        AND pgns.nspname = $7
-        AND pgc_t.relname = $1
-        AND pga.attname = $2
-        AND pgam.amname = 'gist';
+  SELECT 
+    pgc_i.relname,
+    pgoc.opcname
+  INTO
+    idx_name,
+    opclass_param
+  FROM pg_class pgc_t
+  JOIN pg_index pgi ON pgi.indrelid = pgc_t.oid  
+  JOIN pg_class pgc_i ON pgc_i.oid = pgi.indexrelid
+  JOIN pg_opclass pgoc ON pgoc.oid = pgi.indclass[0]
+  JOIN pg_am pgam ON pgam.oid = pgc_i.relam
+  JOIN pg_attribute pga ON pga.attrelid = pgc_i.oid
+  JOIN pg_namespace pgns ON pgns.oid = pgc_i.relnamespace
+  WHERE pgns.nspname = $7
+    AND pgc_t.relname = $1
+    AND pga.attname = $2
+    AND pgam.amname = 'gist';
 
-  IF idx_name IS NOT NULL
-  THEN
+  IF idx_name IS NOT NULL THEN
     -- drop spatial index if exists
     EXECUTE format('DROP INDEX %I.%I', $7, idx_name);
   END IF;
 
-  IF $5 <> 0
-  THEN
+  IF transform <> 0 THEN
     -- construct correct geometry type
-    IF $3 < 3
-    THEN
-      geometry_type := $6;
-    ELSE
+    IF dim = 3 AND substr($6,length($6),length($6)) <> 'M' THEN
       geometry_type := $6 || 'Z';
+    ELSIF dim = 4 THEN
+      geometry_type := $6 || 'ZM';
+    ELSE
+      geometry_type := $6;
     END IF;
 
     -- coordinates of existent geometries will be transformed
@@ -189,15 +195,9 @@ BEGIN
     PERFORM UpdateGeometrySRID($7, $1, $2, $4);
   END IF;
 
-  IF idx_name IS NOT NULL
-  THEN
+  IF idx_name IS NOT NULL THEN
     -- recreate spatial index again
-    IF $3 < 3
-    THEN
-      EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I)', idx_name, $7, $1, $2);
-    ELSE
-      EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_nd )', idx_name, $7, $1, $2);
-    END IF;
+    EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I %I)', idx_name, $7, $1, $2, opclass_param);
   END IF;
 END;
 $$
@@ -222,12 +222,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_schema_srid(
   ) RETURNS SETOF VOID AS $$
 DECLARE
   is_set_srs_info INTEGER;
-  path_setting TEXT;
 BEGIN
-  -- set search_path for this session
-  path_setting := current_setting('search_path');
-  PERFORM set_config('search_path', $4 || ',public', true);
-
   -- check if user selected valid srid
   -- will raise an exception if not
   PERFORM citydb_pkg.check_srid($1);
@@ -247,9 +242,6 @@ BEGIN
         AND f_geometry_column != 'implicit_geometry'
         AND f_geometry_column != 'relative_other_geom'
         AND f_geometry_column != 'texture_coordinates';
-
-  -- reset search_path in case auto_commit is switched off
-  PERFORM set_config('search_path', path_setting, true);
 END;
 $$
 LANGUAGE plpgsql STRICT;
