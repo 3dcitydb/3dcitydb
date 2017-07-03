@@ -268,15 +268,15 @@ BEGIN
     BEGIN
       IF idx.type = SPATIAL THEN
         IF idx.is_3d = 1 THEN
-          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST ('|| idx.attribute_name || ' gist_geometry_ops_nd)',
-                            idx.index_name, schema_name, idx.table_name);
+          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_nd)',
+                            idx.index_name, schema_name, idx.table_name, idx.attribute_name);
         ELSE
-          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST ('|| idx.attribute_name || ')',
-                            idx.index_name, schema_name, idx.table_name);
+          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_2d)',
+                            idx.index_name, schema_name, idx.table_name, idx.attribute_name);
         END IF;
       ELSE
-        EXECUTE format('CREATE INDEX %I ON %I.%I USING BTREE ('|| idx.attribute_name || ' )',
-                          idx.index_name, schema_name, idx.table_name);
+        EXECUTE format('CREATE INDEX %I ON %I.%I USING BTREE (%I)',
+                          idx.index_name, schema_name, idx.table_name, idx.attribute_name);
       END IF;
 
       EXCEPTION
