@@ -42,7 +42,7 @@
 CREATE SCHEMA citydb;
 -- ddl-end --
 
-SET search_path TO pg_catalog,public,citydb;
+-- SET search_path TO pg_catalog,public,citydb;
 -- ddl-end --
 
 -- object: postgis | type: EXTENSION --
