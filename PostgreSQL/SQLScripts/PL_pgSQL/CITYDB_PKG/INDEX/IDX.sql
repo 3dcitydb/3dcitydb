@@ -153,9 +153,9 @@ CREATE TABLE citydb_pkg.INDEX_TABLE (
 * Populate INDEX_TABLE with INDEX_OBJ instances
 * 
 ******************************************************************/
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_spatial_3d('cityobject_envelope_spx', 'cityobject', 'envelope'));
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_spatial_3d('surface_geom_spx', 'surface_geometry', 'geometry'));
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_spatial_3d('surface_geom_solid_spx', 'surface_geometry', 'solid_geometry'));
+INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_spatial_2d('cityobject_envelope_spx', 'cityobject', 'envelope'));
+INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_spatial_2d('surface_geom_spx', 'surface_geometry', 'geometry'));
+INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_spatial_2d('surface_geom_solid_spx', 'surface_geometry', 'solid_geometry'));
 INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('cityobject_inx', 'cityobject', 'gmlid, gmlid_codespace'));
 INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('cityobject_lineage_inx', 'cityobject', 'lineage'));
 INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('surface_geom_inx', 'surface_geometry', 'gmlid, gmlid_codespace'));
@@ -271,7 +271,7 @@ BEGIN
           EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST ('|| idx.attribute_name || ' gist_geometry_ops_nd)',
                             idx.index_name, schema_name, idx.table_name);
         ELSE
-          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST ('|| idx.attribute_name || ' gist_geometry_ops_2d)',
+          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST ('|| idx.attribute_name || ')',
                             idx.index_name, schema_name, idx.table_name);
         END IF;
       ELSE

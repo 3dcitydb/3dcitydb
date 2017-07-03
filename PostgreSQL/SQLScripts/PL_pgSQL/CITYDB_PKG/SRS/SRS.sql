@@ -148,13 +148,14 @@ LANGUAGE plpgsql;
 * @param s_name name of schema
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.change_column_srid(
-  t_name      TEXT,
-  c_name      TEXT,
-  dim         INTEGER,
-  schema_srid INTEGER,
-  transform   INTEGER DEFAULT 0,
-  geom_type   TEXT DEFAULT 'GEOMETRY',
-  s_name      TEXT DEFAULT 'citydb'
+  t_name        TEXT,
+  c_name        TEXT,
+  dim           INTEGER,
+  schema_srid   INTEGER,
+  transform     INTEGER DEFAULT 0,
+  geom_type     TEXT DEFAULT 'GEOMETRY',
+  use_nd_index  BOOLEAN DEFAULT false,
+  s_name        TEXT DEFAULT 'citydb'
 )
   RETURNS SETOF VOID AS
 $$
@@ -205,12 +206,12 @@ BEGIN
   IF idx_name IS NOT NULL
   THEN
     -- recreate spatial index again
-    IF dim < 3
+    IF dim > 2 AND use_nd_index
     THEN
-      EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I)', idx_name, s_name, t_name, c_name);
-    ELSE
       EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_nd )', idx_name, s_name, t_name,
                      c_name);
+    ELSE
+      EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I)', idx_name, s_name, t_name, c_name);
     END IF;
   END IF;
 END;
@@ -232,6 +233,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_schema_srid(
   schema_srid         INTEGER,
   schema_gml_srs_name TEXT,
   transform           INTEGER DEFAULT 0,
+  use_nd_index        BOOLEAN DEFAULT false,
   schema_name         TEXT DEFAULT 'citydb'
 )
   RETURNS SETOF VOID AS $$
@@ -255,12 +257,12 @@ BEGIN
   END IF;
 
   -- change srid of each spatially enabled table
-  EXECUTE 'SELECT citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $2, type, f_table_schema) 
-             FROM geometry_columns WHERE f_table_schema = $3
+  EXECUTE 'SELECT citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $2, type, $3, f_table_schema) 
+             FROM geometry_columns WHERE f_table_schema = $4
               AND f_geometry_column != ''implicit_geometry''
               AND f_geometry_column != ''relative_other_geom''
               AND f_geometry_column != ''texture_coordinates'''
-  USING schema_srid, transform, schema_name;
+  USING schema_srid, transform, use_nd_index, schema_name;
 END;
 $$
 LANGUAGE plpgsql;
