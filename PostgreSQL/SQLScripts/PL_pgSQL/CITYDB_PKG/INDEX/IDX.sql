@@ -238,15 +238,15 @@ BEGIN
     BEGIN
       IF ($1).type = SPATIAL THEN
         IF ($1).is_3d = 1 THEN
-          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST ('|| ($1).attribute_name || ' gist_geometry_ops_nd)',
-                            ($1).index_name, $2, ($1).table_name);
+          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_nd)',
+                            ($1).index_name, $2, ($1).table_name, ($1).attribute_name);
         ELSE
-          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST ('|| ($1).attribute_name || ' gist_geometry_ops_2d)',
-                            ($1).index_name, $2, ($1).table_name);
+          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_2d)',
+                            ($1).index_name, $2, ($1).table_name, ($1).attribute_name);
         END IF;
       ELSE
-        EXECUTE format('CREATE INDEX %I ON %I.%I USING BTREE ('|| ($1).attribute_name || ' )',
-                          ($1).index_name, $2, ($1).table_name);
+        EXECUTE format('CREATE INDEX %I ON %I.%I USING BTREE (%I)',
+                          ($1).index_name, $2, ($1).table_name, ($1).attribute_name);
       END IF;
 
       EXCEPTION
