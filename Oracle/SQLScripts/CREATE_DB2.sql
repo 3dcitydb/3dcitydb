@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2016
+-- Copyright 2013 - 2017
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -31,7 +31,6 @@ SET VER OFF
 
 VARIABLE VERSIONBATCHFILE VARCHAR2(50);
 
-
 --// create tables
 @@SCHEMA/TABLES/TABLES.sql
 
@@ -57,19 +56,18 @@ COMMIT;
 
 --// (possibly) activate versioning
 BEGIN
-  :VERSIONBATCHFILE := 'UTIL/CREATE_DB/DO_NOTHING.sql';
-END;
-/
-BEGIN
   IF ('&VERSIONING'='yes' OR '&VERSIONING'='YES' OR '&VERSIONING'='y' OR '&VERSIONING'='Y') THEN
     :VERSIONBATCHFILE := 'ENABLE_VERSIONING2.sql';
+  ELSE
+    :VERSIONBATCHFILE := 'UTIL/CREATE_DB/DO_NOTHING.sql';
   END IF;
 END;
 /
 -- Transfer the value from the bind variable to the substitution variable
 column mc2 new_value VERSIONBATCHFILE2 print
 select :VERSIONBATCHFILE mc2 from dual;
-@@&VERSIONBATCHFILE2
+
+START &VERSIONBATCHFILE2
 
 --// citydb packages
 @@CREATE_CITYDB_PKG.sql
