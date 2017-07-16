@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2016
+-- Copyright 2013 - 2017
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -35,8 +35,14 @@
 *     OUT minor_version INTEGER, 
 *     OUT minor_revision INTEGER
 *     ) RETURNS RECORD
-*   db_info(OUT schema_srid INTEGER, OUT schema_gml_srs_name TEXT, OUT versioning TEXT) RETURNS RECORD
+*   db_info(
+*     schema_name TEXT DEFAULT 'citydb',
+*     OUT schema_srid INTEGER,
+*     OUT schema_gml_srs_name TEXT,
+*     OUT versioning TEXT
+*     ) RETURNS RECORD
 *   db_metadata(
+*     schema_name TEXT DEFAULT 'citydb',
 *     OUT schema_srid INTEGER, 
 *     OUT schema_gml_srs_name TEXT, 
 *     OUT coord_ref_sys_name TEXT, 
@@ -57,7 +63,7 @@
 /*****************************************************************
 * citydb_version
 *
-* @RETURN TABLE with columns
+* @RETURN RECORD with columns
 *   version - version of 3DCityDB as string
 *   major_version - major version number of 3DCityDB instance
 *   minor_version - minor version number of 3DCityDB instance
@@ -84,6 +90,7 @@ LANGUAGE sql IMMUTABLE;
 *
 * @param table_name name of table
 * @param schema_name name of schema of target table
+*
 * @RETURN TEXT 'ON' for version-enabled, 'OFF' otherwise
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.versioning_table(
@@ -100,6 +107,7 @@ LANGUAGE sql IMMUTABLE;
 * versioning_db
 *
 * @param schema_name name of schema
+*
 * @RETURN TEXT 'ON' for version-enabled, 'OFF' for version-disabled
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.versioning_db(schema_name TEXT DEFAULT 'citydb') RETURNS TEXT AS 
@@ -112,33 +120,42 @@ LANGUAGE sql IMMUTABLE;
 /*****************************************************************
 * db_info
 *
-* @param schema_srid database srid
-* @param schema_srs database srs name
-* @param versioning database versioning
+* @param schema_name name of database schema
+*
+* @RETURN RECORD with columns
+*    SCHEMA_SRID, SCHEMA_GML_SRS_NAME, VERSIONING
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.db_info(
+  schema_name TEXT DEFAULT 'citydb',
   OUT schema_srid INTEGER, 
   OUT schema_gml_srs_name TEXT,
   OUT versioning TEXT
-  ) AS 
+  ) RETURNS RECORD AS 
 $$
-SELECT 
-  srid AS schema_srid,
-  gml_srs_name AS schema_gml_srs_name,
-  citydb_pkg.versioning_db(current_schema()) AS versioning
-FROM
-  database_srs;
-$$ 
-LANGUAGE sql STABLE;
+BEGIN
+  EXECUTE format(
+    'SELECT 
+       srid, gml_srs_name, citydb_pkg.versioning_db($1)
+     FROM
+       %I.database_srs', schema_name)
+    USING schema_name
+    INTO schema_srid, schema_gml_srs_name, versioning;
+END;
+$$
+LANGUAGE plpgsql STABLE;
 
 
 /******************************************************************
 * db_metadata
 *
-* @RETURN TABLE with columns SRID, GML_SRS_NAME, COORD_REF_SYS_NAME, 
-*               COORD_REF_SYS_KIND, VERSIONING
+* @param schema_name name of database schema
+*
+* @RETURN RECORD with columns
+*    SCHEMA_SRID, SCHEMA_GML_SRS_NAME,
+*    COORD_REF_SYS_NAME, COORD_REF_SYS_KIND, VERSIONING
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(
+  schema_name TEXT DEFAULT 'citydb',
   OUT schema_srid INTEGER, 
   OUT schema_gml_srs_name TEXT, 
   OUT coord_ref_sys_name TEXT, 
@@ -147,20 +164,25 @@ CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(
   OUT versioning TEXT
   ) RETURNS RECORD AS 
 $$
-SELECT 
-  d.srid AS schema_srid, 
-  d.gml_srs_name AS schema_gml_srs_name, 
-  split_part(s.srtext, '"', 2) AS coord_ref_sys_name,
-  split_part(s.srtext, '[', 1) AS coord_ref_sys_kind,
-  s.srtext AS wktext,
-  citydb_pkg.versioning_db() AS versioning
-FROM 
-  database_srs d,
-  spatial_ref_sys s 
-WHERE
-  d.srid = s.srid;
+BEGIN
+  EXECUTE format(
+    'SELECT 
+       d.srid,
+       d.gml_srs_name,
+       split_part(s.srtext, ''"'', 2),
+       split_part(s.srtext, ''['', 1),
+       s.srtext,
+       citydb_pkg.versioning_db($1) AS versioning
+     FROM 
+       %I.database_srs d,
+       spatial_ref_sys s 
+     WHERE
+       d.srid = s.srid', schema_name)
+    USING schema_name
+    INTO schema_srid, schema_gml_srs_name, coord_ref_sys_name, coord_ref_sys_kind, wktext, versioning;
+END;
 $$
-LANGUAGE sql STABLE;
+LANGUAGE plpgsql STABLE;
 
 
 /******************************************************************
@@ -168,6 +190,7 @@ LANGUAGE sql STABLE;
 *
 * @param a first NUMERIC value
 * @param b second NUMERIC value
+*
 * @RETURN NUMERIC the smaller of the two input NUMERIC values                
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.min(
@@ -258,6 +281,8 @@ LANGUAGE plpgsql STRICT;
 * @param seq_name name of the sequence
 * @param count number of values to be queried from the sequence
 * @param schema_name name of schema of target sequence
+*
+* @RETURN INTEGER SET list of sequence values from given sequence
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_seq_values(
   seq_name TEXT,
@@ -273,8 +298,9 @@ LANGUAGE sql STRICT;
 * objectclass_id_to_table_name
 *
 * @param class_id objectclass_id identifier
+*
 * @RETURN TEXT name of table that stores objects referred 
-*                 to the given objectclass_id
+*              to the given objectclass_id
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.objectclass_id_to_table_name(class_id INTEGER) RETURNS TEXT AS
 $$
