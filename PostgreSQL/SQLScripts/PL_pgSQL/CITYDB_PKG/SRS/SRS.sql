@@ -29,8 +29,10 @@
 * CONTENT
 *
 * FUNCTIONS:
-*   change_column_srid(t_name TEXT, c_name TEXT, dim INTEGER, schema_srid INTEGER, transform INTEGER DEFAULT 0, geom_type TEXT DEFAULT 'GEOMETRY', s_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
-*   change_schema_srid(schema_srid INTEGER, schema_gml_srs_name TEXT, transform INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
+*   change_column_srid(table_name TEXT, column_name TEXT, dim INTEGER, schema_srid INTEGER,
+*     transform INTEGER DEFAULT 0, geom_type TEXT DEFAULT 'GEOMETRY', schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
+*   change_schema_srid(schema_srid INTEGER, schema_gml_srs_name TEXT,
+*     transform INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   check_srid(srsno INTEGER DEFAULT 0) RETURNS TEXT
 *   is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER
 *   is_db_coord_ref_sys_3d() RETURNS INTEGER
@@ -140,82 +142,78 @@ LANGUAGE plpgsql;
 /*****************************************************************
 * change_column_srid
 *
-* @param t_name name of table
-* @param c_name name of spatial column
+* @param table_name name of table
+* @param column_name name of spatial column
 * @param dim dimension of geometry
 * @param schema_srid the SRID of the coordinate system to be further used in the database
 * @param transform 1 if existing data shall be transformed, 0 if not
-* @param s_name name of schema
+* @param geom_type the geometry type of the given spatial column
+* @param schema_name name of schema
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.change_column_srid(
-  t_name      TEXT,
-  c_name      TEXT,
-  dim         INTEGER,
+  table_name TEXT,
+  column_name TEXT,
+  dim INTEGER,
   schema_srid INTEGER,
-  transform   INTEGER DEFAULT 0,
-  geom_type   TEXT DEFAULT 'GEOMETRY',
-  s_name      TEXT DEFAULT 'citydb'
-)
-  RETURNS SETOF VOID AS
+  transform INTEGER DEFAULT 0,
+  geom_type TEXT DEFAULT 'GEOMETRY',
+  schema_name TEXT DEFAULT 'citydb'
+  ) RETURNS SETOF VOID AS
 $$
 DECLARE
-  idx_name      TEXT;
+  idx_name TEXT;
+  opclass_param TEXT;
   geometry_type TEXT;
 BEGIN
   -- check if a spatial index is defined for the column
-  EXECUTE 'SELECT pgc_i.relname AS idx_name 
-             FROM pg_class pgc_t, pg_class pgc_i, pg_index pgi, 
-                  pg_am pgam, pg_attribute pga, pg_namespace pgns
-             WHERE pgc_t.oid = pgi.indrelid
-               AND pgc_i.oid = pgi.indexrelid
-               AND pgam.oid = pgc_i.relam
-               AND pga.attrelid = pgc_i.oid
-               AND pgns.oid = pgc_i.relnamespace
-               AND pgns.nspname = $1
-               AND pgc_t.relname = $2
-               AND pga.attname = $3
-               AND pgam.amname = ''gist'''
-  INTO idx_name
-  USING s_name, t_name, c_name;
+  SELECT 
+    pgc_i.relname,
+    pgoc.opcname
+  INTO
+    idx_name,
+    opclass_param
+  FROM pg_class pgc_t
+  JOIN pg_index pgi ON pgi.indrelid = pgc_t.oid  
+  JOIN pg_class pgc_i ON pgc_i.oid = pgi.indexrelid
+  JOIN pg_opclass pgoc ON pgoc.oid = pgi.indclass[0]
+  JOIN pg_am pgam ON pgam.oid = pgc_i.relam
+  JOIN pg_attribute pga ON pga.attrelid = pgc_i.oid
+  JOIN pg_namespace pgns ON pgns.oid = pgc_i.relnamespace
+  WHERE pgns.nspname = $7
+    AND pgc_t.relname = $1
+    AND pga.attname = $2
+    AND pgam.amname = 'gist';
 
-  IF idx_name IS NOT NULL
-  THEN
+  IF idx_name IS NOT NULL THEN
     -- drop spatial index if exists
-    EXECUTE format('DROP INDEX %I.%I', s_name, idx_name);
+    EXECUTE format('DROP INDEX %I.%I', $7, idx_name);
   END IF;
 
-  IF transform <> 0
-  THEN
+  IF transform <> 0 THEN
     -- construct correct geometry type
-    IF dim < 3
-    THEN
-      geometry_type := geom_type;
+    IF dim = 3 AND substr($6,length($6),length($6)) <> 'M' THEN
+      geometry_type := $6 || 'Z';
+    ELSIF dim = 4 THEN
+      geometry_type := $6 || 'ZM';
     ELSE
-      geometry_type := geom_type || 'Z';
+      geometry_type := $6;
     END IF;
 
     -- coordinates of existent geometries will be transformed
     EXECUTE format('ALTER TABLE %I.%I ALTER COLUMN %I TYPE geometry(%I,%L) USING ST_Transform(%I,%L)',
-                   s_name, t_name, c_name, geometry_type, schema_srid, c_name, schema_srid);
+                     $7, $1, $2, geometry_type, $4, $2, $4);
   ELSE
     -- only metadata of geometry columns is updated, coordinates keep unchanged
-    PERFORM UpdateGeometrySRID(s_name, t_name, c_name, schema_srid);
+    PERFORM UpdateGeometrySRID($7, $1, $2, $4);
   END IF;
 
-  IF idx_name IS NOT NULL
-  THEN
+  IF idx_name IS NOT NULL THEN
     -- recreate spatial index again
-    IF dim < 3
-    THEN
-      EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I)', idx_name, s_name, t_name, c_name);
-    ELSE
-      EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_nd )', idx_name, s_name, t_name,
-                     c_name);
-    END IF;
+    EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I %I)', idx_name, $7, $1, $2, opclass_param);
   END IF;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*******************************************************************
