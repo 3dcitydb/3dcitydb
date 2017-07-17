@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="14203,11169" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="13512,10859" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -4821,8 +4821,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <index name="tunnel_furn_lod4xgeom_spx" table="citydb.tunnel_furniture"
 	 concurrent="false" unique="false" fast-update="false" buffering="false"
-	 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+	 index-type="gist" factor="0">
+		<idxelement use-sorting="false">
 			<column name="lod4_other_geom"/>
 		</idxelement>
 </index>

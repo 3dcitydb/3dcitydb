@@ -3622,10 +3622,10 @@ CREATE INDEX tunnel_furn_lod4brep_fkx ON citydb.tunnel_furniture
 -- object: tunnel_furn_lod4xgeom_spx | type: INDEX --
 -- DROP INDEX IF EXISTS citydb.tunnel_furn_lod4xgeom_spx CASCADE;
 CREATE INDEX tunnel_furn_lod4xgeom_spx ON citydb.tunnel_furniture
-	USING btree
+	USING gist
 	(
-	  lod4_other_geom ASC NULLS LAST
-	)	WITH (FILLFACTOR = 90);
+	  lod4_other_geom
+	);
 -- ddl-end --
 
 -- object: tunnel_furn_lod4impl_fkx | type: INDEX --
