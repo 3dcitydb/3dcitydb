@@ -245,8 +245,8 @@ BEGIN
                             ($1).index_name, $2, ($1).table_name, ($1).attribute_name);
         END IF;
       ELSE
-        EXECUTE format('CREATE INDEX %I ON %I.%I USING BTREE (%I)',
-                          ($1).index_name, $2, ($1).table_name, ($1).attribute_name);
+        EXECUTE format('CREATE INDEX %I ON %I.%I USING BTREE ('|| idx.attribute_name || ')',
+                          idx.index_name, schema_name, idx.table_name);
       END IF;
 
       EXCEPTION
