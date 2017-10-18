@@ -53,7 +53,11 @@ SELECT postgis_version();
 \i CREATE_CITYDB_PKG.sql
 
 --// update search_path on database level
-ALTER DATABASE :"DBNAME" SET search_path TO citydb,citydb_pkg,public;
+DO
+LANGUAGE plpgsql
+$$BEGIN
+ EXECUTE 'ALTER DATABASE '|| 'DBNAME' || ' SET search_path TO ' || current_setting('search_path') || ', citydb, citydb_pkg;';
+END$$;
 
 \echo
 \echo '3DCityDB creation complete!'
