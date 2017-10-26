@@ -38,7 +38,7 @@ You may obtain a copy of the License at
 2. Copyright
 ------------
 
-(C) 2013 - 2016
+(C) 2013 - 2017
 Chair of Geoinformatics
 Technical University of Munich, Germany
 https://www.gis.bgu.tum.de/
