@@ -32,7 +32,7 @@ DROP SCHEMA CITYDB_PKG CASCADE;
 DROP SCHEMA CITYDB CASCADE;
 
 --// update search_path
-SET search_path TO pg_catalog,public;
+ALTER DATABASE :"DBNAME" RESET search_path;
 
 \echo
 \echo '3DCityDB schema successfully removed!'
