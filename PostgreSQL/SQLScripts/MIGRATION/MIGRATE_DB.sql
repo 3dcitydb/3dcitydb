@@ -90,7 +90,7 @@ CREATE SCHEMA citydb_pkg;
 DO
 $$
 BEGIN
-  EXECUTE 'ALTER DATABASE ' || current_database() || ' SET search_path TO citydb, citydb_pkg, ' || current_setting('search_path');
+  EXECUTE 'ALTER DATABASE "' || current_database() || '" SET search_path TO citydb, citydb_pkg, ' || current_setting('search_path');
 END;
 $$;
 
