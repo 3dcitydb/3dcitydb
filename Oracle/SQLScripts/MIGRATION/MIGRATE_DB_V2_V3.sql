@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2016
+-- Copyright 2013 - 2017
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -1747,56 +1747,63 @@ AS
       INSTR(sequence_name, '_SEQ')-1) as sequencename
       from user_sequences order by sequence_name;
     sequence_val NUMBER(10) := 0;
-    corrected_table_name VARCHAR2(100);
+    table_name_fnd VARCHAR2(100);
     query_str VARCHAR2(1000);
     table_exists NUMBER(1) := 0;
     column_exists NUMBER(10) := 0;
+    table_name_4seq VARCHAR2(100);
+    
   BEGIN
+    dbms_output.put_line('********************* updateSequences *********************');
     FOR user_sequences IN user_sequences_cursor LOOP
       IF (user_sequences.sequencename IS NOT NULL) THEN
+      
+        table_name_4seq := NULL;
+
         select count(table_name) into table_exists
         from user_tables where table_name = user_sequences.sequencename;
-
-        select COUNT(*) INTO column_exists
-        from all_tab_cols
-        where table_name = user_sequences.sequencename and
-        column_name = 'ID';
-
-        IF (column_exists != 0) THEN
-          IF (table_exists = 1) THEN
-            query_str := 'select max(id) from '|| user_sequences.sequencename;
+        
+        IF (table_exists = 1) THEN
+          table_name_4seq := user_sequences.sequencename;
+        ELSE 
+          query_str := 'select table_name from user_tables where table_name like ''%'
+                       || user_sequences.sequencename ||
+                       '%''';
+          dbms_output.put_line(query_str);
+          table_name_fnd := NULL;
+          EXECUTE IMMEDIATE query_str into table_name_fnd;
+          IF (table_name_fnd IS NOT NULL) THEN
+            table_name_4seq := table_name_fnd;
+          END IF;
+        END IF;
+        
+        IF (table_name_4seq IS NOT NULL) THEN
+          select COUNT(*) INTO column_exists
+          from all_tab_cols
+          where table_name = table_name_4seq and
+          column_name = 'ID';
+          
+          IF (column_exists != 0) THEN
+            query_str := 'select max(id) from '|| table_name_4seq;
             EXECUTE IMMEDIATE query_str into sequence_val;
-            -- dbms_output.put_line(user_sequences.sequencename || ':' || sequence_val);
+            dbms_output.put_line(table_name_4seq || ':' || sequence_val);
             IF (sequence_val IS NOT NULL) THEN
-              -- dbms_output.put_line('DROP SEQUENCE ' || user_sequences.sequencename || '_SEQ');
-              -- dbms_output.put_line('CREATE SEQUENCE ' || user_sequences.sequencename || '_SEQ START WITH ' || (sequence_val + 1));
+              dbms_output.put_line('DROP SEQUENCE ' || user_sequences.sequencename || '_SEQ');
+              dbms_output.put_line('CREATE SEQUENCE ' || user_sequences.sequencename || '_SEQ START WITH ' || (sequence_val + 1));
               EXECUTE IMMEDIATE 'DROP SEQUENCE ' || user_sequences.sequencename || '_SEQ';
               EXECUTE IMMEDIATE 'CREATE SEQUENCE ' || user_sequences.sequencename || '_SEQ START WITH ' || (sequence_val + 1);
             END IF;
-          ELSE
-             query_str := 'select table_name from user_tables where table_name
-              like ''%'
-              || user_sequences.sequencename ||
-              '%''';
-              -- dbms_output.put_line(query_str);
-
-             EXECUTE IMMEDIATE query_str into corrected_table_name;
-             query_str := 'select max(id) from '|| corrected_table_name;
-             EXECUTE IMMEDIATE query_str into sequence_val;
-             -- dbms_output.put_line(user_sequences.sequencename || ':' || sequence_val);
-             IF (sequence_val IS NOT NULL) THEN
-              -- dbms_output.put_line('DROP SEQUENCE ' || user_sequences.sequencename || '_SEQ');
-              -- dbms_output.put_line('CREATE SEQUENCE ' || user_sequences.sequencename || '_SEQ START WITH ' || (sequence_val + 1));
-              EXECUTE IMMEDIATE 'DROP SEQUENCE ' || user_sequences.sequencename || '_SEQ';
-              EXECUTE IMMEDIATE 'CREATE SEQUENCE ' || user_sequences.sequencename || '_SEQ START WITH ' || (sequence_val + 1);
-             END IF;
           END IF;
         END IF;
+        
       END IF;
+      
       sequence_val := 0;
-      query_str := 0;
+      query_str := NULL;
       table_exists := 0;
-      corrected_table_name := '';
+      table_name_fnd := NULL;
+      table_name_4seq := NULL;
+      
     END LOOP;
   END;
 END citydb_migrate_v2_v3;
