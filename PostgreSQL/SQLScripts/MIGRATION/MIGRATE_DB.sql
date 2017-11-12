@@ -87,7 +87,12 @@ CREATE SCHEMA citydb_pkg;
 --\i DROP_DB_V2.sql
 
 --// update search_path on database level
-ALTER DATABASE :"DBNAME" SET search_path TO citydb,citydb_pkg,public;
+DO
+$$
+BEGIN
+  EXECUTE 'ALTER DATABASE "' || current_database() || '" SET search_path TO citydb, citydb_pkg, ' || current_setting('search_path');
+END;
+$$;
 
 \echo
 \echo '3DCityDB migration complete!'
