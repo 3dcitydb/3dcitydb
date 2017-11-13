@@ -209,7 +209,7 @@ END;
 
 
 BEGIN
-	dbms_output.put_line('Migration related Packages, Procedures and Functions are being removed');
+	dbms_output.put_line('Migration related Packages, Procedures and Functions are being removed...');
 END;
 /
 BEGIN
@@ -224,13 +224,13 @@ BEGIN
 END;
 /
 BEGIN
-	dbms_output.put_line('Removal of migration related Packages, Procedures and Functions is completed');
+	dbms_output.put_line('Removal of migration related Packages, Procedures and Functions is completed.');
 END;
 /
 
 COMMIT;
 
 BEGIN
-	dbms_output.put_line('DB migration is completed.' || SYSTIMESTAMP);	
+	dbms_output.put_line('DB migration is completed. ' || SYSTIMESTAMP);
 END;
 /
