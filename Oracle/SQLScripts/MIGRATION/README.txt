@@ -33,6 +33,10 @@
     - Enter the SRSName to be used 
     - Specify if the versioning shall be enabled 
     - Specify the used oracle license (spatial / locator)
+	
+    - Note: The database user must own the CREATE SYNONYM privilege
+      in addition to the default privileges/roles required by the
+      3DCityDB. Otherwise, step 3 of the migration will fail.
 
 2. Run the script @GRANT_ACCESS.sql as v2.1 schema user 
 
