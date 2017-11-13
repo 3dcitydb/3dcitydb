@@ -187,7 +187,7 @@ BEGIN
 	RETURN NEXT deleted_id;
   END LOOP;
 
-  IF clean_apps <> 0 THEN
+  IF clean_apps <> 0 AND deleted_id IS NOT NULL THEN
     EXECUTE 'SELECT citydb_pkg.cleanup_appearances(0, $1)' USING schema_name;
   END IF;
 
@@ -382,7 +382,7 @@ BEGIN
   --// DELETE APPEARANCE //--
   EXECUTE format('DELETE FROM %I.appearance WHERE id = %L RETURNING id', schema_name, app_id) INTO deleted_id;
 
-  IF cleanup <> 0 THEN
+  IF cleanup <> 0 AND deleted_id IS NOT NULL THEN
     -- delete tex images not referenced by surface data any more
     EXECUTE 'SELECT citydb_pkg.cleanup_tex_images($1)' USING schema_name; 
   END IF;
@@ -511,7 +511,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING lu_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING lu_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -567,7 +569,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING gco_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING gco_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -619,7 +623,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING svo_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING svo_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -688,7 +694,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING pc_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING pc_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -760,7 +768,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING wb_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING wb_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -811,7 +821,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING wbs_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING wbs_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -850,7 +862,9 @@ BEGIN
 
   --// POST DELETE RELIEF FEATURE //--
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING rf_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING rf_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -888,7 +902,9 @@ BEGIN
 
   --// POST DELETE RELIEF FEATURE //--
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING rc_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING rc_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -969,7 +985,9 @@ BEGIN
 
   --// POST DELETE TIN RELIEF //--
   -- delete geometry
-  EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING geom_id, schema_name;
+  IF geom_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING geom_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -1054,7 +1072,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING cf_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING cf_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -1115,7 +1135,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING cog_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING cog_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -1219,7 +1241,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING b_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING b_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -1271,7 +1295,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING bi_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING bi_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -1329,7 +1355,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING ts_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING ts_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -1387,7 +1415,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING o_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING o_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -1425,7 +1455,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING bf_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING bf_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -1480,7 +1512,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING r_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING r_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -1536,7 +1570,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tc_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tc_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -1584,7 +1620,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING ta_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING ta_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -1735,7 +1773,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brd_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brd_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
   
@@ -1787,7 +1827,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdi_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdi_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -1845,7 +1887,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdts_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdts_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -1903,7 +1947,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdo_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdo_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -1941,7 +1987,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdf_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdf_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -1996,7 +2044,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdr_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdr_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -2052,7 +2102,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdce_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdce_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -2137,7 +2189,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tun_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tun_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -2189,7 +2243,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tuni_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tuni_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -2247,7 +2303,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tunts_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tunts_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -2294,7 +2352,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tuno_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tuno_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -2332,7 +2392,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tunf_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tunf_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -2387,7 +2449,9 @@ BEGIN
   END IF;
 
   -- delete city object
-  EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tunhs_id, schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tunhs_id, schema_name;
+  END IF;
 
   RETURN deleted_id;
 
@@ -2598,7 +2662,9 @@ BEGIN
   END IF;
 
   -- delete tex images not referenced by surface data any more
-  EXECUTE 'SELECT citydb_pkg.cleanup_tex_images($1)' USING schema_name;
+  IF deleted_id IS NOT NULL THEN
+    EXECUTE 'SELECT citydb_pkg.cleanup_tex_images($1)' USING schema_name;
+  END IF;
 
   RETURN;
 

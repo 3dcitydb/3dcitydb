@@ -146,10 +146,10 @@ the following cooperation partners:
 
 Claus Nagel <cnagel@virtualcitysystems.de>
 Felix Kunde <felix-kunde@gmx.de>
-Richard Redweik <rredweik@virtualcitysystems.de>
 Zhihang Yao <zhihang.yao@tum.de>
 György Hudra <ghudra@moss.de>
 Arda Müftüoglu <amueftueoglu@moss.de>
+Richard Redweik <richard.redweik@posteo.de>
 Thomas H. Kolbe <thomas.kolbe@tum.de>
 
 Version 3.0 is based on earlier versions of the 3D City Database.
