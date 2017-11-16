@@ -167,7 +167,7 @@
 *
 ******************************************************************/
 
--- DELETE TEX IMAGE
+-- DELETE ADDRESS
 
 /*****************************************************************
 * delete_addresses
@@ -3702,7 +3702,7 @@ $$
 LANGUAGE plpgsql STRICT;
 
 
--- delete hollow space
+-- DELETE TUNNEL HOLLOW SPACE
 
 /*****************************************************************
 * delete_tunnel_hollow_spaces
