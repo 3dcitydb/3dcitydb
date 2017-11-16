@@ -1,6 +1,6 @@
 3D City Database - The Open Source CityGML Database
 
-Version 3.3
+Version 3.3.1
 
   This software is free software and is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -146,10 +146,10 @@ the following cooperation partners:
 
 Claus Nagel <cnagel@virtualcitysystems.de>
 Felix Kunde <felix-kunde@gmx.de>
-Richard Redweik <rredweik@virtualcitysystems.de>
 Zhihang Yao <zhihang.yao@tum.de>
 György Hudra <ghudra@moss.de>
 Arda Müftüoglu <amueftueoglu@moss.de>
+Richard Redweik <richard.redweik@posteo.de>
 Thomas H. Kolbe <thomas.kolbe@tum.de>
 
 Version 3.0 is based on earlier versions of the 3D City Database.

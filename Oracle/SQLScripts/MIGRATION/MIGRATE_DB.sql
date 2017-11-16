@@ -38,6 +38,7 @@ ACCEPT DBVERSION CHAR DEFAULT 'S' PROMPT 'Which DB license are you using in the 
 ACCEPT TEXOP CHAR DEFAULT 'n' PROMPT 'No texture URI is used for multiple texture files (yes(y)/unknown(n), default is n): '
 
 VARIABLE MGRPBATCHFILE VARCHAR2(50);
+VARIABLE GEORASTER_SUPPORT NUMBER;
 
 BEGIN
 	dbms_output.put_line('Starting DB migration... ' || SYSTIMESTAMP);
@@ -63,6 +64,16 @@ BEGIN
 END;
 /
 
+-- Check for SDO_GEORASTER support
+BEGIN
+  :GEORASTER_SUPPORT := 0;
+  IF (upper('&DBVERSION')='S') THEN
+    SELECT COUNT(*) INTO :GEORASTER_SUPPORT FROM ALL_SYNONYMS
+	WHERE SYNONYM_NAME='SDO_GEORASTER';
+  END IF;
+END;
+/
+
 -- Drop the existing indexes (non-spatial indexes)
 BEGIN
 	dbms_output.put_line('Indexes are being dropped...');	
@@ -83,7 +94,7 @@ BEGIN
 END;
 /
 BEGIN
-  IF ('&DBVERSION'='S' or '&DBVERSION'='s') THEN
+  IF (upper('&DBVERSION')='S' and :GEORASTER_SUPPORT <> 0) THEN
     :MGRPBATCHFILE := 'MIGRATE_DB_V2_V3_Sptl';
   END IF;
 END;
@@ -198,7 +209,7 @@ END;
 
 
 BEGIN
-	dbms_output.put_line('Migration related Packages, Procedures and Functions are being removed');
+	dbms_output.put_line('Migration related Packages, Procedures and Functions are being removed...');
 END;
 /
 BEGIN
@@ -213,13 +224,13 @@ BEGIN
 END;
 /
 BEGIN
-	dbms_output.put_line('Removal of migration related Packages, Procedures and Functions is completed');
+	dbms_output.put_line('Removal of migration related Packages, Procedures and Functions is completed.');
 END;
 /
 
 COMMIT;
 
 BEGIN
-	dbms_output.put_line('DB migration is completed.' || SYSTIMESTAMP);	
+	dbms_output.put_line('DB migration is completed. ' || SYSTIMESTAMP);
 END;
 /

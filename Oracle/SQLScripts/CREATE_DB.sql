@@ -41,6 +41,7 @@ prompt
 VARIABLE SRID NUMBER;
 VARIABLE CS_NAME VARCHAR2(256);
 VARIABLE BATCHFILE VARCHAR2(50);
+VARIABLE GEORASTER_SUPPORT NUMBER;
 
 WHENEVER SQLERROR CONTINUE;
 
@@ -70,6 +71,20 @@ SELECT CASE
   WHEN &VERTNO = 0 THEN 'urn:ogc:def:crs,crs:EPSG::' || &SRSNO
   ELSE 'urn:ogc:def:crs,crs:EPSG::' || &SRSNO || ',crs:EPSG::' || &VERTNO
   END gsn FROM dual;
+
+-- Check for SDO_GEORASTER support
+BEGIN
+  :GEORASTER_SUPPORT := 0;
+  IF (upper('&DBVERSION')='S') THEN
+    SELECT COUNT(*) INTO :GEORASTER_SUPPORT FROM ALL_SYNONYMS
+	WHERE SYNONYM_NAME='SDO_GEORASTER';
+  END IF;
+
+  IF :GEORASTER_SUPPORT = 0 THEN 
+	dbms_output.put_line('NOTE: The data type SDO_GEORASTER is not available for this database. Raster relief tables will not be created.');
+  END IF;
+END;
+/
 
 -- transfer the value from the bind variable to the substitution variable
 COLUMN mc new_value BATCHFILE2 print

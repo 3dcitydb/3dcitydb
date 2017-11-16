@@ -29,7 +29,6 @@ CREATE OR REPLACE PACKAGE citydb_delete
 AS
   function delete_surface_geometry(pid number, clean_apps int := 0, schema_name varchar2 := user) return id_array;
   function delete_implicit_geometry(pid number, clean_apps int := 0, schema_name varchar2 := user) return number;
-  function delete_grid_coverage(pid number, schema_name varchar2 := user) return number;
   function delete_citymodel(pid number, delete_members int := 0, schema_name varchar2 := user) return number;
   function delete_genericattrib(pid number, delete_members int := 0, schema_name varchar2 := user) return number;
   function delete_external_reference(pid number, schema_name varchar2 := user) return number;
@@ -89,7 +88,6 @@ AS
   -- private procedures
   function intern_delete_surface_geometry(pid number, schema_name varchar2 := user) return id_array;
   function intern_delete_implicit_geom(pid number, schema_name varchar2 := user) return number;
-  function intern_delete_grid_coverage(pid number, schema_name varchar2 := user) return number;
   function intern_delete_cityobject(pid number, schema_name varchar2 := user) return number;
   function delete_citymodel(citymodel_rec citymodel%rowtype, delete_members int := 0, schema_name varchar2 := user) return number;
   function intern_delete_genericattrib(pid number, delete_members int := 0, schema_name varchar2 := USER) return number;
@@ -269,20 +267,6 @@ AS
   exception
     when others then
       dbms_output.put_line('post_delete_implicit_geom (id: ' || implicit_geometry_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from GRID_COVERAGE
-  */
-  function intern_delete_grid_coverage(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.grid_coverage where id=:1 returning id into :2' using pid, out deleted_id;
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('intern_delete_grid_coverage (id: ' || pid || '): ' || SQLERRM);
   end;
 
   /*
@@ -2396,19 +2380,6 @@ AS
       dbms_output.put_line('delete_implicit_geometry (id: ' || pid || '): ' || SQLERRM);
   end;
 
-  function delete_grid_coverage(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    deleted_id := intern_delete_grid_coverage(pid, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_grid_coverage (id: ' || pid || '): ' || SQLERRM);
-  end;
-
   function delete_citymodel(pid number, delete_members int := 0, schema_name varchar2 := user) return number
   is
     deleted_id number;
@@ -3540,11 +3511,9 @@ AS
     execute immediate 'delete from ' || schema_name || '.land_use';
     execute immediate 'delete from ' || schema_name || '.breakline_relief';
     execute immediate 'delete from ' || schema_name || '.masspoint_relief';
-    execute immediate 'delete from ' || schema_name || '.raster_relief';
     execute immediate 'delete from ' || schema_name || '.tin_relief';
     execute immediate 'delete from ' || schema_name || '.relief_component';
     execute immediate 'delete from ' || schema_name || '.relief_feature';
-    execute immediate 'delete from ' || schema_name || '.grid_coverage';
     execute immediate 'delete from ' || schema_name || '.plant_cover';
     execute immediate 'delete from ' || schema_name || '.solitary_vegetat_object';
     execute immediate 'delete from ' || schema_name || '.traffic_area';
@@ -3612,22 +3581,6 @@ AS
     execute immediate 'alter sequence ' || schema_name || '.external_ref_seq increment by ' || (seq_value-1)*-1;
     execute immediate 'select ' || schema_name || '.external_ref_seq.nextval from dual';
     execute immediate 'alter sequence ' || schema_name || '.external_ref_seq increment by 1';
-
-    execute immediate 'select ' || schema_name || '.grid_coverage_seq.nextval from dual' into seq_value;
-    if (seq_value = 1) then
-      execute immediate 'select ' || schema_name || '.grid_coverage_seq.nextval from dual' into seq_value;
-    end if;
-    execute immediate 'alter sequence ' || schema_name || '.grid_coverage_seq increment by ' || (seq_value-1)*-1;
-    execute immediate 'select ' || schema_name || '.grid_coverage_seq.nextval from dual';
-    execute immediate 'alter sequence ' || schema_name || '.grid_coverage_seq increment by 1';
-
-    execute immediate 'select ' || schema_name || '.grid_coverage_rdt_seq.nextval from dual' into seq_value;
-    if (seq_value = 1) then
-      execute immediate 'select ' || schema_name || '.grid_coverage_rdt_seq.nextval from dual' into seq_value;
-    end if;
-    execute immediate 'alter sequence ' || schema_name || '.grid_coverage_rdt_seq increment by ' || (seq_value-1)*-1;
-    execute immediate 'select ' || schema_name || '.grid_coverage_rdt_seq.nextval from dual';
-    execute immediate 'alter sequence ' || schema_name || '.grid_coverage_rdt_seq increment by 1';
 
     execute immediate 'select ' || schema_name || '.implicit_geometry_seq.nextval from dual' into seq_value;
     if (seq_value = 1) then
