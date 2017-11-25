@@ -891,7 +891,7 @@ BEGIN
     SELECT unnest($1) AS co_id
   ) a 
   WHERE g.generalizes_to_id = a.co_id
-    AND g.cityobject_id = a.co_id;
+     OR g.cityobject_id = a.co_id;
 
   -- delete external references
   DELETE FROM external_reference er USING (
@@ -977,7 +977,7 @@ BEGIN
   -- delete self references
   DELETE FROM generalization
     WHERE generalizes_to_id = $1
-      AND cityobject_id = $1;
+       OR cityobject_id = $1;
 
   -- delete self references
   DELETE FROM external_reference WHERE cityobject_id = $1;
@@ -1573,7 +1573,7 @@ BEGIN
       FROM (
         SELECT unnest(address_array) AS ad_id
       ) a
-	  LEFT JOIN opening o
+      LEFT JOIN opening o
       ON o.address_id = a.ad_id
       LEFT JOIN address_to_building a2b
       ON a2b.address_id = a.ad_id
@@ -1645,7 +1645,7 @@ BEGIN
       FROM (
         SELECT ad_id
       ) a
-	  LEFT JOIN opening o
+      LEFT JOIN opening o
       ON o.address_id = a.ad_id
       LEFT JOIN address_to_building a2b
       ON a2b.address_id = a.ad_id
@@ -2133,7 +2133,7 @@ BEGIN
       FROM (
         SELECT unnest(address_array) AS ad_id
       ) a
-	  LEFT JOIN opening o
+      LEFT JOIN opening o
       ON o.address_id = a.ad_id
       LEFT JOIN address_to_building a2b
       ON a2b.address_id = a.ad_id
@@ -2229,7 +2229,7 @@ BEGIN
       FROM (
         SELECT unnest(address_array) AS ad_id
       ) a
-	  LEFT JOIN opening o
+      LEFT JOIN opening o
       ON o.address_id = a.ad_id
       LEFT JOIN address_to_building a2b
       ON a2b.address_id = a.ad_id
@@ -2403,7 +2403,7 @@ BEGIN
       FROM (
         SELECT unnest(address_array) AS ad_id
       ) a
-	  LEFT JOIN opening o
+      LEFT JOIN bridge_opening o
       ON o.address_id = a.ad_id
       LEFT JOIN address_to_bridge a2b
       ON a2b.address_id = a.ad_id
@@ -2475,7 +2475,7 @@ BEGIN
       FROM (
         SELECT ad_id
       ) a
-	  LEFT JOIN bridge_opening o
+      LEFT JOIN bridge_opening o
       ON o.address_id = a.ad_id
       LEFT JOIN address_to_bridge a2b
       ON a2b.address_id = a.ad_id
@@ -3108,7 +3108,7 @@ BEGIN
       FROM (
         SELECT unnest(address_array) AS ad_id
       ) a
-	  LEFT JOIN bridge_opening o
+      LEFT JOIN bridge_opening o
       ON o.address_id = a.ad_id
       LEFT JOIN address_to_bridge a2b
       ON a2b.address_id = a.ad_id
@@ -3209,7 +3209,7 @@ BEGIN
       FROM (
         SELECT unnest(address_array) AS ad_id
       ) a
-	  LEFT JOIN bridge_opening o
+      LEFT JOIN bridge_opening o
       ON o.address_id = a.ad_id
       LEFT JOIN address_to_bridge a2b
       ON a2b.address_id = a.ad_id
