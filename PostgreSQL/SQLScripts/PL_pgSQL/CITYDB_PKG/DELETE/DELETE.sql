@@ -346,7 +346,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.batch_delete_genericattribs(int[]) RETURNS
 $$
 WITH delete_genattrib AS (
   DELETE FROM cityobject_genericattrib cga USING (
-    SELECT unnest($1) AS cga_id
+    SELECT cga_id, idx FROM unnest($1) WITH ORDINALITY AS arr(cga_id, idx)
   ) a
   WHERE cga.id = a.cga_id
   RETURNING cga.id
@@ -391,12 +391,10 @@ WITH RECURSIVE genattrib(id, parent_genattrib_id, level) AS (
       FROM cityobject_genericattrib cga, genattrib g
       WHERE cga.parent_genattrib_id = g.id
 )
-SELECT array_agg(g.g_id) AS result_array FROM (
-  SELECT unnest(citydb_pkg.batch_delete_genericattribs(batch.ids)) AS g_id FROM (
-    SELECT array_agg(id) AS ids
-      FROM genattrib
-      GROUP BY level ORDER BY level DESC
-  ) batch
+SELECT citydb_pkg.batch_delete_genericattribs(g.id ORDER BY g.level DESC) AS result_array FROM (
+  SELECT DISTINCT ON (id) id, level
+    FROM genattrib
+    ORDER BY id DESC, level DESC
 ) g;
 $$
 LANGUAGE sql STRICT;
@@ -452,23 +450,20 @@ BEGIN
             FROM cityobject_genericattrib cga, genattrib g
             WHERE cga.parent_genattrib_id = g.id
       )
-      SELECT citydb_pkg.batch_delete_geometry(batch.ids) INTO dummy_array FROM (
-        SELECT array_agg(id) AS ids
-          FROM genattrib
-          GROUP BY level ORDER BY level DESC
-      ) batch;
+      SELECT citydb_pkg.batch_delete_genericattribs(id ORDER BY level DESC) INTO dummy_array
+        FROM genattrib;
     ELSE
       -- recursive update of nested attributes
       FOR member_rec IN
         WITH RECURSIVE parts (id, parent_id, root_id) AS (
-           SELECT id, genattrib_parent_id::integer AS parent_id, 
-             CASE WHEN root_genattrib_id = $1 THEN id ELSE root_genattrib_id END AS root_id
-             FROM cityobject_genericattrib
-             WHERE parent_genattrib_id = $1
-           UNION ALL
-             SELECT part.id, part.parent_genattrib_id AS parent_id, p.root_id
-               FROM cityobject_genericattrib part, parts p 
-               WHERE part.parent_genattrib_id = p.id
+          SELECT id, genattrib_parent_id::integer AS parent_id, 
+            CASE WHEN root_genattrib_id = $1 THEN id ELSE root_genattrib_id END AS root_id
+            FROM cityobject_genericattrib
+            WHERE parent_genattrib_id = $1
+          UNION ALL
+            SELECT part.id, part.parent_genattrib_id AS parent_id, p.root_id
+              FROM cityobject_genericattrib part, parts p 
+              WHERE part.parent_genattrib_id = p.id
         )
         SELECT id, parent_id, root_id FROM parts
       LOOP
@@ -906,16 +901,14 @@ BEGIN
         SELECT unnest($1) AS co_id
       ) a
       WHERE cga.cityobject_id = a.co_id
+        AND cga.parent_genattrib_id IS NULL
     UNION ALL
       SELECT cga.id, cga.parent_genattrib_id, g.level + 1 AS level 
         FROM cityobject_genericattrib cga, genattrib g
         WHERE cga.parent_genattrib_id = g.id
   )
-  SELECT citydb_pkg.batch_delete_genericattribs(batch.ids) INTO dummy_array FROM (
-    SELECT array_agg(id) AS ids
-      FROM genattrib
-      GROUP BY level ORDER BY level DESC
-  ) batch;
+  SELECT citydb_pkg.batch_delete_genericattribs(id ORDER BY level DESC) INTO dummy_array
+    FROM genattrib;
 
   -- delete local appearances
   PERFORM citydb_pkg.delete_appearances(id)
@@ -987,16 +980,14 @@ BEGIN
     SELECT id, parent_genattrib_id, 1 AS level 
       FROM cityobject_genericattrib
       WHERE cityobject_id = $1
+        AND parent_genattrib_id IS NULL
     UNION ALL
       SELECT cga.id, cga.parent_genattrib_id, g.level + 1 AS level 
         FROM cityobject_genericattrib cga, genattrib g
         WHERE cga.parent_genattrib_id = g.id
   )
-  SELECT citydb_pkg.batch_delete_genericattribs(batch.ids) INTO dummy_array FROM (
-    SELECT array_agg(id) AS ids
-      FROM genattrib
-      GROUP BY level ORDER BY level DESC
-  ) batch;
+  SELECT citydb_pkg.batch_delete_genericattribs(id ORDER BY level DESC) INTO dummy_array
+    FROM genattrib;
 
   -- delete local appearances
   PERFORM citydb_pkg.delete_appearances(id)
@@ -1057,7 +1048,7 @@ BEGIN
   -- delete entries from surface_geometry table
   WITH delete_geometry AS (
     DELETE FROM surface_geometry sg USING (
-      SELECT unnest($1) AS sg_id
+      SELECT sg_id, idx FROM unnest($1) WITH ORDINALITY AS arr(sg_id, idx)
     ) a
     WHERE sg.id = a.sg_id
     RETURNING sg.id
@@ -1106,12 +1097,10 @@ WITH RECURSIVE geometry(id, parent_id, level) AS (
       FROM surface_geometry sg, geometry g
       WHERE sg.parent_id = g.id
 )
-SELECT array_agg(g.g_id) AS result_array FROM (
-  SELECT unnest(citydb_pkg.batch_delete_geometry(batch.ids)) AS g_id FROM (
-    SELECT array_agg(id) AS ids
-      FROM geometry
-      GROUP BY level ORDER BY level DESC
-  ) batch
+SELECT citydb_pkg.batch_delete_geometry(g.id ORDER BY g.level DESC) AS result_array FROM (
+  SELECT DISTINCT ON (id) id, level
+    FROM geometry
+    ORDER BY id DESC, level DESC
 ) g;
 $$
 LANGUAGE sql STRICT;
@@ -1155,13 +1144,8 @@ BEGIN
         FROM surface_geometry sg, geometry g
         WHERE sg.parent_id = g.id
   )
-  SELECT array_agg(g.g_id) INTO result_array FROM (
-    SELECT unnest(citydb_pkg.batch_delete_geometry(batch.ids)) AS g_id FROM (
-      SELECT array_agg(id) AS ids
-        FROM geometry
-        GROUP BY level ORDER BY level DESC
-    ) batch
-  ) g;
+  SELECT citydb_pkg.batch_delete_geometry(id ORDER BY level DESC) INTO result_array
+    FROM geometry;
 
   -- delete appearances not being referenced by geometry any more
   IF clean_apps <> 0 THEN
@@ -1198,18 +1182,14 @@ WITH RECURSIVE geometry(id, parent_id, level) AS (
       SELECT unnest($1) AS co_id
     ) a
     WHERE sg.cityobject_id = a.co_id
+      AND sg.parent_id IS NULL
   UNION ALL
     SELECT sg.id, sg.parent_id, g.level + 1 AS level 
       FROM surface_geometry sg, geometry g
       WHERE sg.parent_id = g.id
 )
-SELECT array_agg(g.g_id) AS result_array FROM (
-  SELECT unnest(citydb_pkg.batch_delete_geometry(batch.ids)) AS g_id FROM (
-    SELECT array_agg(id) AS ids
-      FROM geometry
-      GROUP BY level ORDER BY level DESC
-  ) batch
-) g;
+SELECT citydb_pkg.batch_delete_geometry(id ORDER BY level DESC) AS result_array
+  FROM geometry;
 $$
 LANGUAGE sql STRICT;
 
@@ -1246,18 +1226,14 @@ BEGIN
     SELECT id, parent_id, 1 AS level 
       FROM surface_geometry
       WHERE cityobject_id = $1
+        AND parent_id IS NULL
     UNION ALL
       SELECT sg.id, sg.parent_id, g.level + 1 AS level 
         FROM surface_geometry sg, geometry g
         WHERE sg.parent_id = g.id
   )
-  SELECT array_agg(g.g_id) INTO result_array FROM (
-    SELECT unnest(citydb_pkg.batch_delete_geometry(batch.ids)) AS g_id FROM (
-      SELECT array_agg(id) AS ids
-        FROM geometry
-        GROUP BY level ORDER BY level DESC
-    ) batch
-  ) g;
+  SELECT citydb_pkg.batch_delete_geometry(id ORDER BY level DESC) INTO result_array
+    FROM geometry;
 
   -- delete appearances not being referenced by geometry any more
   IF clean_apps <> 0 THEN
@@ -2074,26 +2050,13 @@ DECLARE
   parts_array int[] := '{}';
   address_array int[] := '{}';
 BEGIN
-  -- delete parts
-  WITH RECURSIVE part(id, building_parent_id, level) AS (
-    SELECT id, building_parent_id, 1 AS level 
-      FROM building b, (
-        SELECT unnest($1) AS b_id
-      ) a
-      WHERE b.id = a.b_id
-    UNION ALL
-      SELECT b.id, b.building_parent_id, p.level + 1 AS level 
-        FROM building b, part p
-        WHERE b.building_parent_id = p.id
-  )
-  SELECT array_agg(bp.g_id) INTO parts_array FROM (
-    SELECT unnest(citydb_pkg.delete_buildings(batch.ids)) AS g_id FROM (
-      SELECT array_agg(id) AS ids
-        FROM part
-        WHERE level > 1
-        GROUP BY level ORDER BY level DESC
-    ) batch
-  ) bp;
+  -- delete building parts
+  PERFORM citydb_pkg.delete_buildings(b.id) INTO parts_array
+    FROM building b, (
+      SELECT unnest($1) AS b_id
+    ) a   
+    WHERE b.building_parent_id = b_id
+      AND b.id != b_id;
 
   -- delete rooms
   PERFORM citydb_pkg.delete_rooms(r.id)
@@ -2149,15 +2112,14 @@ BEGIN
     WHERE b.id = a.b_id
     RETURNING b.id
   )
-  SELECT array_cat(o.arr, parts_array) INTO result_array FROM (
-    SELECT array_agg(id) AS arr FROM delete_objects
-  ) o;
+  SELECT array_agg(id) INTO result_array
+    FROM delete_objects;
 
   -- delete geometries and cityobjects
   PERFORM citydb_pkg.delete_cityobject_geometries(result_array);
   PERFORM citydb_pkg.intern_delete_cityobjects(result_array);
 
-  RETURN result_array;
+  RETURN array_cat(result_array, parts_array);
 END;
 $$
 LANGUAGE plpgsql STRICT;
@@ -2177,27 +2139,13 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_building(int) RETURNS int AS
 $$
 DECLARE
   deleted_id int;
-  parts_array int[] := '{}';
   address_array int[] := '{}';
 BEGIN
-  -- delete parts
-  WITH RECURSIVE part(id, building_parent_id, level) AS (
-    SELECT id, building_parent_id, 1 AS level 
-      FROM building
-      WHERE id = $1
-    UNION ALL
-      SELECT b.id, b.building_parent_id, p.level + 1 AS level 
-        FROM building b, part p
-        WHERE b.building_parent_id = p.id
-  )
-  SELECT array_agg(bp.g_id) INTO parts_array FROM (
-    SELECT unnest(citydb_pkg.delete_buildings(batch.ids)) AS g_id FROM (
-      SELECT array_agg(id) AS ids
-        FROM part
-        WHERE level > 1
-        GROUP BY level ORDER BY level DESC
-    ) batch
-  ) bp;
+  -- delete building parts
+  PERFORM citydb_pkg.delete_buildings(id)
+    FROM building
+    WHERE building_parent_id = $1
+      AND id != $1;
 
   -- delete rooms
   PERFORM citydb_pkg.delete_rooms(id)
@@ -3042,26 +2990,13 @@ DECLARE
   parts_array int[] := '{}';
   address_array int[] := '{}';
 BEGIN
-  -- delete parts
-  WITH RECURSIVE part(id, bridge_parent_id, level) AS (
-    SELECT id, bridge_parent_id, 1 AS level 
-      FROM bridge b, (
-        SELECT unnest($1) AS b_id
-      ) a
-      WHERE b.id = a.b_id
-    UNION ALL
-      SELECT b.id, b.bridge_parent_id, p.level + 1 AS level 
-        FROM bridge b, part p
-        WHERE b.bridge_parent_id = p.id
-  )
-  SELECT array_agg(bp.g_id) INTO parts_array FROM (
-    SELECT unnest(citydb_pkg.delete_bridges(batch.ids)) AS g_id FROM (
-      SELECT array_agg(id) AS ids
-        FROM part
-        WHERE level > 1
-        GROUP BY level ORDER BY level DESC
-    ) batch
-  ) bp;
+  -- delete bridge parts
+  PERFORM citydb_pkg.delete_bridges(b.id) INTO parts_array
+    FROM bridge b, (
+      SELECT unnest($1) AS b_id
+    ) a   
+    WHERE b.bridge_parent_id = b_id
+      AND b.id != b_id;
 
   -- delete bridge rooms
   PERFORM citydb_pkg.delete_bridge_rooms(r.id)
@@ -3124,15 +3059,14 @@ BEGIN
     WHERE b.id = a.b_id
     RETURNING b.id
   )
-  SELECT array_cat(o.arr, parts_array) INTO result_array FROM (
-    SELECT array_agg(id) AS arr FROM delete_objects
-  ) o;
+  SELECT array_agg(id) INTO result_array
+    FROM delete_objects;
 
   -- delete geometries and cityobjects
   PERFORM citydb_pkg.delete_cityobject_geometries(result_array);
   PERFORM citydb_pkg.intern_delete_cityobjects(result_array);
 
-  RETURN result_array;
+  RETURN array_cat(result_array, parts_array);
 END;
 $$
 LANGUAGE plpgsql STRICT;
@@ -3152,27 +3086,13 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_bridge(int) RETURNS int AS
 $$
 DECLARE
   deleted_id int;
-  parts_array int[] := '{}';
   address_array int[] := '{}';
 BEGIN
-  -- delete parts
-  WITH RECURSIVE part(id, bridge_parent_id, level) AS (
-    SELECT id, bridge_parent_id, 1 AS level 
-      FROM bridge
-      WHERE id = $1
-    UNION ALL
-      SELECT b.id, b.bridge_parent_id, p.level + 1 AS level 
-        FROM bridge b, part p
-        WHERE b.bridge_parent_id = p.id
-  )
-  SELECT array_agg(bp.g_id) INTO parts_array FROM (
-    SELECT unnest(citydb_pkg.delete_bridges(batch.ids)) AS g_id FROM (
-      SELECT array_agg(id) AS ids
-        FROM part
-        WHERE level > 1
-        GROUP BY level ORDER BY level DESC
-    ) batch
-  ) bp;
+  -- delete bridge parts
+  PERFORM citydb_pkg.delete_bridges(id)
+    FROM bridge
+    WHERE bridge_parent_id = $1
+      AND id != $1;
 
   -- delete rooms
   PERFORM citydb_pkg.delete_bridge_rooms(id)
@@ -3854,26 +3774,13 @@ DECLARE
   result_array int[] := '{}';
   parts_array int[] := '{}';
 BEGIN
-  -- delete parts
-  WITH RECURSIVE part(id, tunnel_parent_id, level) AS (
-    SELECT id, tunnel_parent_id, 1 AS level 
-      FROM tunnel t, (
-        SELECT unnest($1) AS t_id
-      ) a
-      WHERE t.id = a.t_id
-    UNION ALL
-      SELECT t.id, t.tunnel_parent_id, p.level + 1 AS level 
-        FROM tunnel t, part p
-        WHERE t.tunnel_parent_id = p.id
-  )
-  SELECT array_agg(tp.g_id) INTO parts_array FROM (
-    SELECT unnest(citydb_pkg.delete_tunnels(batch.ids)) AS g_id FROM (
-      SELECT array_agg(id) AS ids
-        FROM part
-        WHERE level > 1
-        GROUP BY level ORDER BY level DESC
-    ) batch
-  ) tp;
+  -- delete tunnel parts
+  SELECT citydb_pkg.delete_tunnels(t.id) INTO parts_array
+    FROM tunnel t, (
+      SELECT unnest($1) AS t_id
+    ) a   
+    WHERE t.tunnel_parent_id = t_id
+      AND t.id != t_id;
 
   -- delete hollow spaces
   PERFORM citydb_pkg.delete_tunnel_hollow_spaces(hs.id)
@@ -3904,15 +3811,14 @@ BEGIN
     WHERE t.id = a.t_id
     RETURNING t.id
   )
-  SELECT array_cat(o.arr, parts_array) INTO result_array FROM (
-    SELECT array_agg(id) AS arr FROM delete_objects
-  ) o;
+  SELECT array_agg(id) INTO result_array
+    FROM delete_objects;
 
   -- delete geometries and cityobjects
   PERFORM citydb_pkg.delete_cityobject_geometries(result_array);
   PERFORM citydb_pkg.intern_delete_cityobjects(result_array);
 
-  RETURN result_array;
+  RETURN array_cat(result_array, parts_array);
 END;
 $$
 LANGUAGE plpgsql STRICT;
@@ -3932,26 +3838,12 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_tunnel(int) RETURNS int AS
 $$
 DECLARE
   deleted_id int;
-  parts_array int[] := '{}';
 BEGIN
-  -- delete parts
-  WITH RECURSIVE part(id, tunnel_parent_id, level) AS (
-    SELECT id, tunnel_parent_id, 1 AS level 
-      FROM tunnel
-      WHERE id = $1
-    UNION ALL
-      SELECT t.id, t.tunnel_parent_id, p.level + 1 AS level 
-        FROM tunnel t, part p
-        WHERE t.tunnel_parent_id = p.id
-  )
-  SELECT array_agg(tp.g_id) INTO parts_array FROM (
-    SELECT unnest(citydb_pkg.delete_tunnels(batch.ids)) AS g_id FROM (
-      SELECT array_agg(id) AS ids
-        FROM part
-        WHERE level > 1
-        GROUP BY level ORDER BY level DESC
-    ) batch
-  ) tp;
+  -- delete tunnel parts
+  PERFORM citydb_pkg.delete_tunnels(id)
+    FROM tunnel
+    WHERE tunnel_parent_id = $1
+      AND id != $1;
 
   -- delete hollow spaces
   PERFORM citydb_pkg.delete_tunnel_hollow_spaces(id)
