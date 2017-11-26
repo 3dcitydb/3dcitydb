@@ -604,13 +604,13 @@ BEGIN
     WHERE sd.id = a.sd_id
     RETURNING sd.id, sd.tex_image_id
   )
-  SELECT array_agg(id), array_agg(DISTINCT tex_image_id) INTO result_array, tex_image_array
+  SELECT array_agg(id), array_agg(tex_image_id) INTO result_array, tex_image_array
     FROM delete_objects;
 
   -- delete tex images not being referenced by a surface data object any more
   IF -1 = ALL(tex_image_array) IS NOT NULL THEN
     DELETE FROM tex_image ti USING (
-        SELECT unnest(tex_image_array) AS ti_id
+        SELECT DISTINCT unnest(tex_image_array) AS ti_id
       ) a
       LEFT JOIN surface_data sd ON sd.tex_image_id = a.ti_id
       WHERE ti.id = a.ti_id
@@ -702,14 +702,14 @@ BEGIN
     WHERE a2sd.appearance_id = a.a_id
     RETURNING a2sd.surface_data_id
   )
-  SELECT array_agg(DISTINCT surface_data_id) INTO surface_data_array
+  SELECT array_agg(surface_data_id) INTO surface_data_array
     FROM delete_surface_data_refs;
 
   -- delete surface data not being referenced by an appearance any more
   IF -1 = ALL(surface_data_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_surface_datas(a.sd_id)
       FROM (
-        SELECT unnest(surface_data_array) AS sd_id
+        SELECT DISTINCT unnest(surface_data_array) AS sd_id
       ) a
       LEFT JOIN appear_to_surface_data a2sd
       ON a2sd.surface_data_id = a.sd_id
@@ -762,7 +762,7 @@ BEGIN
       WHERE appearance_id = $1
       RETURNING surface_data_id
   )
-  SELECT array_agg(DISTINCT surface_data_id)
+  SELECT array_agg(surface_data_id)
     INTO surface_data_array FROM delete_surface_data_refs;
 
   -- delete surface data not being referenced by an appearance any more
@@ -1278,13 +1278,13 @@ BEGIN
     WHERE ig.id = a.ig_id
     RETURNING ig.id, ig.relative_brep_id
   )
-  SELECT array_agg(id), array_agg(DISTINCT relative_brep_id) INTO result_array, rel_brep_array
+  SELECT array_agg(id), array_agg(relative_brep_id) INTO result_array, rel_brep_array
     FROM delete_objects;
 
   -- delete surface geometry not being referenced by an implicit geometry any more
   PERFORM citydb_pkg.delete_surface_geometries(a.rel_brep_id) 
     FROM (
-      SELECT unnest(rel_brep_array) AS rel_brep_id
+      SELECT DISTINCT unnest(rel_brep_array) AS rel_brep_id
     ) a
     LEFT JOIN implicit_geometry ig ON ig.relative_brep_id = a.rel_brep_id
     WHERE ig.relative_brep_id IS NULL;
@@ -1427,14 +1427,14 @@ BEGIN
     WHERE bf.id = a.bf_id 
     RETURNING bf.id, bf.lod4_implicit_rep_id
   )
-  SELECT array_agg(id), array_agg(DISTINCT lod4_implicit_rep_id) INTO result_array, implicit_rep_array
+  SELECT array_agg(id), array_agg(lod4_implicit_rep_id) INTO result_array, implicit_rep_array
     FROM delete_objects;
 
   -- delete implicit geometry not being referenced by other building furniture any more
   IF -1 = ALL(implicit_rep_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_implicit_geometries(a.implicit_rep_id) 
       FROM (
-        SELECT unnest(implicit_rep_array) AS implicit_rep_id
+        SELECT DISTINCT unnest(implicit_rep_array) AS implicit_rep_id
       ) a
       LEFT JOIN building_furniture bf ON bf.lod4_implicit_rep_id = a.implicit_rep_id
       WHERE bf.lod4_implicit_rep_id IS NULL;
@@ -1537,9 +1537,9 @@ BEGIN
     RETURNING o.id, o.address_id, o.lod3_implicit_rep_id, o.lod4_implicit_rep_id
   )
   SELECT array_agg(id),
-    array_agg(DISTINCT address_id),
-	array_agg(DISTINCT lod3_implicit_rep_id) || 
-	array_agg(DISTINCT lod4_implicit_rep_id)
+    array_agg(address_id),
+    array_agg(lod3_implicit_rep_id) || 
+    array_agg(lod4_implicit_rep_id)
     INTO result_array, address_array, implicit_rep_array
     FROM delete_objects;
 
@@ -1547,7 +1547,7 @@ BEGIN
   IF -1 = ALL(address_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_addresses(a.ad_id)
       FROM (
-        SELECT unnest(address_array) AS ad_id
+        SELECT DISTINCT unnest(address_array) AS ad_id
       ) a
       LEFT JOIN opening o
       ON o.address_id = a.ad_id
@@ -1681,13 +1681,13 @@ BEGIN
     WHERE o2ts.thematic_surface_id = a.ts_id
     RETURNING o2ts.opening_id
   )
-  SELECT array_agg(DISTINCT opening_id) INTO opening_array
+  SELECT array_agg(opening_id) INTO opening_array
     FROM delete_opening_refs;
 
   -- delete openings not being referenced by a thematic surface any more
   PERFORM citydb_pkg.delete_openings(a.o_id) 
     FROM (
-      SELECT unnest(opening_array) AS o_id
+      SELECT DISTINCT unnest(opening_array) AS o_id
     ) a
     LEFT JOIN opening_to_them_surface o2ts
     ON o2ts.opening_id = a.o_id
@@ -1742,7 +1742,7 @@ BEGIN
       WHERE thematic_surface_id = $1
       RETURNING opening_id
   )
-  SELECT array_agg(DISTINCT opening_id) INTO opening_array
+  SELECT array_agg(opening_id) INTO opening_array
     FROM delete_opening_refs;
 
   -- delete openings not being referenced by a thematic surface any more
@@ -1805,9 +1805,9 @@ BEGIN
     RETURNING bi.id, bi.lod2_implicit_rep_id, bi.lod3_implicit_rep_id, bi.lod4_implicit_rep_id
   )
   SELECT array_agg(id),
-	array_agg(DISTINCT lod2_implicit_rep_id) || 
-	array_agg(DISTINCT lod3_implicit_rep_id) || 
-	array_agg(DISTINCT lod4_implicit_rep_id)
+    array_agg(lod2_implicit_rep_id) || 
+    array_agg(lod3_implicit_rep_id) || 
+    array_agg(lod4_implicit_rep_id)
     INTO result_array, implicit_rep_array
     FROM delete_objects;
 
@@ -1815,7 +1815,7 @@ BEGIN
   IF -1 = ALL(implicit_rep_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_implicit_geometries(a.implicit_rep_id) 
       FROM (
-        SELECT unnest(implicit_rep_array) AS implicit_rep_id
+        SELECT DISTINCT unnest(implicit_rep_array) AS implicit_rep_id
       ) a
       LEFT JOIN building_installation bi2 ON bi2.lod2_implicit_rep_id = a.implicit_rep_id
       LEFT JOIN building_installation bi3 ON bi3.lod3_implicit_rep_id = a.implicit_rep_id
@@ -2087,14 +2087,14 @@ BEGIN
     WHERE a2b.building_id = a.b_id
     RETURNING a2b.address_id
   )
-  SELECT array_agg(DISTINCT address_id) INTO address_array
+  SELECT array_agg(address_id) INTO address_array
     FROM delete_address_refs;
 
   -- delete address(es) not being referenced by a building or an opening any more
   IF -1 = ALL(address_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_addresses(a.ad_id)
       FROM (
-        SELECT unnest(address_array) AS ad_id
+        SELECT DISTINCT unnest(address_array) AS ad_id
       ) a
       LEFT JOIN opening o
       ON o.address_id = a.ad_id
@@ -2168,7 +2168,7 @@ BEGIN
     WHERE building_id = $1
     RETURNING address_id
   )
-  SELECT array_agg(DISTINCT address_id) INTO address_array
+  SELECT array_agg(address_id) INTO address_array
     FROM delete_address_refs;
 
   -- delete address(es) not being referenced by a building or an opening any more
@@ -2229,14 +2229,14 @@ BEGIN
     WHERE bf.id = a.bf_id
     RETURNING bf.id, bf.lod4_implicit_rep_id
   )
-  SELECT array_agg(id), array_agg(DISTINCT lod4_implicit_rep_id) INTO result_array, implicit_rep_array
+  SELECT array_agg(id), array_agg(lod4_implicit_rep_id) INTO result_array, implicit_rep_array
     FROM delete_objects;
 
   -- delete implicit geometry not being referenced by other bridge furniture any more
   IF -1 = ALL(implicit_rep_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_implicit_geometries(a.implicit_rep_id) 
       FROM (
-        SELECT unnest(implicit_rep_array) AS implicit_rep_id
+        SELECT DISTINCT unnest(implicit_rep_array) AS implicit_rep_id
       ) a
       LEFT JOIN bridge_furniture bf ON bf.lod4_implicit_rep_id = a.implicit_rep_id
       WHERE bf.lod4_implicit_rep_id IS NULL;
@@ -2339,9 +2339,9 @@ BEGIN
     RETURNING o.id, o.address_id, o.lod3_implicit_rep_id, o.lod4_implicit_rep_id
   )
   SELECT array_agg(id),
-    array_agg(DISTINCT address_id),
-	array_agg(DISTINCT lod3_implicit_rep_id) || 
-	array_agg(DISTINCT lod4_implicit_rep_id)
+    array_agg(address_id),
+    array_agg(lod3_implicit_rep_id) || 
+    array_agg(lod4_implicit_rep_id)
     INTO result_array, address_array, implicit_rep_array
     FROM delete_objects;
 
@@ -2349,7 +2349,7 @@ BEGIN
   IF -1 = ALL(address_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_addresses(a.ad_id)
       FROM (
-        SELECT unnest(address_array) AS ad_id
+        SELECT DISTINCT unnest(address_array) AS ad_id
       ) a
       LEFT JOIN bridge_opening o
       ON o.address_id = a.ad_id
@@ -2483,13 +2483,13 @@ BEGIN
     WHERE o2ts.bridge_thematic_surface_id = a.ts_id
     RETURNING o2ts.bridge_opening_id
   )
-  SELECT array_agg(DISTINCT bridge_opening_id) INTO opening_array
+  SELECT array_agg(bridge_opening_id) INTO opening_array
     FROM delete_opening_refs;
 
   -- delete openings not being referenced by a thematic surface any more
   PERFORM citydb_pkg.delete_bridge_openings(a.o_id) 
     FROM (
-      SELECT unnest(opening_array) AS o_id
+      SELECT DISTINCT unnest(opening_array) AS o_id
     ) a
     LEFT JOIN bridge_open_to_them_srf o2ts
     ON o2ts.bridge_opening_id = a.o_id
@@ -2545,7 +2545,7 @@ BEGIN
       WHERE bridge_thematic_surface_id = $1 
       RETURNING bridge_opening_id
   )
-  SELECT array_agg(DISTINCT bridge_opening_id) INTO opening_array
+  SELECT array_agg(bridge_opening_id) INTO opening_array
     FROM delete_opening_refs;
 
   -- delete openings not being referenced by a thematic surface any more
@@ -2609,9 +2609,9 @@ BEGIN
     RETURNING bi.id, bi.lod2_implicit_rep_id, bi.lod3_implicit_rep_id, bi.lod4_implicit_rep_id
   )
   SELECT array_agg(id),
-	array_agg(DISTINCT lod2_implicit_rep_id) || 
-	array_agg(DISTINCT lod3_implicit_rep_id) || 
-	array_agg(DISTINCT lod4_implicit_rep_id)
+    array_agg(lod2_implicit_rep_id) || 
+    array_agg(lod3_implicit_rep_id) || 
+    array_agg(lod4_implicit_rep_id)
     INTO result_array, implicit_rep_array
     FROM delete_objects;
 
@@ -2619,7 +2619,7 @@ BEGIN
   IF -1 = ALL(implicit_rep_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_implicit_geometries(a.implicit_rep_id) 
       FROM (
-        SELECT unnest(implicit_rep_array) AS implicit_rep_id
+        SELECT DISTINCT unnest(implicit_rep_array) AS implicit_rep_id
       ) a
       LEFT JOIN bridge_installation bi2 ON bi2.lod2_implicit_rep_id = a.implicit_rep_id
       LEFT JOIN bridge_installation bi3 ON bi3.lod3_implicit_rep_id = a.implicit_rep_id
@@ -2739,10 +2739,10 @@ BEGIN
     RETURNING bce.id, bce.lod1_implicit_rep_id, bce.lod2_implicit_rep_id, bce.lod3_implicit_rep_id, bce.lod4_implicit_rep_id
   )
   SELECT array_agg(id),
-	array_agg(DISTINCT lod1_implicit_rep_id) || 
-	array_agg(DISTINCT lod2_implicit_rep_id) || 
-	array_agg(DISTINCT lod3_implicit_rep_id) || 
-	array_agg(DISTINCT lod4_implicit_rep_id)
+	array_agg(lod1_implicit_rep_id) || 
+    array_agg(lod2_implicit_rep_id) || 
+    array_agg(lod3_implicit_rep_id) || 
+    array_agg(lod4_implicit_rep_id)
     INTO result_array, implicit_rep_array
     FROM delete_objects;
 
@@ -2750,7 +2750,7 @@ BEGIN
   IF -1 = ALL(implicit_rep_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_implicit_geometries(a.implicit_rep_id) 
       FROM (
-        SELECT unnest(implicit_rep_array) AS implicit_rep_id
+        SELECT DISTINCT unnest(implicit_rep_array) AS implicit_rep_id
       ) a
       LEFT JOIN bridge_constr_element bce1 ON bce1.lod1_implicit_rep_id = a.implicit_rep_id
       LEFT JOIN bridge_constr_element bce2 ON bce2.lod2_implicit_rep_id = a.implicit_rep_id
@@ -3034,14 +3034,14 @@ BEGIN
     WHERE a2b.bridge_id = a.b_id
     RETURNING a2b.address_id
   )
-  SELECT array_agg(DISTINCT address_id) INTO address_array
+  SELECT array_agg(address_id) INTO address_array
     FROM delete_address_refs;
 
   -- delete address(es) not being referenced by a bridge or an opening any more
   IF -1 = ALL(address_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_addresses(a.ad_id)
       FROM (
-        SELECT unnest(address_array) AS ad_id
+        SELECT DISTINCT unnest(address_array) AS ad_id
       ) a
       LEFT JOIN bridge_opening o
       ON o.address_id = a.ad_id
@@ -3120,7 +3120,7 @@ BEGIN
     WHERE bridge_id = $1
     RETURNING address_id
   )
-  SELECT array_agg(DISTINCT address_id) INTO address_array
+  SELECT array_agg(address_id) INTO address_array
     FROM delete_address_refs;
 
   -- delete address(es) not being referenced by a bridge or an opening any more
@@ -3181,14 +3181,14 @@ BEGIN
     WHERE tf.id = a.tf_id
     RETURNING tf.id, tf.lod4_implicit_rep_id
   )
-  SELECT array_agg(id), array_agg(DISTINCT lod4_implicit_rep_id) INTO result_array, implicit_rep_array
+  SELECT array_agg(id), array_agg(lod4_implicit_rep_id) INTO result_array, implicit_rep_array
     FROM delete_objects;
 
   -- delete implicit geometry not being referenced by other tunnel furniture any more
   IF -1 = ALL(implicit_rep_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_implicit_geometries(a.implicit_rep_id) 
       FROM (
-        SELECT unnest(implicit_rep_array) AS implicit_rep_id
+        SELECT DISTINCT unnest(implicit_rep_array) AS implicit_rep_id
       ) a
       LEFT JOIN tunnel_furniture tf ON tf.lod4_implicit_rep_id = a.implicit_rep_id
       WHERE tf.lod4_implicit_rep_id IS NULL;
@@ -3290,8 +3290,8 @@ BEGIN
     RETURNING o.id, o.lod3_implicit_rep_id, o.lod4_implicit_rep_id
   )
   SELECT array_agg(id),
-	array_agg(DISTINCT lod3_implicit_rep_id) || 
-	array_agg(DISTINCT lod4_implicit_rep_id)
+    array_agg(lod3_implicit_rep_id) || 
+    array_agg(lod4_implicit_rep_id)
     INTO result_array, implicit_rep_array
     FROM delete_objects;
 
@@ -3299,7 +3299,7 @@ BEGIN
   IF -1 = ALL(implicit_rep_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_implicit_geometries(a.implicit_rep_id) 
       FROM (
-        SELECT unnest(implicit_rep_array) AS implicit_rep_id
+        SELECT DISTINCT unnest(implicit_rep_array) AS implicit_rep_id
       ) a
       LEFT JOIN tunnel_opening o3 ON o3.lod3_implicit_rep_id = a.implicit_rep_id
       LEFT JOIN tunnel_opening o4 ON o4.lod4_implicit_rep_id = a.implicit_rep_id
@@ -3404,13 +3404,13 @@ BEGIN
     WHERE o2ts.tunnel_thematic_surface_id = a.ts_id
     RETURNING o2ts.tunnel_opening_id
   )
-  SELECT array_agg(DISTINCT tunnel_opening_id) INTO opening_array
+  SELECT array_agg(tunnel_opening_id) INTO opening_array
     FROM delete_opening_refs;
 
   -- delete openings not being referenced by a thematic surface any more
   PERFORM citydb_pkg.delete_tunnel_openings(a.o_id) 
     FROM (
-      SELECT unnest(opening_array) AS o_id
+      SELECT DISTINCT unnest(opening_array) AS o_id
     ) a
     LEFT JOIN tunnel_open_to_them_srf o2ts
     ON o2ts.tunnel_opening_id = a.o_id
@@ -3466,7 +3466,7 @@ BEGIN
       WHERE tunnel_thematic_surface_id = $1 
       RETURNING tunnel_opening_id
   )
-  SELECT array_agg(DISTINCT tunnel_opening_id) INTO opening_array
+  SELECT array_agg(tunnel_opening_id) INTO opening_array
     FROM delete_opening_refs;
 
   -- delete openings not being referenced by a thematic surface any more
@@ -3530,9 +3530,9 @@ BEGIN
     RETURNING ti.id, ti.lod2_implicit_rep_id, ti.lod3_implicit_rep_id, ti.lod4_implicit_rep_id
   )
   SELECT array_agg(id),
-	array_agg(DISTINCT lod2_implicit_rep_id) || 
-	array_agg(DISTINCT lod3_implicit_rep_id) || 
-	array_agg(DISTINCT lod4_implicit_rep_id)
+    array_agg(lod2_implicit_rep_id) || 
+    array_agg(lod3_implicit_rep_id) || 
+    array_agg(lod4_implicit_rep_id)
     INTO result_array, implicit_rep_array
     FROM delete_objects;
 
@@ -3540,7 +3540,7 @@ BEGIN
   IF -1 = ALL(implicit_rep_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_implicit_geometries(a.implicit_rep_id) 
       FROM (
-        SELECT unnest(implicit_rep_array) AS implicit_rep_id
+        SELECT DISTINCT unnest(implicit_rep_array) AS implicit_rep_id
       ) a
       LEFT JOIN tunnel_installation ti2 ON ti2.lod2_implicit_rep_id = a.implicit_rep_id
       LEFT JOIN tunnel_installation ti3 ON ti3.lod3_implicit_rep_id = a.implicit_rep_id
@@ -3984,11 +3984,11 @@ BEGIN
               gco.lod2_implicit_rep_id, gco.lod3_implicit_rep_id, gco.lod4_implicit_rep_id
   )
   SELECT array_agg(id),
-    array_agg(DISTINCT lod0_implicit_rep_id) ||
-    array_agg(DISTINCT lod1_implicit_rep_id) || 
-	array_agg(DISTINCT lod2_implicit_rep_id) || 
-	array_agg(DISTINCT lod3_implicit_rep_id) || 
-	array_agg(DISTINCT lod4_implicit_rep_id)
+    array_agg(lod0_implicit_rep_id) ||
+    array_agg(lod1_implicit_rep_id) || 
+    array_agg(lod2_implicit_rep_id) || 
+    array_agg(lod3_implicit_rep_id) || 
+    array_agg(lod4_implicit_rep_id)
     INTO result_array, implicit_rep_array
     FROM delete_objects;
 
@@ -3996,7 +3996,7 @@ BEGIN
   IF -1 = ALL(implicit_rep_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_implicit_geometries(a.implicit_rep_id) 
       FROM (
-        SELECT unnest(implicit_rep_array) AS implicit_rep_id
+        SELECT DISTINCT unnest(implicit_rep_array) AS implicit_rep_id
       ) a
       LEFT JOIN generic_cityobject gco ON gco.lod0_implicit_rep_id = a.implicit_rep_id
       LEFT JOIN generic_cityobject gco1 ON gco1.lod1_implicit_rep_id = a.implicit_rep_id
@@ -4114,10 +4114,10 @@ BEGIN
     RETURNING svo.id, svo.lod1_implicit_rep_id, svo.lod2_implicit_rep_id, svo.lod3_implicit_rep_id, svo.lod4_implicit_rep_id
   )
   SELECT array_agg(id),
-    array_agg(DISTINCT lod1_implicit_rep_id) || 
-	array_agg(DISTINCT lod2_implicit_rep_id) || 
-	array_agg(DISTINCT lod3_implicit_rep_id) || 
-	array_agg(DISTINCT lod4_implicit_rep_id)
+    array_agg(lod1_implicit_rep_id) || 
+    array_agg(lod2_implicit_rep_id) || 
+    array_agg(lod3_implicit_rep_id) || 
+    array_agg(lod4_implicit_rep_id)
     INTO result_array, implicit_rep_array
     FROM delete_objects;
 
@@ -4125,7 +4125,7 @@ BEGIN
   IF -1 = ALL(implicit_rep_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_implicit_geometries(a.implicit_rep_id) 
       FROM (
-        SELECT unnest(implicit_rep_array) AS implicit_rep_id
+        SELECT DISTINCT unnest(implicit_rep_array) AS implicit_rep_id
       ) a
       LEFT JOIN solitary_vegetat_object svo1 ON svo1.lod1_implicit_rep_id = a.implicit_rep_id
       LEFT JOIN solitary_vegetat_object svo2 ON svo2.lod2_implicit_rep_id = a.implicit_rep_id
@@ -4401,13 +4401,13 @@ BEGIN
     WHERE wb2wbs.waterbody_id = a.wb_id
     RETURNING wb2wbs.waterboundary_surface_id
   )
-  SELECT array_agg(DISTINCT waterboundary_surface_id) INTO surface_array
+  SELECT array_agg(waterboundary_surface_id) INTO surface_array
     FROM delete_surface_refs;
 
   -- delete water boundary surfaces not being referenced by a water body any more
   PERFORM citydb_pkg.delete_waterbnd_surfaces(a.wbs_id) 
     FROM (
-      SELECT unnest(surface_array) AS wbs_id
+      SELECT DISTINCT unnest(surface_array) AS wbs_id
     ) a
     LEFT JOIN waterbod_to_waterbnd_srf wb2wbs
     ON wb2wbs.waterboundary_surface_id = a.wbs_id
@@ -4462,7 +4462,7 @@ BEGIN
       WHERE waterbody_id = $1
       RETURNING waterboundary_surface_id
   )
-  SELECT array_agg(DISTINCT waterboundary_surface_id) INTO surface_array
+  SELECT array_agg(waterboundary_surface_id) INTO surface_array
     FROM delete_surface_refs;
 
   -- delete water boundary surfaces not being referenced by a water body any more
@@ -4523,10 +4523,10 @@ BEGIN
     WHERE tr.id = a.tr_id
     RETURNING tr.surface_geometry_id
   )
-  SELECT array_agg(DISTINCT surface_geometry_id) INTO tin_geom_array
+  SELECT array_agg(surface_geometry_id) INTO tin_geom_array
     FROM delete_objects;
 
-  PERFORM citydb_pkg.delete_surface_geometries(tin_geom_array);
+  PERFORM citydb_pkg.delete_surface_geometries(DISTINCT tin_geom_array);
 
   -- delete mass point relief
   DELETE FROM masspoint_relief mpr USING (
@@ -4548,10 +4548,10 @@ BEGIN
     WHERE rr.id = a.rr_id
     RETURNING rr.coverage_id
   )
-  SELECT array_agg(DISTINCT coverage_id) INTO relief_coverage_array
+  SELECT array_agg(coverage_id) INTO relief_coverage_array
     FROM delete_objects;
 
-  PERFORM citydb_pkg.delete_grid_coverages(relief_coverage_array);
+  PERFORM citydb_pkg.delete_grid_coverages(DISTINCT relief_coverage_array);
 
   -- delete relief components
   WITH delete_objects AS (
@@ -4661,13 +4661,13 @@ BEGIN
     WHERE rf2rc.relief_feature_id = a.rf_id
     RETURNING rf2rc.relief_component_id
   )
-  SELECT array_agg(DISTINCT relief_component_id) INTO component_array
+  SELECT array_agg(relief_component_id) INTO component_array
     FROM delete_component_refs;
 
   -- delete relief components not being referenced by a relief feature any more
   PERFORM citydb_pkg.delete_relief_components(a.rc_id) 
     FROM (
-      SELECT unnest(component_array) AS rc_id
+      SELECT DISTINCT unnest(component_array) AS rc_id
     ) a
     LEFT JOIN relief_feat_to_rel_comp rf2rc
     ON rf2rc.relief_component_id = a.rc_id
@@ -4721,7 +4721,7 @@ BEGIN
       WHERE relief_feature_id = $1
       RETURNING relief_component_id
   )
-  SELECT array_agg(DISTINCT relief_component_id) INTO component_array
+  SELECT array_agg(relief_component_id) INTO component_array
     FROM delete_component_refs;
 
   -- delete relief components not being referenced by a relief feature any more
@@ -4776,10 +4776,10 @@ BEGIN
     RETURNING cf.id, cf.lod1_implicit_rep_id, cf.lod2_implicit_rep_id, cf.lod3_implicit_rep_id, cf.lod4_implicit_rep_id
   )
   SELECT array_agg(id),
-    array_agg(DISTINCT lod1_implicit_rep_id) || 
-	array_agg(DISTINCT lod2_implicit_rep_id) || 
-	array_agg(DISTINCT lod3_implicit_rep_id) || 
-	array_agg(DISTINCT lod4_implicit_rep_id)
+    array_agg(lod1_implicit_rep_id) || 
+    array_agg(lod2_implicit_rep_id) || 
+    array_agg(lod3_implicit_rep_id) || 
+    array_agg(lod4_implicit_rep_id)
     INTO result_array, implicit_rep_array
     FROM delete_objects;
 
@@ -4787,7 +4787,7 @@ BEGIN
   IF -1 = ALL(implicit_rep_array) IS NOT NULL THEN
     PERFORM citydb_pkg.delete_implicit_geometries(a.implicit_rep_id) 
       FROM (
-        SELECT unnest(implicit_rep_array) AS implicit_rep_id
+        SELECT DISTINCT unnest(implicit_rep_array) AS implicit_rep_id
       ) a
       LEFT JOIN city_furniture cf1 ON cf1.lod1_implicit_rep_id = a.implicit_rep_id
       LEFT JOIN city_furniture cf2 ON cf2.lod2_implicit_rep_id = a.implicit_rep_id
@@ -5067,13 +5067,13 @@ BEGIN
     WHERE g2c.cityobjectgroup_id = a.grp_id
     RETURNING g2c.cityobject_id
   )
-  SELECT array_agg(DISTINCT cityobject_id) INTO cityobject_array
+  SELECT array_agg(cityobject_id) INTO cityobject_array
     FROM delete_member_refs;
 
   -- delete cityobjects not being referenced by a city object group any more
   PERFORM citydb_pkg.delete_cityobject(a.c_id, 1, 0) 
     FROM (
-      SELECT unnest(cityobject_array) AS c_id
+      SELECT DISTINCT unnest(cityobject_array) AS c_id
     ) a
     LEFT JOIN group_to_cityobject g2c
     ON g2c.cityobject_id = a.c_id
@@ -5134,7 +5134,7 @@ BEGIN
     WHERE cityobjectgroup_id = $1
     RETURNING cityobject_id
   )
-  SELECT array_agg(DISTINCT cityobject_id) INTO cityobject_array
+  SELECT array_agg(cityobject_id) INTO cityobject_array
     FROM delete_member_refs;
 
   IF delete_members <> 0 THEN
@@ -5195,7 +5195,7 @@ BEGIN
     WHERE citymodel_id = $1
     RETURNING cityobject_id
   )
-  SELECT array_agg(DISTINCT cityobject_id) INTO cityobject_array
+  SELECT array_agg(cityobject_id) INTO cityobject_array
     FROM delete_member_refs;
 
   IF delete_members <> 0 THEN
