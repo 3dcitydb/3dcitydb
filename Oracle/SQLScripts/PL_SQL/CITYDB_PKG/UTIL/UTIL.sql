@@ -94,8 +94,8 @@ AS
   FUNCTION db_metadata RETURN DB_INFO_TABLE;
   FUNCTION split(list VARCHAR2, delim VARCHAR2 := ',') RETURN STRARRAY;
   FUNCTION min(a NUMBER, b NUMBER) RETURN NUMBER;
-  PROCEDURE update_schema_constraints(on_delete_param VARCHAR2 := 'CASCADE', schema_name VARCHAR2 := USER);
-  PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param VARCHAR2 := 'CASCADE', schema_name VARCHAR2 := USER);
+  PROCEDURE update_schema_constraints(on_delete_param CHAR := 'a', schema_name VARCHAR2 := USER);
+  PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param CHAR := 'a', schema_name VARCHAR2 := USER);
   FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER, schema_name VARCHAR2 := USER) RETURN ID_ARRAY;
   FUNCTION string2id_array(str VARCHAR2, delim VARCHAR2 := ',') RETURN ID_ARRAY;
   FUNCTION get_id_array_size(id_arr ID_ARRAY) RETURN NUMBER;
@@ -275,15 +275,14 @@ AS
   /******************************************************************
   * update_table_constraint
   *
-  * Removes a constraint to add it again with parameters
-  * ON UPDATE CASCADE ON DELETE CASCADE or NO ACTION
+  * Removes a constraint to add it again with given ON DELETE parameter
   *
   * @param fkey_name name of the foreign key that is updated 
   * @param table_name defines the table to which the constraint belongs to
   * @param column_name defines the column the constraint is relying on
   * @param ref_table name of referenced table
   * @param ref_column name of referencing column of referenced table
-  * @param on_delete_param whether CASCADE or NO ACTION
+  * @param delete_param whether NO ACTION, RESTIRCT, CASCADE or SET NULL
   * @param schema_name name of schema of target constraints
   ******************************************************************/
   PROCEDURE update_table_constraint(
@@ -292,20 +291,28 @@ AS
     column_name VARCHAR2,
     ref_table VARCHAR2,
     ref_column VARCHAR2,
-    on_delete_param VARCHAR2 := 'CASCADE',
+    on_delete_param CHAR := 'a',
     schema_name VARCHAR2 := USER
     )
   IS
+    delete_param VARCHAR(9);
   BEGIN
     IF versioning_table(table_name, schema_name) = 'ON' OR versioning_table(ref_table, schema_name) = 'ON' THEN
       dbms_output.put_line('Can not perform operation with version enabled tables.');
       RETURN;
     END IF;
 
+    CASE on_delete_param
+      WHEN 'r' THEN delete_param := 'RESTRICT';
+      WHEN 'c' THEN delete_param := 'CASCADE';
+      WHEN 'n' THEN delete_param := 'SET NULL';
+      ELSE delete_param := 'NO ACTION';
+    END CASE;
+
     EXECUTE IMMEDIATE 'ALTER TABLE ' || upper(schema_name) || '.' || table_name || ' DROP CONSTRAINT ' || fkey_name;
     EXECUTE IMMEDIATE 'ALTER TABLE ' || upper(schema_name) || '.' || table_name || ' ADD CONSTRAINT ' || fkey_name || 
                          ' FOREIGN KEY (' || column_name || ') REFERENCES ' || upper(schema_name) || '.' || ref_table || '(' || ref_column || ')'
-                         || on_delete_param;
+                         || ' ON UPDATE CASCADE ON DELETE ' || delete_param;
     EXCEPTION
       WHEN OTHERS THEN
         dbms_output.put_line('Error on constraint ' || fkey_name || ': ' || SQLERRM);
@@ -315,26 +322,21 @@ AS
   * update_schema_constraints
   *
   * calls update_table_constraint for updating all the constraints
-  * in the user schema
+  * in the specified schema where options for on_delete_param are:
+  * a = NO ACTION
+  * r = RESTRICT
+  * c = CASCADE
+  * n = SET NULL
   *
-  * @param on_delete_param whether CASCADE (default) or NO ACTION
+  * @param on_delete_param default is 'a' = NO ACTION
   * @param schema_name name of schema of target constraints
   ******************************************************************/
   PROCEDURE update_schema_constraints(
-    on_delete_param VARCHAR2 := 'CASCADE',
+    on_delete_param CHAR := 'a',
     schema_name VARCHAR2 := USER
     )
   IS
-    delete_param VARCHAR2(30) := 'ON DELETE CASCADE';
-    deferrable_param VARCHAR2(30);
   BEGIN
-    IF on_delete_param <> 'CASCADE' THEN
-      delete_param := '';
-      dbms_output.put_line('Constraints are set to ON DELETE NO ACTION');
-    ELSE
-      dbms_output.put_line('Constraints are set to ON DELETE CASCADE');
-    END IF;
-
     FOR rec IN (SELECT acc1.constraint_name AS fkey, acc1.table_name AS t, acc1.column_name AS c, 
                   ac2.table_name AS ref_t, acc2.column_name AS ref_c, acc1.owner AS schema
                 FROM all_cons_columns acc1
@@ -346,7 +348,7 @@ AS
                   AND ac2.constraint_name = acc2.constraint_name 
                   AND acc2.position = acc1.position     
                 WHERE acc1.owner = upper(schema_name) AND ac1.constraint_type = 'R') LOOP
-      update_table_constraint(rec.fkey, rec.t, rec.c, rec.ref_t, rec.ref_c, delete_param, schema_name);
+      update_table_constraint(rec.fkey, rec.t, rec.c, rec.ref_t, rec.ref_c, on_delete_param, schema_name);
     END LOOP;
   END;
 
