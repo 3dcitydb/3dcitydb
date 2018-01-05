@@ -337,17 +337,35 @@ AS
     )
   IS
   BEGIN
-    FOR rec IN (SELECT acc1.constraint_name AS fkey, acc1.table_name AS t, acc1.column_name AS c, 
-                  ac2.table_name AS ref_t, acc2.column_name AS ref_c, acc1.owner AS schema
-                FROM all_cons_columns acc1
-                JOIN all_constraints ac1 ON acc1.owner = ac1.owner 
-                  AND acc1.constraint_name = ac1.constraint_name
-                JOIN all_constraints ac2 ON ac1.r_owner = ac2.owner 
-                  AND ac1.r_constraint_name = ac2.constraint_name
-                JOIN all_cons_columns acc2 ON ac2.owner = acc2.owner 
-                  AND ac2.constraint_name = acc2.constraint_name 
-                  AND acc2.position = acc1.position     
-                WHERE acc1.owner = upper(schema_name) AND ac1.constraint_type = 'R') LOOP
+    FOR rec IN (
+      SELECT
+        acc1.constraint_name AS fkey,
+        acc1.table_name AS t,
+        acc1.column_name AS c, 
+        ac2.table_name AS ref_t,
+        acc2.column_name AS ref_c,
+        acc1.owner AS schema
+      FROM
+        all_cons_columns acc1
+      JOIN
+        all_constraints ac1
+        ON acc1.constraint_name = ac1.constraint_name
+       AND acc1.owner = ac1.owner 
+       AND acc1.table_name = ac1.table_name
+      JOIN
+        all_constraints ac2
+        ON acc1.constraint_name = ac2.constraint_name
+       AND acc1.owner = ac2.owner 
+       AND acc1.table_name = ac2.table_name
+      JOIN
+        all_cons_columns acc2
+        ON ac2.owner = acc2.owner 
+       AND ac2.constraint_name = acc2.constraint_name 
+       AND acc2.position = acc1.position     
+      WHERE
+        acc1.owner = upper(schema_name)
+        AND ac1.constraint_type = 'R'
+    ) LOOP
       update_table_constraint(rec.fkey, rec.t, rec.c, rec.ref_t, rec.ref_c, on_delete_param, schema_name);
     END LOOP;
   END;
