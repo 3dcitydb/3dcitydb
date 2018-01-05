@@ -109,7 +109,7 @@ COMMIT;
 * 
 * utility methods for index handling
 ******************************************************************/
-CREATE OR REPLACE PACKAGE citydb_idx
+CREATE OR REPLACE PACKAGE citydb_idx AUTHID CURRENT_USER
 AS
   FUNCTION index_status(idx INDEX_OBJ, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION index_status(table_name VARCHAR2, column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
