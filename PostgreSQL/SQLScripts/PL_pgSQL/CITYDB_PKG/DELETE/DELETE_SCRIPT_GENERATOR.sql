@@ -167,11 +167,13 @@ $$
 SELECT E'\n  -- delete references to '||$3||'s'
   || E'\n  WITH delete_'||$3||'_refs AS ('
   || E'\n    DELETE FROM'
-  || E'\n      '||$1
+  || E'\n      '||$1||' t'
+  || E'\n    USING'
+  || E'\n      unnest($1) a(a_id)'
   || E'\n    WHERE'
-  || E'\n      '||$2||' = $1'
+  || E'\n      t.'||$2||' = a.a_id'
   || E'\n    RETURNING'
-  || E'\n      '||$4
+  || E'\n      t.'||$4
   || E'\n  )'
   || E'\n  SELECT'
   || E'\n    array_agg('||$4||')'
@@ -247,10 +249,10 @@ BEGIN
     LEFT JOIN (
       -- count references of referencing tables
       -- > 1 ref = extra delete function
-      WITH RECURSIVE ref_table_depth(parent_oid, child_oid, depth) AS (
+      WITH RECURSIVE ref_table_depth(parent_table, ref_table, depth) AS (
         SELECT DISTINCT ON (conrelid)
-          confrelid AS parent_oid,
-          conrelid AS child_oid,
+          confrelid AS parent_table,
+          conrelid AS ref_table,
           1 AS depth
         FROM
           pg_constraint
@@ -260,28 +262,28 @@ BEGIN
           AND contype = 'f'
           AND confdeltype = 'a'
         UNION ALL
-          SELECT DISTINCT ON (conrelid)
-            c.confrelid AS parent_oid,
-            c.conrelid AS child_oid,
+          SELECT DISTINCT ON (ct.conrelid)
+            ct.confrelid AS parent_table,
+            ct.conrelid AS ref_table,
             d.depth + 1 AS depth
           FROM
-            pg_constraint c,
+            pg_constraint ct,
             ref_table_depth d
-          WHERE (d.child_oid = c.confrelid)
-            AND d.child_oid <> c.conrelid
-            AND c.contype = 'f'
-            AND confdeltype = 'a'
+          WHERE d.ref_table = ct.confrelid
+            AND d.ref_table <> ct.conrelid
+            AND ct.contype = 'f'
+            AND ct.confdeltype = 'a'
       )
       SELECT
-        parent_oid AS ref_node,
-        count(parent_oid) AS ref_count,
+        parent_table,
+        count(parent_table) AS ref_count,
         max(depth) AS ref_depth
       FROM
         ref_table_depth
       GROUP BY
-        parent_oid
+        parent_table
     ) rf
-    ON rf.ref_node = c.conrelid
+    ON rf.parent_table = c.conrelid
     -- check for FKs in ref tables which cover same columns as the PK
     -- if found = extra delete function to clean parent, except parent table = $1
     LEFT JOIN LATERAL (
@@ -309,25 +311,25 @@ BEGIN
     LEFT JOIN LATERAL (
       SELECT
         ct.confrelid AS m_table,
-        a.attname AS fk_m_column_name
+        fka.attname AS fk_m_column_name
       FROM
         pg_constraint ct
-      JOIN pg_attribute a
-        ON a.attrelid = ct.conrelid
-       AND a.attnum = ANY (ct.conkey)
+      JOIN pg_attribute fka
+        ON fka.attrelid = ct.conrelid
+       AND fka.attnum = ANY (ct.conkey)
       WHERE
         ct.conrelid = c.conrelid
-        AND ct.confrelid <> ($2 || '.' || $1)::regclass::oid
+        AND ct.confrelid <> c.conrelid
         AND ct.contype = 'f'
         AND ct.confdeltype = 'c'
     ) rt ON (true)
     -- count references of n:m tables
     -- this time, any FK type counts, > 1 ref = extra delete function
     LEFT JOIN LATERAL (
-      WITH RECURSIVE ref_table_depth(parent_oid, child_oid, depth) AS (
+      WITH RECURSIVE ref_table_depth(parent_table, ref_table, depth) AS (
         SELECT DISTINCT ON (conrelid)
-          confrelid AS parent_oid,
-          conrelid AS child_oid,
+          confrelid AS parent_table,
+          conrelid AS ref_table,
           1 AS depth
         FROM
           pg_constraint
@@ -336,25 +338,25 @@ BEGIN
           AND conrelid <> confrelid
           AND contype = 'f'
         UNION ALL
-          SELECT DISTINCT ON (conrelid)
-            c.confrelid AS parent_oid,
-            c.conrelid AS child_oid,
+          SELECT DISTINCT ON (ct.conrelid)
+            ct.confrelid AS parent_table,
+            ct.conrelid AS ref_table,
             d.depth + 1 AS depth
           FROM
-            pg_constraint c,
+            pg_constraint ct,
             ref_table_depth d
           WHERE
-            d.child_oid = c.confrelid
-            AND d.child_oid <> c.conrelid
-            AND c.contype = 'f'
+            d.ref_table = ct.confrelid
+            AND d.ref_table <> ct.conrelid
+            AND ct.contype = 'f'
       )
       SELECT
-        count(parent_oid) AS m_table_count,
+        count(parent_table) AS m_table_count,
         max(depth) AS m_table_depth
       FROM
         ref_table_depth
       GROUP BY
-        parent_oid
+        parent_table
     ) rtrf ON (true)
     -- check for FKs in n:m tables which cover same columns as PK
     -- if found = extra delete function to clean parent, except parent table = $1
@@ -779,10 +781,10 @@ BEGIN
     LEFT JOIN (
       -- count references of referencing tables
       -- > 1 ref = extra delete function
-      WITH RECURSIVE ref_table_depth(parent_oid, child_oid, depth) AS (
+      WITH RECURSIVE ref_table_depth(parent_table, ref_table, depth) AS (
         SELECT DISTINCT ON (conrelid)
-          confrelid AS parent_oid,
-          conrelid AS child_oid,
+          confrelid AS parent_table,
+          conrelid AS ref_table,
           1 AS depth
         FROM
           pg_constraint
@@ -792,28 +794,28 @@ BEGIN
           AND contype = 'f'
           AND confdeltype = 'a'
         UNION ALL
-          SELECT DISTINCT ON (conrelid)
-            c.confrelid AS parent_oid,
-            c.conrelid AS child_oid,
+          SELECT DISTINCT ON (ct.conrelid)
+            ct.confrelid AS parent_table,
+            ct.conrelid AS ref_table,
             d.depth + 1 AS depth
           FROM
-            pg_constraint c,
+            pg_constraint ct,
             ref_table_depth d
-          WHERE (d.child_oid = c.confrelid)
-            AND d.child_oid <> c.conrelid
-            AND c.contype = 'f'
-            AND confdeltype = 'a'
+          WHERE d.ref_table = ct.confrelid
+            AND d.ref_table <> ct.conrelid
+            AND ct.contype = 'f'
+            AND ct.confdeltype = 'a'
       )
       SELECT
-        parent_oid AS ref_node,
-        count(parent_oid) AS ref_count,
+        parent_table,
+        count(parent_table) AS ref_count,
         max(depth) AS ref_depth
       FROM
         ref_table_depth
       GROUP BY
-        parent_oid
+        parent_table
     ) rf
-    ON rf.ref_node = c.conrelid
+    ON rf.parent_table = c.conrelid
     -- check for FKs in ref tables which cover same columns as the PK
     -- if found = extra delete function to clean parent, except parent table = $1
     LEFT JOIN LATERAL (
@@ -841,25 +843,25 @@ BEGIN
     LEFT JOIN LATERAL (
       SELECT
         ct.confrelid AS m_table,
-        a.attname AS fk_m_column_name
+        fka.attname AS fk_m_column_name
       FROM
         pg_constraint ct
-      JOIN pg_attribute a
-        ON a.attrelid = ct.conrelid
-       AND a.attnum = ANY (ct.conkey)
+      JOIN pg_attribute fka
+        ON fka.attrelid = ct.conrelid
+       AND fka.attnum = ANY (ct.conkey)
       WHERE
         ct.conrelid = c.conrelid
-        AND ct.confrelid <> ($2 || '.' || $1)::regclass::oid
+        AND ct.confrelid <> c.conrelid
         AND ct.contype = 'f'
         AND ct.confdeltype = 'c'
     ) rt ON (true)
     -- count references of n:m tables
     -- this time, any FK type counts, > 1 ref = extra delete function
     LEFT JOIN LATERAL (
-      WITH RECURSIVE ref_table_depth(parent_oid, child_oid, depth) AS (
+      WITH RECURSIVE ref_table_depth(parent_table, ref_table, depth) AS (
         SELECT DISTINCT ON (conrelid)
-          confrelid AS parent_oid,
-          conrelid AS child_oid,
+          confrelid AS parent_table,
+          conrelid AS ref_table,
           1 AS depth
         FROM
           pg_constraint
@@ -868,25 +870,25 @@ BEGIN
           AND conrelid <> confrelid
           AND contype = 'f'
         UNION ALL
-          SELECT DISTINCT ON (conrelid)
-            c.confrelid AS parent_oid,
-            c.conrelid AS child_oid,
+          SELECT DISTINCT ON (ct.conrelid)
+            ct.confrelid AS parent_table,
+            ct.conrelid AS ref_table,
             d.depth + 1 AS depth
           FROM
-            pg_constraint c,
+            pg_constraint ct,
             ref_table_depth d
           WHERE
-            d.child_oid = c.confrelid
-            AND d.child_oid <> c.conrelid
-            AND c.contype = 'f'
+            d.ref_table = ct.confrelid
+            AND d.ref_table <> ct.conrelid
+            AND ct.contype = 'f'
       )
       SELECT
-        count(parent_oid) AS m_table_count,
+        count(parent_table) AS m_table_count,
         max(depth) AS m_table_depth
       FROM
         ref_table_depth
       GROUP BY
-        parent_oid
+        parent_table
     ) rtrf ON (true)
     -- check for FKs in n:m tables which cover same columns as PK
     -- if found = extra delete function to clean parent, except parent table = $1
