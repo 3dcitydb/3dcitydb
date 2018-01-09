@@ -1041,7 +1041,7 @@ BEGIN
       returning_block := returning_block || E',\n    ARRAY['||rec.ref_columns||']';
       into_block := into_block || E',\n    ' ||rec.fk_table||'_ids';
     ELSE
-      vars := vars || E'\n  '||rec.fk_table||'_ref_id int[] := ''{}'';';
+      vars := vars || E'\n  '||rec.fk_table||'_ref_id int;';
       returning_block := returning_block || E',\n    '||rec.ref_columns;
       into_block := into_block || E',\n    ' ||rec.fk_table||'_ref_id';
     END IF;
@@ -1264,7 +1264,7 @@ BEGIN
   IF pre_block = '' AND post_block = '' THEN
     ddl_command := ddl_command
       || E'\n  -- delete '||$1||'s'
-      || E'\n' || delete_block || ';'
+      || delete_block || ';'
       || E'\n$body$\nLANGUAGE sql STRICT';
   ELSE
     ddl_command := ddl_command
