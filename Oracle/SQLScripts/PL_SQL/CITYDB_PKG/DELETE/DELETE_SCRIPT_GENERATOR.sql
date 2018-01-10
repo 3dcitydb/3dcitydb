@@ -32,8 +32,8 @@
 ******************************************************************/
 CREATE OR REPLACE PACKAGE citydb_delete_gen AUTHID CURRENT_USER
 AS
-  PROCEDURE create_array_delete_function(tab_name VARCHAR2, tab_short_name VARCHAR2, schema_name VARCHAR2 := USER) AUTHID CURRENT_USER;
-  PROCEDURE create_delete_function(tab_name VARCHAR2, tab_short_name VARCHAR2, schema_name VARCHAR2 := USER) AUTHID CURRENT_USER;
+  PROCEDURE create_array_delete_function(tab_name VARCHAR2, tab_short_name VARCHAR2, schema_name VARCHAR2 := USER);
+  PROCEDURE create_delete_function(tab_name VARCHAR2, tab_short_name VARCHAR2, schema_name VARCHAR2 := USER);
 END citydb_delete_gen;
 /
 
@@ -71,7 +71,7 @@ AS
     schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2 
   IS
-    self_block VARCHAR2;
+    self_block VARCHAR2(1000);
   BEGIN
     SELECT LISTAGG(
         chr(10)||'  -- delete referenced parts'
@@ -248,7 +248,7 @@ AS
       ||chr(10)||'    FROM'
       ||chr(10)||'      TABLE(arr) a'
       ||chr(10)||'    WHERE'
-      ||chr(10)||'      a.COLUMN_VALUE = t.'||fk_column_name
+      ||chr(10)||'      a.COLUMN_VALUE = t.'||fk_n_column_name
       ||chr(10)||'  );'
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||fk_m_column_name
@@ -278,7 +278,7 @@ AS
       ||chr(10)||'    FROM'
       ||chr(10)||'      TABLE(arr) a'
       ||chr(10)||'    WHERE'
-      ||chr(10)||'      a.COLUMN_VALUE = t.'||fk_column_name
+      ||chr(10)||'      a.COLUMN_VALUE = t.'||fk_n_column_name
       ||chr(10)||'  );'
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||fk_m_column_name
@@ -369,7 +369,7 @@ AS
           SELECT
             ctp.table_name,
             ctp.owner,
-            pka.column_id
+            pka.column_name
           FROM
             all_constraints ctp
           JOIN
@@ -382,7 +382,7 @@ AS
           ) pk
           ON pk.table_name = fk.table_name
          AND pk.owner = fk.owner
-         AND pk.column_id = fka.column_id
+         AND pk.column_name = fka.column_name
         WHERE fk.table_name = c.table_name
           AND fk.owner = c.owner
           AND fk.constraint_type = 'R'
@@ -416,8 +416,8 @@ AS
       OUTER APPLY (
         SELECT
           parent_table,
-          count(parent_table) AS ref_count,
-          max(LEVEL) AS ref_depth
+          count(parent_table) AS m_table_count,
+          max(LEVEL) AS m_table_depth
         FROM (
           SELECT DISTINCT
             ct.table_name AS parent_table,
@@ -457,7 +457,7 @@ AS
           SELECT
             ctp.table_name,
             ctp.owner,
-            pka.column_id
+            pka.column_name
           FROM
             all_constraints ctp
           JOIN
@@ -470,7 +470,7 @@ AS
           ) pk
           ON pk.table_name = fk.table_name
          AND pk.owner = fk.owner
-         AND pk.column_id = fka.column_id
+         AND pk.column_name = fka.column_name
         WHERE fk.table_name = rt.table_name
           AND fk.owner = rt.owner
           AND fk.constraint_type = 'R'
@@ -590,7 +590,7 @@ AS
       ) fk
       OUTER APPLY (
         SELECT
-          TRUE AS has_ref
+          1 AS has_ref
         FROM
           all_constraints ct
         JOIN
@@ -600,8 +600,8 @@ AS
         WHERE
           ct.table_name = fk.fk_table
           AND ct2.table_name <> fk.fk_table
-          AND constraint_type = 'R'
-          AND (delete_rule = 'NO ACTION' OR delete_rule = 'RESTRICT')
+          AND ct.constraint_type = 'R'
+          AND (ct.delete_rule = 'NO ACTION' OR ct.delete_rule = 'RESTRICT')
       ) rf
     )
     LOOP
@@ -616,7 +616,7 @@ AS
       returning_block := returning_block ||chr(10)||'      '|| rec.ref_columns;
       into_block := into_block ||chr(10)||'    '|| rec.fk_table||'_ids';
 
-      IF rec.has_ref THEN
+      IF rec.has_ref = 1 THEN
         -- function call required, so create function first
         citydb_delete_gen.create_array_delete_function(rec.fk_table, rec.fk_table_short, schema_name);
         fk_block := fk_block || delete_m_table_by_ids(rec.fk_table, rec.fk_table_short, rec.fk_column, rec.fk_table);
@@ -634,8 +634,7 @@ AS
     schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2 
   IS
-    rec RECORD;
-    parent_block VARCHAR2 := '';
+    parent_block VARCHAR2(1000) := '';
   BEGIN
     FOR rec IN (
       SELECT
@@ -651,7 +650,7 @@ AS
         SELECT
           ctp.table_name,
           ctp.owner,
-          pka.column_id
+          pka.column_name
         FROM
           all_constraints ctp
         JOIN all_cons_columns pka
@@ -663,9 +662,9 @@ AS
         ) pk
         ON pk.table_name = fk.table_name
        AND pk.owner = fk.owner
-       AND pk.column_id = fka.column_id
-      WHERE fk.table_name = rt.table_name
-        AND fk.owner = rt.owner
+       AND pk.column_name = fka.column_name
+      WHERE fk.table_name = tab_name
+        AND fk.owner = schema_name
         AND fk.constraint_type = 'R'
         AND fk.delete_rule = 'NO ACTION'
     )
@@ -694,7 +693,7 @@ AS
     schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2 
   IS
-    self_block VARCHAR2;
+    self_block VARCHAR2(1000);
   BEGIN
     SELECT LISTAGG(
         chr(10)||'  -- delete referenced parts'
@@ -860,7 +859,7 @@ AS
       ||chr(10)||'  DELETE FROM'
       ||chr(10)||'    '||n_m_tab_name
       ||chr(10)||'  WHERE'
-      ||chr(10)||'    '||fk_column_name||' = pid'
+      ||chr(10)||'    '||fk_n_column_name||' = pid'
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||fk_m_column_name
       ||chr(10)||'  BULK COLLECT INTO'
@@ -884,7 +883,7 @@ AS
       ||chr(10)||'  DELETE FROM'
       ||chr(10)||'    '||n_m_tab_name
       ||chr(10)||'  WHERE'
-      ||chr(10)||'    '||fk_column_name||' = pid'
+      ||chr(10)||'    '||fk_n_column_name||' = pid'
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||fk_m_column_name
       ||chr(10)||'  BULK COLLECT INTO'
@@ -973,7 +972,7 @@ AS
           SELECT
             ctp.table_name,
             ctp.owner,
-            pka.column_id
+            pka.column_name
           FROM
             all_constraints ctp
           JOIN all_cons_columns pka
@@ -985,7 +984,7 @@ AS
           ) pk
           ON pk.table_name = fk.table_name
          AND pk.owner = fk.owner
-         AND pk.column_id = fka.column_id
+         AND pk.column_name = fka.column_name
         WHERE fk.table_name = c.table_name
           AND fk.owner = c.owner
           AND fk.constraint_type = 'R'
@@ -1018,8 +1017,8 @@ AS
       OUTER APPLY (
         SELECT
           parent_table,
-          count(parent_table) AS ref_count,
-          max(LEVEL) AS ref_depth
+          count(parent_table) AS m_table_count,
+          max(LEVEL) AS m_table_depth
         FROM (
           SELECT DISTINCT
             ct.table_name AS parent_table,
@@ -1058,7 +1057,7 @@ AS
           SELECT
             ctp.table_name,
             ctp.owner,
-            pka.column_id
+            pka.column_name
           FROM
             all_constraints ctp
           JOIN all_cons_columns pka
@@ -1070,7 +1069,7 @@ AS
           ) pk
           ON pk.table_name = fk.table_name
          AND pk.owner = fk.owner
-         AND pk.column_id = fka.column_id
+         AND pk.column_name = fka.column_name
         WHERE fk.table_name = rt.table_name
           AND fk.owner = rt.owner
           AND fk.constraint_type = 'R'
@@ -1190,7 +1189,7 @@ AS
       ) fk
       OUTER APPLY (
         SELECT
-          TRUE AS has_ref
+          1 AS has_ref
         FROM
           all_constraints ct
         JOIN
@@ -1200,8 +1199,8 @@ AS
         WHERE
           ct.table_name = fk.fk_table
           AND ct2.table_name <> fk.fk_table
-          AND constraint_type = 'R'
-          AND (delete_rule = 'NO ACTION' OR delete_rule = 'RESTRICT')
+          AND ct.constraint_type = 'R'
+          AND (ct.delete_rule = 'NO ACTION' OR ct.delete_rule = 'RESTRICT')
       ) rf
     )
     LOOP
@@ -1222,7 +1221,7 @@ AS
         into_block := into_block ||chr(10)||'    '|| rec.fk_table||'_ref_id';
       END IF;
 
-      IF rec.has_ref THEN
+      IF rec.has_ref = 1 THEN
         -- function call required, so create function first
         citydb_delete_gen.create_array_delete_function(rec.fk_table, rec.fk_table_short, schema_name);
         IF rec.column_count > 1 THEN
@@ -1248,8 +1247,7 @@ AS
     schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2 
   IS
-    rec RECORD;
-    parent_block VARCHAR2 := '';
+    parent_block VARCHAR2(1000) := '';
   BEGIN
     FOR rec IN (
       SELECT
@@ -1265,7 +1263,7 @@ AS
         SELECT
           ctp.table_name,
           ctp.owner,
-          pka.column_id
+          pka.column_name
         FROM
           all_constraints ctp
         JOIN all_cons_columns pka
@@ -1277,9 +1275,9 @@ AS
         ) pk
         ON pk.table_name = fk.table_name
        AND pk.owner = fk.owner
-       AND pk.column_id = fka.column_id
-      WHERE fk.table_name = rt.table_name
-        AND fk.owner = rt.owner
+       AND pk.column_name = fka.column_name
+      WHERE fk.table_name = tab_name
+        AND fk.owner = schema_name
         AND fk.constraint_type = 'R'
         AND fk.delete_rule = 'NO ACTION'
     )
@@ -1306,7 +1304,7 @@ AS
     table_short_name VARCHAR2
     )
   IS
-    ddl_command VARCHAR2 := 
+    ddl_command VARCHAR2(500) := 
       'CREATE OR REPLACE FUNCTION delete_'||table_short_name||'(arr ID_ARRAY) RETURN ID_ARRAY'
       ||chr(10)||'IS'
       ||chr(10)||'  deleted_ids ID_ARRAY;'
@@ -1325,13 +1323,13 @@ AS
     schema_name VARCHAR2 := USER
     )
   IS
-    ddl_command VARCHAR2 := 
+    ddl_command VARCHAR2(10000) := 
       'CREATE OR REPLACE FUNCTION delete_'||tab_short_name||'(arr ID_ARRAY) RETURN ID_ARRAY'
       ||chr(10)||'IS';
-    declare_block VARCHAR2 := chr(10)||'  deleted_ids ID_ARRAY;';
-    pre_block VARCHAR2 := '';
-    post_block VARCHAR2 := '';
-    delete_block VARCHAR2 :=
+    declare_block VARCHAR2(500) := chr(10)||'  deleted_ids ID_ARRAY;';
+    pre_block VARCHAR2(2000) := '';
+    post_block VARCHAR2(1000) := '';
+    delete_block VARCHAR2(1000) :=
       '  DELETE FROM'
       ||chr(10)||'    '||tab_name||' t'
       ||chr(10)||'  WHERE EXISTS ('
@@ -1344,39 +1342,32 @@ AS
       ||chr(10)||'  )'
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    id';
-    delete_into_block VARCHAR2 :=
+    delete_into_block VARCHAR2(500) :=
         chr(10)||'  BULK COLLECT INTO'
       ||chr(10)||'    deleted_ids';
+    vars VARCHAR2(500);
+    ref_block VARCHAR2(2000);
+    returning_block VARCHAR2(500);
+    into_block VARCHAR2(500);
+    fk_block VARCHAR2(1000);
   BEGIN
     -- SELF-REFERENCES
-    pre_block := delete_self_ref_by_id(tab_name, tab_short_name, schema_name);
+    pre_block := delete_self_ref_by_ids(tab_name, tab_short_name, schema_name);
 
     -- REFERENCING TABLES
-    SELECT
-      declare_block || COALESCE(vars, ''),
-      pre_block || COALESCE(ref_block, '')
-    INTO
-      declare_block,
-      pre_block
-    FROM
-      TABLE(delete_refs_by_id(tab_name, schema_name));
+    delete_refs_by_ids(tab_name, schema_name, vars, ref_block);
+    declare_block := declare_block || COALESCE(vars, '');
+    pre_block := pre_block || COALESCE(ref_block, '');
 
     -- FOREIGN KEY which are set to ON DELETE RESTRICT
-    SELECT
-      declare_block || COALESCE(vars, ''),
-      delete_block || COALESCE(returning_block, ''),
-      delete_into_block || COALESCE(into_block, ''),
-      COALESCE(fk_block, '')
-    INTO
-      declare_block,
-      delete_block,
-      delete_into_block,
-      post_block
-    FROM
-      TABLE(delete_fkeys_by_id(tab_name, schema_name));
+    delete_fkeys_by_ids(tab_name, schema_name, vars, returning_block, into_block, fk_block);
+    declare_block := declare_block || COALESCE(vars, '');
+    delete_block := delete_block || COALESCE(returning_block, '');
+    delete_into_block := delete_into_block || COALESCE(into_block, '');
+    post_block := post_block || COALESCE(fk_block, '');
 
     -- FOREIGN KEY which cover same columns AS primary key
-    post_block := post_block || delete_parent_by_id(tab_name, schema_name);
+    post_block := post_block || delete_parent_by_ids(tab_name, schema_name);
 
     -- create dummy variable if pre or post block are not null
     IF pre_block <> '' OR post_block <> '' THEN
@@ -1406,39 +1397,32 @@ AS
     schema_name VARCHAR2 := USER
     )
   IS
-    ddl_command VARCHAR2 := 'CREATE OR REPLACE FUNCTION delete_'||tab_short_name||'(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
-    declare_block VARCHAR2 := chr(10)||''||chr(10)||'  deleted_id NUMBER;';
-    pre_block VARCHAR2 := '';
-    post_block VARCHAR2 := '';
-    delete_block VARCHAR2 := chr(10)||'  DELETE FROM'||chr(10)||'    '||tab_name||chr(10)||'  WHERE'||chr(10)||'    id = pid'||chr(10)||'  RETURNING'||chr(10)||'    id';
-    delete_into_block VARCHAR2 := chr(10)||'  INTO'||chr(10)||'    deleted_id';
+    ddl_command VARCHAR2(10000) := 'CREATE OR REPLACE FUNCTION delete_'||tab_short_name||'(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
+    declare_block VARCHAR2(500) := chr(10)||''||chr(10)||'  deleted_id NUMBER;';
+    pre_block VARCHAR2(2000) := '';
+    post_block VARCHAR2(1000) := '';
+    delete_block VARCHAR2(1000) := chr(10)||'  DELETE FROM'||chr(10)||'    '||tab_name||chr(10)||'  WHERE'||chr(10)||'    id = pid'||chr(10)||'  RETURNING'||chr(10)||'    id';
+    delete_into_block VARCHAR2(500) := chr(10)||'  INTO'||chr(10)||'    deleted_id';
+    vars VARCHAR2(500);
+    ref_block VARCHAR2(2000);
+    returning_block VARCHAR2(500);
+    into_block VARCHAR2(500);
+    fk_block VARCHAR2(1000);
   BEGIN
     -- SELF-REFERENCES
     pre_block := delete_self_ref_by_id(tab_name, tab_short_name, schema_name);
 
     -- REFERENCING TABLES
-    SELECT
-      declare_block || COALESCE(vars, ''),
-      pre_block || COALESCE(ref_block, '')
-    INTO
-      declare_block,
-      pre_block
-    FROM
-      TABLE(delete_refs_by_id(tab_name, schema_name));
+    delete_refs_by_id(tab_name, schema_name, vars, ref_block);
+    declare_block := declare_block || COALESCE(vars, '');
+    pre_block := pre_block || COALESCE(ref_block, '');
 
     -- FOREIGN KEY which are set to ON DELETE RESTRICT
-    SELECT
-      declare_block || COALESCE(vars, ''),
-      delete_block || COALESCE(returning_block, ''),
-      delete_into_block || COALESCE(into_block, '') ||';'||chr(10),
-      COALESCE(fk_block, '')
-    INTO
-      declare_block,
-      delete_block,
-      delete_into_block,
-      post_block
-    FROM
-      TABLE(delete_fkeys_by_id(tab_name, schema_name));
+    delete_fkeys_by_id(tab_name, schema_name, vars, returning_block, into_block, fk_block);
+    declare_block := declare_block || COALESCE(vars, '');
+    delete_block := delete_block || COALESCE(returning_block, '');
+    delete_into_block := delete_into_block || COALESCE(into_block, '');
+    post_block := post_block || COALESCE(fk_block, '');
 
     -- FOREIGN KEY which cover same columns AS primary key
     post_block := delete_parent_by_id(tab_name, schema_name);
