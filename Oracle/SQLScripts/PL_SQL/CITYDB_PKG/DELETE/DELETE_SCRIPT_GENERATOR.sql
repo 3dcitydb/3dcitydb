@@ -114,7 +114,7 @@ AS
       AND c.delete_rule = 'NO ACTION'
       AND a.nullable = 'Y'
     GROUP BY
-      a.column_name;
+      c.table_name;
 
     IF self_block IS NOT NULL THEN
       -- create a dummy array delete function to enable compiling
@@ -578,8 +578,8 @@ AS
           ON a_ref.constraint_name = c2.constraint_name
          AND a_ref.owner = c2.owner
         WHERE
-          c.table_name = tab_name
-          AND c.owner = schema_name
+          c.table_name = upper(tab_name)
+          AND c.owner = upper(schema_name)
           AND c.table_name <> c2.table_name
           AND c.constraint_type = 'R'
           AND c.delete_rule = 'RESTRICT'
@@ -638,8 +638,8 @@ AS
   BEGIN
     FOR rec IN (
       SELECT
-        fk.table_name AS parent_table,
-        fk.table_name AS parent_table_short
+        p.table_name AS parent_table,
+        p.table_name AS parent_table_short
       FROM
         all_constraints fk
       JOIN all_cons_columns fka
@@ -663,8 +663,12 @@ AS
         ON pk.table_name = fk.table_name
        AND pk.owner = fk.owner
        AND pk.column_name = fka.column_name
-      WHERE fk.table_name = tab_name
-        AND fk.owner = schema_name
+      JOIN
+        all_constraints p
+        ON p.constraint_name = fk.r_constraint_name
+       AND p.owner = fk.owner
+      WHERE fk.table_name = upper(tab_name)
+        AND fk.owner = upper(schema_name)
         AND fk.constraint_type = 'R'
         AND fk.delete_rule = 'NO ACTION'
     )
@@ -735,7 +739,7 @@ AS
       AND c.delete_rule = 'NO ACTION'
       AND a.nullable = 'Y'
     GROUP BY
-      a.column_name;
+      c.table_name;
 
     IF self_block IS NOT NULL THEN
       -- create a dummy array delete function to enable compiling
@@ -1177,8 +1181,8 @@ AS
           ON a_ref.constraint_name = c2.constraint_name
          AND a_ref.owner = c2.owner
         WHERE
-          c.table_name = tab_name
-          AND c.owner = schema_name
+          c.table_name = upper(tab_name)
+          AND c.owner = upper(schema_name)
           AND c.table_name <> c2.table_name
           AND c.constraint_type = 'R'
           AND c.delete_rule = 'RESTRICT'
@@ -1251,8 +1255,8 @@ AS
   BEGIN
     FOR rec IN (
       SELECT
-        fk.table_name AS parent_table,
-        fk.table_name AS parent_table_short
+        p.table_name AS parent_table,
+        p.table_name AS parent_table_short
       FROM
         all_constraints fk
       JOIN all_cons_columns fka
@@ -1276,8 +1280,12 @@ AS
         ON pk.table_name = fk.table_name
        AND pk.owner = fk.owner
        AND pk.column_name = fka.column_name
-      WHERE fk.table_name = tab_name
-        AND fk.owner = schema_name
+      JOIN
+        all_constraints p
+        ON p.constraint_name = fk.r_constraint_name
+       AND p.owner = fk.owner
+      WHERE fk.table_name = upper(tab_name)
+        AND fk.owner = upper(schema_name)
         AND fk.constraint_type = 'R'
         AND fk.delete_rule = 'NO ACTION'
     )
