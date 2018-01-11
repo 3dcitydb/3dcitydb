@@ -42,7 +42,7 @@ BEGIN
 
   -- packages
   FOR R IN (SELECT object_name FROM all_objects WHERE owner = schema_name_user AND upper(object_type) = 'PACKAGE' 
-              AND object_name IN ('CITYDB_UTIL','CITYDB_IDX','CITYDB_SRS','CITYDB_STAT','CITYDB_ENVELOPE','VCDB_UTIL','VCDB_LOD_TEST','VCDB_APP_TEST','VCDB_FOOTPRINT')) LOOP
+              AND object_name IN ('CITYDB_UTIL','CITYDB_IDX','CITYDB_SRS','CITYDB_STAT','CITYDB_ENVELOPE')) LOOP
     EXECUTE IMMEDIATE 'drop synonym '||read_only_user||'.'||R.object_name;
   END LOOP;
 
@@ -61,7 +61,7 @@ BEGIN
 
   -- packages
   FOR R IN (SELECT object_name FROM all_objects WHERE owner = schema_name_user AND upper(object_type) = 'PACKAGE' 
-              AND object_name IN ('CITYDB_UTIL','CITYDB_IDX','CITYDB_SRS','CITYDB_STAT','CITYDB_ENVELOPE','VCDB_UTIL','VCDB_LOD_TEST','VCDB_APP_TEST','VCDB_FOOTPRINT')) LOOP
+              AND object_name IN ('CITYDB_UTIL','CITYDB_IDX','CITYDB_SRS','CITYDB_STAT','CITYDB_ENVELOPE')) LOOP
     EXECUTE IMMEDIATE 'revoke execute on '||schema_name_user||'.'||R.object_name||' from "'||read_only_user||'"';
   END LOOP;
 
