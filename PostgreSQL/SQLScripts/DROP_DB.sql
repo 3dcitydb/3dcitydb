@@ -28,8 +28,8 @@
 SET client_min_messages TO WARNING;
 
 --// drop schemas
-DROP SCHEMA CITYDB_PKG CASCADE;
-DROP SCHEMA CITYDB CASCADE;
+DROP SCHEMA citydb_pkg CASCADE;
+DROP SCHEMA citydb CASCADE;
 
 --// update search_path
 ALTER DATABASE :"DBNAME" RESET search_path;
