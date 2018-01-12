@@ -325,32 +325,33 @@ AS
         -- > 1 ref = extra delete function
         SELECT
           parent_table,
+          owner,
           count(parent_table) AS ref_count,
           max(LEVEL) AS ref_depth
         FROM (
           SELECT DISTINCT
             ct.table_name AS parent_table,
             ct2.table_name AS ref_table,
-            LEVEL
+            ct.owner
           FROM
             all_constraints ct
           JOIN
             all_constraints ct2
             ON ct2.constraint_name = ct.r_constraint_name
             AND ct2.owner = ct.owner
-          START WITH
-            ct2.table_name = upper(tab_name)
-            AND ct2.owner = upper(schema_name)
+          WHERE
+            ct2.owner = upper(schema_name)
             AND ct.table_name <> ct2.table_name
             AND ct.constraint_type = 'R'
             AND ct.delete_rule = 'NO ACTION'
-          CONNECT BY PRIOR
-            ct2.table_name = ct.table_name
-            AND ct.constraint_type = 'R'
-            AND ct.delete_rule = 'NO ACTION'
-        )
+        ) r
+        START WITH
+          r.ref_table = upper(tab_name)
+        CONNECT BY PRIOR
+          r.ref_table = parent_table
         GROUP BY
-          parent_table
+          parent_table,
+          owner
       ) rf
       ON rf.parent_table = c.table_name
       -- check for FKs in ref tables which cover same columns as the PK
@@ -415,29 +416,28 @@ AS
       -- this time, any FK type counts, > 1 ref = extra delete function
       OUTER APPLY (
         SELECT
-          parent_table,
           count(parent_table) AS m_table_count,
           max(LEVEL) AS m_table_depth
         FROM (
           SELECT DISTINCT
             ct.table_name AS parent_table,
-            ct2.table_name AS ref_table,
-            LEVEL
+            ct2.table_name AS ref_table
           FROM
             all_constraints ct
           JOIN
             all_constraints ct2
             ON ct2.constraint_name = ct.r_constraint_name
             AND ct2.owner = ct.owner
-          START WITH
-            ct2.table_name = rt.m_table
-            AND ct2.owner = rt.owner
+          WHERE
+            ct2.owner = rt.owner
             AND ct.table_name <> ct2.table_name
             AND ct.constraint_type = 'R'
-          CONNECT BY PRIOR
-            ct2.table_name = ct.table_name
-            AND ct.constraint_type = 'R'
-        )
+            AND ct.delete_rule = 'NO ACTION'
+        ) r
+        START WITH
+          r.ref_table = rt.table_name
+        CONNECT BY PRIOR
+          r.ref_table = parent_table
         GROUP BY
           parent_table
       ) rtrf
@@ -921,7 +921,8 @@ AS
         rtp.m_table_clean_parent
       FROM
         all_constraints c
-      JOIN all_cons_columns a
+      JOIN
+        all_cons_columns a
         ON a.constraint_name = c.constraint_name
        AND a.table_name = c.table_name
       JOIN
@@ -933,34 +934,36 @@ AS
         -- > 1 ref = extra delete function
         SELECT
           parent_table,
+          owner,
           count(parent_table) AS ref_count,
           max(LEVEL) AS ref_depth
         FROM (
           SELECT DISTINCT
             ct.table_name AS parent_table,
             ct2.table_name AS ref_table,
-            LEVEL
+            ct.owner
           FROM
             all_constraints ct
           JOIN
             all_constraints ct2
             ON ct2.constraint_name = ct.r_constraint_name
             AND ct2.owner = ct.owner
-          START WITH
-            ct2.table_name = upper(tab_name)
-            AND ct2.owner = upper(schema_name)
+          WHERE
+            ct2.owner = upper(schema_name)
             AND ct.table_name <> ct2.table_name
             AND ct.constraint_type = 'R'
             AND ct.delete_rule = 'NO ACTION'
-          CONNECT BY PRIOR
-            ct2.table_name = ct.table_name
-            AND ct.constraint_type = 'R'
-            AND ct.delete_rule = 'NO ACTION'
-        )
+        ) r
+        START WITH
+          r.ref_table = upper(tab_name)
+        CONNECT BY PRIOR
+          r.ref_table = parent_table
         GROUP BY
-          parent_table
+          parent_table,
+          owner
       ) rf
       ON rf.parent_table = c.table_name
+      AND rf.owner = c.owner
       -- check for FKs in ref tables which cover same columns as the PK
       -- if found = extra delete function to clean parent, except parent table = :1
       OUTER APPLY (
@@ -968,7 +971,8 @@ AS
           fk.table_name AS clean_parent
         FROM
           all_constraints fk
-        JOIN all_cons_columns fka
+        JOIN
+          all_cons_columns fka
           ON fka.constraint_name = fk.constraint_name
          AND fka.table_name = fk.table_name
          AND fka.owner = fk.owner
@@ -979,7 +983,8 @@ AS
             pka.column_name
           FROM
             all_constraints ctp
-          JOIN all_cons_columns pka
+          JOIN
+            all_cons_columns pka
             ON pka.constraint_name = ctp.constraint_name
            AND pka.table_name = ctp.table_name
            AND pka.owner = ctp.owner
@@ -1002,7 +1007,8 @@ AS
           fka.column_name AS fk_m_column_name
         FROM
           all_constraints ct
-        JOIN all_cons_columns fka
+        JOIN
+          all_cons_columns fka
           ON fka.table_name = ct.table_name
          AND fka.owner = ct.owner
         JOIN
@@ -1020,29 +1026,28 @@ AS
       -- this time, any FK type counts, > 1 ref = extra delete function
       OUTER APPLY (
         SELECT
-          parent_table,
           count(parent_table) AS m_table_count,
           max(LEVEL) AS m_table_depth
         FROM (
           SELECT DISTINCT
             ct.table_name AS parent_table,
-            ct2.table_name AS ref_table,
-            LEVEL
+            ct2.table_name AS ref_table
           FROM
             all_constraints ct
           JOIN
             all_constraints ct2
             ON ct2.constraint_name = ct.r_constraint_name
             AND ct2.owner = ct.owner
-          START WITH
-            ct2.table_name = rt.m_table
-            AND ct2.owner = rt.owner
+          WHERE
+            ct2.owner = rt.owner
             AND ct.table_name <> ct2.table_name
             AND ct.constraint_type = 'R'
-          CONNECT BY PRIOR
-            ct2.table_name = ct.table_name
-            AND ct.constraint_type = 'R'
-        )
+            AND ct.delete_rule = 'NO ACTION'
+        ) r
+        START WITH
+          r.ref_table = rt.table_name
+        CONNECT BY PRIOR
+          r.ref_table = parent_table
         GROUP BY
           parent_table
       ) rtrf
@@ -1053,7 +1058,8 @@ AS
           fk.table_name AS clean_parent
         FROM
           all_constraints fk
-        JOIN all_cons_columns fka
+        JOIN
+          all_cons_columns fka
           ON fka.constraint_name = fk.constraint_name
          AND fka.table_name = fk.table_name
          AND fka.owner = fk.owner
@@ -1064,7 +1070,8 @@ AS
             pka.column_name
           FROM
             all_constraints ctp
-          JOIN all_cons_columns pka
+          JOIN
+            all_cons_columns pka
             ON pka.constraint_name = ctp.constraint_name
            AND pka.table_name = ctp.table_name
            AND pka.owner = ctp.owner
