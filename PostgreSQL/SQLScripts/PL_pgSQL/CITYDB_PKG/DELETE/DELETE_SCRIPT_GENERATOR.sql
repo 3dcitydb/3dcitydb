@@ -228,19 +228,18 @@ DECLARE
   rec RECORD;
 BEGIN
   FOR rec IN (
-    SELECT DISTINCT ON (c.conrelid, rt.m_table)
+    SELECT
       c.conrelid::regclass::text AS n_table,
       c.conrelid::regclass::text AS n_table_short,
       a.attname AS fk_n_column_name,
-      rf.ref_count,
-      rf.ref_depth,
+      n.ref_count,
+      n.ref_depth,
       p.clean_parent,
-      rt.m_table::regclass::text,
-      rt.m_table::regclass::text AS m_table_short,
-      rt.fk_m_column_name,
-      rtrf.m_table_count,
-      rtrf.m_table_depth,
-      rtp.m_table_clean_parent
+      m.m_table::regclass::text,
+      m.m_table::regclass::text AS m_table_short,
+      m.fk_m_column_name,
+      m.m_table_count,
+      m.m_table_clean_parent
     FROM
       pg_constraint c
     JOIN pg_attribute a
@@ -250,7 +249,7 @@ BEGIN
       -- count references of referencing tables
       -- > 1 ref = extra delete function
       WITH RECURSIVE ref_table_depth(parent_table, ref_table, depth) AS (
-        SELECT DISTINCT ON (conrelid)
+        SELECT
           confrelid AS parent_table,
           conrelid AS ref_table,
           1 AS depth
@@ -262,17 +261,17 @@ BEGIN
           AND contype = 'f'
           AND confdeltype = 'a'
         UNION ALL
-          SELECT DISTINCT ON (ct.conrelid)
-            ct.confrelid AS parent_table,
-            ct.conrelid AS ref_table,
+          SELECT
+            r.confrelid AS parent_table,
+            r.conrelid AS ref_table,
             d.depth + 1 AS depth
           FROM
-            pg_constraint ct,
+            pg_constraint r,
             ref_table_depth d
-          WHERE d.ref_table = ct.confrelid
-            AND d.ref_table <> ct.conrelid
-            AND ct.contype = 'f'
-            AND ct.confdeltype = 'a'
+          WHERE d.ref_table = r.confrelid
+            AND d.ref_table <> r.conrelid
+            AND r.contype = 'f'
+            AND r.confdeltype = 'a'
       )
       SELECT
         parent_table,
@@ -282,8 +281,8 @@ BEGIN
         ref_table_depth
       GROUP BY
         parent_table
-    ) rf
-    ON rf.parent_table = c.conrelid
+    ) n
+    ON n.parent_table = c.conrelid
     -- check for FKs in ref tables which cover same columns as the PK
     -- if found = extra delete function to clean parent, except parent table = $1
     LEFT JOIN LATERAL (
@@ -308,92 +307,71 @@ BEGIN
     ) p ON (true)
     -- get tables from n:m relationships to cleanup
     -- the FK has to be confdeltype = 'c' to decide for cleanup
+    -- count references of n:m tables and check for FKs cover same columns as PK
     LEFT JOIN LATERAL (
       SELECT
-        ct.confrelid AS m_table,
-        fka.attname AS fk_m_column_name
+        mn.confrelid AS m_table,
+        mna.attname AS fk_m_column_name,
+        mr.m_table_count,
+        mp.m_table_clean_parent
       FROM
-        pg_constraint ct
-      JOIN pg_attribute fka
-        ON fka.attrelid = ct.conrelid
-       AND fka.attnum = ANY (ct.conkey)
-      WHERE
-        ct.conrelid = c.conrelid
-        AND ct.confrelid <> c.conrelid
-        AND ct.contype = 'f'
-        AND ct.confdeltype = 'c'
-    ) rt ON (true)
-    -- count references of n:m tables
-    -- this time, any FK type counts, > 1 ref = extra delete function
-    LEFT JOIN LATERAL (
-      WITH RECURSIVE ref_table_depth(parent_table, ref_table, depth) AS (
-        SELECT DISTINCT ON (conrelid)
-          confrelid AS parent_table,
-          conrelid AS ref_table,
-          1 AS depth
+        pg_constraint mn
+      JOIN pg_attribute mna
+        ON mna.attrelid = mn.conrelid
+       AND mna.attnum = ANY (mn.conkey)
+      LEFT JOIN LATERAL (
+        SELECT
+          count(conrelid) AS m_table_count
         FROM
           pg_constraint
         WHERE
-          confrelid = rt.m_table
+          confrelid = mn.confrelid
           AND conrelid <> confrelid
           AND contype = 'f'
-        UNION ALL
-          SELECT DISTINCT ON (ct.conrelid)
-            ct.confrelid AS parent_table,
-            ct.conrelid AS ref_table,
-            d.depth + 1 AS depth
-          FROM
-            pg_constraint ct,
-            ref_table_depth d
-          WHERE
-            d.ref_table = ct.confrelid
-            AND d.ref_table <> ct.conrelid
-            AND ct.contype = 'f'
-      )
-      SELECT
-        count(parent_table) AS m_table_count,
-        max(depth) AS m_table_depth
-      FROM
-        ref_table_depth
-      GROUP BY
-        parent_table
-    ) rtrf ON (true)
-    -- check for FKs in n:m tables which cover same columns as PK
-    -- if found = extra delete function to clean parent, except parent table = $1
-    LEFT JOIN LATERAL (
-      SELECT
-        fk.confrelid AS m_table_clean_parent
-      FROM
-        pg_constraint fk
-      JOIN (
+        GROUP BY
+          confrelid
+      ) mr
+      ON (true)
+      LEFT JOIN LATERAL (
         SELECT
-          conrelid,
-          conkey
+          fk.confrelid AS m_table_clean_parent
         FROM
-          pg_constraint
+          pg_constraint fk
+        JOIN (
+          SELECT
+            conrelid,
+            conkey
+          FROM
+            pg_constraint
+          WHERE
+            contype = 'p'
+          ) pk
+          ON pk.conrelid = fk.conrelid
+         AND pk.conkey = fk.conkey
         WHERE
-          contype = 'p'
-        ) pk
-        ON pk.conrelid = fk.conrelid
-       AND pk.conkey = fk.conkey
+          fk.conrelid = mn.confrelid
+          AND fk.contype = 'f'
+          AND fk.confdeltype = 'a'
+      ) mp
+      ON (true)
       WHERE
-        fk.conrelid = rt.m_table
-        AND fk.contype = 'f'
-        AND fk.confdeltype = 'a'
-    ) rtp ON (true)
+        mn.conrelid = c.conrelid
+        AND mn.confrelid <> c.conrelid
+        AND mn.contype = 'f'
+        AND mn.confdeltype = 'c'
+    ) m ON (true)
     WHERE
       c.confrelid = ($2 || '.' || $1)::regclass::oid
       AND c.conrelid <> c.confrelid
       AND c.contype = 'f'
       AND c.confdeltype = 'a'
       AND (p.clean_parent IS NULL OR p.clean_parent <> c.confrelid)
-      AND (rtp.m_table_clean_parent IS NULL OR rtp.m_table_clean_parent <> c.confrelid)
+      AND (m.m_table_clean_parent IS NULL OR m.m_table_clean_parent <> c.confrelid)
     ORDER BY
       c.conrelid,
-      rt.m_table,
-      rf.ref_depth NULLS FIRST,
-      rtrf.m_table_count DESC,
-      rtrf.m_table_depth NULLS FIRST
+      m.m_table,
+      n.ref_depth NULLS FIRST,
+      m.m_table_count DESC
   )
   LOOP
     IF vars IS NULL THEN
@@ -407,7 +385,6 @@ BEGIN
       OR rec.clean_parent IS NOT NULL
       ) OR (
       rec.m_table_count > 1
-      OR rec.m_table_depth > 1
       OR rec.m_table_clean_parent IS NOT NULL
     ) THEN
       -- function call required, so create function first
@@ -760,19 +737,18 @@ DECLARE
   rec RECORD;
 BEGIN
   FOR rec IN (
-    SELECT DISTINCT ON (c.conrelid, rt.m_table)
+    SELECT
       c.conrelid::regclass::text AS n_table,
       c.conrelid::regclass::text AS n_table_short,
       a.attname AS fk_n_column_name,
-      rf.ref_count,
-      rf.ref_depth,
+      n.ref_count,
+      n.ref_depth,
       p.clean_parent,
-      rt.m_table::regclass::text,
-      rt.m_table::regclass::text AS m_table_short,
-      rt.fk_m_column_name,
-      rtrf.m_table_count,
-      rtrf.m_table_depth,
-      rtp.m_table_clean_parent
+      m.m_table::regclass::text,
+      m.m_table::regclass::text AS m_table_short,
+      m.fk_m_column_name,
+      m.m_table_count,
+      m.m_table_clean_parent
     FROM
       pg_constraint c
     JOIN pg_attribute a
@@ -782,7 +758,7 @@ BEGIN
       -- count references of referencing tables
       -- > 1 ref = extra delete function
       WITH RECURSIVE ref_table_depth(parent_table, ref_table, depth) AS (
-        SELECT DISTINCT ON (conrelid)
+        SELECT
           confrelid AS parent_table,
           conrelid AS ref_table,
           1 AS depth
@@ -794,17 +770,17 @@ BEGIN
           AND contype = 'f'
           AND confdeltype = 'a'
         UNION ALL
-          SELECT DISTINCT ON (ct.conrelid)
-            ct.confrelid AS parent_table,
-            ct.conrelid AS ref_table,
+          SELECT
+            r.confrelid AS parent_table,
+            r.conrelid AS ref_table,
             d.depth + 1 AS depth
           FROM
-            pg_constraint ct,
+            pg_constraint r,
             ref_table_depth d
-          WHERE d.ref_table = ct.confrelid
-            AND d.ref_table <> ct.conrelid
-            AND ct.contype = 'f'
-            AND ct.confdeltype = 'a'
+          WHERE d.ref_table = r.confrelid
+            AND d.ref_table <> r.conrelid
+            AND r.contype = 'f'
+            AND r.confdeltype = 'a'
       )
       SELECT
         parent_table,
@@ -814,8 +790,8 @@ BEGIN
         ref_table_depth
       GROUP BY
         parent_table
-    ) rf
-    ON rf.parent_table = c.conrelid
+    ) n
+    ON n.parent_table = c.conrelid
     -- check for FKs in ref tables which cover same columns as the PK
     -- if found = extra delete function to clean parent, except parent table = $1
     LEFT JOIN LATERAL (
@@ -840,92 +816,71 @@ BEGIN
     ) p ON (true)
     -- get tables from n:m relationships to cleanup
     -- the FK has to be confdeltype = 'c' to decide for cleanup
+    -- count references of n:m tables and check for FKs cover same columns as PK
     LEFT JOIN LATERAL (
       SELECT
-        ct.confrelid AS m_table,
-        fka.attname AS fk_m_column_name
+        mn.confrelid AS m_table,
+        mna.attname AS fk_m_column_name,
+        mr.m_table_count,
+        mp.m_table_clean_parent
       FROM
-        pg_constraint ct
-      JOIN pg_attribute fka
-        ON fka.attrelid = ct.conrelid
-       AND fka.attnum = ANY (ct.conkey)
-      WHERE
-        ct.conrelid = c.conrelid
-        AND ct.confrelid <> c.conrelid
-        AND ct.contype = 'f'
-        AND ct.confdeltype = 'c'
-    ) rt ON (true)
-    -- count references of n:m tables
-    -- this time, any FK type counts, > 1 ref = extra delete function
-    LEFT JOIN LATERAL (
-      WITH RECURSIVE ref_table_depth(parent_table, ref_table, depth) AS (
-        SELECT DISTINCT ON (conrelid)
-          confrelid AS parent_table,
-          conrelid AS ref_table,
-          1 AS depth
+        pg_constraint mn
+      JOIN pg_attribute mna
+        ON mna.attrelid = mn.conrelid
+       AND mna.attnum = ANY (mn.conkey)
+      LEFT JOIN LATERAL (
+        SELECT
+          count(confrelid) AS m_table_count
         FROM
           pg_constraint
         WHERE
-          confrelid = rt.m_table
+          confrelid = mn.confrelid
           AND conrelid <> confrelid
           AND contype = 'f'
-        UNION ALL
-          SELECT DISTINCT ON (ct.conrelid)
-            ct.confrelid AS parent_table,
-            ct.conrelid AS ref_table,
-            d.depth + 1 AS depth
-          FROM
-            pg_constraint ct,
-            ref_table_depth d
-          WHERE
-            d.ref_table = ct.confrelid
-            AND d.ref_table <> ct.conrelid
-            AND ct.contype = 'f'
-      )
-      SELECT
-        count(parent_table) AS m_table_count,
-        max(depth) AS m_table_depth
-      FROM
-        ref_table_depth
-      GROUP BY
-        parent_table
-    ) rtrf ON (true)
-    -- check for FKs in n:m tables which cover same columns as PK
-    -- if found = extra delete function to clean parent, except parent table = $1
-    LEFT JOIN LATERAL (
-      SELECT
-        fk.confrelid AS m_table_clean_parent
-      FROM
-        pg_constraint fk
-      JOIN (
+        GROUP BY
+          confrelid
+      ) mr
+      ON (true)
+      LEFT JOIN LATERAL (
         SELECT
-          conrelid,
-          conkey
+          fk.confrelid AS m_table_clean_parent
         FROM
-          pg_constraint
+          pg_constraint fk
+        JOIN (
+          SELECT
+            conrelid,
+            conkey
+          FROM
+            pg_constraint
+          WHERE
+            contype = 'p'
+          ) pk
+          ON pk.conrelid = fk.conrelid
+         AND pk.conkey = fk.conkey
         WHERE
-          contype = 'p'
-        ) pk
-        ON pk.conrelid = fk.conrelid
-       AND pk.conkey = fk.conkey
+          fk.conrelid = mn.confrelid
+          AND fk.contype = 'f'
+          AND fk.confdeltype = 'a'
+      ) mp
+      ON (true)
       WHERE
-        fk.conrelid = rt.m_table
-        AND fk.contype = 'f'
-        AND fk.confdeltype = 'a'
-    ) rtp ON (true)
+        mn.conrelid = c.conrelid
+        AND mn.confrelid <> c.conrelid
+        AND mn.contype = 'f'
+        AND mn.confdeltype = 'c'
+    ) m ON (true)
     WHERE
       c.confrelid = ($2 || '.' || $1)::regclass::oid
       AND c.conrelid <> c.confrelid
       AND c.contype = 'f'
       AND c.confdeltype = 'a'
       AND (p.clean_parent IS NULL OR p.clean_parent <> c.confrelid)
-      AND (rtp.m_table_clean_parent IS NULL OR rtp.m_table_clean_parent <> c.confrelid)
+      AND (m.m_table_clean_parent IS NULL OR m.m_table_clean_parent <> c.confrelid)
     ORDER BY
       c.conrelid,
-      rt.m_table,
-      rf.ref_depth NULLS FIRST,
-      rtrf.m_table_count DESC,
-      rtrf.m_table_depth NULLS FIRST
+      m.m_table,
+      n.ref_depth NULLS FIRST,
+      m.m_table_count DESC
   )
   LOOP
     IF vars IS NULL THEN
@@ -939,7 +894,6 @@ BEGIN
       OR rec.clean_parent IS NOT NULL
       ) OR (
       rec.m_table_count > 1
-      OR rec.m_table_depth > 1
       OR rec.m_table_clean_parent IS NOT NULL
     ) THEN
       -- function call required, so create function first

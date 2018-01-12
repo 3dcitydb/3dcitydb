@@ -121,7 +121,11 @@ AS
       create_array_delete_dummy(tab_short_name);
     END IF;
 
-    RETURN COALESCE(self_block,'');
+    RETURN self_block;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN '';
   END;
 
   -- creates code block to delete referenced entries in n table
@@ -297,19 +301,18 @@ AS
   IS
   BEGIN
     FOR rec IN (
-      SELECT DISTINCT
+      SELECT
         c.table_name AS n_table,
         c.table_name AS n_table_short,
         a.column_name AS fk_n_column_name,
-        rf.ref_count,
-        rf.ref_depth,
+        n.ref_count,
+        n.ref_depth,
         p.clean_parent,
-        rt.m_table,
-        rt.m_table AS m_table_short,
-        rt.fk_m_column_name,
-        rtrf.m_table_count,
-        rtrf.m_table_depth,
-        rtp.m_table_clean_parent
+        m.m_table,
+        m.m_table AS m_table_short,
+        m.fk_m_column_name,
+        m.m_table_count,
+        m.m_table_clean_parent
       FROM
         all_constraints c
       JOIN
@@ -329,32 +332,32 @@ AS
           count(parent_table) AS ref_count,
           max(LEVEL) AS ref_depth
         FROM (
-          SELECT DISTINCT
-            ct2.table_name AS parent_table,
-            ct.table_name AS ref_table,
-            ct.owner
+          SELECT
+            n2.table_name AS parent_table,
+            n.table_name AS ref_table,
+            n.owner
           FROM
-            all_constraints ct
+            all_constraints n
           JOIN
-            all_constraints ct2
-            ON ct2.constraint_name = ct.r_constraint_name
-            AND ct2.owner = ct.owner
+            all_constraints n2
+            ON n2.constraint_name = n.r_constraint_name
+            AND n2.owner = n.owner
           WHERE
-            ct2.owner = upper(schema_name)
-            AND ct.table_name <> ct2.table_name
-            AND ct.constraint_type = 'R'
-            AND ct.delete_rule = 'NO ACTION'
+            n2.owner = upper(schema_name)
+            AND n.table_name <> n2.table_name
+            AND n.constraint_type = 'R'
+            AND n.delete_rule = 'NO ACTION'
         ) r
         START WITH
-          r.parent_table = upper(r.table_name)
+          r.parent_table = upper(tab_name)
         CONNECT BY
           r.parent_table = PRIOR r.ref_table
           AND r.ref_table <> r.parent_table
         GROUP BY
-          parent_table,
-          owner
-      ) rf
-      ON rf.parent_table = c.table_name
+          r.parent_table,
+          r.owner
+      ) n
+      ON n.parent_table = c.table_name
       -- check for FKs in ref tables which cover same columns as the PK
       -- if found = extra delete function to clean parent, except parent table = :1
       OUTER APPLY (
@@ -392,91 +395,80 @@ AS
       ) p
       -- get tables from n:m relationships to cleanup
       -- the FK has to be delete_rule = 'CASCADE' to decide for cleanup
+      -- count references of n:m tables and check for FKs cover same columns as PK
       OUTER APPLY (
         SELECT
-          ct2.table_name AS m_table,
-          fka.column_name AS fk_m_column_name
+          mn2.table_name AS m_table,
+          mna.column_name AS fk_m_column_name,
+          mr.m_table_count,
+          mp.m_table_clean_parent
         FROM
-          all_constraints ct
+          all_constraints mn
         JOIN
-          all_cons_columns fka
-          ON fka.table_name = ct.table_name
-         AND fka.owner = ct.owner
+          all_cons_columns mna
+          ON mna.table_name = mn.table_name
+         AND mna.owner = mn.owner
         JOIN
-          all_constraints ct2
-          ON ct2.constraint_name = ct.r_constraint_name
-          AND ct2.owner = ct.owner 
-        WHERE
-          ct.table_name = c.table_name
-          AND ct.owner = c.owner
-          AND ct2.table_name <> ct.table_name
-          AND ct.constraint_type = 'R'
-          AND ct.delete_rule = 'CASCADE'
-      ) rt
-      -- count references of n:m tables
-      -- this time, any FK type counts, > 1 ref = extra delete function
-      OUTER APPLY (
-        SELECT
-          count(parent_table) AS m_table_count,
-          max(LEVEL) AS m_table_depth
-        FROM (
-          SELECT DISTINCT
-            ct2.table_name AS parent_table,
-            ct.table_name AS ref_table
-          FROM
-            all_constraints ct
-          JOIN
-            all_constraints ct2
-            ON ct2.constraint_name = ct.r_constraint_name
-            AND ct2.owner = ct.owner
-          WHERE
-            ct2.owner = rt.owner
-            AND ct.table_name <> ct2.table_name
-            AND ct.constraint_type = 'R'
-        ) r
-        START WITH
-          r.parent_table = upper(r.table_name)
-        CONNECT BY
-          r.parent_table = PRIOR r.ref_table
-          AND r.ref_table <> r.parent_table
-        GROUP BY
-          parent_table
-      ) rtrf
-      -- check for FKs in n:m tables which cover same columns as PK
-      -- if found = extra delete function to clean parent, except parent table = :1
-      OUTER APPLY (
-        SELECT
-          fk.table_name AS clean_parent
-        FROM
-          all_constraints fk
-        JOIN
-          all_cons_columns fka
-          ON fka.constraint_name = fk.constraint_name
-         AND fka.table_name = fk.table_name
-         AND fka.owner = fk.owner
-        JOIN (
+          all_constraints mn2
+          ON mn2.constraint_name = mn.r_constraint_name
+          AND mn2.owner = mn.owner
+        OUTER APPLY (
           SELECT
-            ctp.table_name,
-            ctp.owner,
-            pka.column_name
+            count(mnr.table_name) AS m_table_count
           FROM
-            all_constraints ctp
+            all_constraints mnr
           JOIN
-            all_cons_columns pka
-            ON pka.constraint_name = ctp.constraint_name
-           AND pka.table_name = ctp.table_name
-           AND pka.owner = ctp.owner
+            all_constraints mnr2
+            ON mnr2.constraint_name = mnr.r_constraint_name
+           AND mnr2.owner = mnr.owner
           WHERE
-            ctp.constraint_type = 'P'
-          ) pk
-          ON pk.table_name = fk.table_name
-         AND pk.owner = fk.owner
-         AND pk.column_name = fka.column_name
-        WHERE fk.table_name = rt.table_name
-          AND fk.owner = rt.owner
-          AND fk.constraint_type = 'R'
-          AND fk.delete_rule = 'NO ACTION'
-      ) rtp
+            mnr2.table_name = mn2.table_name
+            AND mnr2.owner = mn2.owner
+            AND mnr.table_name <> mnr2.table_name
+            AND mnr.constraint_type = 'R'
+          GROUP BY
+            mnr2.table_name
+        ) mr
+        OUTER APPLY (
+          SELECT
+            fk.table_name AS clean_parent
+          FROM
+            all_constraints fk
+          JOIN
+            all_cons_columns fka
+            ON fka.constraint_name = fk.constraint_name
+           AND fka.table_name = fk.table_name
+           AND fka.owner = fk.owner
+          JOIN (
+            SELECT
+              cp.table_name,
+              cp.owner,
+              pka.column_name
+            FROM
+              all_constraints cp
+            JOIN
+              all_cons_columns pka
+              ON pka.constraint_name = cp.constraint_name
+             AND pka.table_name = cp.table_name
+             AND pka.owner = cp.owner
+            WHERE
+              cp.constraint_type = 'P'
+            ) pk
+            ON pk.table_name = fk.table_name
+           AND pk.owner = fk.owner
+           AND pk.column_name = fka.column_name
+          WHERE fk.table_name = mn2.table_name
+            AND fk.owner = mn2.owner
+            AND fk.constraint_type = 'R'
+            AND fk.delete_rule = 'NO ACTION'
+        ) mp
+        WHERE
+          mn.table_name = c.table_name
+          AND mn.owner = c.owner
+          AND mn2.table_name <> mn.table_name
+          AND mn.constraint_type = 'R'
+          AND mn.delete_rule = 'CASCADE'
+      ) m
       WHERE
         c2.table_name = upper(tab_name)
         AND c2.owner = upper(schema_name)
@@ -484,13 +476,12 @@ AS
         AND c.constraint_type = 'R'
         AND c.delete_rule = 'NO ACTION'
         AND (p.clean_parent IS NULL OR p.clean_parent <> c2.table_name)
-        AND (rtp.m_table_clean_parent IS NULL OR rtp.m_table_clean_parent <> c2.table_name)
+        AND (m.m_table_clean_parent IS NULL OR m.m_table_clean_parent <> c2.table_name)
       ORDER BY
         c.table_name,
-        rt.m_table,
-        rf.ref_depth NULLS FIRST,
-        rtrf.m_table_count DESC,
-        rtrf.m_table_depth NULLS FIRST
+        m.m_table,
+        n.ref_depth NULLS FIRST,
+        m.m_table_count DESC
     )
     LOOP
       IF vars IS NULL THEN
@@ -504,7 +495,6 @@ AS
         OR rec.clean_parent IS NOT NULL
         ) OR (
         rec.m_table_count > 1
-        OR rec.m_table_depth > 1
         OR rec.m_table_clean_parent IS NOT NULL
       ) THEN
         -- function call required, so create function first
@@ -684,7 +674,11 @@ AS
         ||chr(10);
     END LOOP;
 
-    RETURN COALESCE(parent_block,'');
+    RETURN parent_block;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN '';
   END;
 
 
@@ -747,7 +741,11 @@ AS
       create_array_delete_dummy(tab_short_name);
     END IF;
 
-    RETURN COALESCE(self_block,'');
+    RETURN self_block;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN '';
   END;
 
   -- creates code block to delete referenced entries in n table
@@ -907,19 +905,18 @@ AS
   IS
   BEGIN
     FOR rec IN (
-      SELECT DISTINCT
+      SELECT
         c.table_name AS n_table,
         c.table_name AS n_table_short,
         a.column_name AS fk_n_column_name,
-        rf.ref_count,
-        rf.ref_depth,
+        n.ref_count,
+        n.ref_depth,
         p.clean_parent,
-        rt.m_table,
-        rt.m_table AS m_table_short,
-        rt.fk_m_column_name,
-        rtrf.m_table_count,
-        rtrf.m_table_depth,
-        rtp.m_table_clean_parent
+        m.m_table,
+        m.m_table AS m_table_short,
+        m.fk_m_column_name,
+        m.m_table_count,
+        m.m_table_clean_parent
       FROM
         all_constraints c
       JOIN
@@ -939,33 +936,32 @@ AS
           count(parent_table) AS ref_count,
           max(LEVEL) AS ref_depth
         FROM (
-          SELECT DISTINCT
-            ct2.table_name AS parent_table,
-            ct.table_name AS ref_table,
-            ct.owner
+          SELECT
+            n2.table_name AS parent_table,
+            n.table_name AS ref_table,
+            n.owner
           FROM
-            all_constraints ct
+            all_constraints n
           JOIN
-            all_constraints ct2
-            ON ct2.constraint_name = ct.r_constraint_name
-            AND ct2.owner = ct.owner
+            all_constraints n2
+            ON n2.constraint_name = n.r_constraint_name
+            AND n2.owner = n.owner
           WHERE
-            ct2.owner = upper(schema_name)
-            AND ct.table_name <> ct2.table_name
-            AND ct.constraint_type = 'R'
-            AND ct.delete_rule = 'NO ACTION'
+            n2.owner = upper(schema_name)
+            AND n.table_name <> n2.table_name
+            AND n.constraint_type = 'R'
+            AND n.delete_rule = 'NO ACTION'
         ) r
         START WITH
-          r.parent_table = upper(r.table_name)
+          r.parent_table = upper(tab_name)
         CONNECT BY
           r.parent_table = PRIOR r.ref_table
           AND r.ref_table <> r.parent_table
         GROUP BY
-          parent_table,
-          owner
-      ) rf
-      ON rf.parent_table = c.table_name
-      AND rf.owner = c.owner
+          r.parent_table,
+          r.owner
+      ) n
+      ON n.parent_table = c.table_name
       -- check for FKs in ref tables which cover same columns as the PK
       -- if found = extra delete function to clean parent, except parent table = :1
       OUTER APPLY (
@@ -1003,91 +999,80 @@ AS
       ) p
       -- get tables from n:m relationships to cleanup
       -- the FK has to be delete_rule = 'CASCADE' to decide for cleanup
+      -- count references of n:m tables and check for FKs cover same columns as PK
       OUTER APPLY (
         SELECT
-          ct2.table_name AS m_table,
-          fka.column_name AS fk_m_column_name
+          mn2.table_name AS m_table,
+          mna.column_name AS fk_m_column_name,
+          mr.m_table_count,
+          mp.m_table_clean_parent
         FROM
-          all_constraints ct
+          all_constraints mn
         JOIN
-          all_cons_columns fka
-          ON fka.table_name = ct.table_name
-         AND fka.owner = ct.owner
+          all_cons_columns mna
+          ON mna.table_name = mn.table_name
+         AND mna.owner = mn.owner
         JOIN
-          all_constraints ct2
-          ON ct2.constraint_name = ct.r_constraint_name
-          AND ct2.owner = ct.owner 
-        WHERE
-          ct.table_name = c.table_name
-          AND ct.owner = c.owner
-          AND ct2.table_name <> ct.table_name
-          AND ct.constraint_type = 'R'
-          AND ct.delete_rule = 'CASCADE'
-      ) rt
-      -- count references of n:m tables
-      -- this time, any FK type counts, > 1 ref = extra delete function
-      OUTER APPLY (
-        SELECT
-          count(parent_table) AS m_table_count,
-          max(LEVEL) AS m_table_depth
-        FROM (
-          SELECT DISTINCT
-            ct2.table_name AS parent_table,
-            ct.table_name AS ref_table
-          FROM
-            all_constraints ct
-          JOIN
-            all_constraints ct2
-            ON ct2.constraint_name = ct.r_constraint_name
-            AND ct2.owner = ct.owner
-          WHERE
-            ct2.owner = rt.owner
-            AND ct.table_name <> ct2.table_name
-            AND ct.constraint_type = 'R'
-        ) r
-        START WITH
-          r.parent_table = upper(r.table_name)
-        CONNECT BY
-          r.parent_table = PRIOR r.ref_table
-          AND r.ref_table <> r.parent_table
-        GROUP BY
-          parent_table
-      ) rtrf
-      -- check for FKs in n:m tables which cover same columns as PK
-      -- if found = extra delete function to clean parent, except parent table = :1
-      OUTER APPLY (
-        SELECT
-          fk.table_name AS clean_parent
-        FROM
-          all_constraints fk
-        JOIN
-          all_cons_columns fka
-          ON fka.constraint_name = fk.constraint_name
-         AND fka.table_name = fk.table_name
-         AND fka.owner = fk.owner
-        JOIN (
+          all_constraints mn2
+          ON mn2.constraint_name = mn.r_constraint_name
+          AND mn2.owner = mn.owner
+        OUTER APPLY (
           SELECT
-            ctp.table_name,
-            ctp.owner,
-            pka.column_name
+            count(mnr.table_name) AS m_table_count
           FROM
-            all_constraints ctp
+            all_constraints mnr
           JOIN
-            all_cons_columns pka
-            ON pka.constraint_name = ctp.constraint_name
-           AND pka.table_name = ctp.table_name
-           AND pka.owner = ctp.owner
+            all_constraints mnr2
+            ON mnr2.constraint_name = mnr.r_constraint_name
+           AND mnr2.owner = mnr.owner
           WHERE
-            ctp.constraint_type = 'P'
-          ) pk
-          ON pk.table_name = fk.table_name
-         AND pk.owner = fk.owner
-         AND pk.column_name = fka.column_name
-        WHERE fk.table_name = rt.table_name
-          AND fk.owner = rt.owner
-          AND fk.constraint_type = 'R'
-          AND fk.delete_rule = 'NO ACTION'
-      ) rtp
+            mnr2.table_name = mn2.table_name
+            AND mnr2.owner = mn2.owner
+            AND mnr.table_name <> mnr2.table_name
+            AND mnr.constraint_type = 'R'
+          GROUP BY
+            mnr2.table_name
+        ) mr
+        OUTER APPLY (
+          SELECT
+            fk.table_name AS m_table_clean_parent
+          FROM
+            all_constraints fk
+          JOIN
+            all_cons_columns fka
+            ON fka.constraint_name = fk.constraint_name
+           AND fka.table_name = fk.table_name
+           AND fka.owner = fk.owner
+          JOIN (
+            SELECT
+              cp.table_name,
+              cp.owner,
+              pka.column_name
+            FROM
+              all_constraints cp
+            JOIN
+              all_cons_columns pka
+              ON pka.constraint_name = cp.constraint_name
+             AND pka.table_name = cp.table_name
+             AND pka.owner = cp.owner
+            WHERE
+              cp.constraint_type = 'P'
+            ) pk
+            ON pk.table_name = fk.table_name
+           AND pk.owner = fk.owner
+           AND pk.column_name = fka.column_name
+          WHERE fk.table_name = mn2.table_name
+            AND fk.owner = mn2.owner
+            AND fk.constraint_type = 'R'
+            AND fk.delete_rule = 'NO ACTION'
+        ) mp
+        WHERE
+          mn.table_name = c.table_name
+          AND mn.owner = c.owner
+          AND mn2.table_name <> mn.table_name
+          AND mn.constraint_type = 'R'
+          AND mn.delete_rule = 'CASCADE'
+      ) m
       WHERE
         c2.table_name = upper(tab_name)
         AND c2.owner = upper(schema_name)
@@ -1095,13 +1080,12 @@ AS
         AND c.constraint_type = 'R'
         AND c.delete_rule = 'NO ACTION'
         AND (p.clean_parent IS NULL OR p.clean_parent <> c2.table_name)
-        AND (rtp.m_table_clean_parent IS NULL OR rtp.m_table_clean_parent <> c2.table_name)
+        AND (m.m_table_clean_parent IS NULL OR m.m_table_clean_parent <> c2.table_name)
       ORDER BY
         c.table_name,
-        rt.m_table,
-        rf.ref_depth NULLS FIRST,
-        rtrf.m_table_count DESC,
-        rtrf.m_table_depth NULLS FIRST
+        m.m_table,
+        n.ref_depth NULLS FIRST,
+        m.m_table_count DESC
     )
     LOOP
       IF vars IS NULL THEN
@@ -1115,7 +1099,6 @@ AS
         OR rec.clean_parent IS NOT NULL
         ) OR (
         rec.m_table_count > 1
-        OR rec.m_table_depth > 1
         OR rec.m_table_clean_parent IS NOT NULL
       ) THEN
         -- function call required, so create function first
@@ -1309,7 +1292,11 @@ AS
         ||chr(10);
     END LOOP;
 
-    RETURN COALESCE(parent_block,'');
+    RETURN parent_block;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN '';
   END;
 
 
