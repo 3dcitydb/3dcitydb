@@ -303,16 +303,22 @@ AS
     END IF;
 
     CASE on_delete_param
-      WHEN 'r' THEN delete_param := 'RESTRICT';
-      WHEN 'c' THEN delete_param := 'CASCADE';
-      WHEN 'n' THEN delete_param := 'SET NULL';
-      ELSE delete_param := 'NO ACTION';
+      WHEN 'c' THEN delete_param := ' ON DELETE CASCADE';
+      WHEN 'n' THEN delete_param := ' ON DELETE SET NULL';
+      ELSE delete_param := '';
     END CASE;
 
-    EXECUTE IMMEDIATE 'ALTER TABLE ' || upper(schema_name) || '.' || table_name || ' DROP CONSTRAINT ' || fkey_name;
-    EXECUTE IMMEDIATE 'ALTER TABLE ' || upper(schema_name) || '.' || table_name || ' ADD CONSTRAINT ' || fkey_name || 
-                         ' FOREIGN KEY (' || column_name || ') REFERENCES ' || upper(schema_name) || '.' || ref_table || '(' || ref_column || ')'
-                         || ' ON UPDATE CASCADE ON DELETE ' || delete_param;
+    EXECUTE IMMEDIATE 
+      'ALTER TABLE '
+      || upper(schema_name) || '.' || upper(table_name)
+      || ' DROP CONSTRAINT ' || fkey_name;
+    EXECUTE IMMEDIATE
+      'ALTER TABLE '
+      || upper(schema_name) || '.' || upper(table_name)
+      || ' ADD CONSTRAINT ' || upper(fkey_name)
+      || ' FOREIGN KEY (' || upper(column_name) || ')'
+      || ' REFERENCES ' || upper(schema_name) || '.' || upper(ref_table) || '(' || upper(ref_column) || ')'
+      || delete_param;
     EXCEPTION
       WHEN OTHERS THEN
         dbms_output.put_line('Error on constraint ' || fkey_name || ': ' || SQLERRM);
@@ -324,7 +330,6 @@ AS
   * calls update_table_constraint for updating all the constraints
   * in the specified schema where options for on_delete_param are:
   * a = NO ACTION
-  * r = RESTRICT
   * c = CASCADE
   * n = SET NULL
   *
