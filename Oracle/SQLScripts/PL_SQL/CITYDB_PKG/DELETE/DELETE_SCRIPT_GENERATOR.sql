@@ -327,9 +327,9 @@ AS
         -- count references of referencing tables
         -- > 1 ref = extra delete function
         SELECT
-          parent_table,
-          owner,
-          count(parent_table) AS ref_count,
+          r.parent_table,
+          r.owner,
+          count(r.parent_table) AS ref_count,
           max(LEVEL) AS ref_depth
         FROM (
           SELECT
@@ -362,7 +362,7 @@ AS
       -- if found = extra delete function to clean parent, except parent table = :1
       OUTER APPLY (
         SELECT
-          fk.table_name AS clean_parent
+          fk2.table_name AS clean_parent
         FROM
           all_constraints fk
         JOIN
@@ -370,6 +370,10 @@ AS
           ON fka.constraint_name = fk.constraint_name
          AND fka.table_name = fk.table_name
          AND fka.owner = fk.owner
+        JOIN
+          all_constraints fk2
+          ON fk2.constraint_name = fk.r_constraint_name
+          AND fk2.owner = fk.owner
         JOIN (
           SELECT
             ctp.table_name,
@@ -431,7 +435,7 @@ AS
         ) mr
         OUTER APPLY (
           SELECT
-            fk.table_name AS clean_parent
+            fk2.table_name AS m_table_clean_parent
           FROM
             all_constraints fk
           JOIN
@@ -439,6 +443,10 @@ AS
             ON fka.constraint_name = fk.constraint_name
            AND fka.table_name = fk.table_name
            AND fka.owner = fk.owner
+          JOIN
+            all_constraints fk2
+            ON fk2.constraint_name = fk.r_constraint_name
+            AND fk2.owner = fk.owner
           JOIN (
             SELECT
               cp.table_name,
@@ -931,9 +939,9 @@ AS
         -- count references of referencing tables
         -- > 1 ref = extra delete function
         SELECT
-          parent_table,
-          owner,
-          count(parent_table) AS ref_count,
+          r.parent_table,
+          r.owner,
+          count(r.parent_table) AS ref_count,
           max(LEVEL) AS ref_depth
         FROM (
           SELECT
@@ -966,7 +974,7 @@ AS
       -- if found = extra delete function to clean parent, except parent table = :1
       OUTER APPLY (
         SELECT
-          fk.table_name AS clean_parent
+          fk2.table_name AS clean_parent
         FROM
           all_constraints fk
         JOIN
@@ -974,6 +982,10 @@ AS
           ON fka.constraint_name = fk.constraint_name
          AND fka.table_name = fk.table_name
          AND fka.owner = fk.owner
+        JOIN
+          all_constraints fk2
+          ON fk2.constraint_name = fk.r_constraint_name
+          AND fk2.owner = fk.owner
         JOIN (
           SELECT
             ctp.table_name,
@@ -1035,7 +1047,7 @@ AS
         ) mr
         OUTER APPLY (
           SELECT
-            fk.table_name AS m_table_clean_parent
+            fk2.table_name AS m_table_clean_parent
           FROM
             all_constraints fk
           JOIN
@@ -1043,6 +1055,10 @@ AS
             ON fka.constraint_name = fk.constraint_name
            AND fka.table_name = fk.table_name
            AND fka.owner = fk.owner
+          JOIN
+            all_constraints fk2
+            ON fk2.constraint_name = fk.r_constraint_name
+            AND fk2.owner = fk.owner
           JOIN (
             SELECT
               cp.table_name,
