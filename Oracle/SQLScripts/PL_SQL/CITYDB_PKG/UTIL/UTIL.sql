@@ -311,7 +311,7 @@ AS
     EXECUTE IMMEDIATE 
       'ALTER TABLE '
       || upper(schema_name) || '.' || upper(table_name)
-      || ' DROP CONSTRAINT ' || fkey_name;
+      || ' DROP CONSTRAINT ' || upper(fkey_name);
     EXECUTE IMMEDIATE
       'ALTER TABLE '
       || upper(schema_name) || '.' || upper(table_name)

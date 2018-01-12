@@ -330,8 +330,8 @@ AS
           max(LEVEL) AS ref_depth
         FROM (
           SELECT DISTINCT
-            ct.table_name AS parent_table,
-            ct2.table_name AS ref_table,
+            ct2.table_name AS parent_table,
+            ct.table_name AS ref_table,
             ct.owner
           FROM
             all_constraints ct
@@ -346,9 +346,10 @@ AS
             AND ct.delete_rule = 'NO ACTION'
         ) r
         START WITH
-          r.ref_table = upper(tab_name)
-        CONNECT BY PRIOR
-          r.ref_table = parent_table
+          r.parent_table = upper(r.table_name)
+        CONNECT BY
+          r.parent_table = PRIOR r.ref_table
+          AND r.ref_table <> r.parent_table
         GROUP BY
           parent_table,
           owner
@@ -420,8 +421,8 @@ AS
           max(LEVEL) AS m_table_depth
         FROM (
           SELECT DISTINCT
-            ct.table_name AS parent_table,
-            ct2.table_name AS ref_table
+            ct2.table_name AS parent_table,
+            ct.table_name AS ref_table
           FROM
             all_constraints ct
           JOIN
@@ -432,12 +433,12 @@ AS
             ct2.owner = rt.owner
             AND ct.table_name <> ct2.table_name
             AND ct.constraint_type = 'R'
-            AND ct.delete_rule = 'NO ACTION'
         ) r
         START WITH
-          r.ref_table = rt.table_name
-        CONNECT BY PRIOR
-          r.ref_table = parent_table
+          r.parent_table = upper(r.table_name)
+        CONNECT BY
+          r.parent_table = PRIOR r.ref_table
+          AND r.ref_table <> r.parent_table
         GROUP BY
           parent_table
       ) rtrf
@@ -582,7 +583,7 @@ AS
           AND c.owner = upper(schema_name)
           AND c.table_name <> c2.table_name
           AND c.constraint_type = 'R'
-          AND c.delete_rule = 'RESTRICT'
+          AND c.delete_rule = 'NO ACTION'
           AND a.nullable = 'Y'
         GROUP BY
           c2.table_name,
@@ -601,7 +602,7 @@ AS
           ct.table_name = fk.fk_table
           AND ct2.table_name <> fk.fk_table
           AND ct.constraint_type = 'R'
-          AND (ct.delete_rule = 'NO ACTION' OR ct.delete_rule = 'RESTRICT')
+          AND ct.delete_rule = 'NO ACTION'
       ) rf
     )
     LOOP
@@ -939,8 +940,8 @@ AS
           max(LEVEL) AS ref_depth
         FROM (
           SELECT DISTINCT
-            ct.table_name AS parent_table,
-            ct2.table_name AS ref_table,
+            ct2.table_name AS parent_table,
+            ct.table_name AS ref_table,
             ct.owner
           FROM
             all_constraints ct
@@ -955,9 +956,10 @@ AS
             AND ct.delete_rule = 'NO ACTION'
         ) r
         START WITH
-          r.ref_table = upper(tab_name)
-        CONNECT BY PRIOR
-          r.ref_table = parent_table
+          r.parent_table = upper(r.table_name)
+        CONNECT BY
+          r.parent_table = PRIOR r.ref_table
+          AND r.ref_table <> r.parent_table
         GROUP BY
           parent_table,
           owner
@@ -1030,8 +1032,8 @@ AS
           max(LEVEL) AS m_table_depth
         FROM (
           SELECT DISTINCT
-            ct.table_name AS parent_table,
-            ct2.table_name AS ref_table
+            ct2.table_name AS parent_table,
+            ct.table_name AS ref_table
           FROM
             all_constraints ct
           JOIN
@@ -1042,12 +1044,12 @@ AS
             ct2.owner = rt.owner
             AND ct.table_name <> ct2.table_name
             AND ct.constraint_type = 'R'
-            AND ct.delete_rule = 'NO ACTION'
         ) r
         START WITH
-          r.ref_table = rt.table_name
-        CONNECT BY PRIOR
-          r.ref_table = parent_table
+          r.parent_table = upper(r.table_name)
+        CONNECT BY
+          r.parent_table = PRIOR r.ref_table
+          AND r.ref_table <> r.parent_table
         GROUP BY
           parent_table
       ) rtrf
@@ -1192,7 +1194,7 @@ AS
           AND c.owner = upper(schema_name)
           AND c.table_name <> c2.table_name
           AND c.constraint_type = 'R'
-          AND c.delete_rule = 'RESTRICT'
+          AND c.delete_rule = 'NO ACTION'
           AND a.nullable = 'Y'
         GROUP BY
           c2.table_name,
@@ -1211,7 +1213,7 @@ AS
           ct.table_name = fk.fk_table
           AND ct2.table_name <> fk.fk_table
           AND ct.constraint_type = 'R'
-          AND (ct.delete_rule = 'NO ACTION' OR ct.delete_rule = 'RESTRICT')
+          AND ct.delete_rule = 'NO ACTION'
       ) rf
     )
     LOOP
@@ -1374,7 +1376,7 @@ AS
     declare_block := declare_block || COALESCE(vars, '');
     pre_block := pre_block || COALESCE(ref_block, '');
 
-    -- FOREIGN KEY which are set to ON DELETE RESTRICT
+    -- FOREIGN KEY which are set to ON DELETE NO ACTION and are nullable
     delete_fkeys_by_ids(tab_name, schema_name, vars, returning_block, into_block, fk_block);
     declare_block := declare_block || COALESCE(vars, '');
     delete_block := delete_block || COALESCE(returning_block, '');
@@ -1432,7 +1434,7 @@ AS
     declare_block := declare_block || COALESCE(vars, '');
     pre_block := pre_block || COALESCE(ref_block, '');
 
-    -- FOREIGN KEY which are set to ON DELETE RESTRICT
+    -- FOREIGN KEY which are set to ON DELETE NO ACTION and are nullable
     delete_fkeys_by_id(tab_name, schema_name, vars, returning_block, into_block, fk_block);
     declare_block := declare_block || COALESCE(vars, '');
     delete_block := delete_block || COALESCE(returning_block, '');
