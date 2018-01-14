@@ -85,6 +85,10 @@ FROM (
     table_schema = $1
     AND table_name != 'database_srs' 
     AND table_name != 'objectclass'
+    AND table_name != 'ade'
+    AND table_name != 'schema'
+    AND table_name != 'schema_to_objectclass' 
+    AND table_name != 'schema_referencing'
     AND table_name NOT LIKE 'tmp_%'
   ORDER BY
     table_name ASC
