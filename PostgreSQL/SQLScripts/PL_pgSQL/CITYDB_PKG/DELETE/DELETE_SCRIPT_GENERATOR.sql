@@ -53,10 +53,11 @@ BEGIN
     self_block
   FROM
     pg_constraint c
-  JOIN pg_attribute a
+  JOIN
+    pg_attribute a
     ON a.attrelid = c.conrelid
    AND a.attnum = ANY (c.conkey)
-  WHERE 
+  WHERE
     c.conrelid = ($3 || '.' || $1)::regclass::oid
     AND c.conrelid = c.confrelid
     AND c.contype = 'f'
@@ -123,7 +124,8 @@ SELECT
   || E'\n      '||$1||' m'
   || E'\n    USING'
   || E'\n      (SELECT DISTINCT unnest('||$1||'_ids) AS a_id) a'
-  || E'\n    LEFT JOIN '||$3||' n2m'
+  || E'\n    LEFT JOIN'
+  || E'\n'     ||$3||' n2m'
   || E'\n      ON n2m.'||$2||' = a.a_id'
   || E'\n    WHERE'
   || E'\n      m.id = a.a_id'
@@ -147,7 +149,8 @@ SELECT
   || E'\n      gen.delete_'||$2||'(array_agg(a.a_id))'
   || E'\n    FROM'
   || E'\n      (SELECT DISTINCT unnest('||$1||'_ids) AS a_id) a'
-  || E'\n    LEFT JOIN '||$4||' n2m'
+  || E'\n    LEFT JOIN'
+  || E'\n      '||$4||' n2m'
   || E'\n      ON n2m.'||$3||' = a.a_id'
   || E'\n    WHERE'
   || E'\n      n2m.'||$3||' IS NULL;'
@@ -242,7 +245,8 @@ BEGIN
       m.m_table_clean_parent
     FROM
       pg_constraint c
-    JOIN pg_attribute a
+    JOIN
+      pg_attribute a
       ON a.attrelid = c.conrelid
      AND a.attnum = ANY (c.conkey)
     LEFT JOIN (
@@ -268,7 +272,8 @@ BEGIN
           FROM
             pg_constraint r,
             ref_table_depth d
-          WHERE d.ref_table = r.confrelid
+          WHERE
+            d.ref_table = r.confrelid
             AND d.ref_table <> r.conrelid
             AND r.contype = 'f'
             AND r.confdeltype = 'a'
@@ -301,7 +306,8 @@ BEGIN
         ) pk
         ON pk.conrelid = fk.conrelid
        AND pk.conkey = fk.conkey
-      WHERE fk.conrelid = c.conrelid
+      WHERE
+        fk.conrelid = c.conrelid
         AND fk.contype = 'f'
         AND fk.confdeltype = 'a'
     ) p ON (true)
@@ -316,7 +322,8 @@ BEGIN
         mp.m_table_clean_parent
       FROM
         pg_constraint mn
-      JOIN pg_attribute mna
+      JOIN
+        pg_attribute mna
         ON mna.attrelid = mn.conrelid
        AND mna.attnum = ANY (mn.conkey)
       LEFT JOIN LATERAL (
@@ -446,10 +453,12 @@ BEGIN
         string_agg('array_agg('||a.attname||')', E' ||\n    ' ORDER BY a.attnum) AS concat_id_arrays
       FROM
         pg_constraint c
-      JOIN pg_attribute a
+      JOIN
+        pg_attribute a
         ON a.attrelid = c.conrelid
        AND a.attnum = ANY (c.conkey)
-      JOIN pg_attribute a_ref
+      JOIN
+        pg_attribute a_ref
         ON a_ref.attrelid = c.confrelid
        AND a_ref.attnum = ANY (c.confkey)
        WHERE
@@ -520,7 +529,8 @@ BEGIN
     FROM
       pg_constraint f,
       pg_constraint p
-    WHERE f.conrelid = ($2 || '.' || $1)::regclass::oid
+    WHERE
+      f.conrelid = ($2 || '.' || $1)::regclass::oid
       AND p.conrelid = ($2 || '.' || $1)::regclass::oid
       AND f.conkey = p.conkey
       AND f.contype = 'f'
@@ -569,10 +579,11 @@ BEGIN
     self_block
   FROM
     pg_constraint c
-  JOIN pg_attribute a
+  JOIN
+    pg_attribute a
     ON a.attrelid = c.conrelid
    AND a.attnum = ANY (c.conkey)
-  WHERE 
+  WHERE
     c.conrelid = ($3 || '.' || $1)::regclass::oid
     AND c.conrelid = c.confrelid
     AND c.contype = 'f'
@@ -636,7 +647,8 @@ SELECT
   || E'\n      '||$1||' m'
   || E'\n    USING'
   || E'\n      (VALUES ('||$1||'_ref_id)) a(a_id)'
-  || E'\n    LEFT JOIN '||$3||' n2m'
+  || E'\n    LEFT JOIN'
+  || E'\n'     ||$3||' n2m'
   || E'\n      ON n2m.'||$2||' = a.a_id'
   || E'\n    WHERE'
   || E'\n      m.id = a.a_id'
@@ -660,7 +672,8 @@ SELECT
   || E'\n      gen.delete_'||$2||'(a.a_id)'
   || E'\n    FROM'
   || E'\n      (VALUES ('||$1||'_ref_id)) a(a_id)'
-  || E'\n    LEFT JOIN '||$4||' n2m'
+  || E'\n    LEFT JOIN'
+  || E'\n'     ||$4||' n2m'
   || E'\n      ON n2m.'||$3||' = a.a_id'
   || E'\n    WHERE'
   || E'\n      n2m.'||$3||' IS NULL;'
@@ -751,7 +764,8 @@ BEGIN
       m.m_table_clean_parent
     FROM
       pg_constraint c
-    JOIN pg_attribute a
+    JOIN
+      pg_attribute a
       ON a.attrelid = c.conrelid
      AND a.attnum = ANY (c.conkey)
     LEFT JOIN (
@@ -777,7 +791,8 @@ BEGIN
           FROM
             pg_constraint r,
             ref_table_depth d
-          WHERE d.ref_table = r.confrelid
+          WHERE
+            d.ref_table = r.confrelid
             AND d.ref_table <> r.conrelid
             AND r.contype = 'f'
             AND r.confdeltype = 'a'
@@ -810,7 +825,8 @@ BEGIN
         ) pk
         ON pk.conrelid = fk.conrelid
        AND pk.conkey = fk.conkey
-      WHERE fk.conrelid = c.conrelid
+      WHERE
+        fk.conrelid = c.conrelid
         AND fk.contype = 'f'
         AND fk.confdeltype = 'a'
     ) p ON (true)
@@ -825,7 +841,8 @@ BEGIN
         mp.m_table_clean_parent
       FROM
         pg_constraint mn
-      JOIN pg_attribute mna
+      JOIN
+        pg_attribute mna
         ON mna.attrelid = mn.conrelid
        AND mna.attnum = ANY (mn.conkey)
       LEFT JOIN LATERAL (
@@ -954,10 +971,12 @@ BEGIN
         count(a.attname) AS column_count
       FROM
         pg_constraint c
-      JOIN pg_attribute a
+      JOIN
+        pg_attribute a
         ON a.attrelid = c.conrelid
        AND a.attnum = ANY (c.conkey)
-      JOIN pg_attribute a_ref
+      JOIN
+        pg_attribute a_ref
         ON a_ref.attrelid = c.confrelid
        AND a_ref.attnum = ANY (c.confkey)
        WHERE
@@ -1039,7 +1058,8 @@ BEGIN
     FROM
       pg_constraint f,
       pg_constraint p
-    WHERE f.conrelid = ($2 || '.' || $1)::regclass::oid
+    WHERE
+      f.conrelid = ($2 || '.' || $1)::regclass::oid
       AND p.conrelid = ($2 || '.' || $1)::regclass::oid
       AND f.conkey = p.conkey
       AND f.contype = 'f'
