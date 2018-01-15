@@ -77,16 +77,16 @@ AS
         chr(10)||'  -- delete referenced parts'
       ||chr(10)||'  SELECT'
       ||chr(10)||'    t.id'
+      ||chr(10)||'  BULK COLLECT INTO'
+      ||chr(10)||'    part_ids'
       ||chr(10)||'  FROM'
-      ||chr(10)||'    '||tab_name||' t,'
+      ||chr(10)||'    '||lower(tab_name)||' t,'
       ||chr(10)||'    TABLE(arr) a'
       ||chr(10)||'  WHERE'
       ||chr(10)||'    t.'||lower(a.column_name)||' = a.a_id'
-      ||chr(10)||'    AND t.id != a.a_id'
-      ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'    '||tab_name||'_ids;'
+      ||chr(10)||'    AND t.id != a.a_id;'
       ||chr(10)
-      ||chr(10)||'  dummy_ids := delete_'||tab_short_name||'('||tab_name||'_ids);'
+      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'(part_ids);'
       ||chr(10), '') WITHIN GROUP (ORDER BY a.column_id)
     INTO
       self_block
@@ -136,16 +136,16 @@ AS
   IS
   BEGIN
     RETURN
-        chr(10)||'  -- delete '||tab_name||'s'
+        chr(10)||'  -- delete '||lower(tab_name)||'s'
       ||chr(10)||'  DELETE FROM'
-      ||chr(10)||'    '||tab_name||' t'
+      ||chr(10)||'    '||lower(tab_name)||' t'
       ||chr(10)||'  WHERE EXISTS ('
       ||chr(10)||'    SELECT'
       ||chr(10)||'      1'
       ||chr(10)||'    FROM'
       ||chr(10)||'      TABLE(arr) a'
       ||chr(10)||'    WHERE'
-      ||chr(10)||'      a.COLUMN_VALUE = t.'||fk_column_name
+      ||chr(10)||'      a.COLUMN_VALUE = t.'||lower(fk_column_name)
       ||chr(10)||'  );'
       ||chr(10);
   END;
@@ -159,18 +159,18 @@ AS
   IS
   BEGIN
     RETURN
-        chr(10)||'  -- delete '||tab_name||'s'
+        chr(10)||'  -- delete '||lower(tab_name)||'s'
       ||chr(10)||'  SELECT'
       ||chr(10)||'    t.id'
+      ||chr(10)||'  BULK COLLECT INTO'
+      ||chr(10)||'    child_ids'
       ||chr(10)||'  FROM'
-      ||chr(10)||'    '||tab_name||' t,'
+      ||chr(10)||'    '||lower(tab_name)||' t,'
       ||chr(10)||'    TABLE(arr) a'
       ||chr(10)||'  WHERE'
-      ||chr(10)||'    t.'||fk_column_name||' = a.COLUMN_VALUE'
-      ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'    '||tab_name||'_ids;'
+      ||chr(10)||'    t.'||lower(fk_column_name)||' = a.COLUMN_VALUE;'
       ||chr(10)
-      ||chr(10)||'  dummy_ids := delete_'||tab_short_name||'('||tab_name||'_ids);'
+      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'(child_ids);'
       ||chr(10);
   END;
 
@@ -183,21 +183,21 @@ AS
   IS
   BEGIN
     RETURN
-        chr(10)||'  -- delete '||m_tab_name||'(s) not being referenced any more'
-      ||chr(10)||'  IF -1 = ALL('||m_tab_name||'_ids) IS NOT NULL THEN'
+        chr(10)||'  -- delete '||lower(m_tab_name)||'(s) not being referenced any more'
+      ||chr(10)||'  IF '||lower(m_tab_name)||'_ids IS NOT EMPTY OR '||lower(m_tab_name)||'_ids IS NOT NULL THEN'
       ||chr(10)||'    DELETE FROM'
-      ||chr(10)||'      '||m_tab_name||' m'
+      ||chr(10)||'      '||lower(m_tab_name)||' m'
       ||chr(10)||'    WHERE EXISTS ('
-      ||chr(10)||'      SELECT'
-      ||chr(10)||'        DISTINCT COLUMN_VALUE'
+      ||chr(10)||'      SELECT DISTINCT'
+      ||chr(10)||'        a.COLUMN_VALUE'
       ||chr(10)||'      FROM'
-      ||chr(10)||'        TABLE('||m_tab_name||'_ids) a'
+      ||chr(10)||'        TABLE('||lower(m_tab_name)||'_ids) a'
       ||chr(10)||'      LEFT JOIN'
-      ||chr(10)||'        '||n_m_tab_name||' n2m'
-      ||chr(10)||'        ON n2m.'||fk_m_column_name||' = a.COLUMN_VALUE'
+      ||chr(10)||'        '||lower(n_m_tab_name)||' n2m'
+      ||chr(10)||'        ON n2m.'||lower(fk_m_column_name)||' = a.COLUMN_VALUE'
       ||chr(10)||'      WHERE'
       ||chr(10)||'        a.COLUMN_VALUE = m.id'
-      ||chr(10)||'        AND n2m.'||fk_m_column_name||' IS NULL'
+      ||chr(10)||'        AND n2m.'||lower(fk_m_column_name)||' IS NULL'
       ||chr(10)||'    );'
       ||chr(10)||'  END IF;'
       ||chr(10);
@@ -213,21 +213,21 @@ AS
   IS
   BEGIN
     RETURN
-        chr(10)||'  -- delete '||m_tab_name||'(s) not being referenced any more'
-      ||chr(10)||'  IF -1 = ALL('||m_tab_name||'_ids) IS NOT NULL THEN'
-      ||chr(10)||'    SELECT'
-      ||chr(10)||'      DISTINCT a.COLUMN_VALUE'
-      ||chr(10)||'    FROM'
-      ||chr(10)||'      TABLE('||m_tab_name||'_ids) a'
-      ||chr(10)||'    LEFT JOIN'
-      ||chr(10)||'      '||n_m_tab_name||' n2m'
-      ||chr(10)||'      ON n2m.'||fk_m_column_name||' = a.COLUMN_VALUE'
-      ||chr(10)||'    WHERE'
-      ||chr(10)||'      AND n2m.'||fk_m_column_name||' IS NULL'
+        chr(10)||'  -- delete '||lower(m_tab_name)||'(s) not being referenced any more'
+      ||chr(10)||'  IF '||lower(m_tab_name)||'_ids IS NOT EMPTY OR '||lower(m_tab_name)||'_ids IS NOT NULL THEN'
+      ||chr(10)||'    SELECT DISTINCT'
+      ||chr(10)||'      a.COLUMN_VALUE'
       ||chr(10)||'    BULK COLLECT INTO'
-      ||chr(10)||'      '||m_tab_name||'_ids;'
+      ||chr(10)||'      '||lower(m_tab_name)||'_ids'
+      ||chr(10)||'    FROM'
+      ||chr(10)||'      TABLE('||lower(m_tab_name)||'_ids) a'
+      ||chr(10)||'    LEFT JOIN'
+      ||chr(10)||'      '||lower(n_m_tab_name)||' n2m'
+      ||chr(10)||'      ON n2m.'||lower(fk_m_column_name)||' = a.COLUMN_VALUE'
+      ||chr(10)||'    WHERE'
+      ||chr(10)||'      n2m.'||lower(fk_m_column_name)||' IS NULL;'
       ||chr(10)
-      ||chr(10)||'    dummy_ids := delete_'||m_tab_short_name||'('||m_tab_name||'_ids);'
+      ||chr(10)||'    dummy_ids := delete_'||lower(m_tab_short_name)||'('||lower(m_tab_name)||'_ids);'
       ||chr(10)||'  END IF;'
       ||chr(10);
   END;
@@ -243,21 +243,21 @@ AS
   IS
   BEGIN
     RETURN
-        chr(10)||'  -- delete references to '||m_tab_name||'s'
+        chr(10)||'  -- delete references to '||lower(m_tab_name)||'s'
       ||chr(10)||'  DELETE FROM'
-      ||chr(10)||'    '||n_m_tab_name||' t'
+      ||chr(10)||'    '||lower(n_m_tab_name)||' t'
       ||chr(10)||'  WHERE EXISTS ('
       ||chr(10)||'    SELECT'
       ||chr(10)||'      1'
       ||chr(10)||'    FROM'
       ||chr(10)||'      TABLE(arr) a'
       ||chr(10)||'    WHERE'
-      ||chr(10)||'      a.COLUMN_VALUE = t.'||fk_n_column_name
+      ||chr(10)||'      a.COLUMN_VALUE = t.'||lower(fk_n_column_name)
       ||chr(10)||'  );'
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||fk_m_column_name
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	 '||m_tab_name||'_ids;'
+      ||chr(10)||'	  '||lower(m_tab_name)||'_ids;'
       ||chr(10) || delete_m_table_by_ids(m_tab_name, fk_m_column_name, n_m_tab_name);
   END;
 
@@ -273,21 +273,21 @@ AS
   IS
   BEGIN
     RETURN
-        chr(10)||'  -- delete references to '||m_tab_name||'s'
+        chr(10)||'  -- delete references to '||lower(m_tab_name)||'s'
       ||chr(10)||'  DELETE FROM'
-      ||chr(10)||'    '||n_m_tab_name||' t'
+      ||chr(10)||'    '||lower(n_m_tab_name)||' t'
       ||chr(10)||'  WHERE EXISTS ('
       ||chr(10)||'    SELECT'
       ||chr(10)||'      1'
       ||chr(10)||'    FROM'
       ||chr(10)||'      TABLE(arr) a'
       ||chr(10)||'    WHERE'
-      ||chr(10)||'      a.COLUMN_VALUE = t.'||fk_n_column_name
+      ||chr(10)||'      a.COLUMN_VALUE = t.'||lower(fk_n_column_name)
       ||chr(10)||'  );'
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||fk_m_column_name
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	 '||m_tab_name||'_ids;'
+      ||chr(10)||'	  '||lower(m_tab_name)||'_ids;'
       ||chr(10) || delete_m_table_by_ids(m_tab_name, m_tab_short_name, fk_m_column_name, n_m_tab_name);
   END;
 
@@ -319,6 +319,7 @@ AS
         all_cons_columns a
         ON a.constraint_name = c.constraint_name
        AND a.table_name = c.table_name
+       AND a.owner = c.owner
       JOIN
         all_constraints c2
         ON c2.constraint_name = c.r_constraint_name
@@ -375,10 +376,11 @@ AS
           ON fk2.constraint_name = fk.r_constraint_name
           AND fk2.owner = fk.owner
         JOIN (
-          SELECT
+          SELECT DISTINCT
             ctp.table_name,
             ctp.owner,
-            pka.column_name
+            first_value(pka.column_name) OVER (PARTITION BY ctp.table_name ORDER BY pka.position DESC) AS column_name,
+            first_value(pka.position) OVER (PARTITION BY ctp.table_name ORDER BY pka.position DESC) AS position
           FROM
             all_constraints ctp
           JOIN
@@ -392,10 +394,12 @@ AS
           ON pk.table_name = fk.table_name
          AND pk.owner = fk.owner
          AND pk.column_name = fka.column_name
-        WHERE fk.table_name = c.table_name
+        WHERE
+          fk.table_name = c.table_name
           AND fk.owner = c.owner
           AND fk.constraint_type = 'R'
           AND fk.delete_rule = 'NO ACTION'
+          AND pk.position = 1
       ) p
       -- get tables from n:m relationships to cleanup
       -- the FK has to be delete_rule = 'CASCADE' to decide for cleanup
@@ -410,6 +414,7 @@ AS
           all_constraints mn
         JOIN
           all_cons_columns mna
+          ON mna.constraint_name = mn.constraint_name
           ON mna.table_name = mn.table_name
          AND mna.owner = mn.owner
         JOIN
@@ -448,10 +453,11 @@ AS
             ON fk2.constraint_name = fk.r_constraint_name
             AND fk2.owner = fk.owner
           JOIN (
-            SELECT
+            SELECT DISTINCT
               cp.table_name,
               cp.owner,
-              pka.column_name
+              first_value(pka.column_name) OVER (PARTITION BY cp.table_name ORDER BY pka.position DESC) AS column_name,
+              first_value(pka.position) OVER (PARTITION BY cp.table_name ORDER BY pka.position DESC) AS position
             FROM
               all_constraints cp
             JOIN
@@ -465,10 +471,12 @@ AS
             ON pk.table_name = fk.table_name
            AND pk.owner = fk.owner
            AND pk.column_name = fka.column_name
-          WHERE fk.table_name = mn2.table_name
+          WHERE
+            fk.table_name = mn2.table_name
             AND fk.owner = mn2.owner
             AND fk.constraint_type = 'R'
             AND fk.delete_rule = 'NO ACTION'
+            AND pk.position = 1
         ) mp
         WHERE
           mn.table_name = c.table_name
@@ -493,7 +501,7 @@ AS
     )
     LOOP
       IF vars IS NULL THEN
-        vars := '';
+        vars := chr(10)|| '  child_ids ID_ARRAY;';
         ref_block := '';
       END IF;
 
@@ -611,9 +619,9 @@ AS
         fk_block := '';
       END IF;
 
-      vars := vars ||chr(10)||'  '|| rec.fk_table||'_ids ID_ARRAY;';
-      returning_block := returning_block ||chr(10)||'      '|| rec.ref_columns;
-      into_block := into_block ||chr(10)||'    '|| rec.fk_table||'_ids';
+      vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ids ID_ARRAY;';
+      returning_block := returning_block ||','||chr(10)||'    '|| lower(rec.ref_columns);
+      into_block := into_block ||','||chr(10)||'    '||lower(rec.fk_table)||'_ids';
 
       IF rec.has_ref = 1 THEN
         -- function call required, so create function first
@@ -641,18 +649,21 @@ AS
         p.table_name AS parent_table_short
       FROM
         all_constraints fk
-      JOIN all_cons_columns fka
+      JOIN
+        all_cons_columns fka
         ON fka.constraint_name = fk.constraint_name
        AND fka.table_name = fk.table_name
        AND fka.owner = fk.owner
       JOIN (
-        SELECT
+        SELECT DISTINCT
           ctp.table_name,
           ctp.owner,
-          pka.column_name
+          first_value(pka.column_name) OVER (PARTITION BY ctp.table_name ORDER BY pka.position DESC) AS column_name,
+          first_value(pka.position) OVER (PARTITION BY ctp.table_name ORDER BY pka.position DESC) AS position
         FROM
           all_constraints ctp
-        JOIN all_cons_columns pka
+        JOIN
+          all_cons_columns pka
           ON pka.constraint_name = ctp.constraint_name
          AND pka.table_name = ctp.table_name
          AND pka.owner = ctp.owner
@@ -666,10 +677,12 @@ AS
         all_constraints p
         ON p.constraint_name = fk.r_constraint_name
        AND p.owner = fk.owner
-      WHERE fk.table_name = upper(tab_name)
+      WHERE
+        fk.table_name = upper(tab_name)
         AND fk.owner = upper(schema_name)
         AND fk.constraint_type = 'R'
         AND fk.delete_rule = 'NO ACTION'
+        AND pk.position = 1
     )
     LOOP
       -- create array delete function for parent table
@@ -677,8 +690,8 @@ AS
 
       -- add delete call for parent table
       parent_block := parent_block
-        ||chr(10)||'  -- delete '|| rec.parent_table
-        ||chr(10)||'  dummy_ids := delete_'|| rec.parent_table_short||'(deleted_ids);'
+        ||chr(10)||'  -- delete '||lower(rec.parent_table)
+        ||chr(10)||'  dummy_ids := delete_'||lower(rec.parent_table_short)||'(deleted_ids);'
         ||chr(10);
     END LOOP;
 
@@ -706,15 +719,15 @@ AS
         chr(10)||'  -- delete referenced parts'
       ||chr(10)||'  SELECT'
       ||chr(10)||'    id'
+      ||chr(10)||'  BULK COLLECT INTO'
+      ||chr(10)||'    part_ids'
       ||chr(10)||'  FROM'
-      ||chr(10)||'    '||tab_name
+      ||chr(10)||'    '||lower(tab_name)
       ||chr(10)||'  WHERE'
       ||chr(10)||'    '||lower(a.column_name)||' = pid'
-      ||chr(10)||'    AND id != pid'
-      ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'    '||tab_name||'_ids;'
+      ||chr(10)||'    AND id != pid;'
       ||chr(10)
-      ||chr(10)||'  dummy_ids := delete_'||tab_short_name||'('||tab_name||'_ids);'
+      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'(part_ids);'
       ||chr(10), '')  WITHIN GROUP (ORDER BY a.column_id)
     INTO
       self_block
@@ -764,11 +777,11 @@ AS
   IS
   BEGIN
     RETURN
-        chr(10)||'  -- delete '||tab_name||'s'
+        chr(10)||'  -- delete '||lower(tab_name)||'s'
       ||chr(10)||'  DELETE FROM'
-      ||chr(10)||'    '||tab_name
+      ||chr(10)||'    '||lower(tab_name)
       ||chr(10)||'  WHERE'
-      ||chr(10)||'    '||fk_column_name||' = pid;'
+      ||chr(10)||'    '||lower(fk_column_name)||' = pid;'
       ||chr(10);
   END;
 
@@ -781,17 +794,17 @@ AS
   IS
   BEGIN
     RETURN
-        chr(10)||'  -- delete '||tab_name||'s'
+        chr(10)||'  -- delete '||lower(tab_name)||'s'
       ||chr(10)||'  SELECT'
       ||chr(10)||'    id'
-      ||chr(10)||'  FROM'
-      ||chr(10)||'    '||tab_name
-      ||chr(10)||'  WHERE'
-      ||chr(10)||'    '||fk_column_name||' = pid'
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'    '||tab_name||'_ids;'
+      ||chr(10)||'    child_ids'
+      ||chr(10)||'  FROM'
+      ||chr(10)||'    '||lower(tab_name)
+      ||chr(10)||'  WHERE'
+      ||chr(10)||'    '||lower(fk_column_name)||' = pid;'
       ||chr(10)
-      ||chr(10)||'  dummy_ids := delete_'||tab_short_name||'('||tab_name||'_ids);'
+      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'(child_ids);'
       ||chr(10);
   END;
 
@@ -804,21 +817,21 @@ AS
   IS
   BEGIN
     RETURN
-        chr(10)||'  -- delete '||m_tab_name||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||m_tab_name||'_ref_id IS NOT NULL THEN'
+        chr(10)||'  -- delete '||lower(m_tab_name)||'(s) not being referenced any more'
+      ||chr(10)||'  IF '||lower(m_tab_name)||'_ref_id IS NOT NULL THEN'
       ||chr(10)||'    DELETE FROM'
-      ||chr(10)||'      '||m_tab_name||' m'
+      ||chr(10)||'      '||lower(m_tab_name)||' m'
       ||chr(10)||'    WHERE EXISTS ('
       ||chr(10)||'      SELECT'
       ||chr(10)||'        1'
       ||chr(10)||'      FROM'
-      ||chr(10)||'        TABLE('||m_tab_name||'_ref_id) a'
+      ||chr(10)||'        TABLE('||lower(m_tab_name)||'_ref_id) a'
       ||chr(10)||'      LEFT JOIN'
-      ||chr(10)||'        '||n_m_tab_name||' n2m'
-      ||chr(10)||'        ON n2m.'||fk_m_column_name||' = a.COLUMN_NAME'
+      ||chr(10)||'        '||lower(n_m_tab_name)||' n2m'
+      ||chr(10)||'        ON n2m.'||lower(fk_m_column_name)||' = a.COLUMN_VALUE'
       ||chr(10)||'      WHERE'
       ||chr(10)||'        a.COLUMN_VALUE = m.id'
-      ||chr(10)||'        n2m.'||fk_m_column_name||' IS NULL'
+      ||chr(10)||'        n2m.'||lower(fk_m_column_name)||' IS NULL'
       ||chr(10)||'    );'
       ||chr(10)||'  END IF;'
       ||chr(10);
@@ -834,23 +847,21 @@ AS
   IS
   BEGIN
     RETURN
-        chr(10)||'  -- delete '||m_tab_name||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||m_tab_name||'_ref_id IS NOT NULL THEN'
+        chr(10)||'  -- delete '||lower(m_tab_name)||'(s) not being referenced any more'
+      ||chr(10)||'  IF '||lower(m_tab_name)||'_ref_id IS NOT NULL THEN'
       ||chr(10)||'    SELECT'
       ||chr(10)||'      a.COLUMN_VALUE'
       ||chr(10)||'    INTO'
-      ||chr(10)||'      '||m_tab_name||'_pid'
+      ||chr(10)||'      '||lower(m_tab_name)||'_pid'
       ||chr(10)||'    FROM'
-      ||chr(10)||'      TABLE('||m_tab_name||'_ref_id) a'
+      ||chr(10)||'      TABLE('||lower(m_tab_name)||'_ref_id) a'
       ||chr(10)||'    LEFT JOIN'
-      ||chr(10)||'      '||n_m_tab_name||' n2m'
-      ||chr(10)||'      ON n2m.'||fk_m_column_name||' = a.COLUMN_VALUE'
+      ||chr(10)||'      '||lower(n_m_tab_name)||' n2m'
+      ||chr(10)||'      ON n2m.'||lower(fk_m_column_name)||' = a.COLUMN_VALUE'
       ||chr(10)||'    WHERE'
-      ||chr(10)||'      AND n2m.'||fk_m_column_name||' IS NULL'
-      ||chr(10)||'    BULK COLLECT INTO'
-      ||chr(10)||'      '||m_tab_name||'_ids;'
+      ||chr(10)||'      n2m.'||lower(fk_m_column_name)||' IS NULL;'
       ||chr(10)
-      ||chr(10)||'    dummy_ids := delete_'||m_tab_short_name||'('||m_tab_name||'_pid);'
+      ||chr(10)||'    dummy_ids := delete_'||lower(m_tab_short_name)||'('||lower(m_tab_name)||'_pid);'
       ||chr(10)||'  END IF;'
       ||chr(10);
   END;
@@ -866,15 +877,15 @@ AS
   IS
   BEGIN
     RETURN
-        chr(10)||'  -- delete references to '||m_tab_name||'s'
+        chr(10)||'  -- delete references to '||lower(m_tab_name)||'s'
       ||chr(10)||'  DELETE FROM'
-      ||chr(10)||'    '||n_m_tab_name
+      ||chr(10)||'    '||lower(n_m_tab_name)
       ||chr(10)||'  WHERE'
-      ||chr(10)||'    '||fk_n_column_name||' = pid'
+      ||chr(10)||'    '||lower(fk_n_column_name)||' = pid'
       ||chr(10)||'  RETURNING'
-      ||chr(10)||'    '||fk_m_column_name
+      ||chr(10)||'    '||lower(fk_m_column_name)
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	 '||m_tab_name||'_ids;'
+      ||chr(10)||'	  '||lower(m_tab_name)||'_ids;'
       ||chr(10) || delete_m_table_by_ids(m_tab_name, fk_m_column_name, n_m_tab_name);
   END;
 
@@ -890,15 +901,15 @@ AS
   IS
   BEGIN
     RETURN
-        chr(10)||'  -- delete references to '||m_tab_name||'s'
+        chr(10)||'  -- delete references to '||lower(m_tab_name)||'s'
       ||chr(10)||'  DELETE FROM'
-      ||chr(10)||'    '||n_m_tab_name
+      ||chr(10)||'    '||lower(n_m_tab_name)
       ||chr(10)||'  WHERE'
-      ||chr(10)||'    '||fk_n_column_name||' = pid'
+      ||chr(10)||'    '||lower(fk_n_column_name)||' = pid'
       ||chr(10)||'  RETURNING'
-      ||chr(10)||'    '||fk_m_column_name
+      ||chr(10)||'    '||lower(fk_m_column_name)
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	 '||m_tab_name||'_ids;'
+      ||chr(10)||'	  '||lower(m_tab_name)||'_ids;'
       ||chr(10) || delete_m_table_by_ids(m_tab_name, m_tab_short_name, fk_m_column_name, n_m_tab_name);
   END;
 
@@ -931,6 +942,7 @@ AS
         all_cons_columns a
         ON a.constraint_name = c.constraint_name
        AND a.table_name = c.table_name
+       AND a.owner = c.owner
       JOIN
         all_constraints c2
         ON c2.constraint_name = c.r_constraint_name
@@ -987,10 +999,11 @@ AS
           ON fk2.constraint_name = fk.r_constraint_name
           AND fk2.owner = fk.owner
         JOIN (
-          SELECT
+          SELECT DISTINCT
             ctp.table_name,
             ctp.owner,
-            pka.column_name
+            first_value(pka.column_name) OVER (PARTITION BY ctp.table_name ORDER BY pka.position DESC) AS column_name,
+            first_value(pka.position) OVER (PARTITION BY ctp.table_name ORDER BY pka.position DESC) AS position
           FROM
             all_constraints ctp
           JOIN
@@ -1004,10 +1017,12 @@ AS
           ON pk.table_name = fk.table_name
          AND pk.owner = fk.owner
          AND pk.column_name = fka.column_name
-        WHERE fk.table_name = c.table_name
+        WHERE
+          fk.table_name = c.table_name
           AND fk.owner = c.owner
           AND fk.constraint_type = 'R'
           AND fk.delete_rule = 'NO ACTION'
+          AND pk.position = 1
       ) p
       -- get tables from n:m relationships to cleanup
       -- the FK has to be delete_rule = 'CASCADE' to decide for cleanup
@@ -1022,6 +1037,7 @@ AS
           all_constraints mn
         JOIN
           all_cons_columns mna
+          ON mna.constraint_name = mn.constraint_name
           ON mna.table_name = mn.table_name
          AND mna.owner = mn.owner
         JOIN
@@ -1060,10 +1076,11 @@ AS
             ON fk2.constraint_name = fk.r_constraint_name
             AND fk2.owner = fk.owner
           JOIN (
-            SELECT
+            SELECT DISTINCT
               cp.table_name,
               cp.owner,
-              pka.column_name
+              first_value(pka.column_name) OVER (PARTITION BY cp.table_name ORDER BY pka.position DESC) AS column_name,
+              first_value(pka.position) OVER (PARTITION BY cp.table_name ORDER BY pka.position DESC) AS position
             FROM
               all_constraints cp
             JOIN
@@ -1077,10 +1094,12 @@ AS
             ON pk.table_name = fk.table_name
            AND pk.owner = fk.owner
            AND pk.column_name = fka.column_name
-          WHERE fk.table_name = mn2.table_name
+          WHERE
+            fk.table_name = mn2.table_name
             AND fk.owner = mn2.owner
             AND fk.constraint_type = 'R'
             AND fk.delete_rule = 'NO ACTION'
+            AND pk.position = 1
         ) mp
         WHERE
           mn.table_name = c.table_name
@@ -1105,7 +1124,7 @@ AS
     )
     LOOP
       IF vars IS NULL THEN
-        vars := '';
+        vars := chr(10)|| '  child_ids ID_ARRAY;';
         ref_block := '';
       END IF;
 
@@ -1127,14 +1146,14 @@ AS
         IF rec.m_table IS NULL THEN
           ref_block := ref_block || delete_n_table_by_id(rec.n_table, rec.n_table_short, rec.fk_n_column_name);
         ELSE
-          vars := vars ||chr(10)||'  '|| rec.m_table_short||'_ids ID_ARRAY;';
+          vars := vars ||chr(10)||'  '||lower(rec.m_table_short)||'_ids ID_ARRAY;';
           ref_block := ref_block || delete_n_m_table_by_id(rec.n_table, rec.fk_n_column_name, rec.m_table, rec.m_table_short, rec.fk_m_column_name);
         END IF;      
       ELSE
         IF rec.m_table IS NULL THEN
           ref_block := ref_block || delete_n_table_by_id(rec.n_table, rec.fk_n_column_name);
         ELSE
-          vars := vars ||chr(10)||'  '|| rec.m_table||'_ids ID_ARRAY;';
+          vars := vars ||chr(10)||'  '||lower(rec.m_table)||'_ids ID_ARRAY;';
           ref_block := ref_block || delete_n_m_table_by_id(rec.n_table, rec.fk_n_column_name, rec.m_table, rec.fk_m_column_name);
         END IF;
       END IF;
@@ -1224,13 +1243,13 @@ AS
       END IF;
 
       IF rec.column_count > 1 THEN
-        vars := vars ||chr(10)||'  '|| rec.fk_table||'_ids ID_ARRAY;';
-        returning_block := returning_block ||chr(10)||'    ID_ARRAY('|| rec.ref_columns||')';
-        into_block := into_block ||chr(10)||'    '|| rec.fk_table||'_ids';
+        vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ids ID_ARRAY;';
+        returning_block := returning_block||','||chr(10)||'    ID_ARRAY('||lower(rec.ref_columns)||')';
+        into_block := into_block||','||chr(10)||'    '||lower(rec.fk_table)||'_ids';
       ELSE
-        vars := vars ||chr(10)||'  '|| rec.fk_table||'_ref_id NUMBER;';
-        returning_block := returning_block ||chr(10)||'    '|| rec.ref_columns;
-        into_block := into_block ||chr(10)||'    '|| rec.fk_table||'_ref_id';
+        vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ref_id NUMBER;';
+        returning_block := returning_block ||','||chr(10)||'    '||lower(rec.ref_columns);
+        into_block := into_block||','||chr(10)||'    '||lower(rec.fk_table)||'_ref_id';
       END IF;
 
       IF rec.has_ref = 1 THEN
@@ -1239,6 +1258,7 @@ AS
         IF rec.column_count > 1 THEN
           fk_block := fk_block || delete_m_table_by_ids(rec.fk_table, rec.fk_table_short, rec.fk_column, rec.fk_table);
         ELSE
+          vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_pid NUMBER;';
           fk_block := fk_block || delete_m_table_by_id(rec.fk_table, rec.fk_table_short, rec.fk_column, rec.fk_table);
         END IF;
       ELSE
@@ -1267,18 +1287,21 @@ AS
         p.table_name AS parent_table_short
       FROM
         all_constraints fk
-      JOIN all_cons_columns fka
+      JOIN
+        all_cons_columns fka
         ON fka.constraint_name = fk.constraint_name
        AND fka.table_name = fk.table_name
        AND fka.owner = fk.owner
       JOIN (
-        SELECT
+        SELECT DISTINCT
           ctp.table_name,
           ctp.owner,
-          pka.column_name
+          first_value(pka.column_name) OVER (PARTITION BY ctp.table_name ORDER BY pka.position DESC) AS column_name,
+          first_value(pka.position) OVER (PARTITION BY ctp.table_name ORDER BY pka.position DESC) AS position
         FROM
           all_constraints ctp
-        JOIN all_cons_columns pka
+        JOIN
+          all_cons_columns pka
           ON pka.constraint_name = ctp.constraint_name
          AND pka.table_name = ctp.table_name
          AND pka.owner = ctp.owner
@@ -1292,10 +1315,12 @@ AS
         all_constraints p
         ON p.constraint_name = fk.r_constraint_name
        AND p.owner = fk.owner
-      WHERE fk.table_name = upper(tab_name)
+      WHERE
+        fk.table_name = upper(tab_name)
         AND fk.owner = upper(schema_name)
         AND fk.constraint_type = 'R'
         AND fk.delete_rule = 'NO ACTION'
+        AND pk.position = 1
     )
     LOOP
       -- create array delete function for parent table
@@ -1303,8 +1328,8 @@ AS
 
       -- add delete call for parent table
       parent_block := parent_block
-        ||chr(10)||'  -- delete '|| rec.parent_table
-        ||chr(10)||'  dummy_id := delete_'|| rec.parent_table_short||'(deleted_id);'
+        ||chr(10)||'  -- delete '||lower(rec.parent_table)
+        ||chr(10)||'  dummy_id := delete_'||lower(rec.parent_table_short)||'(deleted_id);'
         ||chr(10);
     END LOOP;
 
@@ -1325,7 +1350,7 @@ AS
     )
   IS
     ddl_command VARCHAR2(500) := 
-      'CREATE OR REPLACE FUNCTION delete_'||table_short_name||'(arr ID_ARRAY) RETURN ID_ARRAY'
+      'CREATE OR REPLACE FUNCTION delete_'||lower(table_short_name)||'(arr ID_ARRAY) RETURN ID_ARRAY'
       ||chr(10)||'IS'
       ||chr(10)||'  deleted_ids ID_ARRAY;'
       ||chr(10)||'BEGIN'
@@ -1333,6 +1358,7 @@ AS
       ||chr(10)||'END;';
   BEGIN
     EXECUTE IMMEDIATE ddl_command;
+    COMMIT;
   END;
 
   -- creates a array delete function for given table
@@ -1344,21 +1370,21 @@ AS
     )
   IS
     ddl_command VARCHAR2(10000) := 
-      'CREATE OR REPLACE FUNCTION delete_'||tab_short_name||'(arr ID_ARRAY) RETURN ID_ARRAY'
-      ||chr(10)||'IS';
-    declare_block VARCHAR2(500) := chr(10)||'  deleted_ids ID_ARRAY;';
+      'CREATE OR REPLACE FUNCTION delete_'||lower(tab_short_name)||'(arr ID_ARRAY) RETURN ID_ARRAY'
+      ||chr(10)||'IS'||chr(10);
+    declare_block VARCHAR2(500) := '  deleted_ids ID_ARRAY;';
     pre_block VARCHAR2(2000) := '';
     post_block VARCHAR2(1000) := '';
     delete_block VARCHAR2(1000) :=
-      '  DELETE FROM'
-      ||chr(10)||'    '||tab_name||' t'
+        chr(10)||'  DELETE FROM'
+      ||chr(10)||'    '||lower(tab_name)||' t'
       ||chr(10)||'  WHERE EXISTS ('
       ||chr(10)||'    SELECT'
-      ||chr(10)||'      a.COLUMN_NAME'
+      ||chr(10)||'      a.COLUMN_VALUE'
       ||chr(10)||'    FROM'
-      ||chr(10)||'      TABLE(arr)'
+      ||chr(10)||'      TABLE(arr) a'
       ||chr(10)||'    WHERE'
-      ||chr(10)||'      a.COLUMN_NAME = t.id'
+      ||chr(10)||'      a.COLUMN_VALUE = t.id'
       ||chr(10)||'  )'
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    id';
@@ -1373,6 +1399,9 @@ AS
   BEGIN
     -- SELF-REFERENCES
     pre_block := delete_self_ref_by_ids(tab_name, tab_short_name, schema_name);
+    IF pre_block IS NOT NULL THEN
+      declare_block := declare_block ||chr(10)|| '  part_ids ID_ARRAY;';
+    END IF;
 
     -- REFERENCING TABLES
     delete_refs_by_ids(tab_name, schema_name, vars, ref_block);
@@ -1390,8 +1419,8 @@ AS
     post_block := post_block || delete_parent_by_ids(tab_name, schema_name);
 
     -- create dummy variable if pre or post block are not null
-    IF pre_block <> '' OR post_block <> '' THEN
-      declare_block := declare_block ||chr(10)||'  dummy_ids ID_ARRAY';
+    IF pre_block IS NOT NULL OR post_block IS NOT NULL THEN
+      declare_block := declare_block ||chr(10)||'  dummy_ids ID_ARRAY;';
     END IF;
 
     -- putting all together
@@ -1399,14 +1428,16 @@ AS
       || declare_block
       ||chr(10)||'BEGIN'
       || pre_block
-      ||chr(10)||'  -- delete '||tab_name||'s'
+      ||chr(10)||'  -- delete '||lower(tab_name)||'s'
       || delete_block
       || delete_into_block || ';'
+      ||chr(10)
       || post_block
       ||chr(10)||'  RETURN deleted_ids;'
       ||chr(10)||'END;';
 
     EXECUTE IMMEDIATE ddl_command;
+    COMMIT;
   END;
 
   -- creates a delete function for given table
@@ -1417,12 +1448,20 @@ AS
     schema_name VARCHAR2 := USER
     )
   IS
-    ddl_command VARCHAR2(10000) := 'CREATE OR REPLACE FUNCTION delete_'||tab_short_name||'(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
-    declare_block VARCHAR2(500) := chr(10)||''||chr(10)||'  deleted_id NUMBER;';
+    ddl_command VARCHAR2(10000) := 'CREATE OR REPLACE FUNCTION delete_'||lower(tab_short_name)||'(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
+    declare_block VARCHAR2(500) := '  deleted_id NUMBER;';
     pre_block VARCHAR2(2000) := '';
     post_block VARCHAR2(1000) := '';
-    delete_block VARCHAR2(1000) := chr(10)||'  DELETE FROM'||chr(10)||'    '||tab_name||chr(10)||'  WHERE'||chr(10)||'    id = pid'||chr(10)||'  RETURNING'||chr(10)||'    id';
-    delete_into_block VARCHAR2(500) := chr(10)||'  INTO'||chr(10)||'    deleted_id';
+    delete_block VARCHAR2(1000) :=
+        chr(10)||'  DELETE FROM'
+      ||chr(10)||'    '||lower(tab_name)
+      ||chr(10)||'  WHERE'
+      ||chr(10)||'    id = pid'
+      ||chr(10)||'  RETURNING'
+      ||chr(10)||'    id';
+    delete_into_block VARCHAR2(500) := 
+        chr(10)||'  INTO'
+      ||chr(10)||'    deleted_id';
     vars VARCHAR2(500);
     ref_block VARCHAR2(2000);
     returning_block VARCHAR2(500);
@@ -1431,6 +1470,9 @@ AS
   BEGIN
     -- SELF-REFERENCES
     pre_block := delete_self_ref_by_id(tab_name, tab_short_name, schema_name);
+    IF pre_block IS NOT NULL THEN
+      declare_block := declare_block ||chr(10)|| '  part_ids ID_ARRAY;';
+    END IF;
 
     -- REFERENCING TABLES
     delete_refs_by_id(tab_name, schema_name, vars, ref_block);
@@ -1448,11 +1490,11 @@ AS
     post_block := delete_parent_by_id(tab_name, schema_name);
 
     -- create dummy variable if pre or post block are not null
-    IF pre_block <> '' THEN
-      declare_block := declare_block ||chr(10)||'  dummy_ids ID_ARRAY';
+    IF pre_block IS NOT NULL THEN
+      declare_block := declare_block ||chr(10)||'  dummy_ids ID_ARRAY;';
     END IF;
-    IF post_block <> '' THEN
-      declare_block := declare_block ||chr(10)||'  dummy_id NUMBER';
+    IF post_block IS NOT NULL THEN
+      declare_block := declare_block ||chr(10)||'  dummy_id NUMBER;';
     END IF;
 
     -- putting all together
@@ -1460,14 +1502,16 @@ AS
       || declare_block
       ||chr(10)||'BEGIN'
       || pre_block
-      ||chr(10)||'  -- delete '||tab_name||'s'
+      ||chr(10)||'  -- delete '||lower(tab_name)||'s'
       || delete_block
       || delete_into_block || ';'
+      ||chr(10)
       || post_block
       ||chr(10)||'  RETURN deleted_id;'
       ||chr(10)||'END;';
 
     EXECUTE IMMEDIATE ddl_command;
+    COMMIT;
   END;
 
 END citydb_delete_gen;
