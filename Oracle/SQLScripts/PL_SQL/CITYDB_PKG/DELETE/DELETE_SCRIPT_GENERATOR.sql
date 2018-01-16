@@ -86,7 +86,7 @@ AS
       ||chr(10)||'    t.'||lower(a.column_name)||' = a.a_id'
       ||chr(10)||'    AND t.id != a.a_id;'
       ||chr(10)
-      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'(part_ids);'
+      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'_batch(part_ids);'
       ||chr(10), '') WITHIN GROUP (ORDER BY a.column_id)
     INTO
       self_block
@@ -170,7 +170,7 @@ AS
       ||chr(10)||'  WHERE'
       ||chr(10)||'    t.'||lower(fk_column_name)||' = a.COLUMN_VALUE;'
       ||chr(10)
-      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'(child_ids);'
+      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'_batch(child_ids);'
       ||chr(10);
   END;
 
@@ -227,7 +227,7 @@ AS
       ||chr(10)||'    WHERE'
       ||chr(10)||'      n2m.'||lower(fk_m_column_name)||' IS NULL;'
       ||chr(10)
-      ||chr(10)||'    dummy_ids := delete_'||lower(m_tab_short_name)||'('||lower(m_tab_name)||'_ids);'
+      ||chr(10)||'    dummy_ids := delete_'||lower(m_tab_short_name)||'_batch('||lower(m_tab_name)||'_ids);'
       ||chr(10)||'  END IF;'
       ||chr(10);
   END;
@@ -253,7 +253,7 @@ AS
       ||chr(10)||'      TABLE(arr) a'
       ||chr(10)||'    WHERE'
       ||chr(10)||'      a.COLUMN_VALUE = t.'||lower(fk_n_column_name)
-      ||chr(10)||'  );'
+      ||chr(10)||'  )'
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||fk_m_column_name
       ||chr(10)||'  BULK COLLECT INTO'
@@ -283,7 +283,7 @@ AS
       ||chr(10)||'      TABLE(arr) a'
       ||chr(10)||'    WHERE'
       ||chr(10)||'      a.COLUMN_VALUE = t.'||lower(fk_n_column_name)
-      ||chr(10)||'  );'
+      ||chr(10)||'  )'
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||fk_m_column_name
       ||chr(10)||'  BULK COLLECT INTO'
@@ -501,7 +501,7 @@ AS
     )
     LOOP
       IF vars IS NULL THEN
-        vars := chr(10)|| '  child_ids ID_ARRAY;';
+        vars := '';
         ref_block := '';
       END IF;
 
@@ -521,6 +521,9 @@ AS
         );
 
         IF rec.m_table IS NULL THEN
+          IF vars IS NULL THEN
+            vars := chr(10)|| '  child_ids ID_ARRAY;';
+          END IF;
           ref_block := ref_block || delete_n_table_by_ids(rec.n_table, rec.n_table_short, rec.fk_n_column_name);
         ELSE
           vars := vars ||chr(10)||'  '|| rec.m_table_short||'_ids ID_ARRAY;';
@@ -727,7 +730,7 @@ AS
       ||chr(10)||'    '||lower(a.column_name)||' = pid'
       ||chr(10)||'    AND id != pid;'
       ||chr(10)
-      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'(part_ids);'
+      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'_batch(part_ids);'
       ||chr(10), '')  WITHIN GROUP (ORDER BY a.column_id)
     INTO
       self_block
@@ -804,7 +807,7 @@ AS
       ||chr(10)||'  WHERE'
       ||chr(10)||'    '||lower(fk_column_name)||' = pid;'
       ||chr(10)
-      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'(child_ids);'
+      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'_batch(child_ids);'
       ||chr(10);
   END;
 
@@ -1124,7 +1127,7 @@ AS
     )
     LOOP
       IF vars IS NULL THEN
-        vars := chr(10)|| '  child_ids ID_ARRAY;';
+        vars := '';
         ref_block := '';
       END IF;
 
@@ -1144,6 +1147,9 @@ AS
         );
 
         IF rec.m_table IS NULL THEN
+          IF vars IS NULL THEN
+            vars := chr(10)|| '  child_ids ID_ARRAY;';
+          END IF;
           ref_block := ref_block || delete_n_table_by_id(rec.n_table, rec.n_table_short, rec.fk_n_column_name);
         ELSE
           vars := vars ||chr(10)||'  '||lower(rec.m_table_short)||'_ids ID_ARRAY;';
@@ -1350,7 +1356,7 @@ AS
     )
   IS
     ddl_command VARCHAR2(500) := 
-      'CREATE OR REPLACE FUNCTION delete_'||lower(table_short_name)||'(arr ID_ARRAY) RETURN ID_ARRAY'
+      'CREATE OR REPLACE FUNCTION delete_'||lower(table_short_name)||'_batch(arr ID_ARRAY) RETURN ID_ARRAY'
       ||chr(10)||'IS'
       ||chr(10)||'  deleted_ids ID_ARRAY;'
       ||chr(10)||'BEGIN'
@@ -1370,7 +1376,7 @@ AS
     )
   IS
     ddl_command VARCHAR2(10000) := 
-      'CREATE OR REPLACE FUNCTION delete_'||lower(tab_short_name)||'(arr ID_ARRAY) RETURN ID_ARRAY'
+      'CREATE OR REPLACE FUNCTION delete_'||lower(tab_short_name)||'_batch(arr ID_ARRAY) RETURN ID_ARRAY'
       ||chr(10)||'IS'||chr(10);
     declare_block VARCHAR2(500) := '  deleted_ids ID_ARRAY;';
     pre_block VARCHAR2(2000) := '';
