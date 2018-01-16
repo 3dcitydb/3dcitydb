@@ -47,7 +47,7 @@ AS
   FUNCTION delete_n_m_table_by_ids(n_m_tab_name VARCHAR2, fk_n_column_name VARCHAR2, m_tab_name VARCHAR2, fk_m_column_name VARCHAR2) RETURN VARCHAR2;
   FUNCTION delete_n_m_table_by_ids(n_m_tab_name VARCHAR2, fk_n_column_name VARCHAR2, m_tab_name VARCHAR2, m_tab_short_name VARCHAR2, fk_m_column_name VARCHAR2) RETURN VARCHAR2;
   PROCEDURE delete_refs_by_ids(tab_name VARCHAR2, schema_name VARCHAR2 := USER, vars OUT VARCHAR2, ref_block OUT VARCHAR2);
-  PROCEDURE delete_fkeys_by_ids(tab_name VARCHAR2, schema_name VARCHAR2 := USER, vars OUT VARCHAR2, returning_block OUT VARCHAR2, into_block OUT VARCHAR2, fk_block OUT VARCHAR2);
+  PROCEDURE delete_fkeys_by_ids(tab_name VARCHAR2, schema_name VARCHAR2 := USER, vars OUT VARCHAR2, returning_block OUT VARCHAR2, collect_block OUT VARCHAR2, into_block OUT VARCHAR2, fk_block OUT VARCHAR2);
   FUNCTION delete_parent_by_ids(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION delete_self_ref_by_id(tab_name VARCHAR2, tab_short_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION delete_n_table_by_id(tab_name VARCHAR2, fk_column_name VARCHAR2) RETURN VARCHAR2;
@@ -59,7 +59,7 @@ AS
   PROCEDURE delete_refs_by_id(tab_name VARCHAR2, schema_name VARCHAR2 := USER, vars OUT VARCHAR2, ref_block OUT VARCHAR2);
   PROCEDURE delete_fkeys_by_id(tab_name VARCHAR2, schema_name VARCHAR2 := USER, vars OUT VARCHAR2, returning_block OUT VARCHAR2, into_block OUT VARCHAR2, fk_block OUT VARCHAR2);
   FUNCTION delete_parent_by_id(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
-  PROCEDURE create_array_delete_dummy(table_short_name VARCHAR2);
+  PROCEDURE create_array_delete_dummy(tab_short_name VARCHAR2);
 
   /***********************
   * DELETE BY IDS (ARRAY)
@@ -83,8 +83,8 @@ AS
       ||chr(10)||'    '||lower(tab_name)||' t,'
       ||chr(10)||'    TABLE(arr) a'
       ||chr(10)||'  WHERE'
-      ||chr(10)||'    t.'||lower(a.column_name)||' = a.a_id'
-      ||chr(10)||'    AND t.id != a.a_id;'
+      ||chr(10)||'    t.'||lower(a.column_name)||' = a.COLUMN_VALUE'
+      ||chr(10)||'    AND t.id != a.COLUMN_VALUE;'
       ||chr(10)
       ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'_batch(part_ids);'
       ||chr(10), '') WITHIN GROUP (ORDER BY a.column_id)
@@ -258,7 +258,7 @@ AS
       ||chr(10)||'    '||fk_m_column_name
       ||chr(10)||'  BULK COLLECT INTO'
       ||chr(10)||'	  '||lower(m_tab_name)||'_ids;'
-      ||chr(10) || delete_m_table_by_ids(m_tab_name, fk_m_column_name, n_m_tab_name);
+      ||chr(10)|| delete_m_table_by_ids(m_tab_name, fk_m_column_name, n_m_tab_name);
   END;
 
   -- creates code block to delete referenced entries in n:m table
@@ -288,7 +288,7 @@ AS
       ||chr(10)||'    '||fk_m_column_name
       ||chr(10)||'  BULK COLLECT INTO'
       ||chr(10)||'	  '||lower(m_tab_name)||'_ids;'
-      ||chr(10) || delete_m_table_by_ids(m_tab_name, m_tab_short_name, fk_m_column_name, n_m_tab_name);
+      ||chr(10)|| delete_m_table_by_ids(m_tab_name, m_tab_short_name, fk_m_column_name, n_m_tab_name);
   END;
 
   -- creates code block to delete referenced entries
@@ -496,7 +496,7 @@ AS
       ORDER BY
         c.table_name,
         m.m_table,
-        n.ref_depth NULLS FIRST,
+        n.ref_depth DESC,
         m.m_table_count DESC
     )
     LOOP
@@ -521,8 +521,8 @@ AS
         );
 
         IF rec.m_table IS NULL THEN
-          IF vars IS NULL THEN
-            vars := chr(10)|| '  child_ids ID_ARRAY;';
+          IF vars IS NULL OR INSTR(vars, 'child_ids') = 0 THEN
+            vars := vars ||chr(10)|| '  child_ids ID_ARRAY;';
           END IF;
           ref_block := ref_block || delete_n_table_by_ids(rec.n_table, rec.n_table_short, rec.fk_n_column_name);
         ELSE
@@ -548,6 +548,7 @@ AS
     schema_name VARCHAR2 := USER,
     vars OUT VARCHAR2,
     returning_block OUT VARCHAR2,
+    collect_block OUT VARCHAR2,
     into_block OUT VARCHAR2,
     fk_block OUT VARCHAR2
     )
@@ -565,7 +566,7 @@ AS
         SELECT
           c2.table_name AS fk_table,
           a_ref.column_name AS fk_column,
-          LISTAGG(a.column_name, chr(10)||'    ') WITHIN GROUP (ORDER BY a.column_id) AS ref_columns,
+          LISTAGG(a.column_name, ','||chr(10)||'    ') WITHIN GROUP (ORDER BY a.column_id) AS ref_columns,
           count(a.column_name) AS column_count
         FROM
           all_constraints c
@@ -586,13 +587,15 @@ AS
         JOIN
           all_cons_columns a_ref
           ON a_ref.constraint_name = c2.constraint_name
+         AND a_ref.table_name = c2.table_name
          AND a_ref.owner = c2.owner
         WHERE
           c.table_name = upper(tab_name)
           AND c.owner = upper(schema_name)
           AND c.table_name <> c2.table_name
           AND c.constraint_type = 'R'
-          AND c.delete_rule = 'NO ACTION'
+          AND c.delete_rule = 'SET NULL'
+          AND (c2.table_name <> 'SURFACE_GEOMETRY' OR c.table_name = 'IMPLICIT_GEOMETRY')
           AND a.nullable = 'Y'
         GROUP BY
           c2.table_name,
@@ -618,13 +621,24 @@ AS
       IF vars IS NULL THEN
         vars := '';
         returning_block := '';
+        collect_block := '';
         into_block := '';
         fk_block := '';
       END IF;
 
-      vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ids ID_ARRAY;';
       returning_block := returning_block ||','||chr(10)||'    '|| lower(rec.ref_columns);
-      into_block := into_block ||','||chr(10)||'    '||lower(rec.fk_table)||'_ids';
+      vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ids ID_ARRAY;';
+
+      IF rec.column_count > 1 THEN
+        collect_block := collect_block||chr(10)||'  -- collect all '||lower(rec.fk_table)||' ids into one nested table';
+        FOR i IN 1..rec.column_count LOOP
+          vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ids'||i||' ID_ARRAY;';
+          into_block := into_block ||','||chr(10)||'    '||lower(rec.fk_table)||'_ids'||i;
+          collect_block := collect_block||'  '||lower(rec.fk_table)||'_ids := '||lower(rec.fk_table)||'_ids MULTISET UNION ALL '||lower(rec.fk_table)||'_ids'||i||';'||chr(10);
+        END LOOP;
+      ELSE
+        into_block := into_block ||','||chr(10)||'    '||lower(rec.fk_table)||'_ids';
+      END IF;
 
       IF rec.has_ref = 1 THEN
         -- function call required, so create function first
@@ -761,8 +775,8 @@ AS
       c.table_name;
 
     IF self_block IS NOT NULL THEN
-      -- create a dummy array delete function to enable compiling
-      create_array_delete_dummy(tab_short_name);
+      -- create a array delete function
+      citydb_delete_gen.create_array_delete_function(tab_name, tab_short_name, schema_name);
     END IF;
 
     RETURN self_block;
@@ -889,7 +903,7 @@ AS
       ||chr(10)||'    '||lower(fk_m_column_name)
       ||chr(10)||'  BULK COLLECT INTO'
       ||chr(10)||'	  '||lower(m_tab_name)||'_ids;'
-      ||chr(10) || delete_m_table_by_ids(m_tab_name, fk_m_column_name, n_m_tab_name);
+      ||chr(10)|| delete_m_table_by_ids(m_tab_name, fk_m_column_name, n_m_tab_name);
   END;
 
   -- creates code block to delete referenced entries in n:m table
@@ -913,7 +927,7 @@ AS
       ||chr(10)||'    '||lower(fk_m_column_name)
       ||chr(10)||'  BULK COLLECT INTO'
       ||chr(10)||'	  '||lower(m_tab_name)||'_ids;'
-      ||chr(10) || delete_m_table_by_ids(m_tab_name, m_tab_short_name, fk_m_column_name, n_m_tab_name);
+      ||chr(10)|| delete_m_table_by_ids(m_tab_name, m_tab_short_name, fk_m_column_name, n_m_tab_name);
   END;
 
 
@@ -1122,7 +1136,7 @@ AS
       ORDER BY
         c.table_name,
         m.m_table,
-        n.ref_depth NULLS FIRST,
+        n.ref_depth DESC,
         m.m_table_count DESC
     )
     LOOP
@@ -1147,8 +1161,8 @@ AS
         );
 
         IF rec.m_table IS NULL THEN
-          IF vars IS NULL THEN
-            vars := chr(10)|| '  child_ids ID_ARRAY;';
+          IF vars IS NULL OR INSTR(vars, 'child_ids') = 0 THEN
+            vars := vars ||chr(10)|| '  child_ids ID_ARRAY;';
           END IF;
           ref_block := ref_block || delete_n_table_by_id(rec.n_table, rec.n_table_short, rec.fk_n_column_name);
         ELSE
@@ -1191,7 +1205,7 @@ AS
         SELECT
           c2.table_name AS fk_table,
           a_ref.column_name AS fk_column,
-          LISTAGG(a.column_name, chr(10)||'      ') WITHIN GROUP (ORDER BY a.column_id) AS ref_columns,
+          LISTAGG(a.column_name, ','||chr(10)||'      ') WITHIN GROUP (ORDER BY a.column_id) AS ref_columns,
           count(a.column_name) AS column_count
         FROM
           all_constraints c
@@ -1218,7 +1232,8 @@ AS
           AND c.owner = upper(schema_name)
           AND c.table_name <> c2.table_name
           AND c.constraint_type = 'R'
-          AND c.delete_rule = 'NO ACTION'
+          AND c.delete_rule = 'SET NULL'
+          AND (c2.table_name <> 'SURFACE_GEOMETRY' OR c.table_name = 'IMPLICIT_GEOMETRY')
           AND a.nullable = 'Y'
         GROUP BY
           c2.table_name,
@@ -1352,11 +1367,11 @@ AS
   **************************/
   -- dummy function to compile array delete functions with recursions
   PROCEDURE create_array_delete_dummy(
-    table_short_name VARCHAR2
+    tab_short_name VARCHAR2
     )
   IS
     ddl_command VARCHAR2(500) := 
-      'CREATE OR REPLACE FUNCTION delete_'||lower(table_short_name)||'_batch(arr ID_ARRAY) RETURN ID_ARRAY'
+      'CREATE OR REPLACE FUNCTION delete_'||lower(tab_short_name)||'_batch(arr ID_ARRAY) RETURN ID_ARRAY'
       ||chr(10)||'IS'
       ||chr(10)||'  deleted_ids ID_ARRAY;'
       ||chr(10)||'BEGIN'
@@ -1380,7 +1395,7 @@ AS
       ||chr(10)||'IS'||chr(10);
     declare_block VARCHAR2(500) := '  deleted_ids ID_ARRAY;';
     pre_block VARCHAR2(2000) := '';
-    post_block VARCHAR2(1000) := '';
+    post_block VARCHAR2(2000) := '';
     delete_block VARCHAR2(1000) :=
         chr(10)||'  DELETE FROM'
       ||chr(10)||'    '||lower(tab_name)||' t'
@@ -1400,6 +1415,7 @@ AS
     vars VARCHAR2(500);
     ref_block VARCHAR2(2000);
     returning_block VARCHAR2(500);
+    collect_block VARCHAR2(500);
     into_block VARCHAR2(500);
     fk_block VARCHAR2(1000);
   BEGIN
@@ -1415,11 +1431,11 @@ AS
     pre_block := pre_block || COALESCE(ref_block, '');
 
     -- FOREIGN KEY which are set to ON DELETE NO ACTION and are nullable
-    delete_fkeys_by_ids(tab_name, schema_name, vars, returning_block, into_block, fk_block);
+    delete_fkeys_by_ids(tab_name, schema_name, vars, returning_block, collect_block, into_block, fk_block);
     declare_block := declare_block || COALESCE(vars, '');
     delete_block := delete_block || COALESCE(returning_block, '');
     delete_into_block := delete_into_block || COALESCE(into_block, '');
-    post_block := post_block || COALESCE(fk_block, '');
+    post_block := post_block || COALESCE(collect_block, '') ||chr(10)|| COALESCE(fk_block, '');
 
     -- FOREIGN KEY which cover same columns AS primary key
     post_block := post_block || delete_parent_by_ids(tab_name, schema_name);
@@ -1437,6 +1453,7 @@ AS
       ||chr(10)||'  -- delete '||lower(tab_name)||'s'
       || delete_block
       || delete_into_block || ';'
+      || collect_block
       ||chr(10)
       || post_block
       ||chr(10)||'  RETURN deleted_ids;'
