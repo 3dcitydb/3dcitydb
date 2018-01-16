@@ -377,7 +377,7 @@ BEGIN
     ORDER BY
       c.conrelid,
       m.m_table,
-      n.ref_depth NULLS FIRST,
+      n.ref_depth DESC,
       m.m_table_count DESC
   )
   LOOP
@@ -591,7 +591,7 @@ BEGIN
     AND a.attnotnull = FALSE;
 
   IF self_block IS NOT NULL THEN
-    -- create a dummy array delete function to enable compiling
+    -- create a array delete function
     PERFORM citydb_pkg.create_array_delete_function($1, $2, $3);
   END IF;
 
@@ -896,7 +896,7 @@ BEGIN
     ORDER BY
       c.conrelid,
       m.m_table,
-      n.ref_depth NULLS FIRST,
+      n.ref_depth DESC,
       m.m_table_count DESC
   )
   LOOP
