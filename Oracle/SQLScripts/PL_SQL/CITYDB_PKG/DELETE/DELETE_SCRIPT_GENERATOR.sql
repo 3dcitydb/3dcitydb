@@ -86,7 +86,9 @@ AS
       ||chr(10)||'    t.'||lower(a.column_name)||' = a.COLUMN_VALUE'
       ||chr(10)||'    AND t.id != a.COLUMN_VALUE;'
       ||chr(10)
-      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'_batch(part_ids);'
+      ||chr(10)||'  IF part_ids.COUNT > 0 THEN'
+      ||chr(10)||'    dummy_ids := delete_'||lower(substr(tab_short_name,1,17))||'_batch(part_ids);'
+      ||chr(10)||'  END IF;'
       ||chr(10), '') WITHIN GROUP (ORDER BY a.column_id)
     INTO
       self_block
@@ -170,7 +172,9 @@ AS
       ||chr(10)||'  WHERE'
       ||chr(10)||'    t.'||lower(fk_column_name)||' = a.COLUMN_VALUE;'
       ||chr(10)
-      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'_batch(child_ids);'
+      ||chr(10)||'  IF child_ids.COUNT > 0 THEN'
+      ||chr(10)||'    dummy_ids := delete_'||lower(substr(tab_short_name,1,17))||'_batch(child_ids);'
+      ||chr(10)||'  END IF;'
       ||chr(10);
   END;
 
@@ -184,7 +188,7 @@ AS
   BEGIN
     RETURN
         chr(10)||'  -- delete '||lower(m_tab_name)||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||lower(m_tab_name)||'_ids IS NOT EMPTY OR '||lower(m_tab_name)||'_ids IS NOT NULL THEN'
+      ||chr(10)||'  IF '||lower(m_tab_name)||'_ids.COUNT > 0 THEN'
       ||chr(10)||'    DELETE FROM'
       ||chr(10)||'      '||lower(m_tab_name)||' m'
       ||chr(10)||'    WHERE EXISTS ('
@@ -214,7 +218,7 @@ AS
   BEGIN
     RETURN
         chr(10)||'  -- delete '||lower(m_tab_name)||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||lower(m_tab_name)||'_ids IS NOT EMPTY OR '||lower(m_tab_name)||'_ids IS NOT NULL THEN'
+      ||chr(10)||'  IF '||lower(m_tab_name)||'_ids.COUNT > 0 THEN'
       ||chr(10)||'    SELECT DISTINCT'
       ||chr(10)||'      a.COLUMN_VALUE'
       ||chr(10)||'    BULK COLLECT INTO'
@@ -227,7 +231,9 @@ AS
       ||chr(10)||'    WHERE'
       ||chr(10)||'      n2m.'||lower(fk_m_column_name)||' IS NULL;'
       ||chr(10)
-      ||chr(10)||'    dummy_ids := delete_'||lower(m_tab_short_name)||'_batch('||lower(m_tab_name)||'_ids);'
+      ||chr(10)||'    IF '||lower(m_tab_name)||'_ids.COUNT > 0 THEN'
+      ||chr(10)||'      dummy_ids := delete_'||lower(substr(m_tab_short_name,1,17))||'_batch('||lower(m_tab_name)||'_ids);'
+      ||chr(10)||'    END IF;'
       ||chr(10)||'  END IF;'
       ||chr(10);
   END;
@@ -630,7 +636,7 @@ AS
       vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ids ID_ARRAY;';
 
       IF rec.column_count > 1 THEN
-        collect_block := collect_block||chr(10)||'  -- collect all '||lower(rec.fk_table)||' ids into one nested table';
+        collect_block := collect_block||chr(10)||'  -- collect all '||lower(rec.fk_table)||' ids into one nested table'||chr(10);
         FOR i IN 1..rec.column_count LOOP
           vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ids'||i||' ID_ARRAY;';
           into_block := into_block ||','||chr(10)||'    '||lower(rec.fk_table)||'_ids'||i;
@@ -708,7 +714,9 @@ AS
       -- add delete call for parent table
       parent_block := parent_block
         ||chr(10)||'  -- delete '||lower(rec.parent_table)
-        ||chr(10)||'  dummy_ids := delete_'||lower(rec.parent_table_short)||'(deleted_ids);'
+        ||chr(10)||'  IF deleted_ids.COUNT > 0 THEN'
+        ||chr(10)||'    dummy_ids := delete_'||lower(substr(rec.parent_table_short,1,17))||'_batch(deleted_ids);'
+        ||chr(10)||'  END IF;'
         ||chr(10);
     END LOOP;
 
@@ -744,7 +752,9 @@ AS
       ||chr(10)||'    '||lower(a.column_name)||' = pid'
       ||chr(10)||'    AND id != pid;'
       ||chr(10)
-      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'_batch(part_ids);'
+      ||chr(10)||'  IF part_ids.COUNT > 0 THEN'
+      ||chr(10)||'    dummy_ids := delete_'||lower(substr(tab_short_name,1,17))||'_batch(part_ids);'
+      ||chr(10)||'  END IF;'
       ||chr(10), '')  WITHIN GROUP (ORDER BY a.column_id)
     INTO
       self_block
@@ -821,7 +831,9 @@ AS
       ||chr(10)||'  WHERE'
       ||chr(10)||'    '||lower(fk_column_name)||' = pid;'
       ||chr(10)
-      ||chr(10)||'  dummy_ids := delete_'||lower(tab_short_name)||'_batch(child_ids);'
+      ||chr(10)||'  IF child_ids.COUNT > 0 THEN'
+      ||chr(10)||'    dummy_ids := delete_'||lower(substr(tab_short_name,1,17))||'_batch(child_ids);'
+      ||chr(10)||'  END IF;'
       ||chr(10);
   END;
 
@@ -878,7 +890,9 @@ AS
       ||chr(10)||'    WHERE'
       ||chr(10)||'      n2m.'||lower(fk_m_column_name)||' IS NULL;'
       ||chr(10)
-      ||chr(10)||'    dummy_ids := delete_'||lower(m_tab_short_name)||'('||lower(m_tab_name)||'_pid);'
+      ||chr(10)||'    IF '||lower(m_tab_name)||'_pid IS NOT NULL THEN'
+      ||chr(10)||'      dummy_id := delete_'||lower(substr(m_tab_short_name,1,17))||'('||lower(m_tab_name)||'_pid);'
+      ||chr(10)||'    END IF;'
       ||chr(10)||'  END IF;'
       ||chr(10);
   END;
@@ -1350,7 +1364,9 @@ AS
       -- add delete call for parent table
       parent_block := parent_block
         ||chr(10)||'  -- delete '||lower(rec.parent_table)
-        ||chr(10)||'  dummy_id := delete_'||lower(rec.parent_table_short)||'(deleted_id);'
+        ||chr(10)||'  IF deleted_id IS NOT NULL THEN'
+        ||chr(10)||'    dummy_id := delete_'||lower(substr(rec.parent_table_short,1,17))||'(deleted_id);'
+        ||chr(10)||'  END IF;'
         ||chr(10);
     END LOOP;
 
@@ -1371,7 +1387,7 @@ AS
     )
   IS
     ddl_command VARCHAR2(500) := 
-      'CREATE OR REPLACE FUNCTION delete_'||lower(tab_short_name)||'_batch(arr ID_ARRAY) RETURN ID_ARRAY'
+      'CREATE OR REPLACE FUNCTION delete_'||lower(substr(tab_short_name,1,17))||'_batch(arr ID_ARRAY) RETURN ID_ARRAY'
       ||chr(10)||'IS'
       ||chr(10)||'  deleted_ids ID_ARRAY;'
       ||chr(10)||'BEGIN'
@@ -1391,7 +1407,7 @@ AS
     )
   IS
     ddl_command VARCHAR2(10000) := 
-      'CREATE OR REPLACE FUNCTION delete_'||lower(tab_short_name)||'_batch(arr ID_ARRAY) RETURN ID_ARRAY'
+      'CREATE OR REPLACE FUNCTION delete_'||lower(substr(tab_short_name,1,17))||'_batch(arr ID_ARRAY) RETURN ID_ARRAY'
       ||chr(10)||'IS'||chr(10);
     declare_block VARCHAR2(500) := '  deleted_ids ID_ARRAY;';
     pre_block VARCHAR2(2000) := '';
@@ -1435,7 +1451,7 @@ AS
     declare_block := declare_block || COALESCE(vars, '');
     delete_block := delete_block || COALESCE(returning_block, '');
     delete_into_block := delete_into_block || COALESCE(into_block, '');
-    post_block := post_block || COALESCE(collect_block, '') ||chr(10)|| COALESCE(fk_block, '');
+    post_block := post_block || COALESCE(collect_block, '') || COALESCE(fk_block, '');
 
     -- FOREIGN KEY which cover same columns AS primary key
     post_block := post_block || delete_parent_by_ids(tab_name, schema_name);
@@ -1453,7 +1469,6 @@ AS
       ||chr(10)||'  -- delete '||lower(tab_name)||'s'
       || delete_block
       || delete_into_block || ';'
-      || collect_block
       ||chr(10)
       || post_block
       ||chr(10)||'  RETURN deleted_ids;'
@@ -1471,7 +1486,7 @@ AS
     schema_name VARCHAR2 := USER
     )
   IS
-    ddl_command VARCHAR2(10000) := 'CREATE OR REPLACE FUNCTION delete_'||lower(tab_short_name)||'(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
+    ddl_command VARCHAR2(10000) := 'CREATE OR REPLACE FUNCTION delete_'||lower(substr(tab_short_name,1,17))||'(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
     declare_block VARCHAR2(500) := '  deleted_id NUMBER;';
     pre_block VARCHAR2(2000) := '';
     post_block VARCHAR2(1000) := '';
