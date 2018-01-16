@@ -633,9 +633,10 @@ AS
       END IF;
 
       returning_block := returning_block ||','||chr(10)||'    '|| lower(rec.ref_columns);
-      vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ids ID_ARRAY;';
 
       IF rec.column_count > 1 THEN
+        -- additional collections and initialization of final list for referencing IDs required
+        vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ids ID_ARRAY := ID_ARRAY();';
         collect_block := collect_block||chr(10)||'  -- collect all '||lower(rec.fk_table)||' ids into one nested table'||chr(10);
         FOR i IN 1..rec.column_count LOOP
           vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ids'||i||' ID_ARRAY;';
@@ -643,6 +644,7 @@ AS
           collect_block := collect_block||'  '||lower(rec.fk_table)||'_ids := '||lower(rec.fk_table)||'_ids MULTISET UNION ALL '||lower(rec.fk_table)||'_ids'||i||';'||chr(10);
         END LOOP;
       ELSE
+        vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ids ID_ARRAY;';
         into_block := into_block ||','||chr(10)||'    '||lower(rec.fk_table)||'_ids';
       END IF;
 
