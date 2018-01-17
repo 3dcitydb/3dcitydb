@@ -1281,7 +1281,10 @@ AS
 
       IF rec.column_count > 1 THEN
         vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ids ID_ARRAY;';
-        returning_block := returning_block||','||chr(10)||'    ID_ARRAY('||lower(rec.ref_columns)||')';
+        returning_block := returning_block||','
+          ||chr(10)||'    ID_ARRAY('
+          ||chr(10)||'      '||lower(rec.ref_columns)
+          ||chr(10)||'    )';
         into_block := into_block||','||chr(10)||'    '||lower(rec.fk_table)||'_ids';
       ELSE
         vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ref_id NUMBER;';
@@ -1448,7 +1451,7 @@ AS
     declare_block := declare_block || COALESCE(vars, '');
     pre_block := pre_block || COALESCE(ref_block, '');
 
-    -- FOREIGN KEY which are set to ON DELETE NO ACTION and are nullable
+    -- FOREIGN KEYs which are set to ON DELETE SET NULL and are nullable
     delete_fkeys_by_ids(tab_name, schema_name, vars, returning_block, collect_block, into_block, fk_block);
     declare_block := declare_block || COALESCE(vars, '');
     delete_block := delete_block || COALESCE(returning_block, '');
@@ -1519,7 +1522,7 @@ AS
     declare_block := declare_block || COALESCE(vars, '');
     pre_block := pre_block || COALESCE(ref_block, '');
 
-    -- FOREIGN KEY which are set to ON DELETE NO ACTION and are nullable
+    -- FOREIGN KEY which are set to ON DELETE SET NULL and are nullable
     delete_fkeys_by_id(tab_name, schema_name, vars, returning_block, into_block, fk_block);
     declare_block := declare_block || COALESCE(vars, '');
     delete_block := delete_block || COALESCE(returning_block, '');
