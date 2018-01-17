@@ -622,7 +622,7 @@ AS
           ct.table_name = fk.fk_table
           AND ct2.table_name <> fk.fk_table
           AND ct.constraint_type = 'R'
-          AND ct.delete_rule = 'NO ACTION'
+          AND (ct.delete_rule = 'NO ACTION' OR ct.delete_rule = 'SET NULL')
       ) rf
     )
     LOOP
@@ -883,21 +883,21 @@ AS
   BEGIN
     RETURN
         chr(10)||'  -- delete '||lower(m_tab_name)||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||lower(m_tab_name)||'_ref_id IS NOT NULL THEN'
+      ||chr(10)||'  IF '||lower(m_tab_name)||'_pid IS NOT NULL THEN'
       ||chr(10)||'    SELECT'
       ||chr(10)||'      a.COLUMN_VALUE'
       ||chr(10)||'    INTO'
-      ||chr(10)||'      '||lower(m_tab_name)||'_pid'
+      ||chr(10)||'      '||lower(m_tab_name)||'_ref_id'
       ||chr(10)||'    FROM'
-      ||chr(10)||'      TABLE('||lower(m_tab_name)||'_ref_id) a'
+      ||chr(10)||'      TABLE('||lower(m_tab_name)||'_pid) a'
       ||chr(10)||'    LEFT JOIN'
       ||chr(10)||'      '||lower(n_m_tab_name)||' n2m'
       ||chr(10)||'      ON n2m.'||lower(fk_m_column_name)||' = a.COLUMN_VALUE'
       ||chr(10)||'    WHERE'
       ||chr(10)||'      n2m.'||lower(fk_m_column_name)||' IS NULL;'
       ||chr(10)
-      ||chr(10)||'    IF '||lower(m_tab_name)||'_pid IS NOT NULL THEN'
-      ||chr(10)||'      dummy_id := delete_'||lower(substr(m_tab_short_name,1,17))||'('||lower(m_tab_name)||'_pid);'
+      ||chr(10)||'    IF '||lower(m_tab_name)||'_ref_id IS NOT NULL THEN'
+      ||chr(10)||'      dummy_id := delete_'||lower(substr(m_tab_short_name,1,17))||'('||lower(m_tab_name)||'_ref_id);'
       ||chr(10)||'    END IF;'
       ||chr(10)||'  END IF;'
       ||chr(10);
@@ -1186,7 +1186,9 @@ AS
           END IF;
           ref_block := ref_block || delete_n_table_by_id(rec.n_table, rec.n_table_short, rec.fk_n_column_name);
         ELSE
-          vars := vars ||chr(10)||'  '||lower(rec.m_table_short)||'_ids ID_ARRAY;';
+          vars := vars
+            ||chr(10)||'  '||lower(rec.m_table_short)||'_ids ID_ARRAY;'
+            ||chr(10)||'  '||lower(rec.m_table_short)||'_ref_ids ID_ARRAY;';
           ref_block := ref_block || delete_n_m_table_by_id(rec.n_table, rec.fk_n_column_name, rec.m_table, rec.m_table_short, rec.fk_m_column_name);
         END IF;      
       ELSE
@@ -1272,7 +1274,7 @@ AS
           ct.table_name = fk.fk_table
           AND ct2.table_name <> fk.fk_table
           AND ct.constraint_type = 'R'
-          AND ct.delete_rule = 'NO ACTION'
+          AND (ct.delete_rule = 'NO ACTION' OR ct.delete_rule = 'SET NULL')
       ) rf
     )
     LOOP
@@ -1291,18 +1293,19 @@ AS
           ||chr(10)||'    )';
         into_block := into_block||','||chr(10)||'    '||lower(rec.fk_table)||'_ids';
       ELSE
-        vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ref_id NUMBER;';
+        vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_pid NUMBER;';
         returning_block := returning_block ||','||chr(10)||'    '||lower(rec.ref_columns);
-        into_block := into_block||','||chr(10)||'    '||lower(rec.fk_table)||'_ref_id';
+        into_block := into_block||','||chr(10)||'    '||lower(rec.fk_table)||'_pid';
       END IF;
 
       IF rec.has_ref = 1 THEN
         -- function call required, so create function first
         citydb_delete_gen.create_array_delete_function(rec.fk_table, rec.fk_table_short, schema_name);
         IF rec.column_count > 1 THEN
+          vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ref_ids ID_ARRAY;';
           fk_block := fk_block || delete_m_table_by_ids(rec.fk_table, rec.fk_table_short, rec.fk_column, rec.fk_table);
         ELSE
-          vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_pid NUMBER;';
+          vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ref_id NUMBER;';
           fk_block := fk_block || delete_m_table_by_id(rec.fk_table, rec.fk_table_short, rec.fk_column, rec.fk_table);
         END IF;
       ELSE
@@ -1534,7 +1537,7 @@ AS
     post_block := post_block || COALESCE(fk_block, '');
 
     -- FOREIGN KEY which cover same columns AS primary key
-    post_block := delete_parent_by_id(tab_name, schema_name);
+    post_block := post_block || delete_parent_by_id(tab_name, schema_name);
 
     -- create dummy variable if pre or post block are not null
     IF pre_block IS NOT NULL THEN
