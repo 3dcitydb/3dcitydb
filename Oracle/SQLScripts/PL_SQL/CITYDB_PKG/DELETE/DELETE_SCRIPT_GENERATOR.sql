@@ -222,7 +222,7 @@ AS
       ||chr(10)||'    SELECT DISTINCT'
       ||chr(10)||'      a.COLUMN_VALUE'
       ||chr(10)||'    BULK COLLECT INTO'
-      ||chr(10)||'      '||lower(m_tab_name)||'_ids'
+      ||chr(10)||'      '||lower(m_tab_name)||'_ref_ids'
       ||chr(10)||'    FROM'
       ||chr(10)||'      TABLE('||lower(m_tab_name)||'_ids) a'
       ||chr(10)||'    LEFT JOIN'
@@ -231,8 +231,8 @@ AS
       ||chr(10)||'    WHERE'
       ||chr(10)||'      n2m.'||lower(fk_m_column_name)||' IS NULL;'
       ||chr(10)
-      ||chr(10)||'    IF '||lower(m_tab_name)||'_ids.COUNT > 0 THEN'
-      ||chr(10)||'      dummy_ids := delete_'||lower(substr(m_tab_short_name,1,17))||'_batch('||lower(m_tab_name)||'_ids);'
+      ||chr(10)||'    IF '||lower(m_tab_name)||'_ref_ids.COUNT > 0 THEN'
+      ||chr(10)||'      dummy_ids := delete_'||lower(substr(m_tab_short_name,1,17))||'_batch('||lower(m_tab_name)||'_ref_ids);'
       ||chr(10)||'    END IF;'
       ||chr(10)||'  END IF;'
       ||chr(10);
@@ -532,14 +532,16 @@ AS
           END IF;
           ref_block := ref_block || delete_n_table_by_ids(rec.n_table, rec.n_table_short, rec.fk_n_column_name);
         ELSE
-          vars := vars ||chr(10)||'  '|| rec.m_table_short||'_ids ID_ARRAY;';
+          vars := vars
+            ||chr(10)||'  '||lower(rec.m_table_short)||'_ids ID_ARRAY;'
+            ||chr(10)||'  '||lower(rec.m_table_short)||'_ref_ids ID_ARRAY;';
           ref_block := ref_block || delete_n_m_table_by_ids(rec.n_table, rec.fk_n_column_name, rec.m_table, rec.m_table_short, rec.fk_m_column_name);
         END IF;      
       ELSE
         IF rec.m_table IS NULL THEN
           ref_block := ref_block || delete_n_table_by_ids(rec.n_table, rec.fk_n_column_name);
         ELSE
-          vars := vars ||chr(10)||'  '|| rec.m_table||'_ids ID_ARRAY;';
+          vars := vars ||chr(10)||'  '||lower(rec.m_table)||'_ids ID_ARRAY;';
           ref_block := ref_block || delete_n_m_table_by_ids(rec.n_table, rec.fk_n_column_name, rec.m_table, rec.fk_m_column_name);
         END IF;
       END IF;
@@ -641,7 +643,8 @@ AS
         FOR i IN 1..rec.column_count LOOP
           vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ids'||i||' ID_ARRAY;';
           into_block := into_block ||','||chr(10)||'    '||lower(rec.fk_table)||'_ids'||i;
-          collect_block := collect_block||'  '||lower(rec.fk_table)||'_ids := '||lower(rec.fk_table)||'_ids MULTISET UNION ALL '||lower(rec.fk_table)||'_ids'||i||';'||chr(10);
+          collect_block := collect_block||'  '||lower(rec.fk_table)||'_ids := '
+            ||lower(rec.fk_table)||'_ids MULTISET UNION ALL '||lower(rec.fk_table)||'_ids'||i||';'||chr(10);
         END LOOP;
       ELSE
         vars := vars ||chr(10)||'  '||lower(rec.fk_table)||'_ids ID_ARRAY;';
@@ -651,6 +654,7 @@ AS
       IF rec.has_ref = 1 THEN
         -- function call required, so create function first
         citydb_delete_gen.create_array_delete_function(rec.fk_table, rec.fk_table_short, schema_name);
+        vars := vars ||chr(10)||'  '||lower(rec.fk_table_short)||'_ref_ids ID_ARRAY;';
         fk_block := fk_block || delete_m_table_by_ids(rec.fk_table, rec.fk_table_short, rec.fk_column, rec.fk_table);
       ELSE
         fk_block := fk_block || delete_m_table_by_ids(rec.fk_table, rec.fk_column, rec.fk_table);
