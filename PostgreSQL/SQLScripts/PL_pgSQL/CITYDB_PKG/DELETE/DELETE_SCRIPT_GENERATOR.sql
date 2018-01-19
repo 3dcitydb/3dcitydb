@@ -125,7 +125,7 @@ SELECT
   || E'\n    USING'
   || E'\n      (SELECT DISTINCT unnest('||$1||'_ids) AS a_id) a'
   || E'\n    LEFT JOIN'
-  || E'\n'     ||$3||' n2m'
+  || E'\n     '||$3||' n2m'
   || E'\n      ON n2m.'||$2||' = a.a_id'
   || E'\n    WHERE'
   || E'\n      m.id = a.a_id'
@@ -465,7 +465,8 @@ BEGIN
          c.conrelid = ($2 || '.' || $1)::regclass::oid
          AND c.conrelid <> c.confrelid
          AND c.contype = 'f'
-         AND c.confdeltype = 'r'
+         AND c.confdeltype = 'n'
+         AND (c.confrelid::regclass::text NOT LIKE '%surface_geometry' OR c.confrelid::regclass::text LIKE '%implicit_geometry')
          AND NOT a.attnotnull
        GROUP BY
          c.confrelid,
@@ -480,7 +481,7 @@ BEGIN
         conrelid = fk.fk_table_oid
         AND confrelid <> fk.fk_table_oid
         AND contype = 'f'
-        AND (confdeltype = 'a' OR confdeltype = 'r')
+        AND (confdeltype = 'a' OR confdeltype = 'n')
     ) rf ON (true)
   )
   LOOP
@@ -648,7 +649,7 @@ SELECT
   || E'\n    USING'
   || E'\n      (VALUES ('||$1||'_ref_id)) a(a_id)'
   || E'\n    LEFT JOIN'
-  || E'\n'     ||$3||' n2m'
+  || E'\n      '||$3||' n2m'
   || E'\n      ON n2m.'||$2||' = a.a_id'
   || E'\n    WHERE'
   || E'\n      m.id = a.a_id'
@@ -673,7 +674,7 @@ SELECT
   || E'\n    FROM'
   || E'\n      (VALUES ('||$1||'_ref_id)) a(a_id)'
   || E'\n    LEFT JOIN'
-  || E'\n'     ||$4||' n2m'
+  || E'\n     '||$4||' n2m'
   || E'\n      ON n2m.'||$3||' = a.a_id'
   || E'\n    WHERE'
   || E'\n      n2m.'||$3||' IS NULL;'
@@ -983,7 +984,8 @@ BEGIN
          c.conrelid = ($2 || '.' || $1)::regclass::oid
          AND c.conrelid <> c.confrelid
          AND c.contype = 'f'
-         AND c.confdeltype = 'r'
+         AND c.confdeltype = 'n'
+         AND (c.confrelid::regclass::text NOT LIKE '%surface_geometry' OR c.confrelid::regclass::text LIKE '%implicit_geometry')
          AND NOT a.attnotnull
        GROUP BY
          c.confrelid,
@@ -998,7 +1000,7 @@ BEGIN
         conrelid = fk.fk_table_oid
         AND confrelid <> fk.fk_table_oid
         AND contype = 'f'
-        AND (confdeltype = 'a' OR confdeltype = 'r')
+        AND (confdeltype = 'a' OR confdeltype = 'n')
     ) rf ON (true)
   )
   LOOP
@@ -1135,7 +1137,7 @@ BEGIN
   FROM
     citydb_pkg.delete_refs_by_ids($1, $3);
 
-  -- FOREIGN KEY which are set to ON DELETE RESTRICT
+  -- FOREIGN KEY which are set to ON DELETE SET NULL
   SELECT
     declare_block || COALESCE(vars, ''),
     delete_block || COALESCE(returning_block, ''),
@@ -1220,7 +1222,7 @@ BEGIN
   FROM
     citydb_pkg.delete_refs_by_id($1, $3);
 
-  -- FOREIGN KEY which are set to ON DELETE RESTRICT
+  -- FOREIGN KEY which are set to ON DELETE SET NULL
   SELECT
     declare_block || COALESCE(vars, ''),
     delete_block || COALESCE(returning_block, ''),
