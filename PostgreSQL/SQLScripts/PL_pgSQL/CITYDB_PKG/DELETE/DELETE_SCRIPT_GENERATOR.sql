@@ -466,7 +466,7 @@ BEGIN
          AND c.conrelid <> c.confrelid
          AND c.contype = 'f'
          AND c.confdeltype = 'n'
-         AND (c.confrelid::regclass::text NOT LIKE '%surface_geometry' OR c.confrelid::regclass::text LIKE '%implicit_geometry')
+         AND (c.confrelid::regclass::text NOT LIKE '%surface_geometry' OR c.conrelid::regclass::text LIKE '%implicit_geometry')
          AND NOT a.attnotnull
        GROUP BY
          c.confrelid,
@@ -985,7 +985,7 @@ BEGIN
          AND c.conrelid <> c.confrelid
          AND c.contype = 'f'
          AND c.confdeltype = 'n'
-         AND (c.confrelid::regclass::text NOT LIKE '%surface_geometry' OR c.confrelid::regclass::text LIKE '%implicit_geometry')
+         AND (c.confrelid::regclass::text NOT LIKE '%surface_geometry' OR c.conrelid::regclass::text LIKE '%implicit_geometry')
          AND NOT a.attnotnull
        GROUP BY
          c.confrelid,
