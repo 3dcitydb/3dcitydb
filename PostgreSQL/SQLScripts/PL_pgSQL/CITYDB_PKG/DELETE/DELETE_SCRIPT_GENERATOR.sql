@@ -835,44 +835,37 @@ CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_to_fk(
   ) RETURNS SETOF RECORD AS
 $$
 SELECT
-  ref_table_oid::regclass::text AS ref_table,
-  ref_column::text,
-  fk_columns,
-  concat_id_arrays,
-  column_count::int,
-  (cleanup_ref_table IS NOT NULL) AS cleanup_ref_table
-FROM (
-  SELECT
-    c.confrelid AS ref_table_oid,
-    a_ref.attname AS ref_column,
-    string_agg(a.attname, E',\n      ' ORDER BY a.attnum) AS fk_columns,
-    string_agg('array_agg('||a.attname||')', E' ||\n    ' ORDER BY a.attnum) AS concat_id_arrays,
-    count(a.attname) AS column_count,
-    citydb_pkg.check_for_cleanup(c.confrelid) AS cleanup_ref_table
-  FROM
-    pg_constraint c
-  JOIN
-    pg_attribute a
-    ON a.attrelid = c.conrelid
-   AND a.attnum = ANY (c.conkey)
-  JOIN
-    pg_attribute a_ref
-    ON a_ref.attrelid = c.confrelid
-   AND a_ref.attnum = ANY (c.confkey)
-  WHERE
-    c.conrelid = ($2 || '.' || $1)::regclass::oid
-    AND c.conrelid <> c.confrelid
-    AND c.contype = 'f'
-    AND c.confdeltype = 'n'
-    AND (c.confrelid::regclass::text NOT LIKE '%surface_geometry'
-     OR c.conrelid::regclass::text LIKE '%implicit_geometry'
-     OR c.conrelid::regclass::text LIKE '%cityobject_genericattrib'
-     OR c.conrelid::regclass::text LIKE '%cityobjectgroup')
-    AND NOT a.attnotnull
-  GROUP BY
-    c.confrelid,
-    a_ref.attname
-) fk;
+  c.confrelid::regclass::text AS ref_table,
+  a_ref.attname::text AS ref_column,
+  string_agg(a.attname, E',\n      ' ORDER BY a.attnum) AS fk_columns,
+  string_agg('array_agg('||a.attname||')', E' ||\n    ' ORDER BY a.attnum) AS concat_id_arrays,
+  count(a.attname)::int AS column_count,
+  citydb_pkg.check_for_cleanup(c.confrelid) IS NOT NULL AS cleanup_ref_table
+FROM
+  pg_constraint c
+JOIN
+  pg_attribute a
+  ON a.attrelid = c.conrelid
+ AND a.attnum = ANY (c.conkey)
+JOIN
+  pg_attribute a_ref
+  ON a_ref.attrelid = c.confrelid
+ AND a_ref.attnum = ANY (c.confkey)
+WHERE
+  c.conrelid = ($2 || '.' || $1)::regclass::oid
+  AND c.conrelid <> c.confrelid
+  AND c.contype = 'f'
+  AND c.confdeltype = 'n'
+  AND (c.confrelid::regclass::text NOT LIKE '%surface_geometry'
+   OR c.conrelid::regclass::text LIKE '%implicit_geometry'
+   OR c.conrelid::regclass::text LIKE '%cityobject_genericattrib'
+   OR c.conrelid::regclass::text LIKE '%cityobjectgroup')
+  AND NOT a.attnotnull
+GROUP BY
+  c.confrelid,
+  a_ref.attname
+ORDER BY
+  column_count;
 $$
 LANGUAGE sql STRICT;
 
