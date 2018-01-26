@@ -25,15 +25,6 @@
 -- limitations under the License.
 --
 
-/*
-A delete function can consist of up to five parts:
-  1. A recursive delete call, if the relation stores tree structures, the FK is set to NO ACTION and parent_id can be NULL
-  2. Delete statements (or procedure call) for referencing tables where the FK is set to NO ACTION
-  3. The central delete statement that removes the given entry/ies and returns the deleted IDs
-  4. Deletes for unreferenced entries in tables where the FK is set to SET NULL or CASCADE when it is a n:m table
-  5. If an FK covers the same column(s) as the PK, the referenced parent has to be deleted as well
-*/
-
 /*****************************************************************
 * CONTENT
 *
@@ -78,6 +69,15 @@ A delete function can consist of up to five parts:
 *
 ******************************************************************/
 
+/*
+A delete function can consist of up to five parts:
+  1. A recursive delete call, if the relation stores tree structures, the FK is set to NO ACTION and parent_id can be NULL
+  2. Delete statements (or procedure call) for referencing tables where the FK is set to NO ACTION
+  3. The central delete statement that removes the given entry/ies and returns the deleted IDs
+  4. Deletes for unreferenced entries in tables where the FK is set to SET NULL or CASCADE when it is a n:m table
+  5. If an FK covers the same column(s) as the PK, the referenced parent has to be deleted as well
+*/
+
 CREATE OR REPLACE FUNCTION citydb_pkg.get_short_name(table_name TEXT) RETURNS TEXT AS
 $$
 -- TODO: query a table that stores the short version of a table (maybe objectclass?)
@@ -86,7 +86,7 @@ $$
 LANGUAGE sql STRICT;
 
 /*****************************
-* 1. Self-references
+* 1. Self references
 *****************************/
 -- SYSTEM QUERY
 CREATE OR REPLACE FUNCTION citydb_pkg.query_selfref_fk(
@@ -147,7 +147,7 @@ BEGIN
       citydb_pkg.query_selfref_fk($1, $2) AS q(parent_column)
   )
   LOOP
-    IF self_block <> '' THEN
+    IF self_block = '' THEN
       -- create a dummy array delete function for correct compilation
       PERFORM citydb_pkg.create_array_delete_dummy($1);
     END IF;
@@ -194,7 +194,7 @@ BEGIN
       citydb_pkg.query_selfref_fk($1, $2) AS q(parent_column)
   )
   LOOP
-    IF self_block <> '' THEN
+    IF self_block = '' THEN
       -- create a array delete function
       PERFORM citydb_pkg.create_array_delete_function($1, $2);
     END IF;
@@ -822,7 +822,7 @@ LANGUAGE sql STRICT;
 /*****************************
 * 4. FKs in table
 *****************************/
--- SYSTEM QUERIES
+-- SYSTEM QUERY
 CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_to_fk(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb',
