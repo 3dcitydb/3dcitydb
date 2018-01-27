@@ -355,7 +355,7 @@ AS
           c2.table_name AS root_table,
           c.table_name AS n_table,
           a.column_name AS fk_n_column_name,
-          n.ref_depth,
+          COALESCE(n.ref_depth, 1) AS ref_depth,
           citydb_delete_gen.check_for_cleanup(c.table_name, c.owner) AS clean_n_parent,
           m.m_table,
           m.fk_m_column_name,
@@ -438,7 +438,7 @@ AS
           AND c.table_name <> c2.table_name
           AND c.constraint_type = 'R'
           AND c.delete_rule = 'NO ACTION'
-      ) pre
+      ) ref
       WHERE
         (clean_n_parent IS NULL OR clean_n_parent <> root_table)
         AND (clean_m_parent IS NULL OR clean_m_parent <> root_table)
@@ -541,7 +541,7 @@ AS
       ||chr(10)||'    SELECT DISTINCT'
       ||chr(10)||'      a.COLUMN_VALUE'
       ||chr(10)||'    BULK COLLECT INTO'
-      ||chr(10)||'      '||get_short_name(lower(m_tab_name))||'_ref_ids'
+      ||chr(10)||'      '||get_short_name(lower(m_tab_name))||'_pids'
       ||chr(10)||'    FROM'
       ||chr(10)||'      TABLE('||get_short_name(lower(m_tab_name))||'_ids) a'
       ||chr(10)||'    LEFT JOIN'
@@ -550,8 +550,8 @@ AS
       ||chr(10)||'    WHERE'
       ||chr(10)||'      n2m.'||lower(fk_m_column_name)||' IS NULL;'
       ||chr(10)
-      ||chr(10)||'    IF '||get_short_name(lower(m_tab_name))||'_ref_ids.COUNT > 0 THEN'
-      ||chr(10)||'      dummy_ids := delete_'||get_short_name(lower(m_tab_name))||'_batch('||get_short_name(lower(m_tab_name))||'_ref_ids);'
+      ||chr(10)||'    IF '||get_short_name(lower(m_tab_name))||'_pids.COUNT > 0 THEN'
+      ||chr(10)||'      dummy_ids := delete_'||get_short_name(lower(m_tab_name))||'_batch('||get_short_name(lower(m_tab_name))||'_pids);'
       ||chr(10)||'    END IF;'
       ||chr(10)||'  END IF;'
       ||chr(10);
@@ -646,8 +646,8 @@ AS
 
       IF (
         ref_depth > 1
-        OR cleanup_n_table <> 0
-        OR cleanup_m_table <> 0
+        OR cleanup_n_table IS NOT NULL
+        OR cleanup_m_table IS NOT NULL
       ) THEN
         -- function call required, so create function first
         citydb_delete_gen.create_array_delete_function(
@@ -663,7 +663,7 @@ AS
         ELSE
           vars := vars
             ||chr(10)||'  '||get_short_name(lower(m_table))||'_ids ID_ARRAY;'
-            ||chr(10)||'  '||get_short_name(lower(m_table))||'_ref_ids ID_ARRAY;';
+            ||chr(10)||'  '||get_short_name(lower(m_table))||'_pids ID_ARRAY;';
           ref_block := ref_block || gen_delete_n_m_ref_by_ids_call(n_table, fk_n_column_name, m_table, fk_m_column_name);
         END IF;      
       ELSE
@@ -739,13 +739,13 @@ AS
       ||chr(10)||'      SELECT'
       ||chr(10)||'        1'
       ||chr(10)||'      FROM'
-      ||chr(10)||'        TABLE('||get_short_name(lower(m_tab_name))||'_ref_id) a'
+      ||chr(10)||'        TABLE(ID_ARRAY('||get_short_name(lower(m_tab_name))||'_ref_id)) a'
       ||chr(10)||'      LEFT JOIN'
       ||chr(10)||'        '||lower(n_m_tab_name)||' n2m'
       ||chr(10)||'        ON n2m.'||lower(fk_m_column_name)||' = a.COLUMN_VALUE'
       ||chr(10)||'      WHERE'
       ||chr(10)||'        a.COLUMN_VALUE = m.id'
-      ||chr(10)||'        n2m.'||lower(fk_m_column_name)||' IS NULL'
+      ||chr(10)||'        AND n2m.'||lower(fk_m_column_name)||' IS NULL'
       ||chr(10)||'    );'
       ||chr(10)||'  END IF;'
       ||chr(10);
@@ -761,21 +761,21 @@ AS
   BEGIN
     RETURN
         chr(10)||'  -- delete '||lower(m_tab_name)||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||get_short_name(lower(m_tab_name))||'_pid IS NOT NULL THEN'
+      ||chr(10)||'  IF '||get_short_name(lower(m_tab_name))||'_ref_id IS NOT NULL THEN'
       ||chr(10)||'    SELECT'
       ||chr(10)||'      a.COLUMN_VALUE'
       ||chr(10)||'    INTO'
-      ||chr(10)||'      '||get_short_name(lower(m_tab_name))||'_ref_id'
+      ||chr(10)||'      '||get_short_name(lower(m_tab_name))||'_pid'
       ||chr(10)||'    FROM'
-      ||chr(10)||'      TABLE('||get_short_name(lower(m_tab_name))||'_pid) a'
+      ||chr(10)||'      TABLE(ID_ARRAY('||get_short_name(lower(m_tab_name))||'_ref_id)) a'
       ||chr(10)||'    LEFT JOIN'
       ||chr(10)||'      '||lower(n_m_tab_name)||' n2m'
       ||chr(10)||'      ON n2m.'||lower(fk_m_column_name)||' = a.COLUMN_VALUE'
       ||chr(10)||'    WHERE'
       ||chr(10)||'      n2m.'||lower(fk_m_column_name)||' IS NULL;'
       ||chr(10)
-      ||chr(10)||'    IF '||get_short_name(lower(m_tab_name))||'_ref_id IS NOT NULL THEN'
-      ||chr(10)||'      dummy_id := delete_'||get_short_name(lower(m_tab_name))||'('||get_short_name(lower(m_tab_name))||'_ref_id);'
+      ||chr(10)||'    IF '||get_short_name(lower(m_tab_name))||'_pid IS NOT NULL THEN'
+      ||chr(10)||'      dummy_id := delete_'||get_short_name(lower(m_tab_name))||'('||get_short_name(lower(m_tab_name))||'_pid);'
       ||chr(10)||'    END IF;'
       ||chr(10)||'  END IF;'
       ||chr(10);
@@ -858,8 +858,8 @@ AS
 
       IF (
         ref_depth > 1
-        OR cleanup_n_table <> 0
-        OR cleanup_m_table <> 0
+        OR cleanup_n_table IS NOT NULL
+        OR cleanup_m_table IS NOT NULL
       ) THEN
         -- function call required, so create function first
         citydb_delete_gen.create_array_delete_function(
@@ -875,7 +875,7 @@ AS
         ELSE
           vars := vars
             ||chr(10)||'  '||get_short_name(lower(m_table))||'_ids ID_ARRAY;'
-            ||chr(10)||'  '||get_short_name(lower(m_table))||'_ref_ids ID_ARRAY;';
+            ||chr(10)||'  '||get_short_name(lower(m_table))||'_pids ID_ARRAY;';
           ref_block := ref_block || gen_delete_n_m_ref_by_id_call(n_table, fk_n_column_name, m_table, fk_m_column_name);
         END IF;      
       ELSE
@@ -951,11 +951,11 @@ AS
   BEGIN
     OPEN ref_to_cursor FOR
       SELECT
-        c2.table_name AS ref_table,
+        a_ref.table_name AS ref_table,
         a_ref.column_name AS ref_column,
-        LISTAGG(a.column_name, ','||chr(10)||'    ') WITHIN GROUP (ORDER BY a.column_id) AS fk_columns,
-        count(a.column_name) AS column_count,
-        citydb_delete_gen.check_for_cleanup(c2.table_name, c2.owner) AS cleanup_ref_table
+        LISTAGG(ac.column_name, ','||chr(10)||'    ') WITHIN GROUP (ORDER BY ac.position) AS fk_columns,
+        count(ac.column_name) AS column_count,
+        citydb_delete_gen.check_for_cleanup(a_ref.table_name, a_ref.owner) AS cleanup_ref_table
       FROM
         all_constraints c
       JOIN
@@ -964,33 +964,22 @@ AS
        AND ac.table_name = c.table_name
        AND ac.owner = c.owner
       JOIN
-        all_tab_columns a
-        ON a.column_name = ac.column_name
-       AND a.table_name = ac.table_name
-       AND a.owner = ac.owner
-      JOIN
-        all_constraints c2
-        ON c2.constraint_name = c.r_constraint_name
-       AND c2.owner = c.owner
-      JOIN
         all_cons_columns a_ref
-        ON a_ref.constraint_name = c2.constraint_name
-       AND a_ref.table_name = c2.table_name
-       AND a_ref.owner = c2.owner
+        ON a_ref.constraint_name = c.r_constraint_name
+       AND a_ref.owner = c.owner
       WHERE
         c.table_name = upper(tab_name)
         AND c.owner = upper(schema_name)
-        AND c.table_name <> c2.table_name
+        AND c.table_name <> a_ref.table_name
         AND c.constraint_type = 'R'
         AND c.delete_rule = 'SET NULL'
-        AND (c2.table_name <> 'SURFACE_GEOMETRY'
+        AND (a_ref.table_name <> 'SURFACE_GEOMETRY'
          OR c.table_name = 'IMPLICIT_GEOMETRY'
          OR c.table_name = 'CITYOBJECT_GENERICATTRIB'
          OR c.table_name = 'CITYOBJECTGROUP')
-        AND a.nullable = 'Y'
       GROUP BY
-        c2.table_name,
-        c2.owner,
+        a_ref.table_name,
+        a_ref.owner,
         a_ref.column_name;
     RETURN ref_to_cursor;
   END;
@@ -1051,7 +1040,7 @@ AS
       IF cleanup_ref_table IS NOT NULL THEN
         -- function call required, so create function first
         citydb_delete_gen.create_array_delete_function(ref_table, schema_name);
-        vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table))||'_ref_ids ID_ARRAY;';
+        vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table))||'_pids ID_ARRAY;';
         fk_block := fk_block || gen_delete_m_ref_by_ids_call(ref_table, ref_column, ref_table);
       ELSE
         fk_block := fk_block || gen_delete_m_ref_by_ids_stmt(ref_table, ref_column, ref_table);
@@ -1103,19 +1092,20 @@ AS
           ||chr(10)||'    )';
         into_block := into_block||','||chr(10)||'    '||get_short_name(lower(ref_table))||'_ids';
       ELSE
-        vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table))||'_pid NUMBER;';
+        vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table))||'_ref_id NUMBER;';
         returning_block := returning_block ||','||chr(10)||'    '||lower(fk_columns);
-        into_block := into_block||','||chr(10)||'    '||get_short_name(lower(ref_table))||'_pid';
+        into_block := into_block||','||chr(10)||'    '||get_short_name(lower(ref_table))||'_ref_id';
       END IF;
 
       IF cleanup_ref_table IS NOT NULL THEN
         -- function call required, so create function first
-        citydb_delete_gen.create_array_delete_function(ref_table, schema_name);
         IF column_count > 1 THEN
-          vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table))||'_ref_ids ID_ARRAY;';
+          citydb_delete_gen.create_array_delete_function(ref_table, schema_name);
+          vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table))||'_pids ID_ARRAY;';
           fk_block := fk_block || gen_delete_m_ref_by_ids_call(ref_table, ref_column, ref_table);
         ELSE
-          vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table))||'_ref_id NUMBER;';
+          citydb_delete_gen.create_delete_function(ref_table, schema_name);
+          vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table))||'_pid NUMBER;';
           fk_block := fk_block || gen_delete_m_ref_by_id_call(ref_table, ref_column, ref_table);
         END IF;
       ELSE
@@ -1279,7 +1269,7 @@ AS
     )
   IS
     ddl_command VARCHAR2(10000) := 
-      'CREATE OR REPLACE FUNCTION gen_delete_'||get_short_name(lower(tab_name))||'_batch(arr ID_ARRAY) RETURN ID_ARRAY'
+      'CREATE OR REPLACE FUNCTION delete_'||get_short_name(lower(tab_name))||'_batch(arr ID_ARRAY) RETURN ID_ARRAY'
       ||chr(10)||'IS'||chr(10);
     declare_block VARCHAR2(500) := '  deleted_ids ID_ARRAY;';
     pre_block VARCHAR2(2000) := '';
@@ -1348,7 +1338,7 @@ AS
     schema_name VARCHAR2 := USER
     )
   IS
-    ddl_command VARCHAR2(10000) := 'CREATE OR REPLACE FUNCTION gen_delete_'||get_short_name(lower(tab_name))||'(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
+    ddl_command VARCHAR2(10000) := 'CREATE OR REPLACE FUNCTION delete_'||get_short_name(lower(tab_name))||'(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
     declare_block VARCHAR2(500) := '  deleted_id NUMBER;';
     pre_block VARCHAR2(2000) := '';
     post_block VARCHAR2(1000) := '';
@@ -1387,7 +1377,7 @@ AS
     post_block := post_block || create_ref_parent_delete(tab_name, schema_name);
 
     -- create dummy variable if pre or post block are not null
-    IF pre_block IS NOT NULL THEN
+    IF pre_block IS NOT NULL OR fk_block IS NOT NULL THEN
       declare_block := declare_block ||chr(10)||'  dummy_ids ID_ARRAY;';
     END IF;
     IF post_block IS NOT NULL THEN

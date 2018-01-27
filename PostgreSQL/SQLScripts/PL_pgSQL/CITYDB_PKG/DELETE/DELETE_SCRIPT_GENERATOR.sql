@@ -252,22 +252,17 @@ FULL OUTER JOIN (
   ON r.confrelid = p.conrelid
 FULL OUTER JOIN (
   SELECT DISTINCT
-    c.conrelid
+    conrelid
   FROM
-    pg_constraint c
-  JOIN
-    pg_attribute a
-    ON a.attrelid = c.conrelid
-   AND a.attnum = ANY (c.conkey)
+    pg_constraint
   WHERE
-    c.conrelid = $1
-    AND c.contype = 'f'
-    AND (c.confdeltype = 'n' OR c.confdeltype = 'a')
-    AND (c.confrelid::regclass::text NOT LIKE '%surface_geometry'
-     OR c.conrelid::regclass::text LIKE '%implicit_geometry'
-     OR c.conrelid::regclass::text LIKE '%cityobject_genericattrib'
-     OR c.conrelid::regclass::text LIKE '%cityobjectgroup')
-    AND a.attnotnull = FALSE
+    conrelid = $1
+    AND contype = 'f'
+    AND confdeltype = 'n'
+    AND (confrelid::regclass::text NOT LIKE '%surface_geometry'
+     OR conrelid::regclass::text LIKE '%implicit_geometry'
+     OR conrelid::regclass::text LIKE '%cityobject_genericattrib'
+     OR conrelid::regclass::text LIKE '%cityobjectgroup')
   ) o
   ON o.conrelid = p.conrelid;
 $$
@@ -298,7 +293,7 @@ FROM (
     c.confrelid AS root_table,
     c.conrelid AS n_table,
     a.attname AS fk_n_column_name,
-    n.ref_depth,
+    COALESCE(n.ref_depth, 1) AS ref_depth,
     citydb_pkg.do_cleanup(c.conrelid) AS cleanup_n_table,
     m.m_table,
     m.fk_m_column_name,
@@ -387,7 +382,7 @@ LANGUAGE sql STRICT;
 -- ARRAY CASE
 
 -- creates code block to delete referenced entries in n table
-CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_ref_by_id_stmt(
+CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_ref_by_ids_stmt(
   table_name TEXT,
   fk_column_name TEXT
   ) RETURNS TEXT AS
@@ -404,7 +399,7 @@ $$
 LANGUAGE sql STRICT;
 
 -- creates code block to delete referenced entries in n table with function call
-CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_ref_by_id_call(
+CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_ref_by_ids_call(
   table_name TEXT,
   fk_column_name TEXT
   ) RETURNS TEXT AS
@@ -422,7 +417,7 @@ $$
 LANGUAGE sql STRICT;
 
 -- creates code block to delete unreferenced entries in m table
-CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_id_stmt(
+CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_ids_stmt(
   m_table_name TEXT,
   fk_m_column_name TEXT,
   n_m_table_name TEXT
@@ -446,7 +441,7 @@ $$
 LANGUAGE sql STRICT;
 
 -- creates code block to delete unreferenced entries in m table with function call
-CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_id_call(
+CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_ids_call(
   m_table_name TEXT,
   fk_m_column_name TEXT,
   n_m_table_name TEXT
@@ -470,7 +465,7 @@ LANGUAGE sql STRICT;
 
 -- creates code block to delete referenced entries in n:m table
 -- adds another code block to delete unreferenced entries in m table
-CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_id_stmt(
+CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_ids_stmt(
   n_m_table_name TEXT,
   fk_n_column_name TEXT,
   m_table_name TEXT,
@@ -501,7 +496,7 @@ LANGUAGE sql STRICT;
 
 -- creates code block to delete referenced entries in n:m table
 -- adds another code block to delete unreferenced entries in m table with function call
-CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_id_call(
+CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_ids_call(
   n_m_table_name TEXT,
   fk_n_column_name TEXT,
   m_table_name TEXT,
@@ -617,7 +612,6 @@ SELECT
   || E'\n    '||$2||E' = $1;\n';
 $$
 LANGUAGE sql STRICT;
-
 
 -- creates code block to delete unreferenced entries in m table
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_id_stmt(
@@ -837,7 +831,7 @@ $$
 SELECT
   c.confrelid::regclass::text AS ref_table,
   a_ref.attname::text AS ref_column,
-  string_agg(a.attname, E',\n      ' ORDER BY a.attnum) AS fk_columns,
+  string_agg(a.attname, E',\n    ' ORDER BY a.attnum) AS fk_columns,
   string_agg('array_agg('||a.attname||')', E' ||\n    ' ORDER BY a.attnum) AS concat_id_arrays,
   count(a.attname)::int AS column_count,
   citydb_pkg.check_for_cleanup(c.confrelid) IS NOT NULL AS cleanup_ref_table
@@ -860,7 +854,6 @@ WHERE
    OR c.conrelid::regclass::text LIKE '%implicit_geometry'
    OR c.conrelid::regclass::text LIKE '%cityobject_genericattrib'
    OR c.conrelid::regclass::text LIKE '%cityobjectgroup')
-  AND NOT a.attnotnull
 GROUP BY
   c.confrelid,
   a_ref.attname
@@ -906,9 +899,9 @@ BEGIN
     IF rec.cleanup_ref_table THEN
       -- function call required, so create function first
       PERFORM citydb_pkg.create_array_delete_function(rec.ref_table, $2);
-      fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_id_call(rec.ref_table, rec.ref_column, rec.ref_table);
+      fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_ids_call(rec.ref_table, rec.ref_column, rec.ref_table);
     ELSE
-      fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_id_stmt(rec.ref_table, rec.ref_column, rec.ref_table);
+      fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_ids_stmt(rec.ref_table, rec.ref_column, rec.ref_table);
     END IF;
   END LOOP;
 
@@ -948,7 +941,7 @@ BEGIN
       vars := vars ||E'\n  '||citydb_pkg.get_short_name(rec.ref_table)||'_ids int[] := ''{}'';';
       returning_block := returning_block||','
         || E'\n    ARRAY['
-        || E'\n      '||rec.fk_columns
+        || E'\n    '||rec.fk_columns
         || E'\n    ]';
       into_block := into_block||E',\n    '||citydb_pkg.get_short_name(rec.ref_table)||'_ids';
     ELSE
@@ -959,15 +952,16 @@ BEGIN
 
     IF rec.cleanup_ref_table THEN
       -- function call required, so create function first
-      PERFORM citydb_pkg.create_array_delete_function(rec.ref_table, $2);
       IF rec.column_count > 1 THEN
-        fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_id_call(rec.ref_table, rec.ref_column, rec.ref_table);
+        PERFORM citydb_pkg.create_array_delete_function(rec.ref_table, $2);
+        fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_ids_call(rec.ref_table, rec.ref_column, rec.ref_table);
       ELSE
-        fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_id_stmt(rec.ref_table, rec.ref_column, rec.ref_table);
+        PERFORM citydb_pkg.create_delete_function(rec.ref_table, $2);
+        fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_id_call(rec.ref_table, rec.ref_column, rec.ref_table);
       END IF;
     ELSE
       IF rec.column_count > 1 THEN
-        fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_id_call(rec.ref_table, rec.ref_column, rec.ref_table);
+        fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_ids_stmt(rec.ref_table, rec.ref_column, rec.ref_table);
       ELSE
         fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_id_stmt(rec.ref_table, rec.ref_column, rec.ref_table);
       END IF;
