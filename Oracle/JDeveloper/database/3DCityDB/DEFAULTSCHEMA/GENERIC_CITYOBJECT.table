@@ -1720,7 +1720,7 @@
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <name>GEN_OBJECT_LOD9BREP_FK</name>
+      <name>GEN_OBJECT_LOD4BREP_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
           <name>LOD4_BREP_ID</name>
