@@ -85,10 +85,65 @@ SELECT substr($1, 1, 17);
 $$
 LANGUAGE sql STRICT;
 
+-- function to check if table requires its own delete function
+CREATE OR REPLACE FUNCTION citydb_pkg.check_for_cleanup(ref_table OID) RETURNS OID AS
+$$
+SELECT
+  COALESCE((
+    -- reference to parent
+    SELECT
+      fk.confrelid
+    FROM
+      pg_constraint fk
+    JOIN (
+      SELECT
+        conrelid,
+        conkey
+      FROM
+        pg_constraint
+      WHERE
+        contype = 'p'
+      ) pk
+      ON pk.conrelid = fk.conrelid
+     AND pk.conkey = fk.conkey
+    WHERE
+      fk.conrelid = $1
+      AND fk.contype = 'f'
+      AND fk.confdeltype = 'a'
+  ),(
+    -- referencing tables
+    SELECT DISTINCT
+      confrelid
+    FROM
+      pg_constraint
+    WHERE
+      confrelid = $1
+      AND contype = 'f'
+      AND confdeltype = 'a'
+  ),(
+    -- references to tables that need to be cleaned up
+    SELECT DISTINCT
+      conrelid
+    FROM
+      pg_constraint
+    WHERE
+      conrelid = $1
+      AND contype = 'f'
+      AND confdeltype = 'n'
+      AND (confrelid::regclass::text NOT LIKE '%surface_geometry'
+       OR conrelid::regclass::text LIKE '%implicit_geometry'
+       OR conrelid::regclass::text LIKE '%cityobject_genericattrib'
+       OR conrelid::regclass::text LIKE '%cityobjectgroup')
+  )) AS cleanup;
+$$
+LANGUAGE sql STRICT;
+
+
 /*****************************
 * 1. Self references
+*
+* Look for nullable FK columns to omit root_id column
 *****************************/
--- SYSTEM QUERY
 CREATE OR REPLACE FUNCTION citydb_pkg.query_selfref_fk(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb'
@@ -148,7 +203,7 @@ BEGIN
   )
   LOOP
     IF self_block = '' THEN
-      -- create a dummy array delete function for correct compilation
+      -- create a dummy array delete function to avoid endless recursive calls
       PERFORM citydb_pkg.create_array_delete_dummy($1);
     END IF;
     self_block := self_block || citydb_pkg.generate_delete_selfref_by_ids_call($1, rec.parent_column);
@@ -195,7 +250,7 @@ BEGIN
   )
   LOOP
     IF self_block = '' THEN
-      -- create a array delete function
+      -- create an array delete function
       PERFORM citydb_pkg.create_array_delete_function($1, $2);
     END IF;
     self_block := self_block || citydb_pkg.generate_delete_selfref_by_id_call($1, rec.parent_column);
@@ -210,64 +265,6 @@ LANGUAGE plpgsql STRICT;
 /*****************************
 * 2. Referencing tables
 *****************************/
--- SYSTEM QUERIES
-
--- function to check if table requires its own delete function
-CREATE OR REPLACE FUNCTION citydb_pkg.check_for_cleanup(ref_table OID) RETURNS OID AS
-$$
-SELECT
-  COALESCE(p.confrelid, r.confrelid, o.conrelid) AS cleanup
-FROM (
-  SELECT
-    fk.conrelid,
-    fk.confrelid
-  FROM
-    pg_constraint fk
-  JOIN (
-    SELECT
-      conrelid,
-      conkey
-    FROM
-      pg_constraint
-    WHERE
-      contype = 'p'
-    ) pk
-    ON pk.conrelid = fk.conrelid
-   AND pk.conkey = fk.conkey
-  WHERE
-    fk.conrelid = $1
-    AND fk.contype = 'f'
-    AND fk.confdeltype = 'a'
-) p
-FULL OUTER JOIN (
-  SELECT DISTINCT
-    confrelid
-  FROM
-    pg_constraint
-  WHERE
-    confrelid = $1
-    AND contype = 'f'
-    AND confdeltype = 'a'
-  ) r
-  ON r.confrelid = p.conrelid
-FULL OUTER JOIN (
-  SELECT DISTINCT
-    conrelid
-  FROM
-    pg_constraint
-  WHERE
-    conrelid = $1
-    AND contype = 'f'
-    AND confdeltype = 'n'
-    AND (confrelid::regclass::text NOT LIKE '%surface_geometry'
-     OR conrelid::regclass::text LIKE '%implicit_geometry'
-     OR conrelid::regclass::text LIKE '%cityobject_genericattrib'
-     OR conrelid::regclass::text LIKE '%cityobjectgroup')
-  ) o
-  ON o.conrelid = p.conrelid;
-$$
-LANGUAGE sql STRICT;
-
 CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_fk(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb',
@@ -305,8 +302,7 @@ FROM (
     ON a.attrelid = c.conrelid
    AND a.attnum = ANY (c.conkey)
   LEFT JOIN (
-    -- count references of referencing tables
-    -- > 1 ref = extra delete function
+    -- get depth of referencing tablesion
     WITH RECURSIVE ref_table_depth(parent_table, ref_table, depth) AS (
       SELECT
         confrelid AS parent_table,
@@ -343,8 +339,7 @@ FROM (
     ) n
     ON n.parent_table = c.conrelid
   -- get n:m tables which are the NULL candidates from the n block
-  -- the FK has to be confdeltype = 'c' to decide for cleanup
-  -- also count references and check for cleanup to find out if it needs its own delete function
+  -- the FK has to be set to CASCADE to decide for cleanup
   LEFT JOIN LATERAL (
     SELECT
       mn.confrelid AS m_table,
@@ -378,10 +373,7 @@ ORDER BY
 $$
 LANGUAGE sql STRICT;
 
-
 -- ARRAY CASE
-
--- creates code block to delete referenced entries in n table
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_ref_by_ids_stmt(
   table_name TEXT,
   fk_column_name TEXT
@@ -398,7 +390,6 @@ SELECT
 $$
 LANGUAGE sql STRICT;
 
--- creates code block to delete referenced entries in n table with function call
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_ref_by_ids_call(
   table_name TEXT,
   fk_column_name TEXT
@@ -416,7 +407,6 @@ SELECT
 $$
 LANGUAGE sql STRICT;
 
--- creates code block to delete unreferenced entries in m table
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_ids_stmt(
   m_table_name TEXT,
   fk_m_column_name TEXT,
@@ -440,7 +430,6 @@ SELECT
 $$
 LANGUAGE sql STRICT;
 
--- creates code block to delete unreferenced entries in m table with function call
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_ids_call(
   m_table_name TEXT,
   fk_m_column_name TEXT,
@@ -463,8 +452,6 @@ SELECT
 $$
 LANGUAGE sql STRICT;
 
--- creates code block to delete referenced entries in n:m table
--- adds another code block to delete unreferenced entries in m table
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_ids_stmt(
   n_m_table_name TEXT,
   fk_n_column_name TEXT,
@@ -494,8 +481,6 @@ SELECT
 $$
 LANGUAGE sql STRICT;
 
--- creates code block to delete referenced entries in n:m table
--- adds another code block to delete unreferenced entries in m table with function call
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_ids_call(
   n_m_table_name TEXT,
   fk_n_column_name TEXT,
@@ -525,7 +510,6 @@ SELECT
 $$
 LANGUAGE sql STRICT;
 
--- creates code block to delete referenced entries
 CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_array_delete(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb',
@@ -578,10 +562,7 @@ END;
 $$
 LANGUAGE plpgsql STRICT;
 
-
 -- SINGLE CASE
-
--- creates code block to delete referenced entries in n table
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_ref_by_id_stmt(
   table_name TEXT,
   fk_column_name TEXT
@@ -596,7 +577,6 @@ SELECT
 $$
 LANGUAGE sql STRICT;
 
--- creates code block to delete referenced entries in n table with function call
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_ref_by_id_call(
   table_name TEXT,
   fk_column_name TEXT
@@ -613,7 +593,6 @@ SELECT
 $$
 LANGUAGE sql STRICT;
 
--- creates code block to delete unreferenced entries in m table
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_id_stmt(
   m_table_name TEXT,
   fk_m_column_name TEXT,
@@ -637,7 +616,6 @@ SELECT
 $$
 LANGUAGE sql STRICT;
 
--- creates code block to delete unreferenced entries in m table with function call
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_id_call(
   m_table_name TEXT,
   fk_m_column_name TEXT,
@@ -660,8 +638,6 @@ SELECT
 $$
 LANGUAGE sql STRICT;
 
--- creates code block to delete referenced entries in n:m table
--- adds another code block to delete unreferenced entries in m table
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_id_stmt(
   n_m_table_name TEXT,
   fk_n_column_name TEXT,
@@ -689,8 +665,6 @@ SELECT
 $$
 LANGUAGE sql STRICT;
 
--- creates code block to delete referenced entries in n:m table
--- adds another code block to delete unreferenced entries in m table with function call
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_id_call(
   n_m_table_name TEXT,
   fk_n_column_name TEXT,
@@ -718,7 +692,6 @@ SELECT
 $$
 LANGUAGE sql STRICT;
 
--- creates code block to delete referenced entries
 CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_delete(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb',
@@ -778,8 +751,6 @@ LANGUAGE plpgsql STRICT;
 * statements are not closed because more columns might be returned
 *****************************/
 -- ARRAY CASE
-
--- creates code block to delete entries
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_by_ids_stmt(
   table_name TEXT
   ) RETURNS TEXT AS 
@@ -796,8 +767,6 @@ $$
 LANGUAGE sql STRICT;
 
 -- SINGLE CASE
-
--- creates code block to delete entry
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_by_id_stmt(
   table_name TEXT
   ) RETURNS TEXT AS 
@@ -816,7 +785,6 @@ LANGUAGE sql STRICT;
 /*****************************
 * 4. FKs in table
 *****************************/
--- SYSTEM QUERY
 CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_to_fk(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb',
@@ -862,10 +830,7 @@ ORDER BY
 $$
 LANGUAGE sql STRICT;
 
-
 -- ARRAY CASE
-
--- creates code block to delete referenced entries by foreign keys
 CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_to_array_delete(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb',
@@ -910,10 +875,7 @@ END;
 $$
 LANGUAGE plpgsql STRICT;
 
-
 -- SINGLE CASE
-
--- creates code block to delete referenced entries by foreign keys
 CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_to_delete(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb',
@@ -977,7 +939,6 @@ LANGUAGE plpgsql STRICT;
 /*****************************
 * 5. FK which is PK 
 *****************************/
--- SYSTEM QUERY
 CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_to_parent_fk(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb'
@@ -998,10 +959,7 @@ WHERE
 $$
 LANGUAGE sql STRICT;
 
-
 -- ARRAY CASE
-
--- creates code block to delete referenced parent entries
 CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_to_parent_array_delete(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb'
@@ -1016,8 +974,6 @@ BEGIN
   IF parent_table IS NOT NULL THEN
     -- create array delete function for parent table
     PERFORM citydb_pkg.create_array_delete_function(parent_table, $2);
-
-    -- add delete call for parent table
     parent_block := parent_block
       || E'\n  -- delete '||parent_table
       || E'\n  PERFORM gen.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_ids);\n';
@@ -1028,10 +984,7 @@ END;
 $$
 LANGUAGE plpgsql;
 
-
 -- SINGLE CASE
-
--- creates code block to delete referenced parent entries
 CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_to_parent_delete(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb'
@@ -1046,8 +999,6 @@ BEGIN
   IF parent_table IS NOT NULL THEN
     -- create array delete function for parent table
     PERFORM citydb_pkg.create_delete_function(parent_table, $2);
-
-    -- add delete call for parent table
     parent_block := parent_block
       || E'\n  -- delete '||parent_table
       || E'\n  PERFORM gen.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_id);\n';
@@ -1078,15 +1029,14 @@ END;
 $$
 LANGUAGE plpgsql STRICT;
 
--- creates a array delete function for given table
--- returns deleted IDs (set of int)
+-- ARRAY CASE
 CREATE OR REPLACE FUNCTION citydb_pkg.create_array_delete_function(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS SETOF VOID AS 
 $$
 DECLARE
-  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION gen.delete_' ||citydb_pkg.get_short_name($1)|| E'(int[]) RETURNS SETOF int AS\n$body$';
+  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_' ||citydb_pkg.get_short_name($1)|| E'(int[]) RETURNS SETOF int AS\n$body$';
   declare_block TEXT := E'\nDECLARE\n  deleted_ids int[] := ''{}'';';
   pre_block TEXT := '';
   post_block TEXT := '';
@@ -1167,16 +1117,14 @@ END;
 $$
 LANGUAGE plpgsql STRICT;
 
-
--- creates a delete function for given table
--- returns deleted ID (int)
+-- SINGLE CASE
 CREATE OR REPLACE FUNCTION citydb_pkg.create_delete_function(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS SETOF VOID AS 
 $$
 DECLARE
-  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION gen.delete_'||citydb_pkg.get_short_name($1)|| E'(int) RETURNS int AS\n$body$';
+  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||citydb_pkg.get_short_name($1)|| E'(int) RETURNS int AS\n$body$';
   declare_block TEXT := E'\nDECLARE\n  deleted_id INTEGER;';
   pre_block TEXT := '';
   post_block TEXT := '';

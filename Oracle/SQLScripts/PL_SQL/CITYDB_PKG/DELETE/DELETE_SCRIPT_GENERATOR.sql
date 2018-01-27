@@ -85,8 +85,107 @@ AS
     RETURN substr(tab_name, 1, 17);
   END;
 
+  --if referencing table requires an extra cleanup step, it needs its own delete function
+  FUNCTION check_for_cleanup(
+    tab_name VARCHAR2,
+    schema_name VARCHAR2
+  ) RETURN VARCHAR2
+  IS
+    cleanup_ref_table VARCHAR2(30);
+  BEGIN
+    SELECT
+      COALESCE((
+        -- reference to parent
+        SELECT
+          fk2.table_name
+        FROM
+          all_constraints fk
+        JOIN
+          all_cons_columns fka
+          ON fka.constraint_name = fk.constraint_name
+         AND fka.table_name = fk.table_name
+         AND fka.owner = fk.owner
+        JOIN
+          all_constraints fk2
+          ON fk2.constraint_name = fk.r_constraint_name
+          AND fk2.owner = fk.owner
+        JOIN (
+          SELECT DISTINCT
+            cp.table_name,
+            cp.owner,
+            first_value(pka.column_name) OVER (PARTITION BY cp.table_name ORDER BY pka.position DESC) AS column_name,
+            first_value(pka.position) OVER (PARTITION BY cp.table_name ORDER BY pka.position DESC) AS position
+          FROM
+            all_constraints cp
+          JOIN
+            all_cons_columns pka
+            ON pka.constraint_name = cp.constraint_name
+           AND pka.table_name = cp.table_name
+           AND pka.owner = cp.owner
+          WHERE
+            cp.constraint_type = 'P'
+          ) pk
+          ON pk.table_name = fk.table_name
+         AND pk.owner = fk.owner
+         AND pk.column_name = fka.column_name
+        WHERE
+          fk.table_name = tab_name
+          AND fk.owner = schema_name
+          AND fk.constraint_type = 'R'
+          AND fk.delete_rule = 'NO ACTION'
+          AND pk.position = 1
+      ),(
+        -- referencing tables
+        SELECT DISTINCT
+          c2.table_name
+        FROM
+          all_constraints c
+        JOIN
+          all_constraints c2
+          ON c2.constraint_name = c.r_constraint_name
+         AND c2.owner = c.owner
+        WHERE
+          c2.table_name = tab_name
+          AND c2.owner = schema_name
+          AND c.constraint_type = 'R'
+          AND c.delete_rule = 'NO ACTION'
+      ),(
+        -- references to tables that need to be cleaned up
+        SELECT DISTINCT
+          c.table_name
+        FROM
+          all_constraints c
+        JOIN
+          all_constraints c2
+          ON c2.constraint_name = c.r_constraint_name
+         AND c2.owner = c.owner
+        WHERE
+          c.table_name = tab_name
+          AND c.owner = schema_name
+          AND c.constraint_type = 'R'
+          AND c.delete_rule = 'SET NULL'
+          AND (c2.table_name <> 'SURFACE_GEOMETRY'
+           OR c.table_name = 'IMPLICIT_GEOMETRY'
+           OR c.table_name = 'CITYOBJECT_GENERICATTRIB'
+           OR c.table_name = 'CITYOBJECTGROUP')
+      )) AS cleanup
+      INTO
+        cleanup_ref_table
+      FROM
+        dual;
+
+    RETURN cleanup_ref_table;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN '';
+  END;
+
+
   /*****************************
   * 1. Self references
+  *
+  * Look for nullable FK columns to omit root_id column
   *****************************/
   FUNCTION query_selfref_fk(
     tab_name VARCHAR2,
@@ -148,8 +247,7 @@ AS
       ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(part_ids);'
       ||chr(10)||'  END IF;';
   END;
-	  
-  -- creates code block to delete referenced entries in same table with function call
+
   PROCEDURE create_selfref_array_delete(
     tab_name VARCHAR2,
     schema_name VARCHAR2 := USER,
@@ -168,7 +266,7 @@ AS
       EXIT WHEN self_cursor%NOTFOUND;
 
       IF self_block IS NULL THEN
-        -- create a dummy array delete function to enable compiling
+        -- create a dummy array delete function to avoid endless recursive calls
         create_array_delete_dummy(tab_name);
         vars := chr(10)|| '  part_ids ID_ARRAY;';
         self_block := '';
@@ -204,7 +302,6 @@ AS
       ||chr(10)||'  END IF;';
   END;
 
-  -- creates code block to delete referenced entries in same table with function call
   PROCEDURE create_selfref_delete(
     tab_name VARCHAR2,
     schema_name VARCHAR2 := USER,
@@ -223,7 +320,7 @@ AS
       EXIT WHEN self_cursor%NOTFOUND;
 
       IF self_block IS NULL THEN
-        -- create a array delete function
+        -- create an array delete function
         citydb_delete_gen.create_array_delete_function(tab_name, schema_name);
         vars := chr(10)|| '  part_ids ID_ARRAY;';
         self_block := '';
@@ -238,102 +335,7 @@ AS
 
   /*****************************
   * 2. Referencing tables
-  *****************************/
-  -- SYSTEM QUERIES
-
-  -- if referencing table requires an extra cleanup step, it needs its own delete function
-  FUNCTION check_for_cleanup(
-    tab_name VARCHAR2,
-    schema_name VARCHAR2
-  ) RETURN VARCHAR2
-  IS
-    cleanup_ref_table VARCHAR2(30);
-  BEGIN
-    SELECT
-      COALESCE((
-        SELECT
-          fk2.table_name
-        FROM
-          all_constraints fk
-        JOIN
-          all_cons_columns fka
-          ON fka.constraint_name = fk.constraint_name
-         AND fka.table_name = fk.table_name
-         AND fka.owner = fk.owner
-        JOIN
-          all_constraints fk2
-          ON fk2.constraint_name = fk.r_constraint_name
-          AND fk2.owner = fk.owner
-        JOIN (
-          SELECT DISTINCT
-            cp.table_name,
-            cp.owner,
-            first_value(pka.column_name) OVER (PARTITION BY cp.table_name ORDER BY pka.position DESC) AS column_name,
-            first_value(pka.position) OVER (PARTITION BY cp.table_name ORDER BY pka.position DESC) AS position
-          FROM
-            all_constraints cp
-          JOIN
-            all_cons_columns pka
-            ON pka.constraint_name = cp.constraint_name
-           AND pka.table_name = cp.table_name
-           AND pka.owner = cp.owner
-          WHERE
-            cp.constraint_type = 'P'
-          ) pk
-          ON pk.table_name = fk.table_name
-         AND pk.owner = fk.owner
-         AND pk.column_name = fka.column_name
-        WHERE
-          fk.table_name = tab_name
-          AND fk.owner = schema_name
-          AND fk.constraint_type = 'R'
-          AND fk.delete_rule = 'NO ACTION'
-          AND pk.position = 1
-      ),(
-        SELECT DISTINCT
-          c2.table_name
-        FROM
-          all_constraints c
-        JOIN
-          all_constraints c2
-          ON c2.constraint_name = c.r_constraint_name
-         AND c2.owner = c.owner
-        WHERE
-          c2.table_name = tab_name
-          AND c2.owner = schema_name
-          AND c.constraint_type = 'R'
-          AND c.delete_rule = 'NO ACTION'
-      ),(
-        SELECT DISTINCT
-          c.table_name
-        FROM
-          all_constraints c
-        JOIN
-          all_constraints c2
-          ON c2.constraint_name = c.r_constraint_name
-         AND c2.owner = c.owner
-        WHERE
-          c.table_name = tab_name
-          AND c.owner = schema_name
-          AND c.constraint_type = 'R'
-          AND c.delete_rule = 'SET NULL'
-          AND (c2.table_name <> 'SURFACE_GEOMETRY'
-           OR c.table_name = 'IMPLICIT_GEOMETRY'
-           OR c.table_name = 'CITYOBJECT_GENERICATTRIB'
-           OR c.table_name = 'CITYOBJECTGROUP')
-      )) AS cleanup
-      INTO
-        cleanup_ref_table
-      FROM
-        dual;
-
-    RETURN cleanup_ref_table;
-
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN '';
-  END;
-  
+  *****************************/  
   FUNCTION query_ref_fk(
     tab_name VARCHAR2,
     schema_name VARCHAR2 := USER
@@ -372,8 +374,7 @@ AS
           ON c2.constraint_name = c.r_constraint_name
          AND c2.owner = c.owner
         LEFT JOIN (
-          -- count references of referencing tables
-          -- > 1 ref = extra delete function
+          -- get depth of referencing tables
           SELECT
             r.parent_table,
             r.owner,
@@ -408,7 +409,6 @@ AS
          AND n.owner = c.owner
         -- get n:m tables which are the NULL candidates from the n block
         -- the FK has to be set to CASCADE to decide for cleanup
-        -- also count references and check for cleanup to find out if it needs its own delete function
         OUTER APPLY (
           SELECT
             mn2.table_name AS m_table,
@@ -450,8 +450,6 @@ AS
   END;
 
   -- ARRAY CASE
-
-  -- creates code block to delete referenced entries in n table
   FUNCTION gen_delete_ref_by_ids_stmt(
     tab_name VARCHAR2,
     fk_column_name VARCHAR2
@@ -473,7 +471,6 @@ AS
       ||chr(10);
   END;
 
-  -- creates code block to delete referenced entries in n table with function call
   FUNCTION gen_delete_ref_by_ids_call(
     tab_name VARCHAR2,
     fk_column_name VARCHAR2
@@ -498,7 +495,6 @@ AS
       ||chr(10);
   END;
 
-  -- creates code block to delete unreferenced entries in m table
   FUNCTION gen_delete_m_ref_by_ids_stmt(
     m_tab_name VARCHAR2,
     fk_m_column_name VARCHAR2,
@@ -527,7 +523,6 @@ AS
       ||chr(10);
   END;
 
-  -- creates code block to delete unreferenced entries in m table with function call
   FUNCTION gen_delete_m_ref_by_ids_call(
     m_tab_name VARCHAR2,
     fk_m_column_name VARCHAR2,
@@ -557,8 +552,6 @@ AS
       ||chr(10);
   END;
 
-  -- creates code block to delete referenced entries in n:m table
-  -- adds another code block to delete unreferenced entries in m table
   FUNCTION gen_delete_n_m_ref_by_ids_stmt(
     n_m_tab_name VARCHAR2,
     fk_n_column_name VARCHAR2,
@@ -586,8 +579,6 @@ AS
       ||chr(10)|| gen_delete_m_ref_by_ids_stmt(m_tab_name, fk_m_column_name, n_m_tab_name);
   END;
 
-  -- creates code block to delete referenced entries in n:m table
-  -- adds another code block to delete unreferenced entries in m table with function call
   FUNCTION gen_delete_n_m_ref_by_ids_call(
     n_m_tab_name VARCHAR2,
     fk_n_column_name VARCHAR2,
@@ -615,7 +606,6 @@ AS
       ||chr(10)|| gen_delete_m_ref_by_ids_call(m_tab_name, fk_m_column_name, n_m_tab_name);
   END;
 
-  -- creates code block to delete referenced entries
   PROCEDURE create_ref_array_delete(
     tab_name VARCHAR2,
     schema_name VARCHAR2 := USER,
@@ -679,10 +669,7 @@ AS
     RETURN;
   END;
 
-
   -- SINGLE CASE
-  
-  -- creates code block to delete referenced entries in n table
   FUNCTION gen_delete_ref_by_id_stmt(
     tab_name VARCHAR2,
     fk_column_name VARCHAR2
@@ -698,7 +685,6 @@ AS
       ||chr(10);
   END;
 
-  -- creates code block to delete referenced entries in n table with function call
   FUNCTION gen_delete_ref_by_id_call(
     tab_name VARCHAR2,
     fk_column_name VARCHAR2
@@ -722,7 +708,6 @@ AS
       ||chr(10);
   END;
 
-  -- creates code block to delete unreferenced entries in m table
   FUNCTION gen_delete_m_ref_by_id_stmt(
     m_tab_name VARCHAR2,
     fk_m_column_name VARCHAR2,
@@ -751,7 +736,6 @@ AS
       ||chr(10);
   END;
 
-  -- creates code block to delete unreferenced entries in m table with function call
   FUNCTION gen_delete_m_ref_by_id_call(
     m_tab_name VARCHAR2,
     fk_m_column_name VARCHAR2,
@@ -781,8 +765,6 @@ AS
       ||chr(10);
   END;
 
-  -- creates code block to delete referenced entries in n:m table
-  -- adds another code block to delete unreferenced entries in m table
   FUNCTION gen_delete_n_m_ref_by_id_stmt(
     n_m_tab_name VARCHAR2,
     fk_n_column_name VARCHAR2,
@@ -804,8 +786,6 @@ AS
       ||chr(10)|| gen_delete_m_ref_by_ids_stmt(m_tab_name, fk_m_column_name, n_m_tab_name);
   END;
 
-  -- creates code block to delete referenced entries in n:m table
-  -- adds another code block to delete unreferenced entries in m table with function call
   FUNCTION gen_delete_n_m_ref_by_id_call(
     n_m_tab_name VARCHAR2,
     fk_n_column_name VARCHAR2,
@@ -827,7 +807,6 @@ AS
       ||chr(10)|| gen_delete_m_ref_by_ids_call(m_tab_name, fk_m_column_name, n_m_tab_name);
   END;
 
-  -- creates code block to delete referenced entries
   PROCEDURE create_ref_delete(
     tab_name VARCHAR2,
     schema_name VARCHAR2 := USER,
@@ -863,7 +842,7 @@ AS
       ) THEN
         -- function call required, so create function first
         citydb_delete_gen.create_array_delete_function(
-          COALESCE(n_table, m_table),
+          COALESCE(m_table, n_table),
           schema_name
         );
 
@@ -898,8 +877,6 @@ AS
   * statements are not closed because more columns might be returned
   *****************************/
   -- ARRAY CASE
-
-  -- creates code block to delete entries
   FUNCTION gen_delete_by_ids_stmt(
     tab_name VARCHAR2
     ) RETURN VARCHAR2
@@ -921,8 +898,6 @@ AS
   END;
 
   -- SINGLE CASE
-
-  -- creates code block to delete entry
   FUNCTION gen_delete_by_id_stmt(
     tab_name VARCHAR2
     ) RETURN VARCHAR2
@@ -941,7 +916,6 @@ AS
   /*****************************
   * 4. FKs in table
   *****************************/
-  -- SYSTEM QUERY
   FUNCTION query_ref_to_fk(
     tab_name VARCHAR2,
     schema_name VARCHAR2 := USER
@@ -984,10 +958,7 @@ AS
     RETURN ref_to_cursor;
   END;
 
-
   -- ARRAY CASE
-
-  -- creates code block to delete referenced entries by foreign keys
   PROCEDURE create_ref_to_array_delete(
     tab_name VARCHAR2,
     schema_name VARCHAR2 := USER,
@@ -1050,10 +1021,7 @@ AS
     RETURN;
   END;
 
-
   -- SINGLE CASE
-
-  -- creates code block to delete referenced entries by foreign keys
   PROCEDURE create_ref_to_delete(
     tab_name VARCHAR2,
     schema_name VARCHAR2 := USER,
@@ -1124,7 +1092,6 @@ AS
   /*****************************
   * 5. FK which is PK 
   *****************************/
-  -- SYSTEM QUERY
   FUNCTION query_ref_parent_fk(
     tab_name VARCHAR2,
     schema_name VARCHAR2 := USER
@@ -1180,10 +1147,7 @@ AS
         RETURN '';
   END;
 
-
   -- ARRAY CASE
-
-  -- creates code block to delete referenced parent entries
   FUNCTION create_ref_parent_array_delete(
     tab_name VARCHAR2,
     schema_name VARCHAR2 := USER
@@ -1197,8 +1161,6 @@ AS
     IF parent_table IS NOT NULL THEN
       -- create array delete function for parent table
       citydb_delete_gen.create_array_delete_function(parent_table, schema_name);
-
-      -- add delete call for parent table
       parent_block := parent_block
         ||chr(10)||'  -- delete '||lower(parent_table)
         ||chr(10)||'  IF deleted_ids.COUNT > 0 THEN'
@@ -1210,10 +1172,7 @@ AS
     RETURN parent_block;
   END;
 
-
   -- SINGLE CASE
-
-  -- creates code block to delete referenced parent entries
   FUNCTION create_ref_parent_delete(
     tab_name VARCHAR2,
     schema_name VARCHAR2 := USER
@@ -1227,8 +1186,6 @@ AS
     IF parent_table IS NOT NULL THEN
       -- create array delete function for parent table
       citydb_delete_gen.create_delete_function(parent_table, schema_name);
-
-      -- add delete call for parent table
       parent_block := parent_block
         ||chr(10)||'  -- delete '||lower(parent_table)
         ||chr(10)||'  IF deleted_id IS NOT NULL THEN'
@@ -1261,15 +1218,14 @@ AS
     COMMIT;
   END;
 
-  -- creates a array delete function for given table
-  -- returns deleted IDs (set of int)
+  -- ARRAY CASE
   PROCEDURE create_array_delete_function(
     tab_name VARCHAR2,
     schema_name VARCHAR2 := USER
     )
   IS
     ddl_command VARCHAR2(10000) := 
-      'CREATE OR REPLACE FUNCTION delete_'||get_short_name(lower(tab_name))||'_batch(arr ID_ARRAY) RETURN ID_ARRAY'
+      'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_batch(arr ID_ARRAY) RETURN ID_ARRAY'
       ||chr(10)||'IS'||chr(10);
     declare_block VARCHAR2(500) := '  deleted_ids ID_ARRAY;';
     pre_block VARCHAR2(2000) := '';
@@ -1331,14 +1287,13 @@ AS
     COMMIT;
   END;
 
-  -- creates a delete function for given table
-  -- returns deleted ID (int)
+  -- SINGLE CASE
   PROCEDURE create_delete_function(
     tab_name VARCHAR2,
     schema_name VARCHAR2 := USER
     )
   IS
-    ddl_command VARCHAR2(10000) := 'CREATE OR REPLACE FUNCTION delete_'||get_short_name(lower(tab_name))||'(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
+    ddl_command VARCHAR2(10000) := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
     declare_block VARCHAR2(500) := '  deleted_id NUMBER;';
     pre_block VARCHAR2(2000) := '';
     post_block VARCHAR2(1000) := '';
