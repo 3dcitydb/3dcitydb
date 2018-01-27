@@ -1200,7 +1200,7 @@
       <property key='fontColor' value='#0'/>
       <property key='ShowForeignKeyOwnership' value='true'/>
       <property key='showRoleNames' value='false'/>
-      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GEN_OBJECT_LOD9BREP_FK:N:TABLE:GENERIC_CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
+      <semanticModel xmi:type='DI:CoreSemanticModelBridge' element='DB:N:CONSTRAINT:GEN_OBJECT_LOD4BREP_FK:N:TABLE:GENERIC_CITYOBJECT:SCHEMA:DEFAULTSCHEMA:Provider:bf7a5c73-b39c-4ef0-986b-77c182b03f6c'/>
       <waypoint x='1064.999755859375' y='1718.6461181640625'/>
       <waypoint x='705.0000610351562' y='1718.6461181640625'/>
     </contained>
