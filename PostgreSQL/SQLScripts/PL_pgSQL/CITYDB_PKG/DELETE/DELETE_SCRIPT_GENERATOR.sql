@@ -477,7 +477,7 @@ SELECT
   || E'\n    '||citydb_pkg.get_short_name($3)||'_ids'
   || E'\n  FROM'
   || E'\n    delete_'||citydb_pkg.get_short_name($3)||'_refs;'
-  || E'\n' || citydb_pkg.generate_delete_m_ref_by_id_stmt($3, $4, $1);
+  || E'\n' || citydb_pkg.generate_delete_m_ref_by_ids_stmt($3, $4, $1);
 $$
 LANGUAGE sql STRICT;
 
@@ -506,7 +506,7 @@ SELECT
   || E'\n    '||citydb_pkg.get_short_name($3)||'_ids'
   || E'\n  FROM'
   || E'\n    delete_'||citydb_pkg.get_short_name($3)||'_refs;'
-  || E'\n' || citydb_pkg.generate_delete_m_ref_by_id_call($3, $4, $1);
+  || E'\n' || citydb_pkg.generate_delete_m_ref_by_ids_call($3, $4, $1);
 $$
 LANGUAGE sql STRICT;
 
