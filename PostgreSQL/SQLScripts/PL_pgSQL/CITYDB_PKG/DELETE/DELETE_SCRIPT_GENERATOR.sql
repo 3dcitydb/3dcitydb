@@ -291,10 +291,10 @@ FROM (
     c.conrelid AS n_table,
     a.attname AS fk_n_column_name,
     COALESCE(n.ref_depth, 1) AS ref_depth,
-    citydb_pkg.do_cleanup(c.conrelid) AS cleanup_n_table,
+    citydb_pkg.check_for_cleanup(c.conrelid) AS cleanup_n_table,
     m.m_table,
     m.fk_m_column_name,
-    citydb_pkg.do_cleanup(m.m_table) AS cleanup_m_table
+    citydb_pkg.check_for_cleanup(m.m_table) AS cleanup_m_table
   FROM
     pg_constraint c
   JOIN
