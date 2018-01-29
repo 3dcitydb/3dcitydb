@@ -67,7 +67,7 @@ AS
   FUNCTION query_ref_parent_fk(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION create_ref_parent_array_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION create_ref_parent_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
-  PROCEDURE create_array_delete_dummy(tab_name VARCHAR2);
+  PROCEDURE create_array_delete_dummy(tab_name VARCHAR2, schema_name VARCHAR2 := USER);
 
   /*
   A delete function can consist of up to five parts:
@@ -267,7 +267,7 @@ AS
 
       IF self_block IS NULL THEN
         -- create a dummy array delete function to avoid endless recursive calls
-        create_array_delete_dummy(tab_name);
+        create_array_delete_dummy(tab_name, schema_name);
         vars := chr(10)|| '  part_ids ID_ARRAY;';
         self_block := '';
       END IF;
@@ -1203,11 +1203,12 @@ AS
   **************************/
   -- dummy function to compile array delete functions with recursions
   PROCEDURE create_array_delete_dummy(
-    tab_name VARCHAR2
+    tab_name VARCHAR2,
+    schema_name VARCHAR2 := USER
     )
   IS
     ddl_command VARCHAR2(500) := 
-      'CREATE OR REPLACE FUNCTION gen_delete_'||get_short_name(lower(tab_name))||'_batch(arr ID_ARRAY) RETURN ID_ARRAY'
+      'CREATE OR REPLACE FUNCTION '||schema_name||'.gen_delete_'||get_short_name(lower(tab_name))||'_batch(arr ID_ARRAY) RETURN ID_ARRAY'
       ||chr(10)||'IS'
       ||chr(10)||'  deleted_ids ID_ARRAY;'
       ||chr(10)||'BEGIN'

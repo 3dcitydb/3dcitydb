@@ -30,7 +30,7 @@
 *
 * FUNCTIONS:
 *   check_for_cleanup(ref_table OID) RETURNS OID
-*   create_array_delete_dummy(table_name TEXT) RETURNS SETOF VOID
+*   create_array_delete_dummy(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   create_array_delete_function(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   create_delete_function(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   create_ref_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
@@ -204,7 +204,7 @@ BEGIN
   LOOP
     IF self_block = '' THEN
       -- create a dummy array delete function to avoid endless recursive calls
-      PERFORM citydb_pkg.create_array_delete_dummy($1);
+      PERFORM citydb_pkg.create_array_delete_dummy($1, $2);
     END IF;
     self_block := self_block || citydb_pkg.generate_delete_selfref_by_ids_call($1, rec.parent_column);
   END LOOP;
@@ -1015,11 +1015,12 @@ LANGUAGE plpgsql;
 **************************/
 -- dummy function to compile array delete functions with recursions
 CREATE OR REPLACE FUNCTION citydb_pkg.create_array_delete_dummy(
-  table_name TEXT
+  table_name TEXT,
+  schema_name TEXT DEFAULT 'citydb'
   ) RETURNS SETOF VOID AS 
 $$
 DECLARE
-  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION gen.delete_' ||citydb_pkg.get_short_name($1)|| E'(int[]) RETURNS SETOF int AS\n$body$'
+  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_' ||citydb_pkg.get_short_name($1)|| E'(int[]) RETURNS SETOF int AS\n$body$'
     || E'\nDECLARE\n  deleted_ids int[] := ''{}'';'
     || E'\nBEGIN\n  RETURN QUERY SELECT unnest(deleted_ids);\nEND;'
     || E'\n$body$\nLANGUAGE plpgsql STRICT;';
