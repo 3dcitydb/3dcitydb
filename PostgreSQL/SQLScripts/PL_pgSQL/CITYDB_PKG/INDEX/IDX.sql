@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2017
+-- Copyright 2013 - 2018
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -151,10 +151,21 @@ DECLARE
   is_valid BOOLEAN;
   status TEXT;
 BEGIN
-  SELECT DISTINCT pgi.indisvalid INTO is_valid FROM pg_index pgi
-    JOIN pg_stat_user_indexes pgsui ON pgsui.relid=pgi.indrelid
-    JOIN pg_attribute pga ON pga.attrelid=pgi.indexrelid
-      WHERE pgsui.schemaname=$2 AND pgsui.indexrelname=($1).index_name;
+  SELECT DISTINCT
+    pgi.indisvalid
+  INTO
+    is_valid
+  FROM
+    pg_index pgi
+  JOIN
+    pg_stat_user_indexes pgsui
+    ON pgsui.relid=pgi.indrelid
+  JOIN
+    pg_attribute pga
+    ON pga.attrelid=pgi.indexrelid
+  WHERE
+    pgsui.schemaname=$2
+    AND pgsui.indexrelname=($1).index_name;
 
   IF is_valid is null THEN
     status := 'DROPPED';
@@ -192,12 +203,22 @@ DECLARE
   is_valid BOOLEAN;
   status TEXT;
 BEGIN   
-  SELECT DISTINCT pgi.indisvalid INTO is_valid FROM pg_index pgi
-    JOIN pg_stat_user_indexes pgsui ON pgsui.relid=pgi.indrelid
-    JOIN pg_attribute pga ON pga.attrelid=pgi.indexrelid
-      WHERE pgsui.schemaname = lower($3) 
-        AND pgsui.relname = lower($1)
-        AND pga.attname = lower($2);
+  SELECT DISTINCT
+    pgi.indisvalid
+  INTO
+    is_valid
+  FROM
+    pg_index pgi
+  JOIN
+    pg_stat_user_indexes pgsui
+    ON pgsui.relid=pgi.indrelid
+  JOIN
+    pg_attribute pga
+    ON pga.attrelid=pgi.indexrelid
+  WHERE
+    pgsui.schemaname = lower($3) 
+    AND pgsui.relname = lower($1)
+    AND pga.attname = lower($2);
 
   IF is_valid is null THEN
     status := 'DROPPED';
@@ -238,15 +259,18 @@ BEGIN
     BEGIN
       IF ($1).type = SPATIAL THEN
         IF ($1).is_3d = 1 THEN
-          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_nd)',
-                            ($1).index_name, $2, ($1).table_name, ($1).attribute_name);
+          EXECUTE format(
+            'CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_nd)',
+            ($1).index_name, $2, ($1).table_name, ($1).attribute_name);
         ELSE
-          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_2d)',
-                            ($1).index_name, $2, ($1).table_name, ($1).attribute_name);
+          EXECUTE format(
+            'CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_2d)',
+            ($1).index_name, $2, ($1).table_name, ($1).attribute_name);
         END IF;
       ELSE
-        EXECUTE format('CREATE INDEX %I ON %I.%I USING BTREE ('|| idx.attribute_name || ')',
-                          idx.index_name, schema_name, idx.table_name);
+        EXECUTE format(
+          'CREATE INDEX %I ON %I.%I USING BTREE ('|| idx.attribute_name || ')',
+          idx.index_name, schema_name, idx.table_name);
       END IF;
 
       EXCEPTION
@@ -277,7 +301,9 @@ DECLARE
 BEGIN
   IF citydb_pkg.index_status($1, $2) <> 'DROPPED' THEN
     BEGIN
-      EXECUTE format('DROP INDEX IF EXISTS %I.%I', $2, ($1).index_name);
+      EXECUTE format(
+        'DROP INDEX IF EXISTS %I.%I',
+        $2, ($1).index_name);
 
       EXCEPTION
         WHEN OTHERS THEN
@@ -311,15 +337,24 @@ WITH create_indexes AS (
     || ':' || $2
     || ':' || (obj).table_name 
     || ':' || (obj).attribute_name
-  ) AS log, 
-  citydb_pkg.create_index(obj, $2) AS ddl_result
-  FROM citydb_pkg.index_table WHERE (obj).type = $1
+    ) AS idx_log, 
+    citydb_pkg.create_index(obj, $2) AS ddl_result
+  FROM
+    citydb_pkg.index_table
+  WHERE
+    (obj).type = $1
 )
-SELECT array_agg(
-  CASE WHEN ddl_result = '0' THEN 'VALID' ELSE 'DROPPED' END
-  || ':' || log || ':' || ddl_result
-)
-FROM create_indexes;
+SELECT
+  array_agg(
+    CASE WHEN ddl_result = '0'
+      THEN 'VALID'
+      ELSE 'DROPPED'
+    END
+    || ':' || idx_log
+    || ':' || ddl_result
+  ) AS log
+FROM
+  create_indexes;
 $$
 LANGUAGE sql STRICT;
 
@@ -344,15 +379,24 @@ WITH drop_indexes AS (
     || ':' || $2
     || ':' || (obj).table_name 
     || ':' || (obj).attribute_name
-  ) AS log, 
-  citydb_pkg.drop_index(obj, $2) AS ddl_result
-  FROM citydb_pkg.index_table WHERE (obj).type = $1
+    ) AS idx_log, 
+    citydb_pkg.drop_index(obj, $2) AS ddl_result
+  FROM
+    citydb_pkg.index_table
+  WHERE
+    (obj).type = $1
 )
-SELECT array_agg(
-  CASE WHEN ddl_result = '0' THEN 'DROPPED' ELSE 'FAILED' END
-  || ':' || log || ':' || ddl_result
-) 
-FROM drop_indexes;
+SELECT
+  array_agg(
+    CASE WHEN ddl_result = '0'
+      THEN 'DROPPED'
+      ELSE 'FAILED'
+    END
+    || ':' || idx_log
+    || ':' || ddl_result
+  ) AS log 
+FROM
+  drop_indexes;
 $$
 LANGUAGE sql STRICT;
 
@@ -365,14 +409,18 @@ LANGUAGE sql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.status_spatial_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS
 $$
-SELECT array_agg(
-  citydb_pkg.index_status(obj, $1) 
-  || ':' || (obj).index_name 
-  || ':' || $1
-  || ':' || (obj).table_name 
-  || ':' || (obj).attribute_name
-)
-FROM citydb_pkg.index_table WHERE (obj).type = 1;
+SELECT
+  array_agg(
+    citydb_pkg.index_status(obj, $1) 
+    || ':' || (obj).index_name 
+    || ':' || $1
+    || ':' || (obj).table_name 
+    || ':' || (obj).attribute_name
+  ) AS log
+FROM
+  citydb_pkg.index_table
+WHERE
+  (obj).type = 1;
 $$
 LANGUAGE sql STRICT;
 
@@ -385,14 +433,18 @@ LANGUAGE sql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.status_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS
 $$
-SELECT array_agg(
-  citydb_pkg.index_status(obj, $1) 
-  || ':' || (obj).index_name 
-  || ':' || $1
-  || ':' || (obj).table_name 
-  || ':' || (obj).attribute_name
-)
-FROM citydb_pkg.index_table WHERE (obj).type = 0;
+SELECT
+  array_agg(
+    citydb_pkg.index_status(obj, $1) 
+    || ':' || (obj).index_name 
+    || ':' || $1
+    || ':' || (obj).table_name 
+    || ':' || (obj).attribute_name
+  ) AS log
+FROM
+  citydb_pkg.index_table
+WHERE
+  (obj).type = 0;
 $$
 LANGUAGE sql STRICT;
 
@@ -467,8 +519,12 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_index(
   column_name TEXT
   ) RETURNS citydb_pkg.INDEX_OBJ AS 
 $$
-SELECT obj FROM citydb_pkg.index_table 
-  WHERE (obj).table_name = lower($1)
-    AND (obj).attribute_name = lower($2);
+SELECT
+  obj
+FROM
+  citydb_pkg.index_table 
+WHERE
+  (obj).table_name = lower($1)
+  AND (obj).attribute_name = lower($2);
 $$
 LANGUAGE sql STRICT;

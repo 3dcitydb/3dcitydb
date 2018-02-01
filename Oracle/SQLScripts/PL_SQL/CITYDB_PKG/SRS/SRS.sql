@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2017
+-- Copyright 2013 - 2018
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -32,18 +32,13 @@
 ******************************************************************/
 CREATE OR REPLACE PACKAGE citydb_srs
 AS
-  FUNCTION transform_or_null(geom MDSYS.SDO_GEOMETRY, srid NUMBER)
-    RETURN MDSYS.SDO_GEOMETRY;
-  FUNCTION is_coord_ref_sys_3d(schema_srid NUMBER)
-    RETURN NUMBER;
-  FUNCTION check_srid(srsno INTEGER DEFAULT 0)
-    RETURN VARCHAR;
-  FUNCTION is_db_coord_ref_sys_3d
-    RETURN NUMBER;
+  FUNCTION transform_or_null(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
+  FUNCTION is_coord_ref_sys_3d(schema_srid NUMBER) RETURN NUMBER;
+  FUNCTION check_srid(srsno INTEGER DEFAULT 0) RETURN VARCHAR;
+  FUNCTION is_db_coord_ref_sys_3d RETURN NUMBER;
   PROCEDURE change_schema_srid(schema_srid NUMBER, schema_gml_srs_name VARCHAR2, transform NUMBER := 0);
-  FUNCTION get_dim(t_name VARCHAR, c_name VARCHAR)
-    RETURN NUMBER;
-  PROCEDURE change_column_srid(t_name VARCHAR2, c_name VARCHAR2, dim NUMBER, schema_srid NUMBER, transform NUMBER := 0);
+  FUNCTION get_dim(tab_name VARCHAR, col_name VARCHAR) RETURN NUMBER;
+  PROCEDURE change_column_srid(tab_name VARCHAR2, col_name VARCHAR2, dim NUMBER, schema_srid NUMBER, transform NUMBER := 0);
 END citydb_srs;
 /
 
@@ -78,11 +73,12 @@ AS
   IS
     is_3d NUMBER := 0;
   BEGIN
-    SELECT COUNT(*) INTO is_3d FROM sdo_crs_compound WHERE srid = schema_srid;
-
-    IF is_3d = 0 THEN
-      SELECT COUNT(*) INTO is_3d FROM sdo_crs_geographic3d WHERE SRID = schema_srid;
-    END IF;
+    SELECT COALESCE((
+      SELECT COUNT(*) FROM sdo_crs_compound WHERE srid = schema_srid
+      ),(
+      SELECT COUNT(*) FROM sdo_crs_geographic3d WHERE srid = schema_srid
+      ), 0)
+    INTO is_3d FROM dual;
 
     RETURN is_3d;
   END;
@@ -131,17 +127,26 @@ AS
   /*****************************************************************
   * get_dim
   *
-  * @param t_name name of the table
-  * @param c_name name of the column
+  * @param tab_name name of the table
+  * @param col_name name of the column
   * @RETURN NUMBER number of dimension
   ******************************************************************/
-  FUNCTION get_dim(t_name VARCHAR, c_name VARCHAR)
+  FUNCTION get_dim(tab_name VARCHAR, col_name VARCHAR)
     RETURN NUMBER
   IS
     is_3d NUMBER(1, 0);
   BEGIN
-    SELECT 3 INTO is_3d FROM user_sdo_geom_metadata m, TABLE(m.diminfo) dim
-      WHERE table_name = t_name AND column_name = c_name AND dim.sdo_dimname = 'Z';
+    SELECT
+      3
+    INTO
+      is_3d
+    FROM
+      user_sdo_geom_metadata m,
+      TABLE(m.diminfo) dim
+    WHERE
+      table_name = tab_name
+      AND column_name = col_name
+      AND dim.sdo_dimname = 'Z';
 
     RETURN is_3d;
 
@@ -153,50 +158,50 @@ AS
   /*****************************************************************
   * change_column_srid
   *
-  * @param t_name name of the table
-  * @param c_name name of the column
+  * @param tab_name name of the table
+  * @param col_name name of the column
   * @param dim dimension of spatial index
   * @param schema_srid the SRID of the coordinate system to be further used in the database
   * @param transform 1 if existing data shall be transformed, 0 if not
   ******************************************************************/
   PROCEDURE change_column_srid(
-    t_name      VARCHAR2,
-    c_name      VARCHAR2,
-    dim         NUMBER,
+    tab_name VARCHAR2,
+    col_name VARCHAR2,
+    dim NUMBER,
     schema_srid NUMBER,
-    transform   NUMBER := 0
+    transform NUMBER := 0
   )
   IS
-    internal_t_name VARCHAR2(30);
+    internal_tab_name VARCHAR2(30);
     is_versioned BOOLEAN := FALSE;
     is_valid BOOLEAN;
     idx_name VARCHAR2(30);
     idx INDEX_OBJ;
     sql_err_code VARCHAR2(20);
   BEGIN
-    IF t_name LIKE '%\_LT' ESCAPE '\' THEN
+    IF tab_name LIKE '%\_LT' ESCAPE '\' THEN
       is_versioned := TRUE;
-      internal_t_name := substr(t_name, 1, length(t_name) - 3);
+      internal_tab_name := substr(tab_name, 1, length(tab_name) - 3);
     ELSE
-      internal_t_name := t_name;
+      internal_tab_name := tab_name;
     END IF;
 
-    is_valid := citydb_idx.index_status(t_name, c_name) = 'VALID';
+    is_valid := citydb_idx.index_status(tab_name, col_name) = 'VALID';
 
     -- update metadata as the index was switched off before transaction
-    UPDATE user_sdo_geom_metadata SET srid = schema_srid WHERE table_name = t_name AND column_name = c_name;
+    UPDATE user_sdo_geom_metadata SET srid = schema_srid WHERE table_name = tab_name AND column_name = col_name;
     COMMIT;
 
     -- get name of spatial index
     BEGIN
       SELECT index_name INTO idx_name FROM user_ind_columns
-        WHERE table_name = upper(t_name) AND column_name = upper(c_name);
+        WHERE table_name = upper(tab_name) AND column_name = upper(col_name);
 
       -- create INDEX_OBJ
       IF dim = 3 THEN
-        idx := INDEX_OBJ.construct_spatial_3d(idx_name, internal_t_name, c_name);
+        idx := INDEX_OBJ.construct_spatial_3d(idx_name, internal_tab_name, col_name);
       ELSE
-        idx := INDEX_OBJ.construct_spatial_2d(idx_name, internal_t_name, c_name);
+        idx := INDEX_OBJ.construct_spatial_2d(idx_name, internal_tab_name, col_name);
       END IF;
 
       -- drop spatial index
@@ -206,17 +211,17 @@ AS
         WHEN NO_DATA_FOUND THEN
           is_valid := FALSE;
           -- cleanup
-          DELETE FROM user_sdo_geom_metadata WHERE table_name = t_name AND column_name = c_name;
+          DELETE FROM user_sdo_geom_metadata WHERE table_name = tab_name AND column_name = col_name;
     END;
 
     IF transform <> 0 THEN
       -- coordinates of existent geometries will be transformed
       EXECUTE IMMEDIATE
-        'UPDATE ' || t_name || ' SET ' || c_name || ' = sdo_cs.transform( ' || c_name || ', :1) WHERE ' || c_name || ' IS NOT NULL'
+        'UPDATE ' || tab_name || ' SET ' || col_name || ' = sdo_cs.transform( ' || col_name || ', :1) WHERE ' || col_name || ' IS NOT NULL'
         USING schema_srid;
     ELSE
       -- only srid paramter of geometries is updated
-      EXECUTE IMMEDIATE 'UPDATE ' || t_name || ' t SET t.' || c_name || '.SDO_SRID = :1 WHERE t.' || c_name || ' IS NOT NULL'
+      EXECUTE IMMEDIATE 'UPDATE ' || tab_name || ' t SET t.' || col_name || '.SDO_SRID = :1 WHERE t.' || col_name || ' IS NOT NULL'
         USING schema_srid;
     END IF;
 
@@ -234,9 +239,9 @@ AS
   * @param transform 1 if existing data shall be transformed, 0 if not
   ******************************************************************/
   PROCEDURE change_schema_srid(
-    schema_srid         NUMBER,
+    schema_srid NUMBER,
     schema_gml_srs_name VARCHAR2,
-    transform           NUMBER := 0
+    transform NUMBER := 0
   )
   IS
     unknown_srs_ex EXCEPTION;
