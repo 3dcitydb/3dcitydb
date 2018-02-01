@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2017
+-- Copyright 2013 - 2018
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -229,7 +229,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -304,7 +304,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -372,7 +372,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -412,7 +412,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -458,7 +458,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -498,7 +498,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -540,7 +540,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -611,7 +611,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -679,7 +679,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -757,7 +757,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -829,7 +829,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -894,7 +894,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -940,7 +940,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -988,7 +988,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1035,7 +1035,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1087,7 +1087,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1134,7 +1134,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1174,7 +1174,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1250,7 +1250,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1316,7 +1316,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1362,7 +1362,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1410,7 +1410,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1457,7 +1457,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1509,7 +1509,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1581,7 +1581,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1653,7 +1653,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1718,7 +1718,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1766,7 +1766,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1814,7 +1814,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1861,7 +1861,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -1913,7 +1913,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -2035,7 +2035,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -2105,7 +2105,7 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -2168,4 +2168,4 @@ BEGIN
       RETURN NULL;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
