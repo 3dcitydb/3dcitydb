@@ -478,11 +478,11 @@ AS
         regexp_substr(str, '[^'||delim||']+', 1, LEVEL) IS NOT NULL
     )
     SELECT
-      to_number(replace(str_parts,''.'','',''))
-    FROM
-      split_str
+      to_number(replace(str_parts,'.',','))
     BULK COLLECT INTO
-      arr;
+      arr
+    FROM
+      split_str;
 
     RETURN arr;
   END;
