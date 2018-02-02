@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2017
+-- Copyright 2013 - 2018
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -256,8 +256,8 @@ AS
       column_name = 'WKTEXT3D'
       AND table_name = 'CS_SRS';
 
-	IF wktext3d_exists = 1 THEN
-	  SELECT
+    IF wktext3d_exists = 1 THEN
+      SELECT
         NVL(wktext3d, wktext)
       INTO
         info_tmp.wktext
@@ -265,7 +265,7 @@ AS
         cs_srs
       WHERE
         srid = info_tmp.schema_srid;
-	ELSE
+    ELSE
       SELECT
         wktext
       INTO
@@ -274,7 +274,7 @@ AS
         cs_srs
       WHERE
         srid= info_tmp.schema_srid;
-	END IF;
+    END IF;
 
     info_tmp.versioning := versioning_db(schema_name);
     info_ret(info_ret.count) := info_tmp;
