@@ -43,14 +43,14 @@
 *   create_selfref_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   generate_delete_by_id_stmt(table_name TEXT) RETURNS TEXT
 *   generate_delete_by_ids_stmt(table_name TEXT) RETURNS TEXT
-*   generate_delete_m_ref_by_id_call(m_table_name TEXT, fk_m_column_name TEXT, n_m_table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
-*   generate_delete_m_ref_by_id_stmt(m_table_name TEXT, fk_m_column_name TEXT, n_m_table_name TEXT) RETURNS TEXT
-*   generate_delete_m_ref_by_ids_call(m_table_name TEXT, fk_m_column_name TEXT, n_m_table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
-*   generate_delete_m_ref_by_ids_stmt(m_table_name TEXT, fk_m_column_name TEXT, n_m_table_name TEXT) RETURNS TEXT
-*   generate_delete_n_m_ref_by_id_call(n_m_table_name TEXT, fk_n_column_name TEXT, m_table_name TEXT, fk_m_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
-*   generate_delete_n_m_ref_by_id_stmt(n_m_table_name TEXT, fk_n_column_name TEXT, m_table_name TEXT, fk_m_column_name TEXT) RETURNS TEXT
-*   generate_delete_n_m_ref_by_ids_call(n_m_table_name TEXT, fk_n_column_name TEXT, m_table_name TEXT, fk_m_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
-*   generate_delete_n_m_ref_by_ids_stmt(n_m_table_name TEXT, fk_n_column_name TEXT, m_table_name TEXT, fk_m_column_name TEXT) RETURNS TEXT
+*   generate_delete_m_ref_by_id_call(m_table_name TEXT, fk_table_name TEXT, fk_columns TEXT[], schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
+*   generate_delete_m_ref_by_id_stmt(m_table_name TEXT, m_fk_column_name TEXT, fk_table_name TEXT, fk_columns TEXT[]) RETURNS TEXT
+*   generate_delete_m_ref_by_ids_call(m_table_name TEXT, fk_table_name TEXT, fk_columns TEXT[], schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
+*   generate_delete_m_ref_by_ids_stmt(m_table_name TEXT, m_fk_column_name TEXT, fk_table_name TEXT, fk_columns TEXT[]) RETURNS TEXT
+*   generate_delete_n_m_ref_by_id_call(n_m_table_name TEXT, n_fk_column_name TEXT, m_table_name TEXT, m_fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
+*   generate_delete_n_m_ref_by_id_stmt(n_m_table_name TEXT, n_fk_column_name TEXT, m_table_name TEXT, m_fk_column_name TEXT) RETURNS TEXT
+*   generate_delete_n_m_ref_by_ids_call(n_m_table_name TEXT, n_fk_column_name TEXT, m_table_name TEXT, m_fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
+*   generate_delete_n_m_ref_by_ids_stmt(n_m_table_name TEXT, n_fk_column_name TEXT, m_table_name TEXT, m_fk_column_name TEXT) RETURNS TEXT
 *   generate_delete_ref_by_id_call(table_name TEXT, fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   generate_delete_ref_by_id_stmt(table_name TEXT, fk_column_name TEXT) RETURNS TEXT
 *   generate_delete_ref_by_ids_call(table_name TEXT, fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
@@ -59,11 +59,10 @@
 *   generate_delete_selfref_by_ids_call(table_name TEXT, self_fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   get_short_name(table_name TEXT) RETURNS TEXT
 *   query_ref_fk(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
-*     OUT n_table TEXT, OUT fk_n_column_name TEXT, OUT ref_depth INTEGER, OUT cleanup_n_table BOOLEAN,
-*     OUT m_table TEXT, OUT fk_m_column_name TEXT, OUT cleanup_m_table BOOLEAN) RETURNS SETOF RECORD
+*     OUT n_table_name TEXT, OUT n_fk_column_name TEXT, OUT ref_depth INTEGER, OUT cleanup_n_table BOOLEAN,
+*     OUT m_table_name TEXT, OUT m_fk_column_name TEXT, OUT cleanup_m_table BOOLEAN) RETURNS SETOF RECORD
 *   query_ref_to_fk(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
-*     OUT ref_table TEXT, OUT ref_column TEXT, OUT fk_columns TEXT, OUT concat_id_arrays TEXT,
-*     OUT column_count INTEGER, OUT cleanup_ref_table BOOLEAN) RETURNS SETOF RECORD
+*     OUT ref_table_name TEXT, OUT ref_column_name TEXT, OUT fk_columns TEXT[], OUT cleanup_ref_table BOOLEAN) RETURNS SETOF RECORD
 *   query_ref_to_parent_fk(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   query_selfref_fk(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF TEXT
 *
@@ -270,33 +269,36 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_fk(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb',
-  OUT n_table TEXT,
-  OUT fk_n_column_name TEXT,
+  OUT n_table_name TEXT,
+  OUT n_fk_column_name TEXT,
   OUT ref_depth INTEGER,
   OUT cleanup_n_table BOOLEAN,
-  OUT m_table TEXT,
-  OUT fk_m_column_name TEXT,
+  OUT m_table_name TEXT,
+  OUT m_fk_column_name TEXT,
+  OUT m_ref_column_name TEXT,
   OUT cleanup_m_table BOOLEAN
   ) RETURNS SETOF RECORD AS
 $$
 SELECT
-  n_table::regclass::text,
-  fk_n_column_name::text,
+  n_table_name::regclass::text,
+  n_fk_column_name::text,
   ref_depth,
   (cleanup_n_table IS NOT NULL) AS cleanup_n_table,
-  m_table::regclass::text,
-  fk_m_column_name::text,
+  m_table_name::regclass::text,
+  m_fk_column_name::text,
+  m_ref_column_name::text,
   (cleanup_m_table IS NOT NULL) AS cleanup_m_table
 FROM (
   SELECT
-    c.confrelid AS root_table,
-    c.conrelid AS n_table,
-    a.attname AS fk_n_column_name,
+    c.confrelid AS root_table_name,
+    c.conrelid AS n_table_name,
+    a.attname AS n_fk_column_name,
     COALESCE(n.ref_depth, 1) AS ref_depth,
     citydb_pkg.check_for_cleanup(c.conrelid) AS cleanup_n_table,
-    m.m_table,
-    m.fk_m_column_name,
-    citydb_pkg.check_for_cleanup(m.m_table) AS cleanup_m_table
+    m.m_table_name,
+    m.m_fk_column_name,
+    m.m_ref_column_name,
+    citydb_pkg.check_for_cleanup(m.m_table_name) AS cleanup_m_table
   FROM
     pg_constraint c
   JOIN
@@ -344,14 +346,19 @@ FROM (
   -- the FK has to be set to CASCADE to decide for cleanup
   LEFT JOIN LATERAL (
     SELECT
-      mn.confrelid AS m_table,
-      mna.attname AS fk_m_column_name
+      mn.confrelid AS m_table_name,
+      mna.attname AS m_fk_column_name,
+      mna_ref.attname AS m_ref_column_name
     FROM
       pg_constraint mn
     JOIN
       pg_attribute mna
       ON mna.attrelid = mn.conrelid
      AND mna.attnum = ANY (mn.conkey)
+    JOIN
+      pg_attribute mna_ref
+      ON mna_ref.attrelid = mn.confrelid
+     AND mna_ref.attnum = ANY (mn.confkey)
     WHERE
       mn.conrelid = c.conrelid
       AND n.parent_table IS NULL
@@ -367,11 +374,11 @@ FROM (
 ) ref
 WHERE
   (cleanup_n_table IS NULL OR cleanup_n_table <> root_table)
-  AND (cleanup_m_table IS NULL OR cleanup_m_table <> root_table)
+  AND (cleanup_m_table IS NULL OR cleanup_m_table <> root_table_name)
 ORDER BY
   ref_depth DESC NULLS FIRST,
-  n_table,
-  m_table;
+  n_table_name,
+  m_table_name;
 $$
 LANGUAGE sql STRICT;
 
@@ -412,8 +419,9 @@ LANGUAGE sql STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_ids_stmt(
   m_table_name TEXT,
-  fk_m_column_name TEXT,
-  n_m_table_name TEXT
+  m_fk_column_name TEXT,
+  fk_table_name TEXT,
+  fk_columns TEXT[]
   ) RETURNS TEXT AS 
 $$
 SELECT
@@ -423,20 +431,28 @@ SELECT
   || E'\n      '||$1||' m'
   || E'\n    USING'
   || E'\n      (SELECT DISTINCT unnest('||citydb_pkg.get_short_name($1)||'_ids) AS a_id) a'
-  || E'\n    LEFT JOIN'
-  || E'\n     '||$3||' n2m'
-  || E'\n      ON n2m.'||$2||' = a.a_id'
+  || E'\n    '
+  || string_agg(
+            'LEFT JOIN'
+  || E'\n      '||$3||' n'||i
+  || E'\n      ON n'||i||'.'||col||' = a.a_id',
+     E'\n    ')
   || E'\n    WHERE'
-  || E'\n      m.id = a.a_id'
-  || E'\n      AND n2m.'||$2||' IS NULL;'
-  || E'\n  END IF;\n';
+  || E'\n      m.'||$2||' = a.a_id'
+  || E'\n      AND '
+  || string_agg(
+              'n'||i||'.'||col||' IS NULL',
+     E'\n      AND ') || ';'
+  || E'\n  END IF;\n'
+FROM
+  unnest($4) WITH ORDINALITY AS c(col, i);
 $$
 LANGUAGE sql STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_ids_call(
   m_table_name TEXT,
-  fk_m_column_name TEXT,
-  n_m_table_name TEXT,
+  fk_table_name TEXT,
+  fk_columns TEXT[],
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS TEXT AS 
 $$
@@ -447,20 +463,29 @@ SELECT
   || E'\n      '||$4||'.delete_'||citydb_pkg.get_short_name($1)||'(array_agg(a.a_id))'
   || E'\n    FROM'
   || E'\n      (SELECT DISTINCT unnest('||citydb_pkg.get_short_name($1)||'_ids) AS a_id) a'
-  || E'\n    LEFT JOIN'
-  || E'\n      '||$3||' n2m'
-  || E'\n      ON n2m.'||$2||' = a.a_id'
+  || E'\n    '
+  || string_agg(
+            'LEFT JOIN'
+  || E'\n      '||$2||' n'||i
+  || E'\n      ON n'||i||'.'||col||' = a.a_id',
+     E'\n    ')
   || E'\n    WHERE'
-  || E'\n      n2m.'||$2||' IS NULL;'
-  || E'\n  END IF;\n';
+  || E'\n      '
+  || string_agg(
+              'n'||i||'.'||col||' IS NULL',
+     E'\n      AND ') || ';'
+  || E'\n  END IF;\n'
+FROM
+  unnest($3) WITH ORDINALITY AS c(col, i);
 $$
 LANGUAGE sql STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_ids_stmt(
   n_m_table_name TEXT,
-  fk_n_column_name TEXT,
+  n_fk_column_name TEXT,
   m_table_name TEXT,
-  fk_m_column_name TEXT
+  m_fk_column_name TEXT,
+  m_ref_column_name TEXT
   ) RETURNS TEXT AS 
 $$
 SELECT
@@ -481,15 +506,15 @@ SELECT
   || E'\n    '||citydb_pkg.get_short_name($3)||'_ids'
   || E'\n  FROM'
   || E'\n    delete_'||citydb_pkg.get_short_name($3)||'_refs;'
-  || E'\n' || citydb_pkg.generate_delete_m_ref_by_ids_stmt($3, $4, $1);
+  || E'\n' || citydb_pkg.generate_delete_m_ref_by_ids_stmt($3, $5, $1, ARRAY[$4]);
 $$
 LANGUAGE sql STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_ids_call(
   n_m_table_name TEXT,
-  fk_n_column_name TEXT,
+  n_fk_column_name TEXT,
   m_table_name TEXT,
-  fk_m_column_name TEXT,
+  m_fk_column_name TEXT,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS TEXT AS 
 $$
@@ -511,7 +536,7 @@ SELECT
   || E'\n    '||citydb_pkg.get_short_name($3)||'_ids'
   || E'\n  FROM'
   || E'\n    delete_'||citydb_pkg.get_short_name($3)||'_refs;'
-  || E'\n' || citydb_pkg.generate_delete_m_ref_by_ids_call($3, $4, $1, $5);
+  || E'\n' || citydb_pkg.generate_delete_m_ref_by_ids_call($3, $1, ARRAY[$4], $5);
 $$
 LANGUAGE sql STRICT;
 
@@ -542,22 +567,22 @@ BEGIN
       -- function call required, so create function first
       PERFORM
         citydb_pkg.create_array_delete_function(
-          COALESCE(rec.m_table, rec.n_table),
+          COALESCE(rec.m_table_name, rec.n_table_name),
           $2
         );
 
-      IF rec.m_table IS NULL THEN
-        ref_block := ref_block||citydb_pkg.generate_delete_ref_by_ids_call(rec.n_table, rec.fk_n_column_name, $2);
+      IF rec.m_table_name IS NULL THEN
+        ref_block := ref_block||citydb_pkg.generate_delete_ref_by_ids_call(rec.n_table_name, rec.n_fk_column_name, $2);
       ELSE
-        vars := vars ||E'\n  '||citydb_pkg.get_short_name(rec.m_table)||'_ids int[] := ''{}'';';
-        ref_block := ref_block||citydb_pkg.generate_delete_n_m_ref_by_ids_call(rec.n_table, rec.fk_n_column_name, rec.m_table, rec.fk_m_column_name, $2);
+        vars := vars ||E'\n  '||citydb_pkg.get_short_name(rec.m_table_name)||'_ids int[] := ''{}'';';
+        ref_block := ref_block||citydb_pkg.generate_delete_n_m_ref_by_ids_call(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, $2);
       END IF;
     ELSE
-      IF rec.m_table IS NULL THEN
-        ref_block := ref_block||citydb_pkg.generate_delete_ref_by_ids_stmt(rec.n_table, rec.fk_n_column_name);
+      IF rec.m_table_name IS NULL THEN
+        ref_block := ref_block||citydb_pkg.generate_delete_ref_by_ids_stmt(rec.n_table_name, rec.n_fk_column_name);
       ELSE
-        vars := vars ||E'\n  '||citydb_pkg.get_short_name(rec.m_table)||'_ids int[] := ''{}'';';
-        ref_block := ref_block||citydb_pkg.generate_delete_n_m_ref_by_ids_stmt(rec.n_table, rec.fk_n_column_name, rec.m_table, rec.fk_m_column_name);
+        vars := vars ||E'\n  '||citydb_pkg.get_short_name(rec.m_table_name)||'_ids int[] := ''{}'';';
+        ref_block := ref_block||citydb_pkg.generate_delete_n_m_ref_by_ids_stmt(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, rec.m_ref_column_name);
       END IF;
     END IF;
   END LOOP;
@@ -601,8 +626,9 @@ LANGUAGE sql STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_id_stmt(
   m_table_name TEXT,
-  fk_m_column_name TEXT,
-  n_m_table_name TEXT
+  m_fk_column_name TEXT,
+  fk_table_name TEXT,
+  fk_columns TEXT[]
   ) RETURNS TEXT AS 
 $$
 SELECT
@@ -612,20 +638,28 @@ SELECT
   || E'\n      '||$1||' m'
   || E'\n    USING'
   || E'\n      (VALUES ('||citydb_pkg.get_short_name($1)||'_ref_id)) a(a_id)'
-  || E'\n    LEFT JOIN'
-  || E'\n      '||$3||' n2m'
-  || E'\n      ON n2m.'||$2||' = a.a_id'
+  || E'\n    '
+  || string_agg(
+            'LEFT JOIN'
+  || E'\n      '||$3||' n'||i
+  || E'\n      ON n'||i||'.'||col||' = a.a_id',
+     E'\n    ')
   || E'\n    WHERE'
-  || E'\n      m.id = a.a_id'
-  || E'\n      AND n2m.'||$2||' IS NULL;'
-  || E'\n  END IF;\n';
+  || E'\n      m.'||$2||' = a.a_id'
+  || E'\n      AND '
+  || string_agg(
+              'n'||i||'.'||col||' IS NULL',
+     E'\n      AND ') || ';'
+  || E'\n  END IF;\n'
+FROM
+  unnest($4) WITH ORDINALITY AS c(col, i);
 $$
 LANGUAGE sql STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_id_call(
   m_table_name TEXT,
-  fk_m_column_name TEXT,
-  n_m_table_name TEXT,
+  fk_table_name TEXT,
+  fk_columns TEXT[],
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS TEXT AS 
 $$
@@ -636,20 +670,29 @@ SELECT
   || E'\n      '||$4||'.delete_'||citydb_pkg.get_short_name($1)||'(a.a_id)'
   || E'\n    FROM'
   || E'\n      (VALUES ('||citydb_pkg.get_short_name($1)||'_ref_id)) a(a_id)'
-  || E'\n    LEFT JOIN'
-  || E'\n     '||$3||' n2m'
-  || E'\n      ON n2m.'||$2||' = a.a_id'
+  || E'\n    '
+  || string_agg(
+            'LEFT JOIN'
+  || E'\n      '||$2||' n'||i
+  || E'\n      ON n'||i||'.'||col||' = a.a_id',
+     E'\n    ')
   || E'\n    WHERE'
-  || E'\n      n2m.'||$2||' IS NULL;'
-  || E'\n  END IF;\n';
+  || E'\n      '
+  || string_agg(
+              'n'||i||'.'||col||' IS NULL',
+     E'\n      AND ') || ';'
+  || E'\n  END IF;\n'
+FROM
+  unnest($3) WITH ORDINALITY AS c(col, i);
 $$
 LANGUAGE sql STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_id_stmt(
   n_m_table_name TEXT,
-  fk_n_column_name TEXT,
+  n_fk_column_name TEXT,
   m_table_name TEXT,
-  fk_m_column_name TEXT
+  m_fk_column_name TEXT,
+  m_ref_column_name TEXT
   ) RETURNS TEXT AS 
 $$
 SELECT
@@ -668,15 +711,15 @@ SELECT
   || E'\n    '||citydb_pkg.get_short_name($3)||'_ids'
   || E'\n  FROM'
   || E'\n    delete_'||citydb_pkg.get_short_name($3)||'_refs;'
-  || E'\n' || citydb_pkg.generate_delete_m_ref_by_ids_stmt($3, $4, $1);
+  || E'\n' || citydb_pkg.generate_delete_m_ref_by_ids_stmt($3, $5, $1, ARRAY[$4]);
 $$
 LANGUAGE sql STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_id_call(
   n_m_table_name TEXT,
-  fk_n_column_name TEXT,
+  n_fk_column_name TEXT,
   m_table_name TEXT,
-  fk_m_column_name TEXT,
+  m_fk_column_name TEXT,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS TEXT AS 
 $$
@@ -696,7 +739,7 @@ SELECT
   || E'\n    '||citydb_pkg.get_short_name($3)||'_ids'
   || E'\n  FROM'
   || E'\n    delete_'||citydb_pkg.get_short_name($3)||'_refs;'
-  || E'\n' || citydb_pkg.generate_delete_m_ref_by_ids_call($3, $4, $1, $5);
+  || E'\n' || citydb_pkg.generate_delete_m_ref_by_ids_call($3, $1, ARRAY[$4], $5);
 $$
 LANGUAGE sql STRICT;
 
@@ -727,22 +770,22 @@ BEGIN
       -- function call required, so create function first
       PERFORM
         citydb_pkg.create_array_delete_function(
-          COALESCE(rec.m_table, rec.n_table),
+          COALESCE(rec.m_table_name, rec.n_table_name),
           $2
         );
 
-      IF rec.m_table IS NULL THEN
-        ref_block := ref_block||citydb_pkg.generate_delete_ref_by_id_call(rec.n_table, rec.fk_n_column_name, $2);
+      IF rec.m_table_name IS NULL THEN
+        ref_block := ref_block||citydb_pkg.generate_delete_ref_by_id_call(rec.n_table_name, rec.n_fk_column_name, $2);
       ELSE
-        vars := vars ||E'\n  '||citydb_pkg.get_short_name(rec.m_table)||'_ids int[] := ''{}'';';
-        ref_block := ref_block||citydb_pkg.generate_delete_n_m_ref_by_id_call(rec.n_table, rec.fk_n_column_name, rec.m_table, rec.fk_m_column_name, $2);
+        vars := vars ||E'\n  '||citydb_pkg.get_short_name(rec.m_table_name)||'_ids int[] := ''{}'';';
+        ref_block := ref_block||citydb_pkg.generate_delete_n_m_ref_by_id_call(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, $2);
       END IF;
     ELSE
-      IF rec.m_table IS NULL THEN
-        ref_block := ref_block||citydb_pkg.generate_delete_ref_by_id_stmt(rec.n_table, rec.fk_n_column_name);
+      IF rec.m_table_name IS NULL THEN
+        ref_block := ref_block||citydb_pkg.generate_delete_ref_by_id_stmt(rec.n_table_name, rec.n_fk_column_name);
       ELSE
-        vars := vars ||E'\n  '||citydb_pkg.get_short_name(rec.m_table)||'_ids int[] := ''{}'';';
-        ref_block := ref_block||citydb_pkg.generate_delete_n_m_ref_by_id_stmt(rec.n_table, rec.fk_n_column_name, rec.m_table, rec.fk_m_column_name);
+        vars := vars ||E'\n  '||citydb_pkg.get_short_name(rec.m_table_name)||'_ids int[] := ''{}'';';
+        ref_block := ref_block||citydb_pkg.generate_delete_n_m_ref_by_id_stmt(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, rec.m_ref_column_name);
       END IF;
     END IF;
   END LOOP;
@@ -796,20 +839,16 @@ LANGUAGE sql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_to_fk(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb',
-  OUT ref_table TEXT,
-  OUT ref_column TEXT,
-  OUT fk_columns TEXT,
-  OUT concat_id_arrays TEXT,
-  OUT column_count INTEGER,
+  OUT ref_table_name TEXT,
+  OUT ref_column_name TEXT,
+  OUT fk_columns TEXT[],
   OUT cleanup_ref_table BOOLEAN
   ) RETURNS SETOF RECORD AS
 $$
 SELECT
-  c.confrelid::regclass::text AS ref_table,
-  a_ref.attname::text AS ref_column,
-  string_agg(a.attname, E',\n    ' ORDER BY a.attnum) AS fk_columns,
-  string_agg('array_agg('||a.attname||')', E' ||\n    ' ORDER BY a.attnum) AS concat_id_arrays,
-  count(a.attname)::int AS column_count,
+  c.confrelid::regclass::text AS ref_table_name,
+  a_ref.attname::text AS ref_column_name,
+  array_agg(a.attname::text ORDER BY a.attnum) AS fk_columns,
   citydb_pkg.check_for_cleanup(c.confrelid) IS NOT NULL AS cleanup_ref_table
 FROM
   pg_constraint c
@@ -832,9 +871,7 @@ WHERE
    OR c.conrelid::regclass::text LIKE '%cityobjectgroup')
 GROUP BY
   c.confrelid,
-  a_ref.attname
-ORDER BY
-  column_count;
+  a_ref.attname;
 $$
 LANGUAGE sql STRICT;
 
@@ -864,17 +901,22 @@ BEGIN
       fk_block := '';
     END IF;
 
-    vars := vars || E'\n  '||citydb_pkg.get_short_name(rec.ref_table)||'_ids int[] := ''{}'';';
-    returning_block := returning_block || E',\n      ' || rec.fk_columns;
-    collect_block := collect_block || E',\n    ' || rec.concat_id_arrays;
-    into_block := into_block || E',\n    '||citydb_pkg.get_short_name(rec.ref_table)||'_ids';
+    vars := vars || E'\n  '||citydb_pkg.get_short_name(rec.ref_table_name)||'_ids int[] := ''{}'';';
+    returning_block := returning_block || E',\n      ' || array_to_string(rec.fk_columns, E',\n      ');
+    collect_block := collect_block || E',\n    '
+      || (SELECT
+            string_agg('array_agg('||col||')', E' ||\n    ')
+          FROM
+            unnest(rec.fk_columns) AS c(col));
+
+    into_block := into_block || E',\n    '||citydb_pkg.get_short_name(rec.ref_table_name)||'_ids';
 
     IF rec.cleanup_ref_table THEN
       -- function call required, so create function first
-      PERFORM citydb_pkg.create_array_delete_function(rec.ref_table, $2);
-      fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_ids_call(rec.ref_table, rec.ref_column, rec.ref_table, $2);
+      PERFORM citydb_pkg.create_array_delete_function(rec.ref_table_name, $2);
+      fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_ids_call(rec.ref_table_name, $1, rec.fk_columns, $2);
     ELSE
-      fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_ids_stmt(rec.ref_table, rec.ref_column, rec.ref_table);
+      fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_ids_stmt(rec.ref_table_name, rec.ref_column_name, $1, rec.fk_columns);
     END IF;
   END LOOP;
 
@@ -907,33 +949,33 @@ BEGIN
       fk_block := '';
     END IF;
 
-    IF rec.column_count > 1 THEN
-      vars := vars ||E'\n  '||citydb_pkg.get_short_name(rec.ref_table)||'_ids int[] := ''{}'';';
+    IF array_length(rec.fk_columns, 1) > 1 THEN
+      vars := vars ||E'\n  '||citydb_pkg.get_short_name(rec.ref_table_name)||'_ids int[] := ''{}'';';
       returning_block := returning_block||','
         || E'\n    ARRAY['
-        || E'\n    '||rec.fk_columns
+        || E'\n    '||array_to_string(rec.fk_columns, E',\n    ')
         || E'\n    ]';
-      into_block := into_block||E',\n    '||citydb_pkg.get_short_name(rec.ref_table)||'_ids';
+      into_block := into_block||E',\n    '||citydb_pkg.get_short_name(rec.ref_table_name)||'_ids';
     ELSE
-      vars := vars ||E'\n  '||citydb_pkg.get_short_name(rec.ref_table)||'_ref_id int;';
-      returning_block := returning_block||E',\n    '||rec.fk_columns;
-      into_block := into_block||E',\n    '||citydb_pkg.get_short_name(rec.ref_table)||'_ref_id';
+      vars := vars ||E'\n  '||citydb_pkg.get_short_name(rec.ref_table_name)||'_ref_id int;';
+      returning_block := returning_block || E',\n      ' || array_to_string(rec.fk_columns, E',\n      ');
+      into_block := into_block||E',\n    '||citydb_pkg.get_short_name(rec.ref_table_name)||'_ref_id';
     END IF;
 
     IF rec.cleanup_ref_table THEN
       -- function call required, so create function first
-      IF rec.column_count > 1 THEN
-        PERFORM citydb_pkg.create_array_delete_function(rec.ref_table, $2);
-        fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_ids_call(rec.ref_table, rec.ref_column, rec.ref_table, $2);
+      IF array_length(rec.fk_columns, 1) > 1 THEN
+        PERFORM citydb_pkg.create_array_delete_function(rec.ref_table_name, $2);
+        fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_ids_call(rec.ref_table_name, $1, rec.fk_columns, $2);
       ELSE
-        PERFORM citydb_pkg.create_delete_function(rec.ref_table, $2);
-        fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_id_call(rec.ref_table, rec.ref_column, rec.ref_table, $2);
+        PERFORM citydb_pkg.create_delete_function(rec.ref_table_name, $2);
+        fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_id_call(rec.ref_table_name, $1, rec.fk_columns, $2);
       END IF;
     ELSE
-      IF rec.column_count > 1 THEN
-        fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_ids_stmt(rec.ref_table, rec.ref_column, rec.ref_table);
+      IF array_length(rec.fk_columns, 1) > 1 THEN
+        fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_ids_stmt(rec.ref_table_name, rec.ref_column_name, $1, rec.fk_columns);
       ELSE
-        fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_id_stmt(rec.ref_table, rec.ref_column, rec.ref_table);
+        fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_id_stmt(rec.ref_table_name, rec.ref_column_name, $1, rec.fk_columns);
       END IF;
     END IF;
   END LOOP;
@@ -962,8 +1004,7 @@ WHERE
   AND p.conrelid = ($2 || '.' || $1)::regclass::oid
   AND f.conkey = p.conkey
   AND f.contype = 'f'
-  AND p.contype = 'p'
-  AND f.confdeltype = 'a';
+  AND p.contype = 'p';
 $$
 LANGUAGE sql STRICT;
 
