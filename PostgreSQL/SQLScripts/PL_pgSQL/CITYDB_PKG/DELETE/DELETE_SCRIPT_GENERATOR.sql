@@ -373,7 +373,7 @@ FROM (
     AND c.confdeltype = 'a'
 ) ref
 WHERE
-  (cleanup_n_table IS NULL OR cleanup_n_table <> root_table)
+  (cleanup_n_table IS NULL OR cleanup_n_table <> root_table_name)
   AND (cleanup_m_table IS NULL OR cleanup_m_table <> root_table_name)
 ORDER BY
   ref_depth DESC NULLS FIRST,
