@@ -96,7 +96,7 @@ AS
   FUNCTION min(a NUMBER, b NUMBER) RETURN NUMBER;
   PROCEDURE update_schema_constraints(on_delete_param CHAR := 'a', schema_name VARCHAR2 := USER);
   PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param CHAR := 'a', schema_name VARCHAR2 := USER);
-  FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER, schema_name VARCHAR2 := USER) RETURN ID_ARRAY;
+  FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER) RETURN ID_ARRAY;
   FUNCTION string2id_array(str VARCHAR2, delim VARCHAR2 := ',') RETURN ID_ARRAY;
   FUNCTION get_id_array_size(id_arr ID_ARRAY) RETURN NUMBER;
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
@@ -436,19 +436,17 @@ AS
   *
   * @param seq_name name of the sequence
   * @param count number of values to be queried from the sequence
-  * @param schema_name name of schema of target sequence
   * @return ID_ARRAY array of sequence values
   ******************************************************************/
   FUNCTION get_seq_values(
     seq_name VARCHAR2, 
-    seq_count NUMBER,
-    schema_name VARCHAR2 := USER
+    seq_count NUMBER
     ) RETURN ID_ARRAY
   IS
     seq_tbl ID_ARRAY;
   BEGIN
     EXECUTE IMMEDIATE
-      'SELECT ' || upper(schema_name) || '.' || seq_name || '.nextval '
+      'SELECT ' || upper(seq_name) || '.nextval '
       || 'FROM dual CONNECT BY level <= :1' 
       BULK COLLECT INTO seq_tbl
       USING seq_count;
