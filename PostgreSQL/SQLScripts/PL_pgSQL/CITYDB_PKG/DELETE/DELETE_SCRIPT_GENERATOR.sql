@@ -59,8 +59,8 @@
 *   generate_delete_selfref_by_ids_call(table_name TEXT, self_fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   get_short_name(table_name TEXT) RETURNS TEXT
 *   query_ref_fk(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
-*     OUT n_table_name TEXT, OUT n_fk_column_name TEXT, OUT ref_depth INTEGER, OUT cleanup_n_table BOOLEAN,
-*     OUT m_table_name TEXT, OUT m_fk_column_name TEXT, OUT cleanup_m_table BOOLEAN) RETURNS SETOF RECORD
+*     OUT root_table_name TEXT, OUT n_table_name TEXT, OUT n_fk_column_name TEXT, OUT ref_depth INTEGER, OUT cleanup_n_table TEXT,
+*     OUT m_table_name TEXT, OUT m_fk_column_name TEXT, OUT cleanup_m_table TEXT) RETURNS SETOF RECORD
 *   query_ref_tables_and_columns(table_name TEXT, ref_parent_to_exclude TEXT, schema_name TEXT DEFAULT 'citydb',
 *     OUT ref_tables TEXT[] DEFAULT '{}', OUT ref_columns TEXT[] DEFAULT '{}') RETURNS RECORD
 *   query_ref_to_fk(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
@@ -295,112 +295,99 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_fk(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb',
+  OUT root_table_name TEXT,
   OUT n_table_name TEXT,
   OUT n_fk_column_name TEXT,
   OUT ref_depth INTEGER,
-  OUT cleanup_n_table BOOLEAN,
+  OUT cleanup_n_table TEXT,
   OUT m_table_name TEXT,
   OUT m_fk_column_name TEXT,
   OUT m_ref_column_name TEXT,
-  OUT cleanup_m_table BOOLEAN
+  OUT cleanup_m_table TEXT
   ) RETURNS SETOF RECORD AS
 $$
 SELECT
-  n_table_name::regclass::text,
-  n_fk_column_name::text,
-  ref_depth,
-  (cleanup_n_table IS NOT NULL) AS cleanup_n_table,
-  m_table_name::regclass::text,
-  m_fk_column_name::text,
-  m_ref_column_name::text,
-  (cleanup_m_table IS NOT NULL) AS cleanup_m_table
-FROM (
-  SELECT
-    c.confrelid AS root_table_name,
-    c.conrelid AS n_table_name,
-    a.attname AS n_fk_column_name,
-    COALESCE(n.ref_depth, 1) AS ref_depth,
-    citydb_pkg.check_for_cleanup(c.conrelid) AS cleanup_n_table,
-    m.m_table_name,
-    m.m_fk_column_name,
-    m.m_ref_column_name,
-    citydb_pkg.check_for_cleanup(m.m_table_name) AS cleanup_m_table
-  FROM
-    pg_constraint c
-  JOIN
-    pg_attribute a
-    ON a.attrelid = c.conrelid
-   AND a.attnum = ANY (c.conkey)
-  LEFT JOIN (
-    -- get depth of referencing tablesion
-    WITH RECURSIVE ref_table_depth(parent_table, ref_table, depth) AS (
-      SELECT
-        confrelid AS parent_table,
-        conrelid AS ref_table,
-        1 AS depth
-      FROM
-        pg_constraint
-      WHERE
-        confrelid = ($2 || '.' || $1)::regclass::oid
-        AND conrelid <> confrelid
-        AND contype = 'f'
-        AND confdeltype = 'a'
-      UNION ALL
-        SELECT
-          r.confrelid AS parent_table,
-          r.conrelid AS ref_table,
-          d.depth + 1 AS depth
-        FROM
-          pg_constraint r,
-          ref_table_depth d
-        WHERE
-          d.ref_table = r.confrelid
-          AND d.ref_table <> r.conrelid
-          AND r.contype = 'f'
-          AND r.confdeltype = 'a'
-    )
+  c.confrelid::regclass::text AS root_table_name,
+  c.conrelid::regclass::text AS n_table_name,
+  a.attname::text AS n_fk_column_name,
+  COALESCE(n.ref_depth, 1) AS ref_depth,
+  citydb_pkg.check_for_cleanup(c.conrelid)::regclass::text AS cleanup_n_table,
+  m.m_table_name::regclass::text,
+  m.m_fk_column_name::text,
+  m.m_ref_column_name::text,
+  citydb_pkg.check_for_cleanup(m.m_table_name)::regclass::text AS cleanup_m_table
+FROM
+  pg_constraint c
+JOIN
+  pg_attribute a
+  ON a.attrelid = c.conrelid
+ AND a.attnum = ANY (c.conkey)
+LEFT JOIN (
+  -- get depth of referencing tablesion
+  WITH RECURSIVE ref_table_depth(parent_table, ref_table, depth) AS (
     SELECT
-      parent_table,
-      max(depth) AS ref_depth
+      confrelid AS parent_table,
+      conrelid AS ref_table,
+      1 AS depth
     FROM
-      ref_table_depth
-    GROUP BY
-      parent_table
-    ) n
-    ON n.parent_table = c.conrelid
-  -- get n:m tables which are the NULL candidates from the n block
-  -- the FK has to be set to CASCADE to decide for cleanup
-  LEFT JOIN LATERAL (
-    SELECT
-      mn.confrelid AS m_table_name,
-      mna.attname AS m_fk_column_name,
-      mna_ref.attname AS m_ref_column_name
-    FROM
-      pg_constraint mn
-    JOIN
-      pg_attribute mna
-      ON mna.attrelid = mn.conrelid
-     AND mna.attnum = ANY (mn.conkey)
-    JOIN
-      pg_attribute mna_ref
-      ON mna_ref.attrelid = mn.confrelid
-     AND mna_ref.attnum = ANY (mn.confkey)
+      pg_constraint
     WHERE
-      mn.conrelid = c.conrelid
-      AND n.parent_table IS NULL
-      AND mn.confrelid <> c.conrelid
-      AND mn.contype = 'f'
-      AND mn.confdeltype = 'c'
-  ) m ON (true)
+      confrelid = ($2 || '.' || $1)::regclass::oid
+      AND conrelid <> confrelid
+      AND contype = 'f'
+      AND confdeltype = 'a'
+    UNION ALL
+      SELECT
+        r.confrelid AS parent_table,
+        r.conrelid AS ref_table,
+        d.depth + 1 AS depth
+      FROM
+        pg_constraint r,
+        ref_table_depth d
+      WHERE
+        d.ref_table = r.confrelid
+        AND d.ref_table <> r.conrelid
+        AND r.contype = 'f'
+        AND r.confdeltype = 'a'
+  )
+  SELECT
+    parent_table,
+    max(depth) AS ref_depth
+  FROM
+    ref_table_depth
+  GROUP BY
+    parent_table
+  ) n
+  ON n.parent_table = c.conrelid
+-- get n:m tables which are the NULL candidates from the n block
+-- the FK has to be set to CASCADE to decide for cleanup
+LEFT JOIN LATERAL (
+  SELECT
+    mn.confrelid AS m_table_name,
+    mna.attname AS m_fk_column_name,
+    mna_ref.attname AS m_ref_column_name
+  FROM
+    pg_constraint mn
+  JOIN
+    pg_attribute mna
+    ON mna.attrelid = mn.conrelid
+   AND mna.attnum = ANY (mn.conkey)
+  JOIN
+    pg_attribute mna_ref
+    ON mna_ref.attrelid = mn.confrelid
+   AND mna_ref.attnum = ANY (mn.confkey)
   WHERE
-    c.confrelid = ($2 || '.' || $1)::regclass::oid
-    AND c.conrelid <> c.confrelid
-    AND c.contype = 'f'
-    AND c.confdeltype = 'a'
-) ref
+    mn.conrelid = c.conrelid
+    AND n.parent_table IS NULL
+    AND mn.confrelid <> c.conrelid
+    AND mn.contype = 'f'
+    AND mn.confdeltype = 'c'
+) m ON (true)
 WHERE
-  (cleanup_n_table IS NULL OR cleanup_n_table <> root_table_name)
-  AND (cleanup_m_table IS NULL OR cleanup_m_table <> root_table_name)
+  c.confrelid = ($2 || '.' || $1)::regclass::oid
+  AND c.conrelid <> c.confrelid
+  AND c.contype = 'f'
+  AND c.confdeltype = 'a'
 ORDER BY
   ref_depth DESC NULLS FIRST,
   n_table_name,
@@ -597,35 +584,45 @@ BEGIN
     SELECT * FROM citydb_pkg.query_ref_fk($1, $2)
   )
   LOOP
-    IF vars IS NULL THEN
-      vars := '';
-      ref_block := '';
-    END IF;
-
-    IF (
-      rec.ref_depth > 1
-      OR rec.cleanup_n_table
-      OR rec.cleanup_m_table
-    ) THEN
-      -- function call required, so create function first
-      PERFORM
-        citydb_pkg.create_array_delete_function(
-          COALESCE(rec.m_table_name, rec.n_table_name),
-          $2
-        );
-
-      IF rec.m_table_name IS NULL THEN
-        ref_block := ref_block || citydb_pkg.generate_delete_ref_by_ids_call(rec.n_table_name, rec.n_fk_column_name, $2);
-      ELSE
-        vars := vars ||E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
-        ref_block := ref_block || citydb_pkg.generate_delete_n_m_ref_by_ids_call(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, $2);
+    IF
+      (rec.root_table_name <> 'cityobject'
+      OR rec.cleanup_n_table <> 'cityobject')
+    THEN
+      IF vars IS NULL THEN
+        vars := '';
+        ref_block := '';
       END IF;
-    ELSE
-      IF rec.m_table_name IS NULL THEN
-        ref_block := ref_block || citydb_pkg.generate_delete_ref_by_ids_stmt(rec.n_table_name, rec.n_fk_column_name);
+
+      IF (
+        rec.ref_depth > 1
+        OR rec.cleanup_n_table IS NOT NULL
+        OR rec.cleanup_m_table IS NOT NULL
+      ) THEN
+        -- function call required, so create function first
+        PERFORM
+          citydb_pkg.create_array_delete_function(
+            COALESCE(rec.m_table_name, rec.n_table_name), $2
+          );
+
+        IF rec.m_table_name IS NULL THEN
+          IF rec.root_table_name = rec.cleanup_n_table THEN
+            ref_block := ref_block
+              || E'\n  -- delete '||rec.n_table_name||'s'
+              || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||E'($1);\n';
+          ELSE
+            ref_block := ref_block || citydb_pkg.generate_delete_ref_by_ids_call(rec.n_table_name, rec.n_fk_column_name, $2);
+          END IF;
+        ELSE
+          vars := vars ||E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
+          ref_block := ref_block || citydb_pkg.generate_delete_n_m_ref_by_ids_call(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, $2);
+        END IF;
       ELSE
-        vars := vars || E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
-        ref_block := ref_block || citydb_pkg.generate_delete_n_m_ref_by_ids_stmt(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, rec.m_ref_column_name, $2);
+        IF rec.m_table_name IS NULL THEN
+          ref_block := ref_block || citydb_pkg.generate_delete_ref_by_ids_stmt(rec.n_table_name, rec.n_fk_column_name);
+        ELSE
+          vars := vars || E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
+          ref_block := ref_block || citydb_pkg.generate_delete_n_m_ref_by_ids_stmt(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, rec.m_ref_column_name, $2);
+        END IF;
       END IF;
     END IF;
   END LOOP;
@@ -817,35 +814,45 @@ BEGIN
     SELECT * FROM citydb_pkg.query_ref_fk($1, $2)
   )
   LOOP
-    IF vars IS NULL THEN
-      vars := '';
-      ref_block := '';
-    END IF;
-
-    IF (
-      rec.ref_depth > 1
-      OR rec.cleanup_n_table
-      OR rec.cleanup_m_table
-    ) THEN
-      -- function call required, so create function first
-      PERFORM
-        citydb_pkg.create_array_delete_function(
-          COALESCE(rec.m_table_name, rec.n_table_name),
-          $2
-        );
-
-      IF rec.m_table_name IS NULL THEN
-        ref_block := ref_block || citydb_pkg.generate_delete_ref_by_id_call(rec.n_table_name, rec.n_fk_column_name, $2);
-      ELSE
-        vars := vars || E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
-        ref_block := ref_block || citydb_pkg.generate_delete_n_m_ref_by_id_call(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, $2);
+    IF
+      (rec.root_table_name <> 'cityobject'
+       OR rec.cleanup_n_table <> 'cityobject')
+    THEN
+      IF vars IS NULL THEN
+        vars := '';
+        ref_block := '';
       END IF;
-    ELSE
-      IF rec.m_table_name IS NULL THEN
-        ref_block := ref_block||citydb_pkg.generate_delete_ref_by_id_stmt(rec.n_table_name, rec.n_fk_column_name);
+
+      IF (
+        rec.ref_depth > 1
+        OR rec.cleanup_n_table IS NOT NULL
+        OR rec.cleanup_m_table IS NOT NULL
+      ) THEN
+        -- function call required, so create function first
+        PERFORM
+          citydb_pkg.create_array_delete_function(
+            COALESCE(rec.m_table_name, rec.n_table_name), $2
+          );
+
+        IF rec.m_table_name IS NULL THEN
+          IF rec.root_table_name = rec.cleanup_n_table THEN
+            ref_block := ref_block
+              || E'\n  -- delete '||rec.n_table_name
+              || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||E'($1);\n';
+          ELSE
+            ref_block := ref_block || citydb_pkg.generate_delete_ref_by_id_call(rec.n_table_name, rec.n_fk_column_name, $2);
+          END IF;
+        ELSE
+          vars := vars || E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
+          ref_block := ref_block || citydb_pkg.generate_delete_n_m_ref_by_id_call(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, $2);
+        END IF;
       ELSE
-        vars := vars || E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
-        ref_block := ref_block || citydb_pkg.generate_delete_n_m_ref_by_id_stmt(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, rec.m_ref_column_name, $2);
+        IF rec.m_table_name IS NULL THEN
+          ref_block := ref_block||citydb_pkg.generate_delete_ref_by_id_stmt(rec.n_table_name, rec.n_fk_column_name);
+        ELSE
+          vars := vars || E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
+          ref_block := ref_block || citydb_pkg.generate_delete_n_m_ref_by_id_stmt(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, rec.m_ref_column_name, $2);
+        END IF;
       END IF;
     END IF;
   END LOOP;
@@ -1123,8 +1130,9 @@ BEGIN
   parent_table := citydb_pkg.query_ref_to_parent_fk($1, $2);
 
   IF parent_table IS NOT NULL THEN
-    -- create array delete function for parent table
-    PERFORM citydb_pkg.create_array_delete_function(parent_table, $2);
+    IF parent_table = 'cityobject' THEN
+      PERFORM citydb_pkg.create_array_delete_function(parent_table, $2);
+    END IF;
     parent_block := parent_block
       || E'\n  -- delete '||parent_table
       || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_ids);\n';
@@ -1148,8 +1156,9 @@ BEGIN
   parent_table := citydb_pkg.query_ref_to_parent_fk($1, $2);
 
   IF parent_table IS NOT NULL THEN
-    -- create array delete function for parent table
-    PERFORM citydb_pkg.create_delete_function(parent_table, $2);
+    IF parent_table = 'cityobject' THEN
+      PERFORM citydb_pkg.create_delete_function(parent_table, $2);
+    END IF;
     parent_block := parent_block
       || E'\n  -- delete '||parent_table
       || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_id);\n';
