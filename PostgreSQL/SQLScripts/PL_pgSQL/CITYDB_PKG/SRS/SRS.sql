@@ -35,9 +35,8 @@
 *     transform INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   check_srid(srsno INTEGER DEFAULT 0) RETURNS TEXT
 *   is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER
-*   is_db_coord_ref_sys_3d() RETURNS INTEGER
+*   is_db_coord_ref_sys_3d(schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   transform_or_null(geom GEOMETRY, srid INTEGER) RETURNS GEOMETRY
-
 ******************************************************************/
 
 /******************************************************************
@@ -51,20 +50,11 @@
 * @param schema_srid the SRID of the coordinate system to be checked
 * @RETURN NUMERIC the boolean result encoded as NUMERIC: 0 = false, 1 = true                
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.is_coord_ref_sys_3d(schema_srid INTEGER)
-  RETURNS INTEGER AS
+CREATE OR REPLACE FUNCTION citydb_pkg.is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER AS
 $$
-DECLARE
-  is_3d INTEGER := 0;
-BEGIN
-  EXECUTE 'SELECT 1 FROM spatial_ref_sys WHERE auth_srid=$1 AND srtext LIKE ''%UP]%'''
-  INTO is_3d
-  USING schema_srid;
-
-  RETURN is_3d;
-END;
+SELECT 1 FROM spatial_ref_sys WHERE auth_srid = $1 AND srtext LIKE '%UP]%';
 $$
-LANGUAGE plpgsql;
+LANGUAGE sql STABLE STRICT;
 
 
 /******************************************************************
@@ -72,23 +62,26 @@ LANGUAGE plpgsql;
 *
 * @RETURN NUMERIC the boolean result encoded as NUMERIC: 0 = false, 1 = true                
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d()
-  RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d(schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER AS
+$$
 DECLARE
-  schema_srid INTEGER;
-BEGIN
-  EXECUTE 'SELECT srid from DATABASE_SRS'
-  INTO schema_srid;
-  RETURN citydb_pkg.is_coord_ref_sys_3d(schema_srid);
+  is_3d INTEGER := 0;
+BEGIN  
+  EXECUTE format(
+    'SELECT COALESCE(citydb_pkg.is_coord_ref_sys_3d(srid),0) FROM %I.database_srs', schema_name
+  )
+  INTO is_3d;
+
+  RETURN is_3d;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STABLE STRICT;
 
 
 /*******************************************************************
 * check_srid
 *
-* @param srsno     the chosen SRID to be further used in the database
+* @param srsno  the chosen SRID to be further used in the database
 *
 * @RETURN TEXT  status of srid check
 *******************************************************************/
@@ -98,12 +91,9 @@ $$
 DECLARE
   schema_srid INTEGER;
 BEGIN
-  EXECUTE 'SELECT srid FROM spatial_ref_sys WHERE srid = $1'
-  INTO schema_srid
-  USING srsno;
+  SELECT srid INTO schema_srid FROM spatial_ref_sys WHERE srid = $1;
 
-  IF schema_srid IS NULL
-  THEN
+  IF schema_srid IS NULL THEN
     RAISE EXCEPTION 'Table spatial_ref_sys does not contain the SRID %. Insert commands for missing SRIDs can be found at spatialreference.org', srsno;
     RETURN 'SRID not ok';
   END IF;
@@ -111,7 +101,7 @@ BEGIN
   RETURN 'SRID ok';
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STABLE STRICT;
 
 
 /******************************************************************
@@ -124,19 +114,17 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION citydb_pkg.transform_or_null(
   geom GEOMETRY,
   srid INTEGER
-)
-  RETURNS GEOMETRY AS
+  ) RETURNS GEOMETRY AS
 $$
 BEGIN
-  IF geom IS NOT NULL
-  THEN
-    RETURN ST_Transform(geom, srid);
+  IF geom IS NOT NULL THEN
+    RETURN ST_Transform($1, $2);
   ELSE
     RETURN NULL;
   END IF;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STABLE;
 
 
 /*****************************************************************
@@ -227,38 +215,33 @@ LANGUAGE plpgsql STRICT;
 * @param schema name       name of schema
 *******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.change_schema_srid(
-  schema_srid         INTEGER,
+  schema_srid INTEGER,
   schema_gml_srs_name TEXT,
-  transform           INTEGER DEFAULT 0,
-  schema_name         TEXT DEFAULT 'citydb'
-)
-  RETURNS SETOF VOID AS $$
+  transform INTEGER DEFAULT 0,
+  schema_name TEXT DEFAULT 'citydb'
+  ) RETURNS SETOF VOID AS $$
 DECLARE
   is_set_srs_info INTEGER;
 BEGIN
-
   -- check if user selected valid srid
-  EXECUTE 'SELECT citydb_pkg.check_srid($1)'
-  USING schema_srid;
+  -- will raise an exception if not
+  PERFORM citydb_pkg.check_srid($1);
+  
+  SELECT 1 INTO is_set_srs_info FROM pg_tables 
+    WHERE schemaname = $4 AND tablename = 'database_srs';
 
-  EXECUTE 'SELECT 1 FROM pg_tables WHERE schemaname = $1 AND tablename = ''database_srs'''
-  INTO is_set_srs_info
-  USING schema_name;
-
-  IF is_set_srs_info IS NOT NULL
-  THEN
+  IF is_set_srs_info IS NOT NULL THEN
     -- update entry in DATABASE_SRS table first
-    EXECUTE format('UPDATE %I.database_srs SET srid = %L, gml_srs_name = %L',
-                   schema_name, schema_srid, schema_gml_srs_name);
+    UPDATE database_srs SET srid = $1, gml_srs_name = $2;
   END IF;
 
   -- change srid of each spatially enabled table
-  EXECUTE 'SELECT citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $2, type, f_table_schema) 
-             FROM geometry_columns WHERE f_table_schema = $3
-              AND f_geometry_column != ''implicit_geometry''
-              AND f_geometry_column != ''relative_other_geom''
-              AND f_geometry_column != ''texture_coordinates'''
-  USING schema_srid, transform, schema_name;
+  PERFORM citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $3, type, f_table_schema) 
+    FROM geometry_columns 
+      WHERE f_table_schema = $4
+        AND f_geometry_column != 'implicit_geometry'
+        AND f_geometry_column != 'relative_other_geom'
+        AND f_geometry_column != 'texture_coordinates';
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
