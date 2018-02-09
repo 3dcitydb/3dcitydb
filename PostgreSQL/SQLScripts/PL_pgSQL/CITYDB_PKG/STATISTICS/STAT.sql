@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2017
+-- Copyright 2013 - 2018
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -34,44 +34,6 @@
 ******************************************************************/
 
 /*****************************************************************
-* table_contents
-*
-* @param schema_name name of schema
-* @RETURN TEXT[] database report as text array
-******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.table_contents(schema_name TEXT DEFAULT 'citydb') RETURNS TEXT[] AS $$
-DECLARE
-  report_header TEXT[] := '{}'; 
-  report TEXT[] := '{}';
-BEGIN
-  report_header := array_append(report_header, 'Database Report on 3D City Model - Report date: ' || TO_CHAR(now()::timestamp, 'DD.MM.YYYY HH24:MI:SS'));
-  report_header := array_append(report_header, '===================================================================');
-  PERFORM array_append(report_header, '');
-
-  EXECUTE 'SELECT array_agg(t) FROM 
-             (SELECT ''#'' || upper(table_name) ||
-                (CASE WHEN length(table_name) < 7 THEN E''\t\t\t\t''
-                      WHEN length(table_name) > 6 AND length(table_name) < 15 THEN E''\t\t\t''
-                      WHEN length(table_name) > 14 AND length(table_name) < 23 THEN E''\t\t''
-                      WHEN length(table_name) > 22 THEN E''\t''
-                END)
-			 || citydb_pkg.table_content(table_name, table_schema) AS t 
-                FROM information_schema.tables WHERE table_schema = $1 
-                AND table_name != ''database_srs'' 
-                AND table_name != ''objectclass'' 
-                AND table_name NOT LIKE ''tmp_%''
-                ORDER BY table_name ASC
-              ) tab' INTO report USING schema_name;
-
-  report := array_cat(report_header,report);
-  
-  RETURN report;
-END;
-$$
-LANGUAGE plpgsql;
-
-
-/*****************************************************************
 * table_content
 *
 * @param schema_name name of schema
@@ -85,8 +47,51 @@ CREATE OR REPLACE FUNCTION citydb_pkg.table_content(
 DECLARE
   cnt INTEGER;  
 BEGIN
-  EXECUTE format('SELECT count(*) FROM %I.%I', schema_name, table_name) INTO cnt;
+  EXECUTE format('SELECT count(*) FROM %I.%I', $2, $1) INTO cnt;
   RETURN cnt;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STABLE STRICT;
+
+
+/*****************************************************************
+* table_contents
+*
+* @param schema_name name of schema
+* @RETURN TEXT[] database report as text array
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.table_contents(schema_name TEXT DEFAULT 'citydb') RETURNS TEXT[] AS
+$$
+SELECT 
+  array_cat(
+    ARRAY[
+      'Database Report on 3D City Model - Report date: ' || to_char(now()::timestamp, 'DD.MM.YYYY HH24:MI:SS'),
+      '==================================================================='
+    ],
+    array_agg(t.tab)
+  ) AS report
+FROM (
+  SELECT
+    '#' || upper(table_name) || (
+    CASE WHEN length(table_name) < 7 THEN E'\t\t\t\t'
+      WHEN length(table_name) > 6 AND length(table_name) < 15 THEN E'\t\t\t'
+      WHEN length(table_name) > 14 AND length(table_name) < 23 THEN E'\t\t'
+      WHEN length(table_name) > 22 THEN E'\t'
+    END
+    ) || citydb_pkg.table_content(table_name, $1) AS tab 
+  FROM
+    information_schema.tables
+  WHERE 
+    table_schema = $1
+    AND table_name != 'database_srs' 
+    AND table_name != 'objectclass'
+    AND table_name != 'ade'
+    AND table_name != 'schema'
+    AND table_name != 'schema_to_objectclass' 
+    AND table_name != 'schema_referencing'
+    AND table_name NOT LIKE 'tmp_%'
+  ORDER BY
+    table_name ASC
+) t
+$$
+LANGUAGE sql STABLE STRICT;
