@@ -110,7 +110,6 @@ SELECT
     WHERE
       fk.conrelid = $1
       AND fk.contype = 'f'
-      AND fk.confdeltype = 'a'
   ),(
     -- referencing tables
     SELECT DISTINCT
@@ -306,17 +305,24 @@ CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_fk(
   OUT cleanup_m_table TEXT
   ) RETURNS SETOF RECORD AS
 $$
-SELECT * FROM (
+SELECT
+  root_table_name,
+  conrelid::regclass::text AS n_table_name,
+  n_fk_column_name,
+  ref_depth,
+  cleanup_n_table,
+  m.m_table_name::regclass::text,
+  m.m_fk_column_name::text,
+  m.m_ref_column_name::text,
+  citydb_pkg.check_for_cleanup(m.m_table_name)::regclass::text AS cleanup_m_table
+FROM (
   SELECT
     c.confrelid::regclass::text AS root_table_name,
-    c.conrelid::regclass::text AS n_table_name,
+    c.conrelid,
+    c.conkey,
     a.attname::text AS n_fk_column_name,
     COALESCE(n.ref_depth, 1) AS ref_depth,
-    citydb_pkg.check_for_cleanup(c.conrelid)::regclass::text AS cleanup_n_table,
-    m.m_table_name::regclass::text,
-    m.m_fk_column_name::text,
-    m.m_ref_column_name::text,
-    citydb_pkg.check_for_cleanup(m.m_table_name)::regclass::text AS cleanup_m_table
+    citydb_pkg.check_for_cleanup(c.conrelid)::regclass::text AS cleanup_n_table
   FROM
     pg_constraint c
   JOIN
@@ -324,7 +330,7 @@ SELECT * FROM (
     ON a.attrelid = c.conrelid
    AND a.attnum = ANY (c.conkey)
   LEFT JOIN (
-    -- get depth of referencing tablesion
+    -- get depth of referencing tables
     WITH RECURSIVE ref_table_depth(parent_table, ref_table, depth) AS (
       SELECT
         confrelid AS parent_table,
@@ -360,36 +366,41 @@ SELECT * FROM (
       parent_table
     ) n
     ON n.parent_table = c.conrelid
-  -- get n:m tables which are the NULL candidates from the n block
-  -- the FK has to be set to CASCADE to decide for cleanup
-  LEFT JOIN LATERAL (
-    SELECT
-      mn.confrelid AS m_table_name,
-      mna.attname AS m_fk_column_name,
-      mna_ref.attname AS m_ref_column_name
-    FROM
-      pg_constraint mn
-    JOIN
-      pg_attribute mna
-      ON mna.attrelid = mn.conrelid
-     AND mna.attnum = ANY (mn.conkey)
-    JOIN
-      pg_attribute mna_ref
-      ON mna_ref.attrelid = mn.confrelid
-     AND mna_ref.attnum = ANY (mn.confkey)
-    WHERE
-      mn.conrelid = c.conrelid
-      AND n.parent_table IS NULL
-      AND mn.confrelid <> c.conrelid
-      AND mn.contype = 'f'
-      AND mn.confdeltype = 'c'
-  ) m ON (true)
   WHERE
     c.confrelid = ($2 || '.' || $1)::regclass::oid
     AND c.conrelid <> c.confrelid
     AND c.contype = 'f'
     AND c.confdeltype = 'a'
 ) ref
+-- get n:m tables which are the NULL candidates from the n block
+-- the FK has to be set to CASCADE to decide for cleanup
+LEFT JOIN LATERAL (
+  SELECT
+    mn.confrelid AS m_table_name,
+    mna.attname AS m_fk_column_name,
+    mna_ref.attname AS m_ref_column_name
+  FROM
+    pg_constraint mn
+  JOIN
+    pg_attribute mna
+    ON mna.attrelid = mn.conrelid
+   AND mna.attnum = ANY (mn.conkey)
+  JOIN
+    pg_attribute mna_ref
+    ON mna_ref.attrelid = mn.confrelid
+   AND mna_ref.attnum = ANY (mn.confkey)
+  JOIN
+    pg_constraint pk
+    ON pk.conrelid = mn.conrelid
+   AND pk.conkey @> (ref.conkey || mn.conkey || '{}')
+  WHERE
+    mn.conrelid = ref.conrelid
+    AND ref.cleanup_n_table IS NULL
+    AND mn.confrelid <> ref.conrelid
+    AND mn.contype = 'f'
+    AND mn.confdeltype = 'c'
+    AND pk.contype = 'p'
+  ) m ON (true)
 WHERE
   root_table_name <> 'cityobject'
   OR cleanup_n_table <> 'cityobject'
