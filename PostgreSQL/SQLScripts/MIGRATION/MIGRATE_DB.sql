@@ -39,7 +39,12 @@ SELECT srid FROM database_srs \gset
 \prompt 'No texture URI is used for multiple texture files (yes (y)/unknown (n)): ' tex_opt
 \set texop :tex_opt
 
---// create TABLES and SEQUENCES new in v3.3
+--// Set name of target schema to citydb
+SELECT current_setting('search_path') AS current_path;
+\gset
+SET search_path TO citydb, :current_path;
+
+--// create TABLES and SEQUENCES new in v3.1
 \echo
 \echo 'Create tables and sequences of 3DCityDB instance that are new in v3.3 ...'
 \i CREATE_DB_V3.sql
@@ -87,12 +92,7 @@ CREATE SCHEMA citydb_pkg;
 --\i DROP_DB_V2.sql
 
 --// update search_path on database level
-DO
-$$
-BEGIN
-  EXECUTE 'ALTER DATABASE "' || current_database() || '" SET search_path TO citydb, citydb_pkg, ' || current_setting('search_path');
-END;
-$$;
+ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
 
 \echo
 \echo '3DCityDB migration complete!'

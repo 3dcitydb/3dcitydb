@@ -36,8 +36,16 @@ SET client_min_messages TO WARNING;
 
 \set SRSNO :SRS_NO
 
---// check if the PostGIS extension is available 
+--// check if the PostGIS extension is available
 SELECT postgis_version();
+
+--// create schema
+CREATE SCHEMA citydb;
+
+--// set search_path for this session
+SELECT current_setting('search_path') AS current_path;
+\gset
+SET search_path TO citydb, :current_path;
 
 --// create TABLES, SEQUENCES, CONSTRAINTS, INDEXES
 \echo
@@ -53,12 +61,7 @@ SELECT postgis_version();
 \i CREATE_CITYDB_PKG.sql
 
 --// update search_path on database level
-DO
-$$
-BEGIN
-  EXECUTE 'ALTER DATABASE "' || current_database() || '" SET search_path TO citydb, citydb_pkg, ' || current_setting('search_path');
-END;
-$$;
+ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
 
 \echo
 \echo '3DCityDB creation complete!'
