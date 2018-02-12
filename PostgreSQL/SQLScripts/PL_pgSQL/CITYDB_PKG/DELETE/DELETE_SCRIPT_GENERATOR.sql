@@ -306,11 +306,11 @@ CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_fk(
   ) RETURNS SETOF RECORD AS
 $$
 SELECT
-  root_table_name,
-  conrelid::regclass::text AS n_table_name,
-  n_fk_column_name,
-  ref_depth,
-  cleanup_n_table,
+  ref.root_table_name,
+  ref.conrelid::regclass::text AS n_table_name,
+  ref.n_fk_column_name,
+  ref.ref_depth,
+  ref.cleanup_n_table,
   m.m_table_name::regclass::text,
   m.m_fk_column_name::text,
   m.m_ref_column_name::text,
@@ -402,12 +402,12 @@ LEFT JOIN LATERAL (
     AND pk.contype = 'p'
   ) m ON (true)
 WHERE
-  root_table_name <> 'cityobject'
-  OR cleanup_n_table <> 'cityobject'
+  ref.root_table_name <> 'cityobject'
+  OR ref.cleanup_n_table <> 'cityobject'
 ORDER BY
-  ref_depth DESC NULLS FIRST,
-  n_table_name,
-  m_table_name;
+  ref.ref_depth DESC NULLS FIRST,
+  ref.n_table_name,
+  m.m_table_name;
 $$
 LANGUAGE sql STRICT;
 
