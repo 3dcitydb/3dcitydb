@@ -590,7 +590,7 @@ AS
   IS
     call_stmt VARCHAR2(2000);
     where_clause VARCHAR2(1000);
-    where_and VARCHAR2(3) := '';
+    where_and VARCHAR2(4) := '';
   BEGIN
     call_stmt :=
         chr(10)||'  -- delete '||lower(m_tab_name)||'(s) not being referenced any more'
@@ -865,7 +865,7 @@ AS
   IS
     call_stmt VARCHAR2(2000);
     where_clause VARCHAR2(1000);
-    where_and VARCHAR2(3) := '';
+    where_and VARCHAR2(4) := '';
   BEGIN
     call_stmt :=
         chr(10)||'  -- delete '||lower(m_tab_name)||'(s) not being referenced any more'
