@@ -999,29 +999,33 @@ AS
         OR cleanup_m_table IS NOT NULL
       ) THEN
         -- function call required, so create function first
-        citydb_delete_gen.create_array_delete_function(
-          COALESCE(m_table_name, n_table_name),
-          schema_name
-        );
+        IF root_table_name = cleanup_n_table THEN
+          citydb_delete_gen.create_delete_function(
+            n_table_name,
+            schema_name
+          );
+          ref_block := ref_block
+            ||chr(10)||'  -- delete '||n_table_name||'s'
+            ||chr(10)||'  dummy_ids := delete_'||get_short_name(n_table_name)||'(pids);'
+            ||chr(10);
+        ELSE
+          citydb_delete_gen.create_array_delete_function(
+            COALESCE(m_table_name, n_table_name),
+            schema_name
+          );
 
-        IF m_table_name IS NULL THEN
-          IF root_table_name = cleanup_n_table THEN
-            ref_block := ref_block
-              ||chr(10)||'  -- delete '||n_table_name||'s'
-              ||chr(10)||'  dummy_ids := delete_'||get_short_name(n_table_name)||'(pids);'
-              ||chr(10);
-          ELSE
+          IF m_table_name IS NULL THEN
             IF vars IS NULL OR INSTR(vars, 'child_ids') = 0 THEN
               vars := vars ||chr(10)|| '  child_ids ID_ARRAY;';
             END IF;
             ref_block := ref_block || gen_delete_ref_by_id_call(n_table_name, n_fk_column_name);
+          ELSE
+            vars := vars
+              ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_ids ID_ARRAY;'
+              ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_pids ID_ARRAY;';
+            ref_block := ref_block || gen_delete_n_m_ref_by_id_call(n_table_name, n_fk_column_name, m_table_name, m_fk_column_name, schema_name);
           END IF;
-        ELSE
-          vars := vars
-            ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_ids ID_ARRAY;'
-            ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_pids ID_ARRAY;';
-          ref_block := ref_block || gen_delete_n_m_ref_by_id_call(n_table_name, n_fk_column_name, m_table_name, m_fk_column_name, schema_name);
-        END IF;      
+        END IF;		  
       ELSE
         IF m_table_name IS NULL THEN
           ref_block := ref_block || gen_delete_ref_by_id_stmt(n_table_name, n_fk_column_name);

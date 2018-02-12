@@ -836,22 +836,26 @@ BEGIN
       OR rec.cleanup_m_table IS NOT NULL
     ) THEN
       -- function call required, so create function first
-      PERFORM
-        citydb_pkg.create_array_delete_function(
-          COALESCE(rec.m_table_name, rec.n_table_name), $2
-        );
-
-      IF rec.m_table_name IS NULL THEN
-        IF rec.root_table_name = rec.cleanup_n_table THEN
-          ref_block := ref_block
-            || E'\n  -- delete '||rec.n_table_name
-            || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||E'($1);\n';
-        ELSE
-          ref_block := ref_block || citydb_pkg.generate_delete_ref_by_id_call(rec.n_table_name, rec.n_fk_column_name, $2);
-        END IF;
+      IF rec.root_table_name = rec.cleanup_n_table THEN
+        PERFORM
+          citydb_pkg.create_delete_function(
+            rec.n_table_name, $2
+          );
+        ref_block := ref_block
+          || E'\n  -- delete '||rec.n_table_name
+          || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||E'($1);\n';
       ELSE
-        vars := vars || E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
-        ref_block := ref_block || citydb_pkg.generate_delete_n_m_ref_by_id_call(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, $2);
+        PERFORM
+          citydb_pkg.create_array_delete_function(
+            COALESCE(rec.m_table_name, rec.n_table_name), $2
+          );
+
+        IF rec.m_table_name IS NULL THEN
+          ref_block := ref_block || citydb_pkg.generate_delete_ref_by_id_call(rec.n_table_name, rec.n_fk_column_name, $2);
+        ELSE
+          vars := vars || E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
+          ref_block := ref_block || citydb_pkg.generate_delete_n_m_ref_by_id_call(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, $2);
+        END IF;
       END IF;
     ELSE
       IF rec.m_table_name IS NULL THEN
