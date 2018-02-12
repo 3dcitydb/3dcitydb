@@ -350,7 +350,7 @@ AS
     schema_name VARCHAR2 := USER
     )
   IS
-    delete_param VARCHAR(9);
+    delete_param VARCHAR2(20);
   BEGIN
     IF versioning_table(table_name, schema_name) = 'ON' OR versioning_table(ref_table, schema_name) = 'ON' THEN
       dbms_output.put_line('Can not perform operation with version enabled tables.');
