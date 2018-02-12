@@ -307,7 +307,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_fk(
 $$
 SELECT
   ref.root_table_name,
-  ref.conrelid::regclass::text AS n_table_name,
+  ref.n_table_name::regclass::text,
   ref.n_fk_column_name,
   ref.ref_depth,
   ref.cleanup_n_table,
@@ -318,7 +318,7 @@ SELECT
 FROM (
   SELECT
     c.confrelid::regclass::text AS root_table_name,
-    c.conrelid,
+    c.conrelid AS n_table_name,
     c.conkey,
     a.attname::text AS n_fk_column_name,
     COALESCE(n.ref_depth, 1) AS ref_depth,
@@ -394,9 +394,9 @@ LEFT JOIN LATERAL (
     ON pk.conrelid = mn.conrelid
    AND pk.conkey @> (ref.conkey || mn.conkey || '{}')
   WHERE
-    mn.conrelid = ref.conrelid
+    mn.conrelid = ref.n_table_name
     AND ref.cleanup_n_table IS NULL
-    AND mn.confrelid <> ref.conrelid
+    AND mn.confrelid <> ref.n_table_name
     AND mn.contype = 'f'
     AND mn.confdeltype = 'c'
     AND pk.contype = 'p'
