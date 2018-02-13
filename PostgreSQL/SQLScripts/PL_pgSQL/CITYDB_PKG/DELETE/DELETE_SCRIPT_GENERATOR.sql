@@ -372,8 +372,9 @@ FROM (
     AND c.contype = 'f'
     AND c.confdeltype = 'a'
 ) ref
--- get n:m tables which are the NULL candidates from the n block
+-- get n:m tables which returned NULL for cleanup_n_table in the n block
 -- the FK has to be set to CASCADE to decide for cleanup
+-- found FK column needs to be part of the PK
 LEFT JOIN LATERAL (
   SELECT
     mn.confrelid AS m_table_name,

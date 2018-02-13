@@ -448,8 +448,9 @@ AS
           AND c.constraint_type = 'R'
           AND c.delete_rule = 'NO ACTION'
       ) ref
-      -- get n:m tables which are the NULL candidates from the n block
+      -- get n:m tables which returned NULL for cleanup_n_table in the n block
       -- the FK has to be set to CASCADE to decide for cleanup
+      -- found FK column needs to be part of the PK
       LEFT OUTER JOIN (
         SELECT
           mn.table_name,
@@ -464,10 +465,20 @@ AS
           ON mna.constraint_name = mn.constraint_name
          AND mna.table_name = mn.table_name
          AND mna.owner = mn.owner
+        JOIN 
+          all_constraints mnp
+          ON mnp.table_name = mn.table_name
+         AND mnp.owner = mn.owner
+        JOIN
+          all_cons_columns mnpa
+          ON mnpa.constraint_name = mnp.constraint_name
+         AND mnpa.table_name = mn.table_name
+         AND mnpa.owner = mn.owner
+         AND mnpa.column_name = mna.column_name
         JOIN
           all_constraints mn2
           ON mn2.constraint_name = mn.r_constraint_name
-          AND mn2.owner = mn.owner
+         AND mn2.owner = mn.owner
         JOIN
           all_cons_columns mna_ref
           ON mna_ref.constraint_name = mn.r_constraint_name
@@ -476,13 +487,14 @@ AS
           mn2.table_name <> mn.table_name
           AND mn.constraint_type = 'R'
           AND mn.delete_rule = 'CASCADE'
+          AND mnp.constraint_type = 'P'
         ) m
         ON m.table_name = ref.n_table_name
        AND m.owner = ref.owner
        AND ref.cleanup_n_table IS NULL
       WHERE
-        ref.root_table_name <> 'cityobject'
-        OR ref.cleanup_n_table <> 'cityobject'
+        ref.root_table_name <> 'CITYOBJECT'
+        OR ref.cleanup_n_table <> 'CITYOBJECT'
       ORDER BY
         ref.ref_depth DESC NULLS FIRST,
         ref.n_table_name,
@@ -1371,7 +1383,7 @@ AS
     parent_table := query_ref_parent_fk(tab_name, schema_name);
 
     IF parent_table IS NOT NULL THEN
-      IF parent_table = 'cityobject' THEN
+      IF parent_table = 'CITYOBJECT' THEN
         citydb_delete_gen.create_array_delete_function(parent_table, schema_name);
       END IF;
       parent_block := parent_block
@@ -1397,7 +1409,7 @@ AS
     parent_table := query_ref_parent_fk(tab_name, schema_name);
 
     IF parent_table IS NOT NULL THEN
-      IF parent_table = 'cityobject' THEN
+      IF parent_table = 'CITYOBJECT' THEN
         citydb_delete_gen.create_delete_function(parent_table, schema_name);
       END IF;
       parent_block := parent_block
