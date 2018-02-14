@@ -4,7 +4,7 @@ services:
     - postgresql
 
 addons:
-    postgresql: "9.6"
+    postgresql: "9.4"
 
 before_install:
     - # install postgresql:
@@ -13,10 +13,10 @@ before_install:
     - wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
     - sudo apt-get update
     - sudo apt-get upgrade
-    - sudo apt-get install postgresql-9.6
+    - sudo apt-get install postgresql-9.4
     - # install postgis from source:
     - sudo apt-get install --yes libudunits2-dev libproj-dev libgeos-dev libgdal-dev
-    - sudo apt-get --yes install libjson-c-dev postgresql-server-dev-9.6
+    - sudo apt-get --yes install libjson-c-dev postgresql-server-dev-9.4
     - wget http://download.osgeo.org/postgis/source/postgis-2.3.2.tar.gz
     - (mv postgis* /tmp; cd /tmp; tar xzf postgis-2.3.2.tar.gz)
     - (cd /tmp/postgis-2.3.2 ; ./configure; make; sudo make install)
