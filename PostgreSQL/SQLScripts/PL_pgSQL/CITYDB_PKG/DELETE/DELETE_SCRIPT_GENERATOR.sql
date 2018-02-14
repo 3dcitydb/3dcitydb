@@ -75,8 +75,8 @@ A delete function can consist of up to five parts:
   1. A recursive delete call, if the relation stores tree structures, the FK is set to NO ACTION and parent_id can be NULL
   2. Delete statements (or procedure call) for referencing tables where the FK is set to NO ACTION
   3. The central delete statement that removes the given entry/ies and returns the deleted IDs
-  4. Deletes for unreferenced entries in tables where the FK is set to SET NULL or CASCADE when it is a n:m table
-  5. If an FK covers the same column(s) as the PK, the referenced parent has to be deleted as well
+  4. Deletes for unreferenced entries in tables where the FK is set to SET NULL
+  5. If an FK is set to CASCADE and covers the same column(s) as the PK, the referenced parent will be deleted
 */
 
 CREATE OR REPLACE FUNCTION citydb_pkg.get_short_name(table_name TEXT) RETURNS TEXT AS
@@ -1107,7 +1107,7 @@ LANGUAGE plpgsql STRICT;
 
 
 /*****************************
-* 5. FK which is PK 
+* 5. FK which is PK
 *****************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_to_parent_fk(
   table_name TEXT,
@@ -1124,7 +1124,10 @@ WHERE
   AND p.conrelid = ($2 || '.' || $1)::regclass::oid
   AND f.conkey = p.conkey
   AND f.contype = 'f'
-  AND p.contype = 'p';
+  AND p.contype = 'p'
+  AND (f.confrelid = 'cityobject'::regclass::oid
+   OR (f.confrelid <> 'cityobject'::regclass::oid
+   AND f.confdeltype = 'c'));
 $$
 LANGUAGE sql STRICT;
 
@@ -1141,9 +1144,7 @@ BEGIN
   parent_table := citydb_pkg.query_ref_to_parent_fk($1, $2);
 
   IF parent_table IS NOT NULL THEN
-    IF parent_table = 'cityobject' THEN
-      PERFORM citydb_pkg.create_array_delete_function(parent_table, $2);
-    END IF;
+    PERFORM citydb_pkg.create_array_delete_function(parent_table, $2);
     parent_block := parent_block
       || E'\n  -- delete '||parent_table
       || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_ids);\n';
@@ -1167,9 +1168,7 @@ BEGIN
   parent_table := citydb_pkg.query_ref_to_parent_fk($1, $2);
 
   IF parent_table IS NOT NULL THEN
-    IF parent_table = 'cityobject' THEN
-      PERFORM citydb_pkg.create_delete_function(parent_table, $2);
-    END IF;
+    PERFORM citydb_pkg.create_delete_function(parent_table, $2);
     parent_block := parent_block
       || E'\n  -- delete '||parent_table
       || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_id);\n';

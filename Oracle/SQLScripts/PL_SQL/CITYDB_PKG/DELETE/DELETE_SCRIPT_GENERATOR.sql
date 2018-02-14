@@ -75,8 +75,8 @@ AS
     1. A recursive delete call, if the relation stores tree structures, the FK is set to NO ACTION and parent_id can be NULL
     2. Delete statements (or procedure call) for referencing tables where the FK is set to NO ACTION
     3. The central delete statement that removes the given entry/ies and returns the deleted IDs
-    4. Deletes for unreferenced entries in tables where the FK is set to SET NULL or CASCADE when it is a n:m table
-    5. If an FK covers the same column(s) as the PK, the referenced parent has to be deleted as well
+    4. Deletes for unreferenced entries in tables where the FK is set to SET NULL
+    5. If an FK is set to CASCADE and covers the same column(s) as the PK, the referenced parent will be deleted
   */
 
   FUNCTION get_short_name(tab_name VARCHAR2) RETURN VARCHAR2
@@ -1361,8 +1361,10 @@ AS
       fk.table_name = upper(tab_name)
       AND fk.owner = upper(schema_name)
       AND fk.constraint_type = 'R'
-      AND fk.delete_rule = 'NO ACTION'
-      AND pk.position = 1;
+      AND pk.position = 1
+      AND (p.table_name = 'CITYOBJECT'
+       OR (p.table_name <> 'CITYOBJECT'
+       AND fk.delete_rule = 'CASCADE'));
 
     RETURN parent_table;
 
@@ -1383,9 +1385,7 @@ AS
     parent_table := query_ref_parent_fk(tab_name, schema_name);
 
     IF parent_table IS NOT NULL THEN
-      IF parent_table = 'CITYOBJECT' THEN
-        citydb_delete_gen.create_array_delete_function(parent_table, schema_name);
-      END IF;
+      citydb_delete_gen.create_array_delete_function(parent_table, schema_name);
       parent_block := parent_block
         ||chr(10)||'  -- delete '||lower(parent_table)
         ||chr(10)||'  IF deleted_ids.COUNT > 0 THEN'
@@ -1409,9 +1409,7 @@ AS
     parent_table := query_ref_parent_fk(tab_name, schema_name);
 
     IF parent_table IS NOT NULL THEN
-      IF parent_table = 'CITYOBJECT' THEN
-        citydb_delete_gen.create_delete_function(parent_table, schema_name);
-      END IF;
+      citydb_delete_gen.create_delete_function(parent_table, schema_name);
       parent_block := parent_block
         ||chr(10)||'  -- delete '||lower(parent_table)
         ||chr(10)||'  IF deleted_id IS NOT NULL THEN'
