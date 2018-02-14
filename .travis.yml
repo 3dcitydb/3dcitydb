@@ -27,4 +27,4 @@ before_script:
     - psql --version
 
 script:
-    - psql -U postgres -d citydb_testdb -a -f CREATE_DB.sql
+    - psql -U postgres -d citydb_testdb -a -f PostgreSQL/SQLScripts/CREATE_DB.sql
