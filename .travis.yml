@@ -4,7 +4,7 @@ services:
     - postgresql
 
 addons:
-    postgresql: "9.4"
+    postgresql: "9.6"
 
 before_install:
     - # install postgresql:
@@ -13,7 +13,7 @@ before_install:
     - wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
     - sudo apt-get update
     - sudo apt-get upgrade
-    - sudo apt-get install postgresql-9.4
+    - sudo apt-get install postgresql-9.6
     - # install postgis from source:
     - sudo apt-get install --yes libudunits2-dev libproj-dev libgeos-dev libgdal-dev
     - sudo apt-get --yes install libjson-c-dev postgresql-server-dev-9.6
@@ -22,8 +22,8 @@ before_install:
     - (cd /tmp/postgis-2.3.2 ; ./configure; make; sudo make install)
 
 before_script:
-    - psql -U postgres -c 'create database citydb_testdb;'
-    - psql -U postgres -d citydb_testdb -c 'create extension postgis;'
+    - psql -c 'create database citydb_testdb;' -U postgres
+    - psql -d citydb_testdb -c 'create extension postgis;' -U postgres
     - psql --version
 
 script:
