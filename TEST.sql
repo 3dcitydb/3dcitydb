@@ -25,8 +25,18 @@
 -- limitations under the License.
 --
 
-\set SRSNO 3068
-\set GMLSRSNAME 'urn:ogc:def:crs,crs:EPSG::3068,crs:EPSG::5783'
+\set SRS_NO 3068
+\set VERT_NO 5783
+
+-- prepare GML_SRS_NAME
+SELECT CASE
+  WHEN :VERT_NO = 0 THEN 'urn:ogc:def:crs,crs:EPSG::' || :SRS_NO
+  ELSE 'urn:ogc:def:crs,crs:EPSG::' || :SRS_NO || ',crs:EPSG::' || :VERT_NO
+  END AS srs_string \gset
+
+-- set SRID and GML_SRS_NAME
+\set GMLSRSNAME :srs_string
+\set SRSNO :SRS_NO
 
 --// check if the PostGIS extension is available
 SELECT postgis_version();
