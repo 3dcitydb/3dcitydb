@@ -9,7 +9,7 @@
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>false</notNull>
+      <notNull>true</notNull>
     </column>
     <column>
       <name>PYRAMIDLEVEL</name>
@@ -18,7 +18,7 @@
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>false</notNull>
+      <notNull>true</notNull>
     </column>
     <column>
       <name>BANDBLOCKNUMBER</name>
@@ -27,7 +27,7 @@
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>false</notNull>
+      <notNull>true</notNull>
     </column>
     <column>
       <name>ROWBLOCKNUMBER</name>
@@ -36,7 +36,7 @@
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>false</notNull>
+      <notNull>true</notNull>
     </column>
     <column>
       <name>COLUMNBLOCKNUMBER</name>
@@ -45,7 +45,7 @@
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>false</notNull>
+      <notNull>true</notNull>
     </column>
     <column>
       <name>BLOCKMBR</name>
@@ -75,7 +75,7 @@
               <LOBCache>CACHE</LOBCache>
               <LOBSegName>SECUREFILE</LOBSegName>
               <retention>false</retention>
-              <storageEnabledInRow>true</storageEnabledInRow>
+              <storageInRow>true</storageInRow>
             </LOBProperties>
           </value>
         </entry>

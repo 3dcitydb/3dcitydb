@@ -123,7 +123,7 @@ AS
     version_ret := DB_VERSION_TABLE();
     version_ret.extend;
 
-    version_tmp := DB_VERSION_OBJ('3.3.1', 3, 3, 1);
+    version_tmp := DB_VERSION_OBJ('4.0.0', 4, 0, 0);
 
     version_ret(version_ret.count) := version_tmp;
     RETURN version_ret;

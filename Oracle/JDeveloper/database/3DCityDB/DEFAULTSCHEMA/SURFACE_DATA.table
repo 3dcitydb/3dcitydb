@@ -6,7 +6,6 @@
       <name>ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -55,7 +54,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -104,7 +102,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -120,7 +117,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -169,7 +165,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -218,7 +213,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -271,7 +265,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -314,32 +307,15 @@
       <name>OBJECTCLASS_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
       <notNull>false</notNull>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>TYPE</name>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SURFACE_DATA</name>
-              <identifier class="java.math.BigDecimal">115709</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <type>COLUMN</type>
-          </value>
-        </entry>
-      </properties>
     </column>
     <column>
       <name>X3D_SHININESS</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle10g</providerClass>
           <typeName>BINARY_DOUBLE</typeName>
         </dataTypeID>
         <properties>
@@ -382,7 +358,6 @@
       <name>X3D_TRANSPARENCY</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle10g</providerClass>
           <typeName>BINARY_DOUBLE</typeName>
         </dataTypeID>
         <properties>
@@ -425,7 +400,6 @@
       <name>X3D_AMBIENT_INTENSITY</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle10g</providerClass>
           <typeName>BINARY_DOUBLE</typeName>
         </dataTypeID>
         <properties>
@@ -474,7 +448,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -523,7 +496,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -572,7 +544,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -625,7 +596,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -668,7 +638,6 @@
       <name>TEX_IMAGE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -684,7 +653,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -733,7 +701,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -782,7 +749,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -835,7 +801,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -884,7 +849,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -927,7 +891,6 @@
       <name>GT_REFERENCE_POINT</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle8i</providerClass>
           <schemaName>MDSYS</schemaName>
           <typeName>SDO_GEOMETRY</typeName>
         </dataTypeID>
@@ -969,6 +932,58 @@
     </column>
   </columns>
   <constraints>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <name>SURFACE_DATA_OBJCLASS_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>OBJECTCLASS_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>SURFACE_DATA</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <referenceID class="oracle.javatools.db.NameBasedID">
+        <name>OBJECTCLASS_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>OBJECTCLASS</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
+      <name>SURFACE_DATA_TEX_IMAGE_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>TEX_IMAGE_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>SURFACE_DATA</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <referenceID class="oracle.javatools.db.NameBasedID">
+        <name>TEX_IMAGE_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>TEX_IMAGE</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
     <constraint class="oracle.javatools.db.PKConstraint">
       <name>SURFACE_DATA_PK</name>
       <columnIDs>
@@ -1014,61 +1029,9 @@
         </entry>
       </properties>
     </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <name>SURFACE_DATA_OBJCLASS_FK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>OBJECTCLASS_ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>SURFACE_DATA</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <onDeleteAction>NO_ACTION</onDeleteAction>
-      <referenceID class="oracle.javatools.db.NameBasedID">
-        <name>OBJECTCLASS_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>OBJECTCLASS</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
-      <name>SURFACE_DATA_TEX_IMAGE_FK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>TEX_IMAGE_ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>SURFACE_DATA</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <onDeleteAction>NO_ACTION</onDeleteAction>
-      <referenceID class="oracle.javatools.db.NameBasedID">
-        <name>TEX_IMAGE_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>TEX_IMAGE</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
   </constraints>
   <indexes>
-    <indexe>
+    <index>
       <name>SURFACE_DATA_INX</name>
       <columnExpressions>
         <columnExpression>
@@ -1120,8 +1083,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>SURFACE_DATA_OBJCLASS_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -1133,8 +1096,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>SURFACE_DATA_PK</name>
       <columnExpressions>
         <columnExpression>
@@ -1183,8 +1146,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>SURFACE_DATA_SPX</name>
       <columnExpressions>
         <columnExpression>
@@ -1219,8 +1182,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>SURFACE_DATA_TEX_IMAGE_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -1232,7 +1195,7 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
+    </index>
   </indexes>
   <properties>
     <entry>
