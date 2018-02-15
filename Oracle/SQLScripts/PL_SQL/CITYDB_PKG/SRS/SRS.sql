@@ -34,11 +34,11 @@ CREATE OR REPLACE PACKAGE citydb_srs
 AS
   FUNCTION transform_or_null(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
   FUNCTION is_coord_ref_sys_3d(schema_srid NUMBER) RETURN NUMBER;
-  FUNCTION check_srid(srsno INTEGER DEFAULT 0) RETURN VARCHAR;
-  FUNCTION is_db_coord_ref_sys_3d RETURN NUMBER;
-  PROCEDURE change_schema_srid(schema_srid NUMBER, schema_gml_srs_name VARCHAR2, transform NUMBER := 0);
-  FUNCTION get_dim(tab_name VARCHAR, col_name VARCHAR) RETURN NUMBER;
-  PROCEDURE change_column_srid(tab_name VARCHAR2, col_name VARCHAR2, dim NUMBER, schema_srid NUMBER, transform NUMBER := 0);
+  FUNCTION check_srid(srsno INTEGER := 0) RETURN VARCHAR;
+  FUNCTION is_db_coord_ref_sys_3d(schema_name VARCHAR2 := USER) RETURN NUMBER;
+  FUNCTION get_dim(col_name VARCHAR2, tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN NUMBER;
+  PROCEDURE change_column_srid(tab_name VARCHAR2, col_name VARCHAR2, dim NUMBER, schema_srid NUMBER, transform NUMBER := 0, schema_name VARCHAR2 := USER);
+  PROCEDURE change_schema_srid(schema_srid NUMBER, schema_gml_srs_name VARCHAR2, transform NUMBER := 0, schema_name VARCHAR2 := USER);
 END citydb_srs;
 /
 
@@ -115,24 +115,30 @@ AS
   *
   * @return NUMBER the boolean result encoded as number: 0 = false, 1 = true                
   ******************************************************************/
-  FUNCTION is_db_coord_ref_sys_3d
+  FUNCTION is_db_coord_ref_sys_3d(schema_name VARCHAR2 := USER)
     RETURN NUMBER
   IS
     schema_srid NUMBER;
   BEGIN
-    SELECT srid INTO schema_srid FROM database_srs;
+    EXECUTE IMMEDIATE
+      'SELECT srid FROM '||schema_name||'.database_srs'
+      INTO schema_srid;
     RETURN is_coord_ref_sys_3d(schema_srid);
   END;
 
   /*****************************************************************
   * get_dim
   *
-  * @param tab_name name of the table
   * @param col_name name of the column
+  * @param tab_name name of the table
+  * @param schema_name name of schema
   * @RETURN NUMBER number of dimension
   ******************************************************************/
-  FUNCTION get_dim(tab_name VARCHAR, col_name VARCHAR)
-    RETURN NUMBER
+  FUNCTION get_dim(
+    col_name VARCHAR2,
+    tab_name VARCHAR2,
+    schema_name VARCHAR2 := USER
+    ) RETURN NUMBER
   IS
     is_3d NUMBER(1, 0);
   BEGIN
@@ -141,12 +147,13 @@ AS
     INTO
       is_3d
     FROM
-      user_sdo_geom_metadata m,
+      all_sdo_geom_metadata m,
       TABLE(m.diminfo) dim
     WHERE
-      table_name = tab_name
-      AND column_name = col_name
-      AND dim.sdo_dimname = 'Z';
+      m.table_name = upper(tab_name)
+      AND m.column_name = upper(col_name)
+      AND dim.sdo_dimname = 'Z'
+      AND m.owner = upper(schema_name);
 
     RETURN is_3d;
 
@@ -163,13 +170,15 @@ AS
   * @param dim dimension of spatial index
   * @param schema_srid the SRID of the coordinate system to be further used in the database
   * @param transform 1 if existing data shall be transformed, 0 if not
+  * @param schema_name name of schema
   ******************************************************************/
   PROCEDURE change_column_srid(
     tab_name VARCHAR2,
     col_name VARCHAR2,
     dim NUMBER,
     schema_srid NUMBER,
-    transform NUMBER := 0
+    transform NUMBER := 0,
+    schema_name VARCHAR2 := USER
   )
   IS
     internal_tab_name VARCHAR2(30);
@@ -186,16 +195,34 @@ AS
       internal_tab_name := tab_name;
     END IF;
 
-    is_valid := citydb_idx.index_status(tab_name, col_name) = 'VALID';
+    is_valid := citydb_idx.index_status(tab_name, col_name, schema_name) = 'VALID';
 
     -- update metadata as the index was switched off before transaction
-    UPDATE user_sdo_geom_metadata SET srid = schema_srid WHERE table_name = tab_name AND column_name = col_name;
+    IF schema_name = USER THEN
+      UPDATE
+        user_sdo_geom_metadata
+      SET
+        srid = schema_srid
+      WHERE
+        table_name = upper(tab_name)
+        AND column_name = upper(col_name);
+    ELSE
+      dbms_output.put_line('Did not update sdo_geom_metadata view for user ' || schema_name);
+    END IF;
     COMMIT;
 
     -- get name of spatial index
     BEGIN
-      SELECT index_name INTO idx_name FROM user_ind_columns
-        WHERE table_name = upper(tab_name) AND column_name = upper(col_name);
+      SELECT
+        index_name
+      INTO
+        idx_name
+      FROM
+        all_ind_columns
+      WHERE
+        table_name = upper(tab_name)
+        AND column_name = upper(col_name)
+        AND index_owner = upper(schema_name);
 
       -- create INDEX_OBJ
       IF dim = 3 THEN
@@ -205,29 +232,38 @@ AS
       END IF;
 
       -- drop spatial index
-      sql_err_code := citydb_idx.drop_index(idx, is_versioned);
+      sql_err_code := citydb_idx.drop_index(idx, is_versioned, schema_name);
 
       EXCEPTION
         WHEN NO_DATA_FOUND THEN
           is_valid := FALSE;
           -- cleanup
-          DELETE FROM user_sdo_geom_metadata WHERE table_name = tab_name AND column_name = col_name;
+          IF schema_name = USER THEN
+            DELETE FROM
+              user_sdo_geom_metadata
+            WHERE
+              table_name = upper(tab_name)
+              AND column_name = upper(col_name);
+          ELSE
+            dbms_output.put_line('Did not clean sdo_geom_metadata view for user ' || schema_name);
+          END IF;
     END;
 
     IF transform <> 0 THEN
       -- coordinates of existent geometries will be transformed
       EXECUTE IMMEDIATE
-        'UPDATE ' || tab_name || ' SET ' || col_name || ' = sdo_cs.transform( ' || col_name || ', :1) WHERE ' || col_name || ' IS NOT NULL'
+        'UPDATE ' || schema_name || '.' || tab_name || ' SET ' || col_name || ' = sdo_cs.transform( ' || col_name || ', :1) WHERE ' || col_name || ' IS NOT NULL'
         USING schema_srid;
     ELSE
       -- only srid paramter of geometries is updated
-      EXECUTE IMMEDIATE 'UPDATE ' || tab_name || ' t SET t.' || col_name || '.SDO_SRID = :1 WHERE t.' || col_name || ' IS NOT NULL'
+      EXECUTE IMMEDIATE
+        'UPDATE ' || schema_name || '.' || tab_name || ' t SET t.' || col_name || '.SDO_SRID = :1 WHERE t.' || col_name || ' IS NOT NULL'
         USING schema_srid;
     END IF;
 
     IF is_valid THEN
       -- create spatial index (incl. new spatial metadata)
-      sql_err_code := citydb_idx.create_index(idx, is_versioned);
+      sql_err_code := citydb_idx.create_index(idx, is_versioned, schema_name);
     END IF;
   END;
 
@@ -237,11 +273,13 @@ AS
   * @param schema_srid the SRID of the coordinate system to be further used in the database
   * @param schema_gml_srs_name the GML_SRS_NAME of the coordinate system to be further used in the database
   * @param transform 1 if existing data shall be transformed, 0 if not
+  * @param schema_name name of schema
   ******************************************************************/
   PROCEDURE change_schema_srid(
     schema_srid NUMBER,
     schema_gml_srs_name VARCHAR2,
-    transform NUMBER := 0
+    transform NUMBER := 0,
+    schema_name VARCHAR2 := USER
   )
   IS
     unknown_srs_ex EXCEPTION;
@@ -250,13 +288,23 @@ AS
       dbms_output.put_line('Your chosen SRID was not found in the MDSYS.CS_SRS table! Chosen SRID was ' || schema_srid);
     ELSE
       -- update entry in DATABASE_SRS table first
-      UPDATE database_srs SET srid = schema_srid, gml_srs_name = schema_gml_srs_name;
+      EXECUTE IMMEDIATE
+        'UPDATE '|| schema_name ||'.database_srs SET srid = schema_srid, gml_srs_name = schema_gml_srs_name';
       COMMIT;
 
       -- change srid of each spatially enabled table
-      FOR rec IN (SELECT table_name AS t, column_name AS c, get_dim(table_name, column_name) AS dim FROM user_sdo_geom_metadata) 
+      FOR rec IN (
+        SELECT
+          table_name AS t,
+          column_name AS c,
+          get_dim(column_name, table_name, schema_name) AS dim
+        FROM
+          all_sdo_geom_metadata
+        WHERE
+          owner = upper(schema_name)
+        ) 
 	  LOOP
-        change_column_srid(rec.t, rec.c, rec.dim, schema_srid, transform);
+        change_column_srid(rec.t, rec.c, rec.dim, schema_srid, transform, schema_name);
       END LOOP;
       dbms_output.put_line('Schema SRID sucessfully changed to ' || schema_srid);
     END IF;
