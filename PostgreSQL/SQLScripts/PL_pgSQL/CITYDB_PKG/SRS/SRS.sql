@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2017
+-- Copyright 2013 - 2018
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -232,7 +232,7 @@ BEGIN
 
   IF is_set_srs_info IS NOT NULL THEN
     -- update entry in DATABASE_SRS table first
-    UPDATE database_srs SET srid = $1, gml_srs_name = $2;
+    EXECUTE format('UPDATE %I.database_srs SET srid = %I, gml_srs_name = %I', schema_name, $1, $2);
   END IF;
 
   -- change srid of each spatially enabled table
