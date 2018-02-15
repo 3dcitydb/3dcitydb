@@ -25,8 +25,21 @@
 -- limitations under the License.
 --
 
-\set SRSNO 3068
-\set GMLSRSNAME 'urn:ogc:def:crs,crs:EPSG::3068,crs:EPSG::5783'
+\pset footer off
+SET client_min_messages TO WARNING;
+
+\set SRS_NO 3068
+\set VERT_NO 5783
+
+-- prepare GML_SRS_NAME
+SELECT CASE
+  WHEN :VERT_NO = 0 THEN 'urn:ogc:def:crs,crs:EPSG::' || :SRS_NO
+  ELSE 'urn:ogc:def:crs,crs:EPSG::' || :SRS_NO || ',crs:EPSG::' || :VERT_NO
+  END AS srs_string \gset
+
+-- set SRID and GML_SRS_NAME
+\set GMLSRSNAME :srs_string
+\set SRSNO :SRS_NO
 
 --// check if the PostGIS extension is available
 SELECT postgis_version();
@@ -42,15 +55,15 @@ SET search_path TO citydb, :current_path;
 --// create TABLES, SEQUENCES, CONSTRAINTS, INDEXES
 \echo
 \echo 'Setting up database schema of 3DCityDB instance ...'
-\i PostgreSQL/SQLScripts/SCHEMA/SCHEMA.sql
+\i SCHEMA/SCHEMA.sql
 
 --// fill tables OBJECTCLASS
-\i PostgreSQL/SQLScripts/UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
+\i UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
 
 --// create CITYDB_PKG (additional schema with PL/pgSQL-Functions)
 \echo
 \echo 'Creating additional schema ''citydb_pkg'' ...'
-\i PostgreSQL/SQLScripts/CREATE_CITYDB_PKG.sql
+\i CREATE_CITYDB_PKG.sql
 
 --// update search_path on database level
 ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
@@ -61,9 +74,9 @@ ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
 --// checks if the chosen SRID is provided by the spatial_ref_sys table
 \echo
 \echo 'Checking spatial reference system ...'
-SELECT citydb_pkg.check_srid(:SRSNO);
+SELECT citydb_pkg.check_srid(:SRS_NO);
 
 \echo 'Setting spatial reference system of 3DCityDB instance ...'
-INSERT INTO citydb.DATABASE_SRS(SRID,GML_SRS_NAME) VALUES (:SRSNO,:'GMLSRSNAME');
-SELECT citydb_pkg.change_schema_srid(:SRSNO,:'GMLSRSNAME');
+INSERT INTO citydb.DATABASE_SRS(SRID,GML_SRS_NAME) VALUES (:SRS_NO,:'GMLSRSNAME');
+SELECT citydb_pkg.change_schema_srid(:SRS_NO,:'GMLSRSNAME');
 \echo 'Done'
