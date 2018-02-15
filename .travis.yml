@@ -1,0 +1,19 @@
+language: SQL
+dist: trusty
+sudo: true
+
+addons:
+  postgresql: "9.4"
+  apt:
+    packages:
+      - postgresql-9.4-postgis-2.3
+
+before_install:
+    - psql -c 'create database citydb_testdb;' -U postgres
+    - psql -U postgres -c 'create extension postgis;'
+
+before_script:
+    - psql -U postgres -d citydb_testdb -c "create extension postgis"
+
+script:
+    - psql -U postgres -d citydb_testdb -a -f TEST.sql
