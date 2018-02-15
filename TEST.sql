@@ -71,9 +71,9 @@ ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
 --// checks if the chosen SRID is provided by the spatial_ref_sys table
 \echo
 \echo 'Checking spatial reference system ...'
-SELECT citydb_pkg.check_srid(:SRSNO);
+SELECT citydb_pkg.check_srid(:SRS_NO);
 
 \echo 'Setting spatial reference system of 3DCityDB instance ...'
-INSERT INTO citydb.DATABASE_SRS(SRID,GML_SRS_NAME) VALUES (:SRSNO,:'GMLSRSNAME');
-SELECT citydb_pkg.change_schema_srid(:SRSNO,:'GMLSRSNAME');
+INSERT INTO citydb.DATABASE_SRS(SRID,GML_SRS_NAME) VALUES (:SRS_NO,:'GMLSRSNAME');
+SELECT citydb_pkg.change_schema_srid(:SRS_NO,:'GMLSRSNAME');
 \echo 'Done'
