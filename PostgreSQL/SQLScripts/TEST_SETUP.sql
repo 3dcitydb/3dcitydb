@@ -25,6 +25,9 @@
 -- limitations under the License.
 --
 
+\pset footer off
+SET client_min_messages TO WARNING;
+
 \set SRS_NO 3068
 \set VERT_NO 5783
 
@@ -52,15 +55,15 @@ SET search_path TO citydb, :current_path;
 --// create TABLES, SEQUENCES, CONSTRAINTS, INDEXES
 \echo
 \echo 'Setting up database schema of 3DCityDB instance ...'
-\i PostgreSQL/SQLScripts/SCHEMA/SCHEMA.sql
+\i SCHEMA/SCHEMA.sql
 
 --// fill tables OBJECTCLASS
-\i PostgreSQL/SQLScripts/UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
+\i UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
 
 --// create CITYDB_PKG (additional schema with PL/pgSQL-Functions)
 \echo
 \echo 'Creating additional schema ''citydb_pkg'' ...'
-\i PostgreSQL/SQLScripts/CREATE_CITYDB_PKG.sql
+\i CREATE_CITYDB_PKG.sql
 
 --// update search_path on database level
 ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
