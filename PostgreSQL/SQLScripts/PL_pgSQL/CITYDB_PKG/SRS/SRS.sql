@@ -232,7 +232,7 @@ BEGIN
 
   IF is_set_srs_info IS NOT NULL THEN
     -- update entry in DATABASE_SRS table first
-    EXECUTE format('UPDATE %I.database_srs SET srid = %I, gml_srs_name = %I', schema_name, $1, $2);
+    EXECUTE format('UPDATE %I.database_srs SET srid = %L, gml_srs_name = %L', schema_name, $1, $2);
   END IF;
 
   -- change srid of each spatially enabled table
