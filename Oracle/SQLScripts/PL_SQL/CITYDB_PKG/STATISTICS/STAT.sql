@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2017
+-- Copyright 2013 - 2018
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -90,8 +90,8 @@ AS
                  WHEN length(table_name) > 14 AND length(table_name) < 23 THEN '\t\t'
                  WHEN length(table_name) > 22 THEN '\t' 
             END)
-            || citydb_stat.table_content(view_name, schema_name) FROM all_views 
-            WHERE owner = schema_name AND view_name = substr(at.table_name, 1, length(at.table_name)-3))
+            || citydb_stat.table_content(view_name, owner_name) FROM all_views 
+            WHERE owner = owner_name AND view_name = substr(at.table_name, 1, length(at.table_name)-3))
       ELSE
         (SELECT '#' || upper(table_name) ||
            (CASE WHEN length(table_name) < 7 THEN '\t\t\t\t'
@@ -99,12 +99,12 @@ AS
                  WHEN length(table_name) > 14 AND length(table_name) < 23 THEN '\t\t'
                  WHEN length(table_name) > 22 THEN '\t' 
             END)
-            || citydb_stat.table_content(table_name, schema_name) FROM all_tables
-            WHERE owner = schema_name AND table_name = at.table_name) 
+            || citydb_stat.table_content(table_name, owner_name) FROM all_tables
+            WHERE owner = owner_name AND table_name = at.table_name) 
       END AS t
     FROM all_tables at
-      WHERE owner = schema_name
-        AND at.table_name NOT IN ('DATABASE_SRS', 'OBJECTCLASS', 'INDEX_TABLE')
+      WHERE owner = owner_name
+        AND at.table_name NOT IN ('DATABASE_SRS', 'OBJECTCLASS', 'INDEX_TABLE', 'ADE', 'SCHEMA', 'SCHEMA_TO_OBJECTCLASS', 'SCHEMA_REFERENCING')
         AND at.table_name NOT LIKE '%\_AUX' ESCAPE '\'
         AND at.table_name NOT LIKE '%TMP\_%' ESCAPE '\'
         AND at.table_name NOT LIKE '%MDRT%'
@@ -113,7 +113,7 @@ AS
         ORDER BY at.table_name ASC
     ) tab;
 
-    EXECUTE IMMEDIATE 'SELECT :1 MULTISET UNION :2 FROM dual' INTO report USING report_header, report;
+    report := report_header MULTISET UNION ALL report;
 
     RETURN report;
   END;
