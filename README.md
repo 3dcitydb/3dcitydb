@@ -1,5 +1,8 @@
 3D City Database
 ================
+
+[![Build Status](https://travis-ci.org/3dcitydb/3dcitydb.svg?branch=master)](https://travis-ci.org/3dcitydb/3dcitydb)
+
 The 3D City Database is a free 3D geo database to store, represent, and manage virtual 3D city models on top of a standard spatial relational database. The database model contains semantically rich, hierarchically structured, multi-scale urban objects facilitating complex GIS modeling and analysis tasks, far beyond visualization. In 2012, the 3D City Database received the Oracle Spatial Excellence Award for Education and Research.
 
 The schema of the 3D City Database is based on the [OGC City Geography Markup Language (CityGML)](http://www.opengeospatial.org/standards/citygml), an international standard for representing and exchanging virtual 3D city models issued by the [Open Geospatial Consortium (OGC)](http://www.opengeospatial.org/).
