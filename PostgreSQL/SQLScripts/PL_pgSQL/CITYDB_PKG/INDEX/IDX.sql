@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2017
+-- Copyright 2013 - 2018
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -79,63 +79,33 @@ CREATE OR REPLACE FUNCTION citydb_pkg.construct_spatial_3d(
   tab_name TEXT,
   att_name TEXT,
   crs INTEGER DEFAULT 0
-  ) RETURNS citydb_pkg.INDEX_OBJ AS $$
-DECLARE
-  idx citydb_pkg.INDEX_OBJ;
-BEGIN
-  idx.index_name := ind_name;
-  idx.table_name := tab_name;
-  idx.attribute_name := att_name;
-  idx.type := 1;
-  idx.srid := crs;
-  idx.is_3d := 1;
-
-  RETURN idx;
-END; 
+  ) RETURNS citydb_pkg.INDEX_OBJ AS 
 $$
-LANGUAGE 'plpgsql' IMMUTABLE STRICT;
+SELECT ($1, $2, $3, 1, $4, 1)::citydb_pkg.INDEX_OBJ;
+$$
+LANGUAGE 'sql' IMMUTABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.construct_spatial_2d(
   ind_name TEXT,
   tab_name TEXT,
   att_name TEXT,
   crs INTEGER DEFAULT 0
-  ) RETURNS citydb_pkg.INDEX_OBJ AS $$
-DECLARE
-  idx citydb_pkg.INDEX_OBJ;
-BEGIN
-  idx.index_name := ind_name;   
-  idx.table_name := tab_name;
-  idx.attribute_name := att_name;
-  idx.type := 1;
-  idx.srid := crs;
-  idx.is_3d := 0;
-
-  RETURN idx;
-END; 
+  ) RETURNS citydb_pkg.INDEX_OBJ AS 
 $$
-LANGUAGE 'plpgsql' IMMUTABLE STRICT;
+SELECT ($1, $2, $3, 1, $4, 0)::citydb_pkg.INDEX_OBJ;
+$$
+LANGUAGE 'sql' IMMUTABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.construct_normal(
   ind_name TEXT,
   tab_name TEXT,
   att_name TEXT,
   crs INTEGER DEFAULT 0
-  ) RETURNS citydb_pkg.INDEX_OBJ AS $$
-DECLARE
-  idx citydb_pkg.INDEX_OBJ;
-BEGIN
-  idx.index_name := ind_name;
-  idx.table_name := tab_name;
-  idx.attribute_name := att_name;
-  idx.type := 0;
-  idx.srid := crs;
-  idx.is_3d := 0;
-
-  RETURN idx;
-END;
+  ) RETURNS citydb_pkg.INDEX_OBJ AS
 $$
-LANGUAGE 'plpgsql' IMMUTABLE STRICT;
+SELECT ($1, $2, $3, 0, $4, 0)::citydb_pkg.INDEX_OBJ;
+$$
+LANGUAGE 'sql' IMMUTABLE STRICT;
 
 
 /******************************************************************
@@ -144,8 +114,8 @@ LANGUAGE 'plpgsql' IMMUTABLE STRICT;
 ******************************************************************/
 DROP TABLE IF EXISTS citydb_pkg.INDEX_TABLE;
 CREATE TABLE citydb_pkg.INDEX_TABLE (
-  ID          SERIAL PRIMARY KEY,
-  obj         citydb_pkg.INDEX_OBJ
+  ID   SERIAL PRIMARY KEY,
+  obj  citydb_pkg.INDEX_OBJ
 );
 
 
@@ -181,11 +151,21 @@ DECLARE
   is_valid BOOLEAN;
   status TEXT;
 BEGIN
-  EXECUTE 'SELECT DISTINCT pgi.indisvalid FROM pg_index pgi
-             JOIN pg_stat_user_indexes pgsui ON pgsui.relid=pgi.indrelid
-             JOIN pg_attribute pga ON pga.attrelid=pgi.indexrelid
-               WHERE pgsui.schemaname=$1 AND pgsui.indexrelname=$2' 
-               INTO is_valid USING schema_name, idx.index_name;
+  SELECT DISTINCT
+    pgi.indisvalid
+  INTO
+    is_valid
+  FROM
+    pg_index pgi
+  JOIN
+    pg_stat_user_indexes pgsui
+    ON pgsui.relid=pgi.indrelid
+  JOIN
+    pg_attribute pga
+    ON pga.attrelid=pgi.indexrelid
+  WHERE
+    pgsui.schemaname=$2
+    AND pgsui.indexrelname=($1).index_name;
 
   IF is_valid is null THEN
     status := 'DROPPED';
@@ -202,7 +182,7 @@ BEGIN
       RETURN 'FAILED';
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STABLE STRICT;
 
 
 /*****************************************************************
@@ -223,11 +203,22 @@ DECLARE
   is_valid BOOLEAN;
   status TEXT;
 BEGIN   
-  EXECUTE 'SELECT DISTINCT pgi.indisvalid FROM pg_index pgi
-             JOIN pg_stat_user_indexes pgsui ON pgsui.relid=pgi.indrelid
-             JOIN pg_attribute pga ON pga.attrelid=pgi.indexrelid
-             WHERE pgsui.schemaname=$1 AND pgsui.relname=$2 AND pga.attname=$3' 
-             INTO is_valid USING lower(schema_name), lower(table_name), lower(column_name);
+  SELECT DISTINCT
+    pgi.indisvalid
+  INTO
+    is_valid
+  FROM
+    pg_index pgi
+  JOIN
+    pg_stat_user_indexes pgsui
+    ON pgsui.relid=pgi.indrelid
+  JOIN
+    pg_attribute pga
+    ON pga.attrelid=pgi.indexrelid
+  WHERE
+    pgsui.schemaname = lower($3) 
+    AND pgsui.relname = lower($1)
+    AND pga.attname = lower($2);
 
   IF is_valid is null THEN
     status := 'DROPPED';
@@ -244,7 +235,7 @@ BEGIN
       RETURN 'FAILED';
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STABLE STRICT;
 
 
 /*****************************************************************
@@ -262,21 +253,24 @@ DECLARE
   create_ddl TEXT;
   SPATIAL CONSTANT NUMERIC(1) := 1;
 BEGIN
-  IF citydb_pkg.index_status(idx, schema_name) <> 'VALID' THEN
-    PERFORM citydb_pkg.drop_index(idx, schema_name);
+  IF citydb_pkg.index_status($1, $2) <> 'VALID' THEN
+    PERFORM citydb_pkg.drop_index($1, $2);
 
     BEGIN
-      IF idx.type = SPATIAL THEN
-        IF idx.is_3d = 1 THEN
-          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_nd)',
-                            idx.index_name, schema_name, idx.table_name, idx.attribute_name);
+      IF ($1).type = SPATIAL THEN
+        IF ($1).is_3d = 1 THEN
+          EXECUTE format(
+            'CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_nd)',
+            ($1).index_name, $2, ($1).table_name, ($1).attribute_name);
         ELSE
-          EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_2d)',
-                            idx.index_name, schema_name, idx.table_name, idx.attribute_name);
+          EXECUTE format(
+            'CREATE INDEX %I ON %I.%I USING GIST (%I gist_geometry_ops_2d)',
+            ($1).index_name, $2, ($1).table_name, ($1).attribute_name);
         END IF;
       ELSE
-        EXECUTE format('CREATE INDEX %I ON %I.%I USING BTREE ('|| idx.attribute_name || ')',
-                          idx.index_name, schema_name, idx.table_name);
+        EXECUTE format(
+          'CREATE INDEX %I ON %I.%I USING BTREE ('|| idx.attribute_name || ')',
+          idx.index_name, schema_name, idx.table_name);
       END IF;
 
       EXCEPTION
@@ -288,7 +282,7 @@ BEGIN
   RETURN '0';
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /****************************************************************
@@ -299,15 +293,17 @@ LANGUAGE plpgsql;
 * @return TEXT sql error code and message, 0 for no errors
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.drop_index(
-	idx citydb_pkg.INDEX_OBJ,
-	schema_name TEXT DEFAULT 'citydb'
-	) RETURNS TEXT AS $$
+  idx citydb_pkg.INDEX_OBJ,
+  schema_name TEXT DEFAULT 'citydb'
+  ) RETURNS TEXT AS $$
 DECLARE
   index_name TEXT;
 BEGIN
-  IF citydb_pkg.index_status(idx, schema_name) <> 'DROPPED' THEN
+  IF citydb_pkg.index_status($1, $2) <> 'DROPPED' THEN
     BEGIN
-      EXECUTE format('DROP INDEX IF EXISTS %I.%I', schema_name, idx.index_name);
+      EXECUTE format(
+        'DROP INDEX IF EXISTS %I.%I',
+        $2, ($1).index_name);
 
       EXCEPTION
         WHEN OTHERS THEN
@@ -318,7 +314,7 @@ BEGIN
   RETURN '0';
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -333,23 +329,34 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION citydb_pkg.create_indexes(
   idx_type INTEGER, 
   schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS text[] AS $$
-DECLARE
-  log text[] := '{}';
-  sql_error_msg TEXT;
-  rec RECORD;
-BEGIN
-  FOR rec IN SELECT * FROM citydb_pkg.index_table LOOP
-    IF (rec.obj).type = idx_type THEN
-      sql_error_msg := citydb_pkg.create_index(rec.obj, schema_name);
-      log := array_append(log, citydb_pkg.index_status(rec.obj, schema_name) || ':' || (rec.obj).index_name || ':' || schema_name || ':' || (rec.obj).table_name || ':' || (rec.obj).attribute_name || ':' || sql_error_msg);
-    END IF;
-  END LOOP;
-
-  RETURN log;
-END;
+  ) RETURNS text[] AS 
 $$
-LANGUAGE plpgsql;
+WITH create_indexes AS (
+  SELECT (
+    (obj).index_name 
+    || ':' || $2
+    || ':' || (obj).table_name 
+    || ':' || (obj).attribute_name
+    ) AS idx_log, 
+    citydb_pkg.create_index(obj, $2) AS ddl_result
+  FROM
+    citydb_pkg.index_table
+  WHERE
+    (obj).type = $1
+)
+SELECT
+  array_agg(
+    CASE WHEN ddl_result = '0'
+      THEN 'VALID'
+      ELSE 'DROPPED'
+    END
+    || ':' || idx_log
+    || ':' || ddl_result
+  ) AS log
+FROM
+  create_indexes;
+$$
+LANGUAGE sql STRICT;
 
 
 /*****************************************************************
@@ -364,23 +371,34 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION citydb_pkg.drop_indexes(
   idx_type INTEGER, 
   schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS text[] AS $$
-DECLARE
-  log text[] := '{}';
-  sql_error_msg TEXT;
-  rec RECORD;
-BEGIN
-  FOR rec IN SELECT * FROM citydb_pkg.index_table LOOP
-    IF (rec.obj).type = idx_type THEN
-      sql_error_msg := citydb_pkg.drop_index(rec.obj, schema_name);
-      log := array_append(log, citydb_pkg.index_status(rec.obj, schema_name) || ':' || (rec.obj).index_name || ':' || schema_name || ':' || (rec.obj).table_name || ':' || (rec.obj).attribute_name || ':' || sql_error_msg);
-    END IF;
-  END LOOP;
-
-  RETURN log;
-END;
+  ) RETURNS text[] AS 
 $$
-LANGUAGE plpgsql;
+WITH drop_indexes AS (
+  SELECT (
+    (obj).index_name 
+    || ':' || $2
+    || ':' || (obj).table_name 
+    || ':' || (obj).attribute_name
+    ) AS idx_log, 
+    citydb_pkg.drop_index(obj, $2) AS ddl_result
+  FROM
+    citydb_pkg.index_table
+  WHERE
+    (obj).type = $1
+)
+SELECT
+  array_agg(
+    CASE WHEN ddl_result = '0'
+      THEN 'DROPPED'
+      ELSE 'FAILED'
+    END
+    || ':' || idx_log
+    || ':' || ddl_result
+  ) AS log 
+FROM
+  drop_indexes;
+$$
+LANGUAGE sql STRICT;
 
 
 /******************************************************************
@@ -389,23 +407,22 @@ LANGUAGE plpgsql;
 * @param schema_name target schema of indexes to retrieve status from
 * @return ARRAY array of log message strings
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.status_spatial_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS $$
-DECLARE
-  log text[] := '{}';
-  status TEXT;
-  rec RECORD;
-BEGIN
-  FOR rec IN SELECT * FROM citydb_pkg.index_table LOOP
-    IF (rec.obj).type = 1 THEN
-      status := citydb_pkg.index_status(rec.obj, schema_name);
-      log := array_append(log, status || ':' || (rec.obj).index_name || ':' || schema_name || ':' || (rec.obj).table_name || ':' || (rec.obj).attribute_name);
-    END IF;
-  END LOOP;   
-
-  RETURN log;
-END;
+CREATE OR REPLACE FUNCTION citydb_pkg.status_spatial_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS
 $$
-LANGUAGE plpgsql;
+SELECT
+  array_agg(
+    citydb_pkg.index_status(obj, $1) 
+    || ':' || (obj).index_name 
+    || ':' || $1
+    || ':' || (obj).table_name 
+    || ':' || (obj).attribute_name
+  ) AS log
+FROM
+  citydb_pkg.index_table
+WHERE
+  (obj).type = 1;
+$$
+LANGUAGE sql STRICT;
 
 
 /******************************************************************
@@ -414,23 +431,22 @@ LANGUAGE plpgsql;
 * @param schema_name target schema of indexes to retrieve status from
 * @return ARRAY array of log message strings
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.status_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS $$
-DECLARE
-  log text[] := '{}';
-  status TEXT;
-  rec RECORD;
-BEGIN
-  FOR rec IN SELECT * FROM citydb_pkg.index_table LOOP
-    IF (rec.obj).type = 0 THEN
-      status := citydb_pkg.index_status(rec.obj, schema_name);
-      log := array_append(log, status || ':' || (rec.obj).index_name || ':' || schema_name || ':' || (rec.obj).table_name || ':' || (rec.obj).attribute_name);
-    END IF;
-  END LOOP;
-
-  RETURN log;
-END;
+CREATE OR REPLACE FUNCTION citydb_pkg.status_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS
 $$
-LANGUAGE plpgsql;
+SELECT
+  array_agg(
+    citydb_pkg.index_status(obj, $1) 
+    || ':' || (obj).index_name 
+    || ':' || $1
+    || ':' || (obj).table_name 
+    || ':' || (obj).attribute_name
+  ) AS log
+FROM
+  citydb_pkg.index_table
+WHERE
+  (obj).type = 0;
+$$
+LANGUAGE sql STRICT;
 
 
 /******************************************************************
@@ -440,12 +456,11 @@ LANGUAGE plpgsql;
 * @param schema_name target schema for indexes to be created
 * @return ARRAY array of log message strings
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.create_spatial_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS $$
-BEGIN
-  RETURN citydb_pkg.create_indexes(1, schema_name);
-END;
+CREATE OR REPLACE FUNCTION citydb_pkg.create_spatial_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS
 $$
-LANGUAGE plpgsql;
+SELECT citydb_pkg.create_indexes(1, $1);
+$$
+LANGUAGE sql STRICT;
 
 
 /******************************************************************
@@ -455,12 +470,11 @@ LANGUAGE plpgsql;
 * @param schema_name target schema for indexes to be dropped
 * @return ARRAY array of log message strings
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.drop_spatial_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS $$
-BEGIN
-  RETURN citydb_pkg.drop_indexes(1, schema_name);
-END;
+CREATE OR REPLACE FUNCTION citydb_pkg.drop_spatial_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS 
 $$
-LANGUAGE plpgsql;
+SELECT citydb_pkg.drop_indexes(1, $1);
+$$
+LANGUAGE sql STRICT;
 
 
 /******************************************************************
@@ -470,12 +484,11 @@ LANGUAGE plpgsql;
 * @param schema_name target schema for indexes to be created
 * @return ARRAY array of log message strings
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.create_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS $$
-BEGIN
-  RETURN citydb_pkg.create_indexes(0, schema_name);
-END;
+CREATE OR REPLACE FUNCTION citydb_pkg.create_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS
 $$
-LANGUAGE plpgsql;
+SELECT citydb_pkg.create_indexes(0, $1);
+$$
+LANGUAGE sql STRICT;
 
 
 /******************************************************************
@@ -485,12 +498,11 @@ LANGUAGE plpgsql;
 * @param schema_name target schema for indexes to be dropped
 * @return ARRAY array of log message strings
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.drop_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS $$
-BEGIN
-  RETURN citydb_pkg.drop_indexes(0, schema_name);
-END; 
+CREATE OR REPLACE FUNCTION citydb_pkg.drop_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS 
 $$
-LANGUAGE plpgsql;
+SELECT citydb_pkg.drop_indexes(0, $1); 
+$$
+LANGUAGE sql STRICT;
 
 
 /*****************************************************************
@@ -505,18 +517,14 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION citydb_pkg.get_index(
   tab_name TEXT, 
   column_name TEXT
-  ) RETURNS citydb_pkg.INDEX_OBJ AS $$
-DECLARE
-  idx citydb_pkg.INDEX_OBJ;
-  rec RECORD;
-BEGIN
-  FOR rec IN SELECT * FROM citydb_pkg.index_table LOOP
-    IF (rec.obj).table_name = tab_name AND (rec.obj).attribute_name = column_name THEN
-      idx := rec.obj;
-    END IF;
-  END LOOP;
-
-  RETURN idx;
-END;
+  ) RETURNS citydb_pkg.INDEX_OBJ AS 
 $$
-LANGUAGE plpgsql;
+SELECT
+  obj
+FROM
+  citydb_pkg.index_table 
+WHERE
+  (obj).table_name = lower($1)
+  AND (obj).attribute_name = lower($2);
+$$
+LANGUAGE sql STRICT;
