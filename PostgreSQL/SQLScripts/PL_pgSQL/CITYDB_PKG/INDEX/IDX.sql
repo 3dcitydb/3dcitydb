@@ -327,32 +327,30 @@ CREATE OR REPLACE FUNCTION citydb_pkg.create_indexes(
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS text[] AS 
 $$
-WITH create_indexes AS (
-  SELECT (
-    (obj).index_name 
-    || ':' || $2
-    || ':' || (obj).table_name 
-    || ':' || (obj).attribute_name
-    ) AS idx_log, 
-    citydb_pkg.create_index(obj, $2) AS ddl_result
-  FROM
-    citydb_pkg.index_table
-  WHERE
-    (obj).type = $1
-)
-SELECT
-  array_agg(
-    CASE WHEN ddl_result = '0'
-      THEN 'VALID'
-      ELSE 'DROPPED'
-    END
-    || ':' || idx_log
-    || ':' || ddl_result
-  ) AS log
-FROM
-  create_indexes;
+DECLARE
+  idx_log text[] := '{}';
+  sql_error_msg TEXT;
+  rec RECORD;
+BEGIN
+  FOR rec IN
+    SELECT * FROM citydb_pkg.index_table WHERE (obj).type = $1
+  LOOP
+    sql_error_msg := citydb_pkg.create_index(rec.obj, $2);
+    idx_log := array_append(
+      idx_log,
+      citydb_pkg.index_status(rec.obj, $2)
+      || ':' || (rec.obj).index_name
+      || ':' || $2
+      || ':' || (rec.obj).table_name
+      || ':' || (rec.obj).attribute_name
+      || ':' || sql_error_msg
+    );
+  END LOOP;
+
+  RETURN idx_log;
+END;
 $$
-LANGUAGE sql STRICT;
+LANGUAGE plpgsql STRICT;
 
 
 /*****************************************************************
@@ -369,32 +367,30 @@ CREATE OR REPLACE FUNCTION citydb_pkg.drop_indexes(
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS text[] AS 
 $$
-WITH drop_indexes AS (
-  SELECT (
-    (obj).index_name 
-    || ':' || $2
-    || ':' || (obj).table_name 
-    || ':' || (obj).attribute_name
-    ) AS idx_log, 
-    citydb_pkg.drop_index(obj, $2) AS ddl_result
-  FROM
-    citydb_pkg.index_table
-  WHERE
-    (obj).type = $1
-)
-SELECT
-  array_agg(
-    CASE WHEN ddl_result = '0'
-      THEN 'DROPPED'
-      ELSE 'FAILED'
-    END
-    || ':' || idx_log
-    || ':' || ddl_result
-  ) AS log 
-FROM
-  drop_indexes;
+DECLARE
+  idx_log text[] := '{}';
+  sql_error_msg TEXT;
+  rec RECORD;
+BEGIN
+  FOR rec IN
+    SELECT * FROM citydb_pkg.index_table WHERE (obj).type = $1
+  LOOP
+    sql_error_msg := citydb_pkg.drop_index(rec.obj, $2);
+    idx_log := array_append(
+      idx_log,
+      citydb_pkg.index_status(rec.obj, $2)
+      || ':' || (rec.obj).index_name
+      || ':' || $2
+      || ':' || (rec.obj).table_name
+      || ':' || (rec.obj).attribute_name
+      || ':' || sql_error_msg
+    );
+  END LOOP;
+
+  RETURN idx_log;
+END;
 $$
-LANGUAGE sql STRICT;
+LANGUAGE plpgsql STRICT;
 
 
 /******************************************************************
