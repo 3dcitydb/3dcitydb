@@ -52,7 +52,9 @@
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER AS
 $$
-SELECT 1 FROM spatial_ref_sys WHERE auth_srid = $1 AND srtext LIKE '%UP]%';
+SELECT COALESCE((
+  SELECT 1 FROM spatial_ref_sys WHERE auth_srid = $1 AND srtext LIKE '%UP]%'
+  ), 0);
 $$
 LANGUAGE sql STABLE STRICT;
 
