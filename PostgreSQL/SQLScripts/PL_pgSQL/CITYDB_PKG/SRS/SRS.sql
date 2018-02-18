@@ -70,7 +70,7 @@ DECLARE
   is_3d INTEGER := 0;
 BEGIN  
   EXECUTE format(
-    'SELECT COALESCE(citydb_pkg.is_coord_ref_sys_3d(srid),0) FROM %I.database_srs', schema_name
+    'SELECT citydb_pkg.is_coord_ref_sys_3d(srid) FROM %I.database_srs', schema_name
   )
   INTO is_3d;
 
