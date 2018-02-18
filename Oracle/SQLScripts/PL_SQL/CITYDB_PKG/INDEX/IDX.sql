@@ -429,34 +429,34 @@ AS
   * private convenience method for invoking create_index on indexes 
   * of same index type
   * 
-  * @param type type of index, e.g. SPATIAL or NORMAL
+  * @param idx_type type of index, e.g. SPATIAL or NORMAL
   * @param schema_name target schema for indexes to be created
   * @return STRARRAY array of log message strings
   ******************************************************************/
   FUNCTION create_indexes(
-    type SMALLINT, 
+    idx_type SMALLINT, 
     schema_name VARCHAR2 := USER
     ) RETURN STRARRAY
   IS
-    log STRARRAY;
+    idx_log STRARRAY;
     sql_error_code VARCHAR2(20);
   BEGIN
-    log := STRARRAY();
+    idx_log := STRARRAY();
 
-    FOR rec IN (SELECT * FROM index_table) LOOP
-      IF rec.obj.type = type THEN
-        sql_error_code := create_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name, schema_name) = 'ON', schema_name);
-        log.extend;
-        log(log.count) := index_status(rec.obj, schema_name)
-          || ':' || rec.obj.index_name
-          || ':' || upper(schema_name)
-          || ':' || rec.obj.table_name
-          || ':' || rec.obj.attribute_name
-          || ':' || sql_error_code;
-      END IF;
+    FOR rec IN
+      (SELECT * FROM index_table WHERE (obj).type = idx_type)
+    LOOP
+      sql_error_code := create_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name, schema_name) = 'ON', schema_name);
+      idx_log.extend;
+      idx_log(idx_log.count) := index_status(rec.obj, schema_name)
+        || ':' || rec.obj.index_name
+        || ':' || upper(schema_name)
+        || ':' || rec.obj.table_name
+        || ':' || rec.obj.attribute_name
+        || ':' || sql_error_code;
     END LOOP;
 
-    RETURN log;
+    RETURN idx_log;
   END;
   
   /*****************************************************************
@@ -464,31 +464,31 @@ AS
   * private convenience method for invoking drop_index on indexes 
   * of same index type
   * 
-  * @param type type of index, e.g. SPATIAL or NORMAL
+  * @param idx_type type of index, e.g. SPATIAL or NORMAL
   * @param schema_name target schema for indexes to be dropped
   * @return STRARRAY array of log message strings
   ******************************************************************/
-  FUNCTION drop_indexes(type SMALLINT, schema_name VARCHAR2 := USER) RETURN STRARRAY
+  FUNCTION drop_indexes(idx_type SMALLINT, schema_name VARCHAR2 := USER) RETURN STRARRAY
   IS
-    log STRARRAY;
+    idx_log STRARRAY;
     sql_error_code VARCHAR2(20);
   BEGIN
-    log := STRARRAY();
+    idx_log := STRARRAY();
     
-    FOR rec IN (SELECT * FROM index_table) LOOP
-      IF rec.obj.type = type THEN
-        sql_error_code := drop_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name, schema_name) = 'ON', schema_name);
-        log.extend;
-        log(log.count) := index_status(rec.obj, schema_name)
-          || ':' || rec.obj.index_name
-          || ':' || upper(schema_name)
-          || ':' || rec.obj.table_name
-          || ':' || rec.obj.attribute_name
-          || ':' || sql_error_code;
-      END IF;
+    FOR rec IN
+      (SELECT * FROM index_table WHERE (obj).type = idx_type)
+    LOOP
+      sql_error_code := drop_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name, schema_name) = 'ON', schema_name);
+      idx_log.extend;
+      idx_log(idx_log.count) := index_status(rec.obj, schema_name)
+        || ':' || rec.obj.index_name
+        || ':' || upper(schema_name)
+        || ':' || rec.obj.table_name
+        || ':' || rec.obj.attribute_name
+        || ':' || sql_error_code;
     END LOOP; 
 
-    RETURN log;
+    RETURN idx_log;
   END;
 
   /*****************************************************************
@@ -499,24 +499,24 @@ AS
   ******************************************************************/
   FUNCTION status_spatial_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY
   IS
-    log STRARRAY;
+    idx_log STRARRAY;
     status VARCHAR2(20);
   BEGIN
-    log := STRARRAY();
+    idx_log := STRARRAY();
 
-    FOR rec IN (SELECT * FROM index_table) LOOP
-      IF rec.obj.type = SPATIAL THEN
-        status := index_status(rec.obj, schema_name);
-        log.extend;
-        log(log.count) := status
-          || ':' || rec.obj.index_name
-          || ':' || upper(schema_name)
-          || ':' || rec.obj.table_name
-          || ':' || rec.obj.attribute_name;
-      END IF;
+    FOR rec IN
+      (SELECT * FROM index_table WHERE (obj).type = SPATIAL)
+    LOOP
+      status := index_status(rec.obj, schema_name);
+      idx_log.extend;
+      idx_log(idx_log.count) := status
+        || ':' || rec.obj.index_name
+        || ':' || upper(schema_name)
+        || ':' || rec.obj.table_name
+        || ':' || rec.obj.attribute_name;
     END LOOP;
 
-    RETURN log;
+    RETURN idx_log;
   END;
 
   /*****************************************************************
@@ -527,24 +527,24 @@ AS
   ******************************************************************/
   FUNCTION status_normal_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY
   IS
-    log STRARRAY;
+    idx_log STRARRAY;
     status VARCHAR2(20);
   BEGIN
-    log := STRARRAY();
+    idx_log := STRARRAY();
 
-    FOR rec IN (SELECT * FROM index_table) LOOP
-      IF rec.obj.type = NORMAL THEN
-        status := index_status(rec.obj, schema_name);
-        log.extend;
-        log(log.count) := status
-          || ':' || rec.obj.index_name
-          || ':' || upper(schema_name)
-          || ':' || rec.obj.table_name
-          || ':' || rec.obj.attribute_name;
-      END IF;
+    FOR rec IN
+      (SELECT * FROM index_table WHERE (obj).type = NORMAL)
+    LOOP
+      status := index_status(rec.obj, schema_name);
+      idx_log.extend;
+      idx_log(idx_log.count) := status
+        || ':' || rec.obj.index_name
+        || ':' || upper(schema_name)
+        || ':' || rec.obj.table_name
+        || ':' || rec.obj.attribute_name;
     END LOOP;
 
-    RETURN log;
+    RETURN idx_log;
   END;
 
   /*****************************************************************
@@ -619,12 +619,15 @@ AS
   IS
     idx INDEX_OBJ;
   BEGIN
-    FOR rec IN (SELECT * FROM index_table) LOOP
-      IF rec.obj.attribute_name = upper(column_name) AND rec.obj.table_name = upper(table_name) THEN
-        idx := rec.obj;
-        EXIT;
-      END IF;
-    END LOOP;
+    SELECT
+      obj
+    INTO
+      idx
+    FROM
+      index_table
+    WHERE
+      (obj).attribute_name = upper(column_name)
+      AND (obj).table_name = upper(table_name);
 
     RETURN idx;
   END;
