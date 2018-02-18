@@ -151,21 +151,21 @@ DECLARE
   is_valid BOOLEAN;
   status TEXT;
 BEGIN
-  SELECT DISTINCT
+  SELECT
     pgi.indisvalid
   INTO
     is_valid
   FROM
     pg_index pgi
   JOIN
-    pg_stat_user_indexes pgsui
-    ON pgsui.relid=pgi.indrelid
+    pg_class pgc
+    ON pgc.oid = pgi.indexrelid
   JOIN
-    pg_attribute pga
-    ON pga.attrelid=pgi.indexrelid
+    pg_namespace pgn
+    ON pgn.oid = pgc.relnamespace
   WHERE
-    pgsui.schemaname=$2
-    AND pgsui.indexrelname=($1).index_name;
+    pgn.nspname = $2
+    AND pgc.relname = ($1).index_name;
 
   IF is_valid is null THEN
     status := 'DROPPED';
@@ -203,21 +203,17 @@ DECLARE
   is_valid BOOLEAN;
   status TEXT;
 BEGIN   
-  SELECT DISTINCT
+  SELECT
     pgi.indisvalid
   INTO
     is_valid
   FROM
     pg_index pgi
   JOIN
-    pg_stat_user_indexes pgsui
-    ON pgsui.relid=pgi.indrelid
-  JOIN
     pg_attribute pga
-    ON pga.attrelid=pgi.indexrelid
+    ON pga.attrelid = pgi.indexrelid
   WHERE
-    pgsui.schemaname = lower($3) 
-    AND pgsui.relname = lower($1)
+    pgi.indrelid = (lower($3) || '.' || lower($1))::regclass::oid
     AND pga.attname = lower($2);
 
   IF is_valid is null THEN
