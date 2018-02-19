@@ -178,35 +178,35 @@ AS
   /*****************************************************************
   * index_status
   * 
-  * @param table_name table_name of index to retrieve status from
-  * @param column_name column_name of index to retrieve status from
+  * @param idx_table_name table_name of index to retrieve status from
+  * @param idx_column_name column_name of index to retrieve status from
   * @param schema_name schema_name of index to retrieve status from
   * @return VARCHAR2 string representation of status, may include
   *                  'DROPPED', 'VALID', 'FAILED', 'INVALID'
   ******************************************************************/
   FUNCTION index_status(
-    table_name VARCHAR2, 
-    column_name VARCHAR2,
+    idx_table_name VARCHAR2, 
+    idx_column_name VARCHAR2,
     schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2
   IS
     internal_table_name VARCHAR2(100);
-    index_type VARCHAR2(35);
-    index_name VARCHAR2(35);
+    idx_type VARCHAR2(35);
+    idx_name VARCHAR2(35);
     status VARCHAR2(20);
   BEGIN
-    internal_table_name := table_name;
+    internal_table_name := upper(idx_table_name);
 
-    IF citydb_util.versioning_table(table_name, schema_name) = 'ON' THEN
-      internal_table_name := table_name || '_LT';
+    IF citydb_util.versioning_table(idx_table_name, schema_name) = 'ON' THEN
+      internal_table_name := internal_table_name || '_LT';
     END IF;     
 
     SELECT
       upper(index_type),
       index_name
     INTO
-      index_type,
-      index_name
+      idx_type,
+      idx_name
     FROM
       all_indexes
     WHERE
@@ -217,11 +217,11 @@ AS
         FROM
           all_ind_columns
         WHERE index_owner = upper(schema_name)
-          AND table_name = upper(internal_table_name)
-          AND column_name = upper(column_name)
+          AND table_name = internal_table_name
+          AND column_name = upper(idx_column_name)
       );
 
-    IF index_type = 'DOMAIN' THEN
+    IF idx_type = 'DOMAIN' THEN
       SELECT
         upper(domidx_opstatus)
       INTO
@@ -230,7 +230,7 @@ AS
         all_indexes
       WHERE
         owner = upper(schema_name)
-        AND index_name = index_name;
+        AND index_name = idx_name;
     ELSE
       SELECT
         upper(status)
@@ -240,7 +240,7 @@ AS
         all_indexes
       WHERE
         owner = upper(schema_name)
-        AND index_name = index_name;
+        AND index_name = idx_name;
     END IF;
 
     RETURN status;

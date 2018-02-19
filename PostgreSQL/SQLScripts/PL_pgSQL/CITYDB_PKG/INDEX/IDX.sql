@@ -50,7 +50,7 @@
 *   drop_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[]
 *   drop_spatial_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[]
 *   index_status(idx citydb_pkg.INDEX_OBJ, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
-*   index_status(table_name TEXT, column_name TEXT, schema_name TEXT) RETURNS TEXT
+*   index_status(idx_table_name TEXT, idx_column_name TEXT, schema_name TEXT) RETURNS TEXT
 *   status_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[]
 *   status_spatial_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[]
 ******************************************************************/
@@ -188,15 +188,15 @@ LANGUAGE plpgsql STABLE STRICT;
 /*****************************************************************
 * index_status
 * 
-* @param table_name table_name of index to retrieve status from
-* @param column_name column_name of index to retrieve status from
+* @param idx_table_name table_name of index to retrieve status from
+* @param idx_column_name column_name of index to retrieve status from
 * @param schema_name schema_name of index to retrieve status from
 * @return TEXT string representation of status, may include
 *                  'DROPPED', 'VALID', 'INVALID', 'FAILED'
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.index_status(
-  table_name TEXT,
-  column_name TEXT,
+  idx_table_name TEXT,
+  idx_column_name TEXT,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS TEXT AS $$
 DECLARE
