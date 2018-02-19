@@ -39,6 +39,7 @@ AS
   FUNCTION get_dim(col_name VARCHAR2, tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN NUMBER;
   PROCEDURE change_column_srid(tab_name VARCHAR2, col_name VARCHAR2, dim NUMBER, schema_srid NUMBER, transform NUMBER := 0, schema_name VARCHAR2 := USER);
   PROCEDURE change_schema_srid(schema_srid NUMBER, schema_gml_srs_name VARCHAR2, transform NUMBER := 0, schema_name VARCHAR2 := USER);
+  PROCEDURE sync_spatial_metadata;
 END citydb_srs;
 /
 
@@ -74,9 +75,9 @@ AS
     is_3d NUMBER := 0;
   BEGIN
     SELECT COALESCE((
-      SELECT COUNT(*) FROM sdo_crs_compound WHERE srid = schema_srid
+      SELECT 1 FROM sdo_crs_compound WHERE srid = schema_srid
       ),(
-      SELECT COUNT(*) FROM sdo_crs_geographic3d WHERE srid = schema_srid
+      SELECT 1 FROM sdo_crs_geographic3d WHERE srid = schema_srid
       ), 0)
     INTO is_3d FROM dual;
 
@@ -289,7 +290,8 @@ AS
     ELSE
       -- update entry in DATABASE_SRS table first
       EXECUTE IMMEDIATE
-        'UPDATE '|| schema_name ||'.database_srs SET srid = schema_srid, gml_srs_name = schema_gml_srs_name';
+        'UPDATE '|| schema_name ||'.database_srs SET srid = :1, gml_srs_name = :2'
+           USING schema_srid, schema_gml_srs_name;
       COMMIT;
 
       -- change srid of each spatially enabled table
@@ -308,6 +310,31 @@ AS
       END LOOP;
       dbms_output.put_line('Schema SRID sucessfully changed to ' || schema_srid);
     END IF;
+  END;
+
+  /*****************************************************************
+  * sync_spatial_metadata
+  *
+  *****************************************************************/
+  PROCEDURE sync_spatial_metadata
+  IS
+    schema_srid NUMBER;
+  BEGIN
+    -- fetch SRID in user schema
+    SELECT
+      srid
+    INTO
+      schema_srid
+    FROM
+      database_srs;
+
+    -- update metadata if out of sync
+    UPDATE
+      user_sdo_geom_metadata
+    SET
+      srid = schema_srid
+    WHERE
+      srid <> schema_srid;
   END;
 
 END citydb_srs;
