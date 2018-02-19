@@ -75,9 +75,9 @@ AS
     is_3d NUMBER := 0;
   BEGIN
     SELECT COALESCE((
-      SELECT COUNT(*) FROM sdo_crs_compound WHERE srid = schema_srid
+      SELECT 1 FROM sdo_crs_compound WHERE srid = schema_srid
       ),(
-      SELECT COUNT(*) FROM sdo_crs_geographic3d WHERE srid = schema_srid
+      SELECT 1 FROM sdo_crs_geographic3d WHERE srid = schema_srid
       ), 0)
     INTO is_3d FROM dual;
 

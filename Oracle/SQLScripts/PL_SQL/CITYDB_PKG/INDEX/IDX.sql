@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2017
+-- Copyright 2013 - 2018
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -109,7 +109,7 @@ COMMIT;
 * 
 * utility methods for index handling
 ******************************************************************/
-CREATE OR REPLACE PACKAGE citydb_idx
+CREATE OR REPLACE PACKAGE citydb_idx AUTHID CURRENT_USER
 AS
   FUNCTION index_status(idx INDEX_OBJ, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION index_status(table_name VARCHAR2, column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
@@ -146,9 +146,25 @@ AS
     status VARCHAR2(20);
   BEGIN
     IF idx.type = SPATIAL THEN
-      EXECUTE IMMEDIATE 'select upper(DOMIDX_OPSTATUS) from ALL_INDEXES where OWNER=:1 and INDEX_NAME=:2' INTO status USING upper(schema_name), idx.index_name;
+      SELECT
+        upper(domidx_opstatus)
+      INTO
+        status
+      FROM
+        all_indexes
+      WHERE
+        owner = upper(schema_name)
+        AND index_name = idx.index_name;
     ELSE
-      EXECUTE IMMEDIATE 'select upper(STATUS) from ALL_INDEXES where OWNER=:1 and INDEX_NAME=:2' INTO status USING upper(schema_name), idx.index_name;
+      SELECT
+        upper(status)
+      INTO
+        status
+      FROM
+        all_indexes
+      WHERE
+        owner = upper(schema_name)
+        AND index_name = idx.index_name;
     END IF;
 
     RETURN status;
@@ -185,14 +201,46 @@ AS
       internal_table_name := table_name || '_LT';
     END IF;     
 
-    EXECUTE IMMEDIATE 'select upper(INDEX_TYPE), INDEX_NAME from ALL_INDEXES where OWNER=:1 and INDEX_NAME=
-    	(select upper(INDEX_NAME) from ALL_IND_COLUMNS where INDEX_OWNER=:2 and TABLE_NAME=:3 and COLUMN_NAME=:4)' 
-    	INTO index_type, index_name USING upper(schema_name), upper(schema_name), upper(internal_table_name), upper(column_name);  
+    SELECT
+      upper(index_type),
+      index_name
+    INTO
+      index_type,
+      index_name
+    FROM
+      all_indexes
+    WHERE
+      owner = upper(schema_name)
+      AND index_name = (
+        SELECT
+          upper(index_name)
+        FROM
+          all_ind_columns
+        WHERE index_owner = upper(schema_name)
+          AND table_name = upper(internal_table_name)
+          AND column_name = upper(column_name)
+      );
 
     IF index_type = 'DOMAIN' THEN
-      EXECUTE IMMEDIATE 'select upper(DOMIDX_OPSTATUS) FROM ALL_INDEXES where OWNER=:1 and INDEX_NAME=:2' INTO status USING upper(schema_name), index_name;
+      SELECT
+        upper(domidx_opstatus)
+      INTO
+        status
+      FROM
+        all_indexes
+      WHERE
+        owner = upper(schema_name)
+        AND index_name = index_name;
     ELSE
-      EXECUTE IMMEDIATE 'select upper(STATUS) FROM ALL_INDEXES where OWNER=:1 and INDEX_NAME=:2' INTO status USING upper(schema_name), index_name;
+      SELECT
+        upper(status)
+      INTO
+        status
+      FROM
+        all_indexes
+      WHERE
+        owner = upper(schema_name)
+        AND index_name = index_name;
     END IF;
 
     RETURN status;
@@ -215,7 +263,7 @@ AS
     )
   IS
     table_name VARCHAR2(100);
-    srid DATABASE_SRS.SRID%TYPE;
+    schema_srid DATABASE_SRS.SRID%TYPE;
   BEGIN
     table_name := idx.table_name;
 
@@ -223,31 +271,43 @@ AS
       table_name := table_name || '_LT';
     END IF;    
 
-    EXECUTE IMMEDIATE 'delete from USER_SDO_GEOM_METADATA where TABLE_NAME=:1 and COLUMN_NAME=:2' USING table_name, idx.attribute_name;
+    DELETE FROM
+      user_sdo_geom_metadata
+    WHERE
+      table_name = table_name
+      AND column_name = idx.attribute_name;
 
     IF idx.srid = 0 THEN
-      EXECUTE IMMEDIATE 'select SRID from DATABASE_SRS' INTO srid;
+      SELECT srid INTO schema_srid FROM database_srs;
     ELSE
-      srid := idx.srid;
+      schema_srid := idx.srid;
     END IF;
 
     IF idx.is_3d = 0 THEN
-      EXECUTE IMMEDIATE 'INSERT INTO USER_SDO_GEOM_METADATA (TABLE_NAME, COLUMN_NAME, DIMINFO, SRID)
-                          VALUES (:1, :2,
-                            MDSYS.SDO_DIM_ARRAY 
-                            (
-                              MDSYS.SDO_DIM_ELEMENT(''X'', 0.000, 10000000.000, 0.0005), 
-                              MDSYS.SDO_DIM_ELEMENT(''Y'', 0.000, 10000000.000, 0.0005)), :3
-                            )' USING table_name, idx.attribute_name, srid;
+      INSERT INTO
+        user_sdo_geom_metadata (table_name, column_name, diminfo, srid)
+      VALUES (
+        table_name,
+        idx.attribute_name,
+        MDSYS.SDO_DIM_ARRAY(
+          MDSYS.SDO_DIM_ELEMENT('X', 0.000, 10000000.000, 0.0005), 
+          MDSYS.SDO_DIM_ELEMENT('Y', 0.000, 10000000.000, 0.0005)
+        ),
+        schema_srid
+      );
     ELSE
-      EXECUTE IMMEDIATE 'INSERT INTO USER_SDO_GEOM_METADATA (TABLE_NAME, COLUMN_NAME, DIMINFO, SRID)
-                          VALUES (:1, :2,
-                            MDSYS.SDO_DIM_ARRAY 
-                            (
-                              MDSYS.SDO_DIM_ELEMENT(''X'', 0.000, 10000000.000, 0.0005), 
-                              MDSYS.SDO_DIM_ELEMENT(''Y'', 0.000, 10000000.000, 0.0005),
-                              MDSYS.SDO_DIM_ELEMENT(''Z'', -1000, 10000, 0.0005)), :3
-                            )' USING table_name, idx.attribute_name, srid;
+      INSERT INTO
+        user_sdo_geom_metadata (table_name, column_name, diminfo, srid)
+      VALUES (
+        table_name,
+        idx.attribute_name,
+        MDSYS.SDO_DIM_ARRAY(
+          MDSYS.SDO_DIM_ELEMENT('X', 0.000, 10000000.000, 0.0005), 
+          MDSYS.SDO_DIM_ELEMENT('Y', 0.000, 10000000.000, 0.0005),
+          MDSYS.SDO_DIM_ELEMENT('Z', -1000, 10000, 0.0005)
+        ),
+        schema_srid
+      );
     END IF;    
   END;
 
@@ -280,7 +340,11 @@ AS
           table_name := table_name || '_LTS';
         END IF;
 
-        create_ddl := 'CREATE INDEX ' || upper(schema_name) || '.' || idx.index_name || ' ON ' || upper(schema_name) || '.' || table_name || '(' || idx.attribute_name || ')';
+        create_ddl :=
+          'CREATE INDEX '
+          || upper(schema_name) || '.' || idx.index_name
+          || ' ON ' || upper(schema_name) || '.' || table_name
+          || ' (' || idx.attribute_name || ')';
 
         -- we cannot create spatial metadata for different users 
         IF idx.type = SPATIAL THEN
@@ -383,7 +447,12 @@ AS
       IF rec.obj.type = type THEN
         sql_error_code := create_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name, schema_name) = 'ON', schema_name);
         log.extend;
-        log(log.count) := index_status(rec.obj, schema_name) || ':' || rec.obj.index_name || ':' || upper(schema_name) || ':' || rec.obj.table_name || ':' || rec.obj.attribute_name || ':' || sql_error_code;
+        log(log.count) := index_status(rec.obj, schema_name)
+          || ':' || rec.obj.index_name
+          || ':' || upper(schema_name)
+          || ':' || rec.obj.table_name
+          || ':' || rec.obj.attribute_name
+          || ':' || sql_error_code;
       END IF;
     END LOOP;
 
@@ -410,7 +479,12 @@ AS
       IF rec.obj.type = type THEN
         sql_error_code := drop_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name, schema_name) = 'ON', schema_name);
         log.extend;
-        log(log.count) := index_status(rec.obj, schema_name) || ':' || rec.obj.index_name || ':' || upper(schema_name) || ':' || rec.obj.table_name || ':' || rec.obj.attribute_name || ':' || sql_error_code;
+        log(log.count) := index_status(rec.obj, schema_name)
+          || ':' || rec.obj.index_name
+          || ':' || upper(schema_name)
+          || ':' || rec.obj.table_name
+          || ':' || rec.obj.attribute_name
+          || ':' || sql_error_code;
       END IF;
     END LOOP; 
 
@@ -434,7 +508,11 @@ AS
       IF rec.obj.type = SPATIAL THEN
         status := index_status(rec.obj, schema_name);
         log.extend;
-        log(log.count) := status || ':' || rec.obj.index_name || ':' || upper(schema_name) || ':' || rec.obj.table_name || ':' || rec.obj.attribute_name;
+        log(log.count) := status
+          || ':' || rec.obj.index_name
+          || ':' || upper(schema_name)
+          || ':' || rec.obj.table_name
+          || ':' || rec.obj.attribute_name;
       END IF;
     END LOOP;
 
@@ -458,7 +536,11 @@ AS
       IF rec.obj.type = NORMAL THEN
         status := index_status(rec.obj, schema_name);
         log.extend;
-        log(log.count) := status || ':' || rec.obj.index_name || ':' || upper(schema_name) || ':' || rec.obj.table_name || ':' || rec.obj.attribute_name;
+        log(log.count) := status
+          || ':' || rec.obj.index_name
+          || ':' || upper(schema_name)
+          || ':' || rec.obj.table_name
+          || ':' || rec.obj.attribute_name;
       END IF;
     END LOOP;
 
