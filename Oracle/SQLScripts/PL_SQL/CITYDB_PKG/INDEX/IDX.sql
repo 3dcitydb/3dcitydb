@@ -82,8 +82,8 @@ END;
 * 
 ******************************************************************/
 CREATE TABLE INDEX_TABLE (
-  ID          NUMBER PRIMARY KEY,
-  obj         INDEX_OBJ
+  ID NUMBER PRIMARY KEY,
+  obj INDEX_OBJ
 );
 
 CREATE SEQUENCE INDEX_TABLE_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1;
@@ -112,16 +112,15 @@ COMMIT;
 CREATE OR REPLACE PACKAGE citydb_idx AUTHID CURRENT_USER
 AS
   FUNCTION index_status(idx INDEX_OBJ, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
-  FUNCTION index_status(table_name VARCHAR2, column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
+  FUNCTION index_status(idx_table_name VARCHAR2, idx_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION status_spatial_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION status_normal_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION create_index(idx INDEX_OBJ, is_versioned BOOLEAN, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION drop_index(idx INDEX_OBJ, is_versioned BOOLEAN, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
-  FUNCTION create_spatial_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION drop_spatial_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION create_normal_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION drop_normal_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
-  FUNCTION get_index(table_name VARCHAR2, column_name VARCHAR2) RETURN INDEX_OBJ;
+  FUNCTION get_index(idx_table_name VARCHAR2, idx_column_name VARCHAR2) RETURN INDEX_OBJ;
 END citydb_idx;
 /
 
@@ -252,66 +251,6 @@ AS
   END;
 
   /*****************************************************************
-  * create_spatial_metadata (private)
-  * 
-  * @param idx index to create metadata for
-  * @param is_versioned TRUE if database table is version-enabled
-  ******************************************************************/
-  PROCEDURE create_spatial_metadata(
-    idx INDEX_OBJ, 
-    is_versioned BOOLEAN
-    )
-  IS
-    table_name VARCHAR2(100);
-    schema_srid DATABASE_SRS.SRID%TYPE;
-  BEGIN
-    table_name := idx.table_name;
-
-    IF is_versioned THEN
-      table_name := table_name || '_LT';
-    END IF;    
-
-    DELETE FROM
-      user_sdo_geom_metadata
-    WHERE
-      table_name = table_name
-      AND column_name = idx.attribute_name;
-
-    IF idx.srid = 0 THEN
-      SELECT srid INTO schema_srid FROM database_srs;
-    ELSE
-      schema_srid := idx.srid;
-    END IF;
-
-    IF idx.is_3d = 0 THEN
-      INSERT INTO
-        user_sdo_geom_metadata (table_name, column_name, diminfo, srid)
-      VALUES (
-        table_name,
-        idx.attribute_name,
-        MDSYS.SDO_DIM_ARRAY(
-          MDSYS.SDO_DIM_ELEMENT('X', 0.000, 10000000.000, 0.0005), 
-          MDSYS.SDO_DIM_ELEMENT('Y', 0.000, 10000000.000, 0.0005)
-        ),
-        schema_srid
-      );
-    ELSE
-      INSERT INTO
-        user_sdo_geom_metadata (table_name, column_name, diminfo, srid)
-      VALUES (
-        table_name,
-        idx.attribute_name,
-        MDSYS.SDO_DIM_ARRAY(
-          MDSYS.SDO_DIM_ELEMENT('X', 0.000, 10000000.000, 0.0005), 
-          MDSYS.SDO_DIM_ELEMENT('Y', 0.000, 10000000.000, 0.0005),
-          MDSYS.SDO_DIM_ELEMENT('Z', -1000, 10000, 0.0005)
-        ),
-        schema_srid
-      );
-    END IF;    
-  END;
-
-  /*****************************************************************
   * create_index
   * 
   * @param idx index to create
@@ -346,11 +285,7 @@ AS
           || ' ON ' || upper(schema_name) || '.' || table_name
           || ' (' || idx.attribute_name || ')';
 
-        -- we cannot create spatial metadata for different users 
         IF idx.type = SPATIAL THEN
-          IF upper(schema_name) = USER THEN
-            create_spatial_metadata(idx, is_versioned);
-          END IF;
           create_ddl := create_ddl || ' INDEXTYPE is MDSYS.SPATIAL_INDEX';
         END IF;
 
@@ -608,13 +543,13 @@ AS
   * convenience method for getting an index object 
   * given the schema.table and column it indexes
   * 
-  * @param table_name
-  * @param column_name
+  * @param idx_table_name
+  * @param idx_column_name
   * @return INDEX_OBJ
   ******************************************************************/
   FUNCTION get_index(
-    table_name VARCHAR2, 
-    column_name VARCHAR2
+    idx_table_name VARCHAR2, 
+    idx_column_name VARCHAR2
 	) RETURN INDEX_OBJ
   IS
     idx INDEX_OBJ;
@@ -626,8 +561,8 @@ AS
     FROM
       index_table
     WHERE
-      (obj).attribute_name = upper(column_name)
-      AND (obj).table_name = upper(table_name);
+      (obj).table_name = upper(idx_table_name)
+      AND (obj).attribute_name = upper(idx_column_name);
 
     RETURN idx;
   END;

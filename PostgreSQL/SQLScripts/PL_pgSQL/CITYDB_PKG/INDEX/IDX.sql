@@ -35,12 +35,9 @@
 *   INDEX_TABLE
 *
 * FUNCTIONS:
-*   construct_spatial_3d(ind_name TEXT, tab_name TEXT, att_name TEXT, crs INTEGER DEFAULT 0)
-*     RETURNS citydb_pkg.INDEX_OBJ
-*   construct_spatial_2d(ind_name TEXT, tab_name TEXT, att_name TEXT, crs INTEGER DEFAULT 0)
-*     RETURNS citydb_pkg.INDEX_OBJ
-*   construct_normal(ind_name TEXT, tab_name TEXT, att_name TEXT, crs INTEGER DEFAULT 0)
-*     RETURNS citydb_pkg.INDEX_OBJ
+*   construct_spatial_3d(ind_name TEXT, tab_name TEXT, att_name TEXT, crs INTEGER DEFAULT 0) RETURNS citydb_pkg.INDEX_OBJ
+*   construct_spatial_2d(ind_name TEXT, tab_name TEXT, att_name TEXT, crs INTEGER DEFAULT 0) RETURNS citydb_pkg.INDEX_OBJ
+*   construct_normal(ind_name TEXT, tab_name TEXT, att_name TEXT, crs INTEGER DEFAULT 0) RETURNS citydb_pkg.INDEX_OBJ
 *   create_index(idx citydb_pkg.INDEX_OBJ, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   create_indexes(type INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS text[]
 *   create_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[]
@@ -49,6 +46,7 @@
 *   drop_indexes(type INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS text[]
 *   drop_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[]
 *   drop_spatial_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[]
+*   get_index(idx_table_name TEXT, idx_column_name TEXT) RETURNS citydb_pkg.INDEX_OBJ
 *   index_status(idx citydb_pkg.INDEX_OBJ, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   index_status(idx_table_name TEXT, idx_column_name TEXT, schema_name TEXT) RETURNS TEXT
 *   status_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[]
@@ -502,13 +500,13 @@ LANGUAGE sql STRICT;
 * convenience method for getting an index object 
 * given the schema.table and column it indexes
 * 
-* @param tab_name
-* @param column_name
+* @param idx_table_name
+* @param idx_column_name
 * @return INDEX_OBJ
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_index(
-  tab_name TEXT, 
-  column_name TEXT
+  idx_table_name TEXT, 
+  idx_column_name TEXT
   ) RETURNS citydb_pkg.INDEX_OBJ AS 
 $$
 SELECT
