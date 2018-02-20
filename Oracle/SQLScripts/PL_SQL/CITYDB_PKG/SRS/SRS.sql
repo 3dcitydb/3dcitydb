@@ -208,7 +208,7 @@ AS
         table_name = upper(tab_name)
         AND column_name = upper(col_name);
     ELSE
-      dbms_output.put_line('Did not update sdo_geom_metadata view for user ' || schema_name);
+      dbms_output.put_line('Did not update user_sdo_geom_metadata view for ' || schema_name || '. This user needs to call citydb_srs.sync_spatial_metadata procedure.');
     END IF;
     COMMIT;
 
@@ -238,16 +238,6 @@ AS
       EXCEPTION
         WHEN NO_DATA_FOUND THEN
           is_valid := FALSE;
-          -- cleanup
-          IF schema_name = USER THEN
-            DELETE FROM
-              user_sdo_geom_metadata
-            WHERE
-              table_name = upper(tab_name)
-              AND column_name = upper(col_name);
-          ELSE
-            dbms_output.put_line('Did not clean sdo_geom_metadata view for user ' || schema_name);
-          END IF;
     END;
 
     IF transform <> 0 THEN
