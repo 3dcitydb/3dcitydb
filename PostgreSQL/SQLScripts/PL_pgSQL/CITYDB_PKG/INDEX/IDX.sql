@@ -60,12 +60,12 @@
 ******************************************************************/
 DROP TYPE IF EXISTS citydb_pkg.INDEX_OBJ CASCADE;
 CREATE TYPE citydb_pkg.INDEX_OBJ AS (
-  index_name        TEXT,
-  table_name        TEXT,
-  attribute_name    TEXT,
-  type              NUMERIC(1),
-  srid              INTEGER,
-  is_3d             NUMERIC(1, 0)
+  index_name TEXT,
+  table_name TEXT,
+  attribute_name TEXT,
+  type NUMERIC(1),
+  srid INTEGER,
+  is_3d NUMERIC(1, 0)
 ); 
 
 /******************************************************************
@@ -200,7 +200,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.index_status(
 DECLARE
   is_valid BOOLEAN;
   status TEXT;
-BEGIN   
+BEGIN
   SELECT
     pgi.indisvalid
   INTO
