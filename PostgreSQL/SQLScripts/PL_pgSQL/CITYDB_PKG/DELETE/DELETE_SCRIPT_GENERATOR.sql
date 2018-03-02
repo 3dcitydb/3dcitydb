@@ -32,7 +32,13 @@
 *   check_for_cleanup(ref_table OID) RETURNS OID
 *   create_array_delete_dummy(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   create_array_delete_function(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
+*   create_array_delete_member_fct(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   create_delete_function(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
+*   create_delete_member_fct(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
+*   create_member_1n_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb) RETURNS TEXT
+*   create_member_1n_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb) RETURNS TEXT
+*   create_member_nm_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb', OUT vars TEXT, OUT ref_block TEXT) RETURNS RECORD
+*   create_member_nm_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb', OUT vars TEXT, OUT ref_block TEXT) RETURNS RECORD
 *   create_ref_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   create_ref_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   create_ref_to_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
@@ -58,6 +64,10 @@
 *   generate_delete_selfref_by_id_call(table_name TEXT, self_fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   generate_delete_selfref_by_ids_call(table_name TEXT, self_fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   get_short_name(table_name TEXT) RETURNS TEXT
+*   query_member_nm(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
+*     OUT n_table_name TEXT, OUT n_fk_column_name TEXT, OUT m_table_name TEXT, OUT m_fk_column_name TEXT) RETURNS SETOF RECORD
+*   query_member_1n(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
+*     OUT member_table_name TEXT, OUT member_fk_column TEXT) RETURNS SETOF RECORD
 *   query_ref_fk(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
 *     OUT root_table_name TEXT, OUT n_table_name TEXT, OUT n_fk_column_name TEXT, OUT ref_depth INTEGER, OUT cleanup_n_table TEXT,
 *     OUT m_table_name TEXT, OUT m_fk_column_name TEXT, OUT cleanup_m_table TEXT) RETURNS SETOF RECORD
@@ -158,7 +168,8 @@ JOIN
 WHERE
   c.confrelid = ($3 || '.' || $1)::regclass::oid
   AND c.conrelid <> ($3 || '.' || $2)::regclass::oid
-  AND c.contype = 'f';
+  AND c.contype = 'f'
+  AND c.confrelid <> 'cityobject'::regclass::oid
 $$
 LANGUAGE sql STRICT;
 
@@ -1358,6 +1369,315 @@ BEGIN
   END IF;
 
   EXECUTE ddl_command;
+END;
+$$
+LANGUAGE plpgsql STRICT;
+
+
+/*****************************
+* Referencing member 1:n
+*****************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.query_member_1n(
+  table_name TEXT,
+  schema_name TEXT DEFAULT 'citydb',
+  OUT member_table_name TEXT,
+  OUT member_fk_column TEXT
+  ) RETURNS SETOF RECORD AS 
+$$
+SELECT
+  c.conrelid::regclass::text AS member_table_name,
+  a.attname::text AS member_fk_column
+FROM
+  pg_constraint c
+JOIN
+  pg_attribute a
+  ON a.attrelid = c.conrelid
+ AND a.attnum = ANY (c.conkey)
+JOIN LATERAL (
+  SELECT
+    fk.confrelid AS parent_table
+  FROM
+    pg_constraint fk
+  JOIN (
+    SELECT
+      conrelid,
+      conkey
+    FROM
+      pg_constraint
+    WHERE
+      contype = 'p'
+    ) pk
+    ON pk.conrelid = fk.conrelid
+   AND pk.conkey = fk.conkey
+  WHERE
+    fk.conrelid = c.conrelid
+    AND fk.contype = 'f'
+) p ON (true)
+WHERE
+  c.confrelid = ($2 || '.' || $1)::regclass::oid
+  AND c.contype = 'f'
+  AND c.confdeltype = 'n'
+  AND c.confrelid = p.parent_table;
+$$
+LANGUAGE sql STRICT;
+
+-- ARRAY CASE
+CREATE OR REPLACE FUNCTION citydb_pkg.create_member_1n_array_delete(
+  table_name TEXT,
+  schema_name TEXT DEFAULT 'citydb'
+  ) RETURNS TEXT AS 
+$$
+DECLARE
+  rec RECORD;
+  ref_block TEXT := '';
+BEGIN
+  FOR rec IN (
+    SELECT * FROM citydb_pkg.query_member_1n($1, $2)
+  )
+  LOOP
+    -- function call required, so create function first
+    PERFORM
+      citydb_pkg.create_array_delete_function(
+        rec.member_table_name, $2
+      );
+
+    ref_block := ref_block || generate_delete_ref_by_ids_call(rec.member_table_name, rec.member_fk_column, $2);
+  END LOOP;
+
+  RETURN COALESCE(ref_block, '');
+END;
+$$
+LANGUAGE plpgsql STRICT;
+
+-- SINGLE CASE
+CREATE OR REPLACE FUNCTION citydb_pkg.create_member_1n_delete(
+  table_name TEXT,
+  schema_name TEXT DEFAULT 'citydb'
+  ) RETURNS TEXT AS 
+$$
+DECLARE
+  rec RECORD;
+  ref_block TEXT := '';
+BEGIN
+  FOR rec IN (
+    SELECT * FROM citydb_pkg.query_member_1n($1, $2)
+  )
+  LOOP
+    -- function call required, so create function first
+    PERFORM
+      citydb_pkg.create_delete_function(
+        rec.member_table_name, $2
+      );
+
+    ref_block := ref_block || generate_delete_ref_by_id_call(rec.member_table_name, rec.member_fk_column, $2);
+  END LOOP;
+
+  RETURN COALESCE(ref_block, '');
+END;
+$$
+LANGUAGE plpgsql STRICT;
+
+
+/*****************************
+* Referencing member n:m
+*****************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.query_member_nm(
+  table_name TEXT,
+  schema_name TEXT DEFAULT 'citydb',
+  OUT n_table_name TEXT,
+  OUT n_fk_column_name TEXT,
+  OUT m_table_name TEXT,
+  OUT m_fk_column_name TEXT
+  ) RETURNS SETOF RECORD AS 
+$$
+SELECT
+  c.conrelid::regclass::text AS n_table_name,
+  a.attname::text AS n_fk_column_name,
+  m.m_table_name::regclass::text,
+  m.m_fk_column_name::text
+FROM
+  pg_constraint c
+JOIN
+  pg_attribute a
+  ON a.attrelid = c.conrelid
+ AND a.attnum = ANY (c.conkey)
+LEFT JOIN LATERAL (
+  SELECT
+    mn.confrelid AS m_table_name,
+    mna.attname AS m_fk_column_name
+  FROM
+    pg_constraint mn
+  JOIN
+    pg_attribute mna
+    ON mna.attrelid = mn.conrelid
+   AND mna.attnum = ANY (mn.conkey)
+  JOIN
+    pg_constraint pk
+    ON pk.conrelid = mn.conrelid
+   AND pk.conkey @> (c.conkey || mn.conkey || '{}')
+  WHERE
+    mn.conrelid = c.conrelid
+    AND mn.confrelid <> c.conrelid
+    AND mn.contype = 'f'
+    AND mn.confdeltype = 'c'
+    AND pk.contype = 'p'
+  ) m ON (true)
+WHERE
+  c.confrelid = ($2 || '.' || $1)::regclass::oid
+  AND c.contype = 'f'
+  AND c.confdeltype = 'c'
+  AND c.confrelid <> m.m_table_name;
+$$
+LANGUAGE sql STRICT;
+
+-- ARRAY CASE
+CREATE OR REPLACE FUNCTION citydb_pkg.create_member_nm_array_delete(
+  table_name TEXT,
+  schema_name TEXT DEFAULT 'citydb',
+  OUT vars TEXT,
+  OUT ref_block TEXT
+  ) RETURNS RECORD AS 
+$$
+DECLARE
+  rec RECORD;
+BEGIN
+  FOR rec IN (
+    SELECT * FROM citydb_pkg.query_member_nm($1, $2)
+  )
+  LOOP
+    IF vars IS NULL THEN
+      vars := '';
+      ref_block := '';
+    END IF;
+
+    -- function call required, so create function first
+    PERFORM
+      citydb_pkg.create_array_delete_function(
+        rec.m_table_name, $2
+      );
+
+    vars := vars || E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
+    ref_block := ref_block || citydb_pkg.generate_delete_n_m_ref_by_ids_call(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, $2);
+  END LOOP;
+
+  RETURN;
+END;
+$$
+LANGUAGE plpgsql STRICT;
+
+-- SINGLE CASE
+CREATE OR REPLACE FUNCTION citydb_pkg.create_member_nm_delete(
+  table_name TEXT,
+  schema_name TEXT DEFAULT 'citydb',
+  OUT vars TEXT,
+  OUT ref_block TEXT
+  ) RETURNS RECORD AS 
+$$
+DECLARE
+  rec RECORD;
+BEGIN
+  FOR rec IN (
+    SELECT * FROM citydb_pkg.query_member_nm($1, $2)
+  )
+  LOOP
+    IF vars IS NULL THEN
+      vars := '';
+      ref_block := '';
+    END IF;
+
+    -- function call required, so create function first
+    PERFORM
+      citydb_pkg.create_delete_function(
+        rec.m_table_name, $2
+      );
+
+    vars := vars || E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
+    ref_block := ref_block || citydb_pkg.generate_delete_n_m_ref_by_id_call(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, $2);
+  END LOOP;
+
+  RETURN;
+END;
+$$
+LANGUAGE plpgsql STRICT;
+
+
+/**************************
+* CREATE DELETE MEMBER FUNCTION
+**************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.create_array_delete_member_fct(
+  table_name TEXT,
+  schema_name TEXT DEFAULT 'citydb'
+  ) RETURNS SETOF VOID AS 
+$$
+DECLARE
+  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_' ||citydb_pkg.get_short_name($1)|| E'_with_members(int[]) RETURNS SETOF int AS\n$body$';
+  declare_block TEXT := E'\nDECLARE\n  deleted_ids int[] := ''{}'';';
+  pre_block TEXT := '';
+BEGIN
+  -- MEMBER REFERENCES 1:n
+  pre_block := citydb_pkg.create_member_1n_array_delete($1, $2);
+
+  -- MEMBER REFERENCES n:m
+  SELECT
+    declare_block || COALESCE(vars, ''),
+    pre_block || COALESCE(ref_block, '')
+  INTO
+    declare_block,
+    pre_block
+  FROM
+    citydb_pkg.create_member_nm_array_delete($1, $2);
+
+  -- putting all together
+  ddl_command := ddl_command
+    || declare_block
+    || E'\nBEGIN'
+    || pre_block
+    || E'\n  -- delete '||$1||'s'
+    || E'\n  RETURN QUERY\n    SELECT '||schema_name||'.delete_' ||citydb_pkg.get_short_name($1)|| E'($1);'
+    || E'\nEND;'
+    || E'\n$body$'
+    || E'\nLANGUAGE plpgsql STRICT';
+
+  EXECUTE ddl_command;    
+END;
+$$
+LANGUAGE plpgsql STRICT;
+
+CREATE OR REPLACE FUNCTION citydb_pkg.create_delete_member_fct(
+  table_name TEXT,
+  schema_name TEXT DEFAULT 'citydb'
+  ) RETURNS SETOF VOID AS 
+$$
+DECLARE
+  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_' ||citydb_pkg.get_short_name($1)|| E'_with_members(int) RETURNS int AS\n$body$';
+  declare_block TEXT := E'\nDECLARE\n  deleted_id INTEGER;';
+  pre_block TEXT := '';
+BEGIN
+  -- MEMBER REFERENCES 1:n
+  pre_block := citydb_pkg.create_member_1n_delete($1, $2);
+
+  -- MEMBER REFERENCES n:m
+  SELECT
+    declare_block || COALESCE(vars, ''),
+    pre_block || COALESCE(ref_block, '')
+  INTO
+    declare_block,
+    pre_block
+  FROM
+    citydb_pkg.create_member_nm_delete($1, $2);
+
+  -- putting all together
+  ddl_command := ddl_command
+    || declare_block
+    || E'\nBEGIN'
+    || pre_block
+    || E'\n  -- delete '||$1||'s'
+    || E'\n  RETURN '||schema_name||'.delete_' ||citydb_pkg.get_short_name($1)|| E'($1);'
+    || E'\nEND;'
+    || E'\n$body$'
+    || E'\nLANGUAGE plpgsql STRICT';
+
+  EXECUTE ddl_command;    
 END;
 $$
 LANGUAGE plpgsql STRICT;
