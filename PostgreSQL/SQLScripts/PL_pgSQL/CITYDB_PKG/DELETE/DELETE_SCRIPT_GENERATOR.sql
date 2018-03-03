@@ -30,7 +30,7 @@
 *
 * FUNCTIONS:
 *   check_for_cleanup(ref_table OID) RETURNS OID
-*   create_array_delete_dummy(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
+*   create_array_delete_dummy(table_name TEXT, schema_name TEXT DEFAULT 'citydb', has_objclass_param BOOLEAN DEFAULT FALSE) RETURNS SETOF VOID
 *   create_array_delete_function(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   create_array_delete_member_fct(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   create_delete_function(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
@@ -39,13 +39,17 @@
 *   create_member_1n_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb) RETURNS TEXT
 *   create_member_nm_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb', OUT vars TEXT, OUT ref_block TEXT) RETURNS RECORD
 *   create_member_nm_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb', OUT vars TEXT, OUT ref_block TEXT) RETURNS RECORD
-*   create_ref_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
-*   create_ref_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
-*   create_ref_to_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
-*   create_ref_to_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
+*   create_ref_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb', 
+*     OUT args TEXT, OUT vars TEXT, OUT child_ref_block TEXT, OUT ref_block TEXT) RETURNS RECORD
+*   create_ref_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
+*     OUT args TEXT, OUT vars TEXT, OUT child_ref_block TEXT, OUT ref_block TEXT) RETURNS TEXT
+*   create_ref_to_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
+*     OUT vars TEXT, OUT returning_block TEXT, OUT collect_block TEXT, OUT into_block TEXT, OUT fk_block TEXT) RETURNS RECORD
+*   create_ref_to_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
+*     OUT vars TEXT, OUT returning_block TEXT, OUT into_block TEXT, OUT fk_block TEXT) RETURNS RECORD
 *   create_ref_to_parent_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   create_ref_to_parent_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
-*   create_selfref_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
+*   create_selfref_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb', has_objclass_param BOOLEAN DEFAULT FALSE) RETURNS TEXT
 *   create_selfref_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   generate_delete_by_id_stmt(table_name TEXT) RETURNS TEXT
 *   generate_delete_by_ids_stmt(table_name TEXT) RETURNS TEXT
@@ -435,7 +439,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_array_delete(
   schema_name TEXT DEFAULT 'citydb',
   OUT args TEXT,
   OUT vars TEXT,
-  OUT objclass_block TEXT,
+  OUT child_ref_block TEXT,
   OUT ref_block TEXT
   ) RETURNS RECORD AS
 $$
@@ -443,7 +447,6 @@ DECLARE
   rec RECORD;
   objclass INTEGER[];
   has_objclass_param BOOLEAN;
-  child_ref_block TEXT;
 BEGIN
   FOR rec IN (
     SELECT * FROM citydb_pkg.query_ref_fk($1, $2)
@@ -451,8 +454,8 @@ BEGIN
   LOOP
     IF vars IS NULL THEN
       vars := '';
-      ref_block := '';
       child_ref_block := '';
+      ref_block := '';
     END IF;
 
     IF (
@@ -511,7 +514,7 @@ BEGIN
 
   IF has_objclass_param THEN
     args := '(pids int[], objclass_ids int[] DEFAULT NULL)';
-    objclass_block :=
+    child_ref_block :=
          E'\n  -- fetch objectclass_ids if not set'
       || E'\n  IF objclass_ids IS NULL THEN'
       || E'\n    SELECT'
@@ -707,7 +710,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_delete(
   schema_name TEXT DEFAULT 'citydb',
   OUT args TEXT,
   OUT vars TEXT,
-  OUT objclass_block TEXT,
+  OUT child_ref_block TEXT,
   OUT ref_block TEXT
   ) RETURNS RECORD AS
 $$
@@ -715,7 +718,6 @@ DECLARE
   rec RECORD;
   objclass INTEGER[];
   has_objclass_param BOOLEAN;
-  child_ref_block TEXT;
 BEGIN
   FOR rec IN (
     SELECT * FROM citydb_pkg.query_ref_fk($1, $2)
@@ -723,8 +725,8 @@ BEGIN
   LOOP
     IF vars IS NULL THEN
       vars := '';
-      ref_block := '';
       child_ref_block := '';
+      ref_block := '';
     END IF;
 
     IF (
@@ -789,7 +791,7 @@ BEGIN
   
   IF has_objclass_param THEN
     args := '(pid int, objclass_id int DEFAULT NULL)';
-    objclass_block :=
+    child_ref_block :=
          E'\n  -- fetch objectclass_id if not set'
       || E'\n  IF objclass_id IS NULL THEN'
       || E'\n    SELECT'
@@ -1277,7 +1279,7 @@ $$
 DECLARE
   ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||$2||'.delete_' ||citydb_pkg.get_short_name($1);
   declare_block TEXT := E'\nDECLARE\n  deleted_ids int[] := ''{}'';';
-  set_objclass_block TEXT := '';
+  objclass_block TEXT := '';
   pre_block TEXT := '';
   post_block TEXT := '';
   delete_agg_start TEXT := E'\n  WITH delete_objects AS (\n  ';
@@ -1289,18 +1291,18 @@ BEGIN
   SELECT
     ddl_command || args || E' RETURNS SETOF int AS\n$body$',
     declare_block || COALESCE(vars, ''),
-    set_objclass_block || COALESCE(objclass_block, ''),
+    objclass_block || COALESCE(child_ref_block, ''),
     pre_block || COALESCE(ref_block, '')
   INTO
     ddl_command,
     declare_block,
-    set_objclass_block,
+    objclass_block,
     pre_block
   FROM
     citydb_pkg.create_ref_array_delete($1, $2);
 
-  -- EXIT BLOCK
-  IF set_objclass_block <> '' THEN
+  -- EXIT in case child method has been called already
+  IF objclass_block <> '' THEN
     pre_block :=
          E'\n  IF deleted_ids IS NOT NULL AND deleted_ids <> ''{}'' THEN'
       || E'\n    ' || return_block
@@ -1309,7 +1311,7 @@ BEGIN
   END IF;
 
   -- SELF REFERENCES
-  pre_block := pre_block || citydb_pkg.create_selfref_array_delete($1, $2, set_objclass_block <> '');
+  pre_block := pre_block || citydb_pkg.create_selfref_array_delete($1, $2, objclass_block <> '');
 
   -- MAIN DELETE
   delete_block := generate_delete_by_ids_stmt($1);
@@ -1355,7 +1357,7 @@ BEGIN
     ddl_command := ddl_command
       || declare_block
       || E'\nBEGIN'
-      || set_objclass_block
+      || objclass_block
       || pre_block
       || E'\n  -- delete '||$1||'s'
       || delete_agg_start
@@ -1366,7 +1368,7 @@ BEGIN
       || E'\nEND;'
       || E'\n$body$'
       || E'\nLANGUAGE plpgsql'
-      || CASE WHEN set_objclass_block <> '' THEN ' STRICT' ELSE '' END;
+      || CASE WHEN objclass_block <> '' THEN ' STRICT' ELSE '' END;
   END IF;
 
   EXECUTE ddl_command;
@@ -1383,7 +1385,7 @@ $$
 DECLARE
   ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||$2||'.delete_'||citydb_pkg.get_short_name($1);
   declare_block TEXT := E'\nDECLARE\n  deleted_id INTEGER;';
-  set_objclass_block TEXT := '';
+  objclass_block TEXT := '';
   pre_block TEXT := '';
   post_block TEXT := '';
   delete_block TEXT := '';
@@ -1394,18 +1396,18 @@ BEGIN
   SELECT
     ddl_command || args || E' RETURNS int AS\n$body$',
     declare_block || COALESCE(vars, ''),
-    set_objclass_block || COALESCE(objclass_block, ''),
+    objclass_block || COALESCE(child_ref_block, ''),
     pre_block || COALESCE(ref_block, '')
   INTO
     ddl_command,
     declare_block,
-    set_objclass_block,
+    objclass_block,
     pre_block
   FROM
     citydb_pkg.create_ref_delete($1, $2);
 
-  -- EXIT BLOCK
-  IF set_objclass_block <> '' THEN
+  -- EXIT in case child method has been called already
+  IF objclass_block <> '' THEN
     pre_block :=
          E'\n  IF deleted_id IS NOT NULL THEN'
       || E'\n    ' || return_block
@@ -1447,7 +1449,7 @@ BEGIN
     ddl_command := ddl_command
       || declare_block
       || E'\nBEGIN'
-      || set_objclass_block
+      || objclass_block
       || pre_block
       || E'\n  -- delete '||$1||'s'
       || delete_block
@@ -1457,7 +1459,7 @@ BEGIN
       || E'\nEND;'
       || E'\n$body$'
       || E'\nLANGUAGE plpgsql'
-      || CASE WHEN set_objclass_block <> '' THEN ' STRICT' ELSE '' END;
+      || CASE WHEN objclass_block <> '' THEN ' STRICT' ELSE '' END;
   END IF;
 
   EXECUTE ddl_command;
@@ -1702,7 +1704,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.create_array_delete_member_fct(
   ) RETURNS SETOF VOID AS 
 $$
 DECLARE
-  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_' ||citydb_pkg.get_short_name($1)|| E'_with_members(int[]) RETURNS SETOF int AS\n$body$';
+  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||$2||'.delete_' ||citydb_pkg.get_short_name($1)|| E'_with_members(int[]) RETURNS SETOF int AS\n$body$';
   declare_block TEXT := E'\nDECLARE\n  deleted_ids int[] := ''{}'';';
   pre_block TEXT := '';
 BEGIN
@@ -1725,7 +1727,7 @@ BEGIN
     || E'\nBEGIN'
     || pre_block
     || E'\n  -- delete '||$1||'s'
-    || E'\n  RETURN QUERY\n    SELECT '||schema_name||'.delete_' ||citydb_pkg.get_short_name($1)|| E'($1);'
+    || E'\n  RETURN QUERY\n    SELECT '||$2||'.delete_' ||citydb_pkg.get_short_name($1)|| E'($1);'
     || E'\nEND;'
     || E'\n$body$'
     || E'\nLANGUAGE plpgsql STRICT';
@@ -1741,7 +1743,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.create_delete_member_fct(
   ) RETURNS SETOF VOID AS 
 $$
 DECLARE
-  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_' ||citydb_pkg.get_short_name($1)|| E'_with_members(int) RETURNS int AS\n$body$';
+  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||$2||'.delete_' ||citydb_pkg.get_short_name($1)|| E'_with_members(int) RETURNS int AS\n$body$';
   declare_block TEXT := E'\nDECLARE\n  deleted_id INTEGER;';
   pre_block TEXT := '';
 BEGIN
@@ -1764,7 +1766,7 @@ BEGIN
     || E'\nBEGIN'
     || pre_block
     || E'\n  -- delete '||$1||'s'
-    || E'\n  RETURN '||schema_name||'.delete_' ||citydb_pkg.get_short_name($1)|| E'($1);'
+    || E'\n  RETURN '||$2||'.delete_' ||citydb_pkg.get_short_name($1)|| E'($1);'
     || E'\nEND;'
     || E'\n$body$'
     || E'\nLANGUAGE plpgsql STRICT';
