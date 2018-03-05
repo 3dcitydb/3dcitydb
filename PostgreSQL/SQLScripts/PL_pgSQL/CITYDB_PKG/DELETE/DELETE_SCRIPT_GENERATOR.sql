@@ -152,6 +152,7 @@ SELECT
       conrelid = $1
       AND contype = 'f'
       AND confdeltype = 'n'
+      AND confrelid::regclass::text NOT LIKE '%cityobject'
       AND (confrelid::regclass::text NOT LIKE '%surface_geometry'
        OR conrelid::regclass::text LIKE '%implicit_geometry'
        OR conrelid::regclass::text LIKE '%cityobject_genericattrib'
@@ -1733,7 +1734,7 @@ BEGIN
     -- function call required, so create function first
     IF NOT (rec.m_table_name || '_array_with_members' = ANY($3)) THEN
       member_nm_path :=
-        citydb_pkg.create_array_delete_member_fct(
+        citydb_pkg.create_array_delete_function(
           rec.m_table_name, $2, $3
         );
     END IF;
@@ -1771,7 +1772,7 @@ BEGIN
     -- function call required, so create function first
     IF NOT (rec.m_table_name || '_with_members' = ANY($3)) THEN
       member_nm_path :=
-        citydb_pkg.create_delete_member_fct(
+        citydb_pkg.create_delete_function(
           rec.m_table_name, $2, $3
         );
     END IF;
