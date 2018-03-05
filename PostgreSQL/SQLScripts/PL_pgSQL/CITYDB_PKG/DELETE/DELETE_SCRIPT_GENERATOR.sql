@@ -207,7 +207,7 @@ SELECT
   ref.n_table_name::regclass::text,
   ref.n_fk_column_name,
   ref.cleanup_n_table,
-  CASE WHEN root_table_name = cleanup_n_table THEN 1 ELSE 0 END AS is_child,
+  CASE WHEN ref.root_table_name = ref.cleanup_n_table THEN 1 ELSE 0 END AS is_child,
   m.m_table_name::regclass::text,
   m.m_fk_column_name::text,
   m.m_ref_column_name::text,
@@ -1144,12 +1144,12 @@ BEGIN
       vars := vars || E'\n  ' || citydb_pkg.get_short_name(rec.ref_table_name) || '_ids int[] := ''{}'';';
       returning_block := returning_block || ','
         || E'\n    ARRAY['
-        || E'\n    ' || array_to_string(rec.fk_columns, E',\n    ')
+        || E'\n      ' || array_to_string(rec.fk_columns, E',\n      ')
         || E'\n    ]';
       into_block := into_block || E',\n    ' || citydb_pkg.get_short_name(rec.ref_table_name)||'_ids';
     ELSE
       vars := vars || E'\n  ' || citydb_pkg.get_short_name(rec.ref_table_name)||'_ref_id int;';
-      returning_block := returning_block || E',\n      ' || array_to_string(rec.fk_columns, E',\n      ');
+      returning_block := returning_block || E',\n    ' || array_to_string(rec.fk_columns, E',\n    ');
       into_block := into_block || E',\n    ' || citydb_pkg.get_short_name(rec.ref_table_name) || '_ref_id';
     END IF;
 
@@ -1208,7 +1208,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_to_parent_fk(
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS TEXT AS
 $$
-SELECT 
+SELECT
   f.confrelid::regclass::text AS parent_table
 FROM
   pg_constraint f,
@@ -1239,9 +1239,9 @@ BEGIN
     IF NOT (parent_table || '_array' = ANY($3)) THEN
       ref_to_parent_path := citydb_pkg.create_array_delete_function(parent_table, $2, $3);
     END IF;
-    parent_block := parent_block
-      || E'\n  -- delete '||parent_table
-      || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_ids, ''{}'');\n';
+    parent_block :=
+         E'\n  -- delete '||parent_table
+      || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_ids, ''{}''::int[]);\n';
   END IF;
 
   RETURN;
@@ -1266,8 +1266,8 @@ BEGIN
     IF NOT (parent_table = ANY($3)) THEN
       ref_to_parent_path := citydb_pkg.create_delete_function(parent_table, $2, $3);
     END IF;
-    parent_block := parent_block
-      || E'\n  -- delete '||parent_table
+    parent_block :=
+         E'\n  -- delete '||parent_table
       || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_id, 0);\n';
   END IF;
 
