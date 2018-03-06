@@ -218,7 +218,8 @@ FROM (
     c.conrelid AS n_table_name,
     c.conkey,
     a.attname::text AS n_fk_column_name,
-    citydb_pkg.check_for_cleanup(c.conrelid)::regclass::text AS cleanup_n_table
+    citydb_pkg.check_for_cleanup(c.conrelid)::regclass::text AS cleanup_n_table,
+    confdeltype
   FROM
     pg_constraint c
   JOIN
@@ -229,7 +230,6 @@ FROM (
     c.confrelid = ($2 || '.' || $1)::regclass::oid
     AND c.conrelid <> c.confrelid
     AND c.contype = 'f'
-    AND c.confdeltype = 'a'
 ) ref
 -- get n:m tables which returned NULL for cleanup_n_table in the n block
 -- the FK has to be set to CASCADE to decide for cleanup
@@ -261,6 +261,9 @@ LEFT JOIN LATERAL (
     AND mn.confdeltype = 'c'
     AND pk.contype = 'p'
   ) m ON (true)
+WHERE
+  ref.confdeltype = 'a'
+  OR ref.root_table_name = ref.cleanup_n_table
 ORDER BY
   is_child DESC,
   ref.n_table_name,
