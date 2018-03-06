@@ -107,6 +107,7 @@ SELECT substr($1, 1, 17);
 $$
 LANGUAGE sql STRICT;
 
+
 -- function to check if table requires its own delete function
 CREATE OR REPLACE FUNCTION citydb_pkg.check_for_cleanup(ref_table OID) RETURNS OID AS
 $$
@@ -482,21 +483,37 @@ BEGIN
       IF rec.m_table_name IS NULL THEN
         IF rec.is_child = 1 THEN
           -- find objectclass of child to set filter
+          WITH RECURSIVE objectclass_tree (id, superclass_id) AS (
+            SELECT
+              id,
+              superclass_id
+            FROM
+              objectclass
+            WHERE
+              tablename = rec.n_table_name
+            UNION ALL
+              SELECT
+                o.id,
+                o.superclass_id
+              FROM
+                objectclass o,
+                objectclass_tree t
+              WHERE
+                o.superclass_id = t.id
+          )
           SELECT
-            array_agg(id)
+            array_agg(DISTINCT id)
           INTO
             objclass
           FROM
-            objectclass
-          WHERE
-            tablename = rec.n_table_name;
+            objectclass_tree;
 
           -- if found set objectclass condition
           IF objclass IS NOT NULL THEN
             has_objclass_param := TRUE;
             child_ref_block := child_ref_block ||
                  E'\n  -- delete '||rec.n_table_name||'s'
-              || E'\n  IF objclass_id IN ('||array_to_string(objclass, ',')||') THEN'
+              || E'\n  IF class_ids && ARRAY['||array_to_string(objclass, ',')||']::int[] THEN'
               || E'\n    deleted_ids := deleted_ids || '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||E'($1);'
               || E'\n  END IF;'
               || E'\n';
@@ -525,18 +542,26 @@ BEGIN
 
   IF has_objclass_param THEN
     args := '(pids int[], objclass_ids int[] DEFAULT NULL)';
+    vars := vars ||E'\n  class_ids INTEGER[];';
     child_ref_block :=
          E'\n  -- fetch objectclass_ids if not set'
-      || E'\n  IF objclass_ids IS NULL THEN'
+      || E'\n  IF $2 IS NULL THEN'
       || E'\n    SELECT'
       || E'\n      array_agg(t.objectclass_id)'
       || E'\n    INTO'
-      || E'\n      objclass_ids'
+      || E'\n      class_ids'
       || E'\n    FROM'
       || E'\n      '||$2||'.'||$1||' t,'
       || E'\n      unnest($1) a(a_id)'
       || E'\n    WHERE'
-      || E'\n      t.'||$2||' = a.a_id;'
+      || E'\n      t.id = a.a_id;'
+      || E'\n  ELSE'
+      || E'\n    class_ids := $2;'
+      || E'\n  END IF;'
+      || E'\n'
+      || E'\n  IF array_length(class_ids, 1) IS NULL THEN'
+      || E'\n    RAISE NOTICE ''Objectclass_id unknown! Check OBJECTCLASS table.'';'
+      || E'\n    RETURN NEXT NULL;'
       || E'\n  END IF;'
       || E'\n' || child_ref_block;
   ELSE
@@ -755,21 +780,37 @@ BEGIN
         END IF;
 
         -- find objectclass of child to set filter
+        WITH RECURSIVE objectclass_tree (id, superclass_id) AS (
+          SELECT
+            id,
+            superclass_id
+          FROM
+            objectclass
+          WHERE
+            tablename = rec.n_table_name
+          UNION ALL
+            SELECT
+              o.id,
+              o.superclass_id
+            FROM
+              objectclass o,
+              objectclass_tree t
+            WHERE
+              o.superclass_id = t.id
+        )
         SELECT
-          array_agg(id)
+          array_agg(DISTINCT id)
         INTO
           objclass
         FROM
-          objectclass
-        WHERE
-          tablename = rec.n_table_name;
+          objectclass_tree;
 
         -- if found set objectclass condition
         IF objclass IS NOT NULL THEN
           has_objclass_param := TRUE;
           child_ref_block := child_ref_block ||
                E'\n  -- delete '||rec.n_table_name
-            || E'\n  IF objclass_id IN ('||array_to_string(objclass, ',')||') THEN'
+            || E'\n  IF class_id IN ('||array_to_string(objclass, ',')||') THEN'
             || E'\n    deleted_id := '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||E'($1);'
             || E'\n  END IF;'
             || E'\n';
@@ -807,17 +848,25 @@ BEGIN
   
   IF has_objclass_param THEN
     args := '(pid int, objclass_id int DEFAULT NULL)';
+    vars := vars ||E'\n  class_id INTEGER;';
     child_ref_block :=
          E'\n  -- fetch objectclass_id if not set'
-      || E'\n  IF objclass_id IS NULL THEN'
+      || E'\n  IF $2 IS NULL THEN'
       || E'\n    SELECT'
       || E'\n      objectclass_id'
       || E'\n    INTO'
-      || E'\n      objclass_id'
+      || E'\n      class_id'
       || E'\n    FROM'
       || E'\n      '||$2||'.'||$1
       || E'\n    WHERE'
       || E'\n      id = $1;'
+      || E'\n  ELSE'
+      || E'\n    class_id := $2;'
+      || E'\n  END IF;'
+      || E'\n'
+      || E'\n  IF class_id IS NULL THEN'
+      || E'\n    RAISE NOTICE ''Objectclass_id unknown! Check OBJECTCLASS table.'';'
+      || E'\n    RETURN NULL;'
       || E'\n  END IF;'
       || E'\n' || child_ref_block;
   ELSE
@@ -1240,7 +1289,7 @@ BEGIN
     END IF;
     parent_block :=
          E'\n  -- delete '||parent_table
-      || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_ids, ''{}''::int[]);\n';
+      || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_ids, ''{0}''::int[]);\n';
   END IF;
 
   RETURN;
@@ -1320,7 +1369,7 @@ DECLARE
 BEGIN
   -- add table_name to path
   create_path := array_append($3, $1 || '_array');
-  
+
   -- REFERENCING TABLES
   SELECT
     ref_path,
@@ -1380,7 +1429,7 @@ BEGIN
     post_block
   FROM
     citydb_pkg.create_ref_to_parent_array_delete($1, $2, create_path);
-  
+
   -- if there is no FK to clean up IDs can be returned directly with DELETE statement 
   IF post_block = '' THEN
     delete_agg_start := E'\n  RETURN QUERY\n  ';
@@ -1413,7 +1462,7 @@ BEGIN
       || E'\nEND;'
       || E'\n$body$'
       || E'\nLANGUAGE plpgsql'
-      || CASE WHEN objclass_block <> '' THEN ' STRICT' ELSE '' END;
+      || CASE WHEN objclass_block <> '' THEN '' ELSE ' STRICT' END;
   END IF;
 
   EXECUTE ddl_command;
@@ -1528,7 +1577,7 @@ BEGIN
       || E'\nEND;'
       || E'\n$body$'
       || E'\nLANGUAGE plpgsql'
-      || CASE WHEN objclass_block <> '' THEN ' STRICT' ELSE '' END;
+      || CASE WHEN objclass_block <> '' THEN '' ELSE ' STRICT' END;
   END IF;
 
   EXECUTE ddl_command;
