@@ -1731,7 +1731,7 @@ JOIN
   pg_attribute a
   ON a.attrelid = c.conrelid
  AND a.attnum = ANY (c.conkey)
-LEFT JOIN LATERAL (
+JOIN LATERAL (
   SELECT
     mn.confrelid AS m_table_name,
     mna.attname AS m_fk_column_name
@@ -1747,7 +1747,7 @@ LEFT JOIN LATERAL (
    AND pk.conkey @> (c.conkey || mn.conkey || '{}')
   WHERE
     mn.conrelid = c.conrelid
-    AND mn.confrelid <> c.conrelid
+    AND mn.confrelid <> c.confrelid
     AND mn.contype = 'f'
     AND mn.confdeltype = 'c'
     AND pk.contype = 'p'
@@ -1755,8 +1755,7 @@ LEFT JOIN LATERAL (
 WHERE
   c.confrelid = ($2 || '.' || $1)::regclass::oid
   AND c.contype = 'f'
-  AND c.confdeltype = 'c'
-  AND c.confrelid <> m.m_table_name;
+  AND c.confdeltype = 'c';
 $$
 LANGUAGE sql STRICT;
 
