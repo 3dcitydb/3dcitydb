@@ -1392,7 +1392,10 @@ BEGIN
   -- EXIT in case child method has been called already
   IF objclass_block <> '' THEN
     pre_block :=
-         E'\n  IF deleted_ids IS NOT NULL AND deleted_ids <> ''{}'' THEN'
+         E'\n  IF'
+      || E'\n    (deleted_ids IS NOT NULL AND deleted_ids <> ''{}'')'
+      || E'\n    OR 0 <> ALL(objclass_ids)'
+      || E'\n  THEN'
       || E'\n    ' || return_block
       || E'\n  END IF;'
       || E'\n' || pre_block;
@@ -1514,7 +1517,10 @@ BEGIN
   -- EXIT in case child method has been called already
   IF objclass_block <> '' THEN
     pre_block :=
-         E'\n  IF deleted_id IS NOT NULL THEN'
+         E'\n  IF'
+      || E'\n    deleted_id IS NOT NULL'
+      || E'\n    OR objclass_id <> 0'
+      || E'\n  THEN'
       || E'\n    ' || return_block
       || E'\n  END IF;'
       || E'\n' || pre_block;
