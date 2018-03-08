@@ -547,8 +547,12 @@ BEGIN
     args := '(pids int[], objclass_ids int[] DEFAULT NULL)';
     vars := vars ||E'\n  class_ids INTEGER[];';
     child_ref_block :=
-         E'\n  -- fetch objectclass_ids if not set'
-      || E'\n  IF $2 IS NULL THEN'
+         E'\n  IF array_length($1, 1) IS NULL THEN'
+      || E'\n    RETURN;'
+      || E'\n  END IF;'
+      || E'\n'
+      || E'\n  -- fetch objectclass_ids if not set'
+      || E'\n  IF array_length($2, 1) IS NULL THEN'
       || E'\n    SELECT'
       || E'\n      array_agg(t.objectclass_id)'
       || E'\n    INTO'
