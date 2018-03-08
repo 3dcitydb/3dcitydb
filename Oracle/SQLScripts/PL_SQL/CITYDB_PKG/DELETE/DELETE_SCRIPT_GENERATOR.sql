@@ -35,6 +35,8 @@ AS
   FUNCTION check_for_cleanup(tab_name VARCHAR2, schema_name VARCHAR2) RETURN VARCHAR2;
   PROCEDURE create_array_delete_function(tab_name VARCHAR2, schema_name VARCHAR2 := USER);
   PROCEDURE create_delete_function(tab_name VARCHAR2, schema_name VARCHAR2 := USER);
+  PROCEDURE create_array_delete_member_fct(tab_name VARCHAR2, schema_name VARCHAR2 := USER);
+  PROCEDURE create_delete_member_fct(tab_name VARCHAR2, schema_name VARCHAR2 := USER);
 END citydb_delete_gen;
 /
 
@@ -50,17 +52,17 @@ AS
   FUNCTION query_ref_fk(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN SYS_REFCURSOR;
   FUNCTION gen_delete_ref_by_ids_stmt(tab_name VARCHAR2, fk_column_name VARCHAR2) RETURN VARCHAR2;
   FUNCTION gen_delete_ref_by_ids_call(tab_name VARCHAR2, fk_column_name VARCHAR2) RETURN VARCHAR2;
-  FUNCTION gen_delete_m_ref_by_ids_stmt(m_tab_name VARCHAR2, m_fk_column_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
-  FUNCTION gen_delete_m_ref_by_ids_call(m_tab_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
-  FUNCTION gen_delete_n_m_ref_by_ids_stmt(n_m_tab_name VARCHAR2, n_fk_column_name VARCHAR2, m_tab_name VARCHAR2, m_fk_column_name VARCHAR2, m_ref_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
-  FUNCTION gen_delete_n_m_ref_by_ids_call(n_m_tab_name VARCHAR2, n_fk_column_name VARCHAR2, m_tab_name VARCHAR2, m_fk_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
+  FUNCTION gen_delete_m_ref_by_ids_stmt(m_table_name VARCHAR2, m_fk_column_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
+  FUNCTION gen_delete_m_ref_by_ids_call(m_table_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
+  FUNCTION gen_delete_n_m_ref_by_ids_stmt(n_m_table_name VARCHAR2, n_fk_column_name VARCHAR2, m_table_name VARCHAR2, m_fk_column_name VARCHAR2, m_ref_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
+  FUNCTION gen_delete_n_m_ref_by_ids_call(n_m_table_name VARCHAR2, n_fk_column_name VARCHAR2, m_table_name VARCHAR2, m_fk_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   PROCEDURE create_ref_array_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER, vars OUT VARCHAR2, ref_block OUT VARCHAR2);
   FUNCTION gen_delete_ref_by_id_stmt(tab_name VARCHAR2, fk_column_name VARCHAR2) RETURN VARCHAR2;
   FUNCTION gen_delete_ref_by_id_call(tab_name VARCHAR2, fk_column_name VARCHAR2) RETURN VARCHAR2;
-  FUNCTION gen_delete_m_ref_by_id_stmt(m_tab_name VARCHAR2, m_fk_column_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
-  FUNCTION gen_delete_m_ref_by_id_call(m_tab_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
-  FUNCTION gen_delete_n_m_ref_by_id_stmt(n_m_tab_name VARCHAR2, n_fk_column_name VARCHAR2, m_tab_name VARCHAR2, m_fk_column_name VARCHAR2, m_ref_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
-  FUNCTION gen_delete_n_m_ref_by_id_call(n_m_tab_name VARCHAR2, n_fk_column_name VARCHAR2, m_tab_name VARCHAR2, m_fk_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
+  FUNCTION gen_delete_m_ref_by_id_stmt(m_table_name VARCHAR2, m_fk_column_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
+  FUNCTION gen_delete_m_ref_by_id_call(m_table_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
+  FUNCTION gen_delete_n_m_ref_by_id_stmt(n_m_table_name VARCHAR2, n_fk_column_name VARCHAR2, m_table_name VARCHAR2, m_fk_column_name VARCHAR2, m_ref_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
+  FUNCTION gen_delete_n_m_ref_by_id_call(n_m_table_name VARCHAR2, n_fk_column_name VARCHAR2, m_table_name VARCHAR2, m_fk_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   PROCEDURE create_ref_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER, vars OUT VARCHAR2, ref_block OUT VARCHAR2);
   FUNCTION query_ref_to_fk(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN SYS_REFCURSOR;
   PROCEDURE create_ref_to_array_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER, vars OUT VARCHAR2, returning_block OUT VARCHAR2, collect_block OUT VARCHAR2, into_block OUT VARCHAR2, fk_block OUT VARCHAR2);
@@ -69,6 +71,12 @@ AS
   FUNCTION create_ref_parent_array_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION create_ref_parent_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   PROCEDURE create_array_delete_dummy(tab_name VARCHAR2, schema_name VARCHAR2 := USER);
+  FUNCTION query_member_1n(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN SYS_REFCURSOR;
+  PROCEDURE create_member_1n_array_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER, vars OUT VARCHAR2, ref_block OUT VARCHAR2);
+  PROCEDURE create_member_1n_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER, vars OUT VARCHAR2, ref_block OUT VARCHAR2);
+  FUNCTION query_member_nm(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN SYS_REFCURSOR;
+  PROCEDURE create_member_nm_array_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER, vars OUT VARCHAR2, ref_block OUT VARCHAR2);
+  PROCEDURE create_member_nm_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER, vars OUT VARCHAR2, ref_block OUT VARCHAR2);
 
   /*
   A delete function can consist of up to five parts:
@@ -83,7 +91,7 @@ AS
   IS
   BEGIN
     -- TODO: query a table that stores the short version of a table (maybe objectclass?)
-    RETURN substr(tab_name, 1, 17);
+    RETURN substr(tab_name, 1, 12);
   END;
 
   --if referencing table requires an extra cleanup step, it needs its own delete function
@@ -164,6 +172,7 @@ AS
           AND c.owner = schema_name
           AND c.constraint_type = 'R'
           AND c.delete_rule = 'SET NULL'
+          AND c2.table_name <> 'CITYOBJECT'
           AND (c2.table_name <> 'SURFACE_GEOMETRY'
            OR c.table_name = 'IMPLICIT_GEOMETRY'
            OR c.table_name = 'CITYOBJECT_GENERICATTRIB'
@@ -211,7 +220,8 @@ AS
       c2.table_name = tab_name
       AND c2.owner = schema_name
       AND c.table_name <> ref_parent_to_exclude
-      AND c.constraint_type = 'R';
+      AND c.constraint_type = 'R'
+      AND c2.table_name <> 'CITYOBJECT';
 
     RETURN;
   END;
@@ -549,25 +559,25 @@ AS
   END;
 
   FUNCTION gen_delete_m_ref_by_ids_stmt(
-    m_tab_name VARCHAR2,
+    m_table_name VARCHAR2,
     m_fk_column_name VARCHAR2,
     fk_table_name STRARRAY,
     fk_columns STRARRAY
     ) RETURN VARCHAR2 
   IS
-    stmt VARCHAR2(4000);
-    where_clause VARCHAR2(1000);
+    stmt VARCHAR2(8000);
+    where_clause VARCHAR2(4000);
   BEGIN
     stmt := 
-        chr(10)||'  -- delete '||lower(m_tab_name)||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||get_short_name(lower(m_tab_name))||'_ids.COUNT > 0 THEN'
+        chr(10)||'  -- delete '||lower(m_table_name)||'(s) not being referenced any more'
+      ||chr(10)||'  IF '||get_short_name(lower(m_table_name))||'_ids.COUNT > 0 THEN'
       ||chr(10)||'    DELETE FROM'
-      ||chr(10)||'      '||lower(m_tab_name)||' m'
+      ||chr(10)||'      '||lower(m_table_name)||' m'
       ||chr(10)||'    WHERE EXISTS ('
       ||chr(10)||'      SELECT DISTINCT'
       ||chr(10)||'        a.COLUMN_VALUE'
       ||chr(10)||'      FROM'
-      ||chr(10)||'        TABLE('||get_short_name(lower(m_tab_name))||'_ids) a';
+      ||chr(10)||'        TABLE('||get_short_name(lower(m_table_name))||'_ids) a';
 
     where_clause := 
         chr(10)||'      WHERE'
@@ -595,24 +605,24 @@ AS
   END;
   
   FUNCTION gen_delete_m_ref_by_ids_call(
-    m_tab_name VARCHAR2,
+    m_table_name VARCHAR2,
     fk_table_name STRARRAY,
     fk_columns STRARRAY
     ) RETURN VARCHAR2 
   IS
-    call_stmt VARCHAR2(4000);
-    where_clause VARCHAR2(1000);
+    call_stmt VARCHAR2(8000);
+    where_clause VARCHAR2(4000);
     where_and VARCHAR2(4) := '';
   BEGIN
     call_stmt :=
-        chr(10)||'  -- delete '||lower(m_tab_name)||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||get_short_name(lower(m_tab_name))||'_ids.COUNT > 0 THEN'
+        chr(10)||'  -- delete '||lower(m_table_name)||'(s) not being referenced any more'
+      ||chr(10)||'  IF '||get_short_name(lower(m_table_name))||'_ids.COUNT > 0 THEN'
       ||chr(10)||'    SELECT DISTINCT'
       ||chr(10)||'      a.COLUMN_VALUE'
       ||chr(10)||'    BULK COLLECT INTO'
-      ||chr(10)||'      '||get_short_name(lower(m_tab_name))||'_pids'
+      ||chr(10)||'      '||get_short_name(lower(m_table_name))||'_pids'
       ||chr(10)||'    FROM'
-      ||chr(10)||'      TABLE('||get_short_name(lower(m_tab_name))||'_ids) a';
+      ||chr(10)||'      TABLE('||get_short_name(lower(m_table_name))||'_ids) a';
 
     where_clause := chr(10)||'    WHERE';
 
@@ -633,8 +643,8 @@ AS
     call_stmt := call_stmt
       || where_clause || ';'
       ||chr(10)
-      ||chr(10)||'    IF '||get_short_name(lower(m_tab_name))||'_pids.COUNT > 0 THEN'
-      ||chr(10)||'      dummy_ids := delete_'||get_short_name(lower(m_tab_name))||'_batch('||get_short_name(lower(m_tab_name))||'_pids);'
+      ||chr(10)||'    IF '||get_short_name(lower(m_table_name))||'_pids.COUNT > 0 THEN'
+      ||chr(10)||'      dummy_ids := delete_'||get_short_name(lower(m_table_name))||'_batch('||get_short_name(lower(m_table_name))||'_pids);'
       ||chr(10)||'    END IF;'
       ||chr(10)||'  END IF;'
       ||chr(10);
@@ -643,9 +653,9 @@ AS
   END;
 
   FUNCTION gen_delete_n_m_ref_by_ids_stmt(
-    n_m_tab_name VARCHAR2,
+    n_m_table_name VARCHAR2,
     n_fk_column_name VARCHAR2,
-    m_tab_name VARCHAR2,
+    m_table_name VARCHAR2,
     m_fk_column_name VARCHAR2,
     m_ref_column_name VARCHAR2,
     schema_name VARCHAR2 := USER
@@ -654,14 +664,14 @@ AS
     ref_tables STRARRAY;
     ref_columns STRARRAY;
   BEGIN
-    query_ref_tables_and_columns(m_tab_name, n_m_tab_name, schema_name, ref_tables, ref_columns);
-    ref_tables := STRARRAY(n_m_tab_name) MULTISET UNION ALL COALESCE(ref_tables, STRARRAY());
+    query_ref_tables_and_columns(m_table_name, n_m_table_name, schema_name, ref_tables, ref_columns);
+    ref_tables := STRARRAY(n_m_table_name) MULTISET UNION ALL COALESCE(ref_tables, STRARRAY());
     ref_columns := STRARRAY(m_fk_column_name) MULTISET UNION ALL COALESCE(ref_columns, STRARRAY());
 
     RETURN
-        chr(10)||'  -- delete references to '||lower(m_tab_name)||'s'
+        chr(10)||'  -- delete references to '||lower(m_table_name)||'s'
       ||chr(10)||'  DELETE FROM'
-      ||chr(10)||'    '||lower(n_m_tab_name)||' t'
+      ||chr(10)||'    '||lower(n_m_table_name)||' t'
       ||chr(10)||'  WHERE EXISTS ('
       ||chr(10)||'    SELECT'
       ||chr(10)||'      1'
@@ -673,14 +683,14 @@ AS
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||m_fk_column_name
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	  '||get_short_name(lower(m_tab_name))||'_ids;'
-      ||chr(10)|| gen_delete_m_ref_by_ids_stmt(m_tab_name, m_ref_column_name, ref_tables, ref_columns);
+      ||chr(10)||'	  '||get_short_name(lower(m_table_name))||'_ids;'
+      ||chr(10)|| gen_delete_m_ref_by_ids_stmt(m_table_name, m_ref_column_name, ref_tables, ref_columns);
   END;
 
   FUNCTION gen_delete_n_m_ref_by_ids_call(
-    n_m_tab_name VARCHAR2,
+    n_m_table_name VARCHAR2,
     n_fk_column_name VARCHAR2,
-    m_tab_name VARCHAR2,
+    m_table_name VARCHAR2,
     m_fk_column_name VARCHAR2,
     schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2 
@@ -688,14 +698,14 @@ AS
     ref_tables STRARRAY;
     ref_columns STRARRAY;
   BEGIN
-    query_ref_tables_and_columns(m_tab_name, n_m_tab_name, schema_name, ref_tables, ref_columns);
-    ref_tables := STRARRAY(n_m_tab_name) MULTISET UNION ALL COALESCE(ref_tables, STRARRAY());
+    query_ref_tables_and_columns(m_table_name, n_m_table_name, schema_name, ref_tables, ref_columns);
+    ref_tables := STRARRAY(n_m_table_name) MULTISET UNION ALL COALESCE(ref_tables, STRARRAY());
     ref_columns := STRARRAY(m_fk_column_name) MULTISET UNION ALL COALESCE(ref_columns, STRARRAY());
 
     RETURN
-        chr(10)||'  -- delete references to '||lower(m_tab_name)||'s'
+        chr(10)||'  -- delete references to '||lower(m_table_name)||'s'
       ||chr(10)||'  DELETE FROM'
-      ||chr(10)||'    '||lower(n_m_tab_name)||' t'
+      ||chr(10)||'    '||lower(n_m_table_name)||' t'
       ||chr(10)||'  WHERE EXISTS ('
       ||chr(10)||'    SELECT'
       ||chr(10)||'      1'
@@ -707,8 +717,8 @@ AS
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||m_fk_column_name
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	  '||get_short_name(lower(m_tab_name))||'_ids;'
-      ||chr(10)|| gen_delete_m_ref_by_ids_call(m_tab_name, ref_tables, ref_columns);
+      ||chr(10)||'	  '||get_short_name(lower(m_table_name))||'_ids;'
+      ||chr(10)|| gen_delete_m_ref_by_ids_call(m_table_name, ref_tables, ref_columns);
   END;
 
   PROCEDURE create_ref_array_delete(
@@ -824,25 +834,25 @@ AS
   END;
 
   FUNCTION gen_delete_m_ref_by_id_stmt(
-    m_tab_name VARCHAR2,
+    m_table_name VARCHAR2,
     m_fk_column_name VARCHAR2,
     fk_table_name STRARRAY,
     fk_columns STRARRAY
     ) RETURN VARCHAR2 
   IS
-    stmt VARCHAR2(4000);
-    where_clause VARCHAR2(1000);
+    stmt VARCHAR2(8000);
+    where_clause VARCHAR2(4000);
   BEGIN
     stmt := 
-        chr(10)||'  -- delete '||lower(m_tab_name)||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||get_short_name(lower(m_tab_name))||'_ref_id IS NOT NULL THEN'
+        chr(10)||'  -- delete '||lower(m_table_name)||'(s) not being referenced any more'
+      ||chr(10)||'  IF '||get_short_name(lower(m_table_name))||'_ref_id IS NOT NULL THEN'
       ||chr(10)||'    DELETE FROM'
-      ||chr(10)||'      '||lower(m_tab_name)||' m'
+      ||chr(10)||'      '||lower(m_table_name)||' m'
       ||chr(10)||'    WHERE EXISTS ('
       ||chr(10)||'      SELECT'
       ||chr(10)||'        1'
       ||chr(10)||'      FROM'
-      ||chr(10)||'        TABLE(ID_ARRAY('||get_short_name(lower(m_tab_name))||'_ref_id)) a';
+      ||chr(10)||'        TABLE(ID_ARRAY('||get_short_name(lower(m_table_name))||'_ref_id)) a';
 
     where_clause := 
         chr(10)||'      WHERE'
@@ -870,24 +880,24 @@ AS
   END;
 
   FUNCTION gen_delete_m_ref_by_id_call(
-    m_tab_name VARCHAR2,
+    m_table_name VARCHAR2,
     fk_table_name STRARRAY,
     fk_columns STRARRAY
     ) RETURN VARCHAR2 
   IS
-    call_stmt VARCHAR2(4000);
-    where_clause VARCHAR2(1000);
+    call_stmt VARCHAR2(8000);
+    where_clause VARCHAR2(4000);
     where_and VARCHAR2(4) := '';
   BEGIN
     call_stmt :=
-        chr(10)||'  -- delete '||lower(m_tab_name)||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||get_short_name(lower(m_tab_name))||'_ref_id IS NOT NULL THEN'
+        chr(10)||'  -- delete '||lower(m_table_name)||'(s) not being referenced any more'
+      ||chr(10)||'  IF '||get_short_name(lower(m_table_name))||'_ref_id IS NOT NULL THEN'
       ||chr(10)||'    SELECT'
       ||chr(10)||'      a.COLUMN_VALUE'
       ||chr(10)||'    INTO'
-      ||chr(10)||'      '||get_short_name(lower(m_tab_name))||'_pid'
+      ||chr(10)||'      '||get_short_name(lower(m_table_name))||'_pid'
       ||chr(10)||'    FROM'
-      ||chr(10)||'      TABLE(ID_ARRAY('||get_short_name(lower(m_tab_name))||'_ref_id)) a';
+      ||chr(10)||'      TABLE(ID_ARRAY('||get_short_name(lower(m_table_name))||'_ref_id)) a';
 
     where_clause := chr(10)||'    WHERE';
 
@@ -908,8 +918,8 @@ AS
     call_stmt := call_stmt
       || where_clause || ';'
       ||chr(10)
-      ||chr(10)||'    IF '||get_short_name(lower(m_tab_name))||'_pid IS NOT NULL THEN'
-      ||chr(10)||'      dummy_id := delete_'||get_short_name(lower(m_tab_name))||'('||get_short_name(lower(m_tab_name))||'_pid);'
+      ||chr(10)||'    IF '||get_short_name(lower(m_table_name))||'_pid IS NOT NULL THEN'
+      ||chr(10)||'      dummy_id := delete_'||get_short_name(lower(m_table_name))||'('||get_short_name(lower(m_table_name))||'_pid);'
       ||chr(10)||'    END IF;'
       ||chr(10)||'  END IF;'
       ||chr(10);
@@ -918,9 +928,9 @@ AS
   END;
 
   FUNCTION gen_delete_n_m_ref_by_id_stmt(
-    n_m_tab_name VARCHAR2,
+    n_m_table_name VARCHAR2,
     n_fk_column_name VARCHAR2,
-    m_tab_name VARCHAR2,
+    m_table_name VARCHAR2,
     m_fk_column_name VARCHAR2,
     m_ref_column_name VARCHAR2,
     schema_name VARCHAR2 := USER
@@ -929,27 +939,27 @@ AS
     ref_tables STRARRAY;
     ref_columns STRARRAY;
   BEGIN
-    query_ref_tables_and_columns(m_tab_name, n_m_tab_name, schema_name, ref_tables, ref_columns);
-    ref_tables := STRARRAY(n_m_tab_name) MULTISET UNION ALL COALESCE(ref_tables, STRARRAY());
+    query_ref_tables_and_columns(m_table_name, n_m_table_name, schema_name, ref_tables, ref_columns);
+    ref_tables := STRARRAY(n_m_table_name) MULTISET UNION ALL COALESCE(ref_tables, STRARRAY());
     ref_columns := STRARRAY(m_fk_column_name) MULTISET UNION ALL COALESCE(ref_columns, STRARRAY());
 
     RETURN
-        chr(10)||'  -- delete references to '||lower(m_tab_name)||'s'
+        chr(10)||'  -- delete references to '||lower(m_table_name)||'s'
       ||chr(10)||'  DELETE FROM'
-      ||chr(10)||'    '||lower(n_m_tab_name)
+      ||chr(10)||'    '||lower(n_m_table_name)
       ||chr(10)||'  WHERE'
       ||chr(10)||'    '||lower(n_fk_column_name)||' = pid'
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||lower(m_fk_column_name)
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	  '||get_short_name(lower(m_tab_name))||'_ids;'
-      ||chr(10)|| gen_delete_m_ref_by_ids_stmt(m_tab_name, m_ref_column_name, ref_tables, ref_columns);
+      ||chr(10)||'	  '||get_short_name(lower(m_table_name))||'_ids;'
+      ||chr(10)|| gen_delete_m_ref_by_ids_stmt(m_table_name, m_ref_column_name, ref_tables, ref_columns);
   END;
 
   FUNCTION gen_delete_n_m_ref_by_id_call(
-    n_m_tab_name VARCHAR2,
+    n_m_table_name VARCHAR2,
     n_fk_column_name VARCHAR2,
-    m_tab_name VARCHAR2,
+    m_table_name VARCHAR2,
     m_fk_column_name VARCHAR2,
     schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2 
@@ -957,21 +967,21 @@ AS
     ref_tables STRARRAY;
     ref_columns STRARRAY;
   BEGIN
-    query_ref_tables_and_columns(m_tab_name, n_m_tab_name, schema_name, ref_tables, ref_columns);
-    ref_tables := STRARRAY(n_m_tab_name) MULTISET UNION ALL COALESCE(ref_tables, STRARRAY());
+    query_ref_tables_and_columns(m_table_name, n_m_table_name, schema_name, ref_tables, ref_columns);
+    ref_tables := STRARRAY(n_m_table_name) MULTISET UNION ALL COALESCE(ref_tables, STRARRAY());
     ref_columns := STRARRAY(m_fk_column_name) MULTISET UNION ALL COALESCE(ref_columns, STRARRAY());
 
     RETURN
-        chr(10)||'  -- delete references to '||lower(m_tab_name)||'s'
+        chr(10)||'  -- delete references to '||lower(m_table_name)||'s'
       ||chr(10)||'  DELETE FROM'
-      ||chr(10)||'    '||lower(n_m_tab_name)
+      ||chr(10)||'    '||lower(n_m_table_name)
       ||chr(10)||'  WHERE'
       ||chr(10)||'    '||lower(n_fk_column_name)||' = pid'
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||lower(m_fk_column_name)
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	  '||get_short_name(lower(m_tab_name))||'_ids;'
-      ||chr(10)|| gen_delete_m_ref_by_ids_call(m_tab_name, ref_tables, ref_columns);
+      ||chr(10)||'	  '||get_short_name(lower(m_table_name))||'_ids;'
+      ||chr(10)|| gen_delete_m_ref_by_ids_call(m_table_name, ref_tables, ref_columns);
   END;
 
   PROCEDURE create_ref_delete(
@@ -1127,6 +1137,7 @@ AS
         AND c.table_name <> a_ref.table_name
         AND c.constraint_type = 'R'
         AND c.delete_rule = 'SET NULL'
+        AND a_ref.table_name <> 'CITYOBJECT'
         AND (a_ref.table_name <> 'SURFACE_GEOMETRY'
          OR c.table_name = 'IMPLICIT_GEOMETRY'
          OR c.table_name = 'CITYOBJECT_GENERICATTRIB'
@@ -1449,23 +1460,23 @@ AS
     schema_name VARCHAR2 := USER
     )
   IS
-    ddl_command VARCHAR2(16000) := 
+    ddl_command VARCHAR2(30000) := 
       'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_batch(pids ID_ARRAY) RETURN ID_ARRAY'
       ||chr(10)||'IS'||chr(10);
     declare_block VARCHAR2(1000) := '  deleted_ids ID_ARRAY;';
-    pre_block VARCHAR2(6000) := '';
-    post_block VARCHAR2(6000) := '';
-    delete_block VARCHAR2(1000) := '';
-    delete_into_block VARCHAR2(1000) :=
+    pre_block VARCHAR2(12000) := '';
+    post_block VARCHAR2(12000) := '';
+    delete_block VARCHAR2(2000) := '';
+    delete_into_block VARCHAR2(2000) :=
         chr(10)||'  BULK COLLECT INTO'
       ||chr(10)||'    deleted_ids';
     vars VARCHAR2(1000);
     self_block VARCHAR2(2000);
-    ref_block VARCHAR2(4000);
-    returning_block VARCHAR2(1000);
-    collect_block VARCHAR2(1000);
-    into_block VARCHAR2(1000);
-    fk_block VARCHAR2(4000);
+    ref_block VARCHAR2(8000);
+    returning_block VARCHAR2(2000);
+    collect_block VARCHAR2(2000);
+    into_block VARCHAR2(2000);
+    fk_block VARCHAR2(8000);
   BEGIN
     -- SELF REFERENCES
     create_selfref_array_delete(tab_name, schema_name, vars, self_block);
@@ -1518,20 +1529,20 @@ AS
     schema_name VARCHAR2 := USER
     )
   IS
-    ddl_command VARCHAR2(16000) := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
+    ddl_command VARCHAR2(30000) := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
     declare_block VARCHAR2(1000) := '  deleted_id NUMBER;';
-    pre_block VARCHAR2(6000) := '';
-    post_block VARCHAR2(6000) := '';
-    delete_block VARCHAR2(1000) := '';
-    delete_into_block VARCHAR2(1000) := 
+    pre_block VARCHAR2(12000) := '';
+    post_block VARCHAR2(12000) := '';
+    delete_block VARCHAR2(2000) := '';
+    delete_into_block VARCHAR2(2000) := 
         chr(10)||'  INTO'
       ||chr(10)||'    deleted_id';
     vars VARCHAR2(1000);
     self_block VARCHAR2(2000);
-    ref_block VARCHAR2(4000);
-    returning_block VARCHAR2(1000);
-    into_block VARCHAR2(1000);
-    fk_block VARCHAR2(4000);
+    ref_block VARCHAR2(8000);
+    returning_block VARCHAR2(2000);
+    into_block VARCHAR2(2000);
+    fk_block VARCHAR2(8000);
   BEGIN
     -- SELF REFERENCES
     create_selfref_delete(tab_name, schema_name, vars, self_block);
@@ -1575,6 +1586,390 @@ AS
       ||chr(10)
       || post_block
       ||chr(10)||'  RETURN deleted_id;'
+      ||chr(10)||'END;';
+
+    EXECUTE IMMEDIATE ddl_command;
+    COMMIT;
+  END;
+
+
+  /*****************************
+  * Referencing member 1:n
+  *****************************/
+  FUNCTION query_member_1n(
+    tab_name VARCHAR2,
+    schema_name VARCHAR2 := USER
+    ) RETURN SYS_REFCURSOR
+  IS
+    ref_to_cursor SYS_REFCURSOR;
+  BEGIN
+    OPEN ref_to_cursor FOR
+      SELECT
+        c.table_name AS member_table_name,
+        ac.column_name AS member_fk_column
+      FROM
+        all_constraints c
+      JOIN
+        all_cons_columns ac
+        ON ac.constraint_name = c.constraint_name
+       AND ac.table_name = c.table_name
+       AND ac.owner = c.owner
+      JOIN
+        all_constraints c2
+        ON c2.constraint_name = c.r_constraint_name
+       AND c2.owner = c.owner
+      WHERE
+        c2.table_name = upper(tab_name)
+        AND c2.owner = upper(schema_name)
+        AND c.constraint_type = 'R'
+        AND c.delete_rule = 'SET NULL'
+        AND c.table_name IN
+        (
+        SELECT
+          fk.table_name
+        FROM
+          all_constraints fk
+        JOIN
+          all_cons_columns fka
+          ON fka.constraint_name = fk.constraint_name
+         AND fka.table_name = fk.table_name
+         AND fka.owner = fk.owner
+        JOIN
+          all_constraints fk2
+          ON fk2.constraint_name = fk.r_constraint_name
+          AND fk2.owner = fk.owner
+        JOIN (
+          SELECT DISTINCT
+            cp.table_name,
+            cp.owner,
+            first_value(pka.column_name) OVER (PARTITION BY cp.table_name ORDER BY pka.position DESC) AS column_name,
+            first_value(pka.position) OVER (PARTITION BY cp.table_name ORDER BY pka.position DESC) AS position
+          FROM
+            all_constraints cp
+          JOIN
+            all_cons_columns pka
+            ON pka.constraint_name = cp.constraint_name
+           AND pka.table_name = cp.table_name
+           AND pka.owner = cp.owner
+          WHERE
+            cp.constraint_type = 'P'
+          ) pk
+          ON pk.table_name = fk.table_name
+         AND pk.owner = fk.owner
+         AND pk.column_name = fka.column_name
+        WHERE
+          fk2.table_name = upper(tab_name)
+          AND fk2.owner = upper(schema_name)
+          AND fk.constraint_type = 'R'
+          AND pk.position = 1
+        );
+    RETURN ref_to_cursor;
+  END;
+
+  -- ARRAY CASE
+  PROCEDURE create_member_1n_array_delete(
+    tab_name VARCHAR2,
+    schema_name VARCHAR2 := USER,
+    vars OUT VARCHAR2,
+    ref_block OUT VARCHAR2
+    )
+  IS
+    ref_to_cursor SYS_REFCURSOR;
+    member_table_name VARCHAR2(30);
+    member_fk_column VARCHAR2(30);
+  BEGIN
+    ref_to_cursor := query_member_1n(tab_name, schema_name);
+
+    LOOP
+      FETCH ref_to_cursor
+      INTO member_table_name, member_fk_column;
+      EXIT WHEN ref_to_cursor%NOTFOUND;
+
+      IF vars IS NULL THEN
+        vars := '';
+        ref_block := '';
+      END IF;
+
+      -- function call required, so create function first
+      citydb_delete_gen.create_array_delete_function(member_table_name, schema_name);
+
+      IF vars IS NULL OR INSTR(vars, 'child_ids') = 0 THEN
+        vars := vars ||chr(10)|| '  child_ids ID_ARRAY;';
+      END IF;
+      ref_block := ref_block || gen_delete_ref_by_ids_call(member_table_name, member_fk_column);
+    END LOOP;
+
+    RETURN;
+  END;
+
+  -- SINGLE CASE
+  PROCEDURE create_member_1n_delete(
+    tab_name VARCHAR2,
+    schema_name VARCHAR2 := USER,
+    vars OUT VARCHAR2,
+    ref_block OUT VARCHAR2
+    )
+  IS
+    ref_to_cursor SYS_REFCURSOR;
+    member_table_name VARCHAR2(30);
+    member_fk_column VARCHAR2(30);
+  BEGIN
+    ref_to_cursor := query_member_1n(tab_name, schema_name);
+
+    LOOP
+      FETCH ref_to_cursor
+      INTO member_table_name, member_fk_column;
+      EXIT WHEN ref_to_cursor%NOTFOUND;
+
+      IF vars IS NULL THEN
+        vars := '';
+        ref_block := '';
+      END IF;
+
+      -- function call required, so create function first
+      citydb_delete_gen.create_array_delete_function(member_table_name, schema_name);
+
+      IF vars IS NULL OR INSTR(vars, 'child_ids') = 0 THEN
+        vars := vars ||chr(10)|| '  child_ids ID_ARRAY;';
+      END IF;
+      ref_block := ref_block || gen_delete_ref_by_id_call(member_table_name, member_fk_column);
+    END LOOP;
+
+    RETURN;
+  END;
+
+
+  /*****************************
+  * Referencing member n:m
+  *****************************/
+  FUNCTION query_member_nm(
+    tab_name VARCHAR2,
+    schema_name VARCHAR2 := USER
+    ) RETURN SYS_REFCURSOR
+  IS
+    ref_to_cursor SYS_REFCURSOR;
+  BEGIN
+    OPEN ref_to_cursor FOR
+      SELECT
+        c.table_name AS n_table_name,
+        a.column_name AS n_fk_column_name,
+        m.m_table_name,
+        m.m_fk_column_name
+      FROM
+        all_constraints c
+      JOIN
+        all_cons_columns a
+        ON a.constraint_name = c.constraint_name
+       AND a.table_name = c.table_name
+       AND a.owner = c.owner
+      JOIN
+        all_constraints c2
+        ON c2.constraint_name = c.r_constraint_name
+       AND c2.owner = c.owner
+      JOIN (
+        SELECT
+          mn.table_name,
+          mn.owner,
+          mn2.table_name AS m_table_name,
+          mna.column_name AS m_fk_column_name
+        FROM
+          all_constraints mn
+        JOIN
+          all_cons_columns mna
+          ON mna.constraint_name = mn.constraint_name
+         AND mna.table_name = mn.table_name
+         AND mna.owner = mn.owner
+        JOIN 
+          all_constraints mnp
+          ON mnp.table_name = mn.table_name
+         AND mnp.owner = mn.owner
+        JOIN
+          all_cons_columns mnpa
+          ON mnpa.constraint_name = mnp.constraint_name
+         AND mnpa.table_name = mn.table_name
+         AND mnpa.owner = mn.owner
+         AND mnpa.column_name = mna.column_name
+        JOIN
+          all_constraints mn2
+          ON mn2.constraint_name = mn.r_constraint_name
+         AND mn2.owner = mn.owner
+        WHERE
+          mn2.table_name <> mn.table_name
+          AND mn.constraint_type = 'R'
+          AND mn.delete_rule = 'CASCADE'
+          AND mnp.constraint_type = 'P'
+        ) m
+        ON m.table_name = c.table_name
+       AND m.owner = c.owner
+      WHERE
+        c2.table_name = upper(tab_name)
+        AND c2.owner = upper(schema_name)
+        AND c.constraint_type = 'R'
+        AND c.delete_rule = 'CASCADE'
+        AND c2.table_name <> m.m_table_name;
+    RETURN ref_to_cursor;
+  END;
+
+  -- ARRAY CASE
+  PROCEDURE create_member_nm_array_delete(
+    tab_name VARCHAR2,
+    schema_name VARCHAR2 := USER,
+    vars OUT VARCHAR2,
+    ref_block OUT VARCHAR2
+    )
+  IS
+    ref_to_cursor SYS_REFCURSOR;
+    n_table_name VARCHAR2(30);
+    n_fk_column_name VARCHAR2(30);
+    m_table_name VARCHAR2(30);
+    m_fk_column_name VARCHAR2(30);
+  BEGIN
+    ref_to_cursor := query_member_nm(tab_name, schema_name);
+
+    LOOP
+      FETCH ref_to_cursor
+      INTO n_table_name, n_fk_column_name, m_table_name, m_fk_column_name;
+      EXIT WHEN ref_to_cursor%NOTFOUND;
+
+      IF vars IS NULL THEN
+        vars := '';
+        ref_block := '';
+      END IF;
+
+      -- function call required, so create function first
+      citydb_delete_gen.create_array_delete_function(m_table_name, schema_name);
+
+      vars := vars
+        ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_ids ID_ARRAY;'
+        ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_pids ID_ARRAY;';
+      ref_block := ref_block || gen_delete_n_m_ref_by_ids_call(n_table_name, n_fk_column_name, m_table_name, m_fk_column_name, schema_name);
+    END LOOP;
+
+    RETURN;
+  END;
+
+  -- SINGLE CASE
+  PROCEDURE create_member_nm_delete(
+    tab_name VARCHAR2,
+    schema_name VARCHAR2 := USER,
+    vars OUT VARCHAR2,
+    ref_block OUT VARCHAR2
+    )
+  IS
+    ref_to_cursor SYS_REFCURSOR;
+    n_table_name VARCHAR2(30);
+    n_fk_column_name VARCHAR2(30);
+    m_table_name VARCHAR2(30);
+    m_fk_column_name VARCHAR2(30);
+  BEGIN
+    ref_to_cursor := query_member_nm(tab_name, schema_name);
+
+    LOOP
+      FETCH ref_to_cursor
+      INTO n_table_name, n_fk_column_name, m_table_name, m_fk_column_name;
+      EXIT WHEN ref_to_cursor%NOTFOUND;
+
+      IF vars IS NULL THEN
+        vars := '';
+        ref_block := '';
+      END IF;
+
+      -- function call required, so create function first
+      citydb_delete_gen.create_array_delete_function(m_table_name, schema_name);
+
+      vars := vars
+        ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_ids ID_ARRAY;'
+        ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_pids ID_ARRAY;';
+      ref_block := ref_block || gen_delete_n_m_ref_by_id_call(n_table_name, n_fk_column_name, m_table_name, m_fk_column_name, schema_name);
+    END LOOP;
+
+    RETURN;
+  END;
+
+
+  /**************************
+  * CREATE DELETE MEMBER FUNCTION
+  **************************/
+  PROCEDURE create_array_delete_member_fct(
+    tab_name VARCHAR2,
+    schema_name VARCHAR2 := USER
+    )
+  IS
+    ddl_command VARCHAR2(30000) := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_w_mem_bat(pids ID_ARRAY) RETURN ID_ARRAY'||chr(10)||'IS'||chr(10);
+    declare_block VARCHAR2(1000) := '  deleted_ids ID_ARRAY;';
+    pre_block VARCHAR2(14000) := '';
+    vars VARCHAR2(1000);
+    ref_block VARCHAR2(14000);
+  BEGIN
+    -- MEMBER REFERENCES 1:n
+    create_member_1n_array_delete(tab_name, schema_name, vars, ref_block);
+    declare_block := declare_block || COALESCE(vars, '');
+    pre_block := pre_block || COALESCE(ref_block, '');
+
+    -- MEMBER REFERENCES n:m
+    create_member_nm_array_delete(tab_name, schema_name, vars, ref_block);
+    declare_block := declare_block || COALESCE(vars, '');
+    pre_block := pre_block || COALESCE(ref_block, '');
+
+    -- create dummy variable if pre block is not null
+    IF pre_block IS NOT NULL THEN
+      declare_block := declare_block ||chr(10)||'  dummy_ids ID_ARRAY;';
+    END IF;
+
+    -- delete member function is calling the regular delete function in the end
+    -- so create regular delete function first
+    citydb_delete_gen.create_array_delete_function(tab_name, schema_name);
+
+    -- putting all together
+    ddl_command := ddl_command
+      || declare_block
+      ||chr(10)||'BEGIN'
+      || pre_block
+      ||chr(10)||'  -- delete '||lower(tab_name)||'s'
+      ||chr(10)||'  RETURN delete_' ||get_short_name(lower(tab_name))||'_batch(pids);'
+      ||chr(10)||'END;';
+
+    EXECUTE IMMEDIATE ddl_command;
+    COMMIT;
+  END;
+
+  PROCEDURE create_delete_member_fct(
+    tab_name VARCHAR2,
+    schema_name VARCHAR2 := USER
+    )
+  IS
+    ddl_command VARCHAR2(30000) := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_w_members(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
+    declare_block VARCHAR2(1000) := '  deleted_id NUMBER;';
+    pre_block VARCHAR2(14000) := '';
+    vars VARCHAR2(1000);
+    ref_block VARCHAR2(14000);
+  BEGIN
+    -- MEMBER REFERENCES 1:n
+    create_member_1n_delete(tab_name, schema_name, vars, ref_block);
+    declare_block := declare_block || COALESCE(vars, '');
+    pre_block := pre_block || COALESCE(ref_block, '');
+
+    -- MEMBER REFERENCES n:m
+    create_member_nm_delete(tab_name, schema_name, vars, ref_block);
+    declare_block := declare_block || COALESCE(vars, '');
+    pre_block := pre_block || COALESCE(ref_block, '');
+
+    -- create dummy variable if pre block is not null
+    IF pre_block IS NOT NULL THEN
+      declare_block := declare_block ||chr(10)||'  dummy_ids ID_ARRAY;';
+    END IF;
+
+    -- delete member function is calling the regular delete function in the end
+    -- so create regular delete function first
+    citydb_delete_gen.create_delete_function(tab_name, schema_name);
+
+    -- putting all together
+    ddl_command := ddl_command
+      || declare_block
+      ||chr(10)||'BEGIN'
+      || pre_block
+      ||chr(10)||'  -- delete '||lower(tab_name)||'s'
+      ||chr(10)||'  RETURN delete_' ||get_short_name(lower(tab_name))||'(pid);'
       ||chr(10)||'END;';
 
     EXECUTE IMMEDIATE ddl_command;
