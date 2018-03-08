@@ -4523,10 +4523,10 @@ BEGIN
     WHERE tr.id = a.tr_id
     RETURNING tr.surface_geometry_id
   )
-  SELECT array_agg(surface_geometry_id) INTO tin_geom_array
+  SELECT array_agg(DISTINCT surface_geometry_id) INTO tin_geom_array
     FROM delete_objects;
 
-  PERFORM citydb_pkg.delete_surface_geometries(DISTINCT tin_geom_array);
+  PERFORM citydb_pkg.delete_surface_geometries(tin_geom_array);
 
   -- delete mass point relief
   DELETE FROM masspoint_relief mpr USING (
@@ -4548,10 +4548,10 @@ BEGIN
     WHERE rr.id = a.rr_id
     RETURNING rr.coverage_id
   )
-  SELECT array_agg(coverage_id) INTO relief_coverage_array
+  SELECT array_agg(DISTINCT coverage_id) INTO relief_coverage_array
     FROM delete_objects;
 
-  PERFORM citydb_pkg.delete_grid_coverages(DISTINCT relief_coverage_array);
+  PERFORM citydb_pkg.delete_grid_coverages(relief_coverage_array);
 
   -- delete relief components
   WITH delete_objects AS (
