@@ -1397,7 +1397,7 @@ BEGIN
   IF objclass_block <> '' THEN
     pre_block :=
          E'\n  IF'
-      || E'\n    (deleted_ids IS NOT NULL AND deleted_ids <> ''{}'')'
+      || E'\n    array_length(deleted_ids, 1) IS NOT NULL'
       || E'\n    OR 0 <> ALL(objclass_ids)'
       || E'\n  THEN'
       || E'\n    ' || return_block
