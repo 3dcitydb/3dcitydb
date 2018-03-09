@@ -1667,7 +1667,7 @@ BEGIN
     END IF;
 
     -- function call required, so create function first
-    IF NOT (rec.member_table_name || '_array_with_members' = ANY($3)) THEN
+    IF NOT (rec.member_table_name || '_array' = ANY($3)) THEN
       member_1n_path :=
         citydb_pkg.create_array_delete_function(
           rec.member_table_name, $2, $3
@@ -1702,7 +1702,7 @@ BEGIN
     END IF;
 
     -- function call required, so create function first
-    IF NOT (rec.member_table_name || '_with_members' = ANY($3)) THEN
+    IF NOT (rec.member_table_name = ANY($3)) THEN
       member_1n_path :=
         citydb_pkg.create_delete_function(
           rec.member_table_name, $2, $3
@@ -1791,7 +1791,7 @@ BEGIN
     END IF;
 
     -- function call required, so create function first
-    IF NOT (rec.m_table_name || '_array_with_members' = ANY($3)) THEN
+    IF NOT (rec.m_table_name || '_array' = ANY($3)) THEN
       member_nm_path :=
         citydb_pkg.create_array_delete_function(
           rec.m_table_name, $2, $3
@@ -1829,7 +1829,7 @@ BEGIN
     END IF;
 
     -- function call required, so create function first
-    IF NOT (rec.m_table_name || '_with_members' = ANY($3)) THEN
+    IF NOT (rec.m_table_name = ANY($3)) THEN
       member_nm_path :=
         citydb_pkg.create_delete_function(
           rec.m_table_name, $2, $3
@@ -1888,7 +1888,7 @@ BEGIN
 
   -- delete member function is calling the regular delete function in the end
   -- so create regular delete function first
-  IF NOT ($1 = ANY(create_path)) THEN
+  IF NOT ($1 || '_array' = ANY(create_path)) THEN
     create_path := citydb_pkg.create_array_delete_function($1, $2, create_path);
   END IF;
 
