@@ -98,6 +98,7 @@ AS
   PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param CHAR := 'a', schema_name VARCHAR2 := USER);
   FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER) RETURN ID_ARRAY;
   FUNCTION string2id_array(str VARCHAR2, delim VARCHAR2 := ',') RETURN ID_ARRAY;
+  FUNCTION id_array2string(ids ID_ARRAY, delim VARCHAR2 := ',') RETURN VARCHAR2;
   FUNCTION get_id_array_size(id_arr ID_ARRAY) RETURN NUMBER;
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
   FUNCTION construct_solid(geom_root_id NUMBER) RETURN SDO_GEOMETRY;
@@ -483,6 +484,29 @@ AS
       split_str;
 
     RETURN arr;
+  END;
+
+  /*****************************************************************
+  * id_array2string
+  *
+  * converts an ID_ARRAY object into a string
+  *      
+  * @param ID_ARRAY array of number
+  * @param delim delimiter used in string, defaults to ','
+  * @return VARCHAR2 string representation of ID array content
+  ******************************************************************/
+  FUNCTION id_array2string(ids ID_ARRAY, delim VARCHAR2 := ',') RETURN VARCHAR2
+  IS
+    arr_string VARCHAR2(32767);
+  BEGIN
+    SELECT
+      LISTAGG(column_value, delim) WITHIN GROUP (ORDER BY column_value)
+    INTO
+      arr_string
+    FROM
+      TABLE(ids);
+
+    RETURN arr_string;
   END;
 
   /*****************************************************************
