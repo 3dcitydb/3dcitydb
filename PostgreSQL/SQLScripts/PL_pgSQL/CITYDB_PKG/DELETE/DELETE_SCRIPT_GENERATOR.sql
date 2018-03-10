@@ -204,10 +204,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_fk(
   ) RETURNS SETOF RECORD AS
 $$
 SELECT
-  ref.n_table_name::regclass::text,
-  ref.n_fk_column_name,
-  ref.cleanup_n_table,
-  CASE WHEN ref.root_table_name = ref.cleanup_n_table THEN 1 ELSE 0 END AS is_child,
+  n.n_table_name::regclass::text,
+  n.n_fk_column_name,
+  n.cleanup_n_table,
+  CASE WHEN n.root_table_name = n.cleanup_n_table THEN 1 ELSE 0 END AS is_child,
   m.m_table_name::regclass::text,
   m.m_fk_column_name::text,
   m.m_ref_column_name::text,
@@ -230,7 +230,7 @@ FROM (
     c.confrelid = ($2 || '.' || $1)::regclass::oid
     AND c.conrelid <> c.confrelid
     AND c.contype = 'f'
-) ref
+) n
 -- get n:m tables which returned NULL for cleanup_n_table in the n block
 -- the FK has to be set to CASCADE to decide for cleanup
 -- found FK column needs to be part of the PK
@@ -254,19 +254,19 @@ LEFT JOIN LATERAL (
     ON pk.conrelid = mn.conrelid
    AND pk.conkey @> (ref.conkey || mn.conkey || '{}')
   WHERE
-    mn.conrelid = ref.n_table_name
-    AND ref.cleanup_n_table IS NULL
-    AND mn.confrelid <> ref.n_table_name
+    mn.conrelid = n.n_table_name
+    AND n.cleanup_n_table IS NULL
+    AND mn.confrelid <> n.n_table_name
     AND mn.contype = 'f'
     AND mn.confdeltype = 'c'
     AND pk.contype = 'p'
   ) m ON (true)
 WHERE
-  ref.confdeltype = 'a'
-  OR ref.root_table_name = ref.cleanup_n_table
+  n.confdeltype = 'a'
+  OR n.root_table_name = n.cleanup_n_table
 ORDER BY
   is_child DESC,
-  ref.n_table_name,
+  n.n_table_name,
   m.m_table_name;
 $$
 LANGUAGE sql STRICT;
@@ -459,7 +459,7 @@ $$
 DECLARE
   rec RECORD;
   objclass INTEGER[];
-  has_objclass_param BOOLEAN;
+  has_objclass_param BOOLEAN := FALSE;
 BEGIN
   FOR rec IN (
     SELECT * FROM citydb_pkg.query_ref_fk($1, $2)
@@ -475,12 +475,9 @@ BEGIN
       rec.cleanup_n_table IS NOT NULL
       OR rec.cleanup_m_table IS NOT NULL
     ) THEN
-      -- function call required, so create function first
+      -- create array delete function for referencing features
       IF NOT (COALESCE(rec.m_table_name, rec.n_table_name) || '_array' = ANY($3)) THEN
-        ref_path :=
-          citydb_pkg.create_array_delete_function(
-            COALESCE(rec.m_table_name, rec.n_table_name), $2, $3
-          );
+        ref_path := citydb_pkg.create_array_delete_function(COALESCE(rec.m_table_name, rec.n_table_name), $2, $3);
       END IF;
 
       IF rec.m_table_name IS NULL THEN
@@ -517,14 +514,14 @@ BEGIN
             child_ref_block := child_ref_block ||
                  E'\n  -- delete '||rec.n_table_name||'s'
               || E'\n  IF class_ids && ARRAY['||array_to_string(objclass, ',')||']::int[] THEN'
-              || E'\n    deleted_ids := deleted_ids || '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||E'($1);'
+              || E'\n    deleted_ids := deleted_ids || '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||'($1);'
               || E'\n  END IF;'
               || E'\n';
           ELSE
             ref_block := ref_block ||
-               E'\n  -- delete '||rec.n_table_name||'s'
-            || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||E'($1);'
-            || E'\n';
+                 E'\n  -- delete '||rec.n_table_name||'s'
+              || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||'($1);'
+              || E'\n';
           END IF;
         ELSE
           ref_block := ref_block || citydb_pkg.generate_delete_ref_by_ids_call(rec.n_table_name, rec.n_fk_column_name, $2);
@@ -761,7 +758,7 @@ $$
 DECLARE
   rec RECORD;
   objclass INTEGER[];
-  has_objclass_param BOOLEAN;
+  has_objclass_param BOOLEAN := FALSE;
 BEGIN
   FOR rec IN (
     SELECT * FROM citydb_pkg.query_ref_fk($1, $2)
@@ -780,10 +777,7 @@ BEGIN
       IF rec.is_child = 1 THEN
         -- create delete function for child
         IF NOT (rec.n_table_name = ANY($3)) THEN
-          ref_path := 
-            citydb_pkg.create_delete_function(
-              rec.n_table_name, $2, $3
-            );
+          ref_path := citydb_pkg.create_delete_function(rec.n_table_name, $2, $3);
         END IF;
 
         -- find objectclass of child to set filter
@@ -818,22 +812,19 @@ BEGIN
           child_ref_block := child_ref_block ||
                E'\n  -- delete '||rec.n_table_name
             || E'\n  IF class_id IN ('||array_to_string(objclass, ',')||') THEN'
-            || E'\n    deleted_id := '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||E'($1);'
+            || E'\n    deleted_id := '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||'($1);'
             || E'\n  END IF;'
             || E'\n';
         ELSE
           ref_block := ref_block ||
              E'\n  -- delete '||rec.n_table_name
-          || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||E'($1);'
+          || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||'($1);'
           || E'\n';
         END IF;
       ELSE
         -- create array delete function for referencing features
-        IF NOT (COALESCE(rec.m_table_name, rec.n_table_name) = ANY($3)) THEN
-          ref_path :=
-            citydb_pkg.create_array_delete_function(
-              COALESCE(rec.m_table_name, rec.n_table_name), $2, $3
-            );
+        IF NOT (COALESCE(rec.m_table_name, rec.n_table_name) || '_array' = ANY($3)) THEN
+          ref_path := citydb_pkg.create_array_delete_function(COALESCE(rec.m_table_name, rec.n_table_name), $2, $3);
         END IF;
 
         IF rec.m_table_name IS NULL THEN
@@ -1147,9 +1138,7 @@ BEGIN
         ref_to_ref_tables,
         ref_to_ref_columns
       FROM
-        citydb_pkg.query_ref_tables_and_columns(
-          rec.ref_table_name, $1, $2
-        ) AS r(ref_tables, ref_columns);
+        citydb_pkg.query_ref_tables_and_columns(rec.ref_table_name, $1, $2) AS r(ref_tables, ref_columns);
     END IF;
 
     IF rec.cleanup_ref_table THEN
@@ -1222,15 +1211,13 @@ BEGIN
         ref_to_ref_tables,
         ref_to_ref_columns
       FROM
-        citydb_pkg.query_ref_tables_and_columns(
-          rec.ref_table_name, $1, $2
-        ) AS r(ref_tables, ref_columns);
+        citydb_pkg.query_ref_tables_and_columns(rec.ref_table_name, $1, $2) AS r(ref_tables, ref_columns);
     END IF;
 
     IF rec.cleanup_ref_table THEN
       -- function call required, so create function first
       IF array_length(rec.fk_columns, 1) > 1 THEN
-        IF NOT (rec.ref_table_name = ANY($3)) THEN
+        IF NOT (rec.ref_table_name || '_array' = ANY($3)) THEN
           ref_to_path := citydb_pkg.create_array_delete_function(rec.ref_table_name, $2, $3);
         END IF;
         fk_block := fk_block || citydb_pkg.generate_delete_m_ref_by_ids_call(rec.ref_table_name, ref_to_ref_tables, ref_to_ref_columns, $2);
@@ -1668,10 +1655,7 @@ BEGIN
 
     -- function call required, so create function first
     IF NOT (rec.member_table_name || '_array' = ANY($3)) THEN
-      member_1n_path :=
-        citydb_pkg.create_array_delete_function(
-          rec.member_table_name, $2, $3
-        );
+      member_1n_path := citydb_pkg.create_array_delete_function(rec.member_table_name, $2, $3);
     END IF;
 
     ref_block := ref_block || generate_delete_ref_by_ids_call(rec.member_table_name, rec.member_fk_column, $2);
@@ -1703,10 +1687,7 @@ BEGIN
 
     -- function call required, so create function first
     IF NOT (rec.member_table_name = ANY($3)) THEN
-      member_1n_path :=
-        citydb_pkg.create_delete_function(
-          rec.member_table_name, $2, $3
-        );
+      member_1n_path := citydb_pkg.create_delete_function(rec.member_table_name, $2, $3);
     END IF;
 
     ref_block := ref_block || generate_delete_ref_by_id_call(rec.member_table_name, rec.member_fk_column, $2);
@@ -1792,10 +1773,7 @@ BEGIN
 
     -- function call required, so create function first
     IF NOT (rec.m_table_name || '_array' = ANY($3)) THEN
-      member_nm_path :=
-        citydb_pkg.create_array_delete_function(
-          rec.m_table_name, $2, $3
-        );
+      member_nm_path := citydb_pkg.create_array_delete_function(rec.m_table_name, $2, $3);
     END IF;
 
     vars := vars || E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
@@ -1830,10 +1808,7 @@ BEGIN
 
     -- function call required, so create function first
     IF NOT (rec.m_table_name = ANY($3)) THEN
-      member_nm_path :=
-        citydb_pkg.create_delete_function(
-          rec.m_table_name, $2, $3
-        );
+      member_nm_path := citydb_pkg.create_delete_function(rec.m_table_name, $2, $3);
     END IF;
 
     vars := vars || E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
@@ -1898,7 +1873,7 @@ BEGIN
     || E'\nBEGIN'
     || pre_block
     || E'\n  -- delete '||$1||'s'
-    || E'\n  RETURN QUERY\n    SELECT '||$2||'.delete_' ||citydb_pkg.get_short_name($1)|| E'($1);'
+    || E'\n  RETURN QUERY\n    SELECT '||$2||'.delete_'||citydb_pkg.get_short_name($1)||'($1);'
     || E'\nEND;'
     || E'\n$body$'
     || E'\nLANGUAGE plpgsql STRICT';
@@ -1958,7 +1933,7 @@ BEGIN
     || E'\nBEGIN'
     || pre_block
     || E'\n  -- delete '||$1||'s'
-    || E'\n  RETURN '||$2||'.delete_' ||citydb_pkg.get_short_name($1)|| E'($1);'
+    || E'\n  RETURN '||$2||'.delete_' ||citydb_pkg.get_short_name($1)|| '($1);'
     || E'\nEND;'
     || E'\n$body$'
     || E'\nLANGUAGE plpgsql STRICT';
