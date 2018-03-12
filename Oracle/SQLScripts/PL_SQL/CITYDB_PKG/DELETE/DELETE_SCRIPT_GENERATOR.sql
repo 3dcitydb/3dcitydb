@@ -367,7 +367,7 @@ AS
       ||chr(10)||'  WHERE'
       ||chr(10)||'    t.'||lower(fk_column_name)||' = a.COLUMN_VALUE;'
       ||chr(10)
-      ||chr(10)||'  IF child_ids.COUNT > 0 THEN'
+      ||chr(10)||'  IF child_ids IS NOT EMPTY THEN'
       ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(child_ids);'
       ||chr(10)||'  END IF;'
       ||chr(10);
@@ -385,7 +385,7 @@ AS
   BEGIN
     stmt := 
         chr(10)||'  -- delete '||lower(m_table_name)||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||get_short_name(lower(m_table_name))||'_ids.COUNT > 0 THEN'
+      ||chr(10)||'  IF '||get_short_name(lower(m_table_name))||'_ids IS NOT EMPTY THEN'
       ||chr(10)||'    DELETE FROM'
       ||chr(10)||'      '||lower(m_table_name)||' m'
       ||chr(10)||'    WHERE EXISTS ('
@@ -431,7 +431,7 @@ AS
   BEGIN
     call_stmt :=
         chr(10)||'  -- delete '||lower(m_table_name)||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||get_short_name(lower(m_table_name))||'_ids.COUNT > 0 THEN'
+      ||chr(10)||'  IF '||get_short_name(lower(m_table_name))||'_ids IS NOT EMPTY THEN'
       ||chr(10)||'    SELECT DISTINCT'
       ||chr(10)||'      a.COLUMN_VALUE'
       ||chr(10)||'    BULK COLLECT INTO'
@@ -458,7 +458,7 @@ AS
     call_stmt := call_stmt
       || where_clause || ';'
       ||chr(10)
-      ||chr(10)||'    IF '||get_short_name(lower(m_table_name))||'_pids.COUNT > 0 THEN'
+      ||chr(10)||'    IF '||get_short_name(lower(m_table_name))||'_pids IS NOT EMPTY THEN'
       ||chr(10)||'      dummy_ids := delete_'||get_short_name(lower(m_table_name))||'_batch('||get_short_name(lower(m_table_name))||'_pids);'
       ||chr(10)||'    END IF;'
       ||chr(10)||'  END IF;'
@@ -530,7 +530,7 @@ AS
       ||chr(10)||'      a.COLUMN_VALUE = t.'||lower(n_fk_column_name)
       ||chr(10)||'  )'
       ||chr(10)||'  RETURNING'
-      ||chr(10)||'    '||m_fk_column_name
+      ||chr(10)||'    '||lower(m_fk_column_name)
       ||chr(10)||'  BULK COLLECT INTO'
       ||chr(10)||'	  '||get_short_name(lower(m_table_name))||'_ids;'
       ||chr(10)|| gen_delete_m_ref_by_ids_call(m_table_name, ref_tables, ref_columns);
@@ -598,14 +598,14 @@ AS
             IF objclass IS NOT NULL THEN
               has_objclass_param := TRUE;
               child_ref_block := child_ref_block ||
-                  chr(10)||'  -- delete '||n_table_name||'s'
+                  chr(10)||'  -- delete '||lower(n_table_name)||'s'
                 ||chr(10)||'  IF class_ids MULTISET INTERSECT ID_ARRAY('||citydb_util.id_array2string(objclass, ',')||') IS NOT EMPTY THEN'
-                ||chr(10)||'    deleted_ids := delete_'||get_short_name(lower(n_table_name))||'_batch(pids);'
+                ||chr(10)||'    deleted_ids := deleted_ids MULTISET UNION ALL COALESCE(delete_'||get_short_name(lower(n_table_name))||'_batch(pids), ID_ARRAY());'
                 ||chr(10)||'  END IF;'
                 ||chr(10);
             ELSE
               ref_block := ref_block ||
-                  chr(10)||'  -- delete '||n_table_name||'s'
+                  chr(10)||'  -- delete '||lower(n_table_name)||'s'
                 ||chr(10)||'  dummy_ids := delete_'||get_short_name(lower(n_table_name))||'_batch(pids);'
                 ||chr(10);
             END IF;
@@ -695,7 +695,7 @@ AS
       ||chr(10)||'  WHERE'
       ||chr(10)||'    '||lower(fk_column_name)||' = pid;'
       ||chr(10)
-      ||chr(10)||'  IF child_ids.COUNT > 0 THEN'
+      ||chr(10)||'  IF child_ids IS NOT EMPTY THEN'
       ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(child_ids);'
       ||chr(10)||'  END IF;'
       ||chr(10);
@@ -914,9 +914,9 @@ AS
           IF objclass IS NOT NULL THEN
             has_objclass_param := TRUE;
             child_ref_block := child_ref_block ||
-                chr(10)||'  -- delete '||n_table_name
+                chr(10)||'  -- delete '||lower(n_table_name)
               ||chr(10)||'  IF class_id IN ('||citydb_util.id_array2string(objclass, ',')||') THEN'
-              ||chr(10)||'    deleted_id := delete_'||get_short_name(n_table_name)||'(pid);'
+              ||chr(10)||'    deleted_id := delete_'||get_short_name(lower(n_table_name))||'(pid);'
               ||chr(10)||'  END IF;'
               ||chr(10);
           ELSE
@@ -924,7 +924,7 @@ AS
               vars := vars ||chr(10)|| '  dummy_id NUMBER;';
             END IF;
             ref_block := ref_block ||
-                chr(10)||'  -- delete '||n_table_name
+                chr(10)||'  -- delete '||lower(n_table_name)
               ||chr(10)||'  dummy_id := delete_'||get_short_name(n_table_name)||'(pid);'
               ||chr(10);
           END IF;
@@ -1048,7 +1048,7 @@ AS
       ||chr(10)||'    t.'||lower(self_fk_column_name)||' = a.COLUMN_VALUE'
       ||chr(10)||'    AND t.id != a.COLUMN_VALUE;'
       ||chr(10)
-      ||chr(10)||'  IF part_ids.COUNT > 0 THEN'
+      ||chr(10)||'  IF part_ids IS NOT EMPTY THEN'
       ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(part_ids);'
       ||chr(10)||'  END IF;';
   END;
@@ -1102,7 +1102,7 @@ AS
       ||chr(10)||'    '||lower(self_fk_column_name)||' = pid'
       ||chr(10)||'    AND id != pid;'
       ||chr(10)
-      ||chr(10)||'  IF part_ids.COUNT > 0 THEN'
+      ||chr(10)||'  IF part_ids IS NOT EMPTY THEN'
       ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(part_ids);'
       ||chr(10)||'  END IF;';
   END;
@@ -1484,7 +1484,7 @@ AS
       END IF;
       parent_block :=
           chr(10)||'  -- delete '||lower(parent_table)
-        ||chr(10)||'  IF deleted_ids.COUNT > 0 THEN'
+        ||chr(10)||'  IF deleted_ids IS NOT EMPTY THEN'
         ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(parent_table))||'_batch(deleted_ids, ID_ARRAY(0));'
         ||chr(10)||'  END IF;'
         ||chr(10);
@@ -1611,13 +1611,13 @@ AS
     pre_block := pre_block || COALESCE(ref_block, '');
 
     -- EXIT in case child method has been called already
-    IF objclass_block <> '' THEN
+    IF objclass_block IS NOT NULL THEN
       pre_block :=
           chr(10)||'  IF'
         ||chr(10)||'    deleted_ids IS NOT EMPTY'
         ||chr(10)||'    OR objclass_ids MULTISET EXCEPT ID_ARRAY(0) IS NOT EMPTY'
         ||chr(10)||'  THEN'
-        ||chr(10)||'    ' || return_block
+        ||chr(10)||'  ' || return_block
         ||chr(10)||'  END IF;'
         ||chr(10)|| pre_block;
     END IF;
@@ -1709,13 +1709,13 @@ AS
     pre_block := pre_block || COALESCE(ref_block, '');
 
     -- EXIT in case child method has been called already
-    IF objclass_block <> '' THEN
+    IF objclass_block IS NOT NULL THEN
       pre_block :=
           chr(10)||'  IF'
         ||chr(10)||'    deleted_id IS NOT NULL'
         ||chr(10)||'    OR objclass_id <> 0'
         ||chr(10)||'  THEN'
-        ||chr(10)||'    ' || return_block
+        ||chr(10)||'  ' || return_block
         ||chr(10)||'  END IF;'
         ||chr(10)|| pre_block;
     END IF;
