@@ -590,7 +590,7 @@ AS
             FROM
               objectclass
             START WITH
-              tablename = n_table_name
+              tablename = lower(n_table_name)
             CONNECT BY PRIOR
               id = superclass_id;
 
@@ -600,13 +600,13 @@ AS
               child_ref_block := child_ref_block ||
                   chr(10)||'  -- delete '||n_table_name||'s'
                 ||chr(10)||'  IF class_ids MULTISET INTERSECT ID_ARRAY('||citydb_util.id_array2string(objclass, ',')||') IS NOT EMPTY THEN'
-                ||chr(10)||'    deleted_ids := delete_'||get_short_name(n_table_name)||'_batch(pids);'
+                ||chr(10)||'    deleted_ids := delete_'||get_short_name(lower(n_table_name))||'_batch(pids);'
                 ||chr(10)||'  END IF;'
                 ||chr(10);
             ELSE
               ref_block := ref_block ||
                   chr(10)||'  -- delete '||n_table_name||'s'
-                ||chr(10)||'  dummy_ids := delete_'||get_short_name(n_table_name)||'_batch(pids);'
+                ||chr(10)||'  dummy_ids := delete_'||get_short_name(lower(n_table_name))||'_batch(pids);'
                 ||chr(10);
             END IF;
           ELSE
@@ -642,7 +642,7 @@ AS
         ||chr(10)||'    BULK COLLECT INTO'
         ||chr(10)||'      class_ids'
         ||chr(10)||'    FROM'
-        ||chr(10)||'      '||tab_name|| 't,'
+        ||chr(10)||'      '||lower(tab_name)|| ' t,'
         ||chr(10)||'      TABLE(pids) a'
         ||chr(10)||'    WHERE'
         ||chr(10)||'      t.id = a.COLUMN_VALUE;'
@@ -906,7 +906,7 @@ AS
           FROM
             objectclass
           START WITH
-            tablename = n_table_name
+            tablename = lower(n_table_name)
           CONNECT BY PRIOR
             id = superclass_id;
 
@@ -967,7 +967,7 @@ AS
         ||chr(10)||'    INTO'
         ||chr(10)||'      class_id'
         ||chr(10)||'    FROM'
-        ||chr(10)||'      '||tab_name
+        ||chr(10)||'      '||lower(tab_name)
         ||chr(10)||'    WHERE'
         ||chr(10)||'      id = pid;'
         ||chr(10)||'  ELSE'
@@ -1300,7 +1300,7 @@ AS
       IF cleanup_ref_table IS NOT NULL THEN
         -- function call required, so create function first
         IF lower(ref_table_name) || '_array' NOT MEMBER OF ref_to_path THEN
-          ref_to_path := citydb_delete_gen.create_array_delete_function(ref_table_name, schema_name, ref_to_path);;
+          ref_to_path := citydb_delete_gen.create_array_delete_function(ref_table_name, schema_name, ref_to_path);
         END IF;
         vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table_name))||'_pids ID_ARRAY;';
         fk_block := fk_block || gen_delete_m_ref_by_ids_call(ref_table_name, ref_to_ref_tables, ref_to_ref_columns);
@@ -1536,7 +1536,7 @@ AS
       || 'objclass_ids ID_ARRAY := ID_ARRAY()'
       || ') RETURN ID_ARRAY'
       ||chr(10)||'IS'
-      ||chr(10)||'  deleted_ids ID_ARRAY;'
+      ||chr(10)||'  deleted_ids ID_ARRAY := ID_ARRAY();'
       ||chr(10)||'BEGIN'
       ||chr(10)||'  RETURN deleted_ids;'
       ||chr(10)||'END;';
@@ -1650,6 +1650,7 @@ AS
     ddl_command := ddl_command
       || declare_block
       ||chr(10)||'BEGIN'
+      || objclass_block
       || pre_block
       ||chr(10)||'  -- delete '||lower(tab_name)||'s'
       || delete_block
@@ -1750,6 +1751,7 @@ AS
     ddl_command := ddl_command
       || declare_block
       ||chr(10)||'BEGIN'
+      || objclass_block
       || pre_block
       ||chr(10)||'  -- delete '||lower(tab_name)||'s'
       || delete_block
