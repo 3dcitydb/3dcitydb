@@ -198,7 +198,7 @@ AS
 
     IF citydb_util.versioning_table(idx_table_name, schema_name) = 'ON' THEN
       internal_table_name := internal_table_name || '_LT';
-    END IF;     
+    END IF;
 
     SELECT
       upper(index_type),
@@ -409,7 +409,7 @@ AS
     sql_error_code VARCHAR2(20);
   BEGIN
     idx_log := STRARRAY();
-    
+
     FOR rec IN
       (SELECT * FROM index_table WHERE (obj).type = idx_type)
     LOOP
@@ -421,7 +421,7 @@ AS
         || ':' || rec.obj.table_name
         || ':' || rec.obj.attribute_name
         || ':' || sql_error_code;
-    END LOOP; 
+    END LOOP;
 
     RETURN idx_log;
   END;
@@ -550,7 +550,7 @@ AS
   FUNCTION get_index(
     idx_table_name VARCHAR2, 
     idx_column_name VARCHAR2
-	) RETURN INDEX_OBJ
+    ) RETURN INDEX_OBJ
   IS
     idx INDEX_OBJ;
   BEGIN
