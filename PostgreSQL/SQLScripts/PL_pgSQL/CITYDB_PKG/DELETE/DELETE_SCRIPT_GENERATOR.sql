@@ -44,9 +44,9 @@
 *   create_member_nm_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
 *     INOUT member_nm_path TEXT[] DEFAULT '{}'::text[], OUT vars TEXT, OUT ref_block TEXT) RETURNS RECORD
 *   create_ref_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb', INOUT ref_path TEXT[] DEFAULT '{}'::text[], 
-*     OUT args TEXT, OUT vars TEXT, OUT child_ref_block TEXT, OUT ref_block TEXT) RETURNS RECORD
+*     OUT vars TEXT, OUT child_ref_block TEXT, OUT ref_block TEXT) RETURNS RECORD
 *   create_ref_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb', INOUT ref_path TEXT[] DEFAULT '{}'::text[],
-*     OUT args TEXT, OUT vars TEXT, OUT child_ref_block TEXT, OUT ref_block TEXT) RETURNS TEXT
+*     OUT vars TEXT, OUT child_ref_block TEXT, OUT ref_block TEXT) RETURNS TEXT
 *   create_ref_to_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb', INOUT ref_to_path TEXT[] DEFAULT '{}'::text[],
 *     OUT vars TEXT, OUT returning_block TEXT, OUT collect_block TEXT, OUT into_block TEXT, OUT fk_block TEXT) RETURNS RECORD
 *   create_ref_to_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb', INOUT ref_to_path TEXT[] DEFAULT '{}'::text[],
@@ -252,7 +252,7 @@ LEFT JOIN LATERAL (
   JOIN
     pg_constraint pk
     ON pk.conrelid = mn.conrelid
-   AND pk.conkey @> (ref.conkey || mn.conkey || '{}')
+   AND pk.conkey @> (n.conkey || mn.conkey || '{}')
   WHERE
     mn.conrelid = n.n_table_name
     AND n.cleanup_n_table IS NULL
@@ -450,7 +450,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_array_delete(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb',
   INOUT ref_path TEXT[] DEFAULT '{}'::text[],
-  OUT args TEXT,
   OUT vars TEXT,
   OUT child_ref_block TEXT,
   OUT ref_block TEXT
@@ -459,7 +458,6 @@ $$
 DECLARE
   rec RECORD;
   objclass INTEGER[];
-  has_objclass_param BOOLEAN := FALSE;
 BEGIN
   FOR rec IN (
     SELECT * FROM citydb_pkg.query_ref_fk($1, $2)
@@ -510,7 +508,6 @@ BEGIN
 
           -- if found set objectclass condition
           IF objclass IS NOT NULL THEN
-            has_objclass_param := TRUE;
             child_ref_block := child_ref_block ||
                  E'\n  -- delete '||rec.n_table_name||'s'
               || E'\n  IF class_ids && ARRAY['||array_to_string(objclass, ',')||']::int[] THEN'
@@ -539,38 +536,6 @@ BEGIN
       END IF;
     END IF;
   END LOOP;
-
-  IF has_objclass_param THEN
-    args := '(pids int[], objclass_ids int[] DEFAULT NULL)';
-    vars := vars ||E'\n  class_ids INTEGER[];';
-    child_ref_block :=
-         E'\n  IF array_length($1, 1) IS NULL THEN'
-      || E'\n    RETURN;'
-      || E'\n  END IF;'
-      || E'\n'
-      || E'\n  -- fetch objectclass_ids if not set'
-      || E'\n  IF array_length($2, 1) IS NULL THEN'
-      || E'\n    SELECT'
-      || E'\n      array_agg(t.objectclass_id)'
-      || E'\n    INTO'
-      || E'\n      class_ids'
-      || E'\n    FROM'
-      || E'\n      '||$2||'.'||$1||' t,'
-      || E'\n      unnest($1) a(a_id)'
-      || E'\n    WHERE'
-      || E'\n      t.id = a.a_id;'
-      || E'\n  ELSE'
-      || E'\n    class_ids := $2;'
-      || E'\n  END IF;'
-      || E'\n'
-      || E'\n  IF array_length(class_ids, 1) IS NULL THEN'
-      || E'\n    RAISE NOTICE ''Objectclass_id unknown! Check OBJECTCLASS table.'';'
-      || E'\n    RETURN NEXT NULL;'
-      || E'\n  END IF;'
-      || E'\n' || child_ref_block;
-  ELSE
-    args := '(pids int[])';
-  END IF;
 
   RETURN;
 END;
@@ -749,7 +714,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_delete(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb',
   INOUT ref_path TEXT[] DEFAULT '{}'::text[],
-  OUT args TEXT,
   OUT vars TEXT,
   OUT child_ref_block TEXT,
   OUT ref_block TEXT
@@ -758,7 +722,6 @@ $$
 DECLARE
   rec RECORD;
   objclass INTEGER[];
-  has_objclass_param BOOLEAN := FALSE;
 BEGIN
   FOR rec IN (
     SELECT * FROM citydb_pkg.query_ref_fk($1, $2)
@@ -808,7 +771,6 @@ BEGIN
 
         -- if found set objectclass condition
         IF objclass IS NOT NULL THEN
-          has_objclass_param := TRUE;
           child_ref_block := child_ref_block ||
                E'\n  -- delete '||rec.n_table_name
             || E'\n  IF class_id IN ('||array_to_string(objclass, ',')||') THEN'
@@ -843,33 +805,6 @@ BEGIN
       END IF;
     END IF;
   END LOOP;
-  
-  IF has_objclass_param THEN
-    args := '(pid int, objclass_id int DEFAULT NULL)';
-    vars := vars ||E'\n  class_id INTEGER;';
-    child_ref_block :=
-         E'\n  -- fetch objectclass_id if not set'
-      || E'\n  IF $2 IS NULL THEN'
-      || E'\n    SELECT'
-      || E'\n      objectclass_id'
-      || E'\n    INTO'
-      || E'\n      class_id'
-      || E'\n    FROM'
-      || E'\n      '||$2||'.'||$1
-      || E'\n    WHERE'
-      || E'\n      id = $1;'
-      || E'\n  ELSE'
-      || E'\n    class_id := $2;'
-      || E'\n  END IF;'
-      || E'\n'
-      || E'\n  IF class_id IS NULL THEN'
-      || E'\n    RAISE NOTICE ''Objectclass_id unknown! Check OBJECTCLASS table.'';'
-      || E'\n    RETURN NULL;'
-      || E'\n  END IF;'
-      || E'\n' || child_ref_block;
-  ELSE
-    args := '(pid int)';
-  END IF;
 
   RETURN;
 END;
@@ -1367,13 +1302,11 @@ BEGIN
   -- REFERENCING TABLES
   SELECT
     ref_path,
-    ddl_command || args || E' RETURNS SETOF int AS\n$body$',
     declare_block || COALESCE(vars, ''),
     objclass_block || COALESCE(child_ref_block, ''),
     pre_block || COALESCE(ref_block, '')
   INTO
     create_path,
-    ddl_command,
     declare_block,
     objclass_block,
     pre_block
@@ -1382,15 +1315,46 @@ BEGIN
 
   -- EXIT in case child method has been called already
   IF objclass_block <> '' THEN
-    pre_block :=
-         E'\n  IF'
+    ddl_command := ddl_command || '(pids int[], objclass_ids int[] DEFAULT NULL)';
+    declare_block := declare_block ||E'\n  class_ids INTEGER[];';
+    objclass_block :=
+         E'\n  IF array_length($1, 1) IS NULL THEN'
+      || E'\n    RETURN;'
+      || E'\n  END IF;'
+      || E'\n'
+      || E'\n  -- fetch objectclass_ids if not set'
+      || E'\n  IF array_length($2, 1) IS NULL THEN'
+      || E'\n    SELECT'
+      || E'\n      array_agg(t.objectclass_id)'
+      || E'\n    INTO'
+      || E'\n      class_ids'
+      || E'\n    FROM'
+      || E'\n      '||$1||' t,'
+      || E'\n      unnest($1) a(a_id)'
+      || E'\n    WHERE'
+      || E'\n      t.id = a.a_id;'
+      || E'\n  ELSE'
+      || E'\n    class_ids := $2;'
+      || E'\n  END IF;'
+      || E'\n'
+      || E'\n  IF array_length(class_ids, 1) IS NULL THEN'
+      || E'\n    RAISE NOTICE ''Objectclass_id unknown! Check OBJECTCLASS table.'';'
+      || E'\n    RETURN NEXT NULL;'
+      || E'\n  END IF;'
+      || E'\n' || objclass_block
+      || E'\n  IF'
       || E'\n    array_length(deleted_ids, 1) IS NOT NULL'
       || E'\n    OR 0 <> ALL(objclass_ids)'
       || E'\n  THEN'
       || E'\n    ' || return_block
       || E'\n  END IF;'
       || E'\n' || pre_block;
+  ELSE
+    ddl_command := ddl_command || '(pids int[])';
   END IF;
+  
+  -- complete function header
+  ddl_command := ddl_command || E' RETURNS SETOF int AS\n$body$';
 
   -- SELF REFERENCES
   pre_block := pre_block || citydb_pkg.create_selfref_array_delete($1, $2, objclass_block <> '');
@@ -1492,13 +1456,11 @@ BEGIN
   -- REFERENCING TABLES
   SELECT
     ref_path,
-    ddl_command || args || E' RETURNS int AS\n$body$',
     declare_block || COALESCE(vars, ''),
     objclass_block || COALESCE(child_ref_block, ''),
     pre_block || COALESCE(ref_block, '')
   INTO
     create_path,
-    ddl_command,
     declare_block,
     objclass_block,
     pre_block
@@ -1507,15 +1469,41 @@ BEGIN
 
   -- EXIT in case child method has been called already
   IF objclass_block <> '' THEN
-    pre_block :=
-         E'\n  IF'
+    ddl_command := ddl_command || '(pid int, objclass_id int DEFAULT NULL)';
+    declare_block := declare_block ||E'\n  class_id INTEGER;';
+    objclass_block :=
+         E'\n  -- fetch objectclass_id if not set'
+      || E'\n  IF $2 IS NULL THEN'
+      || E'\n    SELECT'
+      || E'\n      objectclass_id'
+      || E'\n    INTO'
+      || E'\n      class_id'
+      || E'\n    FROM'
+      || E'\n      '||$1
+      || E'\n    WHERE'
+      || E'\n      id = $1;'
+      || E'\n  ELSE'
+      || E'\n    class_id := $2;'
+      || E'\n  END IF;'
+      || E'\n'
+      || E'\n  IF class_id IS NULL THEN'
+      || E'\n    RAISE NOTICE ''Objectclass_id unknown! Check OBJECTCLASS table.'';'
+      || E'\n    RETURN NULL;'
+      || E'\n  END IF;'
+      || E'\n' || objclass_block
+      || E'\n  IF'
       || E'\n    deleted_id IS NOT NULL'
       || E'\n    OR objclass_id <> 0'
       || E'\n  THEN'
       || E'\n    ' || return_block
       || E'\n  END IF;'
       || E'\n' || pre_block;
+  ELSE
+    ddl_command := ddl_command || '(pid int)';
   END IF;
+
+  -- complete function header
+  ddl_command := ddl_command || E' RETURNS int AS\n$body$';
 
   -- SELF REFERENCES
   SELECT
