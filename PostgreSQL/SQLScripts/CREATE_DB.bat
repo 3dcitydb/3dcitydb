@@ -16,14 +16,14 @@ cd /d %~dp0
 :srid_retry
 set var=
 echo.
-echo Please enter a valid SRID (e.g., 3068 for DHDN/Soldner Berlin).
+echo Please enter a valid SRID (e.g., 25832 for ETRS 89 / UTM zone 32N).
 echo Press ENTER to use default.
-set /p var="(default=3068): "
+set /p var="(default=0): "
 
 IF /i NOT "%var%"=="" (
   set srsno=%var%
 ) else (
-  set srsno=3068
+  set srsno=0
 )
 
 :: SRID is numeric?
@@ -36,14 +36,14 @@ IF defined num (
 
 :: Prompt for gmlsrsname
 echo.
-echo Please enter the corresponding SRSName to be used in GML exports (e.g., urn:ogc:def:crs,crs:EPSG::3068,crs:EPSG::5783).
+echo Please enter the corresponding SRSName to be used in GML exports (e.g., urn:ogc:def:crs,crs:EPSG::25832,crs:EPSG::7837).
 echo Press ENTER to use default.
-set /p var="(default=urn:ogc:def:crs,crs:EPSG::3068,crs:EPSG::5783): "
+set /p var="(default=urn:ogc:def:crs,crs:EPSG::25832,crs:EPSG::7837): "
 
 IF /i NOT "%var%"=="" (
   set gmlsrsname=%var%
 ) else (
-  set gmlsrsname=urn:ogc:def:crs,crs:EPSG::3068,crs:EPSG::5783
+  set gmlsrsname=urn:ogc:def:crs,crs:EPSG::25832,crs:EPSG::7837
 )
 
 :: Run CREATE_DB.sql to create the 3D City Database instance

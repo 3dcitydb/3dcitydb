@@ -13,10 +13,10 @@ export PGBIN=path_to_psql
 regex='^[0-9]+$'
 while [ 1 ]; do
   echo
-  echo 'Please enter a valid SRID (e.g., 3068 for DHDN/Soldner Berlin).'
+  echo 'Please enter a valid SRID (e.g., 25832 for ETRS 89 / UTM zone 32N).'
   echo 'Press ENTER to use default.'
-  read -p "(default=3068): " SRSNO
-  SRSNO=${SRSNO:-3068}
+  read -p "(default=0): " SRSNO
+  SRSNO=${SRSNO:-0}
    
   if [[ ! $SRSNO =~ $regex ]]; then
     echo 'SRSNO must be numeric. Please retry.'
@@ -27,10 +27,10 @@ done
 
 # Prompt for GMLSRSNAME
 echo
-echo 'Please enter the corresponding SRSName to be used in GML exports (e.g., urn:ogc:def:crs,crs:EPSG::3068,crs:EPSG::5783).'
+echo 'Please enter the corresponding SRSName to be used in GML exports (e.g., urn:ogc:def:crs,crs:EPSG::25832,crs:EPSG::7837).'
 echo 'Press ENTER to use default.'
-read -p '(default=urn:ogc:def:crs,crs:EPSG::3068,crs:EPSG::5783): ' GMLSRSNAME
-GMLSRSNAME=${GMLSRSNAME:-urn:ogc:def:crs,crs:EPSG::3068,crs:EPSG::5783}
+read -p '(default=urn:ogc:def:crs,crs:EPSG::25832,crs:EPSG::7837): ' GMLSRSNAME
+GMLSRSNAME=${GMLSRSNAME:-urn:ogc:def:crs,crs:EPSG::25832,crs:EPSG::7837}
 
 # cd to path of the shell script
 cd "$( cd "$( dirname "$0" )" && pwd )" > /dev/null
