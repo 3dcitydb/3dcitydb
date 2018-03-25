@@ -481,30 +481,7 @@ BEGIN
       IF rec.m_table_name IS NULL THEN
         IF rec.is_child = 1 THEN
           -- find objectclass of child to set filter
-          WITH RECURSIVE objectclass_tree (id, superclass_id) AS (
-            SELECT
-              id,
-              superclass_id
-            FROM
-              objectclass
-            WHERE
-              tablename = rec.n_table_name
-            UNION ALL
-              SELECT
-                o.id,
-                o.superclass_id
-              FROM
-                objectclass o,
-                objectclass_tree t
-              WHERE
-                o.superclass_id = t.id
-          )
-          SELECT
-            array_agg(DISTINCT id)
-          INTO
-            objclass
-          FROM
-            objectclass_tree;
+          objclass := citydb_pkg.table_name_to_objectclass_ids(rec.n_table_name);
 
           -- if found set objectclass condition
           IF objclass IS NOT NULL THEN
@@ -744,30 +721,7 @@ BEGIN
         END IF;
 
         -- find objectclass of child to set filter
-        WITH RECURSIVE objectclass_tree (id, superclass_id) AS (
-          SELECT
-            id,
-            superclass_id
-          FROM
-            objectclass
-          WHERE
-            tablename = rec.n_table_name
-          UNION ALL
-            SELECT
-              o.id,
-              o.superclass_id
-            FROM
-              objectclass o,
-              objectclass_tree t
-            WHERE
-              o.superclass_id = t.id
-        )
-        SELECT
-          array_agg(DISTINCT id)
-        INTO
-          objclass
-        FROM
-          objectclass_tree;
+        objclass := citydb_pkg.table_name_to_objectclass_ids(rec.n_table_name);
 
         -- if found set objectclass condition
         IF objclass IS NOT NULL THEN

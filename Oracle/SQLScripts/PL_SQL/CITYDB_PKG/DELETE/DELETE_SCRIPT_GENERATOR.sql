@@ -578,16 +578,7 @@ AS
         IF m_table_name IS NULL THEN
           IF is_child = 1 THEN
             -- find objectclass of child to set filter
-            SELECT
-              id
-            BULK COLLECT INTO
-              objclass
-            FROM
-              objectclass
-            START WITH
-              tablename = lower(n_table_name)
-            CONNECT BY PRIOR
-              id = superclass_id;
+            objclass := citydb_util.table_name_to_objectclass_ids(n_table_name);
 
             -- if found set objectclass condition
             IF objclass IS NOT NULL THEN
@@ -872,16 +863,7 @@ AS
       ) THEN
         IF is_child = 1 THEN
           -- find objectclass of child to set filter
-          SELECT
-            id
-          BULK COLLECT INTO
-            objclass
-          FROM
-            objectclass
-          START WITH
-            tablename = lower(n_table_name)
-          CONNECT BY PRIOR
-            id = superclass_id;
+          objclass := citydb_util.table_name_to_objectclass_ids(n_table_name);
 
           -- if found set objectclass condition
           IF objclass IS NOT NULL THEN
