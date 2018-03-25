@@ -53,6 +53,7 @@
 *   get_seq_values(seq_name TEXT, seq_count INTEGER) RETURNS SETOF INTEGER
 *   min(a NUMERIC, b NUMERIC) RETURNS NUMERIC
 *   objectclass_id_to_table_name(class_id INTEGER) RETURNS TEXT
+*   table_name_to_objectclass_ids(table_name TEXT) RETURNS INTEGER[]
 *   update_schema_constraints(on_delete_param TEXT DEFAULT 'CASCADE', schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   update_table_constraint(fkey_name TEXT, table_name TEXT, column_name TEXT, ref_table TEXT, ref_column TEXT, 
 *     delete_param TEXT, deferrable_param TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
@@ -314,83 +315,46 @@ LANGUAGE sql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.objectclass_id_to_table_name(class_id INTEGER) RETURNS TEXT AS
 $$
-SELECT CASE 
-  WHEN $1 = 4 THEN 'land_use'
-  WHEN $1 = 5 THEN 'generic_cityobject'
-  WHEN $1 = 7 THEN 'solitary_vegetat_object'
-  WHEN $1 = 8 THEN 'plant_cover'
-  WHEN $1 = 9 THEN 'waterbody'
-  WHEN $1 = 11 OR 
-       $1 = 12 OR 
-       $1 = 13 THEN 'waterboundary_surface'
-  WHEN $1 = 14 THEN 'relief_feature'
-  WHEN $1 = 16 OR 
-       $1 = 17 OR 
-       $1 = 18 OR 
-       $1 = 19 THEN 'relief_component'
-  WHEN $1 = 21 THEN 'city_furniture'
-  WHEN $1 = 23 THEN 'cityobjectgroup'
-  WHEN $1 = 25 OR 
-       $1 = 26 THEN 'building'
-  WHEN $1 = 27 OR 
-       $1 = 28 THEN 'building_installation'
-  WHEN $1 = 30 OR 
-       $1 = 31 OR 
-       $1 = 32 OR 
-       $1 = 33 OR 
-       $1 = 34 OR 
-       $1 = 35 OR
-       $1 = 36 OR
-       $1 = 60 OR
-       $1 = 61 THEN 'thematic_surface'
-  WHEN $1 = 38 OR 
-       $1 = 39 THEN 'opening'
-  WHEN $1 = 40 THEN 'building_furniture'
-  WHEN $1 = 41 THEN 'room'
-  WHEN $1 = 43 OR 
-       $1 = 44 OR 
-       $1 = 45 OR 
-       $1 = 46 THEN 'transportation_complex'
-  WHEN $1 = 47 OR 
-       $1 = 48 THEN 'traffic_area'
-  WHEN $1 = 57 THEN 'citymodel'
-  WHEN $1 = 63 OR
-       $1 = 64 THEN 'bridge'
-  WHEN $1 = 65 OR
-       $1 = 66 THEN 'bridge_installation'
-  WHEN $1 = 68 OR 
-       $1 = 69 OR 
-       $1 = 70 OR 
-       $1 = 71 OR 
-       $1 = 72 OR
-       $1 = 73 OR
-       $1 = 74 OR
-       $1 = 75 OR
-       $1 = 76 THEN 'bridge_thematic_surface'
-  WHEN $1 = 78 OR 
-       $1 = 79 THEN 'bridge_opening'		 
-  WHEN $1 = 80 THEN 'bridge_furniture'
-  WHEN $1 = 81 THEN 'bridge_room'
-  WHEN $1 = 82 THEN 'bridge_constr_element'
-  WHEN $1 = 84 OR
-       $1 = 85 THEN 'tunnel'
-  WHEN $1 = 86 OR
-       $1 = 87 THEN 'tunnel_installation'
-  WHEN $1 = 88 OR 
-       $1 = 89 OR 
-       $1 = 90 OR 
-       $1 = 91 OR 
-       $1 = 92 OR
-       $1 = 93 OR
-       $1 = 94 OR
-       $1 = 95 OR
-       $1 = 96 THEN 'tunnel_thematic_surface'
-  WHEN $1 = 99 OR 
-       $1 = 100 THEN 'tunnel_opening'		 
-  WHEN $1 = 101 THEN 'tunnel_furniture'
-  WHEN $1 = 102 THEN 'tunnel_hollow_space'
-  ELSE
-    'Unknown table'
-  END;
+SELECT
+  tablename
+FROM
+  objectclass
+WHERE
+  id = $1;
+$$
+LANGUAGE sql IMMUTABLE STRICT;
+
+
+/*****************************************************************
+* table_name_to_objectclass_ids
+*
+* @param table_name name of table
+*
+* @RETURN INT[] array of objectclass_ids
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.table_name_to_objectclass_ids(table_name TEXT) RETURNS INTEGER[] AS
+$$
+WITH RECURSIVE objectclass_tree (id, superclass_id) AS (
+  SELECT
+    id,
+    superclass_id
+  FROM
+    objectclass
+  WHERE
+    tablename = lower($1)
+  UNION ALL
+    SELECT
+      o.id,
+      o.superclass_id
+    FROM
+      objectclass o,
+      objectclass_tree t
+    WHERE
+      o.superclass_id = t.id
+)
+SELECT
+  array_agg(DISTINCT id ORDER BY id)
+FROM
+  objectclass_tree;
 $$
 LANGUAGE sql IMMUTABLE STRICT;

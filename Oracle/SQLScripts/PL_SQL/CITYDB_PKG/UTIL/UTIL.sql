@@ -101,6 +101,7 @@ AS
   FUNCTION id_array2string(ids ID_ARRAY, delim VARCHAR2 := ',') RETURN VARCHAR2;
   FUNCTION get_id_array_size(id_arr ID_ARRAY) RETURN NUMBER;
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
+  FUNCTION table_name_to_objectclass_ids(table_name VARCHAR2) RETURN ID_ARRAY;
   FUNCTION construct_solid(geom_root_id NUMBER) RETURN SDO_GEOMETRY;
   FUNCTION to_2d(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
   FUNCTION sdo2geojson3d(p_geometry in sdo_geometry, p_decimal_places in pls_integer default 2, p_compress_tags in pls_integer default 0, p_relative2mbr in pls_integer default 0) RETURN CLOB DETERMINISTIC;
@@ -537,89 +538,45 @@ AS
   IS
     table_name VARCHAR2(30) := '';
   BEGIN
-    CASE 
-      WHEN class_id = 4 THEN table_name := 'land_use';
-      WHEN class_id = 5 THEN table_name := 'generic_cityobject';
-      WHEN class_id = 7 THEN table_name := 'solitary_vegetat_object';
-      WHEN class_id = 8 THEN table_name := 'plant_cover';
-      WHEN class_id = 9 THEN table_name := 'waterbody';
-      WHEN class_id = 11 OR 
-           class_id = 12 OR 
-           class_id = 13 THEN table_name := 'waterboundary_surface';
-      WHEN class_id = 14 THEN table_name := 'relief_feature';
-      WHEN class_id = 16 OR 
-           class_id = 17 OR 
-           class_id = 18 OR 
-           class_id = 19 THEN table_name := 'relief_component';
-      WHEN class_id = 21 THEN table_name := 'city_furniture';
-      WHEN class_id = 23 THEN table_name := 'cityobjectgroup';
-      WHEN class_id = 25 OR 
-           class_id = 26 THEN table_name := 'building';
-      WHEN class_id = 27 OR 
-           class_id = 28 THEN table_name := 'building_installation';
-      WHEN class_id = 30 OR 
-           class_id = 31 OR 
-           class_id = 32 OR 
-           class_id = 33 OR 
-           class_id = 34 OR 
-           class_id = 35 OR
-           class_id = 36 OR
-           class_id = 60 OR
-           class_id = 61 THEN table_name := 'thematic_surface';
-      WHEN class_id = 38 OR 
-           class_id = 39 THEN table_name := 'opening';
-      WHEN class_id = 40 THEN table_name := 'building_furniture';
-      WHEN class_id = 41 THEN table_name := 'room';
-      WHEN class_id = 43 OR 
-           class_id = 44 OR 
-           class_id = 45 OR 
-           class_id = 46 THEN table_name := 'transportation_complex';
-      WHEN class_id = 47 OR 
-           class_id = 48 THEN table_name := 'traffic_area';
-      WHEN class_id = 57 THEN table_name := 'citymodel';
-      WHEN class_id = 63 OR
-           class_id = 64 THEN table_name := 'bridge';
-      WHEN class_id = 65 OR
-           class_id = 66 THEN table_name := 'bridge_installation';
-      WHEN class_id = 68 OR 
-           class_id = 69 OR 
-           class_id = 70 OR 
-           class_id = 71 OR 
-           class_id = 72 OR
-           class_id = 73 OR
-           class_id = 74 OR
-           class_id = 75 OR
-           class_id = 76 THEN table_name := 'bridge_thematic_surface';
-      WHEN class_id = 78 OR 
-           class_id = 79 THEN table_name := 'bridge_opening';		 
-      WHEN class_id = 80 THEN table_name := 'bridge_furniture';
-      WHEN class_id = 81 THEN table_name := 'bridge_room';
-      WHEN class_id = 82 THEN table_name := 'bridge_constr_element';
-      WHEN class_id = 84 OR
-           class_id = 85 THEN table_name := 'tunnel';
-      WHEN class_id = 86 OR
-           class_id = 87 THEN table_name := 'tunnel_installation';
-      WHEN class_id = 88 OR 
-           class_id = 89 OR 
-           class_id = 90 OR 
-           class_id = 91 OR 
-           class_id = 92 OR
-           class_id = 93 OR
-           class_id = 94 OR
-           class_id = 95 OR
-           class_id = 96 THEN table_name := 'tunnel_thematic_surface';
-      WHEN class_id = 99 OR 
-           class_id = 100 THEN table_name := 'tunnel_opening';		 
-      WHEN class_id = 101 THEN table_name := 'tunnel_furniture';
-      WHEN class_id = 102 THEN table_name := 'tunnel_hollow_space';
-    ELSE
-      dbms_output.put_line('Table name unknown.');
-      NULL;
-    END CASE;
+    SELECT
+      tablename
+    INTO
+      table_name
+    FROM
+      objectclass
+    WHERE
+      id = class_id;
 
     RETURN table_name;
   END;
-  
+
+
+  /*****************************************************************
+  * table_name_to_objectclass_ids
+  *
+  * @param table_name name of table
+  * @return ID_ARRAY array of objectclass_ids
+  ******************************************************************/
+  FUNCTION table_name_to_objectclass_ids(table_name VARCHAR2) RETURN ID_ARRAY
+  IS
+    objclass_ids ID_ARRAY;
+  BEGIN
+    SELECT DISTINCT
+      id
+    BULK COLLECT INTO
+      objclass_ids
+    FROM
+      objectclass
+    START WITH
+      tablename = lower(table_name)
+    CONNECT BY PRIOR
+      id = superclass_id
+    ORDER BY
+      id;
+
+    RETURN objclass_ids;
+  END;
+
 
   /*****************************************************************
   * construct_solid
