@@ -1163,16 +1163,23 @@ CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_to_parent_array_delete(
 $$
 DECLARE
   parent_table TEXT;
+  objclass INTEGER[];
 BEGIN
-  parent_table := citydb_pkg.query_ref_to_parent_fk($1, $2);
+  -- check if given table has objectclass_id column
+  objclass := citydb_pkg.table_name_to_objectclass_ids($1);
 
-  IF parent_table IS NOT NULL THEN
-    IF NOT (parent_table || '_array' = ANY($3)) THEN
-      ref_to_parent_path := citydb_pkg.create_array_delete_function(parent_table, $2, $3);
+  -- if found delete parent object
+  IF objclass IS NOT NULL THEN
+    parent_table := citydb_pkg.query_ref_to_parent_fk($1, $2);
+
+    IF parent_table IS NOT NULL THEN
+      IF NOT (parent_table || '_array' = ANY($3)) THEN
+        ref_to_parent_path := citydb_pkg.create_array_delete_function(parent_table, $2, $3);
+      END IF;
+      parent_block :=
+           E'\n  -- delete '||parent_table
+        || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_ids, ''{0}''::int[]);\n';
     END IF;
-    parent_block :=
-         E'\n  -- delete '||parent_table
-      || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_ids, ''{0}''::int[]);\n';
   END IF;
 
   RETURN;
@@ -1190,16 +1197,23 @@ CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_to_parent_delete(
 $$
 DECLARE
   parent_table TEXT;
+  objclass INTEGER[];
 BEGIN
-  parent_table := citydb_pkg.query_ref_to_parent_fk($1, $2);
+  -- check if given table has objectclass_id column
+  objclass := citydb_pkg.table_name_to_objectclass_ids($1);
 
-  IF parent_table IS NOT NULL THEN
-    IF NOT (parent_table = ANY($3)) THEN
-      ref_to_parent_path := citydb_pkg.create_delete_function(parent_table, $2, $3);
+  -- if found delete parent object
+  IF objclass IS NOT NULL THEN
+    parent_table := citydb_pkg.query_ref_to_parent_fk($1, $2);
+
+    IF parent_table IS NOT NULL THEN
+      IF NOT (parent_table = ANY($3)) THEN
+        ref_to_parent_path := citydb_pkg.create_delete_function(parent_table, $2, $3);
+      END IF;
+      parent_block :=
+           E'\n  -- delete '||parent_table
+        || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_id, 0);\n';
     END IF;
-    parent_block :=
-         E'\n  -- delete '||parent_table
-      || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_id, 0);\n';
   END IF;
 
   RETURN;

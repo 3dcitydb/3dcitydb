@@ -566,7 +566,7 @@ AS
            m_table_name, m_fk_column_name, m_ref_column_name, cleanup_m_table;
       EXIT WHEN ref_cursor%NOTFOUND;
 
-      IF vars IS NULL THEN
+      IF ref_block IS NULL THEN
         vars := '';
         ref_block := '';
       END IF;
@@ -581,7 +581,7 @@ AS
             objclass := citydb_util.table_name_to_objectclass_ids(n_table_name);
 
             -- if found set objectclass condition
-            IF objclass IS NOT NULL THEN
+            IF objclass IS NOT EMPTY THEN
               IF child_ref_block IS NULL THEN
                 -- create dummy function as it is needed in delete function for child
                 create_array_delete_post_dummy(tab_name, schema_name);
@@ -852,7 +852,7 @@ AS
            m_table_name, m_fk_column_name, m_ref_column_name, cleanup_m_table;
       EXIT WHEN ref_cursor%NOTFOUND;
 
-      IF vars IS NULL THEN
+      IF ref_block IS NULL THEN
         vars := '';
         ref_block := '';
       END IF;
@@ -866,7 +866,7 @@ AS
           objclass := citydb_util.table_name_to_objectclass_ids(n_table_name);
 
           -- if found set objectclass condition
-          IF objclass IS NOT NULL THEN
+          IF objclass IS NOT EMPTY THEN
             IF child_ref_block IS NULL THEN
               -- create dummy function as it is needed in delete function for child
               create_delete_post_dummy(tab_name, schema_name);
@@ -879,12 +879,9 @@ AS
               ||chr(10)||'  END IF;'
               ||chr(10);
           ELSE
-            IF vars IS NULL OR INSTR(vars, 'dummy_id') = 0 THEN
-              vars := vars ||chr(10)|| '  dummy_id NUMBER;';
-            END IF;
             ref_block := ref_block ||
                 chr(10)||'  -- delete '||lower(n_table_name)
-              ||chr(10)||'  dummy_id := delete_'||get_short_name(n_table_name)||'(pid);'
+              ||chr(10)||'  dummy_id := delete_'||get_short_name(lower(n_table_name))||'(pid);'
               ||chr(10);
           END IF;
 
@@ -987,7 +984,8 @@ AS
       ||chr(10)
       ||chr(10)||'  IF part_ids IS NOT EMPTY THEN'
       ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(part_ids);'
-      ||chr(10)||'  END IF;';
+      ||chr(10)||'  END IF;'
+      ||chr(10);
   END;
 
   PROCEDURE create_selfref_array_delete(
@@ -1041,7 +1039,8 @@ AS
       ||chr(10)
       ||chr(10)||'  IF part_ids IS NOT EMPTY THEN'
       ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(part_ids);'
-      ||chr(10)||'  END IF;';
+      ||chr(10)||'  END IF;'
+      ||chr(10);
   END;
 
   PROCEDURE create_selfref_delete(
@@ -1412,19 +1411,26 @@ AS
     ) 
   IS
     parent_table VARCHAR2(30);
+    objclass ID_ARRAY;
   BEGIN
-    parent_table := query_ref_parent_fk(tab_name, schema_name);
+    -- check if given table has objectclass_id column
+    objclass := citydb_util.table_name_to_objectclass_ids(tab_name);
 
-    IF parent_table IS NOT NULL THEN
-      IF lower(parent_table) || '_array' NOT MEMBER OF ref_to_parent_path THEN
-        ref_to_parent_path := citydb_delete_gen.create_array_delete_function(parent_table, schema_name, ref_to_parent_path);
+    -- if found delete parent object
+    IF objclass IS NOT EMPTY THEN
+      parent_table := query_ref_parent_fk(tab_name, schema_name);
+
+      IF parent_table IS NOT NULL THEN
+        IF lower(parent_table) || '_array' NOT MEMBER OF ref_to_parent_path THEN
+          ref_to_parent_path := citydb_delete_gen.create_array_delete_function(parent_table, schema_name, ref_to_parent_path);
+        END IF;
+        parent_block :=
+            chr(10)||'  -- delete '||lower(parent_table)
+          ||chr(10)||'  IF deleted_ids IS NOT EMPTY THEN'
+          ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(parent_table))||'_post_bat(deleted_ids);'
+          ||chr(10)||'  END IF;'
+          ||chr(10);
       END IF;
-      parent_block :=
-          chr(10)||'  -- delete '||lower(parent_table)
-        ||chr(10)||'  IF deleted_ids IS NOT EMPTY THEN'
-        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(parent_table))||'_post_bat(deleted_ids);'
-        ||chr(10)||'  END IF;'
-        ||chr(10);
     END IF;
 
     RETURN;
@@ -1439,19 +1445,26 @@ AS
     ) 
   IS
     parent_table VARCHAR2(30);
+    objclass ID_ARRAY;
   BEGIN
-    parent_table := query_ref_parent_fk(tab_name, schema_name);
+    -- check if given table has objectclass_id column
+    objclass := citydb_util.table_name_to_objectclass_ids(tab_name);
 
-    IF parent_table IS NOT NULL THEN
-      IF lower(parent_table) NOT MEMBER OF ref_to_parent_path THEN
-        ref_to_parent_path := citydb_delete_gen.create_delete_function(parent_table, schema_name, ref_to_parent_path);
+    -- if found delete parent object
+    IF objclass IS NOT EMPTY THEN
+      parent_table := query_ref_parent_fk(tab_name, schema_name);
+
+      IF parent_table IS NOT NULL THEN
+        IF lower(parent_table) NOT MEMBER OF ref_to_parent_path THEN
+          ref_to_parent_path := citydb_delete_gen.create_delete_function(parent_table, schema_name, ref_to_parent_path);
+        END IF;
+        parent_block :=
+            chr(10)||'  -- delete '||lower(parent_table)
+          ||chr(10)||'  IF deleted_id IS NOT NULL THEN'
+          ||chr(10)||'    dummy_id := delete_'||get_short_name(lower(parent_table))||'_post(deleted_id);'
+          ||chr(10)||'  END IF;'
+          ||chr(10);
       END IF;
-      parent_block :=
-          chr(10)||'  -- delete '||lower(parent_table)
-        ||chr(10)||'  IF deleted_id IS NOT NULL THEN'
-        ||chr(10)||'    dummy_id := delete_'||get_short_name(lower(parent_table))||'_post(deleted_id);'
-        ||chr(10)||'  END IF;'
-        ||chr(10);
     END IF;
 
     RETURN;
