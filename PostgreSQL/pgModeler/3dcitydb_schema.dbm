@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="13512,10859" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="13511,10858" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -6079,7 +6079,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </index>
 
 <constraint name="cityobject_member_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.cityobject" table="citydb.cityobject_member">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.cityobject" table="citydb.cityobject_member">
 	<columns names="cityobject_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -6127,7 +6127,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="group_to_cityobject_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.cityobject" table="citydb.group_to_cityobject">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.cityobject" table="citydb.group_to_cityobject">
 	<columns names="cityobject_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -6289,7 +6289,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="address_to_building_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.address" table="citydb.address_to_building">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.address" table="citydb.address_to_building">
 	<columns names="address_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -6517,7 +6517,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="open_to_them_surface_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.opening" table="citydb.opening_to_them_surface">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.opening" table="citydb.opening_to_them_surface">
 	<columns names="opening_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -6607,13 +6607,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="texparam_geom_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.surface_geometry" table="citydb.textureparam">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.surface_geometry" table="citydb.textureparam">
 	<columns names="surface_geometry_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="texparam_surface_data_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.surface_data" table="citydb.textureparam">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.surface_data" table="citydb.textureparam">
 	<columns names="surface_data_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -6625,7 +6625,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="app_to_surf_data_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.surface_data" table="citydb.appear_to_surface_data">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.surface_data" table="citydb.appear_to_surface_data">
 	<columns names="surface_data_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -6673,7 +6673,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="rel_feat_to_rel_comp_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.relief_component" table="citydb.relief_feat_to_rel_comp">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.relief_component" table="citydb.relief_feat_to_rel_comp">
 	<columns names="relief_component_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -6997,7 +6997,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="waterbod_to_waterbnd_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.waterboundary_surface" table="citydb.waterbod_to_waterbnd_srf">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.waterboundary_surface" table="citydb.waterbod_to_waterbnd_srf">
 	<columns names="waterboundary_surface_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -7129,7 +7129,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="tun_open_to_them_srf_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.tunnel_opening" table="citydb.tunnel_open_to_them_srf">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.tunnel_opening" table="citydb.tunnel_open_to_them_srf">
 	<columns names="tunnel_opening_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -7549,7 +7549,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="brd_open_to_them_srf_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.bridge_opening" table="citydb.bridge_open_to_them_srf">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.bridge_opening" table="citydb.bridge_open_to_them_srf">
 	<columns names="bridge_opening_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -7711,7 +7711,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="address_to_bridge_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.address" table="citydb.address_to_bridge">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.address" table="citydb.address_to_bridge">
 	<columns names="address_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>

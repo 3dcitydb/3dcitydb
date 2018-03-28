@@ -4966,7 +4966,7 @@ CREATE INDEX surface_data_objclass_fkx ON surface_data
 -- ALTER TABLE cityobject_member DROP CONSTRAINT IF EXISTS cityobject_member_fk CASCADE;
 ALTER TABLE cityobject_member ADD CONSTRAINT cityobject_member_fk FOREIGN KEY (cityobject_id)
 REFERENCES cityobject (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: cityobject_member_fk1 | type: CONSTRAINT --
@@ -5022,7 +5022,7 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE group_to_cityobject DROP CONSTRAINT IF EXISTS group_to_cityobject_fk CASCADE;
 ALTER TABLE group_to_cityobject ADD CONSTRAINT group_to_cityobject_fk FOREIGN KEY (cityobject_id)
 REFERENCES cityobject (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: group_to_cityobject_fk1 | type: CONSTRAINT --
@@ -5211,7 +5211,7 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE address_to_building DROP CONSTRAINT IF EXISTS address_to_building_fk CASCADE;
 ALTER TABLE address_to_building ADD CONSTRAINT address_to_building_fk FOREIGN KEY (address_id)
 REFERENCES address (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: address_to_building_fk1 | type: CONSTRAINT --
@@ -5477,7 +5477,7 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE opening_to_them_surface DROP CONSTRAINT IF EXISTS open_to_them_surface_fk CASCADE;
 ALTER TABLE opening_to_them_surface ADD CONSTRAINT open_to_them_surface_fk FOREIGN KEY (opening_id)
 REFERENCES opening (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: open_to_them_surface_fk1 | type: CONSTRAINT --
@@ -5582,14 +5582,14 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE textureparam DROP CONSTRAINT IF EXISTS texparam_geom_fk CASCADE;
 ALTER TABLE textureparam ADD CONSTRAINT texparam_geom_fk FOREIGN KEY (surface_geometry_id)
 REFERENCES surface_geometry (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: texparam_surface_data_fk | type: CONSTRAINT --
 -- ALTER TABLE textureparam DROP CONSTRAINT IF EXISTS texparam_surface_data_fk CASCADE;
 ALTER TABLE textureparam ADD CONSTRAINT texparam_surface_data_fk FOREIGN KEY (surface_data_id)
 REFERENCES surface_data (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: texparam_objclass_fk | type: CONSTRAINT --
@@ -5603,7 +5603,7 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE appear_to_surface_data DROP CONSTRAINT IF EXISTS app_to_surf_data_fk CASCADE;
 ALTER TABLE appear_to_surface_data ADD CONSTRAINT app_to_surf_data_fk FOREIGN KEY (surface_data_id)
 REFERENCES surface_data (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: app_to_surf_data_fk1 | type: CONSTRAINT --
@@ -5659,7 +5659,7 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE relief_feat_to_rel_comp DROP CONSTRAINT IF EXISTS rel_feat_to_rel_comp_fk CASCADE;
 ALTER TABLE relief_feat_to_rel_comp ADD CONSTRAINT rel_feat_to_rel_comp_fk FOREIGN KEY (relief_component_id)
 REFERENCES relief_component (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: rel_feat_to_rel_comp_fk1 | type: CONSTRAINT --
@@ -6037,7 +6037,7 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE waterbod_to_waterbnd_srf DROP CONSTRAINT IF EXISTS waterbod_to_waterbnd_fk CASCADE;
 ALTER TABLE waterbod_to_waterbnd_srf ADD CONSTRAINT waterbod_to_waterbnd_fk FOREIGN KEY (waterboundary_surface_id)
 REFERENCES waterboundary_surface (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: waterbod_to_waterbnd_fk1 | type: CONSTRAINT --
@@ -6191,7 +6191,7 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE tunnel_open_to_them_srf DROP CONSTRAINT IF EXISTS tun_open_to_them_srf_fk CASCADE;
 ALTER TABLE tunnel_open_to_them_srf ADD CONSTRAINT tun_open_to_them_srf_fk FOREIGN KEY (tunnel_opening_id)
 REFERENCES tunnel_opening (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: tun_open_to_them_srf_fk1 | type: CONSTRAINT --
@@ -6681,7 +6681,7 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE bridge_open_to_them_srf DROP CONSTRAINT IF EXISTS brd_open_to_them_srf_fk CASCADE;
 ALTER TABLE bridge_open_to_them_srf ADD CONSTRAINT brd_open_to_them_srf_fk FOREIGN KEY (bridge_opening_id)
 REFERENCES bridge_opening (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: brd_open_to_them_srf_fk1 | type: CONSTRAINT --
@@ -6870,7 +6870,7 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE address_to_bridge DROP CONSTRAINT IF EXISTS address_to_bridge_fk CASCADE;
 ALTER TABLE address_to_bridge ADD CONSTRAINT address_to_bridge_fk FOREIGN KEY (address_id)
 REFERENCES address (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: address_to_bridge_fk1 | type: CONSTRAINT --
