@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="13511,10858" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="14397,10137" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -6078,6 +6078,25 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
+<table name="aggregation_info">
+	<schema name="citydb"/>
+	<role name="postgres"/>
+	<tag name="global"/>
+	<position x="18860" y="13380"/>
+	<column name="child_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="parent_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="is_composite">
+		<type name="numeric"/>
+	</column>
+	<constraint name="aggregation_info_pk" type="pk-constr" factor="100" table="citydb.aggregation_info">
+		<columns names="child_id,parent_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
 <constraint name="cityobject_member_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.cityobject" table="citydb.cityobject_member">
 	<columns names="cityobject_id" ref-type="src-columns"/>
@@ -7833,6 +7852,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <constraint name="schema_referencing_fk2" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.schema" table="citydb.schema_referencing">
 	<columns names="referenced_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="aggregation_info_fkx1" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="citydb.objectclass" table="citydb.aggregation_info">
+	<columns names="child_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="aggregation_info_fkx2" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="citydb.objectclass" table="citydb.aggregation_info">
+	<columns names="parent_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -10266,6 +10297,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_surface_data_objectclass" type="relfk"
 	 src-table="citydb.surface_data"
+	 dst-table="citydb.objectclass"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_aggregation_info_objectclass" type="relfk"
+	 src-table="citydb.aggregation_info"
 	 dst-table="citydb.objectclass"
 	 src-required="false" dst-required="false"/>
 

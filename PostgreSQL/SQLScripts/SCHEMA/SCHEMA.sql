@@ -4962,6 +4962,20 @@ CREATE INDEX surface_data_objclass_fkx ON surface_data
 	);
 -- ddl-end --
 
+-- object: aggregation_info | type: TABLE --
+-- DROP TABLE IF EXISTS aggregation_info CASCADE;
+CREATE TABLE aggregation_info(
+	child_id integer NOT NULL,
+	parent_id integer NOT NULL,
+	is_composite numeric,
+	CONSTRAINT aggregation_info_pk PRIMARY KEY (child_id,parent_id)
+	 WITH (FILLFACTOR = 100)
+
+);
+-- ddl-end --
+ALTER TABLE aggregation_info OWNER TO postgres;
+-- ddl-end --
+
 -- object: cityobject_member_fk | type: CONSTRAINT --
 -- ALTER TABLE cityobject_member DROP CONSTRAINT IF EXISTS cityobject_member_fk CASCADE;
 ALTER TABLE cityobject_member ADD CONSTRAINT cityobject_member_fk FOREIGN KEY (cityobject_id)
@@ -7011,4 +7025,18 @@ ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE schema_referencing ADD CONSTRAINT schema_referencing_fk2 FOREIGN KEY (referenced_id)
 REFERENCES schema (id) MATCH FULL
 ON DELETE CASCADE ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: aggregation_info_fkx1 | type: CONSTRAINT --
+-- ALTER TABLE aggregation_info DROP CONSTRAINT IF EXISTS aggregation_info_fkx1 CASCADE;
+ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_fkx1 FOREIGN KEY (child_id)
+REFERENCES objectclass (id) MATCH FULL
+ON DELETE CASCADE ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: aggregation_info_fkx2 | type: CONSTRAINT --
+-- ALTER TABLE aggregation_info DROP CONSTRAINT IF EXISTS aggregation_info_fkx2 CASCADE;
+ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_fkx2 FOREIGN KEY (parent_id)
+REFERENCES objectclass (id) MATCH FULL
+ON DELETE CASCADE ON UPDATE NO ACTION;
 -- ddl-end --

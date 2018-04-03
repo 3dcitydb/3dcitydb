@@ -350,3 +350,27 @@ VALUES (103,0,'TexCoordList','textureparam',56,1);
 
 INSERT INTO objectclass ( ID , IS_ADE_CLASS, CLASSNAME , TABLENAME, SUPERCLASS_ID, BASECLASS_ID)
 VALUES (104,0,'TexCoordGen','textureparam',56,1);
+
+INSERT INTO objectclass ( ID , IS_ADE_CLASS, CLASSNAME , TABLENAME, SUPERCLASS_ID, BASECLASS_ID)
+VALUES (106,0,'_BrepGeometry','surface_geometry',NULL,NULL);
+
+INSERT INTO objectclass ( ID , IS_ADE_CLASS, CLASSNAME , TABLENAME, SUPERCLASS_ID, BASECLASS_ID)
+VALUES (107,0,'Polygon','surface_geometry',106,NULL);
+
+INSERT INTO objectclass ( ID , IS_ADE_CLASS, CLASSNAME , TABLENAME, SUPERCLASS_ID, BASECLASS_ID)
+VALUES (108,0,'BrepAggregate','surface_geometry',106,NULL);
+
+INSERT INTO objectclass ( ID , IS_ADE_CLASS, CLASSNAME , TABLENAME, SUPERCLASS_ID, BASECLASS_ID)
+VALUES (109,0,'TexImage','tex_image',NULL,NULL);
+
+INSERT INTO objectclass ( ID , IS_ADE_CLASS, CLASSNAME , TABLENAME, SUPERCLASS_ID, BASECLASS_ID)
+VALUES (110,0,'ExternalReference','external_reference',NULL,NULL);
+
+INSERT INTO objectclass ( ID , IS_ADE_CLASS, CLASSNAME , TABLENAME, SUPERCLASS_ID, BASECLASS_ID)
+VALUES (111,0,'GridCoverage','grid_coverage',NULL,NULL);
+
+INSERT INTO objectclass ( ID , IS_ADE_CLASS, CLASSNAME , TABLENAME, SUPERCLASS_ID, BASECLASS_ID)
+VALUES (112,0,'_genericAttribute','cityobject_genericattrib',NULL,NULL);
+
+INSERT INTO objectclass ( ID , IS_ADE_CLASS, CLASSNAME , TABLENAME, SUPERCLASS_ID, BASECLASS_ID)
+VALUES (113,0,'genericAttributeSet','cityobject_genericattrib',112,NULL);

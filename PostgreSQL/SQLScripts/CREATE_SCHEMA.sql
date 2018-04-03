@@ -52,8 +52,9 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 \echo 'Setting up database schema ...'
 \i SCHEMA/SCHEMA.sql
 
---// fill tables OBJECTCLASS
+--// fill tables OBJECTCLASS and AGGREGATION_INFO
 \i UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
+\i UTIL/CREATE_DB/AGGREGATION_INFO_INSTANCES.sql
 
 \echo
 \echo 'Created schema' :target '.'

@@ -1,0 +1,418 @@
+-- 3D City Database - The Open Source CityGML Database
+-- http://www.3dorg/
+-- 
+-- Copyright 2013 - 2017
+-- Chair of Geoinformatics
+-- Technical University of Munich, Germany
+-- https://www.gis.bgu.tum.de/
+-- 
+-- The 3D City Database is jointly developed with the following
+-- cooperation partners:
+-- 
+-- virtualcitySYSTEMS GmbH, Berlin <http://www.virtualcitysystems.de/>
+-- M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
+-- 
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+-- 
+--     http://www.apache.org/licenses/LICENSE-2.0
+--     
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
+--
+
+DELETE FROM aggregation_info;
+
+--cityobject & citymodel
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (3,57,0);
+
+--external_reference & cityobject
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (110,3,1);
+
+--surface_geometry & cityobject
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,3,1);
+
+--surface_geometry & surface_geometry
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,108,1);
+
+--surface_geometry & implicit_geometry
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,59,1);
+
+--appearance & citymodel
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (50,57,1);
+
+--appearance & cityobject
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (50,3,1);
+
+--surface_data & appearance
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (51,50,0);
+
+--textureparam & surface_data
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (56,51,0);
+
+--tex_image & surface_data
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (109,51,0);
+
+--cityobject & cityobjectgroup
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (3,23,0);
+
+--surface_geometry & cityobjectgroup
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,23,1);
+
+--implicit_geometry & city_furniture
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,21,0);
+
+--surface_geometry & city_furniture
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,21,1);
+
+--cityobject_genericattrib & cityobject_genericattrib
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (112,113,0);
+
+--cityobject_genericattrib & cityobject
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (112,3,1);
+
+--surface_geometry & cityobject_genericattrib
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,112,1);
+
+--surface_geometry & generic_cityobject
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,5,1);
+
+--implicit_geometry & generic_cityobject
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,5,0);
+
+--surface_geometry & land_use
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,4,1);
+
+--relief_component & relief_feature
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (15,14,0);
+
+--surface_geometry & tin_relief
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,16,1);
+
+--grid_coverage & raster_relief
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (111,19,1);
+
+--traffic_area & transportation_complex
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (47,42,1);
+
+--surface_geometry & traffic_area
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,47,1);
+
+--surface_geometry & transportation_complex
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,42,1);
+
+--surface_geometry & solitary_vegetat_object
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,7,1);
+
+--implicit_geometry & solitary_vegetat_object
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,7,0);
+
+--surface_geometry & plant_cover
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,8,1);
+
+--waterboundary_surface & waterbody
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (10,9,1);
+
+--surface_geometry & waterbody
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,9,1);
+
+--surface_geometry & waterboundary_surface
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,10,1);
+
+--address & bridge
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (58,62,0);
+
+--address & bridge_opening
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (58,77,0);
+
+--bridge & bridge
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (63,62,1);
+
+--bridge_constr_element & bridge
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (82,62,1);
+
+--bridge_furniture & bridge_room
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (80,81,1);
+
+--bridge_installation & bridge_room
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (66,81,1);
+
+--bridge_installation & bridge
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (65,62,1);
+
+--bridge_opening & bridge_thematic_surface
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (77,67,1);
+
+--bridge_room & bridge
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (81,62,1);
+
+--bridge_thematic_surface & bridge_room
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (67,81,1);
+
+--bridge_thematic_surface & bridge
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (67,62,1);
+
+--bridge_thematic_surface & bridge_installation
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (67,65,1);
+
+--surface_geometry & bridge
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,62,1);
+
+--surface_geometry & bridge_furniture
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,80,1);
+
+--surface_geometry & bridge_installation
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,65,1);
+
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,66,1);
+
+--surface_geometry & bridge_opening
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,77,1);
+
+--surface_geometry & bridge_thematic_surface
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,67,1);
+
+--surface_geometry & bridge_room
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,81,1);
+
+--surface_geometry & bridge_constr_element
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,82,1);
+
+--implicit_geometry & bridge_furniture
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,80,0);
+
+--implicit_geometry & bridge_installation
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,65,0);
+
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,66,0);
+
+--implicit_geometry & bridge_opening
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,77,0);
+
+--implicit_geometry & bridge_constr_element
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,82,0);
+
+--address & building
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (58,24,0);
+
+--address & opening
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (58,37,0);
+
+--building & building
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (25,24,1);
+
+--building_furniture & room
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (40,41,1);
+
+--building_installation & room
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (28,41,1);
+
+--building_installation & building
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (27,24,1);
+
+--opening & thematic_surface
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (37,29,1);		
+			
+--room & building
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (41,24,1);	
+			
+--thematic_surface & room
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (29,41,1);
+
+--thematic_surface & building_installation
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (29,27,1);
+
+--thematic_surface & building
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (29,24,1);
+
+--surface_geometry & building
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,24,1);
+
+--surface_geometry & building_furniture
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,40,1);
+
+--surface_geometry & building_installation
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,27,1);
+
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,28,1);
+
+--surface_geometry & opening
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,37,1);
+
+--surface_geometry & thematic_surface
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,29,1);
+
+--surface_geometry & room
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,41,1);
+
+--implicit_geometry & building_furniture
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,40,0);
+
+--implicit_geometry & building_installation
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,27,0);
+
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,28,0);
+
+--implicit_geometry & opening
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,37,0);
+
+--tunnel & tunnel
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (84,83,1);
+
+--tunnel_furniture & tunnel_hollow_space
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (101,102,1);
+
+--tunnel_installation & tunnel_hollow_space
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (87,102,1);
+
+--tunnel_installation & tunnel
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (86,83,1);
+
+--tunnel_opening & tunnel_thematic_surface
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (98,88,1);
+
+--tunnel_hollow_space & tunnel
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (102,83,1);
+
+--tunnel_thematic_surface & tunnel_hollow_space
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (88,102,1);
+
+--tunnel_thematic_surface & tunnel
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (88,83,1);
+
+--tunnel_thematic_surface & tunnel_installation
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (88,86,1);
+
+--surface_geometry & tunnel
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,83,1);
+
+--surface_geometry & tunnel_furniture
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,101,1);
+
+--surface_geometry & tunnel_installation
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,86,1);
+
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,87,1);
+
+--surface_geometry & tunnel_opening
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,98,1);
+
+--surface_geometry & tunnel_thematic_surface
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,88,1);
+
+--surface_geometry & tunnel_hollow_space
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (106,102,1);
+
+--implicit_geometry & tunnel_furniture
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,101,0);
+
+--implicit_geometry & tunnel_installation
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,86,0);
+
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,87,0);
+
+--implicit_geometry & tunnel_opening
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, IS_COMPOSITE)
+VALUES (59,98,0);

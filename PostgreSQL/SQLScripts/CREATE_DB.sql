@@ -54,6 +54,7 @@ SET search_path TO citydb, :current_path;
 
 --// fill tables OBJECTCLASS
 \i UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
+\i UTIL/CREATE_DB/AGGREGATION_INFO_INSTANCES.sql
 
 --// create CITYDB_PKG (additional schema with PL/pgSQL-Functions)
 \echo
