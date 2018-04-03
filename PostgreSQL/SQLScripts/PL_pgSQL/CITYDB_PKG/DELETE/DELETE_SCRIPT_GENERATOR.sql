@@ -105,7 +105,7 @@ $$
 -- TODO: query a table that stores the short version of a table (maybe objectclass?)
 SELECT substr($1, 1, 17);
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 
 -- function to check if table requires its own delete function
@@ -159,7 +159,7 @@ SELECT
        OR conrelid::regclass::text LIKE '%cityobjectgroup')
   )) AS cleanup;
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_tables_and_columns(
   table_name TEXT,
@@ -184,7 +184,7 @@ WHERE
   AND c.contype = 'f'
   AND c.confrelid <> 'cityobject'::regclass::oid
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 
 /*****************************
@@ -269,7 +269,7 @@ ORDER BY
   n.n_table_name,
   m.m_table_name;
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 -- ARRAY CASE
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_ref_by_ids_stmt(
@@ -286,7 +286,7 @@ SELECT
   || E'\n  WHERE'
   || E'\n    t.'||$2||E' = a.a_id;\n';
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql IMMUTABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_ref_by_ids_call(
   table_name TEXT,
@@ -304,7 +304,7 @@ SELECT
   || E'\n  WHERE'
   || E'\n    t.'||$2||E' = a.a_id;\n';
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_ids_stmt(
   m_table_name TEXT,
@@ -339,7 +339,7 @@ FROM
 WHERE
   t.i = c.i;
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_ids_call(
   m_table_name TEXT,
@@ -373,7 +373,7 @@ FROM
 WHERE
   t.i = c.i;
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_ids_stmt(
   n_m_table_name TEXT,
@@ -409,7 +409,7 @@ SELECT
 FROM
   citydb_pkg.query_ref_tables_and_columns($3, $1, $6) AS r(ref_tables, ref_columns);
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_ids_call(
   n_m_table_name TEXT,
@@ -444,7 +444,7 @@ SELECT
 FROM
   citydb_pkg.query_ref_tables_and_columns($3, $1, $5) AS r(ref_tables, ref_columns);
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_array_delete(
   table_name TEXT,
@@ -532,7 +532,7 @@ SELECT
   || E'\n  WHERE'
   || E'\n    '||$2||E' = $1;\n';
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql IMMUTABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_ref_by_id_call(
   table_name TEXT,
@@ -549,7 +549,7 @@ SELECT
   || E'\n  WHERE'
   || E'\n    '||$2||E' = $1;\n';
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_id_stmt(
   m_table_name TEXT,
@@ -584,7 +584,7 @@ FROM
 WHERE
   t.i = c.i;
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_id_call(
   m_table_name TEXT,
@@ -618,7 +618,7 @@ FROM
 WHERE
   t.i = c.i;
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_id_stmt(
   n_m_table_name TEXT,
@@ -652,7 +652,7 @@ SELECT
 FROM
   citydb_pkg.query_ref_tables_and_columns($3, $1, $6) AS r(ref_tables, ref_columns);
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_n_m_ref_by_id_call(
   n_m_table_name TEXT,
@@ -685,7 +685,7 @@ SELECT
 FROM
   citydb_pkg.query_ref_tables_and_columns($3, $1, $5) AS r(ref_tables, ref_columns);
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_delete(
   table_name TEXT,
@@ -791,7 +791,7 @@ WHERE
   AND c.confdeltype = 'a'
   AND a.attnotnull = FALSE;
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 -- ARRAY CASE
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_selfref_by_ids_call(
@@ -812,7 +812,7 @@ SELECT
   || E'\n    AND t.id != a.a_id;'
   || E'\n';
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.create_selfref_array_delete(
   table_name TEXT,
@@ -913,7 +913,7 @@ SELECT  '  DELETE FROM'
   || E'\n    RETURNING'
   || E'\n      id';
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql IMMUTABLE STRICT;
 
 -- SINGLE CASE
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_by_id_stmt(
@@ -928,7 +928,7 @@ SELECT
   || E'\n  RETURNING'
   || E'\n    id';
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql IMMUTABLE STRICT;
 
 
 /*****************************
@@ -972,7 +972,7 @@ GROUP BY
   c.confrelid,
   a_ref.attname;
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 -- ARRAY CASE
 CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_to_array_delete(
@@ -1151,7 +1151,7 @@ WHERE
   AND f.contype = 'f'
   AND p.contype = 'p';
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 -- ARRAY CASE
 CREATE OR REPLACE FUNCTION citydb_pkg.create_ref_to_parent_array_delete(
@@ -1588,7 +1588,7 @@ WHERE
   AND c.confdeltype = 'n'
   AND c.confrelid = p.parent_table;
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 -- ARRAY CASE
 CREATE OR REPLACE FUNCTION citydb_pkg.create_member_1n_array_delete(
@@ -1704,7 +1704,7 @@ WHERE
   AND c.contype = 'f'
   AND c.confdeltype = 'c';
 $$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 -- ARRAY CASE
 CREATE OR REPLACE FUNCTION citydb_pkg.create_member_nm_array_delete(

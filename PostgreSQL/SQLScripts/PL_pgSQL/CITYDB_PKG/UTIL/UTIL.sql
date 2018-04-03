@@ -322,7 +322,7 @@ FROM
 WHERE
   id = $1;
 $$
-LANGUAGE sql IMMUTABLE STRICT;
+LANGUAGE sql STABLE STRICT;
 
 
 /*****************************************************************
@@ -357,4 +357,4 @@ SELECT
 FROM
   objectclass_tree;
 $$
-LANGUAGE sql IMMUTABLE STRICT;
+LANGUAGE sql STABLE STRICT;
