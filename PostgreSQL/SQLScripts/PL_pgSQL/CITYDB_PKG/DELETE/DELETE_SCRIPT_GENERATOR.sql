@@ -75,13 +75,14 @@
 *   generate_delete_selfref_by_id_call(table_name TEXT, self_fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   generate_delete_selfref_by_ids_call(table_name TEXT, self_fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   get_short_name(table_name TEXT) RETURNS TEXT
+*   is_child_ref(fk_column_name TEXT, table_name OID, ref_table_name OID) RETURNS INTEGER
 *   query_member_nm(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
 *     OUT n_table_name TEXT, OUT n_fk_column_name TEXT, OUT m_table_name TEXT, OUT m_fk_column_name TEXT) RETURNS SETOF RECORD
 *   query_member_1n(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
 *     OUT member_table_name TEXT, OUT member_fk_column TEXT) RETURNS SETOF RECORD
 *   query_ref_fk(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
-*     OUT root_table_name TEXT, OUT n_table_name TEXT, OUT n_fk_column_name TEXT, OUT ref_depth INTEGER, OUT cleanup_n_table TEXT,
-*     OUT m_table_name TEXT, OUT m_fk_column_name TEXT, OUT cleanup_m_table TEXT) RETURNS SETOF RECORD
+*     OUT n_table_name TEXT, OUT n_fk_column_name TEXT, OUT cleanup_n_table TEXT, OUT is_child INTEGER,
+*     OUT m_table_name TEXT, OUT m_fk_column_name TEXT, OUT m_ref_column_name TEXT, OUT cleanup_m_table TEXT) RETURNS SETOF RECORD
 *   query_ref_tables_and_columns(table_name TEXT, ref_parent_to_exclude TEXT, schema_name TEXT DEFAULT 'citydb',
 *     OUT ref_tables TEXT[] DEFAULT '{}', OUT ref_columns TEXT[] DEFAULT '{}') RETURNS RECORD
 *   query_ref_to_fk(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
@@ -161,6 +162,42 @@ SELECT
 $$
 LANGUAGE sql STABLE STRICT;
 
+CREATE OR REPLACE FUNCTION citydb_pkg.is_child_ref(
+  fk_column_name TEXT,
+  table_name OID,
+  ref_table_name OID
+  ) RETURNS INTEGER AS
+$$
+SELECT
+  COALESCE((
+    SELECT
+      1
+    FROM
+      pg_constraint fk
+    JOIN (
+      SELECT
+        conrelid,
+        conkey
+      FROM
+        pg_constraint
+      WHERE
+        contype = 'p'
+      ) pk
+      ON pk.conrelid = fk.conrelid
+     AND pk.conkey = fk.conkey
+    JOIN
+      pg_attribute a
+      ON a.attrelid = fk.conrelid
+     AND a.attnum = ANY (fk.conkey)
+    WHERE
+      fk.conrelid = $2
+      AND fk.confrelid = $3
+      AND fk.contype = 'f'
+      AND a.attname = $1
+  ), 0);
+$$
+LANGUAGE sql STABLE STRICT;
+
 CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_tables_and_columns(
   table_name TEXT,
   ref_parent_to_exclude TEXT,
@@ -207,18 +244,19 @@ SELECT
   n.n_table_name::regclass::text,
   n.n_fk_column_name,
   n.cleanup_n_table,
-  CASE WHEN n.root_table_name = n.cleanup_n_table THEN 1 ELSE 0 END AS is_child,
+  n.is_child,
   m.m_table_name::regclass::text,
   m.m_fk_column_name::text,
   m.m_ref_column_name::text,
   citydb_pkg.check_for_cleanup(m.m_table_name)::regclass::text AS cleanup_m_table
 FROM (
   SELECT
-    c.confrelid::regclass::text AS root_table_name,
+    c.confrelid AS root_table_name,
     c.conrelid AS n_table_name,
     c.conkey,
     a.attname::text AS n_fk_column_name,
     citydb_pkg.check_for_cleanup(c.conrelid)::regclass::text AS cleanup_n_table,
+    citydb_pkg.is_child_ref(a.attname::text, c.conrelid, c.confrelid) AS is_child,
     confdeltype
   FROM
     pg_constraint c
@@ -258,14 +296,13 @@ LEFT JOIN LATERAL (
     AND n.cleanup_n_table IS NULL
     AND mn.confrelid <> n.n_table_name
     AND mn.contype = 'f'
-    AND mn.confdeltype = 'c'
     AND pk.contype = 'p'
   ) m ON (true)
 WHERE
-  n.confdeltype = 'a'
-  OR n.root_table_name = n.cleanup_n_table
+  (n.confdeltype = 'a' OR n.is_child = 1)
+  AND (n.root_table_name <> m.m_table_name OR m.m_table_name IS NULL)
 ORDER BY
-  is_child DESC,
+  n.is_child DESC,
   n.n_table_name,
   m.m_table_name;
 $$

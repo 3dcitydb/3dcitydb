@@ -32,7 +32,8 @@
 ******************************************************************/
 CREATE OR REPLACE PACKAGE citydb_delete_gen AUTHID CURRENT_USER
 AS
-  FUNCTION check_for_cleanup(tab_name VARCHAR2, schema_name VARCHAR2) RETURN VARCHAR2;
+  FUNCTION check_for_cleanup(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
+  FUNCTION is_child_ref(fk_column_name VARCHAR2, tab_name VARCHAR2, ref_tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN NUMBER;
   FUNCTION create_array_delete_function(tab_name VARCHAR2, schema_name VARCHAR2 := USER, path STRARRAY := STRARRAY()) RETURN STRARRAY;
   FUNCTION create_delete_function(tab_name VARCHAR2, schema_name VARCHAR2 := USER, path STRARRAY := STRARRAY()) RETURN STRARRAY;
   FUNCTION create_array_delete_member_fct(tab_name VARCHAR2, schema_name VARCHAR2 := USER, path STRARRAY := STRARRAY()) RETURN STRARRAY;
@@ -100,7 +101,7 @@ AS
   --if referencing table requires an extra cleanup step, it needs its own delete function
   FUNCTION check_for_cleanup(
     tab_name VARCHAR2,
-    schema_name VARCHAR2
+    schema_name VARCHAR2 := USER
   ) RETURN VARCHAR2
   IS
     cleanup_ref_table VARCHAR2(30);
@@ -193,6 +194,64 @@ AS
         RETURN '';
   END;
 
+  FUNCTION is_child_ref(
+    fk_column_name VARCHAR2,
+    tab_name VARCHAR2,
+    ref_tab_name VARCHAR2,
+    schema_name VARCHAR2 := USER
+    ) RETURN NUMBER
+  IS
+    is_child NUMBER(1);
+  BEGIN
+    SELECT
+      1
+    INTO
+      is_child
+    FROM
+      all_constraints fk
+    JOIN
+      all_cons_columns fka
+      ON fka.constraint_name = fk.constraint_name
+     AND fka.table_name = fk.table_name
+     AND fka.owner = fk.owner
+    JOIN
+      all_constraints fk2
+      ON fk2.constraint_name = fk.r_constraint_name
+     AND fk2.owner = fk.owner
+    JOIN (
+      SELECT DISTINCT
+        cp.table_name,
+        cp.owner,
+        first_value(pka.column_name) OVER (PARTITION BY cp.table_name ORDER BY pka.position DESC) AS column_name,
+        first_value(pka.position) OVER (PARTITION BY cp.table_name ORDER BY pka.position DESC) AS position
+      FROM
+        all_constraints cp
+      JOIN
+        all_cons_columns pka
+        ON pka.constraint_name = cp.constraint_name
+       AND pka.table_name = cp.table_name
+       AND pka.owner = cp.owner
+      WHERE
+        cp.constraint_type = 'P'
+      ) pk
+      ON pk.table_name = fk.table_name
+     AND pk.owner = fk.owner
+     AND pk.column_name = fka.column_name
+    WHERE
+      fk.table_name = tab_name
+      AND fk.owner = schema_name
+      AND fk2.table_name = ref_tab_name
+      AND fk.constraint_type = 'R'
+      AND pk.position = 1
+      AND pk.column_name = fk_column_name;
+
+    RETURN is_child;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN 0;
+  END;
+
   PROCEDURE query_ref_tables_and_columns(
     tab_name VARCHAR2,
     ref_parent_to_exclude VARCHAR2,
@@ -245,7 +304,7 @@ AS
         n.n_table_name,
         n.n_fk_column_name,
         n.cleanup_n_table,
-        CASE WHEN n.root_table_name = n.cleanup_n_table THEN 1 ELSE 0 END AS is_child,
+        n.is_child,
         m.m_table_name,
         m.m_fk_column_name,
         m.m_ref_column_name,
@@ -257,6 +316,7 @@ AS
           c.owner,
           a.column_name AS n_fk_column_name,
           citydb_delete_gen.check_for_cleanup(c.table_name, c.owner) AS cleanup_n_table,
+          citydb_delete_gen.is_child_ref(a.column_name, c.table_name, c2.table_name, c.owner) AS is_child,
           c.delete_rule
         FROM
           all_constraints c
@@ -313,17 +373,16 @@ AS
         WHERE
           mn2.table_name <> mn.table_name
           AND mn.constraint_type = 'R'
-          AND mn.delete_rule = 'CASCADE'
           AND mnp.constraint_type = 'P'
         ) m
         ON m.table_name = n.n_table_name
        AND m.owner = n.owner
        AND n.cleanup_n_table IS NULL
       WHERE
-        n.delete_rule = 'NO ACTION'
-        OR n.root_table_name = n.cleanup_n_table
+        (n.delete_rule = 'NO ACTION' OR n.is_child = 1)
+        AND (n.root_table_name <> m.m_table_name OR m.m_table_name IS NULL)
       ORDER BY
-        is_child DESC,
+        n.is_child DESC,
         n.n_table_name,
         m.m_table_name;
     RETURN ref_cursor;
