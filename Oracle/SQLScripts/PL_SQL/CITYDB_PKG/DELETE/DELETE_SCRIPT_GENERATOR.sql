@@ -33,7 +33,7 @@
 CREATE OR REPLACE PACKAGE citydb_delete_gen AUTHID CURRENT_USER
 AS
   FUNCTION check_for_cleanup(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
-  FUNCTION is_child_ref(fk_column_name VARCHAR2, tab_name VARCHAR2, ref_tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN NUMBER;
+  FUNCTION is_child_ref(fk_column_name VARCHAR2, tab_name VARCHAR2, ref_table_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN NUMBER;
   FUNCTION create_array_delete_function(tab_name VARCHAR2, schema_name VARCHAR2 := USER, path STRARRAY := STRARRAY()) RETURN STRARRAY;
   FUNCTION create_delete_function(tab_name VARCHAR2, schema_name VARCHAR2 := USER, path STRARRAY := STRARRAY()) RETURN STRARRAY;
   FUNCTION create_array_delete_member_fct(tab_name VARCHAR2, schema_name VARCHAR2 := USER, path STRARRAY := STRARRAY()) RETURN STRARRAY;
@@ -197,7 +197,7 @@ AS
   FUNCTION is_child_ref(
     fk_column_name VARCHAR2,
     tab_name VARCHAR2,
-    ref_tab_name VARCHAR2,
+    ref_table_name VARCHAR2,
     schema_name VARCHAR2 := USER
     ) RETURN NUMBER
   IS
@@ -240,7 +240,7 @@ AS
     WHERE
       fk.table_name = tab_name
       AND fk.owner = schema_name
-      AND fk2.table_name = ref_tab_name
+      AND fk2.table_name = ref_table_name
       AND fk.constraint_type = 'R'
       AND pk.position = 1
       AND pk.column_name = fk_column_name;
@@ -282,8 +282,7 @@ AS
       c2.table_name = tab_name
       AND c2.owner = schema_name
       AND c.table_name <> ref_parent_to_exclude
-      AND c.constraint_type = 'R'
-      AND c2.table_name <> 'CITYOBJECT';
+      AND c.constraint_type = 'R';
 
     RETURN;
   END;
@@ -1286,6 +1285,7 @@ AS
       IF
         ref_table_name <> 'IMPLICIT_GEOMETRY'
         AND ref_table_name <> 'SURFACE_GEOMETRY'
+        AND ref_table_name <> 'CITYOBJECT'
       THEN
         query_ref_tables_and_columns(ref_table_name, tab_name, schema_name, ref_tables, ref_columns);
         ref_to_ref_tables := ref_to_ref_tables MULTISET UNION ALL COALESCE(ref_tables, STRARRAY());
@@ -1370,6 +1370,7 @@ AS
       IF
         ref_table_name <> 'IMPLICIT_GEOMETRY'
         AND ref_table_name <> 'SURFACE_GEOMETRY'
+        AND ref_table_name <> 'CITYOBJECT'
       THEN
         query_ref_tables_and_columns(ref_table_name, tab_name, schema_name, ref_tables, ref_columns);
         ref_to_ref_tables := ref_to_ref_tables MULTISET UNION ALL COALESCE(ref_tables, STRARRAY());

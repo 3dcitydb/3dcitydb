@@ -218,8 +218,7 @@ JOIN
 WHERE
   c.confrelid = ($3 || '.' || $1)::regclass::oid
   AND c.conrelid <> ($3 || '.' || $2)::regclass::oid
-  AND c.contype = 'f'
-  AND c.confrelid <> 'cityobject'::regclass::oid
+  AND c.contype = 'f';
 $$
 LANGUAGE sql STABLE STRICT;
 
@@ -1056,6 +1055,7 @@ BEGIN
     IF
       rec.ref_table_name <> 'implicit_geometry'
       AND rec.ref_table_name <> 'surface_geometry'
+      AND rec.ref_table_name <> 'cityobject'
     THEN
       SELECT
         ref_to_ref_tables || COALESCE(r.ref_tables, '{}'),
@@ -1129,6 +1129,7 @@ BEGIN
     IF
       rec.ref_table_name <> 'implicit_geometry'
       AND rec.ref_table_name <> 'surface_geometry'
+      AND rec.ref_table_name <> 'cityobject'
     THEN
       SELECT
         ref_to_ref_tables || COALESCE(r.ref_tables, '{}'),
