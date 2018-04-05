@@ -303,8 +303,8 @@ WHERE
   AND (n.root_table_name <> m.m_table_name OR m.m_table_name IS NULL)
 ORDER BY
   n.is_child DESC,
-  n.n_table_name,
-  m.m_table_name;
+  n.n_table_name::regclass::text,
+  m.m_table_name::regclass::text;
 $$
 LANGUAGE sql STABLE STRICT;
 
@@ -1353,7 +1353,7 @@ BEGIN
       || E'\n  THEN'
       || E'\n    ' || return_block
       || E'\n  END IF;'
-      || E'\n' || pre_block;
+      || E'\n';
   ELSE
     ddl_command := ddl_command || '(pids int[])';
   END IF;
@@ -1502,7 +1502,7 @@ BEGIN
       || E'\n  THEN'
       || E'\n    ' || return_block
       || E'\n  END IF;'
-      || E'\n' || pre_block;
+      || E'\n';
   ELSE
     ddl_command := ddl_command || '(pid int)';
   END IF;
