@@ -44,27 +44,30 @@ END citydb_delete_gen;
 CREATE OR REPLACE PACKAGE BODY citydb_delete_gen
 AS
   FUNCTION get_short_name(tab_name VARCHAR2) RETURN VARCHAR2;
+  FUNCTION has_objclass_id(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN NUMBER;
   PROCEDURE query_ref_tables_and_columns(tab_name VARCHAR2, ref_parent_to_exclude VARCHAR2, schema_name VARCHAR2 := USER, ref_tables OUT STRARRAY, ref_columns OUT STRARRAY);
   FUNCTION query_ref_fk(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN SYS_REFCURSOR;
   FUNCTION gen_delete_ref_by_ids_stmt(tab_name VARCHAR2, fk_column_name VARCHAR2) RETURN VARCHAR2;
-  FUNCTION gen_delete_ref_by_ids_call(tab_name VARCHAR2, fk_column_name VARCHAR2) RETURN VARCHAR2;
+  FUNCTION gen_delete_ref_by_ids_call(tab_name VARCHAR2, fk_column_name VARCHAR2, has_objclass_param BOOLEAN := FALSE) RETURN VARCHAR2;
   FUNCTION gen_delete_m_ref_by_ids_stmt(m_table_name VARCHAR2, m_fk_column_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
   FUNCTION gen_delete_m_ref_by_ids_call(m_table_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
   FUNCTION gen_delete_n_m_ref_by_ids_stmt(n_m_table_name VARCHAR2, n_fk_column_name VARCHAR2, m_table_name VARCHAR2, m_fk_column_name VARCHAR2, m_ref_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION gen_delete_n_m_ref_by_ids_call(n_m_table_name VARCHAR2, n_fk_column_name VARCHAR2, m_table_name VARCHAR2, m_fk_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   PROCEDURE create_ref_array_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER, ref_path IN OUT STRARRAY, vars OUT VARCHAR2, child_ref_block OUT VARCHAR2, ref_block OUT VARCHAR2);
   FUNCTION gen_delete_ref_by_id_stmt(tab_name VARCHAR2, fk_column_name VARCHAR2) RETURN VARCHAR2;
-  FUNCTION gen_delete_ref_by_id_call(tab_name VARCHAR2, fk_column_name VARCHAR2) RETURN VARCHAR2;
+  FUNCTION gen_delete_ref_by_id_call(tab_name VARCHAR2, fk_column_name VARCHAR2, has_objclass_param BOOLEAN := FALSE) RETURN VARCHAR2;
   FUNCTION gen_delete_m_ref_by_id_stmt(m_table_name VARCHAR2, m_fk_column_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
   FUNCTION gen_delete_m_ref_by_id_call(m_table_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
   FUNCTION gen_delete_n_m_ref_by_id_stmt(n_m_table_name VARCHAR2, n_fk_column_name VARCHAR2, m_table_name VARCHAR2, m_fk_column_name VARCHAR2, m_ref_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION gen_delete_n_m_ref_by_id_call(n_m_table_name VARCHAR2, n_fk_column_name VARCHAR2, m_table_name VARCHAR2, m_fk_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   PROCEDURE create_ref_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER, ref_path IN OUT STRARRAY, vars OUT VARCHAR2, child_ref_block OUT VARCHAR2, ref_block OUT VARCHAR2);
   FUNCTION query_selfref_fk(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN SYS_REFCURSOR;
-  FUNCTION gen_delete_selfref_by_ids_call(tab_name VARCHAR2, self_fk_column_name VARCHAR2) RETURN VARCHAR2;
-  PROCEDURE create_selfref_array_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER, vars OUT VARCHAR2, self_block OUT VARCHAR2);
-  FUNCTION gen_delete_selfref_by_id_call(tab_name VARCHAR2, self_fk_column_name VARCHAR2) RETURN VARCHAR2;
-  PROCEDURE create_selfref_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER, selfref_path IN OUT STRARRAY, vars OUT VARCHAR2, self_block OUT VARCHAR2);
+  FUNCTION gen_delete_selfref_by_ids_call(tab_name VARCHAR2, self_fk_column_name VARCHAR2, has_objclass_param BOOLEAN := FALSE) RETURN VARCHAR2;
+  PROCEDURE create_selfref_array_delete(tab_name VARCHAR2, has_objclass_param BOOLEAN := FALSE, schema_name VARCHAR2 := USER, vars OUT VARCHAR2, self_block OUT VARCHAR2);
+  FUNCTION gen_delete_selfref_by_id_call(tab_name VARCHAR2, self_fk_column_name VARCHAR2, has_objclass_param BOOLEAN := FALSE) RETURN VARCHAR2;
+  PROCEDURE create_selfref_delete(tab_name VARCHAR2, has_objclass_param BOOLEAN := FALSE, schema_name VARCHAR2 := USER, selfref_path IN OUT STRARRAY, vars OUT VARCHAR2, self_block OUT VARCHAR2);
+  FUNCTION gen_delete_by_ids_stmt(tab_name VARCHAR2, has_objclass_param BOOLEAN := FALSE) RETURN VARCHAR2;
+  FUNCTION gen_delete_by_id_stmt(tab_name VARCHAR2, has_objclass_param BOOLEAN := FALSE) RETURN VARCHAR2;
   FUNCTION query_ref_to_fk(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN SYS_REFCURSOR;
   PROCEDURE create_ref_to_array_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER, ref_to_path IN OUT STRARRAY, vars OUT VARCHAR2, returning_block OUT VARCHAR2, collect_block OUT VARCHAR2, into_block OUT VARCHAR2, fk_block OUT VARCHAR2);
   PROCEDURE create_ref_to_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER, ref_to_path IN OUT STRARRAY, vars OUT VARCHAR2, returning_block OUT VARCHAR2, into_block OUT VARCHAR2, fk_block OUT VARCHAR2);
@@ -238,14 +241,39 @@ AS
      AND pk.owner = fk.owner
      AND pk.column_name = fka.column_name
     WHERE
-      fk.table_name = tab_name
-      AND fk.owner = schema_name
-      AND fk2.table_name = ref_table_name
+      fk.table_name = upper(tab_name)
+      AND fk.owner = upper(schema_name)
+      AND fk2.table_name = upper(ref_table_name)
       AND fk.constraint_type = 'R'
       AND pk.position = 1
       AND pk.column_name = fk_column_name;
 
     RETURN is_child;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN 0;
+  END;
+
+  FUNCTION has_objclass_id(
+    tab_name VARCHAR2,
+    schema_name VARCHAR2 := USER
+    ) RETURN NUMBER
+  IS
+    has_class_id NUMBER(1);
+  BEGIN
+    SELECT
+      1
+    INTO
+      has_class_id
+    FROM
+      all_tab_columns
+    WHERE
+      table_name = upper(tab_name)
+      AND owner = upper(schema_name)
+      AND column_name = 'OBJECTCLASS_ID';
+
+    RETURN has_class_id;
 
     EXCEPTION
       WHEN NO_DATA_FOUND THEN
@@ -411,26 +439,48 @@ AS
 
   FUNCTION gen_delete_ref_by_ids_call(
     tab_name VARCHAR2,
-    fk_column_name VARCHAR2
+    fk_column_name VARCHAR2,
+    has_objclass_param BOOLEAN := FALSE
     ) RETURN VARCHAR2 
   IS
   BEGIN
-    RETURN
-        chr(10)||'  -- delete '||lower(tab_name)||'s'
-      ||chr(10)||'  SELECT'
-      ||chr(10)||'    t.id'
-      ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'    child_ids'
-      ||chr(10)||'  FROM'
-      ||chr(10)||'    '||lower(tab_name)||' t,'
-      ||chr(10)||'    TABLE(pids) a'
-      ||chr(10)||'  WHERE'
-      ||chr(10)||'    t.'||lower(fk_column_name)||' = a.COLUMN_VALUE;'
-      ||chr(10)
-      ||chr(10)||'  IF child_ids IS NOT EMPTY THEN'
-      ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(child_ids);'
-      ||chr(10)||'  END IF;'
-      ||chr(10);
+    IF has_objclass_param THEN
+      RETURN
+          chr(10)||'  -- delete '||lower(tab_name)||'s'
+        ||chr(10)||'  SELECT'
+        ||chr(10)||'    t.id,'
+        ||chr(10)||'    t.objectclass_id'
+        ||chr(10)||'  BULK COLLECT INTO'
+        ||chr(10)||'    child_ids,'
+        ||chr(10)||'    child_class_ids'
+        ||chr(10)||'  FROM'
+        ||chr(10)||'    '||lower(tab_name)||' t,'
+        ||chr(10)||'    TABLE(pids) a'
+        ||chr(10)||'  WHERE'
+        ||chr(10)||'    t.'||lower(fk_column_name)||' = a.COLUMN_VALUE;'
+        ||chr(10)
+        ||chr(10)||'  IF child_ids IS NOT EMPTY THEN'
+        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(child_ids, SET(child_class_ids));'
+        ||chr(10)||'  END IF;'
+        ||chr(10);
+    ELSE
+      RETURN
+          chr(10)||'  -- delete '||lower(tab_name)||'s'
+        ||chr(10)||'  SELECT'
+        ||chr(10)||'    t.id'
+        ||chr(10)||'  BULK COLLECT INTO'
+        ||chr(10)||'    child_ids'
+        ||chr(10)||'  FROM'
+        ||chr(10)||'    '||lower(tab_name)||' t,'
+        ||chr(10)||'    TABLE(pids) a'
+        ||chr(10)||'  WHERE'
+        ||chr(10)||'    t.'||lower(fk_column_name)||' = a.COLUMN_VALUE;'
+        ||chr(10)
+        ||chr(10)||'  IF child_ids IS NOT EMPTY THEN'
+        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(child_ids);'
+        ||chr(10)||'  END IF;'
+        ||chr(10);    
+    END IF;
   END;
 
   FUNCTION gen_delete_m_ref_by_ids_stmt(
@@ -615,6 +665,7 @@ AS
     m_ref_column_name VARCHAR2(30);
     cleanup_m_table VARCHAR2(30);
     objclass ID_ARRAY;
+    has_objclass_param BOOLEAN := FALSE;
   BEGIN
     ref_cursor := query_ref_fk(tab_name, schema_name);
 
@@ -648,7 +699,7 @@ AS
               child_ref_block := child_ref_block ||
                   chr(10)||'  -- delete '||lower(n_table_name)||'s'
                 ||chr(10)||'  IF class_ids MULTISET INTERSECT ID_ARRAY('||citydb_util.id_array2string(objclass, ',')||') IS NOT EMPTY THEN'
-                ||chr(10)||'    deleted_ids := deleted_ids MULTISET UNION ALL COALESCE(delete_'||get_short_name(lower(n_table_name))||'_batch(pids), ID_ARRAY());'
+                ||chr(10)||'    deleted_ids := deleted_ids MULTISET UNION ALL COALESCE(delete_'||get_short_name(lower(n_table_name))||'_batch(pids, class_ids), ID_ARRAY());'
                 ||chr(10)||'  END IF;'
                 ||chr(10);
             ELSE
@@ -661,7 +712,17 @@ AS
             IF vars IS NULL OR INSTR(vars, 'child_ids') = 0 THEN
               vars := vars ||chr(10)|| '  child_ids ID_ARRAY;';
             END IF;
-            ref_block := ref_block || gen_delete_ref_by_ids_call(n_table_name, n_fk_column_name);
+
+            -- check if delete function for n_table_name has objclass_id parameter
+            has_objclass_param := has_objclass_id(n_table_name, schema_name) = 1;
+
+            IF has_objclass_param THEN
+              IF vars IS NULL OR INSTR(vars, 'child_class_ids') = 0 THEN
+                vars := vars ||chr(10)|| '  child_class_ids ID_ARRAY;';
+              END IF;
+            END IF;
+
+            ref_block := ref_block || gen_delete_ref_by_ids_call(n_table_name, n_fk_column_name, has_objclass_param);
           END IF;
 
           -- create array delete function for referencing childs
@@ -710,25 +771,46 @@ AS
 
   FUNCTION gen_delete_ref_by_id_call(
     tab_name VARCHAR2,
-    fk_column_name VARCHAR2
+    fk_column_name VARCHAR2,
+    has_objclass_param BOOLEAN := FALSE
     ) RETURN VARCHAR2 
   IS
   BEGIN
-    RETURN
-        chr(10)||'  -- delete '||lower(tab_name)||'s'
-      ||chr(10)||'  SELECT'
-      ||chr(10)||'    id'
-      ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'    child_ids'
-      ||chr(10)||'  FROM'
-      ||chr(10)||'    '||lower(tab_name)
-      ||chr(10)||'  WHERE'
-      ||chr(10)||'    '||lower(fk_column_name)||' = pid;'
-      ||chr(10)
-      ||chr(10)||'  IF child_ids IS NOT EMPTY THEN'
-      ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(child_ids);'
-      ||chr(10)||'  END IF;'
-      ||chr(10);
+    IF has_objclass_param THEN
+      RETURN
+          chr(10)||'  -- delete '||lower(tab_name)||'s'
+        ||chr(10)||'  SELECT'
+        ||chr(10)||'    id,'
+        ||chr(10)||'    objectclass_id'
+        ||chr(10)||'  BULK COLLECT INTO'
+        ||chr(10)||'    child_ids,'
+        ||chr(10)||'    child_class_ids'
+        ||chr(10)||'  FROM'
+        ||chr(10)||'    '||lower(tab_name)
+        ||chr(10)||'  WHERE'
+        ||chr(10)||'    '||lower(fk_column_name)||' = pid;'
+        ||chr(10)
+        ||chr(10)||'  IF child_ids IS NOT EMPTY THEN'
+        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(child_ids, SET(child_class_ids));'
+        ||chr(10)||'  END IF;'
+        ||chr(10);
+    ELSE
+      RETURN
+          chr(10)||'  -- delete '||lower(tab_name)||'s'
+        ||chr(10)||'  SELECT'
+        ||chr(10)||'    id'
+        ||chr(10)||'  BULK COLLECT INTO'
+        ||chr(10)||'    child_ids'
+        ||chr(10)||'  FROM'
+        ||chr(10)||'    '||lower(tab_name)
+        ||chr(10)||'  WHERE'
+        ||chr(10)||'    '||lower(fk_column_name)||' = pid;'
+        ||chr(10)
+        ||chr(10)||'  IF child_ids IS NOT EMPTY THEN'
+        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(child_ids);'
+        ||chr(10)||'  END IF;'
+        ||chr(10);
+    END IF;
   END;
 
   FUNCTION gen_delete_m_ref_by_id_stmt(
@@ -901,6 +983,7 @@ AS
     m_ref_column_name VARCHAR2(30);
     cleanup_m_table VARCHAR2(30);
     objclass ID_ARRAY;
+    has_objclass_param BOOLEAN := FALSE;
   BEGIN
     ref_cursor := query_ref_fk(tab_name, schema_name);
 
@@ -933,7 +1016,7 @@ AS
             child_ref_block := child_ref_block ||
                 chr(10)||'  -- delete '||lower(n_table_name)
               ||chr(10)||'  IF class_id IN ('||citydb_util.id_array2string(objclass, ',')||') THEN'
-              ||chr(10)||'    deleted_id := delete_'||get_short_name(lower(n_table_name))||'(pid);'
+              ||chr(10)||'    deleted_id := delete_'||get_short_name(lower(n_table_name))||'(pid, class_id);'
               ||chr(10)||'  END IF;'
               ||chr(10);
           ELSE
@@ -952,7 +1035,17 @@ AS
             IF vars IS NULL OR INSTR(vars, 'child_ids') = 0 THEN
               vars := vars ||chr(10)|| '  child_ids ID_ARRAY;';
             END IF;
-            ref_block := ref_block || gen_delete_ref_by_id_call(n_table_name, n_fk_column_name);
+
+            -- check if delete function for n_table_name has objclass_id parameter
+            has_objclass_param := has_objclass_id(n_table_name, schema_name) = 1;
+
+            IF has_objclass_param THEN
+              IF vars IS NULL OR INSTR(vars, 'child_class_ids') = 0 THEN
+                vars := vars ||chr(10)|| '  child_class_ids ID_ARRAY;';
+              END IF;
+            END IF;
+
+            ref_block := ref_block || gen_delete_ref_by_id_call(n_table_name, n_fk_column_name, has_objclass_param);
           ELSE
             vars := vars
               ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_ids ID_ARRAY;'
@@ -1023,31 +1116,55 @@ AS
   -- ARRAY CASE
   FUNCTION gen_delete_selfref_by_ids_call(
     tab_name VARCHAR2,
-    self_fk_column_name VARCHAR2
+    self_fk_column_name VARCHAR2,
+    has_objclass_param BOOLEAN := FALSE
   ) RETURN VARCHAR2
   IS
   BEGIN
-    RETURN
-        chr(10)||'  -- delete referenced parts'
-      ||chr(10)||'  SELECT'
-      ||chr(10)||'    t.id'
-      ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'    part_ids'
-      ||chr(10)||'  FROM'
-      ||chr(10)||'    '||lower(tab_name)||' t,'
-      ||chr(10)||'    TABLE(pids) a'
-      ||chr(10)||'  WHERE'
-      ||chr(10)||'    t.'||lower(self_fk_column_name)||' = a.COLUMN_VALUE'
-      ||chr(10)||'    AND t.id != a.COLUMN_VALUE;'
-      ||chr(10)
-      ||chr(10)||'  IF part_ids IS NOT EMPTY THEN'
-      ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(part_ids);'
-      ||chr(10)||'  END IF;'
-      ||chr(10);
+    IF has_objclass_param THEN
+      RETURN
+          chr(10)||'  -- delete referenced parts'
+        ||chr(10)||'  SELECT'
+        ||chr(10)||'    t.id,'
+        ||chr(10)||'    t.objectclass_id'
+        ||chr(10)||'  BULK COLLECT INTO'
+        ||chr(10)||'    part_ids,'
+        ||chr(10)||'    part_class_ids'
+        ||chr(10)||'  FROM'
+        ||chr(10)||'    '||lower(tab_name)||' t,'
+        ||chr(10)||'    TABLE(pids) a'
+        ||chr(10)||'  WHERE'
+        ||chr(10)||'    t.'||lower(self_fk_column_name)||' = a.COLUMN_VALUE'
+        ||chr(10)||'    AND t.id != a.COLUMN_VALUE;'
+        ||chr(10)
+        ||chr(10)||'  IF part_ids IS NOT EMPTY THEN'
+        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(part_ids, SET(part_class_ids));'
+        ||chr(10)||'  END IF;'
+        ||chr(10);
+    ELSE
+      RETURN
+          chr(10)||'  -- delete referenced parts'
+        ||chr(10)||'  SELECT'
+        ||chr(10)||'    t.id'
+        ||chr(10)||'  BULK COLLECT INTO'
+        ||chr(10)||'    part_ids'
+        ||chr(10)||'  FROM'
+        ||chr(10)||'    '||lower(tab_name)||' t,'
+        ||chr(10)||'    TABLE(pids) a'
+        ||chr(10)||'  WHERE'
+        ||chr(10)||'    t.'||lower(self_fk_column_name)||' = a.COLUMN_VALUE'
+        ||chr(10)||'    AND t.id != a.COLUMN_VALUE;'
+        ||chr(10)
+        ||chr(10)||'  IF part_ids IS NOT EMPTY THEN'
+        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(part_ids);'
+        ||chr(10)||'  END IF;'
+        ||chr(10);
+    END IF;
   END;
 
   PROCEDURE create_selfref_array_delete(
     tab_name VARCHAR2,
+    has_objclass_param BOOLEAN := FALSE,
     schema_name VARCHAR2 := USER,
     vars OUT VARCHAR2,
     self_block OUT VARCHAR2
@@ -1067,10 +1184,13 @@ AS
         -- create a dummy array delete function to avoid endless recursive calls
         create_array_delete_dummy(tab_name, schema_name);
         vars := chr(10)|| '  part_ids ID_ARRAY;';
+        IF has_objclass_param THEN
+          vars := vars ||chr(10)|| '  part_class_ids ID_ARRAY;';
+        END IF;
         self_block := '';
       END IF;
 
-      self_block := self_block || gen_delete_selfref_by_ids_call(tab_name, parent_column);
+      self_block := self_block || gen_delete_selfref_by_ids_call(tab_name, parent_column, has_objclass_param);
     END LOOP;
 
     RETURN;
@@ -1079,30 +1199,53 @@ AS
   -- SINGLE CASE
   FUNCTION gen_delete_selfref_by_id_call(
     tab_name VARCHAR2,
-    self_fk_column_name VARCHAR2
+    self_fk_column_name VARCHAR2,
+    has_objclass_param BOOLEAN := FALSE
   ) RETURN VARCHAR2
   IS
   BEGIN
-    RETURN
-        chr(10)||'  -- delete referenced parts'
-      ||chr(10)||'  SELECT'
-      ||chr(10)||'    id'
-      ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'    part_ids'
-      ||chr(10)||'  FROM'
-      ||chr(10)||'    '||lower(tab_name)
-      ||chr(10)||'  WHERE'
-      ||chr(10)||'    '||lower(self_fk_column_name)||' = pid'
-      ||chr(10)||'    AND id != pid;'
-      ||chr(10)
-      ||chr(10)||'  IF part_ids IS NOT EMPTY THEN'
-      ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(part_ids);'
-      ||chr(10)||'  END IF;'
-      ||chr(10);
+    IF has_objclass_param THEN
+      RETURN
+          chr(10)||'  -- delete referenced parts'
+        ||chr(10)||'  SELECT'
+        ||chr(10)||'    id,'
+        ||chr(10)||'    objectclass_id'
+        ||chr(10)||'  BULK COLLECT INTO'
+        ||chr(10)||'    part_ids,'
+        ||chr(10)||'    part_class_ids'
+        ||chr(10)||'  FROM'
+        ||chr(10)||'    '||lower(tab_name)
+        ||chr(10)||'  WHERE'
+        ||chr(10)||'    '||lower(self_fk_column_name)||' = pid'
+        ||chr(10)||'    AND id != pid;'
+        ||chr(10)
+        ||chr(10)||'  IF part_ids IS NOT EMPTY THEN'
+        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(part_ids, SET(part_class_ids));'
+        ||chr(10)||'  END IF;'
+        ||chr(10);    
+    ELSE
+      RETURN
+          chr(10)||'  -- delete referenced parts'
+        ||chr(10)||'  SELECT'
+        ||chr(10)||'    id'
+        ||chr(10)||'  BULK COLLECT INTO'
+        ||chr(10)||'    part_ids'
+        ||chr(10)||'  FROM'
+        ||chr(10)||'    '||lower(tab_name)
+        ||chr(10)||'  WHERE'
+        ||chr(10)||'    '||lower(self_fk_column_name)||' = pid'
+        ||chr(10)||'    AND id != pid;'
+        ||chr(10)
+        ||chr(10)||'  IF part_ids IS NOT EMPTY THEN'
+        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(part_ids);'
+        ||chr(10)||'  END IF;'
+        ||chr(10);
+    END IF;
   END;
 
   PROCEDURE create_selfref_delete(
     tab_name VARCHAR2,
+    has_objclass_param BOOLEAN := FALSE,
     schema_name VARCHAR2 := USER,
     selfref_path IN OUT STRARRAY,
     vars OUT VARCHAR2,
@@ -1121,10 +1264,13 @@ AS
 
       IF self_block IS NULL THEN
         vars := chr(10)|| '  part_ids ID_ARRAY;';
+        IF has_objclass_param THEN
+          vars := vars ||chr(10)|| '  part_class_ids ID_ARRAY;';
+        END IF;
         self_block := '';
       END IF;
 
-      self_block := self_block || gen_delete_selfref_by_id_call(tab_name, parent_column);
+      self_block := self_block || gen_delete_selfref_by_id_call(tab_name, parent_column, has_objclass_param);
     END LOOP;
 
     RETURN;
@@ -1138,7 +1284,8 @@ AS
   *****************************/
   -- ARRAY CASE
   FUNCTION gen_delete_by_ids_stmt(
-    tab_name VARCHAR2
+    tab_name VARCHAR2,
+    has_objclass_param BOOLEAN := FALSE
     ) RETURN VARCHAR2
   IS
   BEGIN
@@ -1151,15 +1298,20 @@ AS
       ||chr(10)||'    FROM'
       ||chr(10)||'      TABLE(pids) a'
       ||chr(10)||'    WHERE'
-      ||chr(10)||'      a.COLUMN_VALUE = t.id'
-      ||chr(10)||'  )'
+      ||chr(10)||'      a.COLUMN_VALUE = t.id'     
+      ||chr(10)||'    )'
+      || CASE WHEN has_objclass_param
+           THEN chr(10)||'    AND t.objectclass_id MEMBER OF class_ids'
+           ELSE ''
+         END           
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    id';
   END;
 
   -- SINGLE CASE
   FUNCTION gen_delete_by_id_stmt(
-    tab_name VARCHAR2
+    tab_name VARCHAR2,
+    has_objclass_param BOOLEAN := FALSE
     ) RETURN VARCHAR2
   IS
   BEGIN
@@ -1168,6 +1320,10 @@ AS
       ||chr(10)||'    '||lower(tab_name)
       ||chr(10)||'  WHERE'
       ||chr(10)||'    id = pid'
+      || CASE WHEN has_objclass_param
+           THEN chr(10)||'    AND objectclass_id = class_id'
+           ELSE ''
+         END 
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    id';
   END;
@@ -1487,7 +1643,7 @@ AS
         parent_block :=
             chr(10)||'  -- delete '||lower(parent_table)
           ||chr(10)||'  IF deleted_ids IS NOT EMPTY THEN'
-          ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(parent_table))||'_post_bat(deleted_ids);'
+          ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(parent_table))||'_post_bat(deleted_ids, class_ids);'
           ||chr(10)||'  END IF;'
           ||chr(10);
       END IF;
@@ -1521,7 +1677,7 @@ AS
         parent_block :=
             chr(10)||'  -- delete '||lower(parent_table)
           ||chr(10)||'  IF deleted_id IS NOT NULL THEN'
-          ||chr(10)||'    dummy_id := delete_'||get_short_name(lower(parent_table))||'_post(deleted_id);'
+          ||chr(10)||'    dummy_id := delete_'||get_short_name(lower(parent_table))||'_post(deleted_id, class_id);'
           ||chr(10)||'  END IF;'
           ||chr(10);
       END IF;
@@ -1564,7 +1720,7 @@ AS
     ddl_command VARCHAR2(500) := 
       'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'('
       || 'pid NUMBER, '
-      || 'objclass_id NUMBER := NULL'
+      || 'objclass_id NUMBER := 0'
       || ') RETURN NUMBER'
       ||chr(10)||'IS'
       ||chr(10)||'  deleted_id NUMBER;'
@@ -1584,7 +1740,8 @@ AS
   IS
     ddl_command VARCHAR2(500) := 
       'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_post_bat('
-      || 'pids ID_ARRAY'
+      || 'pids ID_ARRAY,'
+      || 'objclass_ids ID_ARRAY'
       || ') RETURN ID_ARRAY'
       ||chr(10)||'IS'
       ||chr(10)||'  deleted_ids ID_ARRAY := ID_ARRAY();'
@@ -1604,7 +1761,8 @@ AS
   IS
     ddl_command VARCHAR2(500) := 
       'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_post('
-      || 'pid NUMBER'
+      || 'pid NUMBER,'
+      || 'objclass_id NUMBER'
       || ') RETURN NUMBER'
       ||chr(10)||'IS'
       ||chr(10)||'  deleted_id NUMBER;'
@@ -1625,10 +1783,12 @@ AS
     ) RETURN STRARRAY
   IS
     create_path STRARRAY := path;
-    ddl_command VARCHAR2(32767) := 
-      'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_batch';
+    ddl_command VARCHAR2(32767) := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_batch';
+    ddl_command_2 VARCHAR2(32767);
+    has_objclass_param BOOLEAN := FALSE;
     declare_block VARCHAR2(1000) := '  deleted_ids ID_ARRAY := ID_ARRAY();';
-    objclass_block VARCHAR2(8000) := '';
+    objclass_block VARCHAR2(11000) := '';
+    objclass_filter_block VARCHAR2(10000) := '';
     pre_block VARCHAR2(12000) := '';
     post_block VARCHAR2(12000) := '';
     delete_block VARCHAR2(2000) := '';
@@ -1653,15 +1813,12 @@ AS
     -- create dummy function in case it is needed for compiling subsequent functions
     create_array_delete_dummy(tab_name, schema_name);
 
-    -- REFERENCING TABLES
-    create_ref_array_delete(tab_name, schema_name, create_path, vars, child_ref_block, ref_block);
-    declare_block := declare_block || COALESCE(vars, '');
-    objclass_block := objclass_block || COALESCE(child_ref_block, '');
-    pre_block := pre_block || COALESCE(ref_block, '');
+    -- check if table contains objectclass_id column in order to create second parameter
+    has_objclass_param := has_objclass_id(tab_name, schema_name) = 1;
 
-    -- if objclass_block is set finish function here
-    IF objclass_block IS NOT NULL THEN
-      ddl_command := ddl_command || '(pids ID_ARRAY, objclass_ids ID_ARRAY := ID_ARRAY()) RETURN ID_ARRAY'||chr(10)||'IS'||chr(10);
+    IF has_objclass_param THEN
+      ddl_command := ddl_command || '(pids ID_ARRAY, objclass_ids ID_ARRAY := ID_ARRAY())';
+      declare_block := declare_block ||chr(10)||'  class_ids ID_ARRAY;';
       objclass_block :=
           chr(10)||'  -- fetch objectclass_id if not set'
         ||chr(10)||'  IF objclass_ids IS EMPTY THEN'
@@ -1675,44 +1832,61 @@ AS
         ||chr(10)||'    WHERE'
         ||chr(10)||'      t.id = a.COLUMN_VALUE;'
         ||chr(10)||'  ELSE'
-        ||chr(10)||'    class_ids := objclass_ids;'
+        ||chr(10)||'    class_ids := SET(objclass_ids);'
         ||chr(10)||'  END IF;'
         ||chr(10)
         ||chr(10)||'  IF class_ids IS EMPTY THEN'
         ||chr(10)||'    DBMS_OUTPUT.PUT_LINE(''Objectclass_id unknown! Check OBJECTCLASS table.'');'
         ||chr(10)||'    RETURN NULL;'
         ||chr(10)||'  END IF;'
-        ||chr(10)|| objclass_block
-        ||chr(10)||'  IF pids.count <> deleted_ids.count THEN'
-        ||chr(10)||'    deleted_ids := deleted_ids MULTISET UNION ALL COALESCE(delete_'||get_short_name(lower(tab_name))||'_post_bat(pids), ID_ARRAY());'
-        ||chr(10)||'  END IF;'
         ||chr(10);
+    ELSE
+      ddl_command := ddl_command || '(pids ID_ARRAY)';
+    END IF;
 
+    -- complete function header
+    ddl_command := ddl_command || ' RETURN ID_ARRAY'||chr(10)||'IS'||chr(10);
+
+    -- REFERENCING TABLES
+    create_ref_array_delete(tab_name, schema_name, create_path, vars, child_ref_block, ref_block);
+    declare_block := declare_block || COALESCE(vars, '');
+    objclass_filter_block := objclass_filter_block || COALESCE(child_ref_block, '');
+    pre_block := pre_block || COALESCE(ref_block, '');
+
+    -- if objclass_filter_block is set finish function here
+    IF objclass_filter_block IS NOT NULL THEN
       ddl_command := ddl_command
                  ||'  deleted_ids ID_ARRAY := ID_ARRAY();'
         ||chr(10)||'  class_ids ID_ARRAY;'
         ||chr(10)||'BEGIN'
         || objclass_block
+        || objclass_filter_block
+        ||chr(10)||'  IF pids.count <> deleted_ids.count THEN'
+        ||chr(10)||'    deleted_ids := deleted_ids MULTISET UNION ALL COALESCE(delete_'||get_short_name(lower(tab_name))||'_post_bat(pids, class_ids), ID_ARRAY());'
+        ||chr(10)||'  END IF;'
+        ||chr(10)
         ||chr(10)|| return_block
         ||chr(10)||'END;';
 
-      EXECUTE IMMEDIATE ddl_command;
-      COMMIT;
+      -- need to add _post delete method first
+      ddl_command_2 := ddl_command;
+
+      -- clear objclass_block as it is not needed in a _post delete method
+      objclass_block := chr(10)||'  class_ids := objclass_ids;'||chr(10);
 
       -- start a seperate post function which is called by child delete functions
-      ddl_command := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_post_bat';
+      ddl_command := 'CREATE OR REPLACE FUNCTION '
+        ||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_post_bat'
+        ||'(pids ID_ARRAY, objclass_ids ID_ARRAY) RETURN ID_ARRAY'||chr(10)||'IS'||chr(10);
     END IF;
 
-    -- complete function header
-    ddl_command := ddl_command || '(pids ID_ARRAY) RETURN ID_ARRAY'||chr(10)||'IS'||chr(10);
-
     -- SELF REFERENCES
-    create_selfref_array_delete(tab_name, schema_name, vars, self_block);
+    create_selfref_array_delete(tab_name, has_objclass_param, schema_name, vars, self_block);
     declare_block := declare_block || COALESCE(vars, '');
     pre_block := pre_block || COALESCE(self_block, '');
 
     -- MAIN DELETE
-    delete_block := gen_delete_by_ids_stmt(tab_name);
+    delete_block := gen_delete_by_ids_stmt(tab_name, has_objclass_param);
 
     -- FOREIGN KEYs which are set to ON DELETE SET NULL and are nullable
     create_ref_to_array_delete(tab_name, schema_name, create_path, vars, returning_block, collect_block, into_block, fk_block);
@@ -1734,6 +1908,7 @@ AS
     ddl_command := ddl_command
       || declare_block
       ||chr(10)||'BEGIN'
+      || objclass_block
       || pre_block
       ||chr(10)||'  -- delete '||lower(tab_name)||'s'
       || delete_block
@@ -1745,6 +1920,10 @@ AS
 
     EXECUTE IMMEDIATE ddl_command;
     COMMIT;
+    IF ddl_command_2 IS NOT NULL THEN
+      EXECUTE IMMEDIATE ddl_command_2;
+      COMMIT;
+    END IF;
 
     RETURN create_path;
   END;
@@ -1758,8 +1937,11 @@ AS
   IS
     create_path STRARRAY := path;
     ddl_command VARCHAR2(32767) := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name));
+    ddl_command_2 VARCHAR2(32767);
+    has_objclass_param BOOLEAN := FALSE;
     declare_block VARCHAR2(1000) := '  deleted_id NUMBER;';
-    objclass_block VARCHAR2(8000) := '';
+    objclass_block VARCHAR2(11000) := '';
+    objclass_filter_block VARCHAR2(10000) := '';
     pre_block VARCHAR2(12000) := '';
     post_block VARCHAR2(12000) := '';
     delete_block VARCHAR2(2000) := '';
@@ -1783,18 +1965,15 @@ AS
     -- create dummy function in case it is needed for compiling subsequent functions
     create_delete_dummy(tab_name, schema_name);
 
-    -- REFERENCING TABLES
-    create_ref_delete(tab_name, schema_name, create_path, vars, child_ref_block, ref_block);
-    declare_block := declare_block || COALESCE(vars, '');
-    objclass_block := objclass_block || COALESCE(child_ref_block, '');
-    pre_block := pre_block || COALESCE(ref_block, '');
+    -- check if table contains objectclass_id column in order to create second parameter
+    has_objclass_param := has_objclass_id(tab_name, schema_name) = 1;
 
-    -- if objclass_block is set finish function here
-    IF objclass_block IS NOT NULL THEN
-      ddl_command := ddl_command || '(pid NUMBER, objclass_id NUMBER := NULL) RETURN NUMBER'||chr(10)||'IS'||chr(10);
+    IF has_objclass_param THEN
+      ddl_command := ddl_command || '(pid NUMBER, objclass_id NUMBER := 0)';
+      declare_block := declare_block ||chr(10)||'  class_id NUMBER;';
       objclass_block :=
           chr(10)||'  -- fetch objectclass_id if not set'
-        ||chr(10)||'  IF objclass_id IS NULL THEN'
+        ||chr(10)||'  IF objclass_id = 0 THEN'
         ||chr(10)||'    SELECT'
         ||chr(10)||'      objectclass_id'
         ||chr(10)||'    INTO'
@@ -1811,37 +1990,54 @@ AS
         ||chr(10)||'    DBMS_OUTPUT.PUT_LINE(''Objectclass_id unknown! Check OBJECTCLASS table.'');'
         ||chr(10)||'    RETURN NULL;'
         ||chr(10)||'  END IF;'
-        ||chr(10)|| objclass_block
-        ||chr(10)||'  IF deleted_id IS NULL THEN'
-        ||chr(10)||'    deleted_id := delete_'||get_short_name(lower(tab_name))||'_post(pid);'
-        ||chr(10)||'  END IF;'
         ||chr(10);
+    ELSE
+      ddl_command := ddl_command || '(pid NUMBER)';
+    END IF;
 
+    -- complete function header
+    ddl_command := ddl_command || ' RETURN NUMBER'||chr(10)||'IS'||chr(10);
+
+    -- REFERENCING TABLES
+    create_ref_delete(tab_name, schema_name, create_path, vars, child_ref_block, ref_block);
+    declare_block := declare_block || COALESCE(vars, '');
+    objclass_filter_block := objclass_filter_block || COALESCE(child_ref_block, '');
+    pre_block := pre_block || COALESCE(ref_block, '');
+
+    -- if objclass_filter_block is set finish function here
+    IF objclass_filter_block IS NOT NULL THEN
       ddl_command := ddl_command
                  ||'  deleted_id NUMBER;'
         ||chr(10)||'  class_id NUMBER;'
         ||chr(10)||'BEGIN'
         || objclass_block
+        || objclass_filter_block
+        ||chr(10)||'  IF deleted_id IS NULL THEN'
+        ||chr(10)||'    deleted_id := delete_'||get_short_name(lower(tab_name))||'_post(pid, class_id);'
+        ||chr(10)||'  END IF;'
+        ||chr(10)
         ||chr(10)|| return_block
         ||chr(10)||'END;';
 
-      EXECUTE IMMEDIATE ddl_command;
-      COMMIT;
+      -- need to add _post delete method first
+      ddl_command_2 := ddl_command;
+
+      -- clear objclass_block as it is not needed in a _post delete method
+      objclass_block := chr(10)||'  class_id := objclass_id;'||chr(10);
 
       -- start a seperate post function which is called by child delete functions
-      ddl_command := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_post';
+      ddl_command := 'CREATE OR REPLACE FUNCTION '
+        ||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_post'
+        ||'(pid NUMBER, objclass_id NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
     END IF;
 
-    -- complete function header
-    ddl_command := ddl_command || '(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
-
     -- SELF REFERENCES
-    create_selfref_delete(tab_name, schema_name, create_path, vars, self_block);
+    create_selfref_delete(tab_name, has_objclass_param, schema_name, create_path, vars, self_block);
     declare_block := declare_block || COALESCE(vars, '');
     pre_block := pre_block || COALESCE(self_block, '');
 
     -- MAIN DELETE
-    delete_block := gen_delete_by_id_stmt(tab_name);
+    delete_block := gen_delete_by_id_stmt(tab_name, has_objclass_param);
 
     -- FOREIGN KEY which are set to ON DELETE SET NULL and are nullable
     create_ref_to_delete(tab_name, schema_name, create_path, vars, returning_block, into_block, fk_block);
@@ -1866,6 +2062,7 @@ AS
     ddl_command := ddl_command
       || declare_block
       ||chr(10)||'BEGIN'
+      || objclass_block
       || pre_block
       ||chr(10)||'  -- delete '||lower(tab_name)||'s'
       || delete_block
@@ -1877,6 +2074,10 @@ AS
 
     EXECUTE IMMEDIATE ddl_command;
     COMMIT;
+    IF ddl_command_2 IS NOT NULL THEN
+      EXECUTE IMMEDIATE ddl_command_2;
+      COMMIT;
+    END IF;
 
     RETURN create_path;
   END;
@@ -1967,6 +2168,7 @@ AS
     ref_to_cursor SYS_REFCURSOR;
     member_table_name VARCHAR2(30);
     member_fk_column VARCHAR2(30);
+    has_objclass_param BOOLEAN := FALSE;
   BEGIN
     ref_to_cursor := query_member_1n(tab_name, schema_name);
 
@@ -1988,7 +2190,17 @@ AS
       IF vars IS NULL OR INSTR(vars, 'child_ids') = 0 THEN
         vars := vars ||chr(10)|| '  child_ids ID_ARRAY;';
       END IF;
-      ref_block := ref_block || gen_delete_ref_by_ids_call(member_table_name, member_fk_column);
+
+      -- check if delete function for member_table_name has objclass_id parameter
+      has_objclass_param := has_objclass_id(member_table_name, schema_name) = 1;
+
+      IF has_objclass_param THEN
+        IF vars IS NULL OR INSTR(vars, 'child_class_ids') = 0 THEN
+          vars := vars ||chr(10)|| '  child_class_ids ID_ARRAY;';
+        END IF;
+      END IF;
+      
+      ref_block := ref_block || gen_delete_ref_by_ids_call(member_table_name, member_fk_column, has_objclass_param);
     END LOOP;
 
     RETURN;
@@ -2006,6 +2218,7 @@ AS
     ref_to_cursor SYS_REFCURSOR;
     member_table_name VARCHAR2(30);
     member_fk_column VARCHAR2(30);
+    has_objclass_param BOOLEAN := FALSE;
   BEGIN
     ref_to_cursor := query_member_1n(tab_name, schema_name);
 
@@ -2027,7 +2240,17 @@ AS
       IF vars IS NULL OR INSTR(vars, 'child_ids') = 0 THEN
         vars := vars ||chr(10)|| '  child_ids ID_ARRAY;';
       END IF;
-      ref_block := ref_block || gen_delete_ref_by_id_call(member_table_name, member_fk_column);
+
+      -- check if delete function for member_table_name has objclass_id parameter
+      has_objclass_param := has_objclass_id(member_table_name, schema_name) = 1;
+
+      IF has_objclass_param THEN
+        IF vars IS NULL OR INSTR(vars, 'child_class_ids') = 0 THEN
+          vars := vars ||chr(10)|| '  child_class_ids ID_ARRAY;';
+        END IF;
+      END IF;
+
+      ref_block := ref_block || gen_delete_ref_by_id_call(member_table_name, member_fk_column, has_objclass_param);
     END LOOP;
 
     RETURN;

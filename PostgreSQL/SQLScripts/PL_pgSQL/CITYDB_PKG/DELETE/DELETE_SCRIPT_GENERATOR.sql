@@ -30,7 +30,7 @@
 *
 * FUNCTIONS:
 *   check_for_cleanup(ref_table OID) RETURNS OID
-*   create_array_delete_dummy(table_name TEXT, schema_name TEXT DEFAULT 'citydb', has_objclass_param BOOLEAN DEFAULT FALSE) RETURNS SETOF VOID
+*   create_array_delete_dummy(table_name TEXT, has_objclass_param BOOLEAN DEFAULT FALSE, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   create_array_delete_function(table_name TEXT, schema_name TEXT DEFAULT 'citydb', path TEXT[] DEFAULT '{}'::text[]) RETURNS SETOF VOID
 *   create_array_delete_member_fct(table_name TEXT, schema_name TEXT DEFAULT 'citydb', path TEXT[] DEFAULT '{}'::text[]) RETURNS SETOF VOID
 *   create_delete_function(table_name TEXT, schema_name TEXT DEFAULT 'citydb', path TEXT[] DEFAULT '{}'::text[]) RETURNS SETOF VOID
@@ -55,11 +55,11 @@
 *     INOUT ref_to_parent_path TEXT[] DEFAULT '{}'::text[], OUT parent_block TEXT) RETURNS RECORD
 *   create_ref_to_parent_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
 *     INOUT ref_to_parent_path TEXT[] DEFAULT '{}'::text[], OUT parent_block TEXT) RETURNS RECORD
-*   create_selfref_array_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb', has_objclass_param BOOLEAN DEFAULT FALSE) RETURNS TEXT
-*   create_selfref_delete(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
+*   create_selfref_array_delete(table_name TEXT, has_objclass_param BOOLEAN DEFAULT FALSE, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
+*   create_selfref_delete(table_name TEXT, has_objclass_param BOOLEAN DEFAULT FALSE, schema_name TEXT DEFAULT 'citydb',
 *     INOUT selfref_path TEXT[] DEFAULT '{}'::text[], OUT self_block TEXT) RETURNS RECORD
-*   generate_delete_by_id_stmt(table_name TEXT) RETURNS TEXT
-*   generate_delete_by_ids_stmt(table_name TEXT) RETURNS TEXT
+*   generate_delete_by_id_stmt(table_name TEXT, has_objclass_param BOOLEAN DEFAULT FALSE) RETURNS TEXT
+*   generate_delete_by_ids_stmt(table_name TEXT, has_objclass_param BOOLEAN DEFAULT FALSE) RETURNS TEXT
 *   generate_delete_m_ref_by_id_call(m_table_name TEXT, fk_table_name TEXT[], fk_columns TEXT[], schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   generate_delete_m_ref_by_id_stmt(m_table_name TEXT, m_fk_column_name TEXT, fk_table_name TEXT[], fk_columns TEXT[]) RETURNS TEXT
 *   generate_delete_m_ref_by_ids_call(m_table_name TEXT, fk_table_name TEXT[], fk_columns TEXT[], schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
@@ -68,13 +68,14 @@
 *   generate_delete_n_m_ref_by_id_stmt(n_m_table_name TEXT, n_fk_column_name TEXT, m_table_name TEXT, m_fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   generate_delete_n_m_ref_by_ids_call(n_m_table_name TEXT, n_fk_column_name TEXT, m_table_name TEXT, m_fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   generate_delete_n_m_ref_by_ids_stmt(n_m_table_name TEXT, n_fk_column_name TEXT, m_table_name TEXT, m_fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
-*   generate_delete_ref_by_id_call(table_name TEXT, fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
+*   generate_delete_ref_by_id_call(table_name TEXT, fk_column_name TEXT, has_objclass_param BOOLEAN DEFAULT FALSE, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   generate_delete_ref_by_id_stmt(table_name TEXT, fk_column_name TEXT) RETURNS TEXT
-*   generate_delete_ref_by_ids_call(table_name TEXT, fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
+*   generate_delete_ref_by_ids_call(table_name TEXT, fk_column_name TEXT, has_objclass_param BOOLEAN DEFAULT FALSE, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   generate_delete_ref_by_ids_stmt(table_name TEXT, fk_column_name TEXT) RETURNS TEXT
-*   generate_delete_selfref_by_id_call(table_name TEXT, self_fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
-*   generate_delete_selfref_by_ids_call(table_name TEXT, self_fk_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
+*   generate_delete_selfref_by_id_call(table_name TEXT, self_fk_column_name TEXT, has_objclass_param BOOLEAN DEFAULT FALSE, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
+*   generate_delete_selfref_by_ids_call(table_name TEXT, self_fk_column_name TEXT, has_objclass_param BOOLEAN DEFAULT FALSE, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   get_short_name(table_name TEXT) RETURNS TEXT
+*   has_objclass_id(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
 *   is_child_ref(fk_column_name TEXT, table_name OID, ref_table_name OID) RETURNS INTEGER
 *   query_member_nm(table_name TEXT, schema_name TEXT DEFAULT 'citydb',
 *     OUT n_table_name TEXT, OUT n_fk_column_name TEXT, OUT m_table_name TEXT, OUT m_fk_column_name TEXT) RETURNS SETOF RECORD
@@ -107,7 +108,6 @@ $$
 SELECT substr($1, 1, 17);
 $$
 LANGUAGE sql STABLE STRICT;
-
 
 -- function to check if table requires its own delete function
 CREATE OR REPLACE FUNCTION citydb_pkg.check_for_cleanup(ref_table OID) RETURNS OID AS
@@ -194,6 +194,24 @@ SELECT
       AND fk.confrelid = $3
       AND fk.contype = 'f'
       AND a.attname = $1
+  ), 0);
+$$
+LANGUAGE sql STABLE STRICT;
+
+CREATE OR REPLACE FUNCTION citydb_pkg.has_objclass_id(
+  table_name TEXT,
+  schema_name TEXT DEFAULT 'citydb'
+  ) RETURNS INTEGER AS
+$$
+SELECT
+  COALESCE((
+    SELECT
+      1
+    FROM
+      pg_attribute
+    WHERE
+      attrelid = ($2 || '.' || $1)::regclass::oid
+      AND attname = 'objectclass_id'
   ), 0);
 $$
 LANGUAGE sql STABLE STRICT;
@@ -327,13 +345,18 @@ LANGUAGE sql IMMUTABLE STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_ref_by_ids_call(
   table_name TEXT,
   fk_column_name TEXT,
+  has_objclass_param BOOLEAN DEFAULT FALSE,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS TEXT AS
 $$
 SELECT
      E'\n  -- delete '||$1||'s'
   || E'\n  PERFORM'
-  || E'\n    '||$3||'.delete_'||citydb_pkg.get_short_name($1)||E'(array_agg(t.id))'
+  || E'\n    '||$4||'.delete_'||citydb_pkg.get_short_name($1)||E'(array_agg(t.id)'
+  || CASE WHEN $3
+       THEN ', array_agg(DISTINCT t.objectclass_id)'
+       ELSE ''
+     END || ')'
   || E'\n  FROM'
   || E'\n    '||$1|| ' t,'
   || E'\n    unnest($1) a(a_id)'
@@ -524,7 +547,7 @@ BEGIN
             child_ref_block := child_ref_block ||
                  E'\n  -- delete '||rec.n_table_name||'s'
               || E'\n  IF class_ids && ARRAY['||array_to_string(objclass, ',')||']::int[] THEN'
-              || E'\n    deleted_ids := deleted_ids || '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||'($1);'
+              || E'\n    deleted_ids := deleted_ids || (SELECT array_agg(a_id) FROM '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||'($1, class_ids) AS a(a_id));'
               || E'\n  END IF;'
               || E'\n';
           ELSE
@@ -534,7 +557,7 @@ BEGIN
               || E'\n';
           END IF;
         ELSE
-          ref_block := ref_block || citydb_pkg.generate_delete_ref_by_ids_call(rec.n_table_name, rec.n_fk_column_name, $2);
+          ref_block := ref_block || citydb_pkg.generate_delete_ref_by_ids_call(rec.n_table_name, rec.n_fk_column_name, citydb_pkg.has_objclass_id(rec.n_table_name, $2) = 1, $2);
         END IF;
       ELSE
         vars := vars ||E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
@@ -573,13 +596,18 @@ LANGUAGE sql IMMUTABLE STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_ref_by_id_call(
   table_name TEXT,
   fk_column_name TEXT,
+  has_objclass_param BOOLEAN DEFAULT FALSE,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS TEXT AS 
 $$
 SELECT
      E'\n  -- delete '||$1||'s'
   || E'\n  PERFORM'
-  || E'\n    '||$3||'.delete_'||citydb_pkg.get_short_name($1)||E'(array_agg(id))'
+  || E'\n    '||$4||'.delete_'||citydb_pkg.get_short_name($1)||E'(array_agg(id)'
+  || CASE WHEN $3
+       THEN ', array_agg(DISTINCT objectclass_id)'
+       ELSE ''
+     END || ')'
   || E'\n  FROM'
   || E'\n    '||$1
   || E'\n  WHERE'
@@ -764,7 +792,7 @@ BEGIN
           child_ref_block := child_ref_block ||
                E'\n  -- delete '||rec.n_table_name
             || E'\n  IF class_id IN ('||array_to_string(objclass, ',')||') THEN'
-            || E'\n    deleted_id := '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||'($1);'
+            || E'\n    deleted_id := '||$2||'.delete_'||citydb_pkg.get_short_name(rec.n_table_name)||'($1, class_id);'
             || E'\n  END IF;'
             || E'\n';
         ELSE
@@ -780,7 +808,7 @@ BEGIN
         END IF;
 
         IF rec.m_table_name IS NULL THEN
-          ref_block := ref_block || citydb_pkg.generate_delete_ref_by_id_call(rec.n_table_name, rec.n_fk_column_name, $2);
+          ref_block := ref_block || citydb_pkg.generate_delete_ref_by_id_call(rec.n_table_name, rec.n_fk_column_name, citydb_pkg.has_objclass_id(rec.n_table_name, $2) = 1, $2);
         ELSE
           vars := vars || E'\n  ' || citydb_pkg.get_short_name(rec.m_table_name) || '_ids int[] := ''{}'';';
           ref_block := ref_block || citydb_pkg.generate_delete_n_m_ref_by_id_call(rec.n_table_name, rec.n_fk_column_name, rec.m_table_name, rec.m_fk_column_name, $2);
@@ -833,13 +861,18 @@ LANGUAGE sql STABLE STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_selfref_by_ids_call(
   table_name TEXT,
   self_fk_column_name TEXT,
+  has_objclass_param BOOLEAN DEFAULT FALSE,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS TEXT AS 
 $$
 SELECT
      E'\n  -- delete referenced parts'
   || E'\n  PERFORM'
-  || E'\n    '||$3||'.delete_'||citydb_pkg.get_short_name($1)||'(array_agg(t.id))'
+  || E'\n    '||$4||'.delete_'||citydb_pkg.get_short_name($1)||'(array_agg(t.id)'
+  || CASE WHEN $3
+       THEN ', array_agg(DISTINCT t.objectclass_id)'
+       ELSE ''
+     END || ')'
   || E'\n  FROM'
   || E'\n    '||$1||' t,'
   || E'\n    unnest($1) a(a_id)'
@@ -852,8 +885,8 @@ LANGUAGE sql STABLE STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.create_selfref_array_delete(
   table_name TEXT,
-  schema_name TEXT DEFAULT 'citydb',
-  has_objclass_param BOOLEAN DEFAULT FALSE
+  has_objclass_param BOOLEAN DEFAULT FALSE,
+  schema_name TEXT DEFAULT 'citydb'
   ) RETURNS TEXT AS
 $$
 DECLARE
@@ -864,14 +897,14 @@ BEGIN
     SELECT
       parent_column
     FROM
-      citydb_pkg.query_selfref_fk($1, $2) AS q(parent_column)
+      citydb_pkg.query_selfref_fk($1, $3) AS q(parent_column)
   )
   LOOP
     IF self_block = '' THEN
       -- create a dummy array delete function to avoid endless recursive calls
       PERFORM citydb_pkg.create_array_delete_dummy($1, $2, $3);
     END IF;
-    self_block := self_block || citydb_pkg.generate_delete_selfref_by_ids_call($1, rec.parent_column, $2);
+    self_block := self_block || citydb_pkg.generate_delete_selfref_by_ids_call($1, rec.parent_column, $2, $3);
   END LOOP;
 
   RETURN COALESCE(self_block);
@@ -883,13 +916,18 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_selfref_by_id_call(
   table_name TEXT,
   self_fk_column_name TEXT,
+  has_objclass_param BOOLEAN DEFAULT FALSE,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS TEXT AS 
 $$
 SELECT
      E'\n  --delete referenced parts'
   || E'\n  PERFORM'
-  || E'\n    '||$3||'.delete_'||citydb_pkg.get_short_name($1)||'(array_agg(id))'
+  || E'\n    '||$4||'.delete_'||citydb_pkg.get_short_name($1)||'(array_agg(id)'
+  || CASE WHEN $3
+       THEN ', array_agg(DISTINCT objectclass_id)'
+       ELSE ''
+     END || ')'
   || E'\n  FROM'
   || E'\n    '||$1
   || E'\n  WHERE'
@@ -901,6 +939,7 @@ LANGUAGE sql STRICT;
 
 CREATE OR REPLACE FUNCTION citydb_pkg.create_selfref_delete(
   table_name TEXT,
+  has_objclass_param BOOLEAN DEFAULT FALSE,
   schema_name TEXT DEFAULT 'citydb',
   INOUT selfref_path TEXT[] DEFAULT '{}'::text[],
   OUT self_block TEXT
@@ -913,15 +952,15 @@ BEGIN
     SELECT
       parent_column
     FROM
-      citydb_pkg.query_selfref_fk($1, $2) AS q(parent_column)
+      citydb_pkg.query_selfref_fk($1, $3) AS q(parent_column)
   )
   LOOP
     IF self_block IS NULL THEN
       -- create an array delete function
-      selfref_path := citydb_pkg.create_array_delete_function($1, $2, selfref_path);
+      selfref_path := citydb_pkg.create_array_delete_function($1, $3, $4);
       self_block := '';
     END IF;
-    self_block := self_block || citydb_pkg.generate_delete_selfref_by_id_call($1, rec.parent_column, $2);
+    self_block := self_block || citydb_pkg.generate_delete_selfref_by_id_call($1, rec.parent_column, $2, $3);
   END LOOP;
 
   RETURN;
@@ -937,7 +976,8 @@ LANGUAGE plpgsql STRICT;
 *****************************/
 -- ARRAY CASE
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_by_ids_stmt(
-  table_name TEXT
+  table_name TEXT,
+  has_objclass_param BOOLEAN DEFAULT FALSE
   ) RETURNS TEXT AS 
 $$
 SELECT  '  DELETE FROM'
@@ -946,6 +986,10 @@ SELECT  '  DELETE FROM'
   || E'\n      unnest($1) a(a_id)'
   || E'\n    WHERE'
   || E'\n      t.id = a.a_id'
+  || CASE WHEN $2
+       THEN E'\n      AND t.objectclass_id = ANY (class_ids)'
+       ELSE ''
+     END
   || E'\n    RETURNING'
   || E'\n      id';
 $$
@@ -953,7 +997,8 @@ LANGUAGE sql IMMUTABLE STRICT;
 
 -- SINGLE CASE
 CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_by_id_stmt(
-  table_name TEXT
+  table_name TEXT,
+  has_objclass_param BOOLEAN DEFAULT FALSE
   ) RETURNS TEXT AS 
 $$
 SELECT
@@ -961,6 +1006,10 @@ SELECT
   || E'\n    '||$1
   || E'\n  WHERE'
   || E'\n    id = $1'
+  || CASE WHEN $2
+       THEN E'\n    AND objectclass_id = class_id'
+       ELSE ''
+     END
   || E'\n  RETURNING'
   || E'\n    id';
 $$
@@ -1216,7 +1265,7 @@ BEGIN
       END IF;
       parent_block :=
            E'\n  -- delete '||parent_table
-        || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_ids, ''{0}''::int[]);\n';
+        || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'_post(deleted_ids, class_ids);\n';
     END IF;
   END IF;
 
@@ -1250,7 +1299,7 @@ BEGIN
       END IF;
       parent_block :=
            E'\n  -- delete '||parent_table
-        || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'(deleted_id, 0);\n';
+        || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table)||E'_post(deleted_id, class_id);\n';
     END IF;
   END IF;
 
@@ -1266,13 +1315,13 @@ LANGUAGE plpgsql;
 -- dummy function to compile array delete functions with recursions
 CREATE OR REPLACE FUNCTION citydb_pkg.create_array_delete_dummy(
   table_name TEXT,
-  schema_name TEXT DEFAULT 'citydb',
-  has_objclass_param BOOLEAN DEFAULT FALSE
+  has_objclass_param BOOLEAN DEFAULT FALSE,
+  schema_name TEXT DEFAULT 'citydb'
   ) RETURNS SETOF VOID AS
 $$
 DECLARE
-  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||$2||'.delete_' ||citydb_pkg.get_short_name($1)
-    || CASE WHEN $3 THEN '(pids int[], objclass_ids int[])' ELSE '(pids int[])' END
+  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||$3||'.delete_' ||citydb_pkg.get_short_name($1)
+    || CASE WHEN $2 THEN '(pids int[], objclass_ids int[] DEFAULT ''{}'')' ELSE '(pids int[])' END
     || E' RETURNS SETOF int AS\n$body$'
     || E'\nDECLARE\n  deleted_ids int[] := ''{}'';'
     || E'\nBEGIN\n  RETURN QUERY SELECT unnest(deleted_ids);\nEND;'
@@ -1293,45 +1342,32 @@ $$
 DECLARE
   create_path TEXT[] := $3;
   ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||$2||'.delete_' ||citydb_pkg.get_short_name($1);
-  declare_block TEXT := E'\nDECLARE\n  deleted_ids int[] := ''{}'';';
+  ddl_command_2 TEXT;
+  has_objclass_param BOOLEAN := FALSE;
+  declare_block TEXT := E'\nDECLARE\n  deleted_ids INTEGER[] := ''{}'';';
   objclass_block TEXT := '';
+  objclass_filter_block TEXT := '';
   pre_block TEXT := '';
   post_block TEXT := '';
   delete_agg_start TEXT := E'\n  WITH delete_objects AS (\n  ';
   delete_block TEXT := '';
   delete_agg_end TEXT := E'\n  )\n  SELECT\n    array_agg(id)';
-  return_block TEXT := E'RETURN QUERY\n    SELECT unnest(deleted_ids);';
+  return_block TEXT := E'\n  RETURN QUERY\n    SELECT unnest(deleted_ids);';
 BEGIN
   -- add table_name to path
   create_path := array_append($3, $1 || '_array');
 
-  -- REFERENCING TABLES
-  SELECT
-    ref_path,
-    declare_block || COALESCE(vars, ''),
-    objclass_block || COALESCE(child_ref_block, ''),
-    pre_block || COALESCE(ref_block, '')
-  INTO
-    create_path,
-    declare_block,
-    objclass_block,
-    pre_block
-  FROM
-    citydb_pkg.create_ref_array_delete($1, $2, create_path);
+  -- check if table contains objectclass_id column in order to create second parameter
+  has_objclass_param := citydb_pkg.has_objclass_id($1, $2) = 1;
 
-  -- EXIT in case child method has been called already
-  IF objclass_block <> '' THEN
-    ddl_command := ddl_command || '(pids int[], objclass_ids int[] DEFAULT NULL)';
+  IF has_objclass_param THEN
+    ddl_command := ddl_command || '(pids int[], objclass_ids int[] DEFAULT ''{}'')';
     declare_block := declare_block ||E'\n  class_ids INTEGER[];';
     objclass_block :=
-         E'\n  IF array_length($1, 1) IS NULL THEN'
-      || E'\n    RETURN;'
-      || E'\n  END IF;'
-      || E'\n'
-      || E'\n  -- fetch objectclass_ids if not set'
+         E'\n  -- fetch objectclass_ids if not set'
       || E'\n  IF array_length($2, 1) IS NULL THEN'
       || E'\n    SELECT'
-      || E'\n      array_agg(t.objectclass_id)'
+      || E'\n      array_agg(DISTINCT t.objectclass_id)'
       || E'\n    INTO'
       || E'\n      class_ids'
       || E'\n    FROM'
@@ -1340,33 +1376,74 @@ BEGIN
       || E'\n    WHERE'
       || E'\n      t.id = a.a_id;'
       || E'\n  ELSE'
-      || E'\n    class_ids := $2;'
+      || E'\n    SELECT'
+      || E'\n      array_agg(DISTINCT a.a_id)'
+      || E'\n    INTO'
+      || E'\n      class_ids'
+      || E'\n    FROM'
+      || E'\n      unnest($2) AS a(a_id);'
       || E'\n  END IF;'
       || E'\n'
       || E'\n  IF array_length(class_ids, 1) IS NULL THEN'
       || E'\n    RAISE NOTICE ''Objectclass_id unknown! Check OBJECTCLASS table.'';'
       || E'\n    RETURN NEXT NULL;'
       || E'\n  END IF;'
-      || E'\n' || objclass_block
-      || E'\n  IF'
-      || E'\n    array_length(deleted_ids, 1) IS NOT NULL'
-      || E'\n    OR 0 <> ALL(objclass_ids)'
-      || E'\n  THEN'
-      || E'\n    ' || return_block
-      || E'\n  END IF;'
       || E'\n';
   ELSE
     ddl_command := ddl_command || '(pids int[])';
   END IF;
-  
+
   -- complete function header
   ddl_command := ddl_command || E' RETURNS SETOF int AS\n$body$';
 
+  -- REFERENCING TABLES
+  SELECT
+    ref_path,
+    declare_block || COALESCE(vars, ''),
+    objclass_filter_block || COALESCE(child_ref_block, ''),
+    pre_block || COALESCE(ref_block, '')
+  INTO
+    create_path,
+    declare_block,
+    objclass_filter_block,
+    pre_block
+  FROM
+    citydb_pkg.create_ref_array_delete($1, $2, create_path);
+
+  -- if objclass_filter_block is set finish function here
+  IF objclass_filter_block <> '' THEN
+    ddl_command := ddl_command
+      || E'\nDECLARE'
+      || E'\n  deleted_ids INTEGER[] := ''{}'';'
+      || E'\n  class_ids INTEGER[];'
+      || E'\nBEGIN'
+      || objclass_block
+      || objclass_filter_block
+      || E'\n  IF array_length(deleted_ids, 1) IS NULL OR array_length(deleted_ids, 1) <> array_length($1, 1) THEN'
+      || E'\n    deleted_ids := deleted_ids || (SELECT array_agg(a_id) FROM '||$2||'.delete_'||citydb_pkg.get_short_name($1)||'_post($1, class_ids) AS a(a_id));'
+      || E'\n  END IF;'
+      || E'\n'
+      || return_block
+      || E'\nEND;'
+      || E'\n$body$'
+      || E'\nLANGUAGE plpgsql STRICT';
+
+    -- need to add _post delete method first
+    ddl_command_2 := ddl_command;
+
+    -- clear objclass_block as it is not needed in a _post delete method
+    objclass_block := E'\n  class_ids := $2;\n';
+
+    -- start a seperate post function which is called by child delete functions
+    ddl_command := 'CREATE OR REPLACE FUNCTION '||$2||'.delete_'||get_short_name($1)||'_post'
+      || E'(pids int[], objclass_ids int[]) RETURNS SETOF int AS\n$body$';
+  END IF;
+
   -- SELF REFERENCES
-  pre_block := pre_block || citydb_pkg.create_selfref_array_delete($1, $2, objclass_block <> '');
+  pre_block := pre_block || citydb_pkg.create_selfref_array_delete($1, has_objclass_param, $2);
 
   -- MAIN DELETE
-  delete_block := generate_delete_by_ids_stmt($1);
+  delete_block := generate_delete_by_ids_stmt($1, has_objclass_param);
 
   -- FOREIGN KEY which are set to ON DELETE SET NULL
   SELECT
@@ -1403,8 +1480,6 @@ BEGIN
     delete_block := delete_block;
     delete_agg_end := ';';
     return_block := '';
-  ELSE
-    return_block := E'\n  ' || return_block;
   END IF;
 
   -- putting all together
@@ -1428,11 +1503,14 @@ BEGIN
       || return_block
       || E'\nEND;'
       || E'\n$body$'
-      || E'\nLANGUAGE plpgsql'
-      || CASE WHEN objclass_block <> '' THEN '' ELSE ' STRICT' END;
+      || E'\nLANGUAGE plpgsql STRICT';
   END IF;
 
   EXECUTE ddl_command;
+  IF ddl_command_2 IS NOT NULL THEN
+    EXECUTE ddl_command_2;
+  END IF;
+
   RETURN create_path;
 END;
 $$
@@ -1448,38 +1526,29 @@ $$
 DECLARE
   create_path TEXT[] := $3;
   ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||$2||'.delete_'||citydb_pkg.get_short_name($1);
+  ddl_command_2 TEXT;
+  has_objclass_param BOOLEAN := FALSE;
   declare_block TEXT := E'\nDECLARE\n  deleted_id INTEGER;';
   objclass_block TEXT := '';
+  objclass_filter_block TEXT := '';
   pre_block TEXT := '';
   post_block TEXT := '';
   delete_block TEXT := '';
   delete_into_block TEXT := E'\n  INTO\n    deleted_id';
-  return_block TEXT := 'RETURN deleted_id;';
+  return_block TEXT := E'\n  RETURN deleted_id;';
 BEGIN
   -- add table_name to path
   create_path := array_append($3, $1);
 
-  -- REFERENCING TABLES
-  SELECT
-    ref_path,
-    declare_block || COALESCE(vars, ''),
-    objclass_block || COALESCE(child_ref_block, ''),
-    pre_block || COALESCE(ref_block, '')
-  INTO
-    create_path,
-    declare_block,
-    objclass_block,
-    pre_block
-  FROM
-    citydb_pkg.create_ref_delete($1, $2, create_path);
+  -- check if table contains objectclass_id column in order to create second parameter
+  has_objclass_param := citydb_pkg.has_objclass_id($1, $2) = 1;
 
-  -- EXIT in case child method has been called already
-  IF objclass_block <> '' THEN
-    ddl_command := ddl_command || '(pid int, objclass_id int DEFAULT NULL)';
+  IF has_objclass_param THEN
+    ddl_command := ddl_command || '(pid int, objclass_id int DEFAULT 0)';
     declare_block := declare_block ||E'\n  class_id INTEGER;';
     objclass_block :=
          E'\n  -- fetch objectclass_id if not set'
-      || E'\n  IF $2 IS NULL THEN'
+      || E'\n  IF $2 = 0 THEN'
       || E'\n    SELECT'
       || E'\n      objectclass_id'
       || E'\n    INTO'
@@ -1496,13 +1565,6 @@ BEGIN
       || E'\n    RAISE NOTICE ''Objectclass_id unknown! Check OBJECTCLASS table.'';'
       || E'\n    RETURN NULL;'
       || E'\n  END IF;'
-      || E'\n' || objclass_block
-      || E'\n  IF'
-      || E'\n    deleted_id IS NOT NULL'
-      || E'\n    OR objclass_id <> 0'
-      || E'\n  THEN'
-      || E'\n    ' || return_block
-      || E'\n  END IF;'
       || E'\n';
   ELSE
     ddl_command := ddl_command || '(pid int)';
@@ -1510,6 +1572,49 @@ BEGIN
 
   -- complete function header
   ddl_command := ddl_command || E' RETURNS int AS\n$body$';
+
+  -- REFERENCING TABLES
+  SELECT
+    ref_path,
+    declare_block || COALESCE(vars, ''),
+    objclass_filter_block || COALESCE(child_ref_block, ''),
+    pre_block || COALESCE(ref_block, '')
+  INTO
+    create_path,
+    declare_block,
+    objclass_filter_block,
+    pre_block
+  FROM
+    citydb_pkg.create_ref_delete($1, $2, create_path);
+
+  -- if objclass_filter_block is set finish function here
+  IF objclass_filter_block <> '' THEN
+    ddl_command := ddl_command
+      || E'\nDECLARE'
+      || E'\n  deleted_id INTEGER;'
+      || E'\n  class_id INTEGER;'
+      || E'\nBEGIN'
+      || objclass_block
+      || objclass_filter_block
+      || E'\n  IF deleted_id IS NULL THEN'
+      || E'\n    deleted_id := '||$2||'.delete_'||citydb_pkg.get_short_name($1)||'_post($1, class_id);'
+      || E'\n  END IF;'
+      || E'\n'
+      || return_block
+      || E'\nEND;'
+      || E'\n$body$'
+      || E'\nLANGUAGE plpgsql STRICT';
+
+    -- need to add _post delete method first
+    ddl_command_2 := ddl_command;
+
+    -- clear objclass_block as it is not needed in a _post delete method
+    objclass_block := E'\n  class_id := $2;\n';
+
+    -- start a seperate post function which is called by child delete functions
+    ddl_command := 'CREATE OR REPLACE FUNCTION '||$2||'.delete_'||get_short_name($1)||'_post'
+      || E'(pid int, objclass_id int) RETURNS int AS\n$body$';
+  END IF;
 
   -- SELF REFERENCES
   SELECT
@@ -1519,10 +1624,10 @@ BEGIN
     create_path,
     pre_block
   FROM
-    citydb_pkg.create_selfref_delete($1, $2, create_path);
+    citydb_pkg.create_selfref_delete($1, has_objclass_param, $2, create_path);
 
   -- MAIN DELETE
-  delete_block := generate_delete_by_id_stmt($1);
+  delete_block := generate_delete_by_id_stmt($1, has_objclass_param);
 
   -- FOREIGN KEY which are set to ON DELETE SET NULL
   SELECT
@@ -1567,14 +1672,16 @@ BEGIN
       || delete_block
       || delete_into_block
       || post_block
-      || E'\n  ' || return_block
+      || return_block
       || E'\nEND;'
       || E'\n$body$'
-      || E'\nLANGUAGE plpgsql'
-      || CASE WHEN objclass_block <> '' THEN '' ELSE ' STRICT' END;
+      || E'\nLANGUAGE plpgsql STRICT';
   END IF;
 
   EXECUTE ddl_command;
+  IF ddl_command_2 IS NOT NULL THEN
+    EXECUTE ddl_command_2;
+  END IF;
   RETURN create_path;
 END;
 $$
@@ -1652,7 +1759,7 @@ BEGIN
       member_1n_path := citydb_pkg.create_array_delete_function(rec.member_table_name, $2, $3);
     END IF;
 
-    ref_block := ref_block || generate_delete_ref_by_ids_call(rec.member_table_name, rec.member_fk_column, $2);
+    ref_block := ref_block || generate_delete_ref_by_ids_call(rec.member_table_name, rec.member_fk_column, citydb_pkg.has_objclass_id(rec.member_table_name, $2) = 1, $2);
   END LOOP;
 
   RETURN;
@@ -1684,7 +1791,7 @@ BEGIN
       member_1n_path := citydb_pkg.create_delete_function(rec.member_table_name, $2, $3);
     END IF;
 
-    ref_block := ref_block || generate_delete_ref_by_id_call(rec.member_table_name, rec.member_fk_column, $2);
+    ref_block := ref_block || generate_delete_ref_by_id_call(rec.member_table_name, rec.member_fk_column, citydb_pkg.has_objclass_id(rec.member_table_name, $2) = 1, $2);
   END LOOP;
 
   RETURN;
