@@ -117,6 +117,7 @@ AS
   FUNCTION status_normal_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION create_index(idx INDEX_OBJ, is_versioned BOOLEAN, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION drop_index(idx INDEX_OBJ, is_versioned BOOLEAN, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
+  FUNCTION create_spatial_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION drop_spatial_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION create_normal_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION drop_normal_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
