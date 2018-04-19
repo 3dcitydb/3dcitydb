@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="14397,10137" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="14396,10136" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -261,6 +261,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="is_ade_class">
 		<type name="numeric" precision="0"/>
+	</column>
+	<column name="is_toplevel">
+		<type name="numeric"/>
 	</column>
 	<column name="classname">
 		<type name="character varying" length="256"/>
@@ -6092,6 +6095,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="is_composite">
 		<type name="numeric"/>
 	</column>
+	<column name="min_occurs">
+		<type name="integer"/>
+	</column>
+	<column name="max_occurs">
+		<type name="integer"/>
+	</column>
 	<constraint name="aggregation_info_pk" type="pk-constr" factor="100" table="citydb.aggregation_info">
 		<columns names="child_id,parent_id" ref-type="src-columns"/>
 	</constraint>
@@ -7987,7 +7996,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.objectclass"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="19122" y="13141.3"/>
+		<position x="19122" y="13146.9"/>
 	<position x="19122" y="13071"/>
 	<position x="19015.3" y="13071"/>
 	</line>

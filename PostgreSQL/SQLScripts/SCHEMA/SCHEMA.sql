@@ -171,6 +171,7 @@ CREATE TABLE database_srs(
 CREATE TABLE objectclass(
 	id integer NOT NULL,
 	is_ade_class numeric,
+	is_toplevel numeric,
 	classname character varying(256),
 	tablename character varying(30),
 	superclass_id integer,
@@ -4967,6 +4968,8 @@ CREATE INDEX surface_data_objclass_fkx ON surface_data
 CREATE TABLE aggregation_info(
 	child_id integer NOT NULL,
 	parent_id integer NOT NULL,
+	min_occurs integer,
+	max_occurs integer,
 	is_composite numeric,
 	CONSTRAINT aggregation_info_pk PRIMARY KEY (child_id,parent_id)
 	 WITH (FILLFACTOR = 100)
