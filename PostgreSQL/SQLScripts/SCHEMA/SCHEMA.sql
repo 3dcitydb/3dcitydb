@@ -7032,14 +7032,14 @@ ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- object: aggregation_info_fkx1 | type: CONSTRAINT --
 -- ALTER TABLE aggregation_info DROP CONSTRAINT IF EXISTS aggregation_info_fkx1 CASCADE;
-ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_fkx1 FOREIGN KEY (child_id)
+ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_fk1 FOREIGN KEY (child_id)
 REFERENCES objectclass (id) MATCH FULL
 ON DELETE CASCADE ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: aggregation_info_fkx2 | type: CONSTRAINT --
 -- ALTER TABLE aggregation_info DROP CONSTRAINT IF EXISTS aggregation_info_fkx2 CASCADE;
-ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_fkx2 FOREIGN KEY (parent_id)
+ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_fk2 FOREIGN KEY (parent_id)
 REFERENCES objectclass (id) MATCH FULL
 ON DELETE CASCADE ON UPDATE NO ACTION;
 -- ddl-end --
