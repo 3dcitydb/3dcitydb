@@ -1,5 +1,5 @@
 -- 3D City Database - The Open Source CityGML Database
--- http://www.3dorg/
+-- http://www.3dcitydb.org/
 -- 
 -- Copyright 2013 - 2017
 -- Chair of Geoinformatics
