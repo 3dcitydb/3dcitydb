@@ -104,7 +104,7 @@ AS
       END AS t
     FROM all_tables at
       WHERE owner = owner_name
-        AND at.table_name NOT IN ('DATABASE_SRS', 'OBJECTCLASS', 'INDEX_TABLE', 'ADE', 'SCHEMA', 'SCHEMA_TO_OBJECTCLASS', 'SCHEMA_REFERENCING')
+        AND at.table_name NOT IN ('DATABASE_SRS', 'OBJECTCLASS', 'INDEX_TABLE', 'ADE', 'SCHEMA', 'SCHEMA_TO_OBJECTCLASS', 'SCHEMA_REFERENCING', 'AGGREGATION_INFO')
         AND at.table_name NOT LIKE '%\_AUX' ESCAPE '\'
         AND at.table_name NOT LIKE '%TMP\_%' ESCAPE '\'
         AND at.table_name NOT LIKE '%MDRT%'

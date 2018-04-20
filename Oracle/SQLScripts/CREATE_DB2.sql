@@ -54,6 +54,7 @@ COMMIT;
 
 --// create objectclass instances
 @@UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
+@@UTIL/CREATE_DB/AGGREGATION_INFO_INSTANCES.sql
 
 --// (possibly) activate versioning
 BEGIN
