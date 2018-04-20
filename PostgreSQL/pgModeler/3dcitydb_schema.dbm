@@ -6092,14 +6092,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="parent_id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="is_composite">
-		<type name="numeric"/>
-	</column>
 	<column name="min_occurs">
 		<type name="integer"/>
 	</column>
 	<column name="max_occurs">
 		<type name="integer"/>
+	</column>
+	<column name="is_composite">
+		<type name="numeric"/>
 	</column>
 	<constraint name="aggregation_info_pk" type="pk-constr" factor="100" table="citydb.aggregation_info">
 		<columns names="child_id,parent_id" ref-type="src-columns"/>
