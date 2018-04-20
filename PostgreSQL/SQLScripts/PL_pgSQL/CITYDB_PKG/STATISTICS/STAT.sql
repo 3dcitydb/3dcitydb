@@ -89,6 +89,7 @@ FROM (
     AND table_name != 'schema'
     AND table_name != 'schema_to_objectclass' 
     AND table_name != 'schema_referencing'
+    AND table_name != 'aggregation_info'
     AND table_name NOT LIKE 'tmp_%'
   ORDER BY
     table_name ASC
