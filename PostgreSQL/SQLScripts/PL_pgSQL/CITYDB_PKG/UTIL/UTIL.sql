@@ -54,9 +54,6 @@
 *   min(a NUMERIC, b NUMERIC) RETURNS NUMERIC
 *   objectclass_id_to_table_name(class_id INTEGER) RETURNS TEXT
 *   table_name_to_objectclass_ids(table_name TEXT) RETURNS INTEGER[]
-*   update_schema_constraints(on_delete_param TEXT DEFAULT 'CASCADE', schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
-*   update_table_constraint(fkey_name TEXT, table_name TEXT, column_name TEXT, ref_table TEXT, ref_column TEXT, 
-*     delete_param TEXT, deferrable_param TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   versioning_db(schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   versioning_table(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 ******************************************************************/
@@ -202,88 +199,6 @@ $$
 SELECT LEAST($1,$2);
 $$
 LANGUAGE sql IMMUTABLE;
-
-
-/******************************************************************
-* update_table_constraint
-*
-* Removes a constraint to add it again with given ON DELETE parameter
-*
-* @param fkey_name name of the foreign key that is updated 
-* @param table_name defines the table to which the constraint belongs to
-* @param column_name defines the column the constraint is relying on
-* @param ref_table name of referenced table
-* @param ref_column name of referencing column of referenced table
-* @param delete_param whether NO ACTION, RESTIRCT, CASCADE or SET NULL
-* @param schema_name name of schema of target constraints
-******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.update_table_constraint(
-  fkey_name TEXT,
-  table_name TEXT,
-  column_name TEXT,
-  ref_table TEXT,
-  ref_column TEXT,
-  on_delete_param CHAR DEFAULT 'a',
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS SETOF VOID AS 
-$$
-DECLARE
-  delete_param VARCHAR(9);
-BEGIN
-  CASE on_delete_param
-    WHEN 'r' THEN delete_param := 'RESTRICT';
-    WHEN 'c' THEN delete_param := 'CASCADE';
-    WHEN 'n' THEN delete_param := 'SET NULL';
-    ELSE delete_param := 'NO ACTION';
-  END CASE;
-
-  EXECUTE format('ALTER TABLE %I.%I DROP CONSTRAINT %I, ADD CONSTRAINT %I FOREIGN KEY (%I) REFERENCES %I.%I (%I)
-                    ON UPDATE CASCADE ON DELETE ' || delete_param, $7, $2, $1, $1, $3, $7, $4, $5);
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'Error on constraint %: %', fkey_name, SQLERRM;
-END;
-$$
-LANGUAGE plpgsql STRICT;
-
-
-/******************************************************************
-* update_schema_constraints
-*
-* calls update_table_constraint for updating all the constraints
-* in the specified schema where options for on_delete_param are:
-* a = NO ACTION
-* r = RESTRICT
-* c = CASCADE
-* n = SET NULL
-*
-* @param on_delete_param default is 'a' = NO ACTION
-* @param schema_name name of schema of target constraints
-******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.update_schema_constraints(
-  on_delete_param CHAR DEFAULT 'a',
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS SETOF VOID AS 
-$$
-SELECT
-  citydb_pkg.update_table_constraint(
-    c.conname,
-    c.conrelid::regclass::text,
-    a.attname,
-    t.relname,
-    a_ref.attname,
-    $1,
-    n.nspname)
-FROM pg_constraint c
-JOIN pg_attribute a ON a.attrelid = c.conrelid AND a.attnum = ANY (c.conkey)
-JOIN pg_attribute a_ref ON a_ref.attrelid = c.confrelid AND a_ref.attnum = ANY (c.confkey)
-JOIN pg_class t ON t.oid = a_ref.attrelid
-JOIN pg_namespace n ON n.oid = c.connamespace
-  WHERE n.nspname = $2
-    AND c.contype = 'f';
-$$
-LANGUAGE sql STRICT;
 
 
 /*****************************************************************

@@ -94,8 +94,6 @@ AS
   FUNCTION db_metadata(schema_name VARCHAR2 := USER) RETURN DB_INFO_TABLE;
   FUNCTION split(list VARCHAR2, delim VARCHAR2 := ',') RETURN STRARRAY;
   FUNCTION min(a NUMBER, b NUMBER) RETURN NUMBER;
-  PROCEDURE update_schema_constraints(on_delete_param CHAR := 'a', schema_name VARCHAR2 := USER);
-  PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param CHAR := 'a', schema_name VARCHAR2 := USER);
   FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER) RETURN ID_ARRAY;
   FUNCTION string2id_array(str VARCHAR2, delim VARCHAR2 := ',') RETURN ID_ARRAY;
   FUNCTION id_array2string(ids ID_ARRAY, delim VARCHAR2 := ',') RETURN VARCHAR2;
@@ -327,110 +325,6 @@ AS
     ELSE
       RETURN b;
     END IF;
-  END;
-
-  /******************************************************************
-  * update_table_constraint
-  *
-  * Removes a constraint to add it again with given ON DELETE parameter
-  *
-  * @param fkey_name name of the foreign key that is updated 
-  * @param table_name defines the table to which the constraint belongs to
-  * @param column_name defines the column the constraint is relying on
-  * @param ref_table name of referenced table
-  * @param ref_column name of referencing column of referenced table
-  * @param delete_param whether NO ACTION, RESTIRCT, CASCADE or SET NULL
-  * @param schema_name name of schema of target constraints
-  ******************************************************************/
-  PROCEDURE update_table_constraint(
-    fkey_name VARCHAR2,
-    table_name VARCHAR2,
-    column_name VARCHAR2,
-    ref_table VARCHAR2,
-    ref_column VARCHAR2,
-    on_delete_param CHAR := 'a',
-    schema_name VARCHAR2 := USER
-    )
-  IS
-    delete_param VARCHAR2(20);
-  BEGIN
-    IF versioning_table(table_name, schema_name) = 'ON' OR versioning_table(ref_table, schema_name) = 'ON' THEN
-      dbms_output.put_line('Can not perform operation with version enabled tables.');
-      RETURN;
-    END IF;
-
-    CASE on_delete_param
-      WHEN 'c' THEN delete_param := ' ON DELETE CASCADE';
-      WHEN 'n' THEN delete_param := ' ON DELETE SET NULL';
-      ELSE delete_param := '';
-    END CASE;
-
-    EXECUTE IMMEDIATE 
-      'ALTER TABLE '
-      || upper(schema_name) || '.' || upper(table_name)
-      || ' DROP CONSTRAINT ' || upper(fkey_name);
-    EXECUTE IMMEDIATE
-      'ALTER TABLE '
-      || upper(schema_name) || '.' || upper(table_name)
-      || ' ADD CONSTRAINT ' || upper(fkey_name)
-      || ' FOREIGN KEY (' || upper(column_name) || ')'
-      || ' REFERENCES ' || upper(schema_name) || '.' || upper(ref_table) || '(' || upper(ref_column) || ')'
-      || delete_param;
-
-    EXCEPTION
-      WHEN OTHERS THEN
-        dbms_output.put_line('Error on constraint ' || fkey_name || ': ' || SQLERRM);
-  END;
-
-  /******************************************************************
-  * update_schema_constraints
-  *
-  * calls update_table_constraint for updating all the constraints
-  * in the specified schema where options for on_delete_param are:
-  * a = NO ACTION
-  * c = CASCADE
-  * n = SET NULL
-  *
-  * @param on_delete_param default is 'a' = NO ACTION
-  * @param schema_name name of schema of target constraints
-  ******************************************************************/
-  PROCEDURE update_schema_constraints(
-    on_delete_param CHAR := 'a',
-    schema_name VARCHAR2 := USER
-    )
-  IS
-  BEGIN
-    FOR rec IN (
-      SELECT
-        acc1.constraint_name AS fkey,
-        acc1.table_name AS t,
-        acc1.column_name AS c, 
-        ac2.table_name AS ref_t,
-        acc2.column_name AS ref_c,
-        acc1.owner AS schema
-      FROM
-        all_cons_columns acc1
-      JOIN
-        all_constraints ac1
-        ON acc1.constraint_name = ac1.constraint_name
-       AND acc1.owner = ac1.owner 
-       AND acc1.table_name = ac1.table_name
-      JOIN
-        all_constraints ac2
-        ON acc1.constraint_name = ac2.constraint_name
-       AND acc1.owner = ac2.owner 
-       AND acc1.table_name = ac2.table_name
-      JOIN
-        all_cons_columns acc2
-        ON ac2.owner = acc2.owner 
-       AND ac2.constraint_name = acc2.constraint_name 
-       AND acc2.position = acc1.position     
-      WHERE
-        acc1.owner = upper(schema_name)
-        AND ac1.constraint_type = 'R'
-    ) LOOP
-      update_table_constraint(rec.fkey, rec.t, rec.c, rec.ref_t, rec.ref_c, on_delete_param, schema_name);
-    END LOOP;
   END;
 
   /*****************************************************************
