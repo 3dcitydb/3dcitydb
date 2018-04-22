@@ -26,11 +26,11 @@
 --
 
 /*****************************************************************
-* PACKAGE citydb_const
+* PACKAGE citydb_constraint
 * 
 * methods to handle database constraints
 ******************************************************************/
-CREATE OR REPLACE PACKAGE citydb_const
+CREATE OR REPLACE PACKAGE citydb_constraint
 AS
   PROCEDURE set_fkey_delete_rule(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param CHAR := 'a', schema_name VARCHAR2 := USER);
   PROCEDURE set_schema_fkeys_delete_rule(on_delete_param CHAR := 'a', schema_name VARCHAR2 := USER);
@@ -39,10 +39,10 @@ AS
   PROCEDURE set_enabled_schema_fkeys(enable BOOLEAN := TRUE, schema_name VARCHAR2 := USER);
   PROCEDURE set_column_sdo_metadata(geom_column_name VARCHAR2, geom_dim NUMBER, schema_srid NUMBER, geom_table_name VARCHAR2, schema_name VARCHAR2 := USER);
   PROCEDURE set_schema_sdo_metadata(schema_name VARCHAR2 := USER);
-END citydb_const;
+END citydb_constraint;
 /
 
-CREATE OR REPLACE PACKAGE BODY citydb_const
+CREATE OR REPLACE PACKAGE BODY citydb_constraint
 AS
 
   /******************************************************************
@@ -339,5 +339,5 @@ AS
     dbms_output.put_line('Spatial metadata sucessfully set for ' || schema_name);
   END;
 
-END citydb_const;
+END citydb_constraint;
 /
