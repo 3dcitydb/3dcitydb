@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2017
+-- Copyright 2013 - 2018
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -27,8 +27,9 @@
 
 VARIABLE DELETE_FILE VARCHAR2(50);
 
-SELECT 'Creating packages ''citydb_util'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', ''citydb_delete'', and corresponding types' as message from DUAL;
+SELECT 'Creating packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', ''citydb_delete'', and corresponding types' as message from DUAL;
 @@PL_SQL/CITYDB_PKG/UTIL/UTIL.sql;
+@@PL_SQL/CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql;
 @@PL_SQL/CITYDB_PKG/INDEX/IDX.sql;
 @@PL_SQL/CITYDB_PKG/SRS/SRS.sql;
 @@PL_SQL/CITYDB_PKG/STATISTICS/STAT.sql;
@@ -49,5 +50,5 @@ select :DELETE_FILE mc from dual;
 @@&DELETE_FILE2;
 
 @@PL_SQL/CITYDB_PKG/DELETE/DELETE_BY_LINEAGE;
-SELECT 'Packages ''citydb_util'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', and ''citydb_delete'' created' as message from DUAL;
+SELECT 'Packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', and ''citydb_delete'' created' as message from DUAL;
 

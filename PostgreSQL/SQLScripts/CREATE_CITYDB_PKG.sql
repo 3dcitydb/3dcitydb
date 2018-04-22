@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2017
+-- Copyright 2013 - 2018
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -34,6 +34,7 @@ CREATE SCHEMA citydb_pkg;
 
 --// call PL/pgSQL-Scripts to add CITYDB_PKG-Functions
 \i PL_pgSQL/CITYDB_PKG/UTIL/UTIL.sql
+\i PL_pgSQL/CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql
 \i PL_pgSQL/CITYDB_PKG/INDEX/IDX.sql
 \i PL_pgSQL/CITYDB_PKG/SRS/SRS.sql
 \i PL_pgSQL/CITYDB_PKG/STATISTICS/STAT.sql
