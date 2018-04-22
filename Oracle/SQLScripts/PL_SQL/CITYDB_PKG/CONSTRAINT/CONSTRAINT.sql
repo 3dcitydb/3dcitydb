@@ -178,8 +178,9 @@ AS
   /******************************************************************
   * set_enabled_geom_fkeys
   *
-  * enables/disables references to surface_geometry
+  * enables/disables references to SURFACE_GEOMETRY table
   *
+  * @param enable boolean flag to toggle constraint
   * @param schema_name name of schema of target constraints
   ******************************************************************/
   PROCEDURE set_enabled_geom_fkeys(
@@ -208,6 +209,7 @@ AS
   *
   * enables/disables all foreign keys in a given schema
   *
+  * @param enable boolean flag to toggle constraint
   * @param schema_name name of schema of target constraints
   ******************************************************************/
   PROCEDURE set_enabled_schema_fkeys(
