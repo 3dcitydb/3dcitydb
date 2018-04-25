@@ -43,28 +43,27 @@ END citydb_delete_gen;
 
 CREATE OR REPLACE PACKAGE BODY citydb_delete_gen
 AS
-  FUNCTION get_short_name(tab_name VARCHAR2) RETURN VARCHAR2;
   FUNCTION has_objclass_id(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN NUMBER;
   PROCEDURE query_ref_tables_and_columns(tab_name VARCHAR2, ref_parent_to_exclude VARCHAR2, schema_name VARCHAR2 := USER, ref_tables OUT STRARRAY, ref_columns OUT STRARRAY);
   FUNCTION query_ref_fk(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN SYS_REFCURSOR;
   FUNCTION gen_delete_ref_by_ids_stmt(tab_name VARCHAR2, fk_column_name VARCHAR2) RETURN VARCHAR2;
-  FUNCTION gen_delete_ref_by_ids_call(tab_name VARCHAR2, fk_column_name VARCHAR2, has_objclass_param BOOLEAN := FALSE) RETURN VARCHAR2;
-  FUNCTION gen_delete_m_ref_by_ids_stmt(m_table_name VARCHAR2, m_fk_column_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
-  FUNCTION gen_delete_m_ref_by_ids_call(m_table_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
+  FUNCTION gen_delete_ref_by_ids_call(tab_name VARCHAR2, fk_column_name VARCHAR2, has_objclass_param BOOLEAN := FALSE, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
+  FUNCTION gen_delete_m_ref_by_ids_stmt(m_table_name VARCHAR2, m_fk_column_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
+  FUNCTION gen_delete_m_ref_by_ids_call(m_table_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION gen_delete_n_m_ref_by_ids_stmt(n_m_table_name VARCHAR2, n_fk_column_name VARCHAR2, m_table_name VARCHAR2, m_fk_column_name VARCHAR2, m_ref_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION gen_delete_n_m_ref_by_ids_call(n_m_table_name VARCHAR2, n_fk_column_name VARCHAR2, m_table_name VARCHAR2, m_fk_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   PROCEDURE create_ref_array_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER, ref_path IN OUT STRARRAY, vars OUT VARCHAR2, child_ref_block OUT VARCHAR2, ref_block OUT VARCHAR2);
   FUNCTION gen_delete_ref_by_id_stmt(tab_name VARCHAR2, fk_column_name VARCHAR2) RETURN VARCHAR2;
-  FUNCTION gen_delete_ref_by_id_call(tab_name VARCHAR2, fk_column_name VARCHAR2, has_objclass_param BOOLEAN := FALSE) RETURN VARCHAR2;
-  FUNCTION gen_delete_m_ref_by_id_stmt(m_table_name VARCHAR2, m_fk_column_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
-  FUNCTION gen_delete_m_ref_by_id_call(m_table_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY) RETURN VARCHAR2;
+  FUNCTION gen_delete_ref_by_id_call(tab_name VARCHAR2, fk_column_name VARCHAR2, has_objclass_param BOOLEAN := FALSE, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
+  FUNCTION gen_delete_m_ref_by_id_stmt(m_table_name VARCHAR2, m_fk_column_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
+  FUNCTION gen_delete_m_ref_by_id_call(m_table_name VARCHAR2, fk_table_name STRARRAY, fk_columns STRARRAY, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION gen_delete_n_m_ref_by_id_stmt(n_m_table_name VARCHAR2, n_fk_column_name VARCHAR2, m_table_name VARCHAR2, m_fk_column_name VARCHAR2, m_ref_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION gen_delete_n_m_ref_by_id_call(n_m_table_name VARCHAR2, n_fk_column_name VARCHAR2, m_table_name VARCHAR2, m_fk_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   PROCEDURE create_ref_delete(tab_name VARCHAR2, schema_name VARCHAR2 := USER, ref_path IN OUT STRARRAY, vars OUT VARCHAR2, child_ref_block OUT VARCHAR2, ref_block OUT VARCHAR2);
   FUNCTION query_selfref_fk(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN SYS_REFCURSOR;
-  FUNCTION gen_delete_selfref_by_ids_call(tab_name VARCHAR2, self_fk_column_name VARCHAR2, has_objclass_param BOOLEAN := FALSE) RETURN VARCHAR2;
+  FUNCTION gen_delete_selfref_by_ids_call(tab_name VARCHAR2, self_fk_column_name VARCHAR2, has_objclass_param BOOLEAN := FALSE, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   PROCEDURE create_selfref_array_delete(tab_name VARCHAR2, has_objclass_param BOOLEAN := FALSE, schema_name VARCHAR2 := USER, vars OUT VARCHAR2, self_block OUT VARCHAR2);
-  FUNCTION gen_delete_selfref_by_id_call(tab_name VARCHAR2, self_fk_column_name VARCHAR2, has_objclass_param BOOLEAN := FALSE) RETURN VARCHAR2;
+  FUNCTION gen_delete_selfref_by_id_call(tab_name VARCHAR2, self_fk_column_name VARCHAR2, has_objclass_param BOOLEAN := FALSE, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   PROCEDURE create_selfref_delete(tab_name VARCHAR2, has_objclass_param BOOLEAN := FALSE, schema_name VARCHAR2 := USER, selfref_path IN OUT STRARRAY, vars OUT VARCHAR2, self_block OUT VARCHAR2);
   FUNCTION gen_delete_by_ids_stmt(tab_name VARCHAR2, has_objclass_param BOOLEAN := FALSE) RETURN VARCHAR2;
   FUNCTION gen_delete_by_id_stmt(tab_name VARCHAR2, has_objclass_param BOOLEAN := FALSE) RETURN VARCHAR2;
@@ -93,13 +92,6 @@ AS
     4. Deletes for unreferenced entries in tables where the FK is set to SET NULL
     5. If an FK is set to CASCADE and covers the same column(s) as the PK, the referenced parent will be deleted
   */
-
-  FUNCTION get_short_name(tab_name VARCHAR2) RETURN VARCHAR2
-  IS
-  BEGIN
-    -- TODO: query a table that stores the short version of a table (maybe objectclass?)
-    RETURN substr(tab_name, 1, 12);
-  END;
 
   --if referencing table requires an extra cleanup step, it needs its own delete function
   FUNCTION check_for_cleanup(
@@ -440,7 +432,8 @@ AS
   FUNCTION gen_delete_ref_by_ids_call(
     tab_name VARCHAR2,
     fk_column_name VARCHAR2,
-    has_objclass_param BOOLEAN := FALSE
+    has_objclass_param BOOLEAN := FALSE,
+    schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2 
   IS
   BEGIN
@@ -460,7 +453,7 @@ AS
         ||chr(10)||'    t.'||lower(fk_column_name)||' = a.COLUMN_VALUE;'
         ||chr(10)
         ||chr(10)||'  IF child_ids IS NOT EMPTY THEN'
-        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(child_ids, SET(child_class_ids));'
+        ||chr(10)||'    dummy_ids := delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_batch(child_ids, SET(child_class_ids));'
         ||chr(10)||'  END IF;'
         ||chr(10);
     ELSE
@@ -477,7 +470,7 @@ AS
         ||chr(10)||'    t.'||lower(fk_column_name)||' = a.COLUMN_VALUE;'
         ||chr(10)
         ||chr(10)||'  IF child_ids IS NOT EMPTY THEN'
-        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(child_ids);'
+        ||chr(10)||'    dummy_ids := delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_batch(child_ids);'
         ||chr(10)||'  END IF;'
         ||chr(10);    
     END IF;
@@ -487,7 +480,8 @@ AS
     m_table_name VARCHAR2,
     m_fk_column_name VARCHAR2,
     fk_table_name STRARRAY,
-    fk_columns STRARRAY
+    fk_columns STRARRAY,
+    schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2 
   IS
     stmt VARCHAR2(8000);
@@ -495,14 +489,14 @@ AS
   BEGIN
     stmt := 
         chr(10)||'  -- delete '||lower(m_table_name)||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||get_short_name(lower(m_table_name))||'_ids IS NOT EMPTY THEN'
+      ||chr(10)||'  IF '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids IS NOT EMPTY THEN'
       ||chr(10)||'    DELETE FROM'
       ||chr(10)||'      '||lower(m_table_name)||' m'
       ||chr(10)||'    WHERE EXISTS ('
       ||chr(10)||'      SELECT DISTINCT'
       ||chr(10)||'        a.COLUMN_VALUE'
       ||chr(10)||'      FROM'
-      ||chr(10)||'        TABLE('||get_short_name(lower(m_table_name))||'_ids) a';
+      ||chr(10)||'        TABLE('||citydb_util.get_short_name(m_table_name, schema_name)||'_ids) a';
 
     where_clause := 
         chr(10)||'      WHERE'
@@ -532,7 +526,8 @@ AS
   FUNCTION gen_delete_m_ref_by_ids_call(
     m_table_name VARCHAR2,
     fk_table_name STRARRAY,
-    fk_columns STRARRAY
+    fk_columns STRARRAY,
+    schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2 
   IS
     call_stmt VARCHAR2(8000);
@@ -541,13 +536,13 @@ AS
   BEGIN
     call_stmt :=
         chr(10)||'  -- delete '||lower(m_table_name)||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||get_short_name(lower(m_table_name))||'_ids IS NOT EMPTY THEN'
+      ||chr(10)||'  IF '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids IS NOT EMPTY THEN'
       ||chr(10)||'    SELECT DISTINCT'
       ||chr(10)||'      a.COLUMN_VALUE'
       ||chr(10)||'    BULK COLLECT INTO'
-      ||chr(10)||'      '||get_short_name(lower(m_table_name))||'_pids'
+      ||chr(10)||'      '||citydb_util.get_short_name(m_table_name, schema_name)||'_pids'
       ||chr(10)||'    FROM'
-      ||chr(10)||'      TABLE('||get_short_name(lower(m_table_name))||'_ids) a';
+      ||chr(10)||'      TABLE('||citydb_util.get_short_name(m_table_name, schema_name)||'_ids) a';
 
     where_clause := chr(10)||'    WHERE';
 
@@ -568,8 +563,8 @@ AS
     call_stmt := call_stmt
       || where_clause || ';'
       ||chr(10)
-      ||chr(10)||'    IF '||get_short_name(lower(m_table_name))||'_pids IS NOT EMPTY THEN'
-      ||chr(10)||'      dummy_ids := delete_'||get_short_name(lower(m_table_name))||'_batch('||get_short_name(lower(m_table_name))||'_pids);'
+      ||chr(10)||'    IF '||citydb_util.get_short_name(m_table_name, schema_name)||'_pids IS NOT EMPTY THEN'
+      ||chr(10)||'      dummy_ids := delete_'||citydb_util.get_short_name(m_table_name, schema_name)||'_batch('||citydb_util.get_short_name(m_table_name, schema_name)||'_pids);'
       ||chr(10)||'    END IF;'
       ||chr(10)||'  END IF;'
       ||chr(10);
@@ -608,8 +603,8 @@ AS
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||m_fk_column_name
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	  '||get_short_name(lower(m_table_name))||'_ids;'
-      ||chr(10)|| gen_delete_m_ref_by_ids_stmt(m_table_name, m_ref_column_name, ref_tables, ref_columns);
+      ||chr(10)||'	  '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids;'
+      ||chr(10)|| gen_delete_m_ref_by_ids_stmt(m_table_name, m_ref_column_name, ref_tables, ref_columns, schema_name);
   END;
 
   FUNCTION gen_delete_n_m_ref_by_ids_call(
@@ -642,8 +637,8 @@ AS
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||lower(m_fk_column_name)
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	  '||get_short_name(lower(m_table_name))||'_ids;'
-      ||chr(10)|| gen_delete_m_ref_by_ids_call(m_table_name, ref_tables, ref_columns);
+      ||chr(10)||'	  '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids;'
+      ||chr(10)|| gen_delete_m_ref_by_ids_call(m_table_name, ref_tables, ref_columns, schema_name);
   END;
 
   PROCEDURE create_ref_array_delete(
@@ -687,7 +682,8 @@ AS
         IF m_table_name IS NULL THEN
           IF is_child = 1 THEN
             -- find objectclass of child to set filter
-            objclass := citydb_util.table_name_to_objectclass_ids(n_table_name);
+            EXECUTE IMMEDIATE 'SELECT '||schema_name||'.citydb_objclass.table_name_to_objectclass_ids(:1) FROM dual'
+              INTO objclass USING n_table_name;
 
             -- if found set objectclass condition
             IF objclass IS NOT EMPTY THEN
@@ -699,13 +695,13 @@ AS
               child_ref_block := child_ref_block ||
                   chr(10)||'  -- delete '||lower(n_table_name)||'s'
                 ||chr(10)||'  IF class_ids MULTISET INTERSECT ID_ARRAY('||citydb_util.id_array2string(objclass, ',')||') IS NOT EMPTY THEN'
-                ||chr(10)||'    deleted_ids := deleted_ids MULTISET UNION ALL COALESCE(delete_'||get_short_name(lower(n_table_name))||'_batch(pids, class_ids), ID_ARRAY());'
+                ||chr(10)||'    deleted_ids := deleted_ids MULTISET UNION ALL COALESCE(delete_'||citydb_util.get_short_name(n_table_name, schema_name)||'_batch(pids, class_ids), ID_ARRAY());'
                 ||chr(10)||'  END IF;'
                 ||chr(10);
             ELSE
               ref_block := ref_block ||
                   chr(10)||'  -- delete '||lower(n_table_name)||'s'
-                ||chr(10)||'  dummy_ids := delete_'||get_short_name(lower(n_table_name))||'_batch(pids);'
+                ||chr(10)||'  dummy_ids := delete_'||citydb_util.get_short_name(n_table_name, schema_name)||'_batch(pids);'
                 ||chr(10);
             END IF;
           ELSE
@@ -722,7 +718,7 @@ AS
               END IF;
             END IF;
 
-            ref_block := ref_block || gen_delete_ref_by_ids_call(n_table_name, n_fk_column_name, has_objclass_param);
+            ref_block := ref_block || gen_delete_ref_by_ids_call(n_table_name, n_fk_column_name, has_objclass_param, schema_name);
           END IF;
 
           -- create array delete function for referencing childs
@@ -731,8 +727,8 @@ AS
           END IF;
         ELSE
           vars := vars
-            ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_ids ID_ARRAY;'
-            ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_pids ID_ARRAY;';
+            ||chr(10)||'  '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids ID_ARRAY;'
+            ||chr(10)||'  '||citydb_util.get_short_name(m_table_name, schema_name)||'_pids ID_ARRAY;';
           ref_block := ref_block || gen_delete_n_m_ref_by_ids_call(n_table_name, n_fk_column_name, m_table_name, m_fk_column_name, schema_name);
 
           -- create array delete function for referencing features
@@ -744,7 +740,7 @@ AS
         IF m_table_name IS NULL THEN
           ref_block := ref_block || gen_delete_ref_by_ids_stmt(n_table_name, n_fk_column_name);
         ELSE
-          vars := vars ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_ids ID_ARRAY;';
+          vars := vars ||chr(10)||'  '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids ID_ARRAY;';
           ref_block := ref_block || gen_delete_n_m_ref_by_ids_stmt(n_table_name, n_fk_column_name, m_table_name, m_fk_column_name, m_ref_column_name, schema_name);
         END IF;
       END IF;
@@ -772,7 +768,8 @@ AS
   FUNCTION gen_delete_ref_by_id_call(
     tab_name VARCHAR2,
     fk_column_name VARCHAR2,
-    has_objclass_param BOOLEAN := FALSE
+    has_objclass_param BOOLEAN := FALSE,
+    schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2 
   IS
   BEGIN
@@ -791,7 +788,7 @@ AS
         ||chr(10)||'    '||lower(fk_column_name)||' = pid;'
         ||chr(10)
         ||chr(10)||'  IF child_ids IS NOT EMPTY THEN'
-        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(child_ids, SET(child_class_ids));'
+        ||chr(10)||'    dummy_ids := delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_batch(child_ids, SET(child_class_ids));'
         ||chr(10)||'  END IF;'
         ||chr(10);
     ELSE
@@ -807,7 +804,7 @@ AS
         ||chr(10)||'    '||lower(fk_column_name)||' = pid;'
         ||chr(10)
         ||chr(10)||'  IF child_ids IS NOT EMPTY THEN'
-        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(child_ids);'
+        ||chr(10)||'    dummy_ids := delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_batch(child_ids);'
         ||chr(10)||'  END IF;'
         ||chr(10);
     END IF;
@@ -817,7 +814,8 @@ AS
     m_table_name VARCHAR2,
     m_fk_column_name VARCHAR2,
     fk_table_name STRARRAY,
-    fk_columns STRARRAY
+    fk_columns STRARRAY,
+    schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2 
   IS
     stmt VARCHAR2(8000);
@@ -825,14 +823,14 @@ AS
   BEGIN
     stmt := 
         chr(10)||'  -- delete '||lower(m_table_name)||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||get_short_name(lower(m_table_name))||'_ref_id IS NOT NULL THEN'
+      ||chr(10)||'  IF '||citydb_util.get_short_name(m_table_name, schema_name)||'_ref_id IS NOT NULL THEN'
       ||chr(10)||'    DELETE FROM'
       ||chr(10)||'      '||lower(m_table_name)||' m'
       ||chr(10)||'    WHERE EXISTS ('
       ||chr(10)||'      SELECT'
       ||chr(10)||'        1'
       ||chr(10)||'      FROM'
-      ||chr(10)||'        TABLE(ID_ARRAY('||get_short_name(lower(m_table_name))||'_ref_id)) a';
+      ||chr(10)||'        TABLE(ID_ARRAY('||citydb_util.get_short_name(m_table_name, schema_name)||'_ref_id)) a';
 
     where_clause := 
         chr(10)||'      WHERE'
@@ -862,7 +860,8 @@ AS
   FUNCTION gen_delete_m_ref_by_id_call(
     m_table_name VARCHAR2,
     fk_table_name STRARRAY,
-    fk_columns STRARRAY
+    fk_columns STRARRAY,
+    schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2 
   IS
     call_stmt VARCHAR2(8000);
@@ -871,13 +870,13 @@ AS
   BEGIN
     call_stmt :=
         chr(10)||'  -- delete '||lower(m_table_name)||'(s) not being referenced any more'
-      ||chr(10)||'  IF '||get_short_name(lower(m_table_name))||'_ref_id IS NOT NULL THEN'
+      ||chr(10)||'  IF '||citydb_util.get_short_name(m_table_name, schema_name)||'_ref_id IS NOT NULL THEN'
       ||chr(10)||'    SELECT'
       ||chr(10)||'      a.COLUMN_VALUE'
       ||chr(10)||'    INTO'
-      ||chr(10)||'      '||get_short_name(lower(m_table_name))||'_pid'
+      ||chr(10)||'      '||citydb_util.get_short_name(m_table_name, schema_name)||'_pid'
       ||chr(10)||'    FROM'
-      ||chr(10)||'      TABLE(ID_ARRAY('||get_short_name(lower(m_table_name))||'_ref_id)) a';
+      ||chr(10)||'      TABLE(ID_ARRAY('||citydb_util.get_short_name(m_table_name, schema_name)||'_ref_id)) a';
 
     where_clause := chr(10)||'    WHERE';
 
@@ -898,8 +897,8 @@ AS
     call_stmt := call_stmt
       || where_clause || ';'
       ||chr(10)
-      ||chr(10)||'    IF '||get_short_name(lower(m_table_name))||'_pid IS NOT NULL THEN'
-      ||chr(10)||'      dummy_id := delete_'||get_short_name(lower(m_table_name))||'('||get_short_name(lower(m_table_name))||'_pid);'
+      ||chr(10)||'    IF '||citydb_util.get_short_name(m_table_name, schema_name)||'_pid IS NOT NULL THEN'
+      ||chr(10)||'      dummy_id := delete_'||citydb_util.get_short_name(m_table_name, schema_name)||'('||citydb_util.get_short_name(m_table_name, schema_name)||'_pid);'
       ||chr(10)||'    END IF;'
       ||chr(10)||'  END IF;'
       ||chr(10);
@@ -932,8 +931,8 @@ AS
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||lower(m_fk_column_name)
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	  '||get_short_name(lower(m_table_name))||'_ids;'
-      ||chr(10)|| gen_delete_m_ref_by_ids_stmt(m_table_name, m_ref_column_name, ref_tables, ref_columns);
+      ||chr(10)||'	  '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids;'
+      ||chr(10)|| gen_delete_m_ref_by_ids_stmt(m_table_name, m_ref_column_name, ref_tables, ref_columns, schema_name);
   END;
 
   FUNCTION gen_delete_n_m_ref_by_id_call(
@@ -960,8 +959,8 @@ AS
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||lower(m_fk_column_name)
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	  '||get_short_name(lower(m_table_name))||'_ids;'
-      ||chr(10)|| gen_delete_m_ref_by_ids_call(m_table_name, ref_tables, ref_columns);
+      ||chr(10)||'	  '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids;'
+      ||chr(10)|| gen_delete_m_ref_by_ids_call(m_table_name, ref_tables, ref_columns, schema_name);
   END;
 
   PROCEDURE create_ref_delete(
@@ -1004,7 +1003,8 @@ AS
       ) THEN
         IF is_child = 1 THEN
           -- find objectclass of child to set filter
-          objclass := citydb_util.table_name_to_objectclass_ids(n_table_name);
+          EXECUTE IMMEDIATE 'SELECT '||schema_name||'.citydb_objclass.table_name_to_objectclass_ids(:1) FROM dual'
+            INTO objclass USING n_table_name;
 
           -- if found set objectclass condition
           IF objclass IS NOT EMPTY THEN
@@ -1016,13 +1016,13 @@ AS
             child_ref_block := child_ref_block ||
                 chr(10)||'  -- delete '||lower(n_table_name)
               ||chr(10)||'  IF class_id IN ('||citydb_util.id_array2string(objclass, ',')||') THEN'
-              ||chr(10)||'    deleted_id := delete_'||get_short_name(lower(n_table_name))||'(pid, class_id);'
+              ||chr(10)||'    deleted_id := delete_'||citydb_util.get_short_name(n_table_name, schema_name)||'(pid, class_id);'
               ||chr(10)||'  END IF;'
               ||chr(10);
           ELSE
             ref_block := ref_block ||
                 chr(10)||'  -- delete '||lower(n_table_name)
-              ||chr(10)||'  dummy_id := delete_'||get_short_name(lower(n_table_name))||'(pid);'
+              ||chr(10)||'  dummy_id := delete_'||citydb_util.get_short_name(n_table_name, schema_name)||'(pid);'
               ||chr(10);
           END IF;
 
@@ -1045,11 +1045,11 @@ AS
               END IF;
             END IF;
 
-            ref_block := ref_block || gen_delete_ref_by_id_call(n_table_name, n_fk_column_name, has_objclass_param);
+            ref_block := ref_block || gen_delete_ref_by_id_call(n_table_name, n_fk_column_name, has_objclass_param, schema_name);
           ELSE
             vars := vars
-              ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_ids ID_ARRAY;'
-              ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_pids ID_ARRAY;';
+              ||chr(10)||'  '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids ID_ARRAY;'
+              ||chr(10)||'  '||citydb_util.get_short_name(m_table_name, schema_name)||'_pids ID_ARRAY;';
             ref_block := ref_block || gen_delete_n_m_ref_by_id_call(n_table_name, n_fk_column_name, m_table_name, m_fk_column_name, schema_name);
           END IF;
 
@@ -1062,7 +1062,7 @@ AS
         IF m_table_name IS NULL THEN
           ref_block := ref_block || gen_delete_ref_by_id_stmt(n_table_name, n_fk_column_name);
         ELSE
-          vars := vars ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_ids ID_ARRAY;';
+          vars := vars ||chr(10)||'  '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids ID_ARRAY;';
           ref_block := ref_block || gen_delete_n_m_ref_by_id_stmt(n_table_name, n_fk_column_name, m_table_name, m_fk_column_name, m_ref_column_name, schema_name);
         END IF;
       END IF;
@@ -1117,7 +1117,8 @@ AS
   FUNCTION gen_delete_selfref_by_ids_call(
     tab_name VARCHAR2,
     self_fk_column_name VARCHAR2,
-    has_objclass_param BOOLEAN := FALSE
+    has_objclass_param BOOLEAN := FALSE,
+    schema_name VARCHAR2 := USER
   ) RETURN VARCHAR2
   IS
   BEGIN
@@ -1138,7 +1139,7 @@ AS
         ||chr(10)||'    AND t.id != a.COLUMN_VALUE;'
         ||chr(10)
         ||chr(10)||'  IF part_ids IS NOT EMPTY THEN'
-        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(part_ids, SET(part_class_ids));'
+        ||chr(10)||'    dummy_ids := delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_batch(part_ids, SET(part_class_ids));'
         ||chr(10)||'  END IF;'
         ||chr(10);
     ELSE
@@ -1156,7 +1157,7 @@ AS
         ||chr(10)||'    AND t.id != a.COLUMN_VALUE;'
         ||chr(10)
         ||chr(10)||'  IF part_ids IS NOT EMPTY THEN'
-        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(part_ids);'
+        ||chr(10)||'    dummy_ids := delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_batch(part_ids);'
         ||chr(10)||'  END IF;'
         ||chr(10);
     END IF;
@@ -1190,7 +1191,7 @@ AS
         self_block := '';
       END IF;
 
-      self_block := self_block || gen_delete_selfref_by_ids_call(tab_name, parent_column, has_objclass_param);
+      self_block := self_block || gen_delete_selfref_by_ids_call(tab_name, parent_column, has_objclass_param, schema_name);
     END LOOP;
 
     RETURN;
@@ -1200,7 +1201,8 @@ AS
   FUNCTION gen_delete_selfref_by_id_call(
     tab_name VARCHAR2,
     self_fk_column_name VARCHAR2,
-    has_objclass_param BOOLEAN := FALSE
+    has_objclass_param BOOLEAN := FALSE,
+    schema_name VARCHAR2 := USER
   ) RETURN VARCHAR2
   IS
   BEGIN
@@ -1220,7 +1222,7 @@ AS
         ||chr(10)||'    AND id != pid;'
         ||chr(10)
         ||chr(10)||'  IF part_ids IS NOT EMPTY THEN'
-        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(part_ids, SET(part_class_ids));'
+        ||chr(10)||'    dummy_ids := delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_batch(part_ids, SET(part_class_ids));'
         ||chr(10)||'  END IF;'
         ||chr(10);    
     ELSE
@@ -1237,7 +1239,7 @@ AS
         ||chr(10)||'    AND id != pid;'
         ||chr(10)
         ||chr(10)||'  IF part_ids IS NOT EMPTY THEN'
-        ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(tab_name))||'_batch(part_ids);'
+        ||chr(10)||'    dummy_ids := delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_batch(part_ids);'
         ||chr(10)||'  END IF;'
         ||chr(10);
     END IF;
@@ -1270,7 +1272,7 @@ AS
         self_block := '';
       END IF;
 
-      self_block := self_block || gen_delete_selfref_by_id_call(tab_name, parent_column, has_objclass_param);
+      self_block := self_block || gen_delete_selfref_by_id_call(tab_name, parent_column, has_objclass_param, schema_name);
     END LOOP;
 
     RETURN;
@@ -1425,17 +1427,17 @@ AS
 
       IF ref_to_ref_columns.count > 1 THEN
         -- additional collections and initialization of final list for referencing IDs required
-        vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table_name))||'_ids ID_ARRAY := ID_ARRAY();';
-        collect_block := collect_block||chr(10)||'  -- collect all '||get_short_name(lower(ref_table_name))||' ids into one nested table'||chr(10);
+        vars := vars ||chr(10)||'  '||citydb_util.get_short_name(ref_table_name, schema_name)||'_ids ID_ARRAY := ID_ARRAY();';
+        collect_block := collect_block||chr(10)||'  -- collect all '||citydb_util.get_short_name(ref_table_name, schema_name)||' ids into one nested table'||chr(10);
         FOR i IN 1..ref_to_ref_columns.count LOOP
-          vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table_name))||'_ids'||i||' ID_ARRAY;';
-          into_block := into_block ||','||chr(10)||'    '||get_short_name(lower(ref_table_name))||'_ids'||i;
-          collect_block := collect_block||'  '||get_short_name(lower(ref_table_name))||'_ids := '
-            ||get_short_name(lower(ref_table_name))||'_ids MULTISET UNION ALL '||get_short_name(lower(ref_table_name))||'_ids'||i||';'||chr(10);
+          vars := vars ||chr(10)||'  '||citydb_util.get_short_name(ref_table_name, schema_name)||'_ids'||i||' ID_ARRAY;';
+          into_block := into_block ||','||chr(10)||'    '||citydb_util.get_short_name(ref_table_name, schema_name)||'_ids'||i;
+          collect_block := collect_block||'  '||citydb_util.get_short_name(ref_table_name, schema_name)||'_ids := '
+            ||citydb_util.get_short_name(ref_table_name, schema_name)||'_ids MULTISET UNION ALL '||citydb_util.get_short_name(ref_table_name, schema_name)||'_ids'||i||';'||chr(10);
         END LOOP;
       ELSE
-        vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table_name))||'_ids ID_ARRAY;';
-        into_block := into_block ||','||chr(10)||'    '||get_short_name(lower(ref_table_name))||'_ids';
+        vars := vars ||chr(10)||'  '||citydb_util.get_short_name(ref_table_name, schema_name)||'_ids ID_ARRAY;';
+        into_block := into_block ||','||chr(10)||'    '||citydb_util.get_short_name(ref_table_name, schema_name)||'_ids';
       END IF;
 
       IF
@@ -1453,10 +1455,10 @@ AS
         IF lower(ref_table_name) || '_array' NOT MEMBER OF ref_to_path THEN
           ref_to_path := citydb_delete_gen.create_array_delete_function(ref_table_name, schema_name, ref_to_path);
         END IF;
-        vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table_name))||'_pids ID_ARRAY;';
-        fk_block := fk_block || gen_delete_m_ref_by_ids_call(ref_table_name, ref_to_ref_tables, ref_to_ref_columns);
+        vars := vars ||chr(10)||'  '||citydb_util.get_short_name(ref_table_name, schema_name)||'_pids ID_ARRAY;';
+        fk_block := fk_block || gen_delete_m_ref_by_ids_call(ref_table_name, ref_to_ref_tables, ref_to_ref_columns, schema_name);
       ELSE
-        fk_block := fk_block || gen_delete_m_ref_by_ids_stmt(ref_table_name, ref_column_name, ref_to_ref_tables, ref_to_ref_columns);
+        fk_block := fk_block || gen_delete_m_ref_by_ids_stmt(ref_table_name, ref_column_name, ref_to_ref_tables, ref_to_ref_columns, schema_name);
       END IF;
     END LOOP;
 
@@ -1511,16 +1513,16 @@ AS
       END LOOP;
 
       IF fk_columns_count > 1 THEN
-        vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table_name))||'_ids ID_ARRAY;';
+        vars := vars ||chr(10)||'  '||citydb_util.get_short_name(ref_table_name, schema_name)||'_ids ID_ARRAY;';
         returning_block := returning_block||','
           ||chr(10)||'    ID_ARRAY('
           ||chr(10)||'    '||lower(fk_columns)
           ||chr(10)||'    )';
-        into_block := into_block||','||chr(10)||'    '||get_short_name(lower(ref_table_name))||'_ids';
+        into_block := into_block||','||chr(10)||'    '||citydb_util.get_short_name(ref_table_name, schema_name)||'_ids';
       ELSE
-        vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table_name))||'_ref_id NUMBER;';
+        vars := vars ||chr(10)||'  '||citydb_util.get_short_name(ref_table_name, schema_name)||'_ref_id NUMBER;';
         returning_block := returning_block ||','||chr(10)||'    '||lower(fk_columns);
-        into_block := into_block||','||chr(10)||'    '||get_short_name(lower(ref_table_name))||'_ref_id';
+        into_block := into_block||','||chr(10)||'    '||citydb_util.get_short_name(ref_table_name, schema_name)||'_ref_id';
       END IF;
 
       IF
@@ -1539,20 +1541,20 @@ AS
           IF lower(ref_table_name) || '_array' NOT MEMBER OF ref_to_path THEN
             ref_to_path := citydb_delete_gen.create_array_delete_function(ref_table_name, schema_name, ref_to_path);
           END IF;
-          vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table_name))||'_pids ID_ARRAY;';
-          fk_block := fk_block || gen_delete_m_ref_by_ids_call(ref_table_name, ref_to_ref_tables, ref_to_ref_columns);
+          vars := vars ||chr(10)||'  '||citydb_util.get_short_name(ref_table_name, schema_name)||'_pids ID_ARRAY;';
+          fk_block := fk_block || gen_delete_m_ref_by_ids_call(ref_table_name, ref_to_ref_tables, ref_to_ref_columns, schema_name);
         ELSE
           IF lower(ref_table_name) NOT MEMBER OF ref_to_path THEN
             ref_to_path := citydb_delete_gen.create_delete_function(ref_table_name, schema_name, ref_to_path);
           END IF;
-          vars := vars ||chr(10)||'  '||get_short_name(lower(ref_table_name))||'_pid NUMBER;';
-          fk_block := fk_block || gen_delete_m_ref_by_id_call(ref_table_name, ref_to_ref_tables, ref_to_ref_columns);
+          vars := vars ||chr(10)||'  '||citydb_util.get_short_name(ref_table_name, schema_name)||'_pid NUMBER;';
+          fk_block := fk_block || gen_delete_m_ref_by_id_call(ref_table_name, ref_to_ref_tables, ref_to_ref_columns, schema_name);
         END IF;
       ELSE
         IF fk_columns_count > 1 THEN
-          fk_block := fk_block || gen_delete_m_ref_by_ids_stmt(ref_table_name, ref_column_name, ref_to_ref_tables, ref_to_ref_columns);
+          fk_block := fk_block || gen_delete_m_ref_by_ids_stmt(ref_table_name, ref_column_name, ref_to_ref_tables, ref_to_ref_columns, schema_name);
         ELSE
-          fk_block := fk_block || gen_delete_m_ref_by_id_stmt(ref_table_name, ref_column_name, ref_to_ref_tables, ref_to_ref_columns);
+          fk_block := fk_block || gen_delete_m_ref_by_id_stmt(ref_table_name, ref_column_name, ref_to_ref_tables, ref_to_ref_columns, schema_name);
         END IF;
       END IF;
     END LOOP;
@@ -1630,7 +1632,8 @@ AS
     objclass ID_ARRAY;
   BEGIN
     -- check if given table has objectclass_id column
-    objclass := citydb_util.table_name_to_objectclass_ids(tab_name);
+    EXECUTE IMMEDIATE 'SELECT '||schema_name||'.citydb_objclass.table_name_to_objectclass_ids(:1) FROM dual'
+      INTO objclass USING tab_name;
 
     -- if found delete parent object
     IF objclass IS NOT EMPTY THEN
@@ -1643,7 +1646,7 @@ AS
         parent_block :=
             chr(10)||'  -- delete '||lower(parent_table)
           ||chr(10)||'  IF deleted_ids IS NOT EMPTY THEN'
-          ||chr(10)||'    dummy_ids := delete_'||get_short_name(lower(parent_table))||'_post_bat(deleted_ids, class_ids);'
+          ||chr(10)||'    dummy_ids := delete_'||citydb_util.get_short_name(parent_table, schema_name)||'_post_bat(deleted_ids, class_ids);'
           ||chr(10)||'  END IF;'
           ||chr(10);
       END IF;
@@ -1664,7 +1667,8 @@ AS
     objclass ID_ARRAY;
   BEGIN
     -- check if given table has objectclass_id column
-    objclass := citydb_util.table_name_to_objectclass_ids(tab_name);
+    EXECUTE IMMEDIATE 'SELECT '||schema_name||'.citydb_objclass.table_name_to_objectclass_ids(:1) FROM dual'
+      INTO objclass USING tab_name;
 
     -- if found delete parent object
     IF objclass IS NOT EMPTY THEN
@@ -1677,7 +1681,7 @@ AS
         parent_block :=
             chr(10)||'  -- delete '||lower(parent_table)
           ||chr(10)||'  IF deleted_id IS NOT NULL THEN'
-          ||chr(10)||'    dummy_id := delete_'||get_short_name(lower(parent_table))||'_post(deleted_id, class_id);'
+          ||chr(10)||'    dummy_id := delete_'||citydb_util.get_short_name(parent_table, schema_name)||'_post(deleted_id, class_id);'
           ||chr(10)||'  END IF;'
           ||chr(10);
       END IF;
@@ -1697,7 +1701,7 @@ AS
     )
   IS
     ddl_command VARCHAR2(500) := 
-      'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_batch('
+      'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_batch('
       || 'pids ID_ARRAY, '
       || 'objclass_ids ID_ARRAY := ID_ARRAY()'
       || ') RETURN ID_ARRAY'
@@ -1718,7 +1722,7 @@ AS
     )
   IS
     ddl_command VARCHAR2(500) := 
-      'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'('
+      'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||citydb_util.get_short_name(tab_name, schema_name)||'('
       || 'pid NUMBER, '
       || 'objclass_id NUMBER := 0'
       || ') RETURN NUMBER'
@@ -1739,7 +1743,7 @@ AS
     )
   IS
     ddl_command VARCHAR2(500) := 
-      'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_post_bat('
+      'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_post_bat('
       || 'pids ID_ARRAY,'
       || 'objclass_ids ID_ARRAY'
       || ') RETURN ID_ARRAY'
@@ -1760,7 +1764,7 @@ AS
     )
   IS
     ddl_command VARCHAR2(500) := 
-      'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_post('
+      'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_post('
       || 'pid NUMBER,'
       || 'objclass_id NUMBER'
       || ') RETURN NUMBER'
@@ -1783,7 +1787,7 @@ AS
     ) RETURN STRARRAY
   IS
     create_path STRARRAY := path;
-    ddl_command VARCHAR2(32767) := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_batch';
+    ddl_command VARCHAR2(32767) := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_batch';
     ddl_command_2 VARCHAR2(32767);
     has_objclass_param BOOLEAN := FALSE;
     declare_block VARCHAR2(1000) := '  deleted_ids ID_ARRAY := ID_ARRAY();';
@@ -1862,7 +1866,7 @@ AS
         || objclass_block
         || objclass_filter_block
         ||chr(10)||'  IF pids.count <> deleted_ids.count THEN'
-        ||chr(10)||'    deleted_ids := deleted_ids MULTISET UNION ALL COALESCE(delete_'||get_short_name(lower(tab_name))||'_post_bat(pids, class_ids), ID_ARRAY());'
+        ||chr(10)||'    deleted_ids := deleted_ids MULTISET UNION ALL COALESCE(delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_post_bat(pids, class_ids), ID_ARRAY());'
         ||chr(10)||'  END IF;'
         ||chr(10)
         ||chr(10)|| return_block
@@ -1876,7 +1880,7 @@ AS
 
       -- start a seperate post function which is called by child delete functions
       ddl_command := 'CREATE OR REPLACE FUNCTION '
-        ||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_post_bat'
+        ||schema_name||'.delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_post_bat'
         ||'(pids ID_ARRAY, objclass_ids ID_ARRAY) RETURN ID_ARRAY'||chr(10)||'IS'||chr(10);
     END IF;
 
@@ -1936,7 +1940,7 @@ AS
     ) RETURN STRARRAY
   IS
     create_path STRARRAY := path;
-    ddl_command VARCHAR2(32767) := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name));
+    ddl_command VARCHAR2(32767) := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||citydb_util.get_short_name(tab_name, schema_name);
     ddl_command_2 VARCHAR2(32767);
     has_objclass_param BOOLEAN := FALSE;
     declare_block VARCHAR2(1000) := '  deleted_id NUMBER;';
@@ -2013,7 +2017,7 @@ AS
         || objclass_block
         || objclass_filter_block
         ||chr(10)||'  IF deleted_id IS NULL THEN'
-        ||chr(10)||'    deleted_id := delete_'||get_short_name(lower(tab_name))||'_post(pid, class_id);'
+        ||chr(10)||'    deleted_id := delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_post(pid, class_id);'
         ||chr(10)||'  END IF;'
         ||chr(10)
         ||chr(10)|| return_block
@@ -2027,7 +2031,7 @@ AS
 
       -- start a seperate post function which is called by child delete functions
       ddl_command := 'CREATE OR REPLACE FUNCTION '
-        ||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_post'
+        ||schema_name||'.delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_post'
         ||'(pid NUMBER, objclass_id NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
     END IF;
 
@@ -2200,7 +2204,7 @@ AS
         END IF;
       END IF;
       
-      ref_block := ref_block || gen_delete_ref_by_ids_call(member_table_name, member_fk_column, has_objclass_param);
+      ref_block := ref_block || gen_delete_ref_by_ids_call(member_table_name, member_fk_column, has_objclass_param, schema_name);
     END LOOP;
 
     RETURN;
@@ -2250,7 +2254,7 @@ AS
         END IF;
       END IF;
 
-      ref_block := ref_block || gen_delete_ref_by_id_call(member_table_name, member_fk_column, has_objclass_param);
+      ref_block := ref_block || gen_delete_ref_by_id_call(member_table_name, member_fk_column, has_objclass_param, schema_name);
     END LOOP;
 
     RETURN;
@@ -2361,8 +2365,8 @@ AS
       END IF;
 
       vars := vars
-        ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_ids ID_ARRAY;'
-        ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_pids ID_ARRAY;';
+        ||chr(10)||'  '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids ID_ARRAY;'
+        ||chr(10)||'  '||citydb_util.get_short_name(m_table_name, schema_name)||'_pids ID_ARRAY;';
       ref_block := ref_block || gen_delete_n_m_ref_by_ids_call(n_table_name, n_fk_column_name, m_table_name, m_fk_column_name, schema_name);
     END LOOP;
 
@@ -2402,8 +2406,8 @@ AS
       END IF;
 
       vars := vars
-        ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_ids ID_ARRAY;'
-        ||chr(10)||'  '||get_short_name(lower(m_table_name))||'_pids ID_ARRAY;';
+        ||chr(10)||'  '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids ID_ARRAY;'
+        ||chr(10)||'  '||citydb_util.get_short_name(m_table_name, schema_name)||'_pids ID_ARRAY;';
       ref_block := ref_block || gen_delete_n_m_ref_by_id_call(n_table_name, n_fk_column_name, m_table_name, m_fk_column_name, schema_name);
     END LOOP;
 
@@ -2421,7 +2425,7 @@ AS
     ) RETURN STRARRAY
   IS
     create_path STRARRAY := path;
-    ddl_command VARCHAR2(30000) := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_w_mem_bat(pids ID_ARRAY) RETURN ID_ARRAY'||chr(10)||'IS'||chr(10);
+    ddl_command VARCHAR2(30000) := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_w_mem_bat(pids ID_ARRAY) RETURN ID_ARRAY'||chr(10)||'IS'||chr(10);
     declare_block VARCHAR2(1000) := '  deleted_ids ID_ARRAY;';
     pre_block VARCHAR2(14000) := '';
     vars VARCHAR2(1000);
@@ -2458,7 +2462,7 @@ AS
       ||chr(10)||'BEGIN'
       || pre_block
       ||chr(10)||'  -- delete '||lower(tab_name)||'s'
-      ||chr(10)||'  RETURN delete_' ||get_short_name(lower(tab_name))||'_batch(pids);'
+      ||chr(10)||'  RETURN delete_' ||citydb_util.get_short_name(tab_name, schema_name)||'_batch(pids);'
       ||chr(10)||'END;';
 
     EXECUTE IMMEDIATE ddl_command;
@@ -2474,7 +2478,7 @@ AS
     ) RETURN STRARRAY
   IS
     create_path STRARRAY := path;
-    ddl_command VARCHAR2(30000) := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||get_short_name(lower(tab_name))||'_w_members(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
+    ddl_command VARCHAR2(30000) := 'CREATE OR REPLACE FUNCTION '||schema_name||'.delete_'||citydb_util.get_short_name(tab_name, schema_name)||'_w_members(pid NUMBER) RETURN NUMBER'||chr(10)||'IS'||chr(10);
     declare_block VARCHAR2(1000) := '  deleted_id NUMBER;';
     pre_block VARCHAR2(14000) := '';
     vars VARCHAR2(1000);
@@ -2511,7 +2515,7 @@ AS
       ||chr(10)||'BEGIN'
       || pre_block
       ||chr(10)||'  -- delete '||lower(tab_name)||'s'
-      ||chr(10)||'  RETURN delete_' ||get_short_name(lower(tab_name))||'(pid);'
+      ||chr(10)||'  RETURN delete_' ||citydb_util.get_short_name(tab_name, schema_name)||'(pid);'
       ||chr(10)||'END;';
 
     EXECUTE IMMEDIATE ddl_command;

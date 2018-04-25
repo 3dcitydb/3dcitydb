@@ -51,9 +51,8 @@
 *     OUT versioning TEXT
 *     ) RETURNS RECORD
 *   get_seq_values(seq_name TEXT, seq_count INTEGER) RETURNS SETOF INTEGER
+*   get_short_name(table_name TEXT, schema_name TEXT) RETURNS TEXT
 *   min(a NUMERIC, b NUMERIC) RETURNS NUMERIC
-*   objectclass_id_to_table_name(class_id INTEGER) RETURNS TEXT
-*   table_name_to_objectclass_ids(table_name TEXT) RETURNS INTEGER[]
 *   versioning_db(schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   versioning_table(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 ******************************************************************/
@@ -183,6 +182,25 @@ $$
 LANGUAGE plpgsql STABLE;
 
 
+/*****************************************************************
+* get_short_name
+*
+* @param table_name name of table that needs to be shortened
+* @param schema_name name of schema to query short name
+*
+* @RETURN INTEGER SET list of sequence values from given sequence
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.get_short_name(
+  table_name TEXT,
+  schema_name TEXT
+  ) RETURNS TEXT AS
+$$
+-- TODO: query a table that stores the short version of a table (maybe objectclass?)
+SELECT substr($1, 1, 17);
+$$
+LANGUAGE sql STABLE STRICT;
+
+
 /******************************************************************
 * min
 *
@@ -218,58 +236,3 @@ $$
 SELECT nextval($1)::int FROM generate_series(1, $2);
 $$
 LANGUAGE sql STRICT;
-
-
-/*****************************************************************
-* objectclass_id_to_table_name
-*
-* @param class_id objectclass_id identifier
-*
-* @RETURN TEXT name of table that stores objects referred 
-*              to the given objectclass_id
-******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.objectclass_id_to_table_name(class_id INTEGER) RETURNS TEXT AS
-$$
-SELECT
-  tablename
-FROM
-  objectclass
-WHERE
-  id = $1;
-$$
-LANGUAGE sql STABLE STRICT;
-
-
-/*****************************************************************
-* table_name_to_objectclass_ids
-*
-* @param table_name name of table
-*
-* @RETURN INT[] array of objectclass_ids
-******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.table_name_to_objectclass_ids(table_name TEXT) RETURNS INTEGER[] AS
-$$
-WITH RECURSIVE objectclass_tree (id, superclass_id) AS (
-  SELECT
-    id,
-    superclass_id
-  FROM
-    objectclass
-  WHERE
-    tablename = lower($1)
-  UNION ALL
-    SELECT
-      o.id,
-      o.superclass_id
-    FROM
-      objectclass o,
-      objectclass_tree t
-    WHERE
-      o.superclass_id = t.id
-)
-SELECT
-  array_agg(DISTINCT id ORDER BY id)
-FROM
-  objectclass_tree;
-$$
-LANGUAGE sql STABLE STRICT;

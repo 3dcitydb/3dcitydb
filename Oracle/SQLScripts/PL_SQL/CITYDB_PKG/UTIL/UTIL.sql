@@ -92,14 +92,13 @@ AS
   FUNCTION versioning_db(schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   PROCEDURE db_info(schema_name VARCHAR2 := USER, schema_srid OUT INTEGER, schema_gml_srs_name OUT VARCHAR2, versioning OUT VARCHAR2);
   FUNCTION db_metadata(schema_name VARCHAR2 := USER) RETURN DB_INFO_TABLE;
+  FUNCTION get_short_name(table_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION split(list VARCHAR2, delim VARCHAR2 := ',') RETURN STRARRAY;
   FUNCTION min(a NUMBER, b NUMBER) RETURN NUMBER;
   FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER) RETURN ID_ARRAY;
   FUNCTION string2id_array(str VARCHAR2, delim VARCHAR2 := ',') RETURN ID_ARRAY;
   FUNCTION id_array2string(ids ID_ARRAY, delim VARCHAR2 := ',') RETURN VARCHAR2;
   FUNCTION get_id_array_size(id_arr ID_ARRAY) RETURN NUMBER;
-  FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
-  FUNCTION table_name_to_objectclass_ids(table_name VARCHAR2) RETURN ID_ARRAY;
   FUNCTION construct_solid(geom_root_id NUMBER) RETURN SDO_GEOMETRY;
   FUNCTION to_2d(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
   FUNCTION sdo2geojson3d(p_geometry in sdo_geometry, p_decimal_places in pls_integer default 2, p_compress_tags in pls_integer default 0, p_relative2mbr in pls_integer default 0) RETURN CLOB DETERMINISTIC;
@@ -282,6 +281,24 @@ AS
   END;
 
   /*****************************************************************
+  * get_short_name
+  *
+  * @param table_name name of table that needs to be shortened
+  * @param schema_name name of schema to query short name
+  *
+  * @RETURN INTEGER SET list of sequence values from given sequence
+  ******************************************************************/
+  FUNCTION get_short_name(
+    table_name VARCHAR2,
+    schema_name VARCHAR2 := USER
+    ) RETURN VARCHAR2
+  IS
+  BEGIN
+    -- TODO: query a table that stores the short version of a table (maybe objectclass?)
+    RETURN substr(lower(table_name), 1, 12);
+  END;
+
+  /*****************************************************************
   * split
   *
   * @param list string to be splitted
@@ -419,58 +436,6 @@ AS
     arr_count := id_arr.count;
     RETURN arr_count;
   END;
-
-
-  /*****************************************************************
-  * objectclass_id_to_table_name
-  *
-  * @param class_id objectclass_id identifier
-  * @return VARCHAR2 name of table that stores objects referred 
-  *                  to the given objectclass_id
-  ******************************************************************/
-  FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2
-  IS
-    table_name VARCHAR2(30) := '';
-  BEGIN
-    SELECT
-      tablename
-    INTO
-      table_name
-    FROM
-      objectclass
-    WHERE
-      id = class_id;
-
-    RETURN table_name;
-  END;
-
-
-  /*****************************************************************
-  * table_name_to_objectclass_ids
-  *
-  * @param table_name name of table
-  * @return ID_ARRAY array of objectclass_ids
-  ******************************************************************/
-  FUNCTION table_name_to_objectclass_ids(table_name VARCHAR2) RETURN ID_ARRAY
-  IS
-    objclass_ids ID_ARRAY;
-  BEGIN
-    SELECT DISTINCT
-      id
-    BULK COLLECT INTO
-      objclass_ids
-    FROM
-      objectclass
-    START WITH
-      tablename = lower(table_name)
-    CONNECT BY PRIOR
-      id = superclass_id
-    ORDER BY
-      id;
-
-    RETURN objclass_ids;
-  END;
-
 
   /*****************************************************************
   * construct_solid
