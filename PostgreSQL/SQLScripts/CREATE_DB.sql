@@ -31,9 +31,17 @@ SET client_min_messages TO WARNING;
 \set ON_ERROR_STOP ON
 
 \echo
-\prompt 'Please enter a valid SRID (e.g., 3068 for DHDN/Soldner Berlin): ' SRS_NO
-\prompt 'Please enter the corresponding SRSName to be used in GML exports (e.g., urn:ogc:def:crs,crs:EPSG::3068,crs:EPSG::5783): ' GMLSRSNAME
+\prompt 'Please enter EPSG code of CRS to be used: ' SRS_NO
+\prompt 'Please enter EPSG code of the height system (use 0 if unknown or a 3D CRS is used): ' VERT_NO
 
+-- prepare GML_SRS_NAME
+SELECT CASE
+  WHEN :VERT_NO = 0 THEN 'urn:ogc:def:crs,crs:EPSG::' || :SRS_NO
+  ELSE 'urn:ogc:def:crs,crs:EPSG::' || :SRS_NO || ',crs:EPSG::' || :VERT_NO
+  END AS srs_string \gset
+
+-- set SRID and GML_SRS_NAME
+\set GMLSRSNAME :srs_string
 \set SRSNO :SRS_NO
 
 --// check if the PostGIS extension is available

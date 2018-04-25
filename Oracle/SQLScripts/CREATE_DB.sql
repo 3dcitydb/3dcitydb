@@ -31,9 +31,8 @@ SET VER OFF
 
 prompt
 prompt
-accept SRSNO NUMBER DEFAULT 81989002 PROMPT 'Please enter a valid SRID (Berlin: 81989002): '
-prompt Please enter the corresponding SRSName to be used in GML exports
-accept GMLSRSNAME CHAR DEFAULT 'urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783' prompt '  (Berlin: urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783): '
+accept SRSNO NUMBER DEFAULT 0 PROMPT 'Please enter EPSG code of CRS to be used: '
+accept VERTNO NUMBER DEFAULT 0 PROMPT 'Please enter EPSG code of the height system (use 0 if unknown or a 3D CRS is used): '
 accept VERSIONING CHAR DEFAULT 'no' PROMPT 'Shall versioning be enabled (yes/no, default is no): '
 accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Oracle Spatial(S)/Oracle Locator(L), default is S): '
 prompt
@@ -46,25 +45,32 @@ VARIABLE GEORASTER_SUPPORT NUMBER;
 
 WHENEVER SQLERROR CONTINUE;
 
-BEGIN
+BEGIN 
   SELECT SRID,CS_NAME INTO :SRID,:CS_NAME FROM MDSYS.CS_SRS
   WHERE SRID=&SRSNO;
 
   IF (:SRID = &SRSNO) THEN
-	  IF NOT (upper('&DBVERSION')='L' or upper('&DBVERSION')='S') THEN
-        :BATCHFILE := 'UTIL/CREATE_DB/HINT_ON_MISTYPED_DBVERSION';
-	  ELSE
-	  	:BATCHFILE := 'CREATE_DB2';
-	  END IF;
+    IF NOT (upper('&DBVERSION')='L' or upper('&DBVERSION')='S') THEN
+      :BATCHFILE := 'UTIL/CREATE_DB/HINT_ON_MISTYPED_DBVERSION';
+    ELSE
+      :BATCHFILE := 'CREATE_DB2';
+    END IF;
   ELSE 
   	:BATCHFILE := 'UTIL/CREATE_DB/HINT_ON_MISSING_SRS';
   END IF;
   
-EXCEPTION
-  WHEN NO_DATA_FOUND THEN
-    :BATCHFILE := 'UTIL/CREATE_DB/HINT_ON_MISSING_SRS';
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      :BATCHFILE := 'UTIL/CREATE_DB/HINT_ON_MISSING_SRS';
 END;
 /
+
+-- set GMLSRSNAME variable
+COLUMN gsn new_value GMLSRSNAME print
+SELECT CASE
+  WHEN &VERTNO = 0 THEN 'urn:ogc:def:crs,crs:EPSG::' || &SRSNO
+  ELSE 'urn:ogc:def:crs,crs:EPSG::' || &SRSNO || ',crs:EPSG::' || &VERTNO
+  END gsn FROM dual;
 
 -- Check for SDO_GEORASTER support
 BEGIN
@@ -80,8 +86,8 @@ BEGIN
 END;
 /
 
--- Transfer the value from the bind variable to the substitution variable
-column mc new_value BATCHFILE2 print
-select :BATCHFILE mc from dual;
+-- transfer the value from the bind variable to the substitution variable
+COLUMN mc new_value BATCHFILE2 print
+SELECT :BATCHFILE mc FROM dual;
 
 START &BATCHFILE2
