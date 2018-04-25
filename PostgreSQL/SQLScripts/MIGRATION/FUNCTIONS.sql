@@ -60,7 +60,7 @@ BEGIN
         FROM public.%I
        ) sub
      WHERE id = sub.c_id',
-     citydb_pkg.objectclass_id_to_table_name(objectclass_id));
+     citydb.objectclass_id_to_table_name(objectclass_id));
 END;
 $$
 LANGUAGE plpgsql;
