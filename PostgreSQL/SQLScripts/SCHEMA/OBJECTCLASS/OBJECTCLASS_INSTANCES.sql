@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dorg/
 -- 
--- Copyright 2013 - 2017
+-- Copyright 2013 - 2018
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/

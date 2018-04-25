@@ -67,7 +67,7 @@
 ******************************************************************/
 
 /*****************************************************************
-* citydb_pkg.box2envelope
+* box2envelope
 *
 * returns the envelope of a given land use
 *
@@ -78,7 +78,7 @@
 * 3D envelope as diagonal cutting plane inside the given 3D bounding box
 * consisting of 5 points (POLYGON Z)
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.box2envelope(box BOX3D) RETURNS GEOMETRY AS
+CREATE OR REPLACE FUNCTION box2envelope(box BOX3D) RETURNS GEOMETRY AS
 $$
 DECLARE
   envelope GEOMETRY;
@@ -105,7 +105,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.box2envelope": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "box2envelope": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -125,7 +125,7 @@ LANGUAGE plpgsql STABLE STRICT;
 * @return
 * 3D envelope as diagonal cutting plane consisting of 5 points
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_implicit_geometry(
+CREATE OR REPLACE FUNCTION get_envelope_implicit_geometry(
   implicit_rep_id INTEGER,
   ref_pt GEOMETRY,
   transform4x4 VARCHAR
@@ -136,7 +136,7 @@ DECLARE
   params DOUBLE PRECISION[ ] := '{}';
 BEGIN
   -- calculate bounding box for implicit geometry
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO envelope FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO envelope FROM (
     -- relative other geometry
     SELECT relative_other_geom AS geom 
       FROM implicit_geometry 
@@ -185,7 +185,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_implicit_geometry": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_implicit_geometry": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -204,7 +204,7 @@ LANGUAGE plpgsql STABLE;
 * @return
 * aggregated envelope geometry of land use
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_land_use(
+CREATE OR REPLACE FUNCTION get_envelope_land_use(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -212,7 +212,7 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geometry)) INTO bbox
+  SELECT box2envelope(ST_3DExtent(geometry)) INTO bbox
     FROM surface_geometry
      WHERE cityobject_id = co_id
        AND geometry IS NOT NULL;
@@ -225,7 +225,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_land_use": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_land_use": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -244,7 +244,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of generic city object
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_generic_cityobj(
+CREATE OR REPLACE FUNCTION get_envelope_generic_cityobj(
   co_id INTEGER,
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -252,7 +252,7 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- generic cityobject geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
@@ -272,23 +272,23 @@ BEGIN
       SELECT lod4_other_geom AS geom FROM generic_cityobject WHERE id = co_id AND lod4_other_geom IS NOT NULL
     UNION ALL
     -- lod0 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod0_implicit_rep_id, lod0_implicit_ref_point, lod0_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod0_implicit_rep_id, lod0_implicit_ref_point, lod0_implicit_transformation) AS geom 
         FROM generic_cityobject WHERE id = co_id AND lod0_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod1 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation) AS geom 
         FROM generic_cityobject WHERE id = co_id AND lod1_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod2 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation) AS geom 
         FROM generic_cityobject WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod3 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
         FROM generic_cityobject WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod4 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
         FROM generic_cityobject WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
 
@@ -300,7 +300,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_generic_cityobj": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_generic_cityobj": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -319,7 +319,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of solitary vegetation object
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_solitary_veg_obj(
+CREATE OR REPLACE FUNCTION get_envelope_solitary_veg_obj(
   co_id INTEGER,
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -327,7 +327,7 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- solitary vegetation object geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
@@ -344,19 +344,19 @@ BEGIN
       SELECT lod4_other_geom AS geom FROM solitary_vegetat_object WHERE id = co_id AND lod4_other_geom IS NOT NULL
     UNION ALL
     -- lod1 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation) AS geom 
         FROM solitary_vegetat_object WHERE id = co_id AND lod1_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod2 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation) AS geom 
         FROM solitary_vegetat_object WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod3 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
         FROM solitary_vegetat_object WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod4 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
         FROM solitary_vegetat_object WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
 
@@ -368,7 +368,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_solitary_veg_obj": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_solitary_veg_obj": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -387,7 +387,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of plant cover
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_plant_cover(
+CREATE OR REPLACE FUNCTION get_envelope_plant_cover(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -395,7 +395,7 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geometry)) INTO bbox
+  SELECT box2envelope(ST_3DExtent(geometry)) INTO bbox
     FROM surface_geometry
       WHERE cityobject_id = co_id 
         AND geometry IS NOT NULL;
@@ -408,7 +408,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_plant_cover": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_plant_cover": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -427,7 +427,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of water body
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_waterbody(
+CREATE OR REPLACE FUNCTION get_envelope_waterbody(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -435,12 +435,12 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- waterbody geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
     -- water boundary surface geometry
-      SELECT citydb_pkg.get_envelope_waterbnd_surface(wbs.id, set_envelope) AS geom
+      SELECT get_envelope_waterbnd_surface(wbs.id, set_envelope) AS geom
         FROM waterboundary_surface wbs, waterbod_to_waterbnd_srf wb2wbs
           WHERE wbs.id = wb2wbs.waterboundary_surface_id 
             AND wb2wbs.waterbody_id = co_id
@@ -454,7 +454,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_waterbody": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_waterbody": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -473,7 +473,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of water boundary surface
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_waterbnd_surface(
+CREATE OR REPLACE FUNCTION get_envelope_waterbnd_surface(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -481,7 +481,7 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geometry)) INTO bbox
+  SELECT box2envelope(ST_3DExtent(geometry)) INTO bbox
     FROM surface_geometry
       WHERE cityobject_id = co_id
         AND geometry IS NOT NULL;
@@ -494,7 +494,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_waterbnd_surface": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_waterbnd_surface": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -513,7 +513,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of relief feature
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_relief_feature(
+CREATE OR REPLACE FUNCTION get_envelope_relief_feature(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -522,8 +522,8 @@ DECLARE
   bbox GEOMETRY;
 BEGIN
   -- try to generate envelope from relief components
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
-    SELECT citydb_pkg.get_envelope_relief_component(rc.id, rc.objectclass_id, set_envelope) AS geom 
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+    SELECT get_envelope_relief_component(rc.id, rc.objectclass_id, set_envelope) AS geom 
       FROM relief_component rc, relief_feat_to_rel_comp rf2rc 
         WHERE rc.id = rf2rc.relief_component_id AND rf2rc.relief_feature_id = co_id
     ) g;
@@ -536,7 +536,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occured when executing function "citydb_pkg.get_envelope_relief_feature": %', SQLERRM;
+      RAISE NOTICE 'An error occured when executing function "get_envelope_relief_feature": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -556,7 +556,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of relief component
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_relief_component(
+CREATE OR REPLACE FUNCTION get_envelope_relief_component(
   co_id INTEGER,
   objclass_id INTEGER DEFAULT 0,
   set_envelope INTEGER DEFAULT 0
@@ -576,24 +576,24 @@ BEGIN
   CASE
     -- get spatial extent of TIN relief
     WHEN class_id = 16 THEN 
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(sg.geometry)) INTO bbox
+      SELECT box2envelope(ST_3DExtent(sg.geometry)) INTO bbox
         FROM surface_geometry sg, tin_relief tin
           WHERE tin.surface_geometry_id = sg.root_id 
             AND tin.id = co_id 
             AND sg.geometry IS NOT NULL;
     -- get spatial extent of masspoint relief
     WHEN class_id = 17 THEN
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(relief_points)) INTO bbox
+      SELECT box2envelope(ST_3DExtent(relief_points)) INTO bbox
         FROM masspoint_relief 
           WHERE id = co_id;
     -- get spatial extent of breakline relief taking a union of ridge, valley and break lines
     WHEN class_id = 18 THEN
-      SELECT citydb_pkg.box2envelope(ST_3DExtent(ST_Collect(ridge_or_valley_lines, break_lines))) INTO bbox
+      SELECT box2envelope(ST_3DExtent(ST_Collect(ridge_or_valley_lines, break_lines))) INTO bbox
         FROM breakline_relief
           WHERE id = co_id;
     -- get spatial extent of raster relief
     WHEN class_id = 19 THEN
-      SELECT citydb_pkg.box2envelope(Box3D(rasterproperty)) INTO bbox
+      SELECT box2envelope(Box3D(rasterproperty)) INTO bbox
         FROM grid_coverage grid, raster_relief rast 
           WHERE rast.coverage_id = grid.id 
             AND rast.id = co_id;
@@ -607,7 +607,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occured when executing function "citydb_pkg.get_envelope_relief_component": %', SQLERRM;
+      RAISE NOTICE 'An error occured when executing function "get_envelope_relief_component": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -626,7 +626,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of city furniture
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_city_furniture(
+CREATE OR REPLACE FUNCTION get_envelope_city_furniture(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -634,7 +634,7 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- city furniture geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
@@ -651,19 +651,19 @@ BEGIN
       SELECT lod4_other_geom AS geom FROM city_furniture WHERE id = co_id AND lod4_other_geom IS NOT NULL
     UNION ALL
     -- lod1 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation) AS geom 
         FROM city_furniture WHERE id = co_id AND lod1_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod2 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation) AS geom 
         FROM city_furniture WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod3 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
         FROM city_furniture WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod4 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
         FROM city_furniture WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
 
@@ -675,7 +675,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_city_furniture": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_city_furniture": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -696,7 +696,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of city object group
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_cityobjectgroup(
+CREATE OR REPLACE FUNCTION get_envelope_cityobjectgroup(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0,
   calc_member_envelopes INTEGER DEFAULT 1
@@ -706,7 +706,7 @@ DECLARE
   bbox GEOMETRY;
 BEGIN
   IF calc_member_envelopes <> 0 THEN
-    SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+    SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
       -- cityobjectgroup geometry
         SELECT geometry AS geom FROM surface_geometry 
           WHERE cityobject_id = co_id AND geometry IS NOT NULL
@@ -716,13 +716,13 @@ BEGIN
           WHERE id = co_id AND other_geom IS NOT NULL
       UNION ALL
       -- group member geometry
-        SELECT citydb_pkg.get_envelope_cityobject(co.id, co.objectclass_id, set_envelope) AS geom
+        SELECT get_envelope_cityobject(co.id, co.objectclass_id, set_envelope) AS geom
           FROM cityobject co, group_to_cityobject g2co 
             WHERE co.id = g2co.cityobject_id 
               AND g2co.cityobjectgroup_id = co_id
     ) g;
   ELSE
-    SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+    SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
       -- cityobjectgroup geometry
         SELECT geometry AS geom FROM surface_geometry 
           WHERE cityobject_id = co_id AND geometry IS NOT NULL
@@ -743,7 +743,7 @@ BEGIN
     UPDATE cityobject SET envelope = bbox WHERE id = co_id;
 
     -- group parent 
-    PERFORM citydb_pkg.get_envelope_cityobject(co.id, co.objectclass_id, set_envelope)
+    PERFORM get_envelope_cityobject(co.id, co.objectclass_id, set_envelope)
       FROM cityobject co, cityobjectgroup g
         WHERE co.id = g.parent_cityobject_id 
           AND g.id = co_id;
@@ -772,7 +772,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of building
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_building(
+CREATE OR REPLACE FUNCTION get_envelope_building(
   co_id INTEGER,
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -780,20 +780,20 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- building geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
     -- building part geometry
-      SELECT citydb_pkg.get_envelope_building(id, set_envelope) AS geom
+      SELECT get_envelope_building(id, set_envelope) AS geom
         FROM building WHERE building_root_id = co_id AND building_parent_id IS NOT NULL
     UNION ALL
     -- building thematic surface geometry
-      SELECT citydb_pkg.get_envelope_thematic_surface(id, set_envelope) AS geom
+      SELECT get_envelope_thematic_surface(id, set_envelope) AS geom
         FROM thematic_surface WHERE building_id = co_id AND objectclass_id IN (33, 34, 35, 36, 60, 61)
     UNION ALL
     -- building installation geometry
-      SELECT citydb_pkg.get_envelope_building_inst(id, set_envelope) AS geom
+      SELECT get_envelope_building_inst(id, set_envelope) AS geom
         FROM building_installation WHERE building_id = co_id AND objectclass_id = 27
   ) g;
 
@@ -804,18 +804,18 @@ BEGIN
     END IF;
 
     -- interior rooms
-    PERFORM citydb_pkg.get_envelope_room(id, set_envelope)
+    PERFORM get_envelope_room(id, set_envelope)
       FROM room 
         WHERE building_id = co_id;
 
     -- interior thematic surfaces
-    PERFORM citydb_pkg.get_envelope_thematic_surface(id, set_envelope)
+    PERFORM get_envelope_thematic_surface(id, set_envelope)
       FROM thematic_surface 
         WHERE building_id = co_id 
           AND objectclass_id IN (30, 31, 32);
 
     -- interior building installations
-    PERFORM citydb_pkg.get_envelope_building_inst(id, set_envelope)
+    PERFORM get_envelope_building_inst(id, set_envelope)
       FROM building_installation 
         WHERE building_id = co_id 
           AND objectclass_id = 28;
@@ -825,7 +825,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_building": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_building": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -844,7 +844,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of building installation
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_building_inst(
+CREATE OR REPLACE FUNCTION get_envelope_building_inst(
   co_id INTEGER,
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -852,7 +852,7 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- building installation geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
@@ -866,19 +866,19 @@ BEGIN
       SELECT lod4_other_geom AS geom FROM building_installation WHERE id = co_id AND lod4_other_geom IS NOT NULL
     UNION ALL
     -- lod2 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation) AS geom 
         FROM building_installation WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod3 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
         FROM building_installation WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod4 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
         FROM building_installation WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
     UNION ALL
     -- thematic surface geometry
-      SELECT citydb_pkg.get_envelope_thematic_surface(id, set_envelope) AS geom
+      SELECT get_envelope_thematic_surface(id, set_envelope) AS geom
         FROM thematic_surface WHERE building_installation_id = co_id 
   ) g;
 
@@ -890,7 +890,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_building_inst": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_building_inst": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -909,7 +909,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of thematic surface
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_thematic_surface(
+CREATE OR REPLACE FUNCTION get_envelope_thematic_surface(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -917,12 +917,12 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- thematic surface geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
     -- opening geometry
-      SELECT citydb_pkg.get_envelope_opening(o.id, set_envelope) AS geom
+      SELECT get_envelope_opening(o.id, set_envelope) AS geom
         FROM opening o, opening_to_them_surface o2ts 
           WHERE o2ts.thematic_surface_id = co_id 
             AND o.id = o2ts.opening_id
@@ -936,7 +936,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_thematic_surface": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_thematic_surface": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -955,7 +955,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of opening
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_opening(
+CREATE OR REPLACE FUNCTION get_envelope_opening(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -963,16 +963,16 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- opening geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
     -- lod3 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
         FROM opening WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod4 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
         FROM opening WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
     
@@ -984,7 +984,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_opening": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_opening": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1003,7 +1003,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of building furniture
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_building_furn(
+CREATE OR REPLACE FUNCTION get_envelope_building_furn(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1011,7 +1011,7 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- building furniture geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
@@ -1019,7 +1019,7 @@ BEGIN
       SELECT lod4_other_geom AS geom FROM building_furniture WHERE id = co_id AND lod4_other_geom IS NOT NULL
     UNION ALL
     -- lod4 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
         FROM building_furniture WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
 
@@ -1031,7 +1031,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_building_furn": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_building_furn": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1050,7 +1050,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of room
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_room(
+CREATE OR REPLACE FUNCTION get_envelope_room(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1058,20 +1058,20 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- room geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
     -- interior thematic surface geometry
-      SELECT citydb_pkg.get_envelope_thematic_surface(id, set_envelope) AS geom
+      SELECT get_envelope_thematic_surface(id, set_envelope) AS geom
         FROM thematic_surface WHERE room_id = co_id
     UNION ALL
     -- room installation geometry
-      SELECT citydb_pkg.get_envelope_building_inst(id, set_envelope) AS geom
+      SELECT get_envelope_building_inst(id, set_envelope) AS geom
         FROM building_installation WHERE room_id = co_id
     UNION ALL
     -- building furniture geometry
-      SELECT citydb_pkg.get_envelope_building_furn(id, set_envelope) AS geom
+      SELECT get_envelope_building_furn(id, set_envelope) AS geom
         FROM building_furniture WHERE room_id = co_id
   ) g;    
 
@@ -1083,7 +1083,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_room": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_room": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1102,7 +1102,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of transportation complex
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_trans_complex(
+CREATE OR REPLACE FUNCTION get_envelope_trans_complex(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1110,7 +1110,7 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- lod0 road network geometry of transportation complex
       SELECT lod0_network AS geom FROM transportation_complex WHERE id = co_id AND lod0_network IS NOT NULL
     UNION ALL
@@ -1118,7 +1118,7 @@ BEGIN
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
     -- traffic area geometry
-      SELECT citydb_pkg.get_envelope_traffic_area(id, set_envelope) AS geom
+      SELECT get_envelope_traffic_area(id, set_envelope) AS geom
         FROM traffic_area WHERE transportation_complex_id = co_id
   ) g;
 
@@ -1130,7 +1130,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_trans_complex": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_trans_complex": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1149,7 +1149,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of traffic area
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_traffic_area(
+CREATE OR REPLACE FUNCTION get_envelope_traffic_area(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1157,7 +1157,7 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geometry)) INTO bbox 
+  SELECT box2envelope(ST_3DExtent(geometry)) INTO bbox 
     FROM surface_geometry
       WHERE cityobject_id = co_id 
         AND geometry IS NOT NULL;
@@ -1170,7 +1170,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_traffic_area": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_traffic_area": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1189,7 +1189,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of bridge
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge(
+CREATE OR REPLACE FUNCTION get_envelope_bridge(
   co_id INTEGER,
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1197,24 +1197,24 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- bridge geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
     -- bridge part geometry
-      SELECT citydb_pkg.get_envelope_bridge(id, set_envelope) AS geom
+      SELECT get_envelope_bridge(id, set_envelope) AS geom
         FROM bridge WHERE bridge_root_id = co_id AND bridge_parent_id IS NOT NULL
     UNION ALL
     -- bridge thematic surface geometry
-      SELECT citydb_pkg.get_envelope_bridge_them_srf(id, set_envelope) AS geom
+      SELECT get_envelope_bridge_them_srf(id, set_envelope) AS geom
         FROM bridge_thematic_surface WHERE bridge_id = co_id AND objectclass_id IN (71, 72, 73, 74, 75, 76)
     UNION ALL
     -- bridge installation geometry
-      SELECT citydb_pkg.get_envelope_bridge_inst(id, set_envelope) AS geom
+      SELECT get_envelope_bridge_inst(id, set_envelope) AS geom
         FROM bridge_installation WHERE bridge_id = co_id AND objectclass_id = 65
     UNION ALL
     -- bridge construction element geometry
-      SELECT citydb_pkg.get_envelope_bridge_const_elem(id, set_envelope) AS geom
+      SELECT get_envelope_bridge_const_elem(id, set_envelope) AS geom
         FROM bridge_constr_element WHERE bridge_id = co_id
   ) g;
 
@@ -1225,18 +1225,18 @@ BEGIN
     END IF;
 
     -- interior bridge rooms
-    PERFORM citydb_pkg.get_envelope_bridge_room(id, set_envelope)
+    PERFORM get_envelope_bridge_room(id, set_envelope)
       FROM bridge_room 
         WHERE bridge_id = co_id;
 
     -- interior thematic surfaces
-    PERFORM citydb_pkg.get_envelope_bridge_them_srf(id, set_envelope)
+    PERFORM get_envelope_bridge_them_srf(id, set_envelope)
       FROM bridge_thematic_surface 
         WHERE bridge_id = co_id 
           AND objectclass_id IN (68, 69, 70);
 
     -- interior bridge installations
-    PERFORM citydb_pkg.get_envelope_bridge_inst(id, set_envelope)
+    PERFORM get_envelope_bridge_inst(id, set_envelope)
       FROM bridge_installation 
         WHERE bridge_id = co_id 
           AND objectclass_id = 66;
@@ -1246,7 +1246,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_bridge": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_bridge": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1265,7 +1265,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of bridge installation
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_inst(
+CREATE OR REPLACE FUNCTION get_envelope_bridge_inst(
   co_id INTEGER,
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1274,7 +1274,7 @@ DECLARE
   bbox GEOMETRY;
 
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- bridge installation geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
@@ -1288,19 +1288,19 @@ BEGIN
       SELECT lod4_other_geom AS geom FROM bridge_installation WHERE id = co_id AND lod4_other_geom IS NOT NULL
     UNION ALL
     -- lod2 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation) AS geom 
         FROM bridge_installation WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod3 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
         FROM bridge_installation WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod4 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
         FROM bridge_installation WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
     UNION ALL
     -- thematic surface geometry
-      SELECT citydb_pkg.get_envelope_bridge_them_srf(id, set_envelope) AS geom
+      SELECT get_envelope_bridge_them_srf(id, set_envelope) AS geom
         FROM bridge_thematic_surface WHERE bridge_installation_id = co_id 
   ) g;
 
@@ -1312,7 +1312,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_bridge_inst": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_bridge_inst": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1331,7 +1331,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of bridge thematic surface
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_them_srf(
+CREATE OR REPLACE FUNCTION get_envelope_bridge_them_srf(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1339,12 +1339,12 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- thematic surface geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
     -- opening geometry
-      SELECT citydb_pkg.get_envelope_bridge_opening(o.id, set_envelope) AS geom
+      SELECT get_envelope_bridge_opening(o.id, set_envelope) AS geom
         FROM bridge_opening o, bridge_open_to_them_srf o2ts 
           WHERE o2ts.bridge_thematic_surface_id = co_id 
             AND o.id = o2ts.bridge_opening_id
@@ -1358,7 +1358,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_bridge_them_srf": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_bridge_them_srf": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1377,7 +1377,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of bridge opening
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_opening(
+CREATE OR REPLACE FUNCTION get_envelope_bridge_opening(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1385,16 +1385,16 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- opening geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
     -- lod3 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
         FROM bridge_opening WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod4 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
         FROM bridge_opening WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
 
@@ -1406,7 +1406,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_bridge_opening": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_bridge_opening": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1425,7 +1425,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of bridge furniture
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_furniture(
+CREATE OR REPLACE FUNCTION get_envelope_bridge_furniture(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1433,7 +1433,7 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- bridge furniture geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
@@ -1441,7 +1441,7 @@ BEGIN
       SELECT lod4_other_geom AS geom FROM bridge_furniture WHERE id = co_id AND lod4_other_geom IS NOT NULL
     UNION ALL
     -- lod4 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
         FROM bridge_furniture WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g; 
 
@@ -1453,7 +1453,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_bridge_furniture": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_bridge_furniture": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1472,7 +1472,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of bridge room
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_room(
+CREATE OR REPLACE FUNCTION get_envelope_bridge_room(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1480,20 +1480,20 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- room geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
     -- interior thematic surface geometry
-      SELECT citydb_pkg.get_envelope_bridge_them_srf(id, set_envelope) AS geom
+      SELECT get_envelope_bridge_them_srf(id, set_envelope) AS geom
         FROM bridge_thematic_surface WHERE bridge_room_id = co_id
     UNION ALL
     -- bridge room installation geometry
-      SELECT citydb_pkg.get_envelope_bridge_inst(id, set_envelope) AS geom
+      SELECT get_envelope_bridge_inst(id, set_envelope) AS geom
         FROM bridge_installation WHERE bridge_room_id = co_id
     UNION ALL
     -- bridge furniture geometry
-      SELECT citydb_pkg.get_envelope_bridge_furniture(id, set_envelope) AS geom
+      SELECT get_envelope_bridge_furniture(id, set_envelope) AS geom
         FROM bridge_furniture WHERE bridge_room_id = co_id
   ) g;
 
@@ -1505,7 +1505,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_bridge_room": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_bridge_room": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1524,7 +1524,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of bridge construction element
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_bridge_const_elem(
+CREATE OR REPLACE FUNCTION get_envelope_bridge_const_elem(
   co_id INTEGER,
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1532,7 +1532,7 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- bridge construction element geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
@@ -1549,23 +1549,23 @@ BEGIN
       SELECT lod4_other_geom AS geom FROM bridge_constr_element WHERE id = co_id AND lod4_other_geom IS NOT NULL
     UNION ALL
     -- lod1 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod1_implicit_rep_id, lod1_implicit_ref_point, lod1_implicit_transformation) AS geom 
         FROM bridge_constr_element WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod2 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation) AS geom 
         FROM bridge_constr_element WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod3 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
         FROM bridge_constr_element WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod4 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
         FROM bridge_constr_element WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
     UNION ALL
     -- thematic surface geometry
-      SELECT citydb_pkg.get_envelope_bridge_them_srf(id, set_envelope) AS geom
+      SELECT get_envelope_bridge_them_srf(id, set_envelope) AS geom
         FROM bridge_thematic_surface WHERE bridge_constr_element_id = co_id
   ) g;
 
@@ -1577,7 +1577,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_bridge_const_elem": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_bridge_const_elem": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1596,7 +1596,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of tunnel
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel(
+CREATE OR REPLACE FUNCTION get_envelope_tunnel(
   co_id INTEGER,
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1604,20 +1604,20 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- tunnel geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
     -- tunnel part geometry
-      SELECT citydb_pkg.get_envelope_tunnel(id, set_envelope) AS geom
+      SELECT get_envelope_tunnel(id, set_envelope) AS geom
         FROM tunnel WHERE tunnel_root_id = co_id AND tunnel_parent_id IS NOT NULL
     UNION ALL
     -- tunnel thematic surface geometry
-      SELECT citydb_pkg.get_envelope_tunnel_them_srf(id, set_envelope) AS geom
+      SELECT get_envelope_tunnel_them_srf(id, set_envelope) AS geom
         FROM tunnel_thematic_surface WHERE tunnel_id = co_id AND objectclass_id IN (92, 93, 94, 95, 96, 97)
     UNION ALL
     -- tunnel installation geometry
-      SELECT citydb_pkg.get_envelope_tunnel_inst(id, set_envelope) AS geom
+      SELECT get_envelope_tunnel_inst(id, set_envelope) AS geom
         FROM tunnel_installation WHERE tunnel_id = co_id AND objectclass_id = 86
   ) g;
 
@@ -1628,18 +1628,18 @@ BEGIN
     END IF;
 
     -- interior hollow spaces
-    PERFORM citydb_pkg.get_envelope_tunnel_hspace(id, set_envelope) 
+    PERFORM get_envelope_tunnel_hspace(id, set_envelope) 
       FROM tunnel_hollow_space 
         WHERE tunnel_id = co_id;
 
     -- interior thematic surfaces
-    PERFORM citydb_pkg.get_envelope_tunnel_them_srf(id, set_envelope)
+    PERFORM get_envelope_tunnel_them_srf(id, set_envelope)
       FROM tunnel_thematic_surface 
         WHERE tunnel_id = co_id
           AND objectclass_id IN (89, 90, 91);
 
     -- interior tunnel installations
-    PERFORM citydb_pkg.get_envelope_tunnel_inst(id, set_envelope)
+    PERFORM get_envelope_tunnel_inst(id, set_envelope)
       FROM tunnel_installation 
         WHERE tunnel_id = co_id
           AND objectclass_id = 87;
@@ -1649,7 +1649,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_tunnel": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_tunnel": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1668,7 +1668,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of tunnel installation
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel_inst(
+CREATE OR REPLACE FUNCTION get_envelope_tunnel_inst(
   co_id INTEGER,
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1676,7 +1676,7 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- tunnel installation geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
@@ -1690,19 +1690,19 @@ BEGIN
       SELECT lod4_other_geom AS geom FROM tunnel_installation WHERE id = co_id AND lod4_other_geom IS NOT NULL
     UNION ALL
     -- lod2 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod2_implicit_rep_id, lod2_implicit_ref_point, lod2_implicit_transformation) AS geom 
         FROM tunnel_installation WHERE id = co_id AND lod2_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod3 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
         FROM tunnel_installation WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod4 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
         FROM tunnel_installation WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
     UNION ALL
     -- thematic surface geometry
-      SELECT citydb_pkg.get_envelope_tunnel_them_srf(id, set_envelope) AS geom
+      SELECT get_envelope_tunnel_them_srf(id, set_envelope) AS geom
         FROM tunnel_thematic_surface WHERE tunnel_installation_id = co_id
   ) g;
 
@@ -1714,7 +1714,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_tunnel_inst": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_tunnel_inst": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1734,7 +1734,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of tunnel thematic surface
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel_them_srf(
+CREATE OR REPLACE FUNCTION get_envelope_tunnel_them_srf(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
 
@@ -1743,12 +1743,12 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- thematic surface geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
     -- opening geometry
-      SELECT citydb_pkg.get_envelope_tunnel_opening(o.id, set_envelope) AS geom
+      SELECT get_envelope_tunnel_opening(o.id, set_envelope) AS geom
         FROM tunnel_opening o, tunnel_open_to_them_srf o2ts 
           WHERE o2ts.tunnel_thematic_surface_id = co_id 
             AND o.id = o2ts.tunnel_opening_id
@@ -1762,7 +1762,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_tunnel_them_srf": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_tunnel_them_srf": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1781,7 +1781,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of tunnel opening
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel_opening(
+CREATE OR REPLACE FUNCTION get_envelope_tunnel_opening(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1789,16 +1789,16 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- opening geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
     -- lod3 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod3_implicit_rep_id, lod3_implicit_ref_point, lod3_implicit_transformation) AS geom 
         FROM tunnel_opening WHERE id = co_id AND lod3_implicit_rep_id IS NOT NULL
     UNION ALL
     -- lod4 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
         FROM tunnel_opening WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
 
@@ -1810,7 +1810,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_tunnel_opening": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_tunnel_opening": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1829,7 +1829,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of tunnel furniture
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel_furniture(
+CREATE OR REPLACE FUNCTION get_envelope_tunnel_furniture(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1837,7 +1837,7 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- tunnel furniture geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
@@ -1845,7 +1845,7 @@ BEGIN
       SELECT lod4_other_geom AS geom FROM tunnel_furniture WHERE id = co_id AND lod4_other_geom IS NOT NULL
     UNION ALL
     -- lod4 implicit geometry
-      SELECT citydb_pkg.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
+      SELECT get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom 
         FROM tunnel_furniture WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
 
@@ -1857,7 +1857,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_tunnel_furniture": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_tunnel_furniture": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1876,7 +1876,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of tunnel hollow space
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_tunnel_hspace(
+CREATE OR REPLACE FUNCTION get_envelope_tunnel_hspace(
   co_id INTEGER, 
   set_envelope INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
@@ -1884,20 +1884,20 @@ $$
 DECLARE
   bbox GEOMETRY;
 BEGIN
-  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+  SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
     -- hollow space geometry
       SELECT geometry AS geom FROM surface_geometry WHERE cityobject_id = co_id AND geometry IS NOT NULL
     UNION ALL
     -- interior thematic surface geometry
-      SELECT citydb_pkg.get_envelope_tunnel_them_srf(id, set_envelope) AS geom
+      SELECT get_envelope_tunnel_them_srf(id, set_envelope) AS geom
         FROM tunnel_thematic_surface WHERE tunnel_hollow_space_id = co_id
     UNION ALL
     -- interior tunnel installation geometry
-      SELECT citydb_pkg.get_envelope_tunnel_inst(id, set_envelope) AS geom
+      SELECT get_envelope_tunnel_inst(id, set_envelope) AS geom
         FROM tunnel_installation WHERE tunnel_hollow_space_id = co_id
     UNION ALL
     -- tunnel furniture geometry
-      SELECT citydb_pkg.get_envelope_tunnel_furniture(id, set_envelope) AS geom
+      SELECT get_envelope_tunnel_furniture(id, set_envelope) AS geom
         FROM tunnel_furniture WHERE tunnel_hollow_space_id = co_id
   ) g;
 
@@ -1909,7 +1909,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_tunnel_hspace": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_tunnel_hspace": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -1929,7 +1929,7 @@ LANGUAGE plpgsql STRICT;
 * @return
 * aggregated envelope geometry of city object
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_cityobject(
+CREATE OR REPLACE FUNCTION get_envelope_cityobject(
   co_id INTEGER,
   objclass_id INTEGER DEFAULT 0,
   set_envelope INTEGER DEFAULT 0
@@ -1950,25 +1950,25 @@ BEGIN
   END IF;
 
   CASE
-    WHEN class_id = 4 THEN envelope := citydb_pkg.get_envelope_land_use(co_id, set_envelope);
-    WHEN class_id = 5 THEN envelope := citydb_pkg.get_envelope_generic_cityobj(co_id, set_envelope);
-    WHEN class_id = 7 THEN envelope := citydb_pkg.get_envelope_solitary_veg_obj(co_id, set_envelope);
-    WHEN class_id = 8 THEN envelope := citydb_pkg.get_envelope_plant_cover(co_id, set_envelope);
-    WHEN class_id = 9 THEN envelope := citydb_pkg.get_envelope_waterbody(co_id, set_envelope);
+    WHEN class_id = 4 THEN envelope := get_envelope_land_use(co_id, set_envelope);
+    WHEN class_id = 5 THEN envelope := get_envelope_generic_cityobj(co_id, set_envelope);
+    WHEN class_id = 7 THEN envelope := get_envelope_solitary_veg_obj(co_id, set_envelope);
+    WHEN class_id = 8 THEN envelope := get_envelope_plant_cover(co_id, set_envelope);
+    WHEN class_id = 9 THEN envelope := get_envelope_waterbody(co_id, set_envelope);
     WHEN class_id = 11 OR
          class_id = 12 OR
-         class_id = 13 THEN envelope := citydb_pkg.get_envelope_waterbnd_surface(co_id, set_envelope);
-    WHEN class_id = 14 THEN envelope := citydb_pkg.get_envelope_relief_feature(co_id, set_envelope);
+         class_id = 13 THEN envelope := get_envelope_waterbnd_surface(co_id, set_envelope);
+    WHEN class_id = 14 THEN envelope := get_envelope_relief_feature(co_id, set_envelope);
     WHEN class_id = 16 OR
          class_id = 17 OR
          class_id = 18 OR
-         class_id = 19 THEN envelope := citydb_pkg.get_envelope_relief_component(co_id, class_id, set_envelope);
-    WHEN class_id = 21 THEN envelope := citydb_pkg.get_envelope_city_furniture(co_id, set_envelope);
-    WHEN class_id = 23 THEN envelope := citydb_pkg.get_envelope_cityobjectgroup(co_id, set_envelope, 1);
+         class_id = 19 THEN envelope := get_envelope_relief_component(co_id, class_id, set_envelope);
+    WHEN class_id = 21 THEN envelope := get_envelope_city_furniture(co_id, set_envelope);
+    WHEN class_id = 23 THEN envelope := get_envelope_cityobjectgroup(co_id, set_envelope, 1);
     WHEN class_id = 25 OR
-         class_id = 26 THEN envelope := citydb_pkg.get_envelope_building(co_id, set_envelope);
+         class_id = 26 THEN envelope := get_envelope_building(co_id, set_envelope);
     WHEN class_id = 27 OR
-         class_id = 28 THEN envelope := citydb_pkg.get_envelope_building_inst(co_id, set_envelope);
+         class_id = 28 THEN envelope := get_envelope_building_inst(co_id, set_envelope);
     WHEN class_id = 30 OR
          class_id = 31 OR
          class_id = 32 OR
@@ -1977,21 +1977,21 @@ BEGIN
          class_id = 35 OR
          class_id = 36 OR
          class_id = 60 OR
-         class_id = 61 THEN envelope := citydb_pkg.get_envelope_thematic_surface(co_id, set_envelope);
+         class_id = 61 THEN envelope := get_envelope_thematic_surface(co_id, set_envelope);
     WHEN class_id = 38 OR
-         class_id = 39 THEN envelope := citydb_pkg.get_envelope_opening(co_id, set_envelope);
-    WHEN class_id = 40 THEN envelope := citydb_pkg.get_envelope_building_furn(co_id, set_envelope);
-    WHEN class_id = 41 THEN envelope := citydb_pkg.get_envelope_room(co_id, set_envelope);
+         class_id = 39 THEN envelope := get_envelope_opening(co_id, set_envelope);
+    WHEN class_id = 40 THEN envelope := get_envelope_building_furn(co_id, set_envelope);
+    WHEN class_id = 41 THEN envelope := get_envelope_room(co_id, set_envelope);
     WHEN class_id = 43 OR
          class_id = 44 OR
          class_id = 45 OR
-         class_id = 46 THEN envelope := citydb_pkg.get_envelope_trans_complex(co_id, set_envelope);
+         class_id = 46 THEN envelope := get_envelope_trans_complex(co_id, set_envelope);
     WHEN class_id = 47 OR
-         class_id = 48 THEN envelope := citydb_pkg.get_envelope_traffic_area(co_id, set_envelope);
+         class_id = 48 THEN envelope := get_envelope_traffic_area(co_id, set_envelope);
     WHEN class_id = 63 OR
-         class_id = 64 THEN envelope := citydb_pkg.get_envelope_bridge(co_id, set_envelope);
+         class_id = 64 THEN envelope := get_envelope_bridge(co_id, set_envelope);
     WHEN class_id = 65 OR
-         class_id = 66 THEN envelope := citydb_pkg.get_envelope_bridge_inst(co_id, set_envelope);
+         class_id = 66 THEN envelope := get_envelope_bridge_inst(co_id, set_envelope);
     WHEN class_id = 68 OR
          class_id = 69 OR
          class_id = 70 OR
@@ -2000,16 +2000,16 @@ BEGIN
          class_id = 73 OR
          class_id = 74 OR
          class_id = 75 OR
-         class_id = 76 THEN envelope := citydb_pkg.get_envelope_bridge_them_srf(co_id, set_envelope);
+         class_id = 76 THEN envelope := get_envelope_bridge_them_srf(co_id, set_envelope);
     WHEN class_id = 78 OR
-         class_id = 79 THEN envelope := citydb_pkg.get_envelope_bridge_opening(co_id, set_envelope);
-    WHEN class_id = 80 THEN envelope := citydb_pkg.get_envelope_bridge_furniture(co_id, set_envelope);
-    WHEN class_id = 81 THEN envelope := citydb_pkg.get_envelope_bridge_room(co_id, set_envelope);
-    WHEN class_id = 82 THEN envelope := citydb_pkg.get_envelope_bridge_const_elem(co_id, set_envelope);
+         class_id = 79 THEN envelope := get_envelope_bridge_opening(co_id, set_envelope);
+    WHEN class_id = 80 THEN envelope := get_envelope_bridge_furniture(co_id, set_envelope);
+    WHEN class_id = 81 THEN envelope := get_envelope_bridge_room(co_id, set_envelope);
+    WHEN class_id = 82 THEN envelope := get_envelope_bridge_const_elem(co_id, set_envelope);
     WHEN class_id = 84 OR
-         class_id = 85 THEN envelope := citydb_pkg.get_envelope_tunnel(co_id, set_envelope);
+         class_id = 85 THEN envelope := get_envelope_tunnel(co_id, set_envelope);
     WHEN class_id = 86 OR
-         class_id = 87 THEN envelope := citydb_pkg.get_envelope_tunnel_inst(co_id, set_envelope);
+         class_id = 87 THEN envelope := get_envelope_tunnel_inst(co_id, set_envelope);
     WHEN class_id = 89 OR
          class_id = 90 OR
          class_id = 91 OR
@@ -2018,11 +2018,11 @@ BEGIN
          class_id = 94 OR
          class_id = 95 OR
          class_id = 96 OR
-         class_id = 97 THEN envelope := citydb_pkg.get_envelope_tunnel_them_srf(co_id, set_envelope);
+         class_id = 97 THEN envelope := get_envelope_tunnel_them_srf(co_id, set_envelope);
     WHEN class_id = 99 OR
-         class_id = 100 THEN envelope := citydb_pkg.get_envelope_tunnel_opening(co_id, set_envelope);
-    WHEN class_id = 101 THEN envelope := citydb_pkg.get_envelope_tunnel_furniture(co_id, set_envelope);
-    WHEN class_id = 102 THEN envelope := citydb_pkg.get_envelope_tunnel_hspace(co_id, set_envelope);
+         class_id = 100 THEN envelope := get_envelope_tunnel_opening(co_id, set_envelope);
+    WHEN class_id = 101 THEN envelope := get_envelope_tunnel_furniture(co_id, set_envelope);
+    WHEN class_id = 102 THEN envelope := get_envelope_tunnel_hspace(co_id, set_envelope);
   ELSE
     RAISE NOTICE 'Can not get envelope of object with ID % and objectclass_id %.', co_id, class_id;
   END CASE;
@@ -2031,7 +2031,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_cityobject": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_cityobject": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -2048,7 +2048,7 @@ LANGUAGE plpgsql STRICT;
 * set_envelope  if 1 (default = 0) the envelope column is updated
 * only_if_null  if 1 (default) only empty rows of envelope column are updated
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope_cityobjects(
+CREATE OR REPLACE FUNCTION get_envelope_cityobjects(
   objclass_id INTEGER DEFAULT 0,
   set_envelope INTEGER DEFAULT 0,
   only_if_null INTEGER DEFAULT 1
@@ -2058,28 +2058,28 @@ DECLARE
   bbox GEOMETRY;
 BEGIN
   IF set_envelope = 1 AND only_if_null <> 0 THEN
-    RETURN citydb_pkg.set_envelope_cityobjects_if_null(objclass_id);
+    RETURN set_envelope_cityobjects_if_null(objclass_id);
   END IF;
 
   IF objclass_id <> 0 THEN
-    SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+    SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
       -- cityobject geometry
-      SELECT citydb_pkg.get_envelope_cityobject(id, objectclass_id, set_envelope) AS geom
+      SELECT get_envelope_cityobject(id, objectclass_id, set_envelope) AS geom
         FROM cityobject WHERE objectclass_id = objclass_id
     ) g;    
   ELSE
     -- first: work on top-level features not being groups
-    SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+    SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
       -- top-level feature geometry
-      SELECT citydb_pkg.get_envelope_cityobject(id, objectclass_id, set_envelope) AS geom
+      SELECT get_envelope_cityobject(id, objectclass_id, set_envelope) AS geom
         FROM cityobject 
         WHERE objectclass_id IN (4, 5, 7, 8, 9, 14, 21, 25, 26, 42, 43, 44, 45, 46, 63, 64, 84, 85)
     ) g;
 
     -- second: work on city object groups
-    SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+    SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
       -- cityobject group
-      SELECT citydb_pkg.get_envelope_cityobjectgroup(id, set_envelope, 0) AS geom
+      SELECT get_envelope_cityobjectgroup(id, set_envelope, 0) AS geom
         FROM cityobject WHERE objectclass_id = 23
       -- current envelope
       UNION ALL
@@ -2087,9 +2087,9 @@ BEGIN
     ) g;
 
     -- third: work on remaining nested features not being groups
-    SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+    SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
       -- nested feature geometry
-      SELECT citydb_pkg.get_envelope_cityobject(id, objectclass_id, set_envelope) AS geom
+      SELECT get_envelope_cityobject(id, objectclass_id, set_envelope) AS geom
         FROM cityobject WHERE envelope IS NULL AND objectclass_id <> 23
       -- current envelope
       UNION ALL
@@ -2101,7 +2101,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.get_envelope_cityobjects": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "get_envelope_cityobjects": %', SQLERRM;
       RETURN NULL;
 END;
 $$
@@ -2117,7 +2117,7 @@ LANGUAGE plpgsql STRICT;
 * @param        @description
 * objclass_id   if 0 functions runs against every city object
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.set_envelope_cityobjects_if_null(
+CREATE OR REPLACE FUNCTION set_envelope_cityobjects_if_null(
   objclass_id INTEGER DEFAULT 0
   ) RETURNS GEOMETRY AS
 $$
@@ -2125,24 +2125,24 @@ DECLARE
   bbox GEOMETRY;
 BEGIN
   IF objclass_id <> 0 THEN
-    SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+    SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
       -- cityobject geometry
-      SELECT citydb_pkg.get_envelope_cityobject(id, objectclass_id, 1) AS geom
+      SELECT get_envelope_cityobject(id, objectclass_id, 1) AS geom
         FROM cityobject WHERE envelope IS NULL AND objectclass_id = objclass_id
     ) g;    
   ELSE
     -- first: work on top-level features not being groups
-    SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+    SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
       -- top-level feature geometry
-      SELECT citydb_pkg.get_envelope_cityobject(id, objectclass_id, 1) AS geom
+      SELECT get_envelope_cityobject(id, objectclass_id, 1) AS geom
         FROM cityobject WHERE envelope IS NULL 
           AND objectclass_id IN (4, 5, 7, 8, 9, 14, 21, 25, 26, 42, 43, 44, 45, 46, 63, 64, 84, 85)
     ) g;
 
     -- second: work on city object groups
-    SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+    SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
       -- cityobject group
-      SELECT citydb_pkg.get_envelope_cityobjectgroup(id, 1, 0) AS geom
+      SELECT get_envelope_cityobjectgroup(id, 1, 0) AS geom
         FROM cityobject WHERE envelope IS NULL AND objectclass_id = 23
       -- current envelope
       UNION ALL
@@ -2150,9 +2150,9 @@ BEGIN
     ) g;
 
     -- third: work on remaining nested features not being groups
-    SELECT citydb_pkg.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
+    SELECT box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
       -- nested feature geometry
-      SELECT citydb_pkg.get_envelope_cityobject(id, objectclass_id, 1) AS geom
+      SELECT get_envelope_cityobject(id, objectclass_id, 1) AS geom
         FROM cityobject WHERE envelope IS NULL AND objectclass_id <> 23
       -- current envelope
       UNION ALL
@@ -2164,7 +2164,7 @@ BEGIN
 
   EXCEPTION
     WHEN OTHERS THEN
-      RAISE NOTICE 'An error occurred when executing function "citydb_pkg.set_envelope_cityobjects_if_null": %', SQLERRM;
+      RAISE NOTICE 'An error occurred when executing function "set_envelope_cityobjects_if_null": %', SQLERRM;
       RETURN NULL;
 END;
 $$

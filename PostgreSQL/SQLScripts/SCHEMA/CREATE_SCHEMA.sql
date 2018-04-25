@@ -50,10 +50,14 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 --// create TABLES, SEQUENCES, CONSTRAINTS, INDEXES
 \echo
 \echo 'Setting up database schema ...'
-\i SCHEMA/SCHEMA.sql
+\i SCHEMA.sql
 
 --// fill tables OBJECTCLASS
-\i UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
+\i OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
+
+--// create schema FUNCTIONS
+\i OBJECTCLASS/OBJCLASS.sql
+\i ENVELOPE/ENVELOPE.sql
 
 \echo
 \echo 'Created schema' :target '.'
