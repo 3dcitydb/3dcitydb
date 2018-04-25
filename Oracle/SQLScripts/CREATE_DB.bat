@@ -26,7 +26,7 @@ cd /d %~dp0
 :: Run CREATE_DB.sql to create the 3D City Database instance
 
 :: Opt1: This works for me
-sqlplus -S "%USERNAME%/%PASSWORD%@%HOST%:%PORT%/%SID%" @CREATE_DB.sql "%SRSNO%" "%GMLSRSNAME%" "%VERSIONING%" "%DBVERSION%"
+sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @CREATE_DB.sql "%SRSNO%" "%GMLSRSNAME%" "%VERSIONING%" "%DBVERSION%"
 
 :: Opt2: -Preferable, as password and username are prompted by sqlplus, not working for me
 ::sqlplus "%HOST%:%PORT%/%SID%" @CREATE_DB.sql "%SRSNO%" "%GMLSRSNAME%" "%VERSIONING%" "%DBVERSION%"
