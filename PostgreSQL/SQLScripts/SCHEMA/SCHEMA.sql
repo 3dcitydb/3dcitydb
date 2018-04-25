@@ -4976,8 +4976,6 @@ CREATE TABLE aggregation_info(
 
 );
 -- ddl-end --
-ALTER TABLE aggregation_info OWNER TO postgres;
--- ddl-end --
 
 -- object: cityobject_member_fk | type: CONSTRAINT --
 -- ALTER TABLE cityobject_member DROP CONSTRAINT IF EXISTS cityobject_member_fk CASCADE;
@@ -7030,16 +7028,17 @@ REFERENCES schema (id) MATCH FULL
 ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
--- object: aggregation_info_fkx1 | type: CONSTRAINT --
--- ALTER TABLE aggregation_info DROP CONSTRAINT IF EXISTS aggregation_info_fkx1 CASCADE;
+-- object: aggregation_info_fk1 | type: CONSTRAINT --
+-- ALTER TABLE aggregation_info DROP CONSTRAINT IF EXISTS aggregation_info_fk1 CASCADE;
 ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_fk1 FOREIGN KEY (child_id)
 REFERENCES objectclass (id) MATCH FULL
 ON DELETE CASCADE ON UPDATE NO ACTION;
 -- ddl-end --
 
--- object: aggregation_info_fkx2 | type: CONSTRAINT --
--- ALTER TABLE aggregation_info DROP CONSTRAINT IF EXISTS aggregation_info_fkx2 CASCADE;
+-- object: aggregation_info_fk2 | type: CONSTRAINT --
+-- ALTER TABLE aggregation_info DROP CONSTRAINT IF EXISTS aggregation_info_fk2 CASCADE;
 ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_fk2 FOREIGN KEY (parent_id)
 REFERENCES objectclass (id) MATCH FULL
 ON DELETE CASCADE ON UPDATE NO ACTION;
 -- ddl-end --
+

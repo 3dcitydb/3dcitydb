@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="14395,10135" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="14394,10134" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -6083,7 +6083,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="aggregation_info">
 	<schema name="citydb"/>
-	<role name="postgres"/>
 	<tag name="global"/>
 	<position x="18860" y="13380"/>
 	<column name="child_id" not-null="true">
