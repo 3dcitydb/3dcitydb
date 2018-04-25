@@ -251,6 +251,7 @@ AS
   IS
     tab_name VARCHAR2(30);
   BEGIN
+    -- entries into user_sdo_geom_metadata with bounding volume with 10000km extent for x,y and 11km for z
     EXECUTE IMMEDIATE 'ALTER SESSION set NLS_TERRITORY=''AMERICA''';
     EXECUTE IMMEDIATE 'ALTER SESSION set NLS_LANGUAGE=''AMERICAN''';
 
@@ -337,6 +338,8 @@ AS
       END IF;
     END LOOP;
     dbms_output.put_line('Spatial metadata sucessfully set for ' || schema_name);
+
+    COMMIT;
   END;
 
 END citydb_constraint;

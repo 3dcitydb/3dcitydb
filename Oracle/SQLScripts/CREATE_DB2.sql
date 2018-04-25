@@ -47,12 +47,19 @@ COMMIT;
 --// activate constraints
 @@SCHEMA/CONSTRAINTS/CONSTRAINTS.sql
 
+--// citydb packages
+@@CREATE_CITYDB_PKG.sql
+
+--// create objectclass instances and functions
+@@SCHEMA/OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
+@@SCHEMA/OBJECTCLASS/OBJCLASS.sql
+
+--// create spatial metadata
+exec citydb_constraint.set_schema_sdo_metadata(USER);
+
 --// build indexes
 @@SCHEMA/INDEXES/SIMPLE_INDEX.sql
 @@SCHEMA/INDEXES/SPATIAL_INDEX.sql
-
---// create objectclass instances
-@@UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
 
 --// (possibly) activate versioning
 BEGIN
@@ -68,9 +75,6 @@ column mc2 new_value VERSIONBATCHFILE2 print
 select :VERSIONBATCHFILE mc2 from dual;
 
 START &VERSIONBATCHFILE2
-
---// citydb packages
-@@CREATE_CITYDB_PKG.sql
 
 SHOW ERRORS;
 COMMIT;
