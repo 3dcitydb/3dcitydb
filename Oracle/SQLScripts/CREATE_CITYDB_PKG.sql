@@ -36,6 +36,7 @@ SELECT 'Creating packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx''
 @@PL_SQL/CITYDB_PKG/ENVELOPE/ENVELOPE.sql;
 
 BEGIN
+  :GEORASTER_SUPPORT := :GEORASTER_SUPPORT;
   IF (upper('&DBVERSION')='S' and :GEORASTER_SUPPORT <> 0) THEN
     :DELETE_FILE := 'PL_SQL/CITYDB_PKG/DELETE/DELETE.sql';
   ELSE

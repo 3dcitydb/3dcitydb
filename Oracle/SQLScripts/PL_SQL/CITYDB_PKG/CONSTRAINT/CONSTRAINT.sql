@@ -338,8 +338,6 @@ AS
       END IF;
     END LOOP;
     dbms_output.put_line('Spatial metadata sucessfully set for ' || schema_name);
-
-    COMMIT;
   END;
 
 END citydb_constraint;

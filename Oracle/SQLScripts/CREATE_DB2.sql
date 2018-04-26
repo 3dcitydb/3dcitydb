@@ -56,6 +56,7 @@ COMMIT;
 
 --// create spatial metadata
 exec citydb_constraint.set_schema_sdo_metadata(USER);
+COMMIT;
 
 --// build indexes
 @@SCHEMA/INDEXES/SIMPLE_INDEX.sql
