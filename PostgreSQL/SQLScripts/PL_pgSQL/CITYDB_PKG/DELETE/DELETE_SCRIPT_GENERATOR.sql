@@ -1932,7 +1932,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.create_array_delete_member_fct(
 $$
 DECLARE
   create_path TEXT[] := $3;
-  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||$2||'.delete_' ||citydb_pkg.get_short_name($1, $2)|| E'_with_members(int[]) RETURNS SETOF int AS\n$body$';
+  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||$2||'.delete_' ||citydb_pkg.get_short_name($1, $2)|| E'_with_members(pids int[]) RETURNS SETOF int AS\n$body$';
   declare_block TEXT := E'\nDECLARE\n  deleted_ids int[] := ''{}'';';
   pre_block TEXT := '';
 BEGIN
@@ -1992,7 +1992,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.create_delete_member_fct(
 $$
 DECLARE
   create_path TEXT[] := $3;
-  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||$2||'.delete_' ||citydb_pkg.get_short_name($1, $2)|| E'_with_members(int) RETURNS int AS\n$body$';
+  ddl_command TEXT := 'CREATE OR REPLACE FUNCTION '||$2||'.delete_' ||citydb_pkg.get_short_name($1, $2)|| E'_with_members(pid int) RETURNS int AS\n$body$';
   declare_block TEXT := E'\nDECLARE\n  deleted_id INTEGER;';
   pre_block TEXT := '';
 BEGIN
