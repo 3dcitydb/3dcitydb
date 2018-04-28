@@ -570,7 +570,7 @@ END;
 $BODY$
 LANGUAGE plpgsql STRICT;
 
-CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_appearances(
+CREATE OR REPLACE FUNCTION cleanup_appearances(
   only_global int DEFAULT 1
   ) RETURNS SETOF int AS
 $$
@@ -584,7 +584,7 @@ BEGIN
   -- surface data which does not have a valid texture parameterization
   -- any more.
   PERFORM
-    citydb_pkg.delete_surface_data(array_agg(s.id))
+    delete_surface_data(array_agg(s.id))
   FROM
     surface_data s 
   LEFT OUTER JOIN
