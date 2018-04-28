@@ -58,6 +58,7 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 --// create schema FUNCTIONS
 \i OBJECTCLASS/OBJCLASS.sql
 \i ENVELOPE/ENVELOPE.sql
+\i DELETE/DELETE.sql
 
 \echo
 \echo 'Created schema' :target '.'

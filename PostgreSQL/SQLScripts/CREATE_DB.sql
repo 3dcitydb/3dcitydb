@@ -66,6 +66,7 @@ SET search_path TO citydb, :current_path;
 --// create schema FUNCTIONS
 \i SCHEMA/OBJECTCLASS/OBJCLASS.sql
 \i SCHEMA/ENVELOPE/ENVELOPE.sql
+\i SCHEMA/DELETE/DELETE.sql
 
 --// create CITYDB_PKG (additional schema with PL/pgSQL-Functions)
 \echo
