@@ -302,7 +302,8 @@ AS
       c2.table_name = tab_name
       AND c2.owner = schema_name
       AND c.table_name <> ref_parent_to_exclude
-      AND c.constraint_type = 'R';
+      AND c.constraint_type = 'R'
+      AND is_child_ref(a.column_name, c.table_name, tab_name, schema_name) = 0;
 
     RETURN;
   END;

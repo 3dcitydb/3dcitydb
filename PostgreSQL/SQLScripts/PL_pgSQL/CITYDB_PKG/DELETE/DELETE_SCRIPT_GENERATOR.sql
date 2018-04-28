@@ -228,7 +228,8 @@ JOIN
 WHERE
   c.confrelid = ($3 || '.' || $1)::regclass::oid
   AND c.conrelid <> ($3 || '.' || $2)::regclass::oid
-  AND c.contype = 'f';
+  AND c.contype = 'f'
+  AND citydb_pkg.is_child_ref(a.attname, c.conrelid, ($3 || '.' || $1)::regclass::oid) = 0;
 $$
 LANGUAGE sql STABLE STRICT;
 
