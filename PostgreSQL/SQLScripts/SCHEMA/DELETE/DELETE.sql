@@ -7248,22 +7248,22 @@ BEGIN
       cityobject_member n1
       ON n1.cityobject_id = a.a_id
     LEFT JOIN
-      generalization n2
-      ON n2.generalizes_to_id = a.a_id
+      cityobjectgroup n2
+      ON n2.parent_cityobject_id = a.a_id
     LEFT JOIN
       generalization n3
-      ON n3.cityobject_id = a.a_id     
+      ON n3.cityobject_id = a.a_id
     LEFT JOIN
-      cityobjectgroup n4
-      ON n4.parent_cityobject_id = a.a_id
+      generalization n4
+      ON n4.generalizes_to_id = a.a_id
     LEFT JOIN
       group_to_cityobject n5
       ON n5.cityobject_id = a.a_id
     WHERE
       n1.cityobject_id IS NULL
-      AND n2.generalizes_to_id IS NULL
+      AND n2.parent_cityobject_id IS NULL
       AND n3.cityobject_id IS NULL
-      AND n4.parent_cityobject_id IS NULL
+      AND n4.generalizes_to_id IS NULL
       AND n5.cityobject_id IS NULL;
   END IF;
 
@@ -7307,22 +7307,22 @@ BEGIN
       cityobject_member n1
       ON n1.cityobject_id = a.a_id
     LEFT JOIN
-      generalization n2
-      ON n2.generalizes_to_id = a.a_id
+      cityobjectgroup n2
+      ON n2.parent_cityobject_id = a.a_id
     LEFT JOIN
       generalization n3
-      ON n3.cityobject_id = a.a_id     
+      ON n3.cityobject_id = a.a_id
     LEFT JOIN
-      cityobjectgroup n4
-      ON n4.parent_cityobject_id = a.a_id
+      generalization n4
+      ON n4.generalizes_to_id = a.a_id
     LEFT JOIN
       group_to_cityobject n5
       ON n5.cityobject_id = a.a_id
     WHERE
       n1.cityobject_id IS NULL
-      AND n2.generalizes_to_id IS NULL
+      AND n2.parent_cityobject_id IS NULL
       AND n3.cityobject_id IS NULL
-      AND n4.parent_cityobject_id IS NULL
+      AND n4.generalizes_to_id IS NULL
       AND n5.cityobject_id IS NULL;
   END IF;
 
@@ -7368,23 +7368,23 @@ BEGIN
       group_to_cityobject n1
       ON n1.cityobject_id = a.a_id
     LEFT JOIN
-      generalization n2
-      ON n2.generalizes_to_id = a.a_id
+      cityobject_member n2
+      ON n2.cityobject_id = a.a_id
     LEFT JOIN
-      generalization n3
-      ON n3.cityobject_id = a.a_id
+      cityobjectgroup n3
+      ON n3.parent_cityobject_id = a.a_id
     LEFT JOIN
-      cityobjectgroup n4
-      ON n4.parent_cityobject_id = a.a_id
+      generalization n4
+      ON n4.cityobject_id = a.a_id
     LEFT JOIN
-      cityobject_member n5
-      ON n5.cityobject_id = a.a_id
+      generalization n5
+      ON n5.generalizes_to_id = a.a_id
     WHERE
       n1.cityobject_id IS NULL
-      AND n2.generalizes_to_id IS NULL
-      AND n3.cityobject_id IS NULL
-      AND n4.parent_cityobject_id IS NULL
-      AND n5.cityobject_id IS NULL;
+      AND n2.cityobject_id IS NULL
+      AND n3.parent_cityobject_id IS NULL
+      AND n4.cityobject_id IS NULL
+      AND n5.generalizes_to_id IS NULL;
   END IF;
 
   -- delete cityobjectgroups
@@ -7427,23 +7427,23 @@ BEGIN
       group_to_cityobject n1
       ON n1.cityobject_id = a.a_id
     LEFT JOIN
-      generalization n2
-      ON n2.generalizes_to_id = a.a_id
+      cityobject_member n2
+      ON n2.cityobject_id = a.a_id
     LEFT JOIN
-      generalization n3
-      ON n3.cityobject_id = a.a_id
+      cityobjectgroup n3
+      ON n3.parent_cityobject_id = a.a_id
     LEFT JOIN
-      cityobjectgroup n4
-      ON n4.parent_cityobject_id = a.a_id
+      generalization n4
+      ON n4.cityobject_id = a.a_id
     LEFT JOIN
-      cityobject_member n5
-      ON n5.cityobject_id = a.a_id
+      generalization n5
+      ON n5.generalizes_to_id = a.a_id
     WHERE
       n1.cityobject_id IS NULL
-      AND n2.generalizes_to_id IS NULL
-      AND n3.cityobject_id IS NULL
-      AND n4.parent_cityobject_id IS NULL
-      AND n5.cityobject_id IS NULL;
+      AND n2.cityobject_id IS NULL
+      AND n3.parent_cityobject_id IS NULL
+      AND n4.cityobject_id IS NULL
+      AND n5.generalizes_to_id IS NULL;
   END IF;
 
   -- delete cityobjectgroups

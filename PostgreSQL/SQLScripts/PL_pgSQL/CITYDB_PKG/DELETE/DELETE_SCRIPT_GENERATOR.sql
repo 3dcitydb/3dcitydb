@@ -217,22 +217,42 @@ CREATE OR REPLACE FUNCTION citydb_pkg.query_ref_tables_and_columns(
   ) RETURNS RECORD AS
 $$
 SELECT
-  array_agg(c.conrelid::regclass::text) AS ref_tables,
-  array_agg(a.attname::text) AS ref_columns
+  array_agg(c.conrelid::regclass::text ORDER BY c.conrelid::regclass::text) AS n_table_name,
+  array_agg(a.attname::text ORDER BY c.conrelid::regclass::text, a.attname::text) AS n_fk_column_name
 FROM
   pg_constraint c
 JOIN
   pg_attribute a
   ON a.attrelid = c.conrelid
  AND a.attnum = ANY (c.conkey)
+LEFT JOIN LATERAL (
+  SELECT
+    mn.confrelid AS m_table_name,
+    mna.attname AS m_fk_column_name
+  FROM
+    pg_constraint mn
+  JOIN
+    pg_attribute mna
+    ON mna.attrelid = mn.conrelid
+   AND mna.attnum = ANY (mn.conkey)
+  JOIN
+    pg_constraint pk
+    ON pk.conrelid = mn.conrelid
+   AND pk.conkey @> (c.conkey || mn.conkey || '{}')
+  WHERE
+    mn.conrelid = c.conrelid
+    AND mn.confrelid <> c.conrelid
+    AND mn.contype = 'f'
+    AND pk.contype = 'p'
+  ) m ON (true)
 WHERE
   c.confrelid = ($3 || '.' || $1)::regclass::oid
   AND c.conrelid <> ($3 || '.' || $2)::regclass::oid
   AND c.contype = 'f'
-  AND citydb_pkg.is_child_ref(a.attname, c.conrelid, ($3 || '.' || $1)::regclass::oid) = 0;
+  AND (m.m_fk_column_name IS NULL OR a.attname = m.m_fk_column_name)
+  AND (c.confdeltype = 'n' OR (c.confdeltype = 'c' AND m.m_table_name IS NOT NULL));
 $$
 LANGUAGE sql STABLE STRICT;
-
 
 /*****************************
 * 1. Referencing tables

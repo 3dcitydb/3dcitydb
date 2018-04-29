@@ -298,12 +298,50 @@ AS
       all_constraints c2
       ON c2.constraint_name = c.r_constraint_name
      AND c2.owner = c.owner
+    LEFT OUTER JOIN (
+      SELECT
+        mn.table_name,
+        mn.owner,
+        mn2.table_name AS m_table_name,
+        mna.column_name AS m_fk_column_name
+      FROM
+        all_constraints mn
+      JOIN
+        all_cons_columns mna
+        ON mna.constraint_name = mn.constraint_name
+       AND mna.table_name = mn.table_name
+       AND mna.owner = mn.owner
+      JOIN 
+        all_constraints mnp
+        ON mnp.table_name = mn.table_name
+       AND mnp.owner = mn.owner
+      JOIN
+        all_cons_columns mnpa
+        ON mnpa.constraint_name = mnp.constraint_name
+       AND mnpa.table_name = mn.table_name
+       AND mnpa.owner = mn.owner
+       AND mnpa.column_name = mna.column_name
+      JOIN
+        all_constraints mn2
+        ON mn2.constraint_name = mn.r_constraint_name
+       AND mn2.owner = mn.owner
+      WHERE
+        mn2.table_name <> mn.table_name
+        AND mn.constraint_type = 'R'
+        AND mnp.constraint_type = 'P'
+      ) m
+      ON m.table_name = c.table_name
+     AND m.owner = c.owner
     WHERE
       c2.table_name = tab_name
       AND c2.owner = schema_name
       AND c.table_name <> ref_parent_to_exclude
       AND c.constraint_type = 'R'
-      AND is_child_ref(a.column_name, c.table_name, tab_name, schema_name) = 0;
+      AND (m.m_fk_column_name IS NULL OR a.column_name = m.m_fk_column_name)
+      AND (c.delete_rule = 'SET NULL' OR (c.delete_rule = 'CASCADE' AND m.m_table_name IS NOT NULL))
+    ORDER BY
+      c.table_name,
+      a.column_name;
 
     RETURN;
   END;
