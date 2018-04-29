@@ -332,12 +332,12 @@ AS
       ) m
       ON m.table_name = c.table_name
      AND m.owner = c.owner
+     AND a.column_name = m.m_fk_column_name
     WHERE
-      c2.table_name = tab_name
-      AND c2.owner = schema_name
-      AND c.table_name <> ref_parent_to_exclude
+      c2.table_name = 'CITYOBJECT'
+      AND c2.owner = USER
+      AND c.table_name <> 'GROUP_TO_CITYOBJECT'
       AND c.constraint_type = 'R'
-      AND (m.m_fk_column_name IS NULL OR a.column_name = m.m_fk_column_name)
       AND (c.delete_rule = 'SET NULL' OR (c.delete_rule = 'CASCADE' AND m.m_table_name IS NOT NULL))
     ORDER BY
       c.table_name,
