@@ -6,7 +6,6 @@
       <name>BRIDGE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -16,7 +15,6 @@
       <name>ADDRESS_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -24,42 +22,6 @@
     </column>
   </columns>
   <constraints>
-    <constraint class="oracle.javatools.db.PKConstraint">
-      <name>ADDRESS_TO_BRIDGE_PK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>BRIDGE_ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>ADDRESS_TO_BRIDGE</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>ADDRESS_ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>ADDRESS_TO_BRIDGE</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.NameBasedID">
-        <name>ADDRESS_TO_BRIDGE_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>ADDRESS_TO_BRIDGE</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>DEFAULTSCHEMA</schemaName>
-        <type>INDEX</type>
-      </indexID>
-    </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <name>ADDRESS_TO_BRIDGE_FK</name>
       <columnIDs>
@@ -75,7 +37,7 @@
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
-      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <onDeleteAction>CASCADE</onDeleteAction>
       <referenceID class="oracle.javatools.db.NameBasedID">
         <name>ADDRESS_PK</name>
         <parent class="oracle.javatools.db.NameBasedID">
@@ -112,9 +74,45 @@
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
+    <constraint class="oracle.javatools.db.PKConstraint">
+      <name>ADDRESS_TO_BRIDGE_PK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>BRIDGE_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>ADDRESS_TO_BRIDGE</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>ADDRESS_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>ADDRESS_TO_BRIDGE</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <indexID class="oracle.javatools.db.NameBasedID">
+        <name>ADDRESS_TO_BRIDGE_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>ADDRESS_TO_BRIDGE</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
+        <type>INDEX</type>
+      </indexID>
+    </constraint>
   </constraints>
   <indexes>
-    <indexe>
+    <index>
       <name>ADDRESS_TO_BRIDGE_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -126,8 +124,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>ADDRESS_TO_BRIDGE_FKX1</name>
       <columnExpressions>
         <columnExpression>
@@ -139,8 +137,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>ADDRESS_TO_BRIDGE_PK</name>
       <columnExpressions>
         <columnExpression>
@@ -155,7 +153,7 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
-    </indexe>
+    </index>
   </indexes>
   <properties>
     <entry>

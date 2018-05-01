@@ -6,7 +6,6 @@
       <name>SURFACE_DATA_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -49,7 +48,6 @@
       <name>APPEARANCE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -105,7 +103,7 @@
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
-      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <onDeleteAction>CASCADE</onDeleteAction>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -238,7 +236,7 @@
     </constraint>
   </constraints>
   <indexes>
-    <indexe>
+    <index>
       <name>APPEAR_TO_SURFACE_DATA_PK</name>
       <columnExpressions>
         <columnExpression>
@@ -310,8 +308,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>APP_TO_SURF_DATA_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -360,8 +358,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>APP_TO_SURF_DATA_FKX1</name>
       <columnExpressions>
         <columnExpression>
@@ -410,7 +408,7 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
+    </index>
   </indexes>
   <properties>
     <entry>

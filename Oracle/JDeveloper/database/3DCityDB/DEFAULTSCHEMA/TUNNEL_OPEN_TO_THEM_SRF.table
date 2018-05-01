@@ -6,7 +6,6 @@
       <name>TUNNEL_OPENING_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -16,7 +15,6 @@
       <name>TUNNEL_THEMATIC_SURFACE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -39,7 +37,7 @@
         </columnID>
       </columnIDs>
       <enabled>true</enabled>
-      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <onDeleteAction>CASCADE</onDeleteAction>
       <referenceID class="oracle.javatools.db.NameBasedID">
         <name>TUNNEL_OPENING_PK</name>
         <parent class="oracle.javatools.db.NameBasedID">
@@ -114,7 +112,7 @@
     </constraint>
   </constraints>
   <indexes>
-    <indexe>
+    <index>
       <name>TUNNEL_OPEN_TO_THEM_SRF_PK</name>
       <columnExpressions>
         <columnExpression>
@@ -131,8 +129,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>TUN_OPEN_TO_THEM_SRF_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -144,8 +142,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>TUN_OPEN_TO_THEM_SRF_FKX1</name>
       <columnExpressions>
         <columnExpression>
@@ -157,7 +155,7 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
+    </index>
   </indexes>
   <properties>
     <entry>
