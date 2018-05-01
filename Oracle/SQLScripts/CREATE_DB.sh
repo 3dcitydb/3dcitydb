@@ -3,17 +3,11 @@
 # on Oracle Spatial/Locator
 
 # Provide your database details here ------------------------------------------
-export PORT=1521
-export HOST=your_host_address
-export USERNAME=your_username
-export SID=your_SID_or_database_name
 export SQLPLUSBIN=path_to_sqlplus
-export SRSNO=
-export GMLSRSNAME=
-# Database versioning (yes/no)
-export VERSIONING=no 
-# DB Version (S/L) for Oracle Spatial or Oracle Locator
-export DBVERSION=S
+export HOST=your_host_address
+export PORT=1521
+export SID=your_SID_or_database_name
+export USERNAME=your_username
 #------------------------------------------------------------------------------
 
 # add sqlplus to PATH
@@ -22,5 +16,63 @@ export PATH=$PATH:$SQLPLUSBIN
 # cd to path of the shell script
 cd "$( cd "$( dirname "$0" )" && pwd )" > /dev/null
 
-# Run CREATE_DB.sql to create the 3D City Database instance
+# Prompt for DBVERSION --------------------------------------------------------
+test=0
+while [ "$test" = "0" ]; do
+  echo
+  echo 'Which database license are you using? (Oracle Spatial(S)/Oracle Locator(L)): Press ENTER to use default.'
+  read -p "(default DBVERSION=Oracle Spatial(S)): " DBVERSION
+  DBVERSION=${DBVERSION:-S}
+ 
+ # to upper case
+  DBVERSION=$(echo "$DBVERSION" | awk '{print toupper($0)}')
+  
+  if [ "$DBVERSION" = "S" ] || [ "$DBVERSION" = "L" ] ; then
+    test=1
+  else 
+    echo "Illegal input! Enter S or L."  
+  fi
+done
+
+# Prompt for VERSIONING -------------------------------------------------------
+test=0
+while [ "$test" = "0" ]; do
+  echo
+  echo 'Shall versioning be enabled? (yes/no): Press ENTER to use default.'
+  read -p "(default VERSIONING=no): " VERSIONING
+  VERSIONING=${VERSIONING:-no}
+  
+  # to lower case
+  VERSIONING=$(echo "$VERSIONING" | awk '{print tolower($0)}')
+  
+  if [  "$VERSIONING" = "yes" ] || [ "$VERSIONING" = "no" ] ; then
+    test=1
+  else 
+    echo "Illegal input! Enter yes or no."  
+  fi
+done
+
+# Prompt for SRSNO ------------------------------------------------------------
+test=0
+re='^[0-9]+$'
+while [ "$test" = "0" ]; do
+  echo
+  echo 'Please enter a valid SRID (e.g. Berlin: 81989002): Press ENTER to use default.'
+  read -p "(default SRID=81989002): " SRSNO
+  SRSNO=${SRSNO:-81989002}
+  
+  if [[ ! $SRSNO =~ $re ]]; then
+    echo "SRSNO must be numeric. Please retry."  
+  else 
+    test=1
+  fi
+done
+
+# Prompt for GMLSRSNAME -------------------------------------------------------
+echo
+echo 'Please enter the corresponding SRSName to be used in GML exports. Press ENTER to use default.'
+read -p "(default GMLSRSNAME=urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783): " GMLSRSNAME
+GMLSRSNAME=${GMLSRSNAME:-urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783}
+
+# Run CREATE_DB.sql to create the 3D City Database instance -------------------
 sqlplus "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @CREATE_DB.sql "${SRSNO}" "${GMLSRSNAME}" "${VERSIONING}" "${DBVERSION}"
