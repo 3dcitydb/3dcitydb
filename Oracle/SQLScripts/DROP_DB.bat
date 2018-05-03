@@ -11,7 +11,7 @@ set USERNAME=your_username
 ::-----------------------------------------------------------------------------
 
 :: add sqlplus to PATH
-set PATH=%PATH%;%SQLPLUSBIN%
+set PATH=%SQLPLUSBIN%;%PATH%
 
 :: cd to path of the shell script
 cd /d %~dp0
@@ -39,3 +39,5 @@ IF "%res%"=="f" (
 
 :: Run DROP_DB.sql to drop the 3D City Database instance ----------------------
 sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @DROP_DB.sql "%DBVERSION%"
+
+pause
