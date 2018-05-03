@@ -11,7 +11,7 @@ export USERNAME=your_username
 #-------------------------------------------------------------------------------
 
 # add sqlplus to PATH
-export PATH=$PATH:$SQLPLUSBIN
+PATH=$SQLPLUSBIN:$PATH
 
 # cd to path of the shell script
 cd "$( cd "$( dirname "$0" )" && pwd )" > /dev/null
@@ -36,3 +36,7 @@ done
 
 # Run DROP_DB.sql to drop the 3D City Database instance -----------------------
 sqlplus "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @DROP_DB.sql "${DBVERSION}"
+
+echo
+echo 'Press ENTER to quit.'
+read
