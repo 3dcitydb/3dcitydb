@@ -11,7 +11,7 @@ set USERNAME=your_username
 ::-----------------------------------------------------------------------------
 
 :: add sqlplus to PATH
-set PATH=%PATH%;%SQLPLUSBIN%
+set PATH=%SQLPLUSBIN%;%PATH%
 :: cd to path of the shell script
 cd /d %~dp0
 
@@ -92,3 +92,5 @@ IF /i NOT "%var%"=="" (
 
 :: Run CREATE_DB.sql to create the 3D City Database instance ------------------
 sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @CREATE_DB.sql "%SRSNO%" "%GMLSRSNAME%" "%VERSIONING%" "%DBVERSION%"
+
+pause
