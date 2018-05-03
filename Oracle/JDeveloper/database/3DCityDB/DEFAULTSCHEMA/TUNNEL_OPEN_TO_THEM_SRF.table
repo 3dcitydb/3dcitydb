@@ -52,7 +52,7 @@
       <name>TUN_OPEN_TO_THEM_SRF_FK1</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
-          <name>TUNNEL_OPENING_ID</name>
+          <name>TUNNEL_THEMATIC_SURFACE_ID</name>
           <parent class="oracle.javatools.db.NameBasedID">
             <name>TUNNEL_OPEN_TO_THEM_SRF</name>
             <schemaName>DEFAULTSCHEMA</schemaName>
