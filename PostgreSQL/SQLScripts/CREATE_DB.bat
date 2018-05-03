@@ -2,28 +2,31 @@
 :: Shell script to create an instance of the 3D City Database
 :: on PostgreSQL/PostGIS
 
-:: Provide your database details here
-set PGPORT=5432
+:: Provide your database details here -----------------------------------------
+set PGBIN=path_to_psql
 set PGHOST=your_host_address
-set PGUSER=your_username
+set PGPORT=5432
 set CITYDB=your_database
-set PGBIN=path_to_psql.exe
+set PGUSER=your_username
+::-----------------------------------------------------------------------------
+
+:: add PGBIN to PATH
+set PATH=%PGBIN%;%PATH%
 
 :: cd to path of the shell script
 cd /d %~dp0
 
-:: Prompt for srsno
-:srid_retry
+:: Prompt for SRSNO -----------------------------------------------------------
+:srid
 set var=
 echo.
-echo Please enter a valid SRID (e.g., 25832 for ETRS 89 / UTM zone 32N).
-echo Press ENTER to use default.
-set /p var="(default=0): "
+echo Please enter a valid SRID (e.g., 3068 for DHDN/Soldner Berlin): Press ENTER to use default.
+set /p var="(default SRID=3068): "
 
 IF /i NOT "%var%"=="" (
-  set srsno=%var%
+  set SRSNO=%var%
 ) else (
-  set srsno=0
+  set SRSNO=3068
 )
 
 :: SRID is numeric?
@@ -31,20 +34,21 @@ SET "num="&for /f "delims=0123456789" %%i in ("%var%") do set num=%%i
 IF defined num (
   echo.
   echo SRID must be numeric. Please retry.
-  goto:srid_retry
+  goto:srid
 )
 
-:: Prompt for gmlsrsname
+:: Prompt for GMLSRSNAME ------------------------------------------------------
 echo.
-echo Please enter the corresponding SRSName to be used in GML exports (e.g., urn:ogc:def:crs,crs:EPSG::25832,crs:EPSG::7837).
-echo Press ENTER to use default.
-set /p var="(default=urn:ogc:def:crs,crs:EPSG::25832,crs:EPSG::7837): "
+echo Please enter the corresponding SRSName to be used in GML exports. Press ENTER to use default.
+set /p var="(default GMLSRSNAME=urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783): "
 
 IF /i NOT "%var%"=="" (
-  set gmlsrsname=%var%
+  set GMLSRSNAME=%var%
 ) else (
-  set gmlsrsname=urn:ogc:def:crs,crs:EPSG::25832,crs:EPSG::7837
+  set GMLSRSNAME=urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783
 )
 
-:: Run CREATE_DB.sql to create the 3D City Database instance
-"%PGBIN%\psql" -d "%CITYDB%" -f "CREATE_DB.sql" -v srsno="%srsno%" -v gmlsrsname="%gmlsrsname%"
+:: Run CREATE_DB.sql to create the 3D City Database instance ------------------
+psql -d "%CITYDB%" -f "CREATE_DB.sql" -v srsno="%SRSNO%" -v gmlsrsname="%GMLSRSNAME%"
+
+pause
