@@ -11,14 +11,13 @@ export USERNAME=your_username
 #------------------------------------------------------------------------------
 
 # add sqlplus to PATH
-export PATH=$PATH:$SQLPLUSBIN
+PATH=$SQLPLUSBIN:$PATH
 
 # cd to path of the shell script
 cd "$( cd "$( dirname "$0" )" && pwd )" > /dev/null
 
 # Prompt for DBVERSION --------------------------------------------------------
-test=0
-while [ "$test" = "0" ]; do
+while [ 1 ]; do
   echo
   echo 'Which database license are you using? (Oracle Spatial(S)/Oracle Locator(L)): Press ENTER to use default.'
   read -p "(default DBVERSION=Oracle Spatial(S)): " DBVERSION
@@ -28,15 +27,14 @@ while [ "$test" = "0" ]; do
   DBVERSION=$(echo "$DBVERSION" | awk '{print toupper($0)}')
   
   if [ "$DBVERSION" = "S" ] || [ "$DBVERSION" = "L" ] ; then
-    test=1
+    break;
   else 
     echo "Illegal input! Enter S or L."  
   fi
 done
 
 # Prompt for VERSIONING -------------------------------------------------------
-test=0
-while [ "$test" = "0" ]; do
+while [ 1 ]; do
   echo
   echo 'Shall versioning be enabled? (yes/no): Press ENTER to use default.'
   read -p "(default VERSIONING=no): " VERSIONING
@@ -46,33 +44,36 @@ while [ "$test" = "0" ]; do
   VERSIONING=$(echo "$VERSIONING" | awk '{print tolower($0)}')
   
   if [  "$VERSIONING" = "yes" ] || [ "$VERSIONING" = "no" ] ; then
-    test=1
+    break;
   else 
     echo "Illegal input! Enter yes or no."  
   fi
 done
 
 # Prompt for SRSNO ------------------------------------------------------------
-test=0
 re='^[0-9]+$'
-while [ "$test" = "0" ]; do
+while [ 1 ]; do
   echo
   echo 'Please enter a valid SRID (e.g. Berlin: 81989002): Press ENTER to use default.'
   read -p "(default SRID=81989002): " SRSNO
   SRSNO=${SRSNO:-81989002}
   
   if [[ ! $SRSNO =~ $re ]]; then
-    echo "SRSNO must be numeric. Please retry."  
+    echo 'SRID must be numeric. Please retry.'
   else 
-    test=1
+    break;
   fi
 done
 
 # Prompt for GMLSRSNAME -------------------------------------------------------
 echo
 echo 'Please enter the corresponding SRSName to be used in GML exports. Press ENTER to use default.'
-read -p "(default GMLSRSNAME=urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783): " GMLSRSNAME
+read -p '(default GMLSRSNAME=urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783): ' GMLSRSNAME
 GMLSRSNAME=${GMLSRSNAME:-urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783}
 
 # Run CREATE_DB.sql to create the 3D City Database instance -------------------
 sqlplus "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @CREATE_DB.sql "${SRSNO}" "${GMLSRSNAME}" "${VERSIONING}" "${DBVERSION}"
+
+echo
+echo 'Press ENTER to quit.'
+read
