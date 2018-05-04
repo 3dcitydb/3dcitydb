@@ -50,7 +50,7 @@
 *   delete_bridge_them_srf(pid int, objclass_id int) RETURNS int
 *   delete_bridge_them_srf(pids int[], objclass_ids int[]) RETURNS SETOF int
 *   delete_building(pid int, objclass_id int) RETURNS int
-*   delete_buildings(pids int[], objclass_ids int[]) RETURNS SETOF int
+*   delete_building(pids int[], objclass_ids int[]) RETURNS SETOF int
 *   delete_building_furniture(pid int, objclass_id int) RETURNS int
 *   delete_building_furniture(pids int[], objclass_ids int[]) RETURNS SETOF int
 *   delete_building_installation(pid int, objclass_id int) RETURNS int
@@ -6651,7 +6651,7 @@ $BODY$
 DECLARE
   deleted_ids INTEGER[] := '{}';
   class_ids INTEGER[];
-  waterboundary_sur_ids int[] := '{}';
+  waterboundary_srf_ids int[] := '{}';
 BEGIN
   -- fetch objectclass_ids if not set
   IF array_length($2, 1) IS NULL THEN
@@ -6692,16 +6692,16 @@ BEGIN
   SELECT
     array_agg(waterboundary_surface_id)
   INTO
-    waterboundary_sur_ids
+    waterboundary_srf_ids
   FROM
     delete_waterboundary_sur_refs;
 
   -- delete waterboundary_surface(s) not being referenced any more
-  IF -1 = ALL(waterboundary_sur_ids) IS NOT NULL THEN
+  IF -1 = ALL(waterboundary_srf_ids) IS NOT NULL THEN
     PERFORM
       delete_waterbnd_surface(array_agg(a.a_id))
     FROM
-      (SELECT DISTINCT unnest(waterboundary_sur_ids) AS a_id) a
+      (SELECT DISTINCT unnest(waterboundary_srf_ids) AS a_id) a
     LEFT JOIN
       waterbod_to_waterbnd_srf n1
       ON n1.waterboundary_surface_id = a.a_id
@@ -6745,7 +6745,7 @@ $BODY$
 DECLARE
   deleted_id INTEGER;
   class_id INTEGER;
-  waterboundary_sur_ids int[] := '{}';
+  waterboundary_srf_ids int[] := '{}';
 BEGIN
   -- fetch objectclass_id if not set
   IF $2 = 0 THEN
@@ -6778,16 +6778,16 @@ BEGIN
   SELECT
     array_agg(waterboundary_surface_id)
   INTO
-    waterboundary_sur_ids
+    waterboundary_srf_ids
   FROM
     delete_waterboundary_sur_refs;
 
   -- delete waterboundary_surface(s) not being referenced any more
-  IF -1 = ALL(waterboundary_sur_ids) IS NOT NULL THEN
+  IF -1 = ALL(waterboundary_srf_ids) IS NOT NULL THEN
     PERFORM
       delete_waterbnd_surface(array_agg(a.a_id))
     FROM
-      (SELECT DISTINCT unnest(waterboundary_sur_ids) AS a_id) a
+      (SELECT DISTINCT unnest(waterboundary_srf_ids) AS a_id) a
     LEFT JOIN
       waterbod_to_waterbnd_srf n1
       ON n1.waterboundary_surface_id = a.a_id
@@ -7333,6 +7333,9 @@ $BODY$
 LANGUAGE plpgsql STRICT;
 
 
+/***********************************
+* CITY OBJECT GROUP incl. MEMBERS
+***********************************/
 CREATE OR REPLACE FUNCTION delete_cityobjectgroup_with_members(pids integer[])
   RETURNS SETOF integer AS
 $BODY$
