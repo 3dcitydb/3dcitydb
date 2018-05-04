@@ -29,15 +29,11 @@ SET SERVEROUTPUT ON
 SET FEEDBACK ON
 SET VER OFF
 
-prompt
-prompt
-accept SRSNO NUMBER DEFAULT 81989002 PROMPT 'Please enter a valid SRID (Berlin: 81989002): '
-prompt Please enter the corresponding SRSName to be used in GML exports
-accept GMLSRSNAME CHAR DEFAULT 'urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783' prompt '  (Berlin: urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783): '
-accept VERSIONING CHAR DEFAULT 'no' PROMPT 'Shall versioning be enabled (yes/no, default is no): '
-accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Oracle Spatial(S)/Oracle Locator(L), default is S): '
-prompt
-prompt
+-- parse arguments
+DEFINE SRSNO=&1;
+DEFINE GMLSRSNAME=&2;
+DEFINE VERSIONING=&3;
+DEFINE DBVERSION=&4;
 
 VARIABLE SRID NUMBER;
 VARIABLE CS_NAME VARCHAR2(256);
@@ -85,3 +81,6 @@ column mc new_value BATCHFILE2 print
 select :BATCHFILE mc from dual;
 
 START &BATCHFILE2
+
+QUIT;
+/
