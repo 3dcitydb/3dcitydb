@@ -5155,24 +5155,8 @@ AS
       LEFT JOIN
         relief_feat_to_rel_comp n1
         ON n1.relief_component_id = a.COLUMN_VALUE
-      LEFT JOIN
-        breakline_relief n2
-        ON n2.id = a.COLUMN_VALUE
-      LEFT JOIN
-        masspoint_relief n3
-        ON n3.id = a.COLUMN_VALUE
-      LEFT JOIN
-        raster_relief n4
-        ON n4.id = a.COLUMN_VALUE
-      LEFT JOIN
-        tin_relief n5
-        ON n5.id = a.COLUMN_VALUE
       WHERE
-        n1.relief_component_id IS NULL
-        AND n2.id IS NULL
-        AND n3.id IS NULL
-        AND n4.id IS NULL
-        AND n5.id IS NULL;
+        n1.relief_component_id IS NULL;
 
       IF relief_component_pids IS NOT EMPTY THEN
         dummy_ids := delete_relief_component(relief_component_pids);
@@ -5253,24 +5237,8 @@ AS
       LEFT JOIN
         relief_feat_to_rel_comp n1
         ON n1.relief_component_id = a.COLUMN_VALUE
-      LEFT JOIN
-        breakline_relief n2
-        ON n2.id = a.COLUMN_VALUE
-      LEFT JOIN
-        masspoint_relief n3
-        ON n3.id = a.COLUMN_VALUE
-      LEFT JOIN
-        raster_relief n4
-        ON n4.id = a.COLUMN_VALUE
-      LEFT JOIN
-        tin_relief n5
-        ON n5.id = a.COLUMN_VALUE
       WHERE
-        n1.relief_component_id IS NULL
-        AND n2.id IS NULL
-        AND n3.id IS NULL
-        AND n4.id IS NULL
-        AND n5.id IS NULL;
+        n1.relief_component_id IS NULL;
 
       IF relief_component_pids IS NOT EMPTY THEN
         dummy_ids := delete_relief_component(relief_component_pids);
