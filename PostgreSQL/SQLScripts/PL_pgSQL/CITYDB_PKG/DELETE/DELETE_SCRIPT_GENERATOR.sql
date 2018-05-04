@@ -600,7 +600,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_ref_by_id_stmt(
   ) RETURNS TEXT AS 
 $$
 SELECT
-     E'\n  -- delete '||$1||'s'
+     E'\n  -- delete '||$1
   || E'\n  DELETE FROM'
   || E'\n    '||$1
   || E'\n  WHERE'
@@ -1677,7 +1677,7 @@ BEGIN
   -- putting all together
   IF pre_block = '' AND post_block = '' THEN
     ddl_command := ddl_command
-      || E'\n  -- delete '||$1||'s'
+      || E'\n  -- delete '||$1
       || delete_block || ';'
       || E'\n$body$'
       || E'\nLANGUAGE sql STRICT';
@@ -1687,7 +1687,7 @@ BEGIN
       || E'\nBEGIN'
       || objclass_block
       || pre_block
-      || E'\n  -- delete '||$1||'s'
+      || E'\n  -- delete '||$1
       || delete_block
       || delete_into_block
       || post_block
@@ -2052,7 +2052,7 @@ BEGIN
     || declare_block
     || E'\nBEGIN'
     || pre_block
-    || E'\n  -- delete '||$1||'s'
+    || E'\n  -- delete '||$1
     || E'\n  RETURN '||$2||'.delete_' ||citydb_pkg.get_short_name($1, $2)|| '($1);'
     || E'\nEND;'
     || E'\n$body$'

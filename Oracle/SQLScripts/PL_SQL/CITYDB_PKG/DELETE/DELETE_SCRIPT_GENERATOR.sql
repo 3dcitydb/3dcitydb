@@ -796,7 +796,7 @@ AS
   IS
   BEGIN
     RETURN
-        chr(10)||'  -- delete '||lower(tab_name)||'s'
+        chr(10)||'  -- delete '||lower(tab_name)
       ||chr(10)||'  DELETE FROM'
       ||chr(10)||'    '||lower(tab_name)
       ||chr(10)||'  WHERE'
@@ -2107,7 +2107,7 @@ AS
       ||chr(10)||'BEGIN'
       || objclass_block
       || pre_block
-      ||chr(10)||'  -- delete '||lower(tab_name)||'s'
+      ||chr(10)||'  -- delete '||lower(tab_name)
       || delete_block
       || delete_into_block || ';'
       ||chr(10)
@@ -2553,7 +2553,7 @@ AS
       || declare_block
       ||chr(10)||'BEGIN'
       || pre_block
-      ||chr(10)||'  -- delete '||lower(tab_name)||'s'
+      ||chr(10)||'  -- delete '||lower(tab_name)
       ||chr(10)||'  RETURN delete_' ||citydb_util.get_short_name(tab_name, schema_name)||'(pid);'
       ||chr(10)||'END;';
 
