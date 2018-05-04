@@ -642,7 +642,7 @@ AS
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||m_fk_column_name
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	  '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids;'
+      ||chr(10)||'    '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids;'
       ||chr(10)|| gen_delete_m_ref_by_ids_stmt(m_table_name, m_ref_column_name, ref_tables, ref_columns, schema_name);
   END;
 
@@ -676,7 +676,7 @@ AS
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||lower(m_fk_column_name)
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	  '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids;'
+      ||chr(10)||'    '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids;'
       ||chr(10)|| gen_delete_m_ref_by_ids_call(m_table_name, ref_tables, ref_columns, schema_name);
   END;
 
@@ -970,7 +970,7 @@ AS
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||lower(m_fk_column_name)
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	  '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids;'
+      ||chr(10)||'    '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids;'
       ||chr(10)|| gen_delete_m_ref_by_ids_stmt(m_table_name, m_ref_column_name, ref_tables, ref_columns, schema_name);
   END;
 
@@ -998,7 +998,7 @@ AS
       ||chr(10)||'  RETURNING'
       ||chr(10)||'    '||lower(m_fk_column_name)
       ||chr(10)||'  BULK COLLECT INTO'
-      ||chr(10)||'	  '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids;'
+      ||chr(10)||'    '||citydb_util.get_short_name(m_table_name, schema_name)||'_ids;'
       ||chr(10)|| gen_delete_m_ref_by_ids_call(m_table_name, ref_tables, ref_columns, schema_name);
   END;
 
