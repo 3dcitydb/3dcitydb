@@ -29,10 +29,8 @@ SET SERVEROUTPUT ON
 SET FEEDBACK ON
 SET VER OFF
 
-prompt
-prompt DROP_DB procedure will be started
-accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Oracle Spatial(S)/Oracle Locator(L), default is S): '
-prompt
+-- parge arguments
+DEFINE DBVERSION=&1;
 
 VARIABLE BATCHFILE VARCHAR2(50);
 VARIABLE GEORASTER_SUPPORT NUMBER;
@@ -65,3 +63,6 @@ column mc new_value BATCHFILE2 print
 select :BATCHFILE mc from dual;
 
 @@&BATCHFILE2
+
+QUIT;
+/

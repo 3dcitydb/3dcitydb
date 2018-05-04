@@ -1,17 +1,22 @@
-REM Shell script to drop an instance of the 3D City Database
-REM on PostgreSQL/PostGIS
+@echo off
+:: Shell script to drop an instance of the 3D City Database
+:: on PostgreSQL/PostGIS
 
-REM Provide your database details here
-set PGPORT=5432
+:: Provide your database details here -----------------------------------------
+set PGBIN=path_to_psql
 set PGHOST=your_host_address
-set PGUSER=your_username
+set PGPORT=5432
 set CITYDB=your_database
-set PGBIN=path_to_psql.exe
+set PGUSER=your_username
+::-----------------------------------------------------------------------------
 
-REM cd to path of the shell script
+:: add PGBIN to PATH
+set PATH=%PGBIN%;%PATH%
+
+:: cd to path of the shell script
 cd /d %~dp0
 
-REM Run DROP_DB.sql to drop the 3D City Database instance
-"%PGBIN%\psql" -d "%CITYDB%" -f "DROP_DB.sql"
+REM Run DROP_DB.sql to drop the 3D City Database instance ---------------------
+psql -d "%CITYDB%" -f "DROP_DB.sql"
 
 pause

@@ -29,14 +29,11 @@ SET SERVEROUTPUT ON
 SET FEEDBACK ON
 SET VER OFF
 
-prompt
-prompt
-accept SRSNO NUMBER DEFAULT 0 PROMPT 'Please enter EPSG code of CRS to be used: '
-accept VERTNO NUMBER DEFAULT 0 PROMPT 'Please enter EPSG code of the height system (use 0 if unknown or a 3D CRS is used): '
-accept VERSIONING CHAR DEFAULT 'no' PROMPT 'Shall versioning be enabled (yes/no, default is no): '
-accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Oracle Spatial(S)/Oracle Locator(L), default is S): '
-prompt
-prompt
+-- parse arguments
+DEFINE SRSNO=&1;
+DEFINE GMLSRSNAME=&2;
+DEFINE VERSIONING=&3;
+DEFINE DBVERSION=&4;
 
 VARIABLE SRID NUMBER;
 VARIABLE CS_NAME VARCHAR2(256);
@@ -91,3 +88,6 @@ COLUMN mc new_value BATCHFILE2 print
 SELECT :BATCHFILE mc FROM dual;
 
 START &BATCHFILE2
+
+QUIT;
+/

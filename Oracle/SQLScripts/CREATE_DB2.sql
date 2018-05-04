@@ -80,4 +80,4 @@ START &VERSIONBATCHFILE2
 SHOW ERRORS;
 COMMIT;
 
-SELECT 'DB creation complete!' as message from DUAL;
+SELECT '3DCityDB creation complete!' as message from DUAL;
