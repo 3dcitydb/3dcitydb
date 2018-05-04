@@ -15,6 +15,11 @@ set PATH=%SQLPLUSBIN%;%PATH%
 :: cd to path of the shell script
 cd /d %~dp0
 
+:: Interactive mode or usage with arguments? ----------------------------------
+if NOT [%1]==[] (
+  GOTO:args
+)
+
 :: Prompt for SRSNO -----------------------------------------------------------
 :srid
 set var=
@@ -35,6 +40,7 @@ IF defined num (
   echo SRID must be numeric. Please retry.
   goto:srid
 )
+
 
 :: Prompt for GMLSRSNAME ------------------------------------------------------
 set var=
@@ -93,4 +99,40 @@ IF "%res%"=="f" (
 :: Run CREATE_DB.sql to create the 3D City Database instance ------------------
 sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @CREATE_DB.sql "%SRSNO%" "%GMLSRSNAME%" "%VERSIONING%" "%DBVERSION%"
 
-pause
+GOTO:EOF
+
+:args
+:: Correct number of args present? --------------------------------------------
+set argC=0
+for %%x in (%*) do Set /A argC+=1
+
+echo %argC%
+
+if NOT %argC% EQU 9 (
+  echo ERROR: Invalid number of arguments. 1>&2
+  GOTO:EOF
+)
+
+:: Parse args -----------------------------------------------------------------
+:: %1 = HOST
+:: %2 = POST
+:: %3 = SID
+:: %4 = USERNAME
+:: $5 = PASSWORD
+:: %6 = DBVERSION
+:: %7 = VERSIONING
+:: %8 = SRSNO
+:: %9 = GMLSRSNAME
+
+set HOST=%1
+set PORT=%2
+set SID=%3
+set USERNAME=%4
+set PASSWORD=%5
+set DBVERSION=%6
+set VERSIONING=%7
+set SRSNO=%8
+set GMLSRSNAME=%9
+
+:: Run CREATE_DB.sql to create the 3D City Database instance ------------------
+sqlplus "%USERNAME%/\"%PASSWORD%\"@\"%HOST%:%PORT%/%SID%\"" @CREATE_DB.sql "%SRSNO%" "%GMLSRSNAME%" "%VERSIONING%" "%DBVERSION%"
