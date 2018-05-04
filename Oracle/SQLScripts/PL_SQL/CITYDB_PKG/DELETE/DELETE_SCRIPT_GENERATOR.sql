@@ -339,6 +339,7 @@ AS
       AND c.table_name <> upper(ref_parent_to_exclude)
       AND c.constraint_type = 'R'
       AND (c.delete_rule = 'SET NULL' OR (c.delete_rule = 'CASCADE' AND m.m_table_name IS NOT NULL))
+      AND citydb_delete_gen.is_child_ref(a.column_name, c.table_name, upper(tab_name), upper(schema_name)) = 0
     ORDER BY
       c.table_name,
       a.column_name;

@@ -250,7 +250,8 @@ WHERE
   AND c.conrelid <> ($3 || '.' || $2)::regclass::oid
   AND c.contype = 'f'
   AND (m.m_fk_column_name IS NULL OR a.attname = m.m_fk_column_name)
-  AND (c.confdeltype = 'n' OR (c.confdeltype = 'c' AND m.m_table_name IS NOT NULL));
+  AND (c.confdeltype = 'n' OR (c.confdeltype = 'c' AND m.m_table_name IS NOT NULL))
+  AND citydb_pkg.is_child_ref(a.attname, c.conrelid, ($3 || '.' || $1)::regclass::oid) = 0;
 $$
 LANGUAGE sql STABLE STRICT;
 
