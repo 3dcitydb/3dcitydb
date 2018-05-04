@@ -334,9 +334,9 @@ AS
      AND m.owner = c.owner
      AND a.column_name = m.m_fk_column_name
     WHERE
-      c2.table_name = 'CITYOBJECT'
-      AND c2.owner = USER
-      AND c.table_name <> 'GROUP_TO_CITYOBJECT'
+      c2.table_name = upper(tab_name)
+      AND c2.owner = upper(schema_name)
+      AND c.table_name <> upper(ref_parent_to_exclude)
       AND c.constraint_type = 'R'
       AND (c.delete_rule = 'SET NULL' OR (c.delete_rule = 'CASCADE' AND m.m_table_name IS NOT NULL))
     ORDER BY
