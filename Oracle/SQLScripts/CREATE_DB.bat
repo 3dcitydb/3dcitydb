@@ -98,27 +98,25 @@ IF "%res%"=="f" (
 
 :: Run CREATE_DB.sql to create the 3D City Database instance ------------------
 sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @CREATE_DB.sql "%SRSNO%" "%GMLSRSNAME%" "%VERSIONING%" "%DBVERSION%"
-
 GOTO:EOF
 
-:args
 :: Correct number of args present? --------------------------------------------
+:args
 set argC=0
 for %%x in (%*) do Set /A argC+=1
 
-echo %argC%
-
 if NOT %argC% EQU 9 (
   echo ERROR: Invalid number of arguments. 1>&2
+  call :usage
   GOTO:EOF
 )
 
 :: Parse args -----------------------------------------------------------------
 :: %1 = HOST
-:: %2 = POST
+:: %2 = PORT
 :: %3 = SID
 :: %4 = USERNAME
-:: $5 = PASSWORD
+:: %5 = PASSWORD
 :: %6 = DBVERSION
 :: %7 = VERSIONING
 :: %8 = SRSNO
@@ -136,3 +134,22 @@ set GMLSRSNAME=%9
 
 :: Run CREATE_DB.sql to create the 3D City Database instance ------------------
 sqlplus "%USERNAME%/\"%PASSWORD%\"@\"%HOST%:%PORT%/%SID%\"" @CREATE_DB.sql "%SRSNO%" "%GMLSRSNAME%" "%VERSIONING%" "%DBVERSION%"
+GOTO:EOF
+
+:: Print usage information ----------------------------------------------------
+:usage
+echo. 1<&2
+echo Usage: %~n0%~x0 HOST PORT SID USERNAME PASSWORD DBVERSION VERSIONING SRSNO GMLSRSNAME 1>&2
+echo No args can be ommitted and the order is mandatory. 1>&2
+echo. 1>&2
+echo HOST          Database host 1>&2
+echo PORT          Database port 1>&2
+echo SID           Database sid 1>&2
+echo USERNAME      Database username 1>&2
+echo PASSWORD      Database password 1>&2
+echo DBVERSION     Database license type, Oracle (S)patial or Oracle (L)ocator (S/L) 1>&2
+echo VERSIONING    Enable database versioning (yes/no) 1>&2
+echo SRSNO         Spatial reference system number (SRID) 1>&2
+echo GMLSRSNAME    SRSName to be used in GML exports 1>&2
+echo. 1>&2
+GOTO:EOF
