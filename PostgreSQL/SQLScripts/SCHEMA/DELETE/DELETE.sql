@@ -133,7 +133,7 @@ ADDRESS
 CREATE OR REPLACE FUNCTION delete_address(pids integer[])
   RETURNS SETOF integer AS
 $BODY$
-  -- delete addresss
+  -- delete addresses
   DELETE FROM
       address t
     USING
@@ -148,7 +148,7 @@ LANGUAGE sql STRICT;
 CREATE OR REPLACE FUNCTION delete_address(pid integer)
   RETURNS integer AS
 $BODY$
-  -- delete addresss
+  -- delete address
   DELETE FROM
     address
   WHERE
@@ -180,7 +180,7 @@ LANGUAGE sql STRICT;
 CREATE OR REPLACE FUNCTION delete_external_reference(pid integer)
   RETURNS integer AS
 $BODY$
-  -- delete external_references
+  -- delete external_reference
   DELETE FROM
     external_reference
   WHERE
@@ -222,7 +222,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete surface_geometry(s) not being referenced any more
+  -- delete surface_geometry not being referenced any more
   IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_surface_geometry(array_agg(a.a_id))
@@ -248,7 +248,7 @@ DECLARE
   deleted_id INTEGER;
   surface_geometry_ref_id int;
 BEGIN
-  -- delete cityobject_genericattribs
+  -- delete cityobject_genericattrib
   DELETE FROM
     cityobject_genericattrib
   WHERE
@@ -260,7 +260,7 @@ BEGIN
     deleted_id,
     surface_geometry_ref_id;
 
-  -- delete surface_geometry(s) not being referenced any more
+  -- delete surface_geometry not being referenced any more
   IF surface_geometry_ref_id IS NOT NULL THEN
     PERFORM
       delete_surface_geometry(a.a_id)
@@ -303,7 +303,7 @@ LANGUAGE sql STRICT;
 CREATE OR REPLACE FUNCTION delete_tex_image(pid integer)
   RETURNS integer AS
 $BODY$
-  -- delete tex_images
+  -- delete tex_image
   DELETE FROM
     tex_image
   WHERE
@@ -352,7 +352,7 @@ BEGIN
     RETURN NEXT NULL;
   END IF;
 
-  -- delete surface_datas
+  -- delete surface_data
   WITH delete_objects AS (
     DELETE FROM
       surface_data t
@@ -423,7 +423,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete surface_datas
+  -- delete surface_data
   DELETE FROM
     surface_data
   WHERE
@@ -436,7 +436,7 @@ BEGIN
     deleted_id,
     tex_image_ref_id;
 
-  -- delete tex_image(s) not being referenced any more
+  -- delete tex_image not being referenced any more
   IF tex_image_ref_id IS NOT NULL THEN
     DELETE FROM
       tex_image m
@@ -466,7 +466,7 @@ DECLARE
   deleted_ids INTEGER[] := '{}';
   surface_data_ids int[] := '{}';
 BEGIN
-  -- delete references to surface_datas
+  -- delete references to surface_data
   WITH delete_surface_data_refs AS (
     DELETE FROM
       appear_to_surface_data t
@@ -484,7 +484,7 @@ BEGIN
   FROM
     delete_surface_data_refs;
 
-  -- delete surface_data(s) not being referenced any more
+  -- delete surface_data not being referenced any more
   IF -1 = ALL(surface_data_ids) IS NOT NULL THEN
     PERFORM
       delete_surface_data(array_agg(a.a_id))
@@ -522,7 +522,7 @@ DECLARE
   deleted_id INTEGER;
   surface_data_ids int[] := '{}';
 BEGIN
-  -- delete references to surface_datas
+  -- delete references to surface_data
   WITH delete_surface_data_refs AS (
     DELETE FROM
       appear_to_surface_data
@@ -538,7 +538,7 @@ BEGIN
   FROM
     delete_surface_data_refs;
 
-  -- delete surface_data(s) not being referenced any more
+  -- delete surface_data not being referenced any more
   IF -1 = ALL(surface_data_ids) IS NOT NULL THEN
     PERFORM
       delete_surface_data(array_agg(a.a_id))
@@ -555,7 +555,7 @@ BEGIN
       AND n2.surface_data_id IS NULL;
   END IF;
 
-  -- delete appearances
+  -- delete appearance
   DELETE FROM
     appearance
   WHERE
@@ -658,7 +658,7 @@ SURFACE GEOMETRY
 CREATE OR REPLACE FUNCTION delete_surface_geometry(pids integer[])
   RETURNS SETOF integer AS
 $BODY$
-  -- delete surface_geometrys
+  -- delete surface_geometry
   DELETE FROM
       surface_geometry t
     USING
@@ -673,7 +673,7 @@ LANGUAGE sql STRICT;
 CREATE OR REPLACE FUNCTION delete_surface_geometry(pid integer)
   RETURNS integer AS
 $BODY$
-  -- delete surface_geometrys
+  -- delete surface_geometry
   DELETE FROM
     surface_geometry
   WHERE
@@ -694,7 +694,7 @@ DECLARE
   deleted_ids INTEGER[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
-  -- delete implicit_geometrys
+  -- delete implicit_geometry
   WITH delete_objects AS (
     DELETE FROM
       implicit_geometry t
@@ -715,7 +715,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete surface_geometry(s) not being referenced any more
+  -- delete surface_geometry not being referenced any more
   IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
     DELETE FROM
       surface_geometry m
@@ -742,7 +742,7 @@ DECLARE
   deleted_id INTEGER;
   surface_geometry_ref_id int;
 BEGIN
-  -- delete implicit_geometrys
+  -- delete implicit_geometry
   DELETE FROM
     implicit_geometry
   WHERE
@@ -754,7 +754,7 @@ BEGIN
     deleted_id,
     surface_geometry_ref_id;
 
-  -- delete surface_geometry(s) not being referenced any more
+  -- delete surface_geometry not being referenced any more
   IF surface_geometry_ref_id IS NOT NULL THEN
     DELETE FROM
       surface_geometry m
@@ -795,7 +795,7 @@ LANGUAGE sql STRICT;
 CREATE OR REPLACE FUNCTION delete_grid_coverage(pid integer)
   RETURNS integer AS
 $BODY$
-  -- delete grid_coverages
+  -- delete grid_coverage
   DELETE FROM
     grid_coverage
   WHERE
@@ -880,7 +880,7 @@ BEGIN
   WHERE
     cityobject_id = $1;
 
-  -- delete cityobjects
+  -- delete cityobject
   DELETE FROM
     cityobject
   WHERE
@@ -943,7 +943,7 @@ BEGIN
   WHERE
     citymodel_id = $1;
 
-  -- delete citymodels
+  -- delete citymodel
   DELETE FROM
     citymodel
   WHERE
@@ -1022,7 +1022,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -1035,7 +1035,7 @@ BEGIN
       n1.lod4_implicit_rep_id IS NULL;
   END IF;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -1073,7 +1073,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete bridge_furnitures
+  -- delete bridge_furniture
   DELETE FROM
     bridge_furniture
   WHERE
@@ -1086,7 +1086,7 @@ BEGIN
     deleted_id,
     implicit_geometry_ref_id;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF implicit_geometry_ref_id IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(a.a_id)
@@ -1174,7 +1174,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -1191,7 +1191,7 @@ BEGIN
       AND n2.lod4_implicit_rep_id IS NULL;
   END IF;
 
-  -- delete address(s) not being referenced any more
+  -- delete address(es) not being referenced any more
   IF -1 = ALL(address_ids) IS NOT NULL THEN
     DELETE FROM
       address m
@@ -1217,7 +1217,7 @@ BEGIN
       AND n4.address_id IS NULL;
   END IF;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -1256,7 +1256,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete bridge_openings
+  -- delete bridge_opening
   DELETE FROM
     bridge_opening
   WHERE
@@ -1274,7 +1274,7 @@ BEGIN
     implicit_geometry_ids,
     address_ref_id;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -1291,7 +1291,7 @@ BEGIN
       AND n2.lod4_implicit_rep_id IS NULL;
   END IF;
 
-  -- delete address(s) not being referenced any more
+  -- delete address not being referenced any more
   IF address_ref_id IS NOT NULL THEN
     DELETE FROM
       address m
@@ -1414,7 +1414,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -1481,7 +1481,7 @@ BEGIN
       n1.bridge_opening_id IS NULL;
   END IF;
 
-  -- delete bridge_thematic_surfaces
+  -- delete bridge_thematic_surface
   DELETE FROM
     bridge_thematic_surface
   WHERE
@@ -1574,7 +1574,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -1595,7 +1595,7 @@ BEGIN
       AND n3.lod4_implicit_rep_id IS NULL;
   END IF;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -1641,7 +1641,7 @@ BEGIN
   WHERE
     bridge_installation_id = $1;
 
-  -- delete bridge_installations
+  -- delete bridge_installation
   DELETE FROM
     bridge_installation
   WHERE
@@ -1658,7 +1658,7 @@ BEGIN
     deleted_id,
     implicit_geometry_ids;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -1771,7 +1771,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -1832,7 +1832,7 @@ BEGIN
   WHERE
     bridge_room_id = $1;
 
-  -- delete bridge_rooms
+  -- delete bridge_room
   DELETE FROM
     bridge_room
   WHERE
@@ -1927,7 +1927,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -1952,7 +1952,7 @@ BEGIN
       AND n4.lod4_implicit_rep_id IS NULL;
   END IF;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -1998,7 +1998,7 @@ BEGIN
   WHERE
     bridge_constr_element_id = $1;
 
-  -- delete bridge_constr_elements
+  -- delete bridge_constr_element
   DELETE FROM
     bridge_constr_element
   WHERE
@@ -2016,7 +2016,7 @@ BEGIN
     deleted_id,
     implicit_geometry_ids;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -2088,7 +2088,7 @@ BEGIN
     RETURN NEXT NULL;
   END IF;
 
-  -- delete references to addresss
+  -- delete references to addresses
   WITH delete_address_refs AS (
     DELETE FROM
       address_to_bridge t
@@ -2106,7 +2106,7 @@ BEGIN
   FROM
     delete_address_refs;
 
-  -- delete address(s) not being referenced any more
+  -- delete address(es) not being referenced any more
   IF -1 = ALL(address_ids) IS NOT NULL THEN
     DELETE FROM
       address m
@@ -2197,7 +2197,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -2235,7 +2235,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete references to addresss
+  -- delete references to addresses
   WITH delete_address_refs AS (
     DELETE FROM
       address_to_bridge
@@ -2251,7 +2251,7 @@ BEGIN
   FROM
     delete_address_refs;
 
-  -- delete address(s) not being referenced any more
+  -- delete address(es) not being referenced any more
   IF -1 = ALL(address_ids) IS NOT NULL THEN
     DELETE FROM
       address m
@@ -2318,7 +2318,7 @@ BEGIN
     bridge_parent_id = $1
     AND id != $1;
 
-  -- delete bridges
+  -- delete bridge
   DELETE FROM
     bridge
   WHERE
@@ -2344,7 +2344,7 @@ LANGUAGE plpgsql STRICT;
 /*
 BUILDING FURNITURE
 */
-CREATE OR REPLACE FUNCTION delete_bridge_furniture(
+CREATE OR REPLACE FUNCTION delete_building_furniture(
     pids integer[],
     objclass_ids integer[] DEFAULT '{}'::integer[])
   RETURNS SETOF integer AS
@@ -2361,7 +2361,7 @@ BEGIN
     INTO
       class_ids
     FROM
-      bridge_furniture t,
+      building_furniture t,
       unnest($1) a(a_id)
     WHERE
       t.id = a.a_id;
@@ -2379,10 +2379,10 @@ BEGIN
     RETURN NEXT NULL;
   END IF;
 
-  -- delete bridge_furnitures
+  -- delete building_furnitures
   WITH delete_objects AS (
     DELETE FROM
-      bridge_furniture t
+      building_furniture t
     USING
       unnest($1) a(a_id)
     WHERE
@@ -2401,20 +2401,20 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
     FROM
       (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
     LEFT JOIN
-      bridge_furniture n1
+      building_furniture n1
       ON n1.lod4_implicit_rep_id = a.a_id
     WHERE
       n1.lod4_implicit_rep_id IS NULL;
   END IF;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -2423,7 +2423,7 @@ END;
 $BODY$
 LANGUAGE plpgsql STRICT;
 
-CREATE OR REPLACE FUNCTION delete_bridge_furniture(
+CREATE OR REPLACE FUNCTION delete_building_furniture(
     pid integer,
     objclass_id integer DEFAULT 0)
   RETURNS integer AS
@@ -2440,7 +2440,7 @@ BEGIN
     INTO
       class_id
     FROM
-      bridge_furniture
+      building_furniture
     WHERE
       id = $1;
   ELSE
@@ -2452,9 +2452,9 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete bridge_furnitures
+  -- delete building_furniture
   DELETE FROM
-    bridge_furniture
+    building_furniture
   WHERE
     id = $1
     AND objectclass_id = class_id
@@ -2465,14 +2465,14 @@ BEGIN
     deleted_id,
     implicit_geometry_ref_id;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF implicit_geometry_ref_id IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(a.a_id)
     FROM
       (VALUES (implicit_geometry_ref_id)) a(a_id)
     LEFT JOIN
-      bridge_furniture n1
+      building_furniture n1
       ON n1.lod4_implicit_rep_id = a.a_id
     WHERE
       n1.lod4_implicit_rep_id IS NULL;
@@ -2553,7 +2553,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -2570,7 +2570,7 @@ BEGIN
       AND n2.lod4_implicit_rep_id IS NULL;
   END IF;
 
-  -- delete address(s) not being referenced any more
+  -- delete address(es) not being referenced any more
   IF -1 = ALL(address_ids) IS NOT NULL THEN
     DELETE FROM
       address m
@@ -2596,7 +2596,7 @@ BEGIN
       AND n4.address_id IS NULL;
   END IF;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -2635,7 +2635,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete openings
+  -- delete opening
   DELETE FROM
     opening
   WHERE
@@ -2653,7 +2653,7 @@ BEGIN
     implicit_geometry_ids,
     address_ref_id;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -2670,7 +2670,7 @@ BEGIN
       AND n2.lod4_implicit_rep_id IS NULL;
   END IF;
 
-  -- delete address(s) not being referenced any more
+  -- delete address not being referenced any more
   IF address_ref_id IS NOT NULL THEN
     DELETE FROM
       address m
@@ -2793,7 +2793,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -2860,7 +2860,7 @@ BEGIN
       n1.opening_id IS NULL;
   END IF;
 
-  -- delete thematic_surfaces
+  -- delete thematic_surface
   DELETE FROM
     thematic_surface
   WHERE
@@ -2953,7 +2953,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -2974,7 +2974,7 @@ BEGIN
       AND n3.lod4_implicit_rep_id IS NULL;
   END IF;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -3020,7 +3020,7 @@ BEGIN
   WHERE
     building_installation_id = $1;
 
-  -- delete building_installations
+  -- delete building_installation
   DELETE FROM
     building_installation
   WHERE
@@ -3037,7 +3037,7 @@ BEGIN
     deleted_id,
     implicit_geometry_ids;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -3150,7 +3150,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -3211,7 +3211,7 @@ BEGIN
   WHERE
     room_id = $1;
 
-  -- delete rooms
+  -- delete room
   DELETE FROM
     room
   WHERE
@@ -3269,7 +3269,7 @@ BEGIN
     RETURN NEXT NULL;
   END IF;
 
-  -- delete references to addresss
+  -- delete references to addresses
   WITH delete_address_refs AS (
     DELETE FROM
       address_to_building t
@@ -3287,7 +3287,7 @@ BEGIN
   FROM
     delete_address_refs;
 
-  -- delete address(s) not being referenced any more
+  -- delete address(es) not being referenced any more
   IF -1 = ALL(address_ids) IS NOT NULL THEN
     DELETE FROM
       address m
@@ -3369,7 +3369,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -3407,7 +3407,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete references to addresss
+  -- delete references to addresses
   WITH delete_address_refs AS (
     DELETE FROM
       address_to_building
@@ -3423,7 +3423,7 @@ BEGIN
   FROM
     delete_address_refs;
 
-  -- delete address(s) not being referenced any more
+  -- delete address(es) not being referenced any more
   IF -1 = ALL(address_ids) IS NOT NULL THEN
     DELETE FROM
       address m
@@ -3482,7 +3482,7 @@ BEGIN
     building_parent_id = $1
     AND id != $1;
 
-  -- delete buildings
+  -- delete building
   DELETE FROM
     building
   WHERE
@@ -3568,7 +3568,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -3593,7 +3593,7 @@ BEGIN
       AND n4.lod4_implicit_rep_id IS NULL;
   END IF;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -3631,7 +3631,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete city_furnitures
+  -- delete city_furniture
   DELETE FROM
     city_furniture
   WHERE
@@ -3649,7 +3649,7 @@ BEGIN
     deleted_id,
     implicit_geometry_ids;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -3739,7 +3739,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -3776,7 +3776,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete cityobjectgroups
+  -- delete cityobjectgroup
   DELETE FROM
     cityobjectgroup
   WHERE
@@ -3864,7 +3864,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -3893,7 +3893,7 @@ BEGIN
       AND n5.lod4_implicit_rep_id IS NULL;
   END IF;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -3931,7 +3931,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete generic_cityobjects
+  -- delete generic_cityobject
   DELETE FROM
     generic_cityobject
   WHERE
@@ -3950,7 +3950,7 @@ BEGIN
     deleted_id,
     implicit_geometry_ids;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -4044,7 +4044,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -4081,7 +4081,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete land_uses
+  -- delete land_use
   DELETE FROM
     land_use
   WHERE
@@ -4137,7 +4137,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -4157,7 +4157,7 @@ DECLARE
 BEGIN
   class_id := $2;
 
-  -- delete relief_components
+  -- delete relief_component
   DELETE FROM
     relief_component
   WHERE
@@ -4233,7 +4233,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete relief_component
+  -- delete relief_components
   PERFORM delete_relief_component_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -4270,7 +4270,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete breakline_reliefs
+  -- delete breakline_relief
   DELETE FROM
     breakline_relief
   WHERE
@@ -4346,7 +4346,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete relief_component
+  -- delete relief_components
   PERFORM delete_relief_component_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -4383,7 +4383,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete masspoint_reliefs
+  -- delete masspoint_relief
   DELETE FROM
     masspoint_relief
   WHERE
@@ -4477,7 +4477,7 @@ BEGIN
       AND n1.coverage_id IS NULL;
   END IF;
 
-  -- delete relief_component
+  -- delete relief_components
   PERFORM delete_relief_component_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -4515,7 +4515,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete raster_reliefs
+  -- delete raster_relief
   DELETE FROM
     raster_relief
   WHERE
@@ -4528,7 +4528,7 @@ BEGIN
     deleted_id,
     grid_coverage_ref_id;
 
-  -- delete grid_coverage(s) not being referenced any more
+  -- delete grid_coverage not being referenced any more
   IF grid_coverage_ref_id IS NOT NULL THEN
     DELETE FROM
       grid_coverage m
@@ -4607,7 +4607,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete relief_component
+  -- delete relief_components
   PERFORM delete_relief_component_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -4644,7 +4644,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete tin_reliefs
+  -- delete tin_relief
   DELETE FROM
     tin_relief
   WHERE
@@ -4877,7 +4877,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -4944,7 +4944,7 @@ BEGIN
       n1.relief_component_id IS NULL;
   END IF;
 
-  -- delete relief_features
+  -- delete relief_feature
   DELETE FROM
     relief_feature
   WHERE
@@ -5023,7 +5023,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -5060,7 +5060,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete traffic_areas
+  -- delete traffic_area
   DELETE FROM
     traffic_area
   WHERE
@@ -5126,7 +5126,7 @@ BEGIN
   WHERE
     t.transportation_complex_id = a.a_id;
 
-  -- delete transportation_complexs
+  -- delete transportation_complexes
   WITH delete_objects AS (
     DELETE FROM
       transportation_complex t
@@ -5145,7 +5145,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -5190,7 +5190,7 @@ BEGIN
   WHERE
     transportation_complex_id = $1;
 
-  -- delete transportation_complexs
+  -- delete transportation_complex
   DELETE FROM
     transportation_complex
   WHERE
@@ -5273,7 +5273,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -5286,7 +5286,7 @@ BEGIN
       n1.lod4_implicit_rep_id IS NULL;
   END IF;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -5324,7 +5324,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete tunnel_furnitures
+  -- delete tunnel_furniture
   DELETE FROM
     tunnel_furniture
   WHERE
@@ -5337,7 +5337,7 @@ BEGIN
     deleted_id,
     implicit_geometry_ref_id;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF implicit_geometry_ref_id IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(a.a_id)
@@ -5421,7 +5421,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -5438,7 +5438,7 @@ BEGIN
       AND n2.lod4_implicit_rep_id IS NULL;
   END IF;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -5476,7 +5476,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete tunnel_openings
+  -- delete tunnel_opening
   DELETE FROM
     tunnel_opening
   WHERE
@@ -5492,7 +5492,7 @@ BEGIN
     deleted_id,
     implicit_geometry_ids;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -5606,7 +5606,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -5673,7 +5673,7 @@ BEGIN
       n1.tunnel_opening_id IS NULL;
   END IF;
 
-  -- delete tunnel_thematic_surfaces
+  -- delete tunnel_thematic_surface
   DELETE FROM
     tunnel_thematic_surface
   WHERE
@@ -5766,7 +5766,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -5787,7 +5787,7 @@ BEGIN
       AND n3.lod4_implicit_rep_id IS NULL;
   END IF;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -5850,7 +5850,7 @@ BEGIN
     deleted_id,
     implicit_geometry_ids;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -5963,7 +5963,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -6137,7 +6137,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -6207,7 +6207,7 @@ BEGIN
     tunnel_parent_id = $1
     AND id != $1;
 
-  -- delete tunnels
+  -- delete tunnel
   DELETE FROM
     tunnel
   WHERE
@@ -6286,7 +6286,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -6323,7 +6323,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete plant_covers
+  -- delete plant_cover
   DELETE FROM
     plant_cover
   WHERE
@@ -6409,7 +6409,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -6434,7 +6434,7 @@ BEGIN
       AND n4.lod4_implicit_rep_id IS NULL;
   END IF;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -6472,7 +6472,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete solitary_vegetat_objects
+  -- delete solitary_vegetat_object
   DELETE FROM
     solitary_vegetat_object
   WHERE
@@ -6490,7 +6490,7 @@ BEGIN
     deleted_id,
     implicit_geometry_ids;
 
-  -- delete implicit_geometry(s) not being referenced any more
+  -- delete implicit_geometry not being referenced any more
   IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
     PERFORM
       delete_implicit_geometry(array_agg(a.a_id))
@@ -6583,7 +6583,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -6620,7 +6620,7 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  -- delete waterboundary_surfaces
+  -- delete waterboundary_surface
   DELETE FROM
     waterboundary_surface
   WHERE
@@ -6728,7 +6728,7 @@ BEGIN
   FROM
     delete_objects;
 
-  -- delete cityobject
+  -- delete cityobjects
   PERFORM delete_cityobject_post(deleted_ids, class_ids);
 
   RETURN QUERY
@@ -6795,7 +6795,7 @@ BEGIN
       n1.waterboundary_surface_id IS NULL;
   END IF;
 
-  -- delete waterbodys
+  -- delete waterbody
   DELETE FROM
     waterbody
   WHERE
@@ -6962,7 +6962,7 @@ BEGIN
     deleted_ids := deleted_ids || (SELECT array_agg(a_id) FROM delete_traffic_area($1, class_ids) AS a(a_id));
   END IF;
 
-  -- delete transportation_complexs
+  -- delete transportation_complexes
   IF class_ids && ARRAY[42,43,44,45,46]::int[] THEN
     deleted_ids := deleted_ids || (SELECT array_agg(a_id) FROM delete_transport_complex($1, class_ids) AS a(a_id));
   END IF;
@@ -7326,7 +7326,7 @@ BEGIN
       AND n5.cityobject_id IS NULL;
   END IF;
 
-  -- delete citymodels
+  -- delete citymodel
   RETURN delete_citymodel($1);
 END;
 $BODY$
@@ -7449,7 +7449,7 @@ BEGIN
       AND n5.generalizes_to_id IS NULL;
   END IF;
 
-  -- delete cityobjectgroups
+  -- delete cityobjectgroup
   RETURN delete_cityobjectgroup($1);
 END;
 $BODY$

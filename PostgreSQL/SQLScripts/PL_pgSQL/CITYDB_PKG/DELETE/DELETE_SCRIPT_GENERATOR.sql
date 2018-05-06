@@ -640,7 +640,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_id_stmt(
   ) RETURNS TEXT AS 
 $$
 SELECT
-     E'\n  -- delete '||$1||'(s) not being referenced any more'
+     E'\n  -- delete '||$1||' not being referenced any more'
   || E'\n  IF '||citydb_pkg.get_short_name($1, $5)||'_ref_id IS NOT NULL THEN'
   || E'\n    DELETE FROM'
   || E'\n      '||$1||' m'
@@ -675,7 +675,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.generate_delete_m_ref_by_id_call(
   ) RETURNS TEXT AS 
 $$
 SELECT
-     E'\n  -- delete '||$1||'(s) not being referenced any more'
+     E'\n  -- delete '||$1||' not being referenced any more'
   || E'\n  IF '||citydb_pkg.get_short_name($1, $4)||'_ref_id IS NOT NULL THEN'
   || E'\n    PERFORM'
   || E'\n      '||$4||'.delete_'||citydb_pkg.get_short_name($1, $4)||'(a.a_id)'
@@ -1283,7 +1283,7 @@ BEGIN
         ref_to_parent_path := citydb_pkg.create_array_delete_function(parent_table, $2, $3);
       END IF;
       parent_block :=
-           E'\n  -- delete '||parent_table
+           E'\n  -- delete '||parent_table||'s'
         || E'\n  PERFORM '||$2||'.delete_'||citydb_pkg.get_short_name(parent_table, $2)||E'_post(deleted_ids, class_ids);\n';
     END IF;
   END IF;

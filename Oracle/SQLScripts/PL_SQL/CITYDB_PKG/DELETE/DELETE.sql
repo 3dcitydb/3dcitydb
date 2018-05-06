@@ -243,7 +243,7 @@ AS
       deleted_ids,
       surface_geom_ids;
 
-    -- delete surface_geometry(s) not being referenced any more
+    -- delete surface_geometry not being referenced any more
     IF surface_geom_ids IS NOT EMPTY THEN
       DELETE FROM
         surface_geometry m
@@ -267,7 +267,7 @@ AS
   FUNCTION delete_genericattrib(pid NUMBER) RETURN NUMBER
   IS
     deleted_id NUMBER;
-    surface_geom_ref_id NUMBER;
+    surface_geometry_ref_id NUMBER;
     dummy_ids ID_ARRAY;
     dummy_id NUMBER;
   BEGIN
@@ -281,17 +281,17 @@ AS
       surface_geometry_id
     INTO
       deleted_id,
-      surface_geom_ref_id;
+      surface_geometry_ref_id;
 
-    -- delete surface_geometry(s) not being referenced any more
-    IF surface_geom_ref_id IS NOT NULL THEN
+    -- delete surface_geometry not being referenced any more
+    IF surface_geometry_ref_id IS NOT NULL THEN
       DELETE FROM
         surface_geometry m
       WHERE EXISTS (
         SELECT
           1
         FROM
-          TABLE(ID_ARRAY(surface_geom_ref_id)) a
+          TABLE(ID_ARRAY(surface_geometry_ref_id)) a
         LEFT JOIN
           cityobject_genericattrib n1
           ON n1.surface_geometry_id = a.COLUMN_VALUE
@@ -382,7 +382,7 @@ AS
       RETURN NULL;
     END IF;
 
-    -- delete surface_datas
+    -- delete surface_data
     DELETE FROM
       surface_data t
     WHERE EXISTS (
@@ -462,7 +462,7 @@ AS
       deleted_id,
       tex_image_ref_id;
 
-    -- delete tex_image(s) not being referenced any more
+    -- delete tex_image not being referenced any more
     IF tex_image_ref_id IS NOT NULL THEN
       DELETE FROM
         tex_image m
@@ -494,7 +494,7 @@ AS
     surface_data_pids ID_ARRAY;
     dummy_ids ID_ARRAY;
   BEGIN
-    -- delete references to surface_datas
+    -- delete references to surface_data
     DELETE FROM
       appear_to_surface_data t
     WHERE EXISTS (
@@ -559,7 +559,7 @@ AS
     surface_data_pids ID_ARRAY;
     dummy_ids ID_ARRAY;
   BEGIN
-    -- delete references to surface_datas
+    -- delete references to surface_data
     DELETE FROM
       appear_to_surface_data
     WHERE
@@ -677,7 +677,7 @@ AS
   IS
     deleted_ids ID_ARRAY := ID_ARRAY();
   BEGIN
-    -- delete surface_geometrys
+    -- delete surface_geometry
     DELETE FROM
       surface_geometry t
     WHERE EXISTS (
@@ -723,7 +723,7 @@ AS
     surface_geom_ids ID_ARRAY;
     dummy_ids ID_ARRAY;
   BEGIN
-    -- delete implicit_geometrys
+    -- delete implicit_geometry
     DELETE FROM
       implicit_geometry t
     WHERE EXISTS (
@@ -741,7 +741,7 @@ AS
       deleted_ids,
       surface_geom_ids;
 
-    -- delete surface_geometry(s) not being referenced any more
+    -- delete surface_geometry not being referenced any more
     IF surface_geom_ids IS NOT EMPTY THEN
       DELETE FROM
         surface_geometry m
@@ -765,7 +765,7 @@ AS
   FUNCTION delete_implicit_geometry(pid NUMBER) RETURN NUMBER
   IS
     deleted_id NUMBER;
-    surface_geom_ref_id NUMBER;
+    surface_geometry_ref_id NUMBER;
     dummy_ids ID_ARRAY;
     dummy_id NUMBER;
   BEGIN
@@ -779,17 +779,17 @@ AS
       relative_brep_id
     INTO
       deleted_id,
-      surface_geom_ref_id;
+      surface_geometry_ref_id;
 
-    -- delete surface_geometry(s) not being referenced any more
-    IF surface_geom_ref_id IS NOT NULL THEN
+    -- delete surface_geometry not being referenced any more
+    IF surface_geometry_ref_id IS NOT NULL THEN
       DELETE FROM
         surface_geometry m
       WHERE EXISTS (
         SELECT
           1
         FROM
-          TABLE(ID_ARRAY(surface_geom_ref_id)) a
+          TABLE(ID_ARRAY(surface_geometry_ref_id)) a
         LEFT JOIN
           implicit_geometry n1
           ON n1.relative_brep_id = a.COLUMN_VALUE
@@ -1091,7 +1091,7 @@ AS
       deleted_ids,
       implicit_geometry_ids;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -1110,7 +1110,7 @@ AS
       END IF;
     END IF;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -1159,7 +1159,7 @@ AS
       deleted_id,
       implicit_geometry_ref_id;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ref_id IS NOT NULL THEN
       SELECT
         a.COLUMN_VALUE
@@ -1248,7 +1248,7 @@ AS
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids1;
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids2;
 
-    -- delete address(s) not being referenced any more
+    -- delete address(es) not being referenced any more
     IF address_ids IS NOT EMPTY THEN
       DELETE FROM
         address m
@@ -1278,7 +1278,7 @@ AS
       );
     END IF;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -1301,7 +1301,7 @@ AS
       END IF;
     END IF;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -1356,7 +1356,7 @@ AS
       address_ref_id,
       implicit_geometry_ids;
 
-    -- delete address(s) not being referenced any more
+    -- delete address not being referenced any more
     IF address_ref_id IS NOT NULL THEN
       DELETE FROM
         address m
@@ -1386,7 +1386,7 @@ AS
       );
     END IF;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -1501,7 +1501,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -1667,7 +1667,7 @@ AS
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids2;
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids3;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -1694,7 +1694,7 @@ AS
       END IF;
     END IF;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -1765,7 +1765,7 @@ AS
       deleted_id,
       implicit_geometry_ids;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -1900,7 +1900,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -2089,7 +2089,7 @@ AS
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids3;
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids4;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -2120,7 +2120,7 @@ AS
       END IF;
     END IF;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -2192,7 +2192,7 @@ AS
       deleted_id,
       implicit_geometry_ids;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -2266,7 +2266,7 @@ AS
       RETURN NULL;
     END IF;
 
-    -- delete references to addresss
+    -- delete references to addresses
     DELETE FROM
       address_to_bridge t
     WHERE EXISTS (
@@ -2282,7 +2282,7 @@ AS
     BULK COLLECT INTO
       address_ids;
 
-    -- delete address(s) not being referenced any more
+    -- delete address(es) not being referenced any more
     IF address_ids IS NOT EMPTY THEN
       DELETE FROM
         address m
@@ -2415,7 +2415,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -2454,7 +2454,7 @@ AS
       RETURN NULL;
     END IF;
 
-    -- delete references to addresss
+    -- delete references to addresses
     DELETE FROM
       address_to_bridge
     WHERE
@@ -2464,7 +2464,7 @@ AS
     BULK COLLECT INTO
       address_ids;
 
-    -- delete address(s) not being referenced any more
+    -- delete address(es) not being referenced any more
     IF address_ids IS NOT EMPTY THEN
       DELETE FROM
         address m
@@ -2648,7 +2648,7 @@ AS
       deleted_ids,
       implicit_geometry_ids;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -2667,7 +2667,7 @@ AS
       END IF;
     END IF;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -2716,7 +2716,7 @@ AS
       deleted_id,
       implicit_geometry_ref_id;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ref_id IS NOT NULL THEN
       SELECT
         a.COLUMN_VALUE
@@ -2805,7 +2805,7 @@ AS
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids1;
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids2;
 
-    -- delete address(s) not being referenced any more
+    -- delete address(es) not being referenced any more
     IF address_ids IS NOT EMPTY THEN
       DELETE FROM
         address m
@@ -2835,7 +2835,7 @@ AS
       );
     END IF;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -2858,7 +2858,7 @@ AS
       END IF;
     END IF;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -2913,7 +2913,7 @@ AS
       address_ref_id,
       implicit_geometry_ids;
 
-    -- delete address(s) not being referenced any more
+    -- delete address not being referenced any more
     IF address_ref_id IS NOT NULL THEN
       DELETE FROM
         address m
@@ -2943,7 +2943,7 @@ AS
       );
     END IF;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -3058,7 +3058,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -3224,7 +3224,7 @@ AS
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids2;
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids3;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -3251,7 +3251,7 @@ AS
       END IF;
     END IF;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -3322,7 +3322,7 @@ AS
       deleted_id,
       implicit_geometry_ids;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -3457,7 +3457,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -3595,7 +3595,7 @@ AS
       RETURN NULL;
     END IF;
 
-    -- delete references to addresss
+    -- delete references to addresses
     DELETE FROM
       address_to_building t
     WHERE EXISTS (
@@ -3611,7 +3611,7 @@ AS
     BULK COLLECT INTO
       address_ids;
 
-    -- delete address(s) not being referenced any more
+    -- delete address(es) not being referenced any more
     IF address_ids IS NOT EMPTY THEN
       DELETE FROM
         address m
@@ -3727,7 +3727,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -3766,7 +3766,7 @@ AS
       RETURN NULL;
     END IF;
 
-    -- delete references to addresss
+    -- delete references to addresses
     DELETE FROM
       address_to_building
     WHERE
@@ -3776,7 +3776,7 @@ AS
     BULK COLLECT INTO
       address_ids;
 
-    -- delete address(s) not being referenced any more
+    -- delete address(es) not being referenced any more
     IF address_ids IS NOT EMPTY THEN
       DELETE FROM
         address m
@@ -3957,7 +3957,7 @@ AS
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids3;
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids4;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -3988,7 +3988,7 @@ AS
       END IF;
     END IF;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -4042,7 +4042,7 @@ AS
       deleted_id,
       implicit_geometry_ids;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -4128,7 +4128,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -4251,7 +4251,7 @@ AS
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids4;
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids5;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -4286,7 +4286,7 @@ AS
       END IF;
     END IF;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -4341,7 +4341,7 @@ AS
       deleted_id,
       implicit_geometry_ids;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -4431,7 +4431,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -4515,7 +4515,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -4597,7 +4597,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete relief_component
+    -- delete relief_components
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_relief_component_post(deleted_ids, class_ids);
     END IF;
@@ -4696,7 +4696,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete relief_component
+    -- delete relief_components
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_relief_component_post(deleted_ids, class_ids);
     END IF;
@@ -4816,7 +4816,7 @@ AS
       );
     END IF;
 
-    -- delete relief_component
+    -- delete relief_components
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_relief_component_post(deleted_ids, class_ids);
     END IF;
@@ -4864,7 +4864,7 @@ AS
       deleted_id,
       grid_coverag_ref_id;
 
-    -- delete grid_coverage(s) not being referenced any more
+    -- delete grid_coverage not being referenced any more
     IF grid_coverag_ref_id IS NOT NULL THEN
       DELETE FROM
         grid_coverage m
@@ -4937,7 +4937,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete relief_component
+    -- delete relief_components
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_relief_component_post(deleted_ids, class_ids);
     END IF;
@@ -5180,7 +5180,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -5314,7 +5314,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -5415,7 +5415,7 @@ AS
       dummy_ids := delete_traffic_area(child_ids, SET(child_class_ids));
     END IF;
 
-    -- delete transportation_complexs
+    -- delete transportation_complexes
     DELETE FROM
       transportation_complex t
     WHERE EXISTS (
@@ -5432,7 +5432,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -5557,7 +5557,7 @@ AS
       deleted_ids,
       implicit_geometry_ids;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -5576,7 +5576,7 @@ AS
       END IF;
     END IF;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -5625,7 +5625,7 @@ AS
       deleted_id,
       implicit_geometry_ref_id;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ref_id IS NOT NULL THEN
       SELECT
         a.COLUMN_VALUE
@@ -5711,7 +5711,7 @@ AS
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids1;
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids2;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -5734,7 +5734,7 @@ AS
       END IF;
     END IF;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -5786,7 +5786,7 @@ AS
       deleted_id,
       implicit_geometry_ids;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -5901,7 +5901,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -6067,7 +6067,7 @@ AS
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids2;
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids3;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -6094,7 +6094,7 @@ AS
       END IF;
     END IF;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -6165,7 +6165,7 @@ AS
       deleted_id,
       implicit_geometry_ids;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -6300,7 +6300,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -6523,7 +6523,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -6695,7 +6695,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -6814,7 +6814,7 @@ AS
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids3;
     implicit_geometry_ids := implicit_geometry_ids MULTISET UNION ALL implicit_geometry_ids4;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -6845,7 +6845,7 @@ AS
       END IF;
     END IF;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -6899,7 +6899,7 @@ AS
       deleted_id,
       implicit_geometry_ids;
 
-    -- delete implicit_geometry(s) not being referenced any more
+    -- delete implicit_geometry not being referenced any more
     IF implicit_geometry_ids IS NOT EMPTY THEN
       SELECT DISTINCT
         a.COLUMN_VALUE
@@ -6988,7 +6988,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -7124,7 +7124,7 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
-    -- delete cityobject
+    -- delete cityobjects
     IF deleted_ids IS NOT EMPTY THEN
       dummy_ids := delete_cityobject_post(deleted_ids, class_ids);
     END IF;
@@ -7347,7 +7347,7 @@ AS
       deleted_ids := deleted_ids MULTISET UNION ALL COALESCE(delete_traffic_area(pids, class_ids), ID_ARRAY());
     END IF;
 
-    -- delete transportation_complexs
+    -- delete transportation_complexes
     IF class_ids MULTISET INTERSECT ID_ARRAY(42,43,44,45,46) IS NOT EMPTY THEN
       deleted_ids := deleted_ids MULTISET UNION ALL COALESCE(delete_transport_complex(pids, class_ids), ID_ARRAY());
     END IF;

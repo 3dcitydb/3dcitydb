@@ -862,7 +862,7 @@ AS
     where_clause VARCHAR2(4000);
   BEGIN
     stmt := 
-        chr(10)||'  -- delete '||lower(m_table_name)||'(s) not being referenced any more'
+        chr(10)||'  -- delete '||lower(m_table_name)||' not being referenced any more'
       ||chr(10)||'  IF '||citydb_util.get_short_name(m_table_name, schema_name)||'_ref_id IS NOT NULL THEN'
       ||chr(10)||'    DELETE FROM'
       ||chr(10)||'      '||lower(m_table_name)||' m'
@@ -909,7 +909,7 @@ AS
     where_and VARCHAR2(4) := '';
   BEGIN
     call_stmt :=
-        chr(10)||'  -- delete '||lower(m_table_name)||'(s) not being referenced any more'
+        chr(10)||'  -- delete '||lower(m_table_name)||' not being referenced any more'
       ||chr(10)||'  IF '||citydb_util.get_short_name(m_table_name, schema_name)||'_ref_id IS NOT NULL THEN'
       ||chr(10)||'    SELECT'
       ||chr(10)||'      a.COLUMN_VALUE'
@@ -1684,7 +1684,7 @@ AS
           ref_to_parent_path := citydb_delete_gen.create_array_delete_function(parent_table, schema_name, ref_to_parent_path);
         END IF;
         parent_block :=
-            chr(10)||'  -- delete '||lower(parent_table)
+            chr(10)||'  -- delete '||lower(parent_table)||'s'
           ||chr(10)||'  IF deleted_ids IS NOT EMPTY THEN'
           ||chr(10)||'    dummy_ids := delete_'||citydb_util.get_short_name(parent_table, schema_name)||'_post_bat(deleted_ids, class_ids);'
           ||chr(10)||'  END IF;'
