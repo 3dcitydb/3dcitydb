@@ -20,7 +20,7 @@ cd /d %~dp0
 :srid
 set var=
 echo.
-echo Please enter a valid SRID (e.g., 3068 for DHDN/Soldner Berlin): Press ENTER to use default.
+echo Please enter a valid SRID (e.g., 3068 for DHDN/Soldner Berlin). Press ENTER to use default.
 set /p var="(default SRID=3068): "
 
 IF /i NOT "%var%"=="" (
@@ -49,6 +49,8 @@ IF /i NOT "%var%"=="" (
 )
 
 :: Run CREATE_DB.sql to create the 3D City Database instance ------------------
+echo.
+echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%"...
 psql -d "%CITYDB%" -f "CREATE_DB.sql" -v srsno="%SRSNO%" -v gmlsrsname="%GMLSRSNAME%"
 
 pause

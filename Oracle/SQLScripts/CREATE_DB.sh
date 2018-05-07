@@ -20,7 +20,7 @@ cd "$( cd "$( dirname "$0" )" && pwd )" > /dev/null
 re='^[0-9]+$'
 while [ 1 ]; do
   echo
-  echo 'Please enter a valid SRID (e.g. Berlin: 81989002): Press ENTER to use default.'
+  echo 'Please enter a valid SRID (e.g. Berlin: 81989002). Press ENTER to use default.'
   read -p "(default SRID=81989002): " SRSNO
   SRSNO=${SRSNO:-81989002}
   
@@ -40,7 +40,7 @@ GMLSRSNAME=${GMLSRSNAME:-urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783}
 # Prompt for VERSIONING -------------------------------------------------------
 while [ 1 ]; do
   echo
-  echo 'Shall versioning be enabled? (yes/no): Press ENTER to use default.'
+  echo 'Shall versioning be enabled (yes/no)? Press ENTER to use default.'
   read -p "(default VERSIONING=no): " VERSIONING
   VERSIONING=${VERSIONING:-no}
   
@@ -57,7 +57,7 @@ done
 # Prompt for DBVERSION --------------------------------------------------------
 while [ 1 ]; do
   echo
-  echo 'Which database license are you using? (Oracle Spatial(S)/Oracle Locator(L)): Press ENTER to use default.'
+  echo 'Which database license are you using (Oracle Spatial(S)/Oracle Locator(L))? Press ENTER to use default.'
   read -p "(default DBVERSION=Oracle Spatial(S)): " DBVERSION
   DBVERSION=${DBVERSION:-S}
  
@@ -72,6 +72,8 @@ while [ 1 ]; do
 done
 
 # Run CREATE_DB.sql to create the 3D City Database instance -------------------
+echo
+echo "Connecting to the database \"$USERNAME@$HOST:$PORT/$SID\"..."
 sqlplus "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @CREATE_DB.sql "${SRSNO}" "${GMLSRSNAME}" "${VERSIONING}" "${DBVERSION}"
 
 echo

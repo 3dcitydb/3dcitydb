@@ -20,7 +20,7 @@ cd "$( cd "$( dirname "$0" )" && pwd )" > /dev/null
 re='^[0-9]+$'
 while [ 1 ]; do
   echo
-  echo 'Please enter a valid SRID (e.g., 3068 for DHDN/Soldner Berlin): Press ENTER to use default.'
+  echo 'Please enter a valid SRID (e.g., 3068 for DHDN/Soldner Berlin). Press ENTER to use default.'
   read -p "(default SRID=3068): " SRSNO
   SRSNO=${SRSNO:-3068}
    
@@ -38,6 +38,8 @@ read -p '(default GMLSRSNAME=urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:57
 GMLSRSNAME=${GMLSRSNAME:-urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783}
 
 # Run CREATE_DB.sql to create the 3D City Database instance -------------------
+echo
+echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\"..."
 psql -d "$CITYDB" -f "CREATE_DB.sql" -v srsno="$SRSNO" -v gmlsrsname="$GMLSRSNAME"
 
 echo
