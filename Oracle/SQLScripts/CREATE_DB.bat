@@ -19,7 +19,7 @@ cd /d %~dp0
 :srid
 set var=
 echo.
-echo Please enter a valid SRID (e.g. Berlin: 81989002): Press ENTER to use default.
+echo Please enter a valid SRID (e.g. Berlin: 81989002). Press ENTER to use default.
 set /p var="(default SRID=81989002): "
 
 IF /i NOT "%var%"=="" (
@@ -52,7 +52,7 @@ IF /i NOT "%var%"=="" (
 :versioning
 set var=
 echo.
-echo Shall versioning be enabled? (yes/no): Press ENTER to use default.
+echo Shall versioning be enabled (yes/no)? Press ENTER to use default.
 set /p var="(default VERSIONING=no): "
 
 IF /i NOT "%var%"=="" (
@@ -73,7 +73,7 @@ IF "%res%"=="f" (
 :dbversion
 set var=
 echo.
-echo Which database license are you using? (Oracle Spatial(S)/Oracle Locator(L)): Press ENTER to use default.
+echo Which database license are you using (Oracle Spatial(S)/Oracle Locator(L))? Press ENTER to use default.
 set /p var="(default DBVERSION=Oracle Spatial(S)): "
 
 IF /i NOT "%var%"=="" (
@@ -91,6 +91,8 @@ IF "%res%"=="f" (
 )
 
 :: Run CREATE_DB.sql to create the 3D City Database instance ------------------
+echo.
+echo Connecting to the database "%USERNAME%@%HOST%:%PORT%/%SID%"...
 sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @CREATE_DB.sql "%SRSNO%" "%GMLSRSNAME%" "%VERSIONING%" "%DBVERSION%"
 
 pause
