@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Shell script to create an instance of the 3D City Database
 # on PostgreSQL/PostGIS
 
@@ -70,4 +70,5 @@ echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\"..."
 psql -d "$CITYDB" -f "CREATE_DB.sql" -v srsno="$SRSNO" -v gmlsrsname="$GMLSRSNAME"
 
 echo
-read -rp 'Press ENTER to quit.' _
+read -rsn1 -p 'Press ENTER to quit.'
+echo
