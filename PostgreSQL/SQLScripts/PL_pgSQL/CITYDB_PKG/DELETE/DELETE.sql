@@ -25,2874 +25,5538 @@
 -- limitations under the License.
 --
 
-/*****************************************************************
-* CONTENT
-*
-* FUNCTIONS:
-*   cleanup_addresses(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
-*   cleanup_appearances(only_global INTEGER DEFAULT 1, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
-*   cleanup_citymodels(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
-*   cleanup_cityobjectgroups(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
-*   cleanup_grid_coverages(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
-*   cleanup_implicit_geometries(clean_apps INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
-*   cleanup_schema(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
-*   cleanup_tex_images(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
-*   delete_address(ad_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_appearance(app_id INTEGER, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_breakline_relief(blr_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_bridge(brd_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_bridge_constr_element(brdce_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_bridge_furniture(brdf_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_bridge_installation(brdi_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_bridge_opening(brdo_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_bridge_room(brdr_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER	
-*   delete_bridge_them_srf(brdts_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_building(b_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_building_furniture(bf_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_building_installation(bi_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_city_furniture(cf_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_citymodel(cm_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER 
-*   delete_cityobject(co_id INTEGER, delete_members INTEGER DEFAULT 0, cleanup INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_cityobjectgroup(cog_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_external_reference(ref_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_grid_coverage(gc_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_genericattrib(genattrib_id INTEGER, delete_members INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER AS
-*   delete_generic_cityobject(gco_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_implicit_geometry(ig_id INTEGER, clean_apps INTEGER := 0 INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_land_use(lu_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_masspoint_relief(mpr_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_opening(o_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_plant_cover(pc_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_raster_relief(rr_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_relief_component(rc_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_relief_feature(rf_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_room(r_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_solitary_veg_obj(svo_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_surface_data(sd_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_surface_geometry(sg_id INTEGER, clean_apps INTEGER := 0 INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_thematic_surface(ts_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_tin_relief(tr_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_traffic_area(ta_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_transport_complex(tc_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_tunnel(tun_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_tunnel_furniture(tunf_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_tunnel_hollow_space(tunhs_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_tunnel_installation(tuni_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_tunnel_opening(tuno_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_tunnel_them_srf(tunts_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_waterbnd_surface(wbs_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   delete_waterbody(wb_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   intern_delete_cityobject(co_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
-*   intern_delete_surface_geometry(sg_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER
-*   is_not_referenced(table_name TEXT, check_column TEXT, check_id INTEGER, not_column TEXT, not_id INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS BOOLEAN
-******************************************************************/
+-- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-08 13:37:58)
+-- del_address
+-- del_appearance
+-- del_breakline_relief
+-- del_bridge
+-- del_bridge_constr_element
+-- del_bridge_furniture
+-- del_bridge_installation
+-- del_bridge_opening
+-- del_bridge_room
+-- del_bridge_thematic_surface
+-- del_building
+-- del_building_furniture
+-- del_building_installation
+-- del_city_furniture
+-- del_citymodel
+-- del_cityobject
+-- del_cityobject_genericattrib
+-- del_cityobjectgroup
+-- del_cityobject_by_lineage
+-- del_external_reference
+-- del_generic_cityobject
+-- del_grid_coverage
+-- del_implicit_geometry
+-- del_land_use
+-- del_masspoint_relief
+-- del_opening
+-- del_plant_cover
+-- del_raster_relief
+-- del_relief_component
+-- del_relief_feature
+-- del_room
+-- del_solitary_vegetat_object
+-- del_surface_data
+-- del_surface_geometry
+-- del_tex_image
+-- del_thematic_surface
+-- del_tin_relief
+-- del_traffic_area
+-- del_transportation_complex
+-- del_tunnel
+-- del_tunnel_furniture
+-- del_tunnel_hollow_space
+-- del_tunnel_installation
+-- del_tunnel_opening
+-- del_tunnel_thematic_surface
+-- del_waterbody
+-- del_waterboundary_surface
+------------------------------------------
 
-/*
-helper functions
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.is_not_referenced(
-  table_name TEXT, 
-  check_column TEXT, 
-  check_id INTEGER, 
-  not_column TEXT, 
-  not_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS BOOLEAN AS
-$$
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_address(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  dummy INTEGER;
-  is_not_referenced BOOLEAN := false;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
 BEGIN
-  EXECUTE format('SELECT 1 FROM %I.%I WHERE %I = %L AND NOT %I = %L',
-                    schema_name, table_name, check_column, check_id, not_column, not_id) INTO dummy;
+  -- delete citydb.addresss
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.address t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    deleted_ids
+  FROM
+    delete_objects;
 
-  IF dummy IS NULL THEN
-    is_not_referenced := true;
-  END IF;  
-  
-  RETURN is_not_referenced;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from CITY_OBJECT
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.intern_delete_cityobject(
-  co_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-BEGIN
-  --// PRE DELETE CITY OBJECT //--
-  -- delete reference to city model
-  EXECUTE format('DELETE FROM %I.cityobject_member WHERE cityobject_id = %L', schema_name, co_id);
-
-  -- delete reference to city object group
-  EXECUTE format('DELETE FROM %I.group_to_cityobject WHERE cityobject_id = %L', schema_name, co_id);
-
-  -- delete reference to generalization
-  EXECUTE format('DELETE FROM %I.generalization WHERE generalizes_to_id = %L', schema_name, co_id);
-  EXECUTE format('DELETE FROM %I.generalization WHERE cityobject_id = %L', schema_name, co_id);
-
-  -- delete external references of city object
-  EXECUTE format('DELETE FROM %I.external_reference WHERE cityobject_id = %L', schema_name, co_id);
-
-  -- delete generic attributes of city object
-  EXECUTE format('DELETE FROM %I.cityobject_genericattrib WHERE cityobject_id = %L', schema_name, co_id);
-  EXECUTE format('UPDATE %I.cityobjectgroup SET parent_cityobject_id=null WHERE parent_cityobject_id = %L', schema_name, co_id);
-
-  -- delete local appearances of city object 
-  EXECUTE format('SELECT citydb_pkg.delete_appearance(id, 0, %L) FROM %I.appearance WHERE cityobject_id = %L', schema_name, schema_name, co_id);
-
-  --// DELETE CITY OBJECT //--
-  EXECUTE format('DELETE FROM %I.cityobject WHERE id = %L RETURNING id', schema_name, co_id) INTO deleted_id;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'intern_delete_cityobject (id: %): %', co_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from SURFACE_GEOMETRY
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_surface_geometry(
-  sg_id INTEGER,
-  clean_apps INTEGER DEFAULT 0,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS SETOF INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  surface_geometry_rec INTEGER;
-BEGIN
-  FOR surface_geometry_rec IN 
-    EXECUTE format('WITH RECURSIVE geometry(id, parent_id, level) AS (
-                      SELECT sg.id, sg.parent_id, 1 AS level FROM %I.surface_geometry sg WHERE sg.id = %L
-                    UNION ALL
-                      SELECT sg.id, sg.parent_id, g.level + 1 AS level FROM %I.surface_geometry sg, geometry g WHERE sg.parent_id = g.id
-                    )
-                    SELECT id FROM geometry ORDER BY level DESC',
-                    schema_name, sg_id, schema_name) LOOP 			  
-    EXECUTE format('DELETE FROM %I.textureparam WHERE surface_geometry_id = %L', schema_name, surface_geometry_rec);
-    EXECUTE format('DELETE FROM %I.surface_geometry WHERE id = %L RETURNING id', schema_name, surface_geometry_rec) INTO deleted_id;
-	RETURN NEXT deleted_id;
-  END LOOP;
-
-  IF clean_apps <> 0 AND deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.cleanup_appearances(0, $1)' USING schema_name;
-  END IF;
-
-  RETURN;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_surface_geometry (id: %): %', sg_id, SQLERRM;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
 END;
-$$
-LANGUAGE plpgsql;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-
-/*
-delete from IMPLICIT_GEOMETRY
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_implicit_geometry(
-  ig_id INTEGER,
-  clean_apps INTEGER DEFAULT 0,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_appearance(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
-  rel_brep_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  surface_data_ids int[] := '{}';
 BEGIN
-  --// PRE DELETE IMPLICIT GEOMETRY //--
-  -- get relative_geometry_id
-  EXECUTE format('SELECT relative_brep_id FROM %I.implicit_geometry WHERE id = %L',
-                    schema_name, ig_id) INTO rel_brep_id;
+  -- delete references to surface_datas
+  WITH del_surface_data_refs AS (
+    DELETE FROM
+      citydb.appear_to_surface_data t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.appearance_id = a.a_id
+    RETURNING
+      t.surface_data_id
+  )
+  SELECT
+    array_agg(surface_data_id)
+  INTO
+    surface_data_ids
+  FROM
+    del_surface_data_refs;
 
-  --// DELETE IMPLICIT GEOMETRY //--
-  EXECUTE format('DELETE FROM %I.implicit_geometry WHERE id = %L RETURNING id', schema_name, ig_id) INTO deleted_id;
-
-  --// POST DELETE IMPLICIT GEOMETRY //--
-  -- delete geometry
-  IF rel_brep_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, $2, $3)' USING rel_brep_id, clean_apps, schema_name;
+  -- delete citydb.surface_data(s)
+  IF -1 = ALL(surface_data_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_data(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_data_ids) AS a_id) a
+    LEFT JOIN
+      citydb.appear_to_surface_data n1
+      ON n1.surface_data_id  = a.a_id
+    WHERE n1.surface_data_id IS NULL;
   END IF;
 
-  RETURN deleted_id;
+  -- delete citydb.appearances
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.appearance t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    deleted_ids
+  FROM
+    delete_objects;
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_implicit_geometry (id: %): %', ig_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-
-/*
-delete from GRID_COVERAGE
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_grid_coverage(
-  gc_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_breakline_relief(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
 BEGIN
-  EXECUTE format('DELETE FROM %I.grid_coverage WHERE id = %L RETURNING id', schema_name, gc_id) INTO deleted_id;
+  -- delete citydb.breakline_reliefs
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.breakline_relief t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    deleted_ids
+  FROM
+    delete_objects;
 
-  RETURN deleted_id;
+  IF $2 <> 1 THEN
+    -- delete relief_component
+    PERFORM citydb.del_relief_component(deleted_ids, 2);
+  END IF;
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_grid_coverage (id: %): %', gc_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-
-/*
-delete from CITYOBJECT_GENERICATTRIB
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_genericattrib(
-  genattrib_id INTEGER,
-  delete_members INTEGER DEFAULT 0,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_bridge(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  genattrib_parent_id INTEGER;
-  data_type INTEGER;
-  member_id INTEGER;
-  member_rec RECORD;
-  deleted_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  address_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
 BEGIN
-  -- get parent_id and data type
-  EXECUTE format('SELECT parent_genattrib_id, datatype
-                    FROM %I.cityobject_genericattrib WHERE id = %L',
-                    schema_name, genattrib_id) INTO genattrib_parent_id, data_type;
+  -- delete referenced parts
+  PERFORM
+    citydb.del_bridge(array_agg(t.id))
+  FROM
+    citydb.bridge t,
+    unnest($1) a(a_id)
+  WHERE
+    t.bridge_parent_id = a.a_id
+    AND t.id != a.a_id;
 
-  --// PRE DELETE CITYOBJECT_GENERICATTRIB //--
-  -- if the attribute to be deleted is a set, first handle nested attributes
-  IF data_type = 7 THEN
-    IF delete_members <> 0 THEN
-      -- recursive delete of nested attributes
-      FOR member_id IN EXECUTE format(
-        'WITH RECURSIVE parts AS (
-           SELECT id FROM %I.cityobject_genericattrib 
-             WHERE parent_genattrib_id = %L
-           UNION ALL
-             SELECT part.id FROM %I.cityobject_genericattrib part, parts p 
-               WHERE part.parent_genattrib_id = p.id
-         ) SELECT id FROM parts', 
-         schema_name, genattrib_id, schema_name)
-      LOOP
-        EXECUTE format('DELETE FROM %I.cityobject_genericattrib WHERE id = %L', schema_name, member_id);
-      END LOOP;
-    ELSE
-      -- recursive update of nested attributes
-      FOR member_rec IN EXECUTE format(
-        'WITH RECURSIVE parts (id, parent_id, root_id) AS (
-           SELECT id, %L::integer AS parent_id, 
-             CASE WHEN root_genattrib_id = %L THEN id ELSE root_genattrib_id END AS root_id
-             FROM %I.cityobject_genericattrib WHERE parent_genattrib_id = %L
-           UNION ALL
-             SELECT part.id, part.parent_genattrib_id AS parent_id, p.root_id FROM %I.cityobject_genericattrib part, parts p 
-               WHERE part.parent_genattrib_id = p.id
-         )
-         SELECT id, parent_id, root_id FROM parts',
-         genattrib_parent_id, genattrib_id, schema_name, genattrib_id, schema_name)
-      LOOP
-        EXECUTE format(
-          'UPDATE %I.cityobject_genericattrib SET parent_genattrib_id = %L, root_genattrib_id = %L WHERE id = %L',
-           schema_name, member_rec.parent_id, member_rec.root_id, member_rec.id);
-      END LOOP;
-    END IF;
+  -- delete referenced parts
+  PERFORM
+    citydb.del_bridge(array_agg(t.id))
+  FROM
+    citydb.bridge t,
+    unnest($1) a(a_id)
+  WHERE
+    t.bridge_root_id = a.a_id
+    AND t.id != a.a_id;
+
+  -- delete references to addresss
+  WITH del_address_refs AS (
+    DELETE FROM
+      citydb.address_to_bridge t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.bridge_id = a.a_id
+    RETURNING
+      t.address_id
+  )
+  SELECT
+    array_agg(address_id)
+  INTO
+    address_ids
+  FROM
+    del_address_refs;
+
+  -- delete citydb.address(s)
+  IF -1 = ALL(address_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_address(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(address_ids) AS a_id) a
+    LEFT JOIN
+      citydb.address_to_bridge n1
+      ON n1.address_id  = a.a_id
+    LEFT JOIN
+      citydb.address_to_building n2
+      ON n2.address_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n3
+      ON n3.address_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n4
+      ON n4.address_id  = a.a_id
+    WHERE n1.address_id IS NULL
+      AND n2.address_id IS NULL
+      AND n3.address_id IS NULL
+      AND n4.address_id IS NULL;
   END IF;
 
-  --// DELETE CITYOBJECT_GENERICATTRIB //--
-  EXECUTE format('DELETE FROM %I.cityobject_genericattrib WHERE id = %L RETURNING id', schema_name, genattrib_id) INTO deleted_id;
+  --delete bridge_constr_elements
+  PERFORM
+    citydb.del_bridge_constr_element(array_agg(t.id))
+  FROM
+    citydb.bridge_constr_element t,
+    unnest($1) a(a_id)
+  WHERE
+    t.bridge_id = a.a_id;
 
-  RETURN deleted_id;
+  --delete bridge_installations
+  PERFORM
+    citydb.del_bridge_installation(array_agg(t.id))
+  FROM
+    citydb.bridge_installation t,
+    unnest($1) a(a_id)
+  WHERE
+    t.bridge_id = a.a_id;
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_genericattrib (id: %): %', genattrib_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+  --delete bridge_rooms
+  PERFORM
+    citydb.del_bridge_room(array_agg(t.id))
+  FROM
+    citydb.bridge_room t,
+    unnest($1) a(a_id)
+  WHERE
+    t.bridge_id = a.a_id;
 
+  --delete bridge_thematic_surfaces
+  PERFORM
+    citydb.del_bridge_thematic_surface(array_agg(t.id))
+  FROM
+    citydb.bridge_thematic_surface t,
+    unnest($1) a(a_id)
+  WHERE
+    t.bridge_id = a.a_id;
 
-/*
-delete from EXTERNAL_REFERENCE
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_external_reference(
-  ref_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+  -- delete citydb.bridges
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.bridge t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id,
+      lod1_solid_id,
+      lod2_solid_id,
+      lod3_solid_id,
+      lod4_solid_id,
+      lod1_multi_surface_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod2_multi_surface_id) ||
+    array_agg(lod3_multi_surface_id) ||
+    array_agg(lod4_multi_surface_id) ||
+    array_agg(lod1_solid_id) ||
+    array_agg(lod2_solid_id) ||
+    array_agg(lod3_solid_id) ||
+    array_agg(lod4_solid_id) ||
+    array_agg(lod1_multi_surface_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_bridge_constr_element(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  implicit_geometry_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
 BEGIN
-  EXECUTE format('DELETE FROM %I.external_reference WHERE id = %L RETURNING id', schema_name, ref_id) INTO deleted_id;
+  -- delete citydb.bridge_constr_elements
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.bridge_constr_element t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod2_implicit_rep_id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id,
+      lod1_implicit_rep_id,
+      lod1_brep_id,
+      lod3_brep_id,
+      lod4_brep_id,
+      lod2_brep_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod2_implicit_rep_id) ||
+    array_agg(lod3_implicit_rep_id) ||
+    array_agg(lod4_implicit_rep_id) ||
+    array_agg(lod1_implicit_rep_id),
+    array_agg(lod1_brep_id) ||
+    array_agg(lod3_brep_id) ||
+    array_agg(lod4_brep_id) ||
+    array_agg(lod2_brep_id)
+  INTO
+    deleted_ids,
+    implicit_geometry_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
 
-  RETURN deleted_id;
+  -- delete citydb.implicit_geometry(s)
+  IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_implicit_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
+    LEFT JOIN
+      citydb.bridge_constr_element n1
+      ON n1.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n2
+      ON n2.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n3
+      ON n3.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n4
+      ON n4.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_furniture n5
+      ON n5.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n6
+      ON n6.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n7
+      ON n7.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n8
+      ON n8.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n9
+      ON n9.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n10
+      ON n10.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_furniture n11
+      ON n11.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n12
+      ON n12.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n13
+      ON n13.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n14
+      ON n14.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n15
+      ON n15.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n16
+      ON n16.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n17
+      ON n17.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n18
+      ON n18.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n19
+      ON n19.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n20
+      ON n20.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n21
+      ON n21.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n22
+      ON n22.lod0_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n23
+      ON n23.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n24
+      ON n24.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n25
+      ON n25.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n26
+      ON n26.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n27
+      ON n27.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n28
+      ON n28.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n29
+      ON n29.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_furniture n30
+      ON n30.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n31
+      ON n31.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n32
+      ON n32.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n33
+      ON n33.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n34
+      ON n34.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n35
+      ON n35.lod3_implicit_rep_id  = a.a_id
+    WHERE n1.lod3_implicit_rep_id IS NULL
+      AND n2.lod2_implicit_rep_id IS NULL
+      AND n3.lod1_implicit_rep_id IS NULL
+      AND n4.lod4_implicit_rep_id IS NULL
+      AND n5.lod4_implicit_rep_id IS NULL
+      AND n6.lod4_implicit_rep_id IS NULL
+      AND n7.lod3_implicit_rep_id IS NULL
+      AND n8.lod2_implicit_rep_id IS NULL
+      AND n9.lod4_implicit_rep_id IS NULL
+      AND n10.lod3_implicit_rep_id IS NULL
+      AND n11.lod4_implicit_rep_id IS NULL
+      AND n12.lod2_implicit_rep_id IS NULL
+      AND n13.lod3_implicit_rep_id IS NULL
+      AND n14.lod4_implicit_rep_id IS NULL
+      AND n15.lod1_implicit_rep_id IS NULL
+      AND n16.lod2_implicit_rep_id IS NULL
+      AND n17.lod3_implicit_rep_id IS NULL
+      AND n18.lod4_implicit_rep_id IS NULL
+      AND n19.lod4_implicit_rep_id IS NULL
+      AND n20.lod1_implicit_rep_id IS NULL
+      AND n21.lod2_implicit_rep_id IS NULL
+      AND n22.lod0_implicit_rep_id IS NULL
+      AND n23.lod3_implicit_rep_id IS NULL
+      AND n24.lod4_implicit_rep_id IS NULL
+      AND n25.lod3_implicit_rep_id IS NULL
+      AND n26.lod2_implicit_rep_id IS NULL
+      AND n27.lod3_implicit_rep_id IS NULL
+      AND n28.lod4_implicit_rep_id IS NULL
+      AND n29.lod1_implicit_rep_id IS NULL
+      AND n30.lod4_implicit_rep_id IS NULL
+      AND n31.lod4_implicit_rep_id IS NULL
+      AND n32.lod3_implicit_rep_id IS NULL
+      AND n33.lod2_implicit_rep_id IS NULL
+      AND n34.lod4_implicit_rep_id IS NULL
+      AND n35.lod3_implicit_rep_id IS NULL;
+  END IF;
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_external_reference (id: %): %', ref_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
 
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
 
-/*
-delete from APPEARANCE
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_appearance(
-  app_id INTEGER,
-  cleanup INTEGER DEFAULT 0,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_bridge_furniture(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  implicit_geometry_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
 BEGIN
-  --// PRE DELETE APPEARANCE //--
-  -- delete surface data not being referenced by appearances any more
-  EXECUTE format('SELECT citydb_pkg.delete_surface_data(sd.id, %L) FROM %I.surface_data sd, %I.appear_to_surface_data ats 
-                    WHERE sd.id = ats.surface_data_id AND ats.appearance_id = %L
-                    AND citydb_pkg.is_not_referenced(%L, %L, sd.id, %L, %L, %L)', 
-                    schema_name, schema_name, schema_name, app_id, 
-                    'appear_to_surface_data', 'surface_data_id', 'appearance_id', app_id, schema_name);
+  -- delete citydb.bridge_furnitures
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.bridge_furniture t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod4_implicit_rep_id,
+      lod4_brep_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod4_implicit_rep_id),
+    array_agg(lod4_brep_id)
+  INTO
+    deleted_ids,
+    implicit_geometry_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
 
-  -- delete references to surface data
-  EXECUTE format('DELETE FROM %I.appear_to_surface_data WHERE appearance_id = %L', schema_name, app_id);
-  
-  --// DELETE APPEARANCE //--
-  EXECUTE format('DELETE FROM %I.appearance WHERE id = %L RETURNING id', schema_name, app_id) INTO deleted_id;
-
-  IF cleanup <> 0 AND deleted_id IS NOT NULL THEN
-    -- delete tex images not referenced by surface data any more
-    EXECUTE 'SELECT citydb_pkg.cleanup_tex_images($1)' USING schema_name; 
+  -- delete citydb.implicit_geometry(s)
+  IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_implicit_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
+    LEFT JOIN
+      citydb.bridge_constr_element n1
+      ON n1.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n2
+      ON n2.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n3
+      ON n3.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n4
+      ON n4.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_furniture n5
+      ON n5.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n6
+      ON n6.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n7
+      ON n7.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n8
+      ON n8.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n9
+      ON n9.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n10
+      ON n10.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_furniture n11
+      ON n11.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n12
+      ON n12.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n13
+      ON n13.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n14
+      ON n14.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n15
+      ON n15.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n16
+      ON n16.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n17
+      ON n17.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n18
+      ON n18.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n19
+      ON n19.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n20
+      ON n20.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n21
+      ON n21.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n22
+      ON n22.lod0_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n23
+      ON n23.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n24
+      ON n24.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n25
+      ON n25.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n26
+      ON n26.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n27
+      ON n27.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n28
+      ON n28.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n29
+      ON n29.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_furniture n30
+      ON n30.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n31
+      ON n31.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n32
+      ON n32.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n33
+      ON n33.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n34
+      ON n34.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n35
+      ON n35.lod3_implicit_rep_id  = a.a_id
+    WHERE n1.lod3_implicit_rep_id IS NULL
+      AND n2.lod2_implicit_rep_id IS NULL
+      AND n3.lod1_implicit_rep_id IS NULL
+      AND n4.lod4_implicit_rep_id IS NULL
+      AND n5.lod4_implicit_rep_id IS NULL
+      AND n6.lod4_implicit_rep_id IS NULL
+      AND n7.lod3_implicit_rep_id IS NULL
+      AND n8.lod2_implicit_rep_id IS NULL
+      AND n9.lod4_implicit_rep_id IS NULL
+      AND n10.lod3_implicit_rep_id IS NULL
+      AND n11.lod4_implicit_rep_id IS NULL
+      AND n12.lod2_implicit_rep_id IS NULL
+      AND n13.lod3_implicit_rep_id IS NULL
+      AND n14.lod4_implicit_rep_id IS NULL
+      AND n15.lod1_implicit_rep_id IS NULL
+      AND n16.lod2_implicit_rep_id IS NULL
+      AND n17.lod3_implicit_rep_id IS NULL
+      AND n18.lod4_implicit_rep_id IS NULL
+      AND n19.lod4_implicit_rep_id IS NULL
+      AND n20.lod1_implicit_rep_id IS NULL
+      AND n21.lod2_implicit_rep_id IS NULL
+      AND n22.lod0_implicit_rep_id IS NULL
+      AND n23.lod3_implicit_rep_id IS NULL
+      AND n24.lod4_implicit_rep_id IS NULL
+      AND n25.lod3_implicit_rep_id IS NULL
+      AND n26.lod2_implicit_rep_id IS NULL
+      AND n27.lod3_implicit_rep_id IS NULL
+      AND n28.lod4_implicit_rep_id IS NULL
+      AND n29.lod1_implicit_rep_id IS NULL
+      AND n30.lod4_implicit_rep_id IS NULL
+      AND n31.lod4_implicit_rep_id IS NULL
+      AND n32.lod3_implicit_rep_id IS NULL
+      AND n33.lod2_implicit_rep_id IS NULL
+      AND n34.lod4_implicit_rep_id IS NULL
+      AND n35.lod3_implicit_rep_id IS NULL;
   END IF;
 
-  RETURN deleted_id;
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_appearance (id: %): %', app_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
 
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-/*
-delete from SURFACE_DATA
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_surface_data(
-  sd_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_bridge_installation(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  implicit_geometry_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
 BEGIN
-  --// PRE DELETE SURFACE DATA //--
-  -- delete texture params
-  EXECUTE format('DELETE FROM %I.textureparam WHERE surface_data_id = %L', schema_name, sd_id);
+  --delete bridge_thematic_surfaces
+  PERFORM
+    citydb.del_bridge_thematic_surface(array_agg(t.id))
+  FROM
+    citydb.bridge_thematic_surface t,
+    unnest($1) a(a_id)
+  WHERE
+    t.bridge_installation_id = a.a_id;
 
-  -- delete references to appearance
-  EXECUTE format('DELETE FROM %I.appear_to_surface_data WHERE surface_data_id = %L', schema_name, sd_id);
+  -- delete citydb.bridge_installations
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.bridge_installation t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod4_implicit_rep_id,
+      lod2_implicit_rep_id,
+      lod3_implicit_rep_id,
+      lod2_brep_id,
+      lod3_brep_id,
+      lod4_brep_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod4_implicit_rep_id) ||
+    array_agg(lod2_implicit_rep_id) ||
+    array_agg(lod3_implicit_rep_id),
+    array_agg(lod2_brep_id) ||
+    array_agg(lod3_brep_id) ||
+    array_agg(lod4_brep_id)
+  INTO
+    deleted_ids,
+    implicit_geometry_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
 
-  --// DELETE SURFACE DATA //--
-  EXECUTE format('DELETE FROM %I.surface_data WHERE id = %L RETURNING id', schema_name, sd_id) INTO deleted_id;
+  -- delete citydb.implicit_geometry(s)
+  IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_implicit_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
+    LEFT JOIN
+      citydb.bridge_constr_element n1
+      ON n1.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n2
+      ON n2.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n3
+      ON n3.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n4
+      ON n4.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_furniture n5
+      ON n5.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n6
+      ON n6.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n7
+      ON n7.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n8
+      ON n8.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n9
+      ON n9.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n10
+      ON n10.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_furniture n11
+      ON n11.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n12
+      ON n12.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n13
+      ON n13.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n14
+      ON n14.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n15
+      ON n15.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n16
+      ON n16.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n17
+      ON n17.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n18
+      ON n18.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n19
+      ON n19.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n20
+      ON n20.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n21
+      ON n21.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n22
+      ON n22.lod0_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n23
+      ON n23.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n24
+      ON n24.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n25
+      ON n25.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n26
+      ON n26.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n27
+      ON n27.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n28
+      ON n28.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n29
+      ON n29.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_furniture n30
+      ON n30.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n31
+      ON n31.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n32
+      ON n32.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n33
+      ON n33.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n34
+      ON n34.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n35
+      ON n35.lod3_implicit_rep_id  = a.a_id
+    WHERE n1.lod3_implicit_rep_id IS NULL
+      AND n2.lod2_implicit_rep_id IS NULL
+      AND n3.lod1_implicit_rep_id IS NULL
+      AND n4.lod4_implicit_rep_id IS NULL
+      AND n5.lod4_implicit_rep_id IS NULL
+      AND n6.lod4_implicit_rep_id IS NULL
+      AND n7.lod3_implicit_rep_id IS NULL
+      AND n8.lod2_implicit_rep_id IS NULL
+      AND n9.lod4_implicit_rep_id IS NULL
+      AND n10.lod3_implicit_rep_id IS NULL
+      AND n11.lod4_implicit_rep_id IS NULL
+      AND n12.lod2_implicit_rep_id IS NULL
+      AND n13.lod3_implicit_rep_id IS NULL
+      AND n14.lod4_implicit_rep_id IS NULL
+      AND n15.lod1_implicit_rep_id IS NULL
+      AND n16.lod2_implicit_rep_id IS NULL
+      AND n17.lod3_implicit_rep_id IS NULL
+      AND n18.lod4_implicit_rep_id IS NULL
+      AND n19.lod4_implicit_rep_id IS NULL
+      AND n20.lod1_implicit_rep_id IS NULL
+      AND n21.lod2_implicit_rep_id IS NULL
+      AND n22.lod0_implicit_rep_id IS NULL
+      AND n23.lod3_implicit_rep_id IS NULL
+      AND n24.lod4_implicit_rep_id IS NULL
+      AND n25.lod3_implicit_rep_id IS NULL
+      AND n26.lod2_implicit_rep_id IS NULL
+      AND n27.lod3_implicit_rep_id IS NULL
+      AND n28.lod4_implicit_rep_id IS NULL
+      AND n29.lod1_implicit_rep_id IS NULL
+      AND n30.lod4_implicit_rep_id IS NULL
+      AND n31.lod4_implicit_rep_id IS NULL
+      AND n32.lod3_implicit_rep_id IS NULL
+      AND n33.lod2_implicit_rep_id IS NULL
+      AND n34.lod4_implicit_rep_id IS NULL
+      AND n35.lod3_implicit_rep_id IS NULL;
+  END IF;
 
-  -- to delete entries in TEX_IMAGE table use citydb_pkg.cleanup_tex_images('schema_name')
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
 
-  RETURN deleted_id;
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_surface_data (id: %): %', sd_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-
-/*
-delete from ADDRESS
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_address(
-  ad_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_bridge_opening(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  implicit_geometry_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
+  address_ids int[] := '{}';
 BEGIN
-  --// PRE DELETE ADDRESS //--
-  -- delete reference to building
-  EXECUTE format('DELETE FROM %I.address_to_building WHERE address_id = %L', schema_name, ad_id);
+  -- delete citydb.bridge_openings
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.bridge_opening t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id,
+      address_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod3_implicit_rep_id) ||
+    array_agg(lod4_implicit_rep_id),
+    array_agg(lod3_multi_surface_id) ||
+    array_agg(lod4_multi_surface_id),
+    array_agg(address_id)
+  INTO
+    deleted_ids,
+    implicit_geometry_ids,
+    surface_geometry_ids,
+    address_ids
+  FROM
+    delete_objects;
 
-  -- delete reference to bridge
-  EXECUTE format('DELETE FROM %I.address_to_bridge WHERE address_id = %L', schema_name, ad_id);
+  -- delete citydb.implicit_geometry(s)
+  IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_implicit_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
+    LEFT JOIN
+      citydb.bridge_constr_element n1
+      ON n1.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n2
+      ON n2.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n3
+      ON n3.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n4
+      ON n4.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_furniture n5
+      ON n5.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n6
+      ON n6.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n7
+      ON n7.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n8
+      ON n8.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n9
+      ON n9.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n10
+      ON n10.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_furniture n11
+      ON n11.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n12
+      ON n12.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n13
+      ON n13.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n14
+      ON n14.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n15
+      ON n15.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n16
+      ON n16.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n17
+      ON n17.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n18
+      ON n18.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n19
+      ON n19.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n20
+      ON n20.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n21
+      ON n21.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n22
+      ON n22.lod0_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n23
+      ON n23.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n24
+      ON n24.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n25
+      ON n25.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n26
+      ON n26.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n27
+      ON n27.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n28
+      ON n28.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n29
+      ON n29.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_furniture n30
+      ON n30.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n31
+      ON n31.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n32
+      ON n32.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n33
+      ON n33.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n34
+      ON n34.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n35
+      ON n35.lod3_implicit_rep_id  = a.a_id
+    WHERE n1.lod3_implicit_rep_id IS NULL
+      AND n2.lod2_implicit_rep_id IS NULL
+      AND n3.lod1_implicit_rep_id IS NULL
+      AND n4.lod4_implicit_rep_id IS NULL
+      AND n5.lod4_implicit_rep_id IS NULL
+      AND n6.lod4_implicit_rep_id IS NULL
+      AND n7.lod3_implicit_rep_id IS NULL
+      AND n8.lod2_implicit_rep_id IS NULL
+      AND n9.lod4_implicit_rep_id IS NULL
+      AND n10.lod3_implicit_rep_id IS NULL
+      AND n11.lod4_implicit_rep_id IS NULL
+      AND n12.lod2_implicit_rep_id IS NULL
+      AND n13.lod3_implicit_rep_id IS NULL
+      AND n14.lod4_implicit_rep_id IS NULL
+      AND n15.lod1_implicit_rep_id IS NULL
+      AND n16.lod2_implicit_rep_id IS NULL
+      AND n17.lod3_implicit_rep_id IS NULL
+      AND n18.lod4_implicit_rep_id IS NULL
+      AND n19.lod4_implicit_rep_id IS NULL
+      AND n20.lod1_implicit_rep_id IS NULL
+      AND n21.lod2_implicit_rep_id IS NULL
+      AND n22.lod0_implicit_rep_id IS NULL
+      AND n23.lod3_implicit_rep_id IS NULL
+      AND n24.lod4_implicit_rep_id IS NULL
+      AND n25.lod3_implicit_rep_id IS NULL
+      AND n26.lod2_implicit_rep_id IS NULL
+      AND n27.lod3_implicit_rep_id IS NULL
+      AND n28.lod4_implicit_rep_id IS NULL
+      AND n29.lod1_implicit_rep_id IS NULL
+      AND n30.lod4_implicit_rep_id IS NULL
+      AND n31.lod4_implicit_rep_id IS NULL
+      AND n32.lod3_implicit_rep_id IS NULL
+      AND n33.lod2_implicit_rep_id IS NULL
+      AND n34.lod4_implicit_rep_id IS NULL
+      AND n35.lod3_implicit_rep_id IS NULL;
+  END IF;
 
-  -- delete reference to opening
-  EXECUTE format('UPDATE %I.opening SET address_id=null WHERE address_id = %L', schema_name, ad_id);
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
 
-  -- delete reference to bridge_opening
-  EXECUTE format('UPDATE %I.bridge_opening SET address_id=null WHERE address_id = %L', schema_name, ad_id);
+  -- delete citydb.address(s)
+  IF -1 = ALL(address_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_address(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(address_ids) AS a_id) a
+    LEFT JOIN
+      citydb.address_to_bridge n1
+      ON n1.address_id  = a.a_id
+    LEFT JOIN
+      citydb.address_to_building n2
+      ON n2.address_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n3
+      ON n3.address_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n4
+      ON n4.address_id  = a.a_id
+    WHERE n1.address_id IS NULL
+      AND n2.address_id IS NULL
+      AND n3.address_id IS NULL
+      AND n4.address_id IS NULL;
+  END IF;
 
-  --// DELETE ADDRESS //--
-  EXECUTE format('DELETE FROM %I.address WHERE id = %L RETURNING id', schema_name, ad_id) INTO deleted_id;
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
 
-  RETURN deleted_id;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_address (id: %): %', ad_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from LAND_USE
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_land_use(
-  lu_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_bridge_room(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
-  lu_lod0_id INTEGER;
-  lu_lod1_id INTEGER;
-  lu_lod2_id INTEGER;
-  lu_lod3_id INTEGER;
-  lu_lod4_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  surface_geometry_ids int[] := '{}';
 BEGIN
-  --// PRE DELETE LAND USE //--
-  -- get reference ids to surface_geometry table
-  EXECUTE format('SELECT lod0_multi_surface_id, lod1_multi_surface_id, lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id
-                    FROM %I.land_use WHERE id = %L', schema_name, lu_id) 
-                    INTO lu_lod0_id, lu_lod1_id, lu_lod2_id, lu_lod3_id, lu_lod4_id;
+  --delete bridge_furnitures
+  PERFORM
+    citydb.del_bridge_furniture(array_agg(t.id))
+  FROM
+    citydb.bridge_furniture t,
+    unnest($1) a(a_id)
+  WHERE
+    t.bridge_room_id = a.a_id;
 
-  --// DELETE LAND USE //--
-  EXECUTE format('DELETE FROM %I.land_use WHERE id = %L RETURNING id', schema_name, lu_id) INTO deleted_id;
+  --delete bridge_installations
+  PERFORM
+    citydb.del_bridge_installation(array_agg(t.id))
+  FROM
+    citydb.bridge_installation t,
+    unnest($1) a(a_id)
+  WHERE
+    t.bridge_room_id = a.a_id;
 
-  --// POST DELETE LAND USE //--
-  -- delete geometry
-  IF lu_lod0_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING lu_lod0_id, schema_name;
+  --delete bridge_thematic_surfaces
+  PERFORM
+    citydb.del_bridge_thematic_surface(array_agg(t.id))
+  FROM
+    citydb.bridge_thematic_surface t,
+    unnest($1) a(a_id)
+  WHERE
+    t.bridge_room_id = a.a_id;
+
+  -- delete citydb.bridge_rooms
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.bridge_room t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod4_multi_surface_id,
+      lod4_solid_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod4_multi_surface_id) ||
+    array_agg(lod4_solid_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
   END IF;
-  IF lu_lod1_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING lu_lod1_id, schema_name;
-  END IF;
-  IF lu_lod2_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING lu_lod2_id, schema_name;
-  END IF;
-  IF lu_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING lu_lod3_id, schema_name;
-  END IF;
-  IF lu_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING lu_lod4_id, schema_name;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
   END IF;
 
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING lu_id, schema_name;
-  END IF;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_land_use (id: %): %', lu_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from GENERIC_CITYOBJECT
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_generic_cityobject(
-  gco_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_bridge_thematic_surface(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
-  gco_lod0_id INTEGER;
-  gco_lod1_id INTEGER;
-  gco_lod2_id INTEGER;
-  gco_lod3_id INTEGER;
-  gco_lod4_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  bridge_opening_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
 BEGIN
-  --// PRE DELETE GENERIC CITY OBJECT //--
-  -- get reference ids to surface_geometry table
-  EXECUTE format('SELECT lod0_brep_id, lod1_brep_id , lod2_brep_id, lod3_brep_id, lod4_brep_id 
-                    FROM %I.generic_cityobject WHERE id = %L', schema_name, gco_id)
-                    INTO gco_lod0_id, gco_lod1_id, gco_lod2_id, gco_lod3_id, gco_lod4_id;
+  -- delete references to bridge_openings
+  WITH del_bridge_opening_refs AS (
+    DELETE FROM
+      citydb.bridge_open_to_them_srf t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.bridge_thematic_surface_id = a.a_id
+    RETURNING
+      t.bridge_opening_id
+  )
+  SELECT
+    array_agg(bridge_opening_id)
+  INTO
+    bridge_opening_ids
+  FROM
+    del_bridge_opening_refs;
 
-  --// DELETE GENERIC CITY OBJECT //--
-  EXECUTE format('DELETE FROM %I.generic_cityobject WHERE id = %L RETURNING id', schema_name, gco_id) INTO deleted_id;
-
-  --// POST DELETE GENERIC CITY OBJECT //--
-  -- delete geometry
-  IF gco_lod0_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING gco_lod0_id, schema_name;
-  END IF;
-  IF gco_lod1_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING gco_lod1_id, schema_name;
-  END IF;
-  IF gco_lod2_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING gco_lod2_id, schema_name;
-  END IF;
-  IF gco_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING gco_lod3_id, schema_name;
-  END IF;
-  IF gco_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING gco_lod4_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING gco_id, schema_name;
+  -- delete citydb.bridge_opening(s)
+  IF -1 = ALL(bridge_opening_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_bridge_opening(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(bridge_opening_ids) AS a_id) a;
   END IF;
 
-  RETURN deleted_id;
+  -- delete citydb.bridge_thematic_surfaces
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.bridge_thematic_surface t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod2_multi_surface_id) ||
+    array_agg(lod3_multi_surface_id) ||
+    array_agg(lod4_multi_surface_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_generic_cityobject (id: %): %', gco_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
 
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
 
-/*
-delete from SOLITARY_VEGETAT_OBJECT
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_solitary_veg_obj(
-  svo_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_building(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
-  svo_lod1_id INTEGER;
-  svo_lod2_id INTEGER;
-  svo_lod3_id INTEGER;
-  svo_lod4_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  address_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
 BEGIN
-  --// PRE DELETE SOLITARY VEGETATION OBJECT //--
-  -- get reference ids to surface_geometry table  
-  EXECUTE format('SELECT lod1_brep_id , lod2_brep_id, lod3_brep_id, lod4_brep_id
-                    FROM %I.solitary_vegetat_object WHERE id = %L', schema_name, svo_id) 
-                    INTO svo_lod1_id, svo_lod2_id, svo_lod3_id, svo_lod4_id;
+  -- delete referenced parts
+  PERFORM
+    citydb.del_building(array_agg(t.id))
+  FROM
+    citydb.building t,
+    unnest($1) a(a_id)
+  WHERE
+    t.building_parent_id = a.a_id
+    AND t.id != a.a_id;
 
-  --// DELETE SOLITARY VEGETATION OBJECT //--
-  EXECUTE format('DELETE FROM %I.solitary_vegetat_object WHERE id = %L RETURNING id', schema_name, svo_id) INTO deleted_id;
+  -- delete referenced parts
+  PERFORM
+    citydb.del_building(array_agg(t.id))
+  FROM
+    citydb.building t,
+    unnest($1) a(a_id)
+  WHERE
+    t.building_root_id = a.a_id
+    AND t.id != a.a_id;
 
-  --// POST DELETE SOLITARY VEGETATION OBJECT //--
-  -- delete geometry
-  IF svo_lod1_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING svo_lod1_id, schema_name;
-  END IF; 
-  IF svo_lod2_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING svo_lod2_id, schema_name;
+  -- delete references to addresss
+  WITH del_address_refs AS (
+    DELETE FROM
+      citydb.address_to_building t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.building_id = a.a_id
+    RETURNING
+      t.address_id
+  )
+  SELECT
+    array_agg(address_id)
+  INTO
+    address_ids
+  FROM
+    del_address_refs;
+
+  -- delete citydb.address(s)
+  IF -1 = ALL(address_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_address(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(address_ids) AS a_id) a
+    LEFT JOIN
+      citydb.address_to_bridge n1
+      ON n1.address_id  = a.a_id
+    LEFT JOIN
+      citydb.address_to_building n2
+      ON n2.address_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n3
+      ON n3.address_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n4
+      ON n4.address_id  = a.a_id
+    WHERE n1.address_id IS NULL
+      AND n2.address_id IS NULL
+      AND n3.address_id IS NULL
+      AND n4.address_id IS NULL;
   END IF;
-  IF svo_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING svo_lod3_id, schema_name;
+
+  --delete building_installations
+  PERFORM
+    citydb.del_building_installation(array_agg(t.id))
+  FROM
+    citydb.building_installation t,
+    unnest($1) a(a_id)
+  WHERE
+    t.building_id = a.a_id;
+
+  --delete rooms
+  PERFORM
+    citydb.del_room(array_agg(t.id))
+  FROM
+    citydb.room t,
+    unnest($1) a(a_id)
+  WHERE
+    t.building_id = a.a_id;
+
+  --delete thematic_surfaces
+  PERFORM
+    citydb.del_thematic_surface(array_agg(t.id))
+  FROM
+    citydb.thematic_surface t,
+    unnest($1) a(a_id)
+  WHERE
+    t.building_id = a.a_id;
+
+  -- delete citydb.buildings
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.building t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod0_roofprint_id,
+      lod1_multi_surface_id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id,
+      lod1_solid_id,
+      lod2_solid_id,
+      lod3_solid_id,
+      lod4_solid_id,
+      lod0_footprint_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod0_roofprint_id) ||
+    array_agg(lod1_multi_surface_id) ||
+    array_agg(lod2_multi_surface_id) ||
+    array_agg(lod3_multi_surface_id) ||
+    array_agg(lod4_multi_surface_id) ||
+    array_agg(lod1_solid_id) ||
+    array_agg(lod2_solid_id) ||
+    array_agg(lod3_solid_id) ||
+    array_agg(lod4_solid_id) ||
+    array_agg(lod0_footprint_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
   END IF;
-  IF svo_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING svo_lod4_id, schema_name;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
   END IF;
 
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING svo_id, schema_name;
-  END IF;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_solitary_veg_obj (id: %): %', svo_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from PLANT_COVER
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_plant_cover(
-  pc_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_building_furniture(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
-  pc_lod1_msrf_id INTEGER;
-  pc_lod2_msrf_id INTEGER;
-  pc_lod3_msrf_id INTEGER;
-  pc_lod4_msrf_id INTEGER;
-  pc_lod1_msolid_id INTEGER;
-  pc_lod2_msolid_id INTEGER;
-  pc_lod3_msolid_id INTEGER;
-  pc_lod4_msolid_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  implicit_geometry_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
 BEGIN
-  --// PRE DELETE PLANT COVER //--
-  -- get reference ids to surface_geometry table  
-  EXECUTE format('SELECT lod1_multi_surface_id , lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id,
-                    lod1_multi_solid_id , lod2_multi_solid_id, lod3_multi_solid_id, lod4_multi_solid_id FROM %I.plant_cover WHERE id = %L', schema_name, pc_id) 
-                    INTO pc_lod1_msrf_id, pc_lod2_msrf_id, pc_lod3_msrf_id, pc_lod4_msrf_id, 
-                         pc_lod1_msolid_id, pc_lod2_msolid_id, pc_lod3_msolid_id, pc_lod4_msolid_id;
+  -- delete citydb.building_furnitures
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.building_furniture t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod4_implicit_rep_id,
+      lod4_brep_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod4_implicit_rep_id),
+    array_agg(lod4_brep_id)
+  INTO
+    deleted_ids,
+    implicit_geometry_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
 
-  --// DELETE PLANT COVER //--
-  EXECUTE format('DELETE FROM %I.plant_cover WHERE id = %L RETURNING id', schema_name, pc_id) INTO deleted_id;
+  -- delete citydb.implicit_geometry(s)
+  IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_implicit_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
+    LEFT JOIN
+      citydb.bridge_constr_element n1
+      ON n1.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n2
+      ON n2.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n3
+      ON n3.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n4
+      ON n4.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_furniture n5
+      ON n5.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n6
+      ON n6.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n7
+      ON n7.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n8
+      ON n8.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n9
+      ON n9.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n10
+      ON n10.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_furniture n11
+      ON n11.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n12
+      ON n12.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n13
+      ON n13.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n14
+      ON n14.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n15
+      ON n15.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n16
+      ON n16.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n17
+      ON n17.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n18
+      ON n18.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n19
+      ON n19.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n20
+      ON n20.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n21
+      ON n21.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n22
+      ON n22.lod0_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n23
+      ON n23.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n24
+      ON n24.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n25
+      ON n25.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n26
+      ON n26.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n27
+      ON n27.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n28
+      ON n28.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n29
+      ON n29.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_furniture n30
+      ON n30.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n31
+      ON n31.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n32
+      ON n32.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n33
+      ON n33.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n34
+      ON n34.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n35
+      ON n35.lod3_implicit_rep_id  = a.a_id
+    WHERE n1.lod3_implicit_rep_id IS NULL
+      AND n2.lod2_implicit_rep_id IS NULL
+      AND n3.lod1_implicit_rep_id IS NULL
+      AND n4.lod4_implicit_rep_id IS NULL
+      AND n5.lod4_implicit_rep_id IS NULL
+      AND n6.lod4_implicit_rep_id IS NULL
+      AND n7.lod3_implicit_rep_id IS NULL
+      AND n8.lod2_implicit_rep_id IS NULL
+      AND n9.lod4_implicit_rep_id IS NULL
+      AND n10.lod3_implicit_rep_id IS NULL
+      AND n11.lod4_implicit_rep_id IS NULL
+      AND n12.lod2_implicit_rep_id IS NULL
+      AND n13.lod3_implicit_rep_id IS NULL
+      AND n14.lod4_implicit_rep_id IS NULL
+      AND n15.lod1_implicit_rep_id IS NULL
+      AND n16.lod2_implicit_rep_id IS NULL
+      AND n17.lod3_implicit_rep_id IS NULL
+      AND n18.lod4_implicit_rep_id IS NULL
+      AND n19.lod4_implicit_rep_id IS NULL
+      AND n20.lod1_implicit_rep_id IS NULL
+      AND n21.lod2_implicit_rep_id IS NULL
+      AND n22.lod0_implicit_rep_id IS NULL
+      AND n23.lod3_implicit_rep_id IS NULL
+      AND n24.lod4_implicit_rep_id IS NULL
+      AND n25.lod3_implicit_rep_id IS NULL
+      AND n26.lod2_implicit_rep_id IS NULL
+      AND n27.lod3_implicit_rep_id IS NULL
+      AND n28.lod4_implicit_rep_id IS NULL
+      AND n29.lod1_implicit_rep_id IS NULL
+      AND n30.lod4_implicit_rep_id IS NULL
+      AND n31.lod4_implicit_rep_id IS NULL
+      AND n32.lod3_implicit_rep_id IS NULL
+      AND n33.lod2_implicit_rep_id IS NULL
+      AND n34.lod4_implicit_rep_id IS NULL
+      AND n35.lod3_implicit_rep_id IS NULL;
+  END IF;
 
-  --// POST DELETE PLANT COVER //--
-  -- delete geometry
-  IF pc_lod1_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING pc_lod1_msrf_id, schema_name;
-  END IF;
-  IF pc_lod2_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING pc_lod2_msrf_id, schema_name;
-  END IF;
-  IF pc_lod3_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING pc_lod3_msrf_id, schema_name;
-  END IF;
-  IF pc_lod4_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING pc_lod4_msrf_id, schema_name;
-  END IF;
-  IF pc_lod1_msolid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING pc_lod1_msolid_id, schema_name;
-  END IF;
-  IF pc_lod2_msolid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING pc_lod2_msolid_id, schema_name;
-  END IF;
-  IF pc_lod3_msolid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING pc_lod3_msolid_id, schema_name;
-  END IF;
-  IF pc_lod4_msolid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING pc_lod4_msolid_id, schema_name;
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
   END IF;
 
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING pc_id, schema_name;
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
   END IF;
 
-  RETURN deleted_id;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_plant_cover (id: %): %', pc_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from WATERBODY
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_waterbody(
-  wb_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_building_installation(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
-  wb_lod0_msrf_id INTEGER;
-  wb_lod1_msrf_id INTEGER;
-  wb_lod1_solid_id INTEGER;
-  wb_lod2_solid_id INTEGER;
-  wb_lod3_solid_id INTEGER;
-  wb_lod4_solid_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  implicit_geometry_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
 BEGIN
-  --// PRE DELETE WATERBODY //--
-  -- delete water boundary surfaces being not referenced from waterbodies any more
-  EXECUTE format('SELECT citydb_pkg.delete_waterbnd_surface(wbs.id, %L) 
-                    FROM %I.waterboundary_surface wbs, %I.waterbod_to_waterbnd_srf wb2wbs
-                    WHERE wbs.id = wb2wbs.waterboundary_surface_id AND wb2wbs.waterbody_id = %L
-                    AND citydb_pkg.is_not_referenced(%L, %L, wbs.id, %L, %L, %L)', 
-                    schema_name, schema_name, schema_name, wb_id, 
-                    'waterbod_to_waterbnd_srf', 'waterboundary_surface_id', 'waterbody_id', wb_id, schema_name);
+  --delete thematic_surfaces
+  PERFORM
+    citydb.del_thematic_surface(array_agg(t.id))
+  FROM
+    citydb.thematic_surface t,
+    unnest($1) a(a_id)
+  WHERE
+    t.building_installation_id = a.a_id;
 
-  -- delete reference to water boundary surface 
-  EXECUTE format('DELETE FROM %I.waterbod_to_waterbnd_srf WHERE waterbody_id = %L', schema_name, wb_id);
+  -- delete citydb.building_installations
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.building_installation t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod4_implicit_rep_id,
+      lod2_implicit_rep_id,
+      lod3_implicit_rep_id,
+      lod2_brep_id,
+      lod3_brep_id,
+      lod4_brep_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod4_implicit_rep_id) ||
+    array_agg(lod2_implicit_rep_id) ||
+    array_agg(lod3_implicit_rep_id),
+    array_agg(lod2_brep_id) ||
+    array_agg(lod3_brep_id) ||
+    array_agg(lod4_brep_id)
+  INTO
+    deleted_ids,
+    implicit_geometry_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
 
-  -- get reference ids to surface_geometry table
-  EXECUTE format('SELECT lod0_multi_surface_id, lod1_multi_surface_id, 
-                    lod1_solid_id , lod2_solid_id, lod3_solid_id, lod4_solid_id 
-                    FROM %I.waterbody WHERE id = %L', schema_name, wb_id)   
-                    INTO wb_lod0_msrf_id, wb_lod1_msrf_id, wb_lod1_solid_id, wb_lod2_solid_id, wb_lod3_solid_id, wb_lod4_solid_id;
-
-  --// DELETE WATERBODY //--
-  EXECUTE format('DELETE FROM %I.waterbody WHERE id = %L RETURNING id', schema_name, wb_id) INTO deleted_id;
-
-  --// POST DELETE WATERBODY //--
-  -- delete geometry
-  IF wb_lod0_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING wb_lod0_msrf_id, schema_name;
+  -- delete citydb.implicit_geometry(s)
+  IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_implicit_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
+    LEFT JOIN
+      citydb.bridge_constr_element n1
+      ON n1.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n2
+      ON n2.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n3
+      ON n3.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n4
+      ON n4.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_furniture n5
+      ON n5.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n6
+      ON n6.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n7
+      ON n7.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n8
+      ON n8.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n9
+      ON n9.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n10
+      ON n10.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_furniture n11
+      ON n11.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n12
+      ON n12.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n13
+      ON n13.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n14
+      ON n14.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n15
+      ON n15.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n16
+      ON n16.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n17
+      ON n17.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n18
+      ON n18.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n19
+      ON n19.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n20
+      ON n20.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n21
+      ON n21.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n22
+      ON n22.lod0_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n23
+      ON n23.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n24
+      ON n24.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n25
+      ON n25.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n26
+      ON n26.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n27
+      ON n27.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n28
+      ON n28.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n29
+      ON n29.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_furniture n30
+      ON n30.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n31
+      ON n31.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n32
+      ON n32.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n33
+      ON n33.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n34
+      ON n34.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n35
+      ON n35.lod3_implicit_rep_id  = a.a_id
+    WHERE n1.lod3_implicit_rep_id IS NULL
+      AND n2.lod2_implicit_rep_id IS NULL
+      AND n3.lod1_implicit_rep_id IS NULL
+      AND n4.lod4_implicit_rep_id IS NULL
+      AND n5.lod4_implicit_rep_id IS NULL
+      AND n6.lod4_implicit_rep_id IS NULL
+      AND n7.lod3_implicit_rep_id IS NULL
+      AND n8.lod2_implicit_rep_id IS NULL
+      AND n9.lod4_implicit_rep_id IS NULL
+      AND n10.lod3_implicit_rep_id IS NULL
+      AND n11.lod4_implicit_rep_id IS NULL
+      AND n12.lod2_implicit_rep_id IS NULL
+      AND n13.lod3_implicit_rep_id IS NULL
+      AND n14.lod4_implicit_rep_id IS NULL
+      AND n15.lod1_implicit_rep_id IS NULL
+      AND n16.lod2_implicit_rep_id IS NULL
+      AND n17.lod3_implicit_rep_id IS NULL
+      AND n18.lod4_implicit_rep_id IS NULL
+      AND n19.lod4_implicit_rep_id IS NULL
+      AND n20.lod1_implicit_rep_id IS NULL
+      AND n21.lod2_implicit_rep_id IS NULL
+      AND n22.lod0_implicit_rep_id IS NULL
+      AND n23.lod3_implicit_rep_id IS NULL
+      AND n24.lod4_implicit_rep_id IS NULL
+      AND n25.lod3_implicit_rep_id IS NULL
+      AND n26.lod2_implicit_rep_id IS NULL
+      AND n27.lod3_implicit_rep_id IS NULL
+      AND n28.lod4_implicit_rep_id IS NULL
+      AND n29.lod1_implicit_rep_id IS NULL
+      AND n30.lod4_implicit_rep_id IS NULL
+      AND n31.lod4_implicit_rep_id IS NULL
+      AND n32.lod3_implicit_rep_id IS NULL
+      AND n33.lod2_implicit_rep_id IS NULL
+      AND n34.lod4_implicit_rep_id IS NULL
+      AND n35.lod3_implicit_rep_id IS NULL;
   END IF;
-  IF wb_lod1_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING wb_lod1_msrf_id, schema_name;
-  END IF;
-  IF wb_lod1_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING wb_lod1_solid_id, schema_name;
-  END IF;
-  IF wb_lod2_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING wb_lod2_solid_id, schema_name;
-  END IF;
-  IF wb_lod3_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING wb_lod3_solid_id, schema_name;
-  END IF;
-  IF wb_lod4_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING wb_lod4_solid_id, schema_name;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
   END IF;
 
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING wb_id, schema_name;
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
   END IF;
 
-  RETURN deleted_id;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_waterbody (id: %): %', wb_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from WATER BOUNDARY SURFACE
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_waterbnd_surface(
-  wbs_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_city_furniture(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
-  wbs_lod2_id INTEGER;
-  wbs_lod3_id INTEGER;
-  wbs_lod4_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  implicit_geometry_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
 BEGIN
-  --// PRE DELETE WATER BOUNDARY SURFACE //--
-  -- get reference ids to surface_geometry table
-  EXECUTE format('SELECT lod2_surface_id, lod3_surface_id, lod4_surface_id 
-                    FROM %I.waterboundary_surface WHERE id = %L', schema_name, wbs_id)   
-                    INTO wbs_lod2_id, wbs_lod3_id, wbs_lod4_id; 
+  -- delete citydb.city_furnitures
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.city_furniture t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod2_implicit_rep_id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id,
+      lod1_implicit_rep_id,
+      lod1_brep_id,
+      lod3_brep_id,
+      lod4_brep_id,
+      lod2_brep_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod2_implicit_rep_id) ||
+    array_agg(lod3_implicit_rep_id) ||
+    array_agg(lod4_implicit_rep_id) ||
+    array_agg(lod1_implicit_rep_id),
+    array_agg(lod1_brep_id) ||
+    array_agg(lod3_brep_id) ||
+    array_agg(lod4_brep_id) ||
+    array_agg(lod2_brep_id)
+  INTO
+    deleted_ids,
+    implicit_geometry_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
 
-  -- delete reference to waterbody
-  EXECUTE format('DELETE FROM %I.waterbod_to_waterbnd_srf WHERE waterboundary_surface_id = %L', schema_name, wbs_id);
-
-  --// DELETE WATER BOUNDARY SURFACE //--
-  EXECUTE format('DELETE FROM %I.waterboundary_surface WHERE id = %L RETURNING id', schema_name, wbs_id) INTO deleted_id;
-  
-  --// POST DELETE WATER BOUNDARY SURFACE //--
-  -- delete geometry
-  IF wbs_lod2_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING wbs_lod2_id, schema_name;
+  -- delete citydb.implicit_geometry(s)
+  IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_implicit_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
+    LEFT JOIN
+      citydb.bridge_constr_element n1
+      ON n1.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n2
+      ON n2.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n3
+      ON n3.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n4
+      ON n4.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_furniture n5
+      ON n5.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n6
+      ON n6.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n7
+      ON n7.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n8
+      ON n8.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n9
+      ON n9.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n10
+      ON n10.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_furniture n11
+      ON n11.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n12
+      ON n12.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n13
+      ON n13.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n14
+      ON n14.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n15
+      ON n15.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n16
+      ON n16.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n17
+      ON n17.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n18
+      ON n18.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n19
+      ON n19.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n20
+      ON n20.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n21
+      ON n21.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n22
+      ON n22.lod0_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n23
+      ON n23.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n24
+      ON n24.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n25
+      ON n25.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n26
+      ON n26.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n27
+      ON n27.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n28
+      ON n28.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n29
+      ON n29.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_furniture n30
+      ON n30.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n31
+      ON n31.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n32
+      ON n32.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n33
+      ON n33.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n34
+      ON n34.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n35
+      ON n35.lod3_implicit_rep_id  = a.a_id
+    WHERE n1.lod3_implicit_rep_id IS NULL
+      AND n2.lod2_implicit_rep_id IS NULL
+      AND n3.lod1_implicit_rep_id IS NULL
+      AND n4.lod4_implicit_rep_id IS NULL
+      AND n5.lod4_implicit_rep_id IS NULL
+      AND n6.lod4_implicit_rep_id IS NULL
+      AND n7.lod3_implicit_rep_id IS NULL
+      AND n8.lod2_implicit_rep_id IS NULL
+      AND n9.lod4_implicit_rep_id IS NULL
+      AND n10.lod3_implicit_rep_id IS NULL
+      AND n11.lod4_implicit_rep_id IS NULL
+      AND n12.lod2_implicit_rep_id IS NULL
+      AND n13.lod3_implicit_rep_id IS NULL
+      AND n14.lod4_implicit_rep_id IS NULL
+      AND n15.lod1_implicit_rep_id IS NULL
+      AND n16.lod2_implicit_rep_id IS NULL
+      AND n17.lod3_implicit_rep_id IS NULL
+      AND n18.lod4_implicit_rep_id IS NULL
+      AND n19.lod4_implicit_rep_id IS NULL
+      AND n20.lod1_implicit_rep_id IS NULL
+      AND n21.lod2_implicit_rep_id IS NULL
+      AND n22.lod0_implicit_rep_id IS NULL
+      AND n23.lod3_implicit_rep_id IS NULL
+      AND n24.lod4_implicit_rep_id IS NULL
+      AND n25.lod3_implicit_rep_id IS NULL
+      AND n26.lod2_implicit_rep_id IS NULL
+      AND n27.lod3_implicit_rep_id IS NULL
+      AND n28.lod4_implicit_rep_id IS NULL
+      AND n29.lod1_implicit_rep_id IS NULL
+      AND n30.lod4_implicit_rep_id IS NULL
+      AND n31.lod4_implicit_rep_id IS NULL
+      AND n32.lod3_implicit_rep_id IS NULL
+      AND n33.lod2_implicit_rep_id IS NULL
+      AND n34.lod4_implicit_rep_id IS NULL
+      AND n35.lod3_implicit_rep_id IS NULL;
   END IF;
-  IF wbs_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING wbs_lod3_id, schema_name;
-  END IF;
-  IF wbs_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING wbs_lod4_id, schema_name;
-  END IF;
 
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING wbs_id, schema_name;
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
   END IF;
 
-  RETURN deleted_id;
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_waterbnd_surface (id: %): %', wbs_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-
-/*
-delete from RELIEF_FEATURE
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_relief_feature(
-  rf_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_citymodel(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  cityobject_ids int[] := '{}';
 BEGIN
-  --// PRE DELETE RELIEF FEATURE //--
-  -- delete relief component(s) being not referenced from relief fetaures any more
-  EXECUTE format('SELECT citydb_pkg.delete_relief_component(rc.id, %L) FROM %I.relief_component rc, %I.relief_feat_to_rel_comp rf2rc
-                    WHERE rc.id = rf2rc.relief_component_id AND relief_feature_id = %L
-                    AND citydb_pkg.is_not_referenced(%L, %L, rc.id, %L, %L, %L)', 
-                    schema_name, schema_name, schema_name, rf_id, 
-                    'relief_feat_to_rel_comp', 'relief_component_id', 'relief_feature_id', rf_id, schema_name);
+  --delete appearances
+  PERFORM
+    citydb.del_appearance(array_agg(t.id))
+  FROM
+    citydb.appearance t,
+    unnest($1) a(a_id)
+  WHERE
+    t.citymodel_id = a.a_id;
 
-  -- delete reference to relief_component
-  EXECUTE format('DELETE FROM %I.relief_feat_to_rel_comp WHERE relief_feature_id = %L', schema_name, rf_id);
+  -- delete references to cityobjects
+  WITH del_cityobject_refs AS (
+    DELETE FROM
+      citydb.cityobject_member t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.citymodel_id = a.a_id
+    RETURNING
+      t.cityobject_id
+  )
+  SELECT
+    array_agg(cityobject_id)
+  INTO
+    cityobject_ids
+  FROM
+    del_cityobject_refs;
 
-  --// DELETE RELIEF FEATURE //--
-  EXECUTE format('DELETE FROM %I.relief_feature WHERE id = %L RETURNING id', schema_name, rf_id) INTO deleted_id;
-
-  --// POST DELETE RELIEF FEATURE //--
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING rf_id, schema_name;
+  -- delete citydb.cityobject(s)
+  IF -1 = ALL(cityobject_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_cityobject(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(cityobject_ids) AS a_id) a
+    LEFT JOIN
+      citydb.cityobject_member n1
+      ON n1.cityobject_id  = a.a_id
+    LEFT JOIN
+      citydb.cityobjectgroup n2
+      ON n2.parent_cityobject_id  = a.a_id
+    LEFT JOIN
+      citydb.group_to_cityobject n3
+      ON n3.cityobject_id  = a.a_id
+    WHERE n1.cityobject_id IS NULL
+      AND n2.parent_cityobject_id IS NULL
+      AND n3.cityobject_id IS NULL;
   END IF;
 
-  RETURN deleted_id;
+  -- delete citydb.citymodels
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.citymodel t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    deleted_ids
+  FROM
+    delete_objects;
 
-  EXCEPTION
-	WHEN OTHERS THEN
-      RAISE NOTICE 'delete_relief_feature (id: %): %', rf_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-
-/*
-delete from RELIEF_COMPONENT
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_relief_component(
-  rc_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_cityobject(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
 BEGIN
-  --// PRE DELETE RELIEF COMPONENT //--
-  -- delete reference to relief feature
-  EXECUTE format('DELETE FROM %I.relief_feat_to_rel_comp WHERE relief_component_id = %L', schema_name, rc_id);
+  --delete appearances
+  PERFORM
+    citydb.del_appearance(array_agg(t.id))
+  FROM
+    citydb.appearance t,
+    unnest($1) a(a_id)
+  WHERE
+    t.cityobject_id = a.a_id;
 
-  -- delete component
-  EXECUTE 'SELECT citydb_pkg.delete_masspoint_relief($1, $2)' USING rc_id, schema_name;
-  EXECUTE 'SELECT citydb_pkg.delete_breakline_relief($1, $2)' USING rc_id, schema_name;
-  EXECUTE 'SELECT citydb_pkg.delete_tin_relief($1, $2)' USING rc_id, schema_name;
-  EXECUTE 'SELECT citydb_pkg.delete_raster_relief($1, $2)' USING rc_id, schema_name;
+  --delete cityobject_genericattribs
+  PERFORM
+    citydb.del_cityobject_genericattrib(array_agg(t.id))
+  FROM
+    citydb.cityobject_genericattrib t,
+    unnest($1) a(a_id)
+  WHERE
+    t.cityobject_id = a.a_id;
 
-  --// DELETE RELIEF COMPONENT //--
-  EXECUTE format('DELETE FROM %I.relief_component WHERE id = %L RETURNING id', schema_name, rc_id) INTO deleted_id;
+  --delete external_references
+  PERFORM
+    citydb.del_external_reference(array_agg(t.id))
+  FROM
+    citydb.external_reference t,
+    unnest($1) a(a_id)
+  WHERE
+    t.cityobject_id = a.a_id;
 
-  --// POST DELETE RELIEF FEATURE //--
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING rc_id, schema_name;
-  END IF;
+  IF $2 <> 2 THEN
+    FOREACH object_id IN ARRAY $1
+    LOOP
+      EXECUTE format('SELECT objectclass_id FROM citydb.cityobject WHERE id = %L', object_id) INTO objectclass_id;
 
-  RETURN deleted_id;
+      -- delete land_use
+      IF objectclass_id = 4 THEN
+        PERFORM citydb.del_land_use(array_agg(object_id), 1);
+      END IF;
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_relief_component (id: %): %', rc_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+      -- delete generic_cityobject
+      IF objectclass_id = 5 THEN
+        PERFORM citydb.del_generic_cityobject(array_agg(object_id), 1);
+      END IF;
 
+      -- delete solitary_vegetat_object
+      IF objectclass_id = 7 THEN
+        PERFORM citydb.del_solitary_vegetat_object(array_agg(object_id), 1);
+      END IF;
 
-/*
-delete from MASSPOINT_RELIEF
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_masspoint_relief(
-  mpr_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-BEGIN
-  --// DELETE MASSPOINT RELIEF //--
-  EXECUTE format('DELETE FROM %I.masspoint_relief WHERE id = %L RETURNING id', schema_name, mpr_id) INTO deleted_id;
+      -- delete plant_cover
+      IF objectclass_id = 8 THEN
+        PERFORM citydb.del_plant_cover(array_agg(object_id), 1);
+      END IF;
 
-  RETURN deleted_id;
+      -- delete waterbody
+      IF objectclass_id = 9 THEN
+        PERFORM citydb.del_waterbody(array_agg(object_id), 1);
+      END IF;
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_masspoint_relief (id: %): %', mpr_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+      -- delete waterboundary_surface
+      IF objectclass_id = 10 THEN
+        PERFORM citydb.del_waterboundary_surface(array_agg(object_id), 1);
+      END IF;
 
+      -- delete waterboundary_surface
+      IF objectclass_id = 11 THEN
+        PERFORM citydb.del_waterboundary_surface(array_agg(object_id), 1);
+      END IF;
 
-/*
-delete from BREAKLINE_RELIEF
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_breakline_relief(
-  blr_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-BEGIN
-  --// DELETE BREAKLINE RELIEF //--
-  EXECUTE format('DELETE FROM %I.breakline_relief WHERE id = %L RETURNING id', schema_name, blr_id) INTO deleted_id;
+      -- delete waterboundary_surface
+      IF objectclass_id = 12 THEN
+        PERFORM citydb.del_waterboundary_surface(array_agg(object_id), 1);
+      END IF;
 
-  RETURN deleted_id;
+      -- delete waterboundary_surface
+      IF objectclass_id = 13 THEN
+        PERFORM citydb.del_waterboundary_surface(array_agg(object_id), 1);
+      END IF;
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_breakline_relief (id: %): %', blr_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+      -- delete relief_feature
+      IF objectclass_id = 14 THEN
+        PERFORM citydb.del_relief_feature(array_agg(object_id), 1);
+      END IF;
 
+      -- delete relief_component
+      IF objectclass_id = 15 THEN
+        PERFORM citydb.del_relief_component(array_agg(object_id), 1);
+      END IF;
 
-/*
-delete from TIN_RELIEF
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_tin_relief(
-  tr_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  geom_id INTEGER;
-BEGIN
-  --// PRE DELETE TIN RELIEF //--
-  -- get reference id to surface_geometry table
-  EXECUTE format('SELECT surface_geometry_id FROM %I.tin_relief WHERE id = %L', schema_name, tr_id) INTO geom_id;
+      -- delete tin_relief
+      IF objectclass_id = 16 THEN
+        PERFORM citydb.del_tin_relief(array_agg(object_id), 0);
+      END IF;
 
-  --// DELETE TIN RELIEF //--
-  EXECUTE format('DELETE FROM %I.tin_relief WHERE id = %L RETURNING id', schema_name, tr_id) INTO deleted_id;
+      -- delete masspoint_relief
+      IF objectclass_id = 17 THEN
+        PERFORM citydb.del_masspoint_relief(array_agg(object_id), 0);
+      END IF;
 
-  --// POST DELETE TIN RELIEF //--
-  -- delete geometry
-  IF geom_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING geom_id, schema_name;
-  END IF;
+      -- delete breakline_relief
+      IF objectclass_id = 18 THEN
+        PERFORM citydb.del_breakline_relief(array_agg(object_id), 0);
+      END IF;
 
-  RETURN deleted_id;
+      -- delete raster_relief
+      IF objectclass_id = 19 THEN
+        PERFORM citydb.del_raster_relief(array_agg(object_id), 0);
+      END IF;
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_tin_relief (id: %): %', tr_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+      -- delete city_furniture
+      IF objectclass_id = 21 THEN
+        PERFORM citydb.del_city_furniture(array_agg(object_id), 1);
+      END IF;
 
+      -- delete cityobjectgroup
+      IF objectclass_id = 23 THEN
+        PERFORM citydb.del_cityobjectgroup(array_agg(object_id), 1);
+      END IF;
 
-/*
-delete from RASTER_RELIEF
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_raster_relief(
-  rr_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  cov_id INTEGER;
-BEGIN
-  --// PRE DELETE RATSER RELIEF //--
-  -- get reference id to raster_relief_georaster table
-  EXECUTE format('SELECT coverage_id FROM %I.raster_relief WHERE id = %L', schema_name, rr_id) INTO cov_id;
+      -- delete building
+      IF objectclass_id = 24 THEN
+        PERFORM citydb.del_building(array_agg(object_id), 1);
+      END IF;
 
-  --// DELETE RATSER RELIEF //--
-  EXECUTE format('DELETE FROM %I.raster_relief WHERE id = %L RETURNING id', schema_name, rr_id) INTO deleted_id;
+      -- delete building
+      IF objectclass_id = 25 THEN
+        PERFORM citydb.del_building(array_agg(object_id), 1);
+      END IF;
 
-  --// POST DELETE RATSER RELIEF //--
-  -- delete raster data
-  EXECUTE 'SELECT citydb_pkg.delete_grid_coverage($1, $2)' USING cov_id, schema_name;
+      -- delete building
+      IF objectclass_id = 26 THEN
+        PERFORM citydb.del_building(array_agg(object_id), 1);
+      END IF;
 
-  RETURN deleted_id;
+      -- delete building_installation
+      IF objectclass_id = 27 THEN
+        PERFORM citydb.del_building_installation(array_agg(object_id), 1);
+      END IF;
 
-  EXCEPTION
-	WHEN OTHERS THEN
-      RAISE NOTICE 'delete_raster_relief (id: %): %', rr_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+      -- delete building_installation
+      IF objectclass_id = 28 THEN
+        PERFORM citydb.del_building_installation(array_agg(object_id), 1);
+      END IF;
 
+      -- delete thematic_surface
+      IF objectclass_id = 29 THEN
+        PERFORM citydb.del_thematic_surface(array_agg(object_id), 1);
+      END IF;
 
-/*
-delete from CITY_FURNITURE
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_city_furniture(
-  cf_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  cf_lod1_id INTEGER;
-  cf_lod2_id INTEGER;
-  cf_lod3_id INTEGER;
-  cf_lod4_id INTEGER;
-BEGIN
-  --// PRE DELETE CITY_FURNITURE //--
-  -- get reference ids to surface_geometry table
-  EXECUTE format('SELECT lod1_brep_id, lod2_brep_id, lod3_brep_id, lod4_brep_id
-                    FROM %I.city_furniture WHERE id = %L', schema_name, cf_id)
-                    INTO cf_lod1_id, cf_lod2_id, cf_lod3_id, cf_lod4_id;
+      -- delete thematic_surface
+      IF objectclass_id = 30 THEN
+        PERFORM citydb.del_thematic_surface(array_agg(object_id), 1);
+      END IF;
 
-  --// DELETE CITY_FURNITURE //--
-  EXECUTE format('DELETE FROM %I.city_furniture WHERE id = %L RETURNING id', schema_name, cf_id) INTO deleted_id;
+      -- delete thematic_surface
+      IF objectclass_id = 31 THEN
+        PERFORM citydb.del_thematic_surface(array_agg(object_id), 1);
+      END IF;
 
-  --// POST DELETE CITY_FURNITURE //--
-  -- delete geometry
-  IF cf_lod1_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING cf_lod1_id, schema_name;
-  END IF; 
-  IF cf_lod2_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING cf_lod2_id, schema_name;
-  END IF;
-  IF cf_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING cf_lod3_id, schema_name;
-  END IF;
-  IF cf_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING cf_lod4_id, schema_name;
-  END IF;
+      -- delete thematic_surface
+      IF objectclass_id = 32 THEN
+        PERFORM citydb.del_thematic_surface(array_agg(object_id), 1);
+      END IF;
 
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING cf_id, schema_name;
-  END IF;
+      -- delete thematic_surface
+      IF objectclass_id = 33 THEN
+        PERFORM citydb.del_thematic_surface(array_agg(object_id), 1);
+      END IF;
 
-  RETURN deleted_id;
+      -- delete thematic_surface
+      IF objectclass_id = 34 THEN
+        PERFORM citydb.del_thematic_surface(array_agg(object_id), 1);
+      END IF;
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_city_furniture (id: %): %', cf_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+      -- delete thematic_surface
+      IF objectclass_id = 35 THEN
+        PERFORM citydb.del_thematic_surface(array_agg(object_id), 1);
+      END IF;
 
+      -- delete thematic_surface
+      IF objectclass_id = 36 THEN
+        PERFORM citydb.del_thematic_surface(array_agg(object_id), 1);
+      END IF;
 
-/*
-delete from CITYOBJECTGROUP
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_cityobjectgroup(
-  cog_id INTEGER,
-  delete_members INTEGER DEFAULT 0,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  member_id INTEGER;
-  geom_id INTEGER;
-BEGIN
-  --// PRE DELETE CITY OBJECT GROUP //--
-  -- delete members
-  IF delete_members <> 0 THEN
-    FOR member_id IN EXECUTE format('SELECT cityobject_id FROM %I.group_to_cityobject WHERE cityobjectgroup_id = %L', 
-                                       schema_name, cog_id) LOOP
-      BEGIN
-        EXECUTE 'SELECT citydb_pkg.delete_cityobject($1, $2, 0, $3)' USING member_id, delete_members, schema_name;
+      -- delete opening
+      IF objectclass_id = 37 THEN
+        PERFORM citydb.del_opening(array_agg(object_id), 1);
+      END IF;
 
-        EXCEPTION
-          WHEN OTHERS THEN
-            RAISE NOTICE 'delete_cityobjectgroup: deletion of group_member with ID % threw %', member_id, SQLERRM;
-      END;
+      -- delete opening
+      IF objectclass_id = 38 THEN
+        PERFORM citydb.del_opening(array_agg(object_id), 1);
+      END IF;
+
+      -- delete opening
+      IF objectclass_id = 39 THEN
+        PERFORM citydb.del_opening(array_agg(object_id), 1);
+      END IF;
+
+      -- delete building_furniture
+      IF objectclass_id = 40 THEN
+        PERFORM citydb.del_building_furniture(array_agg(object_id), 1);
+      END IF;
+
+      -- delete room
+      IF objectclass_id = 41 THEN
+        PERFORM citydb.del_room(array_agg(object_id), 1);
+      END IF;
+
+      -- delete transportation_complex
+      IF objectclass_id = 42 THEN
+        PERFORM citydb.del_transportation_complex(array_agg(object_id), 1);
+      END IF;
+
+      -- delete transportation_complex
+      IF objectclass_id = 43 THEN
+        PERFORM citydb.del_transportation_complex(array_agg(object_id), 1);
+      END IF;
+
+      -- delete transportation_complex
+      IF objectclass_id = 44 THEN
+        PERFORM citydb.del_transportation_complex(array_agg(object_id), 1);
+      END IF;
+
+      -- delete transportation_complex
+      IF objectclass_id = 45 THEN
+        PERFORM citydb.del_transportation_complex(array_agg(object_id), 1);
+      END IF;
+
+      -- delete transportation_complex
+      IF objectclass_id = 46 THEN
+        PERFORM citydb.del_transportation_complex(array_agg(object_id), 1);
+      END IF;
+
+      -- delete traffic_area
+      IF objectclass_id = 47 THEN
+        PERFORM citydb.del_traffic_area(array_agg(object_id), 1);
+      END IF;
+
+      -- delete traffic_area
+      IF objectclass_id = 48 THEN
+        PERFORM citydb.del_traffic_area(array_agg(object_id), 1);
+      END IF;
+
+      -- delete appearance
+      IF objectclass_id = 50 THEN
+        PERFORM citydb.del_appearance(array_agg(object_id), 0);
+      END IF;
+
+      -- delete surface_data
+      IF objectclass_id = 51 THEN
+        PERFORM citydb.del_surface_data(array_agg(object_id), 0);
+      END IF;
+
+      -- delete surface_data
+      IF objectclass_id = 52 THEN
+        PERFORM citydb.del_surface_data(array_agg(object_id), 0);
+      END IF;
+
+      -- delete surface_data
+      IF objectclass_id = 53 THEN
+        PERFORM citydb.del_surface_data(array_agg(object_id), 0);
+      END IF;
+
+      -- delete surface_data
+      IF objectclass_id = 54 THEN
+        PERFORM citydb.del_surface_data(array_agg(object_id), 0);
+      END IF;
+
+      -- delete surface_data
+      IF objectclass_id = 55 THEN
+        PERFORM citydb.del_surface_data(array_agg(object_id), 0);
+      END IF;
+
+      -- delete citymodel
+      IF objectclass_id = 57 THEN
+        PERFORM citydb.del_citymodel(array_agg(object_id), 0);
+      END IF;
+
+      -- delete address
+      IF objectclass_id = 58 THEN
+        PERFORM citydb.del_address(array_agg(object_id), 0);
+      END IF;
+
+      -- delete implicit_geometry
+      IF objectclass_id = 59 THEN
+        PERFORM citydb.del_implicit_geometry(array_agg(object_id), 0);
+      END IF;
+
+      -- delete thematic_surface
+      IF objectclass_id = 60 THEN
+        PERFORM citydb.del_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete thematic_surface
+      IF objectclass_id = 61 THEN
+        PERFORM citydb.del_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge
+      IF objectclass_id = 62 THEN
+        PERFORM citydb.del_bridge(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge
+      IF objectclass_id = 63 THEN
+        PERFORM citydb.del_bridge(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge
+      IF objectclass_id = 64 THEN
+        PERFORM citydb.del_bridge(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_installation
+      IF objectclass_id = 65 THEN
+        PERFORM citydb.del_bridge_installation(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_installation
+      IF objectclass_id = 66 THEN
+        PERFORM citydb.del_bridge_installation(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_thematic_surface
+      IF objectclass_id = 67 THEN
+        PERFORM citydb.del_bridge_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_thematic_surface
+      IF objectclass_id = 68 THEN
+        PERFORM citydb.del_bridge_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_thematic_surface
+      IF objectclass_id = 69 THEN
+        PERFORM citydb.del_bridge_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_thematic_surface
+      IF objectclass_id = 70 THEN
+        PERFORM citydb.del_bridge_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_thematic_surface
+      IF objectclass_id = 71 THEN
+        PERFORM citydb.del_bridge_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_thematic_surface
+      IF objectclass_id = 72 THEN
+        PERFORM citydb.del_bridge_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_thematic_surface
+      IF objectclass_id = 73 THEN
+        PERFORM citydb.del_bridge_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_thematic_surface
+      IF objectclass_id = 74 THEN
+        PERFORM citydb.del_bridge_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_thematic_surface
+      IF objectclass_id = 75 THEN
+        PERFORM citydb.del_bridge_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_thematic_surface
+      IF objectclass_id = 76 THEN
+        PERFORM citydb.del_bridge_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_opening
+      IF objectclass_id = 77 THEN
+        PERFORM citydb.del_bridge_opening(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_opening
+      IF objectclass_id = 78 THEN
+        PERFORM citydb.del_bridge_opening(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_opening
+      IF objectclass_id = 79 THEN
+        PERFORM citydb.del_bridge_opening(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_furniture
+      IF objectclass_id = 80 THEN
+        PERFORM citydb.del_bridge_furniture(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_room
+      IF objectclass_id = 81 THEN
+        PERFORM citydb.del_bridge_room(array_agg(object_id), 1);
+      END IF;
+
+      -- delete bridge_constr_element
+      IF objectclass_id = 82 THEN
+        PERFORM citydb.del_bridge_constr_element(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel
+      IF objectclass_id = 83 THEN
+        PERFORM citydb.del_tunnel(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel
+      IF objectclass_id = 84 THEN
+        PERFORM citydb.del_tunnel(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel
+      IF objectclass_id = 85 THEN
+        PERFORM citydb.del_tunnel(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_installation
+      IF objectclass_id = 86 THEN
+        PERFORM citydb.del_tunnel_installation(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_installation
+      IF objectclass_id = 87 THEN
+        PERFORM citydb.del_tunnel_installation(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_thematic_surface
+      IF objectclass_id = 88 THEN
+        PERFORM citydb.del_tunnel_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_thematic_surface
+      IF objectclass_id = 89 THEN
+        PERFORM citydb.del_tunnel_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_thematic_surface
+      IF objectclass_id = 90 THEN
+        PERFORM citydb.del_tunnel_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_thematic_surface
+      IF objectclass_id = 91 THEN
+        PERFORM citydb.del_tunnel_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_thematic_surface
+      IF objectclass_id = 92 THEN
+        PERFORM citydb.del_tunnel_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_thematic_surface
+      IF objectclass_id = 93 THEN
+        PERFORM citydb.del_tunnel_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_thematic_surface
+      IF objectclass_id = 94 THEN
+        PERFORM citydb.del_tunnel_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_thematic_surface
+      IF objectclass_id = 95 THEN
+        PERFORM citydb.del_tunnel_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_thematic_surface
+      IF objectclass_id = 96 THEN
+        PERFORM citydb.del_tunnel_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_thematic_surface
+      IF objectclass_id = 97 THEN
+        PERFORM citydb.del_tunnel_thematic_surface(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_opening
+      IF objectclass_id = 98 THEN
+        PERFORM citydb.del_tunnel_opening(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_opening
+      IF objectclass_id = 99 THEN
+        PERFORM citydb.del_tunnel_opening(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_opening
+      IF objectclass_id = 100 THEN
+        PERFORM citydb.del_tunnel_opening(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_furniture
+      IF objectclass_id = 101 THEN
+        PERFORM citydb.del_tunnel_furniture(array_agg(object_id), 1);
+      END IF;
+
+      -- delete tunnel_hollow_space
+      IF objectclass_id = 102 THEN
+        PERFORM citydb.del_tunnel_hollow_space(array_agg(object_id), 1);
+      END IF;
     END LOOP;
-
-    -- cleanup
-    EXECUTE 'SELECT citydb_pkg.cleanup_implicit_geometries(1, $1)' USING schema_name;
-    EXECUTE 'SELECT citydb_pkg.cleanup_appearances(1, $1)' USING schema_name;
   END IF;
 
-  -- delete reference to city object
-  EXECUTE format('DELETE FROM %I.group_to_cityobject WHERE cityobjectgroup_id = %L', schema_name, cog_id);
+  -- delete citydb.cityobjects
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.cityobject t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    deleted_ids
+  FROM
+    delete_objects;
 
-  -- get reference id to surface_geometry table  
-  EXECUTE format('SELECT brep_id FROM %I.cityobjectgroup WHERE id = %L', schema_name, cog_id) INTO geom_id;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-  --// DELETE CITY OBJECT GROUP //--
-  EXECUTE format('DELETE FROM %I.cityobjectgroup WHERE id = %L RETURNING id', schema_name, cog_id) INTO deleted_id;
-
-  --// POST DELETE CITY OBJECT GROUP //--
-  -- delete geometry
-  IF geom_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING geom_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING cog_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_cityobjectgroup (id: %): %', cog_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from BUILDING
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_building(
-  b_id INTEGER,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_cityobject_genericattrib(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
-  b_lod0_foot_id INTEGER;
-  b_lod0_roof_id INTEGER;
-  b_lod1_msrf_id INTEGER;
-  b_lod2_msrf_id INTEGER;
-  b_lod3_msrf_id INTEGER;
-  b_lod4_msrf_id INTEGER;
-  b_lod1_solid_id INTEGER;
-  b_lod2_solid_id INTEGER;
-  b_lod3_solid_id INTEGER;
-  b_lod4_solid_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  surface_geometry_ids int[] := '{}';
 BEGIN
-  --// PRE DELETE BUILDING //--
-  -- delete referenced building part(s)
-  EXECUTE format('SELECT citydb_pkg.delete_building(id, %L) FROM %I.building WHERE id != %L AND building_parent_id = %L', 
-                    schema_name, schema_name, b_id, b_id);
+  -- delete citydb.cityobject_genericattribs
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.cityobject_genericattrib t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      surface_geometry_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(surface_geometry_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
 
-  -- delete referenced building installation(s)
-  EXECUTE format('SELECT citydb_pkg.delete_building_installation(id, %L) FROM %I.building_installation WHERE building_id = %L', 
-                    schema_name, schema_name, b_id);
-
-  -- delete referenced thematic surfaces
-  EXECUTE format('SELECT citydb_pkg.delete_thematic_surface(id, %L) FROM %I.thematic_surface WHERE building_id = %L', 
-                    schema_name, schema_name, b_id);
-
-  -- delete referenced room(s)
-  EXECUTE format('SELECT citydb_pkg.delete_room(id, %L) FROM %I.room WHERE building_id = %L', 
-                    schema_name, schema_name, b_id);
-
-  -- delete address(es) being not referenced from buildings any more
-  EXECUTE format('SELECT citydb_pkg.delete_address(ad.id, %L) FROM %I.address ad, %I.address_to_building ad2b 
-                    WHERE ad.id = ad2b.address_id AND ad2b.building_id = %L
-                    AND citydb_pkg.is_not_referenced(%L, %L, ad.id, %L, %L, %L)', 
-                    schema_name, schema_name, schema_name, b_id, 
-                    'address_to_building', 'address_id', 'building_id', b_id, schema_name);
-
-  -- delete reference to address
-  EXECUTE format('DELETE FROM %I.address_to_building WHERE building_id = %L', schema_name, b_id);
-
-  -- get reference ids to surface_geometry table  
-  EXECUTE format('SELECT lod0_footprint_id, lod0_roofprint_id, 
-                    lod1_multi_surface_id, lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id,
-                    lod1_solid_id , lod2_solid_id, lod3_solid_id, lod4_solid_id FROM %I.building WHERE id = %L', schema_name, b_id)   
-                    INTO b_lod0_foot_id, b_lod0_roof_id, b_lod1_msrf_id, b_lod2_msrf_id, b_lod3_msrf_id, b_lod4_msrf_id,
-                         b_lod1_solid_id, b_lod2_solid_id, b_lod3_solid_id, b_lod4_solid_id;
-
-  --// DELETE BUILDING //--
-  EXECUTE format('DELETE FROM %I.building WHERE id = %L RETURNING id', schema_name, b_id) INTO deleted_id;
-
-  --// POST DELETE BUILDING //--
-  -- delete geometry
-  IF b_lod0_foot_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING b_lod0_foot_id, schema_name;
-  END IF; 
-  IF b_lod0_roof_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING b_lod0_roof_id, schema_name;
-  END IF; 
-  IF b_lod1_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING b_lod1_msrf_id, schema_name;
-  END IF; 
-  IF b_lod2_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING b_lod2_msrf_id, schema_name;
-  END IF;
-  IF b_lod3_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING b_lod3_msrf_id, schema_name;
-  END IF;
-  IF b_lod4_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING b_lod4_msrf_id, schema_name;
-  END IF;
-  IF b_lod1_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING b_lod1_solid_id, schema_name;
-  END IF; 
-  IF b_lod2_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING b_lod2_solid_id, schema_name;
-  END IF;
-  IF b_lod3_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING b_lod3_solid_id, schema_name;
-  END IF;
-  IF b_lod4_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING b_lod4_solid_id, schema_name;
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
   END IF;
 
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING b_id, schema_name;
-  END IF;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_building (id: %): %', b_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from BUILDING_INSTALLATION
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_building_installation(
-  bi_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_cityobjectgroup(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
-  bi_lod2_id INTEGER;
-  bi_lod3_id INTEGER;
-  bi_lod4_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  cityobject_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
 BEGIN
-  --// PRE DELETE BUILDING INSTALLATION //--
-  -- delete referenced thematic surfaces
-  EXECUTE format('SELECT citydb_pkg.delete_thematic_surface(id, %L) FROM %I.thematic_surface WHERE building_installation_id = %L', 
-                    schema_name, schema_name, bi_id);
+  -- delete references to cityobjects
+  WITH del_cityobject_refs AS (
+    DELETE FROM
+      citydb.group_to_cityobject t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.cityobjectgroup_id = a.a_id
+    RETURNING
+      t.cityobject_id
+  )
+  SELECT
+    array_agg(cityobject_id)
+  INTO
+    cityobject_ids
+  FROM
+    del_cityobject_refs;
 
-  -- get reference ids to surface_geometry table 
-  EXECUTE format('SELECT lod2_brep_id, lod3_brep_id, lod4_brep_id 
-                    FROM %I.building_installation WHERE id = %L', schema_name, bi_id)
-                    INTO bi_lod2_id, bi_lod3_id, bi_lod4_id;
-
-  --// DELETE BUILDING INSTALLATION //--
-  EXECUTE format('DELETE FROM %I.building_installation WHERE id = %L RETURNING id', schema_name, bi_id) INTO deleted_id;
-
-  --// POST DELETE BUILDING INSTALLATION //--
-  -- delete geometry
-  IF bi_lod2_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING bi_lod2_id, schema_name;
+  -- delete citydb.cityobject(s)
+  IF -1 = ALL(cityobject_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_cityobject(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(cityobject_ids) AS a_id) a
+    LEFT JOIN
+      citydb.cityobject_member n1
+      ON n1.cityobject_id  = a.a_id
+    LEFT JOIN
+      citydb.cityobjectgroup n2
+      ON n2.parent_cityobject_id  = a.a_id
+    LEFT JOIN
+      citydb.group_to_cityobject n3
+      ON n3.cityobject_id  = a.a_id
+    WHERE n1.cityobject_id IS NULL
+      AND n2.parent_cityobject_id IS NULL
+      AND n3.cityobject_id IS NULL;
   END IF;
-  IF bi_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING bi_lod3_id, schema_name;
+
+  -- delete citydb.cityobjectgroups
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.cityobjectgroup t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      brep_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(brep_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
   END IF;
-  IF bi_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING bi_lod4_id, schema_name;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
   END IF;
 
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING bi_id, schema_name;
-  END IF;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_building_installation (id: %): %', bi_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from THEMATIC_SURFACE
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_thematic_surface(
-  ts_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_cityobject_by_lineage(lineage_value TEXT, objectclass_id INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+-- Function for deleting cityobjects by lineage value
 DECLARE
-  deleted_id INTEGER;
-  ts_lod2_id INTEGER;
-  ts_lod3_id INTEGER;
-  ts_lod4_id INTEGER;
+  deleted_ids int[] := '{}';
 BEGIN
-  --// PRE DELETE THEMATIC SURFACE //--
-  -- delete opening(s) not being referenced by a thematic surface any more
-  EXECUTE format('SELECT citydb_pkg.delete_opening(o.id, %L) FROM %I.opening o, %I.opening_to_them_surface o2ts
-                    WHERE o.id = o2ts.opening_id AND o2ts.thematic_surface_id = %L
-                    AND citydb_pkg.is_not_referenced(%L, %L, o.id, %L, %L, %L)',
-                    schema_name, schema_name, schema_name, ts_id, 
-                    'opening_to_them_surface', 'opening_id', 'thematic_surface_id', ts_id, schema_name);
-
-  -- delete reference to opening
-  EXECUTE format('DELETE FROM %I.opening_to_them_surface WHERE thematic_surface_id = %L', schema_name, ts_id);
-
-  -- get reference ids to surface_geometry table 
-  EXECUTE format('SELECT lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id 
-                    FROM %I.thematic_surface WHERE id = %L', schema_name, ts_id)
-                    INTO ts_lod2_id, ts_lod3_id, ts_lod4_id;
-
-  --// DELETE THEMATIC SURFACE //--
-  EXECUTE format('DELETE FROM %I.thematic_surface WHERE id = %L RETURNING id', schema_name, ts_id) INTO deleted_id;
-
-  --// POST DELETE THEMATIC SURFACE //--
-  -- delete geometry
-  IF ts_lod2_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING ts_lod2_id, schema_name;
-  END IF;
-  IF ts_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING ts_lod3_id, schema_name;
-  END IF;
-  IF ts_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING ts_lod4_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING ts_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_thematic_surface (id: %): %', ts_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from OPENING
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_opening(
-  o_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  o_add_id INTEGER;
-  o_lod3_id INTEGER;
-  o_lod4_id INTEGER;
-BEGIN
-  --// PRE DELETE OPENING //--
-  -- delete reference to thematic surface
-  EXECUTE format('DELETE FROM %I.opening_to_them_surface WHERE opening_id = %L', schema_name, o_id);
-
-  -- get reference ids to surface_geometry table and address_id
-  EXECUTE format('SELECT lod3_multi_surface_id, lod4_multi_surface_id, address_id 
-                    FROM %I.opening WHERE id = %L', schema_name, o_id)
-                    INTO o_lod3_id, o_lod4_id, o_add_id;
-
-  -- delete addresses not being referenced from buildings and openings any more
-  IF o_add_id IS NOT NULL THEN
-    EXECUTE format('SELECT citydb_pkg.delete_address(ad.id, %L) FROM %I.address ad 
-                      LEFT OUTER JOIN %I.address_to_building ad2b ON ad.id = ad2b.address_id 
-                      WHERE ad.id = %L AND ad2b.address_id IS NULL
-                        AND citydb_pkg.is_not_referenced(%L, %L, ad.id, %L, %L, %L)',
-                        schema_name, schema_name, schema_name, o_add_id, 
-                        'opening', 'address_id', 'id', o_id, schema_name);
-  END IF;
-
-  --// DELETE OPENING //--
-  EXECUTE format('DELETE FROM %I.opening WHERE id = %L RETURNING id', schema_name, o_id) INTO deleted_id;
-
-  --// POST DELETE OPENING //--
-  -- delete geometry
-  IF o_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING o_lod3_id, schema_name;
-  END IF;
-  IF o_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING o_lod4_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING o_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_opening (id: %): %', o_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from BUILDING_FURNITURE
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_building_furniture(
-  bf_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  bf_lod4_id INTEGER;
-BEGIN
-  --// PRE DELETE BUILDING FURNITURE //--
-  -- get reference id to surface_geometry table 
-  EXECUTE format('SELECT lod4_brep_id FROM %I.building_furniture WHERE id = %L', schema_name, bf_id) INTO bf_lod4_id;
-
-  --// DELETE BUILDING FURNITURE //--
-  EXECUTE format('DELETE FROM %I.building_furniture WHERE id = %L RETURNING id', schema_name, bf_id) INTO deleted_id;
-
-  --// POST DELETE BUILDING FURNITURE //--
-  -- delete geometry
-  IF bf_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING bf_lod4_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING bf_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_building_furniture (id: %): %', bf_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from ROOM
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_room(
-  r_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  r_lod4_msrf_id INTEGER;
-  r_lod4_solid_id INTEGER;
-BEGIN
-  --// PRE DELETE ROOM //--
-  -- delete referenced building installation(s)
-  EXECUTE format('SELECT citydb_pkg.delete_building_installation(id, %L) FROM %I.building_installation WHERE room_id = %L', 
-                    schema_name, schema_name, r_id);
-
-  -- delete referenced thematic surfaces
-  EXECUTE format('SELECT citydb_pkg.delete_thematic_surface(id, %L) FROM %I.thematic_surface WHERE room_id = %L', 
-                    schema_name, schema_name, r_id);
-  
-  -- delete referenced building furniture
-  EXECUTE format('SELECT citydb_pkg.delete_building_furniture(id, %L) FROM %I.building_furniture WHERE room_id = %L', 
-                    schema_name, schema_name, r_id);
-
-  -- get reference id to surface_geometry table 
-  EXECUTE format('SELECT lod4_multi_surface_id, lod4_solid_id FROM %I.room WHERE id = %L', schema_name, r_id) 
-                    INTO r_lod4_msrf_id, r_lod4_solid_id;
- 
-  --// DELETE ROOM //--
-  EXECUTE format('DELETE FROM %I.room WHERE id = %L RETURNING id', schema_name, r_id) INTO deleted_id;
-
-  --// POST DELETE ROOM //--
-  -- delete geometry
-  IF r_lod4_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING r_lod4_msrf_id, schema_name;
-  END IF;
-  IF r_lod4_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING r_lod4_solid_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING r_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_room (id: %): %', r_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from TRANSPORTATION_COMPLEX
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_transport_complex(
-  tc_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  tc_lod1_id INTEGER;
-  tc_lod2_id INTEGER;
-  tc_lod3_id INTEGER;
-  tc_lod4_id INTEGER;
-BEGIN
-  --// PRE DELETE TRANSPORTATION COMPLEX //--
-  -- delete referenced traffic area(s)
-  EXECUTE format('SELECT citydb_pkg.delete_traffic_area(id, %L) FROM %I.traffic_area WHERE transportation_complex_id = %L', 
-                    schema_name, schema_name, tc_id);
-
-  -- get reference ids to surface_geometry table
-  EXECUTE format('SELECT lod1_multi_surface_id, lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id 
-                    FROM %I.transportation_complex WHERE id = %L', schema_name, tc_id)
-                    INTO tc_lod1_id, tc_lod2_id, tc_lod3_id, tc_lod4_id;
-
-  --// DELETE TRANSPORTATION COMPLEX //--
-  EXECUTE format('DELETE FROM %I.transportation_complex WHERE id = %L RETURNING id', schema_name, tc_id) INTO deleted_id;
-
-  --// POST DELETE TRANSPORTATION COMPLEX //--
-  -- delete geometry
-  IF tc_lod1_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tc_lod1_id, schema_name;
-  END IF;
-  IF tc_lod2_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tc_lod2_id, schema_name;
-  END IF;
-  IF tc_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tc_lod3_id, schema_name;
-  END IF;
-  IF tc_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tc_lod4_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tc_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_transport_complex (id: %): %', tc_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from TRAFFIC_AREA
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_traffic_area(
-  ta_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  ta_lod2_id INTEGER;
-  ta_lod3_id INTEGER;
-  ta_lod4_id INTEGER;
-BEGIN
-  --// PRE DELETE TRAFFIC AREA //--
-  -- get reference ids to surface_geometry table 
-  EXECUTE format('SELECT lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id 
-                    FROM %I.traffic_area WHERE id = %L', schema_name, ta_id) 
-                    INTO ta_lod2_id, ta_lod3_id, ta_lod4_id;
-			 
-  --// DELETE TRAFFIC AREA //--
-  EXECUTE format('DELETE FROM %I.traffic_area WHERE id = %L RETURNING id', schema_name, ta_id) INTO deleted_id;
-
-  --// POST DELETE TRAFFIC AREA //--
-  -- delete geometry
-  IF ta_lod2_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING ta_lod2_id, schema_name;
-  END IF;
-  IF ta_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING ta_lod3_id, schema_name;
-  END IF;
-  IF ta_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING ta_lod4_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING ta_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_traffic_area (id: %): %', ta_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from CITYMODEL
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_citymodel(
-  cm_id INTEGER,
-  delete_members INTEGER DEFAULT 0,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  member_id INTEGER;
-BEGIN
-  --// PRE DELETE CITY MODEL //--
-  -- delete members
-  IF delete_members <> 0 THEN
-    FOR member_id IN EXECUTE format('SELECT cityobject_id FROM %I.cityobject_member WHERE citymodel_id = %L', 
-                                        schema_name, cm_id) LOOP
-      BEGIN
-        EXECUTE 'SELECT citydb_pkg.delete_cityobject($1, $2, 0, $3)' USING member_id, delete_members, schema_name;
-
-        EXCEPTION
-          WHEN OTHERS THEN
-            RAISE NOTICE 'delete_citymodel: deletion of cityobject_member with ID % threw %', member_id, SQLERRM;
-      END;
-    END LOOP;
-
-    -- cleanup
-    EXECUTE 'SELECT citydb_pkg.cleanup_implicit_geometries(1, $1)' USING schema_name;
-    EXECUTE 'SELECT citydb_pkg.cleanup_appearances(1, $1)' USING schema_name;
-  END IF;
-  
-  -- delete reference to city objects
-  EXECUTE format('DELETE FROM %I.cityobject_member WHERE citymodel_id = %L', schema_name, cm_id);
-
-  -- delete appearances assigned to the city model
-  EXECUTE format('SELECT citydb_pkg.delete_appearance(id, 0, %L) FROM %I.appearance WHERE citymodel_id = %L', 
-                    schema_name, schema_name, cm_id);
-
-  --// DELETE CITY MODEL //--
-  EXECUTE format('DELETE FROM %I.citymodel WHERE id = %L RETURNING id', schema_name, cm_id) INTO deleted_id;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_citymodel (id: %): %', cm_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from BRIDGE
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_bridge(
-  brd_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  brd_lod1_msrf_id INTEGER;
-  brd_lod2_msrf_id INTEGER;
-  brd_lod3_msrf_id INTEGER;
-  brd_lod4_msrf_id INTEGER;
-  brd_lod1_solid_id INTEGER;
-  brd_lod2_solid_id INTEGER;
-  brd_lod3_solid_id INTEGER;
-  brd_lod4_solid_id INTEGER;
-BEGIN
-  --// PRE DELETE BRIDGE //--
-  -- delete referenced bridge part(s)
-  EXECUTE format('SELECT citydb_pkg.delete_bridge(id, %L) FROM %I.bridge WHERE id != %L AND bridge_parent_id = %L', 
-                    schema_name, schema_name, brd_id, brd_id);
-
-  -- delete referenced bridge installation(s)
-  EXECUTE format('SELECT citydb_pkg.delete_bridge_installation(id, %L) FROM %I.bridge_installation WHERE bridge_id = %L', 
-                    schema_name, schema_name, brd_id);
-
-  -- delete referenced bridge construction element(s)
-  EXECUTE format('SELECT citydb_pkg.delete_bridge_constr_element(id, %L) FROM %I.bridge_constr_element WHERE bridge_id = %L', 
-                    schema_name, schema_name, brd_id);
-
-  -- delete referenced bridge thematic surfaces
-  EXECUTE format('SELECT citydb_pkg.delete_bridge_them_srf(id, %L) FROM %I.bridge_thematic_surface WHERE bridge_id = %L', 
-                    schema_name, schema_name, brd_id);
-
-  -- delete referenced bridge_room(s)
-  EXECUTE format('SELECT citydb_pkg.delete_bridge_room(id, %L) FROM %I.bridge_room WHERE bridge_id = %L', 
-                    schema_name, schema_name, brd_id);
-
-  -- delete address(es) being not referenced from bridges any more
-  EXECUTE format('SELECT citydb_pkg.delete_address(ad.id, %L) FROM %I.address ad, %I.address_to_bridge ad2brd 
-                    WHERE ad.id = ad2brd.address_id AND ad2brd.bridge_id = %L
-                    AND citydb_pkg.is_not_referenced(%L, %L, ad.id, %L, %L, %L)',
-                    schema_name, schema_name, schema_name, brd_id, 
-                    'address_to_bridge', 'address_id', 'bridge_id', brd_id, schema_name);
-
-  -- delete reference to address
-  EXECUTE format('DELETE FROM %I.address_to_bridge WHERE bridge_id = %L', schema_name, brd_id);
-
-  -- get reference ids to surface_geometry table  
-  EXECUTE format('SELECT lod1_multi_surface_id, lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id,
-                    lod1_solid_id, lod2_solid_id, lod3_solid_id, lod4_solid_id FROM %I.bridge WHERE id = %L', schema_name, brd_id)   
-                    INTO brd_lod1_msrf_id, brd_lod2_msrf_id, brd_lod3_msrf_id, brd_lod4_msrf_id,
-                         brd_lod1_solid_id, brd_lod2_solid_id, brd_lod3_solid_id, brd_lod4_solid_id;
-
-  --// DELETE BRIDGE //--
-  EXECUTE format('DELETE FROM %I.bridge WHERE id = %L RETURNING id', schema_name, brd_id) INTO deleted_id;
-
-  --// POST DELETE BRIDGE //--
-  -- delete geometry
-  IF brd_lod1_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brd_lod1_msrf_id, schema_name;
-  END IF; 
-  IF brd_lod2_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brd_lod2_msrf_id, schema_name;
-  END IF;
-  IF brd_lod3_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brd_lod3_msrf_id, schema_name;
-  END IF;
-  IF brd_lod4_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brd_lod4_msrf_id, schema_name;
-  END IF;
-  IF brd_lod1_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brd_lod1_solid_id, schema_name;
-  END IF; 
-  IF brd_lod2_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brd_lod2_solid_id, schema_name;
-  END IF;
-  IF brd_lod3_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brd_lod3_solid_id, schema_name;
-  END IF;
-  IF brd_lod4_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brd_lod4_solid_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brd_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-  
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_bridge (id: %): %', brd_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from BRIDGE_INSTALLATION
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_bridge_installation(
-  brdi_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  brdi_lod2_id INTEGER;
-  brdi_lod3_id INTEGER;
-  brdi_lod4_id INTEGER;
-BEGIN
-  --// PRE DELETE BRIDGE INSTALLATION //--
-  -- delete referenced bridge thematic surfaces
-  EXECUTE format('SELECT citydb_pkg.delete_bridge_them_srf(id, %L) FROM %I.bridge_thematic_surface WHERE bridge_installation_id = %L', 
-                    schema_name, schema_name, brdi_id);
-
-  -- get reference ids to surface_geometry table 
-  EXECUTE format('SELECT lod2_brep_id, lod3_brep_id, lod4_brep_id 
-                    FROM %I.bridge_installation WHERE id = %L', schema_name, brdi_id)
-                    INTO brdi_lod2_id, brdi_lod3_id, brdi_lod4_id;
-
-  --// DELETE BRIDGE INSTALLATION //--
-  EXECUTE format('DELETE FROM %I.bridge_installation WHERE id = %L RETURNING id', schema_name, brdi_id) INTO deleted_id;
-
-  --// POST DELETE BRIDGE INSTALLATION //--
-  -- delete geometry
-  IF brdi_lod2_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brdi_lod2_id, schema_name;
-  END IF;
-  IF brdi_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brdi_lod3_id, schema_name;
-  END IF;
-  IF brdi_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brdi_lod4_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdi_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_bridge_installation (id: %): %', brdi_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from BRIDGE_THEMATIC_SURFACE
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_bridge_them_srf(
-  brdts_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  brdts_lod2_id INTEGER;
-  brdts_lod3_id INTEGER;
-  brdts_lod4_id INTEGER;
-BEGIN
-  --// PRE DELETE BRIDGE THEMATIC SURFACE //--
-  -- delete opening(s) not being referenced by a bridge thematic surface any more
-  EXECUTE format('SELECT citydb_pkg.delete_bridge_opening(brdo.id, %L) FROM %I.bridge_opening brdo, %I.bridge_open_to_them_srf brdo2ts
-                    WHERE brdo.id = brdo2ts.bridge_opening_id AND brdo2ts.bridge_thematic_surface_id = %L
-                    AND citydb_pkg.is_not_referenced(%L, %L, brdo.id, %L, %L, %L)',
-                    schema_name, schema_name, schema_name, brdts_id, 
-                    'bridge_open_to_them_srf', 'bridge_opening_id', 'bridge_thematic_surface_id', brdts_id, schema_name);
-
-  -- delete reference to opening
-  EXECUTE format('DELETE FROM %I.bridge_open_to_them_srf WHERE bridge_thematic_surface_id = %L', schema_name, brdts_id);
-
-  -- get reference ids to surface_geometry table 
-  EXECUTE format('SELECT lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id 
-                    FROM %I.bridge_thematic_surface WHERE id = %L', schema_name, brdts_id)
-                    INTO brdts_lod2_id, brdts_lod3_id, brdts_lod4_id;
-
-  --// DELETE BRIDGE THEMATIC SURFACE //--
-  EXECUTE format('DELETE FROM %I.bridge_thematic_surface WHERE id = %L RETURNING id', schema_name, brdts_id) INTO deleted_id;
-
-  --// POST DELETE BRIDGE THEMATIC SURFACE //--
-  -- delete geometry
-  IF brdts_lod2_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brdts_lod2_id, schema_name;
-  END IF;
-  IF brdts_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brdts_lod3_id, schema_name;
-  END IF;
-  IF brdts_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brdts_lod4_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdts_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_bridge_them_srf (id: %): %', brdts_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from BRIDGE_OPENING
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_bridge_opening(
-  brdo_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  brdo_add_id INTEGER;
-  brdo_lod3_id INTEGER;
-  brdo_lod4_id INTEGER;
-BEGIN
-  --// PRE DELETE BRIDGE OPENING //--
-  -- delete reference to bridge thematic surface
-  EXECUTE format('DELETE FROM %I.bridge_open_to_them_srf WHERE bridge_opening_id = %L', schema_name, brdo_id);
-
-  -- get reference ids to surface_geometry table and address_id
-  EXECUTE format('SELECT lod3_multi_surface_id, lod4_multi_surface_id, address_id 
-                    FROM %I.bridge_opening WHERE id = %L', schema_name, brdo_id) 
-                    INTO brdo_lod3_id, brdo_lod4_id, brdo_add_id;
-
-  -- delete addresses not being referenced from bridges and bridge openings any more
-  IF brdo_add_id IS NOT NULL THEN
-    EXECUTE format('SELECT citydb_pkg.delete_address(ad.id, %L) FROM %I.address ad 
-                      LEFT OUTER JOIN %I.address_to_bridge ad2brd ON ad.id = ad2brd.address_id 
-                      WHERE ad.id = %L AND ad2brd.address_id IS NULL
-                      AND citydb_pkg.is_not_referenced(%L, %L, ad.id, %L, %L, %L)',
-                      schema_name, schema_name, schema_name, brdo_add_id,
-                      'bridge_opening', 'address_id', 'id', brdo_id, schema_name);
-  END IF;
-
-  --// DELETE BRIDGE OPENING //--
-  EXECUTE format('DELETE FROM %I.bridge_opening WHERE id = %L RETURNING id', schema_name, brdo_id) INTO deleted_id;
-
-  --// POST DELETE BRIDGE OPENING //--
-  -- delete geometry
-  IF brdo_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brdo_lod3_id, schema_name;
-  END IF;
-  IF brdo_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brdo_lod4_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdo_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_bridge_opening (id: %): %', brdo_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from BRIDGE_FURNITURE
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_bridge_furniture(
-  brdf_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  brdf_lod4_id INTEGER;
-BEGIN
-  --// PRE DELETE BRIDGE FURNITURE //--
-  -- get reference id to surface_geometry table 
-  EXECUTE format('SELECT lod4_brep_id FROM %I.bridge_furniture WHERE id = %L', schema_name, brdf_id) INTO brdf_lod4_id;
-
-  --// DELETE BRIDGE FURNITURE //--
-  EXECUTE format('DELETE FROM %I.bridge_furniture WHERE id = %L RETURNING id', schema_name, brdf_id) INTO deleted_id;
-
-  --// POST DELETE BRIDGE FURNITURE //--
-  -- delete geometry
-  IF brdf_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brdf_lod4_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdf_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_bridge_furniture (id: %): %', brdf_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from BRIDGE_ROOM
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_bridge_room(
-  brdr_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  brdr_lod4_msrf_id INTEGER;
-  brdr_lod4_solid_id INTEGER;
-BEGIN
-  --// PRE DELETE BRIDGE ROOM //--
-  -- delete referenced bridge installation(s)
-  EXECUTE format('SELECT citydb_pkg.delete_bridge_installation(id, %L) FROM %I.bridge_installation WHERE bridge_room_id = %L', 
-                    schema_name, schema_name, brdr_id);
-
-  -- delete referenced bridge thematic surfaces
-  EXECUTE format('SELECT citydb_pkg.delete_bridge_them_srf(id, %L) FROM %I.bridge_thematic_surface WHERE bridge_room_id = %L', 
-                    schema_name, schema_name, brdr_id);
-  
-  -- delete referenced bridge furniture
-  EXECUTE format('SELECT citydb_pkg.delete_bridge_furniture(id, %L) FROM %I.bridge_furniture WHERE bridge_room_id = %L', 
-                    schema_name, schema_name, brdr_id);
-
-  -- get reference id to surface_geometry table 
-  EXECUTE format('SELECT lod4_multi_surface_id, lod4_solid_id FROM %I.bridge_room WHERE id = %L', schema_name, brdr_id)   
-                    INTO brdr_lod4_msrf_id, brdr_lod4_solid_id;
- 
-  --// DELETE BRIDGE ROOM //--
-  EXECUTE format('DELETE FROM %I.bridge_room WHERE id = %L RETURNING id', schema_name, brdr_id) INTO deleted_id;
-
-  --// POST DELETE BRIDGE ROOM //--
-  -- delete geometry
-  IF brdr_lod4_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brdr_lod4_msrf_id, schema_name;
-  END IF;
-  IF brdr_lod4_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brdr_lod4_solid_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdr_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_bridge_room (id: %): %', brdr_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from BRIDGE_CONSTR_ELEMENT
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_bridge_constr_element(
-  brdce_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  brdce_lod1_id INTEGER;
-  brdce_lod2_id INTEGER;
-  brdce_lod3_id INTEGER;
-  brdce_lod4_id INTEGER;
-BEGIN
-  --// PRE DELETE BRIDGE CONSTRUCTION ELEMENT //--
-  -- delete referenced bridge thematic surfaces
-  EXECUTE format('SELECT citydb_pkg.delete_bridge_them_srf(id, %L) FROM %I.bridge_thematic_surface WHERE bridge_constr_element_id = %L', 
-                    schema_name, schema_name, brdce_id);
-
-  -- get reference ids to surface_geometry table 
-  EXECUTE format('SELECT lod1_brep_id, lod2_brep_id, lod3_brep_id, lod4_brep_id 
-                    FROM %I.bridge_constr_element WHERE id = %L', schema_name, brdce_id)
-                    INTO brdce_lod1_id, brdce_lod2_id, brdce_lod3_id, brdce_lod4_id;
-
-  --// DELETE BRIDGE CONSTRUCTION ELEMENT //--
-  EXECUTE format('DELETE FROM %I.bridge_constr_element WHERE id = %L RETURNING id', schema_name, brdce_id) INTO deleted_id;
-
-  --// POST DELETE BRIDGE CONSTRUCTION ELEMENT //--
-  -- delete geometry
-  IF brdce_lod1_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brdce_lod1_id, schema_name;
-  END IF;
-  IF brdce_lod2_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brdce_lod2_id, schema_name;
-  END IF;
-  IF brdce_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brdce_lod3_id, schema_name;
-  END IF;
-  IF brdce_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING brdce_lod4_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING brdce_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_bridge_constr_element (id: %): %', brdce_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from TUNNEL
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_tunnel(
-  tun_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  tun_lod1_msrf_id INTEGER;
-  tun_lod2_msrf_id INTEGER;
-  tun_lod3_msrf_id INTEGER;
-  tun_lod4_msrf_id INTEGER;
-  tun_lod1_solid_id INTEGER;
-  tun_lod2_solid_id INTEGER;
-  tun_lod3_solid_id INTEGER;
-  tun_lod4_solid_id INTEGER;
-BEGIN
-  --// PRE DELETE TUNNEL //--
-  -- delete referenced tunnel part(s)
-  EXECUTE format('SELECT citydb_pkg.delete_tunnel(id, %L) FROM %I.tunnel WHERE id != %L AND tunnel_parent_id = %L', 
-                    schema_name, schema_name, tun_id, tun_id);
-
-  -- delete referenced tunnel installation(s)
-  EXECUTE format('SELECT citydb_pkg.delete_tunnel_installation(id, %L) FROM %I.tunnel_installation WHERE tunnel_id = %L', 
-                    schema_name, schema_name, tun_id);
-
-  -- delete referenced tunnel thematic surfaces
-  EXECUTE format('SELECT citydb_pkg.delete_tunnel_them_srf(id, %L) FROM %I.tunnel_thematic_surface WHERE tunnel_id = %L', 
-                    schema_name, schema_name, tun_id);
-
-  -- delete referenced tunnel hollow space(s)
-  EXECUTE format('SELECT citydb_pkg.delete_tunnel_hollow_space(id, %L) FROM %I.tunnel_hollow_space WHERE tunnel_id = %L', 
-                    schema_name, schema_name, tun_id);
-
-  -- get reference ids to surface_geometry table  
-  EXECUTE format('SELECT lod1_multi_surface_id, lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id,
-                    lod1_solid_id , lod2_solid_id, lod3_solid_id, lod4_solid_id FROM %I.tunnel WHERE id = %L', schema_name, tun_id) 
-                    INTO tun_lod1_msrf_id, tun_lod2_msrf_id, tun_lod3_msrf_id, tun_lod4_msrf_id,
-                         tun_lod1_solid_id, tun_lod2_solid_id, tun_lod3_solid_id, tun_lod4_solid_id;
-
-  --// DELETE TUNNEL //--
-  EXECUTE format('DELETE FROM %I.tunnel WHERE id = %L RETURNING id', schema_name, tun_id) INTO deleted_id;
-
-  --// POST DELETE TUNNEL //--
-  -- delete geometry
-  IF tun_lod1_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tun_lod1_msrf_id, schema_name;
-  END IF; 
-  IF tun_lod2_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tun_lod2_msrf_id, schema_name;
-  END IF;
-  IF tun_lod3_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tun_lod3_msrf_id, schema_name;
-  END IF;
-  IF tun_lod4_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tun_lod4_msrf_id, schema_name;
-  END IF;
-  IF tun_lod1_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tun_lod1_solid_id, schema_name;
-  END IF; 
-  IF tun_lod2_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tun_lod2_solid_id, schema_name;
-  END IF;
-  IF tun_lod3_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tun_lod3_solid_id, schema_name;
-  END IF;
-  IF tun_lod4_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tun_lod4_solid_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tun_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_tunnel (id: %): %', tun_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from TUNNEL_INSTALLATION
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_tunnel_installation(
-  tuni_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  tuni_lod2_id INTEGER;
-  tuni_lod3_id INTEGER;
-  tuni_lod4_id INTEGER;
-BEGIN
-  --// PRE DELETE TUNNEL INSTALLATION //--
-  -- delete referenced tunnel thematic surfaces
-  EXECUTE format('SELECT citydb_pkg.delete_tunnel_them_srf(id, %L) FROM %I.tunnel_thematic_surface WHERE tunnel_installation_id = %L', 
-                    schema_name, schema_name, tuni_id);
-
-  -- get reference ids to surface_geometry table 
-  EXECUTE format('SELECT lod2_brep_id, lod3_brep_id, lod4_brep_id 
-                    FROM %I.tunnel_installation WHERE id = %L', schema_name, tuni_id) 
-                    INTO tuni_lod2_id, tuni_lod3_id, tuni_lod4_id;
-
-  --// DELETE TUNNEL INSTALLATION //--
-  EXECUTE format('DELETE FROM %I.tunnel_installation WHERE id = %L RETURNING id', schema_name, tuni_id) INTO deleted_id;
-
-  --// POST DELETE TUNNEL INSTALLATION //--
-  -- delete geometry
-  IF tuni_lod2_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tuni_lod2_id, schema_name;
-  END IF;
-  IF tuni_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tuni_lod3_id, schema_name;
-  END IF;
-  IF tuni_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tuni_lod4_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tuni_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_tunnel_installation (id: %): %', tuni_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from TUNNEL_THEMATIC_SURFACE
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_tunnel_them_srf(
-  tunts_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  tunts_lod2_id INTEGER;
-  tunts_lod3_id INTEGER;
-  tunts_lod4_id INTEGER;
-BEGIN
-  --// PRE DELETE TUNNEL THEMATIC SURFACE //--
-  -- delete opening(s) not being referenced by a tunnel thematic surface any more
-  EXECUTE format('SELECT citydb_pkg.delete_tunnel_opening(tuno.id, %L) FROM %I.tunnel_opening tuno, %I.tunnel_open_to_them_srf tuno2ts
-                    WHERE tuno.id = tuno2ts.tunnel_opening_id AND tuno2ts.tunnel_thematic_surface_id = %L
-                      AND citydb_pkg.is_not_referenced(%L, %L, tuno.id, %L, %L, %L)',
-                      schema_name, schema_name, schema_name, tunts_id,
-                      'tunnel_open_to_them_srf', 'tunnel_opening_id', 'tunnel_thematic_surface_id', tunts_id, schema_name);
-
-  -- delete reference to opening
-  EXECUTE format('DELETE FROM %I.tunnel_open_to_them_srf WHERE tunnel_thematic_surface_id = %L', schema_name, tunts_id);
-
-  -- get reference ids to surface_geometry table 
-  EXECUTE format('SELECT lod2_multi_surface_id, lod3_multi_surface_id, lod4_multi_surface_id 
-                    FROM %I.tunnel_thematic_surface WHERE id = %L', schema_name, tunts_id)
-                    INTO tunts_lod2_id, tunts_lod3_id, tunts_lod4_id;
-
-  --// DELETE TUNNEL THEMATIC SURFACE //--
-  EXECUTE format('DELETE FROM %I.tunnel_thematic_surface WHERE id = %L RETURNING id', schema_name, tunts_id) INTO deleted_id;
-
-  --// POST DELETE TUNNEL THEMATIC SURFACE //--
-  -- delete geometry
-  IF tunts_lod2_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tunts_lod2_id, schema_name;
-  END IF;
-  IF tunts_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tunts_lod3_id, schema_name;
-  END IF;
-  IF tunts_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tunts_lod4_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tunts_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_tunnel_them_srf (id: %): %', tunts_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from TUNNEL_OPENING
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_tunnel_opening(
-  tuno_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  tuno_lod3_id INTEGER;
-  tuno_lod4_id INTEGER;
-BEGIN
-  --// PRE DELETE TUNNEL OPENING //--
-  -- delete reference to tunnel thematic surface
-  EXECUTE format('DELETE FROM %I.tunnel_open_to_them_srf WHERE tunnel_opening_id = %L', schema_name, tuno_id);
-
-  -- get reference ids to surface_geometry table 
-  EXECUTE format('SELECT lod3_multi_surface_id, lod4_multi_surface_id 
-                    FROM %I.tunnel_opening WHERE id = %L', schema_name, tuno_id)
-                    INTO tuno_lod3_id, tuno_lod4_id;
-
-  --// DELETE TUNNEL OPENING //--
-  EXECUTE format('DELETE FROM %I.tunnel_opening WHERE id = %L RETURNING id', schema_name, tuno_id) INTO deleted_id;
-
-  --// POST DELETE TUNNEL OPENING //--
-  -- delete geometry
-  IF tuno_lod3_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry(tuno_lod3_id, 0, $2)' USING tuno_lod3_id, schema_name;
-  END IF;
-  IF tuno_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry(tuno_lod4_id, 0, $2)' USING tuno_lod4_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tuno_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_tunnel_opening (id: %): %', tuno_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from TUNNEL_FURNITURE
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_tunnel_furniture(
-  tunf_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  tunf_lod4_id INTEGER;
-BEGIN
-  --// PRE DELETE TUNNEL FURNITURE //--
-  -- get reference id to surface_geometry table 
-  EXECUTE format('SELECT lod4_brep_id FROM %I.tunnel_furniture WHERE id = %L', schema_name, tunf_id) INTO tunf_lod4_id;
-
-  --// DELETE TUNNEL FURNITURE //--
-  EXECUTE format('DELETE FROM %I.tunnel_furniture WHERE id = %L RETURNING id', schema_name, tunf_id) INTO deleted_id;
-
-  --// POST DELETE TUNNEL FURNITURE //--
-  -- delete geometry
-  IF tunf_lod4_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tunf_lod4_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tunf_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_tunnel_furniture (id: %): %', tunf_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-delete from TUNNEL_HOLLOW_SPACE
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_tunnel_hollow_space(
-  tunhs_id INTEGER, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  tunhs_lod4_msrf_id INTEGER;
-  tunhs_lod4_solid_id INTEGER;
-BEGIN
-  --// PRE DELETE TUNNEL HOLLOW SPACE //--
-  -- delete referenced tunnel installation(s)
-  EXECUTE format('SELECT citydb_pkg.delete_tunnel_installation(id, %L) FROM %I.tunnel_installation WHERE tunnel_hollow_space_id = %L', 
-                    schema_name, schema_name, tunhs_id);
-
-  -- delete referenced tunnel thematic surfaces
-  EXECUTE format('SELECT citydb_pkg.delete_tunnel_them_srf(id, %L) FROM %I.tunnel_thematic_surface WHERE tunnel_hollow_space_id = %L', 
-                    schema_name, schema_name, tunhs_id);
-  
-  -- delete referenced tunnel furniture
-  EXECUTE format('SELECT citydb_pkg.delete_tunnel_furniture(id, %L) FROM %I.tunnel_furniture WHERE tunnel_hollow_space_id = %L', 
-                    schema_name, schema_name, tunhs_id);
-
-  -- get reference id to surface_geometry table 
-  EXECUTE format('SELECT lod4_multi_surface_id, lod4_solid_id FROM %I.tunnel_hollow_space WHERE id = %L', schema_name, tunhs_id)  
-                    INTO tunhs_lod4_msrf_id, tunhs_lod4_solid_id;
- 
-  --// DELETE TUNNEL HOLLOW SPACE //--
-  EXECUTE format('DELETE FROM %I.tunnel_hollow_space WHERE id = %L RETURNING id', schema_name, tunhs_id) INTO deleted_id;
-
-  --// POST DELETE TUNNEL HOLLOW SPACE //--
-  -- delete geometry
-  IF tunhs_lod4_msrf_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tunhs_lod4_msrf_id, schema_name;
-  END IF;
-  IF tunhs_lod4_solid_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.delete_surface_geometry($1, 0, $2)' USING tunhs_lod4_solid_id, schema_name;
-  END IF;
-
-  -- delete city object
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.intern_delete_cityobject($1, $2)' USING tunhs_id, schema_name;
-  END IF;
-
-  RETURN deleted_id;
-
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_tunnel_hollow_space (id: %): %', tunhs_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-/*
-cleanup procedures
-*/
-CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_implicit_geometries(
-  clean_apps INTEGER DEFAULT 0, 
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS SETOF INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  ig_id INTEGER;
-BEGIN
-  FOR ig_id IN EXECUTE format(
-    'SELECT ig.id FROM %I.implicit_geometry ig
-       LEFT JOIN %I.bridge_furniture brdf ON brdf.lod4_implicit_rep_id = ig.id
-       LEFT JOIN %I.bridge_constr_element brdce1 ON brdce1.lod1_implicit_rep_id = ig.id
-       LEFT JOIN %I.bridge_constr_element brdce2 ON brdce1.lod2_implicit_rep_id = ig.id
-       LEFT JOIN %I.bridge_constr_element brdce3 ON brdce1.lod3_implicit_rep_id = ig.id
-       LEFT JOIN %I.bridge_constr_element brdce4 ON brdce1.lod4_implicit_rep_id = ig.id
-       LEFT JOIN %I.bridge_installation brdi1 ON brdi1.lod2_implicit_rep_id = ig.id
-       LEFT JOIN %I.bridge_installation brdi2 ON brdi2.lod3_implicit_rep_id = ig.id
-       LEFT JOIN %I.bridge_installation brdi3 ON brdi3.lod4_implicit_rep_id = ig.id
-       LEFT JOIN %I.bridge_opening brdo1 ON brdo1.lod3_implicit_rep_id = ig.id
-       LEFT JOIN %I.bridge_opening brdo2 ON brdo2.lod4_implicit_rep_id = ig.id
-       LEFT JOIN %I.building_furniture bf ON bf.lod4_implicit_rep_id = ig.id
-       LEFT JOIN %I.building_installation bi1 ON bi1.lod2_implicit_rep_id = ig.id
-       LEFT JOIN %I.building_installation bi2 ON bi2.lod3_implicit_rep_id = ig.id
-       LEFT JOIN %I.building_installation bi3 ON bi3.lod4_implicit_rep_id = ig.id
-       LEFT JOIN %I.city_furniture cf1 ON cf1.lod1_implicit_rep_id = ig.id
-       LEFT JOIN %I.city_furniture cf2 ON cf2.lod2_implicit_rep_id = ig.id
-       LEFT JOIN %I.city_furniture cf3 ON cf3.lod3_implicit_rep_id = ig.id
-       LEFT JOIN %I.city_furniture cf4 ON cf4.lod4_implicit_rep_id = ig.id
-       LEFT JOIN %I.generic_cityobject gco0 ON gco0.lod0_implicit_rep_id = ig.id
-       LEFT JOIN %I.generic_cityobject gco1 ON gco1.lod1_implicit_rep_id = ig.id
-       LEFT JOIN %I.generic_cityobject gco2 ON gco2.lod2_implicit_rep_id = ig.id
-       LEFT JOIN %I.generic_cityobject gco3 ON gco3.lod3_implicit_rep_id = ig.id
-       LEFT JOIN %I.generic_cityobject gco4 ON gco4.lod4_implicit_rep_id = ig.id
-       LEFT JOIN %I.opening o1 ON o1.lod3_implicit_rep_id = ig.id
-       LEFT JOIN %I.opening o2 ON o2.lod4_implicit_rep_id = ig.id
-       LEFT JOIN %I.solitary_vegetat_object svo1 ON svo1.lod1_implicit_rep_id = ig.id
-       LEFT JOIN %I.solitary_vegetat_object svo2 ON svo2.lod2_implicit_rep_id = ig.id
-       LEFT JOIN %I.solitary_vegetat_object svo3 ON svo3.lod3_implicit_rep_id = ig.id
-       LEFT JOIN %I.solitary_vegetat_object svo4 ON svo4.lod4_implicit_rep_id = ig.id
-       LEFT JOIN %I.tunnel_furniture tunf ON tunf.lod4_implicit_rep_id = ig.id
-       LEFT JOIN %I.tunnel_installation tuni1 ON tuni1.lod2_implicit_rep_id = ig.id
-       LEFT JOIN %I.tunnel_installation tuni2 ON tuni2.lod3_implicit_rep_id = ig.id
-       LEFT JOIN %I.tunnel_installation tuni3 ON tuni3.lod4_implicit_rep_id = ig.id
-       LEFT JOIN %I.tunnel_opening tuno1 ON tuno1.lod3_implicit_rep_id = ig.id
-       LEFT JOIN %I.tunnel_opening tuno2 ON tuno2.lod4_implicit_rep_id = ig.id
-       WHERE (brdf.lod4_implicit_rep_id IS NULL)
-          AND (brdce1.lod1_implicit_rep_id IS NULL)
-          AND (brdce2.lod2_implicit_rep_id IS NULL)
-          AND (brdce3.lod3_implicit_rep_id IS NULL)
-          AND (brdce4.lod4_implicit_rep_id IS NULL)
-          AND (brdi1.lod2_implicit_rep_id IS NULL)
-          AND (brdi2.lod3_implicit_rep_id IS NULL)
-          AND (brdi3.lod4_implicit_rep_id IS NULL)
-          AND (brdo1.lod3_implicit_rep_id IS NULL)
-          AND (brdo2.lod4_implicit_rep_id IS NULL)
-          AND (bf.lod4_implicit_rep_id IS NULL)
-          AND (bi1.lod2_implicit_rep_id IS NULL)
-          AND (bi2.lod3_implicit_rep_id IS NULL)
-          AND (bi3.lod4_implicit_rep_id IS NULL)
-          AND (cf1.lod1_implicit_rep_id IS NULL)
-          AND (cf2.lod2_implicit_rep_id IS NULL)
-          AND (cf3.lod3_implicit_rep_id IS NULL)
-          AND (cf4.lod4_implicit_rep_id IS NULL)
-          AND (gco0.lod0_implicit_rep_id IS NULL)
-          AND (gco1.lod1_implicit_rep_id IS NULL)
-          AND (gco2.lod2_implicit_rep_id IS NULL)
-          AND (gco3.lod3_implicit_rep_id IS NULL)
-          AND (gco4.lod4_implicit_rep_id IS NULL)
-          AND (o1.lod3_implicit_rep_id IS NULL)
-          AND (o2.lod4_implicit_rep_id IS NULL)
-          AND (svo1.lod1_implicit_rep_id IS NULL)
-          AND (svo2.lod2_implicit_rep_id IS NULL)
-          AND (svo3.lod3_implicit_rep_id IS NULL)
-          AND (svo4.lod4_implicit_rep_id IS NULL)
-          AND (tunf.lod4_implicit_rep_id IS NULL)
-          AND (tuni1.lod2_implicit_rep_id IS NULL)
-          AND (tuni2.lod3_implicit_rep_id IS NULL)
-          AND (tuni3.lod4_implicit_rep_id IS NULL)
-          AND (tuno1.lod3_implicit_rep_id IS NULL)
-          AND (tuno2.lod4_implicit_rep_id IS NULL)', schema_name,
-          schema_name, schema_name, schema_name, schema_name, schema_name,
-          schema_name, schema_name, schema_name, schema_name, schema_name,
-          schema_name, schema_name, schema_name, schema_name, schema_name,
-          schema_name, schema_name, schema_name, schema_name, schema_name,
-          schema_name, schema_name, schema_name, schema_name, schema_name,
-          schema_name, schema_name, schema_name, schema_name, schema_name,
-          schema_name, schema_name, schema_name, schema_name, schema_name) LOOP
-    deleted_id := citydb_pkg.delete_implicit_geometry(ig_id, 0, schema_name);
-    RETURN NEXT deleted_id;
-  END LOOP;
-
-  IF clean_apps <> 0 THEN
-    EXECUTE 'SELECT citydb_pkg.cleanup_appearances(0, $1)' USING schema_name;
-  END IF;
-
-  RETURN;
-
-  EXCEPTION  
-    WHEN OTHERS THEN
-      RAISE NOTICE 'cleanup_implicit_geometries: %', SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_grid_coverages(
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS SETOF INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  gc_id INTEGER;
-BEGIN
-  FOR gc_id IN EXECUTE format('SELECT gc.id FROM %I.grid_coverage gc
-                                 LEFT JOIN %I.raster_relief rr ON rr.coverage_id = gc.id
-                                 WHERE rr.coverage_id IS NULL', schema_name, schema_name) LOOP
-    --// DELETE GRID COVERAGE //--
-    EXECUTE format('DELETE FROM %I.grid_coverage WHERE id = %L RETURNING id', schema_name, gc_id) INTO deleted_id;
-    RETURN NEXT deleted_id;
-  END LOOP;
-
-  RETURN;
-
-  EXCEPTION  
-    WHEN OTHERS THEN
-      RAISE NOTICE 'cleanup_grid_coverages: %', SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_tex_images(
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS SETOF INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  ti_id INTEGER;
-BEGIN
-  FOR ti_id IN EXECUTE format('SELECT ti.id FROM %I.tex_image ti
-                                 LEFT JOIN %I.surface_data sd ON sd.tex_image_id = ti.id
-                                 WHERE sd.tex_image_id IS NULL', schema_name, schema_name) LOOP
-    --// DELETE TEX IMAGE //--
-    EXECUTE format('DELETE FROM %I.tex_image WHERE id = %L RETURNING id', schema_name, ti_id) INTO deleted_id;
-    RETURN NEXT deleted_id;
-  END LOOP;
-
-  RETURN;
-
-  EXCEPTION  
-    WHEN OTHERS THEN
-      RAISE NOTICE 'cleanup_tex_images: %', SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_appearances(
-  only_global INTEGER DEFAULT 1,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS SETOF INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  app_id INTEGER;
-BEGIN
-  -- global appearances are not related to a cityobject.
-  -- however, we assume that all surface geometries of a cityobject
-  -- have been deleted at this stage. thus, we can check and delete
-  -- surface data which does not have a valid texture parameterization
-  -- any more.
-  EXECUTE format('SELECT citydb_pkg.delete_surface_data(s.id, %L) FROM %I.surface_data s 
-                    LEFT OUTER JOIN %I.textureparam t ON s.id = t.surface_data_id 
-                    WHERE t.surface_data_id IS NULL', schema_name, schema_name, schema_name);
-
-  -- delete appearances which does not have surface data any more
-  IF only_global=1 THEN
-    FOR app_id IN EXECUTE format(
-      'SELECT a.id FROM %I.appearance a 
-         LEFT OUTER JOIN %I.appear_to_surface_data asd ON a.id=asd.appearance_id 
-           WHERE a.cityobject_id IS NULL AND asd.appearance_id IS NULL', schema_name, schema_name) LOOP
-      deleted_id := citydb_pkg.delete_appearance(app_id, 0, schema_name);
-      RETURN NEXT deleted_id;
-    END LOOP;
+  IF $2 = 0 THEN
+    SELECT array_agg(c.id) FROM
+      citydb.cityobject c
+    INTO
+      deleted_ids
+    WHERE
+      c.lineage = $1;
   ELSE
-    FOR app_id IN EXECUTE format(
-      'SELECT a.id FROM %I.appearance a 
-         LEFT OUTER JOIN %I.appear_to_surface_data asd ON a.id=asd.appearance_id 
-           WHERE asd.appearance_id IS NULL', schema_name, schema_name) LOOP
-      deleted_id := citydb_pkg.delete_appearance(app_id, 0, schema_name);
-      RETURN NEXT deleted_id;
+    SELECT array_agg(c.id) FROM
+      citydb.cityobject c
+    INTO
+      deleted_ids
+    WHERE
+      c.lineage = $1 AND c.objectclass_id = $2;
+  END IF;
+
+  IF -1 = ALL(deleted_ids) IS NOT NULL THEN
+    PERFORM citydb.del_cityobject(deleted_ids);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_external_reference(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+BEGIN
+  -- delete citydb.external_references
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.external_reference t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    deleted_ids
+  FROM
+    delete_objects;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_generic_cityobject(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  implicit_geometry_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  -- delete citydb.generic_cityobjects
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.generic_cityobject t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod1_implicit_rep_id,
+      lod2_implicit_rep_id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id,
+      lod0_implicit_rep_id,
+      lod0_brep_id,
+      lod2_brep_id,
+      lod3_brep_id,
+      lod4_brep_id,
+      lod1_brep_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod1_implicit_rep_id) ||
+    array_agg(lod2_implicit_rep_id) ||
+    array_agg(lod3_implicit_rep_id) ||
+    array_agg(lod4_implicit_rep_id) ||
+    array_agg(lod0_implicit_rep_id),
+    array_agg(lod0_brep_id) ||
+    array_agg(lod2_brep_id) ||
+    array_agg(lod3_brep_id) ||
+    array_agg(lod4_brep_id) ||
+    array_agg(lod1_brep_id)
+  INTO
+    deleted_ids,
+    implicit_geometry_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.implicit_geometry(s)
+  IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_implicit_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
+    LEFT JOIN
+      citydb.bridge_constr_element n1
+      ON n1.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n2
+      ON n2.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n3
+      ON n3.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n4
+      ON n4.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_furniture n5
+      ON n5.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n6
+      ON n6.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n7
+      ON n7.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n8
+      ON n8.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n9
+      ON n9.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n10
+      ON n10.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_furniture n11
+      ON n11.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n12
+      ON n12.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n13
+      ON n13.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n14
+      ON n14.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n15
+      ON n15.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n16
+      ON n16.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n17
+      ON n17.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n18
+      ON n18.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n19
+      ON n19.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n20
+      ON n20.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n21
+      ON n21.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n22
+      ON n22.lod0_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n23
+      ON n23.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n24
+      ON n24.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n25
+      ON n25.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n26
+      ON n26.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n27
+      ON n27.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n28
+      ON n28.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n29
+      ON n29.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_furniture n30
+      ON n30.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n31
+      ON n31.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n32
+      ON n32.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n33
+      ON n33.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n34
+      ON n34.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n35
+      ON n35.lod3_implicit_rep_id  = a.a_id
+    WHERE n1.lod3_implicit_rep_id IS NULL
+      AND n2.lod2_implicit_rep_id IS NULL
+      AND n3.lod1_implicit_rep_id IS NULL
+      AND n4.lod4_implicit_rep_id IS NULL
+      AND n5.lod4_implicit_rep_id IS NULL
+      AND n6.lod4_implicit_rep_id IS NULL
+      AND n7.lod3_implicit_rep_id IS NULL
+      AND n8.lod2_implicit_rep_id IS NULL
+      AND n9.lod4_implicit_rep_id IS NULL
+      AND n10.lod3_implicit_rep_id IS NULL
+      AND n11.lod4_implicit_rep_id IS NULL
+      AND n12.lod2_implicit_rep_id IS NULL
+      AND n13.lod3_implicit_rep_id IS NULL
+      AND n14.lod4_implicit_rep_id IS NULL
+      AND n15.lod1_implicit_rep_id IS NULL
+      AND n16.lod2_implicit_rep_id IS NULL
+      AND n17.lod3_implicit_rep_id IS NULL
+      AND n18.lod4_implicit_rep_id IS NULL
+      AND n19.lod4_implicit_rep_id IS NULL
+      AND n20.lod1_implicit_rep_id IS NULL
+      AND n21.lod2_implicit_rep_id IS NULL
+      AND n22.lod0_implicit_rep_id IS NULL
+      AND n23.lod3_implicit_rep_id IS NULL
+      AND n24.lod4_implicit_rep_id IS NULL
+      AND n25.lod3_implicit_rep_id IS NULL
+      AND n26.lod2_implicit_rep_id IS NULL
+      AND n27.lod3_implicit_rep_id IS NULL
+      AND n28.lod4_implicit_rep_id IS NULL
+      AND n29.lod1_implicit_rep_id IS NULL
+      AND n30.lod4_implicit_rep_id IS NULL
+      AND n31.lod4_implicit_rep_id IS NULL
+      AND n32.lod3_implicit_rep_id IS NULL
+      AND n33.lod2_implicit_rep_id IS NULL
+      AND n34.lod4_implicit_rep_id IS NULL
+      AND n35.lod3_implicit_rep_id IS NULL;
+  END IF;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_grid_coverage(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+BEGIN
+  -- delete citydb.grid_coverages
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.grid_coverage t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    deleted_ids
+  FROM
+    delete_objects;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_implicit_geometry(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  -- delete citydb.implicit_geometrys
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.implicit_geometry t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      relative_brep_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(relative_brep_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_land_use(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  -- delete citydb.land_uses
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.land_use t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod1_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id,
+      lod2_multi_surface_id,
+      lod0_multi_surface_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod1_multi_surface_id) ||
+    array_agg(lod3_multi_surface_id) ||
+    array_agg(lod4_multi_surface_id) ||
+    array_agg(lod2_multi_surface_id) ||
+    array_agg(lod0_multi_surface_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_masspoint_relief(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+BEGIN
+  -- delete citydb.masspoint_reliefs
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.masspoint_relief t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    deleted_ids
+  FROM
+    delete_objects;
+
+  IF $2 <> 1 THEN
+    -- delete relief_component
+    PERFORM citydb.del_relief_component(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_opening(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  implicit_geometry_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
+  address_ids int[] := '{}';
+BEGIN
+  -- delete citydb.openings
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.opening t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id,
+      address_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod3_implicit_rep_id) ||
+    array_agg(lod4_implicit_rep_id),
+    array_agg(lod3_multi_surface_id) ||
+    array_agg(lod4_multi_surface_id),
+    array_agg(address_id)
+  INTO
+    deleted_ids,
+    implicit_geometry_ids,
+    surface_geometry_ids,
+    address_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.implicit_geometry(s)
+  IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_implicit_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
+    LEFT JOIN
+      citydb.bridge_constr_element n1
+      ON n1.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n2
+      ON n2.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n3
+      ON n3.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n4
+      ON n4.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_furniture n5
+      ON n5.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n6
+      ON n6.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n7
+      ON n7.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n8
+      ON n8.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n9
+      ON n9.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n10
+      ON n10.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_furniture n11
+      ON n11.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n12
+      ON n12.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n13
+      ON n13.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n14
+      ON n14.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n15
+      ON n15.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n16
+      ON n16.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n17
+      ON n17.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n18
+      ON n18.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n19
+      ON n19.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n20
+      ON n20.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n21
+      ON n21.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n22
+      ON n22.lod0_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n23
+      ON n23.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n24
+      ON n24.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n25
+      ON n25.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n26
+      ON n26.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n27
+      ON n27.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n28
+      ON n28.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n29
+      ON n29.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_furniture n30
+      ON n30.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n31
+      ON n31.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n32
+      ON n32.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n33
+      ON n33.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n34
+      ON n34.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n35
+      ON n35.lod3_implicit_rep_id  = a.a_id
+    WHERE n1.lod3_implicit_rep_id IS NULL
+      AND n2.lod2_implicit_rep_id IS NULL
+      AND n3.lod1_implicit_rep_id IS NULL
+      AND n4.lod4_implicit_rep_id IS NULL
+      AND n5.lod4_implicit_rep_id IS NULL
+      AND n6.lod4_implicit_rep_id IS NULL
+      AND n7.lod3_implicit_rep_id IS NULL
+      AND n8.lod2_implicit_rep_id IS NULL
+      AND n9.lod4_implicit_rep_id IS NULL
+      AND n10.lod3_implicit_rep_id IS NULL
+      AND n11.lod4_implicit_rep_id IS NULL
+      AND n12.lod2_implicit_rep_id IS NULL
+      AND n13.lod3_implicit_rep_id IS NULL
+      AND n14.lod4_implicit_rep_id IS NULL
+      AND n15.lod1_implicit_rep_id IS NULL
+      AND n16.lod2_implicit_rep_id IS NULL
+      AND n17.lod3_implicit_rep_id IS NULL
+      AND n18.lod4_implicit_rep_id IS NULL
+      AND n19.lod4_implicit_rep_id IS NULL
+      AND n20.lod1_implicit_rep_id IS NULL
+      AND n21.lod2_implicit_rep_id IS NULL
+      AND n22.lod0_implicit_rep_id IS NULL
+      AND n23.lod3_implicit_rep_id IS NULL
+      AND n24.lod4_implicit_rep_id IS NULL
+      AND n25.lod3_implicit_rep_id IS NULL
+      AND n26.lod2_implicit_rep_id IS NULL
+      AND n27.lod3_implicit_rep_id IS NULL
+      AND n28.lod4_implicit_rep_id IS NULL
+      AND n29.lod1_implicit_rep_id IS NULL
+      AND n30.lod4_implicit_rep_id IS NULL
+      AND n31.lod4_implicit_rep_id IS NULL
+      AND n32.lod3_implicit_rep_id IS NULL
+      AND n33.lod2_implicit_rep_id IS NULL
+      AND n34.lod4_implicit_rep_id IS NULL
+      AND n35.lod3_implicit_rep_id IS NULL;
+  END IF;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  -- delete citydb.address(s)
+  IF -1 = ALL(address_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_address(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(address_ids) AS a_id) a
+    LEFT JOIN
+      citydb.address_to_bridge n1
+      ON n1.address_id  = a.a_id
+    LEFT JOIN
+      citydb.address_to_building n2
+      ON n2.address_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n3
+      ON n3.address_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n4
+      ON n4.address_id  = a.a_id
+    WHERE n1.address_id IS NULL
+      AND n2.address_id IS NULL
+      AND n3.address_id IS NULL
+      AND n4.address_id IS NULL;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_plant_cover(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  -- delete citydb.plant_covers
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.plant_cover t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id,
+      lod1_multi_solid_id,
+      lod2_multi_solid_id,
+      lod3_multi_solid_id,
+      lod4_multi_solid_id,
+      lod1_multi_surface_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod2_multi_surface_id) ||
+    array_agg(lod3_multi_surface_id) ||
+    array_agg(lod4_multi_surface_id) ||
+    array_agg(lod1_multi_solid_id) ||
+    array_agg(lod2_multi_solid_id) ||
+    array_agg(lod3_multi_solid_id) ||
+    array_agg(lod4_multi_solid_id) ||
+    array_agg(lod1_multi_surface_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_raster_relief(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  grid_coverage_ids int[] := '{}';
+BEGIN
+  -- delete citydb.raster_reliefs
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.raster_relief t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      coverage_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(coverage_id)
+  INTO
+    deleted_ids,
+    grid_coverage_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.grid_coverage(s)
+  IF -1 = ALL(grid_coverage_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_grid_coverage(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(grid_coverage_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete relief_component
+    PERFORM citydb.del_relief_component(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_relief_component(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+BEGIN
+  IF $2 <> 2 THEN
+    FOREACH object_id IN ARRAY $1
+    LOOP
+      EXECUTE format('SELECT objectclass_id FROM citydb.relief_component WHERE id = %L', object_id) INTO objectclass_id;
+
+      -- delete tin_relief
+      IF objectclass_id = 16 THEN
+        PERFORM citydb.del_tin_relief(array_agg(object_id), 1);
+      END IF;
+
+      -- delete masspoint_relief
+      IF objectclass_id = 17 THEN
+        PERFORM citydb.del_masspoint_relief(array_agg(object_id), 1);
+      END IF;
+
+      -- delete breakline_relief
+      IF objectclass_id = 18 THEN
+        PERFORM citydb.del_breakline_relief(array_agg(object_id), 1);
+      END IF;
+
+      -- delete raster_relief
+      IF objectclass_id = 19 THEN
+        PERFORM citydb.del_raster_relief(array_agg(object_id), 1);
+      END IF;
     END LOOP;
   END IF;
 
-  -- delete tex images not referenced by surface data any more
-  IF deleted_id IS NOT NULL THEN
-    EXECUTE 'SELECT citydb_pkg.cleanup_tex_images($1)' USING schema_name;
+  -- delete citydb.relief_components
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.relief_component t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    deleted_ids
+  FROM
+    delete_objects;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
   END IF;
 
-  RETURN;
-
-  EXCEPTION  
-    WHEN OTHERS THEN
-      RAISE NOTICE 'cleanup_appearances: %', SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_addresses(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  ad_id INTEGER;
-BEGIN
-  FOR ad_id IN EXECUTE format(
-    'SELECT ad.id FROM %I.address ad
-       LEFT OUTER JOIN %I.address_to_building ad2b ON ad2b.address_id = ad.id
-       LEFT OUTER JOIN %I.address_to_bridge ad2brd ON ad2brd.address_id = ad.id
-       LEFT OUTER JOIN %I.opening o ON o.address_id = ad.id
-       LEFT OUTER JOIN %I.bridge_opening brdo ON brdo.address_id = ad.id
-       WHERE ad2b.building_id IS NULL
-         AND ad2brd.bridge_id IS NULL
-         AND o.address_id IS NULL
-         AND brdo.address_id IS NULL',
-         schema_name, schema_name, schema_name, schema_name, schema_name) LOOP
-    deleted_id := citydb_pkg.delete_address(ad_id, schema_name);
-    RETURN NEXT deleted_id;
-  END LOOP;
-
-  RETURN;
-
-  EXCEPTION  
-    WHEN OTHERS THEN
-      RAISE NOTICE 'cleanup_addresses: %', SQLERRM;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
 END;
-$$ 
-LANGUAGE plpgsql;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-
-CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_cityobjectgroups(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_relief_feature(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
 DECLARE
-  deleted_id INTEGER;
-  cog_id INTEGER;
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  relief_component_ids int[] := '{}';
 BEGIN
-  FOR cog_id IN EXECUTE format(
-    'SELECT g.id FROM %I.cityobjectgroup g 
-       LEFT OUTER JOIN %I.group_to_cityobject gtc ON g.id=gtc.cityobjectgroup_id 
-       WHERE gtc.cityobject_id IS NULL', schema_name, schema_name) LOOP
-    deleted_id := citydb_pkg.delete_cityobjectgroup(cog_id, 0, schema_name);
-    RETURN NEXT deleted_id;
-  END LOOP;
+  -- delete references to relief_components
+  WITH del_relief_component_refs AS (
+    DELETE FROM
+      citydb.relief_feat_to_rel_comp t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.relief_feature_id = a.a_id
+    RETURNING
+      t.relief_component_id
+  )
+  SELECT
+    array_agg(relief_component_id)
+  INTO
+    relief_component_ids
+  FROM
+    del_relief_component_refs;
 
-  RETURN;
-
-  EXCEPTION  
-    WHEN OTHERS THEN
-      RAISE NOTICE 'cleanup_cityobjectgroups: %', SQLERRM;
-END;
-$$ 
-LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_citymodels(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  cm_id INTEGER;
-BEGIN
-  FOR cm_id IN EXECUTE format(
-    'SELECT c.id FROM %I.citymodel c 
-       LEFT OUTER JOIN %I.cityobject_member cm ON c.id=cm.citymodel_id 
-       WHERE cm.cityobject_id IS NULL', schema_name, schema_name) LOOP
-    deleted_id := citydb_pkg.delete_citymodel(cm_id, 0, schema_name);
-    RETURN NEXT deleted_id;
-  END LOOP;
-
-  RETURN;
-
-  EXCEPTION  
-    WHEN OTHERS THEN
-      RAISE NOTICE 'cleanup_citymodels: %', SQLERRM;
-END;
-$$ 
-LANGUAGE plpgsql;
-
-
--- generic function to delete any cityobject
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_cityobject(
-  co_id INTEGER,
-  delete_members INTEGER DEFAULT 0,
-  cleanup INTEGER DEFAULT 0,
-  schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS
-$$
-DECLARE
-  deleted_id INTEGER;
-  class_id INTEGER;
-BEGIN
-  EXECUTE format('SELECT objectclass_id FROM %I.cityobject WHERE id = %L', schema_name, co_id) INTO class_id;
-
-  -- class_id can be NULL if object has already been deleted
- IF class_id IS NOT NULL THEN
-    CASE
-      WHEN class_id = 4 THEN deleted_id := citydb_pkg.delete_land_use(co_id, schema_name);
-      WHEN class_id = 5 THEN deleted_id := citydb_pkg.delete_generic_cityobject(co_id, schema_name);
-      WHEN class_id = 7 THEN deleted_id := citydb_pkg.delete_solitary_veg_obj(co_id, schema_name);
-      WHEN class_id = 8 THEN deleted_id := citydb_pkg.delete_plant_cover(co_id, schema_name);
-      WHEN class_id = 9 THEN deleted_id := citydb_pkg.delete_waterbody(co_id, schema_name);
-      WHEN class_id = 11 OR 
-           class_id = 12 OR 
-           class_id = 13 THEN deleted_id := citydb_pkg.delete_waterbnd_surface(co_id, schema_name);
-      WHEN class_id = 14 THEN deleted_id := citydb_pkg.delete_relief_feature(co_id, schema_name);
-      WHEN class_id = 16 OR 
-           class_id = 17 OR 
-           class_id = 18 OR 
-           class_id = 19 THEN deleted_id := citydb_pkg.delete_relief_component(co_id, schema_name);
-      WHEN class_id = 21 THEN deleted_id := citydb_pkg.delete_city_furniture(co_id, schema_name);
-      WHEN class_id = 23 THEN deleted_id := citydb_pkg.delete_cityobjectgroup(co_id, delete_members, schema_name);
-      WHEN class_id = 25 OR 
-           class_id = 26 THEN deleted_id := citydb_pkg.delete_building(co_id, schema_name);
-      WHEN class_id = 27 OR 
-           class_id = 28 THEN deleted_id := citydb_pkg.delete_building_installation(co_id, schema_name);
-      WHEN class_id = 30 OR 
-           class_id = 31 OR 
-           class_id = 32 OR 
-           class_id = 33 OR 
-           class_id = 34 OR 
-           class_id = 35 OR 
-           class_id = 36 OR 
-           class_id = 60 OR 
-           class_id = 61 THEN deleted_id := citydb_pkg.delete_thematic_surface(co_id, schema_name);
-      WHEN class_id = 38 OR 
-           class_id = 39 THEN deleted_id := citydb_pkg.delete_opening(co_id, schema_name);
-      WHEN class_id = 40 THEN deleted_id := citydb_pkg.delete_building_furniture(co_id, schema_name);
-      WHEN class_id = 41 THEN deleted_id := citydb_pkg.delete_room(co_id, schema_name);
-      WHEN class_id = 43 OR 
-           class_id = 44 OR 
-           class_id = 45 OR 
-           class_id = 46 THEN deleted_id := citydb_pkg.delete_transport_complex(co_id, schema_name);
-      WHEN class_id = 47 OR 
-           class_id = 48 THEN deleted_id := citydb_pkg.delete_traffic_area(co_id, schema_name);
-      WHEN class_id = 63 OR 
-           class_id = 64 THEN deleted_id := citydb_pkg.delete_bridge(co_id, schema_name);
-      WHEN class_id = 65 OR 
-           class_id = 66 THEN deleted_id := citydb_pkg.delete_bridge_installation(co_id, schema_name);
-      WHEN class_id = 68 OR 
-           class_id = 69 OR 
-           class_id = 70 OR 
-           class_id = 71 OR 
-           class_id = 72 OR 
-           class_id = 73 OR 
-           class_id = 74 OR 
-           class_id = 75 OR 
-           class_id = 76 THEN deleted_id := citydb_pkg.delete_bridge_them_srf(co_id, schema_name);
-      WHEN class_id = 78 OR 
-           class_id = 79 THEN deleted_id := citydb_pkg.delete_bridge_opening(co_id, schema_name);		 
-      WHEN class_id = 80 THEN deleted_id := citydb_pkg.delete_bridge_furniture(co_id, schema_name);
-      WHEN class_id = 81 THEN deleted_id := citydb_pkg.delete_bridge_room(co_id, schema_name);
-      WHEN class_id = 82 THEN deleted_id := citydb_pkg.delete_bridge_constr_element(co_id, schema_name);
-      WHEN class_id = 84 OR 
-           class_id = 85 THEN deleted_id := citydb_pkg.delete_tunnel(co_id, schema_name);
-      WHEN class_id = 86 OR 
-           class_id = 87 THEN deleted_id := citydb_pkg.delete_tunnel_installation(co_id, schema_name);
-      WHEN class_id = 88 OR 
-           class_id = 89 OR 
-           class_id = 90 OR 
-           class_id = 91 OR 
-           class_id = 92 OR 
-           class_id = 93 OR 
-           class_id = 94 OR 
-           class_id = 95 OR 
-           class_id = 96 THEN deleted_id := citydb_pkg.delete_tunnel_them_srf(co_id, schema_name);
-      WHEN class_id = 99 OR 
-           class_id = 100 THEN deleted_id := citydb_pkg.delete_tunnel_opening(co_id, schema_name);
-      WHEN class_id = 101 THEN deleted_id := citydb_pkg.delete_tunnel_furniture(co_id, schema_name);
-      WHEN class_id = 102 THEN deleted_id := citydb_pkg.delete_tunnel_hollow_space(co_id, schema_name);
-      ELSE
-        RAISE NOTICE 'Can not delete chosen object with ID % and objectclass_id %.', co_id, class_id;
-    END CASE;
+  -- delete citydb.relief_component(s)
+  IF -1 = ALL(relief_component_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_relief_component(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(relief_component_ids) AS a_id) a
+    LEFT JOIN
+      citydb.relief_feat_to_rel_comp n1
+      ON n1.relief_component_id  = a.a_id
+    WHERE n1.relief_component_id IS NULL;
   END IF;
 
-  IF cleanup <> 0 THEN
-    EXECUTE 'SELECT citydb_pkg.cleanup_implicit_geometries(1, $1)' USING schema_name;
-    EXECUTE 'SELECT citydb_pkg.cleanup_appearances(1, $1)' USING schema_name;
-    EXECUTE 'SELECT citydb_pkg.cleanup_citymodels($1)' USING schema_name;
+  -- delete citydb.relief_features
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.relief_feature t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    deleted_ids
+  FROM
+    delete_objects;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
   END IF;
 
-  RETURN deleted_id;
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'delete_cityobject (id: %): %', co_id, SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
-
-
--- truncates all tables
-CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_schema(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID AS
-$$
+CREATE OR REPLACE FUNCTION citydb.del_room(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  surface_geometry_ids int[] := '{}';
 BEGIN
-  -- clear tables
-  EXECUTE format('TRUNCATE TABLE %I.cityobject CASCADE', schema_name);
-  EXECUTE format('TRUNCATE TABLE %I.tex_image CASCADE', schema_name);
-  EXECUTE format('TRUNCATE TABLE %I.grid_coverage CASCADE', schema_name);
-  EXECUTE format('TRUNCATE TABLE %I.address CASCADE', schema_name);
-  EXECUTE format('TRUNCATE TABLE %I.citymodel CASCADE', schema_name);
+  --delete building_furnitures
+  PERFORM
+    citydb.del_building_furniture(array_agg(t.id))
+  FROM
+    citydb.building_furniture t,
+    unnest($1) a(a_id)
+  WHERE
+    t.room_id = a.a_id;
 
-  -- restart sequences
-  EXECUTE format('ALTER SEQUENCE %I.address_seq RESTART', schema_name);
-  EXECUTE format('ALTER SEQUENCE %I.appearance_seq RESTART', schema_name);
-  EXECUTE format('ALTER SEQUENCE %I.citymodel_seq RESTART', schema_name);
-  EXECUTE format('ALTER SEQUENCE %I.cityobject_genericatt_seq RESTART', schema_name);
-  EXECUTE format('ALTER SEQUENCE %I.cityobject_seq RESTART', schema_name);
-  EXECUTE format('ALTER SEQUENCE %I.external_ref_seq RESTART', schema_name);
-  EXECUTE format('ALTER SEQUENCE %I.grid_coverage_seq RESTART', schema_name);
-  EXECUTE format('ALTER SEQUENCE %I.implicit_geometry_seq RESTART', schema_name);
-  EXECUTE format('ALTER SEQUENCE %I.surface_data_seq RESTART', schema_name);
-  EXECUTE format('ALTER SEQUENCE %I.surface_geometry_seq RESTART', schema_name);
-  EXECUTE format('ALTER SEQUENCE %I.tex_image_seq RESTART', schema_name);
+  --delete building_installations
+  PERFORM
+    citydb.del_building_installation(array_agg(t.id))
+  FROM
+    citydb.building_installation t,
+    unnest($1) a(a_id)
+  WHERE
+    t.room_id = a.a_id;
 
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE NOTICE 'cleanup_schema: %', SQLERRM;
-END; 
-$$ 
-LANGUAGE plpgsql;
+  --delete thematic_surfaces
+  PERFORM
+    citydb.del_thematic_surface(array_agg(t.id))
+  FROM
+    citydb.thematic_surface t,
+    unnest($1) a(a_id)
+  WHERE
+    t.room_id = a.a_id;
+
+  -- delete citydb.rooms
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.room t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod4_multi_surface_id,
+      lod4_solid_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod4_multi_surface_id) ||
+    array_agg(lod4_solid_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_solitary_vegetat_object(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  implicit_geometry_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  -- delete citydb.solitary_vegetat_objects
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.solitary_vegetat_object t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod2_implicit_rep_id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id,
+      lod1_implicit_rep_id,
+      lod1_brep_id,
+      lod3_brep_id,
+      lod4_brep_id,
+      lod2_brep_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod2_implicit_rep_id) ||
+    array_agg(lod3_implicit_rep_id) ||
+    array_agg(lod4_implicit_rep_id) ||
+    array_agg(lod1_implicit_rep_id),
+    array_agg(lod1_brep_id) ||
+    array_agg(lod3_brep_id) ||
+    array_agg(lod4_brep_id) ||
+    array_agg(lod2_brep_id)
+  INTO
+    deleted_ids,
+    implicit_geometry_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.implicit_geometry(s)
+  IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_implicit_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
+    LEFT JOIN
+      citydb.bridge_constr_element n1
+      ON n1.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n2
+      ON n2.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n3
+      ON n3.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n4
+      ON n4.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_furniture n5
+      ON n5.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n6
+      ON n6.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n7
+      ON n7.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n8
+      ON n8.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n9
+      ON n9.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n10
+      ON n10.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_furniture n11
+      ON n11.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n12
+      ON n12.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n13
+      ON n13.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n14
+      ON n14.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n15
+      ON n15.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n16
+      ON n16.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n17
+      ON n17.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n18
+      ON n18.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n19
+      ON n19.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n20
+      ON n20.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n21
+      ON n21.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n22
+      ON n22.lod0_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n23
+      ON n23.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n24
+      ON n24.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n25
+      ON n25.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n26
+      ON n26.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n27
+      ON n27.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n28
+      ON n28.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n29
+      ON n29.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_furniture n30
+      ON n30.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n31
+      ON n31.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n32
+      ON n32.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n33
+      ON n33.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n34
+      ON n34.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n35
+      ON n35.lod3_implicit_rep_id  = a.a_id
+    WHERE n1.lod3_implicit_rep_id IS NULL
+      AND n2.lod2_implicit_rep_id IS NULL
+      AND n3.lod1_implicit_rep_id IS NULL
+      AND n4.lod4_implicit_rep_id IS NULL
+      AND n5.lod4_implicit_rep_id IS NULL
+      AND n6.lod4_implicit_rep_id IS NULL
+      AND n7.lod3_implicit_rep_id IS NULL
+      AND n8.lod2_implicit_rep_id IS NULL
+      AND n9.lod4_implicit_rep_id IS NULL
+      AND n10.lod3_implicit_rep_id IS NULL
+      AND n11.lod4_implicit_rep_id IS NULL
+      AND n12.lod2_implicit_rep_id IS NULL
+      AND n13.lod3_implicit_rep_id IS NULL
+      AND n14.lod4_implicit_rep_id IS NULL
+      AND n15.lod1_implicit_rep_id IS NULL
+      AND n16.lod2_implicit_rep_id IS NULL
+      AND n17.lod3_implicit_rep_id IS NULL
+      AND n18.lod4_implicit_rep_id IS NULL
+      AND n19.lod4_implicit_rep_id IS NULL
+      AND n20.lod1_implicit_rep_id IS NULL
+      AND n21.lod2_implicit_rep_id IS NULL
+      AND n22.lod0_implicit_rep_id IS NULL
+      AND n23.lod3_implicit_rep_id IS NULL
+      AND n24.lod4_implicit_rep_id IS NULL
+      AND n25.lod3_implicit_rep_id IS NULL
+      AND n26.lod2_implicit_rep_id IS NULL
+      AND n27.lod3_implicit_rep_id IS NULL
+      AND n28.lod4_implicit_rep_id IS NULL
+      AND n29.lod1_implicit_rep_id IS NULL
+      AND n30.lod4_implicit_rep_id IS NULL
+      AND n31.lod4_implicit_rep_id IS NULL
+      AND n32.lod3_implicit_rep_id IS NULL
+      AND n33.lod2_implicit_rep_id IS NULL
+      AND n34.lod4_implicit_rep_id IS NULL
+      AND n35.lod3_implicit_rep_id IS NULL;
+  END IF;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_surface_data(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  tex_image_ids int[] := '{}';
+BEGIN
+  -- delete citydb.surface_datas
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.surface_data t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      tex_image_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(tex_image_id)
+  INTO
+    deleted_ids,
+    tex_image_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.tex_image(s)
+  IF -1 = ALL(tex_image_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_tex_image(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(tex_image_ids) AS a_id) a
+    LEFT JOIN
+      citydb.surface_data n1
+      ON n1.tex_image_id  = a.a_id
+    WHERE n1.tex_image_id IS NULL;
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_surface_geometry(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+BEGIN
+  -- delete referenced parts
+  PERFORM
+    citydb.del_surface_geometry(array_agg(t.id))
+  FROM
+    citydb.surface_geometry t,
+    unnest($1) a(a_id)
+  WHERE
+    t.parent_id = a.a_id
+    AND t.id != a.a_id;
+
+  -- delete referenced parts
+  PERFORM
+    citydb.del_surface_geometry(array_agg(t.id))
+  FROM
+    citydb.surface_geometry t,
+    unnest($1) a(a_id)
+  WHERE
+    t.root_id = a.a_id
+    AND t.id != a.a_id;
+
+  -- delete citydb.surface_geometrys
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.surface_geometry t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    deleted_ids
+  FROM
+    delete_objects;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_tex_image(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+BEGIN
+  -- delete citydb.tex_images
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.tex_image t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    deleted_ids
+  FROM
+    delete_objects;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_thematic_surface(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  opening_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  -- delete references to openings
+  WITH del_opening_refs AS (
+    DELETE FROM
+      citydb.opening_to_them_surface t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.thematic_surface_id = a.a_id
+    RETURNING
+      t.opening_id
+  )
+  SELECT
+    array_agg(opening_id)
+  INTO
+    opening_ids
+  FROM
+    del_opening_refs;
+
+  -- delete citydb.opening(s)
+  IF -1 = ALL(opening_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_opening(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(opening_ids) AS a_id) a;
+  END IF;
+
+  -- delete citydb.thematic_surfaces
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.thematic_surface t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod2_multi_surface_id) ||
+    array_agg(lod3_multi_surface_id) ||
+    array_agg(lod4_multi_surface_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_tin_relief(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  -- delete citydb.tin_reliefs
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.tin_relief t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      surface_geometry_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(surface_geometry_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete relief_component
+    PERFORM citydb.del_relief_component(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_traffic_area(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  -- delete citydb.traffic_areas
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.traffic_area t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod2_multi_surface_id) ||
+    array_agg(lod3_multi_surface_id) ||
+    array_agg(lod4_multi_surface_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_transportation_complex(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  --delete traffic_areas
+  PERFORM
+    citydb.del_traffic_area(array_agg(t.id))
+  FROM
+    citydb.traffic_area t,
+    unnest($1) a(a_id)
+  WHERE
+    t.transportation_complex_id = a.a_id;
+
+  -- delete citydb.transportation_complexs
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.transportation_complex t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod1_multi_surface_id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod1_multi_surface_id) ||
+    array_agg(lod2_multi_surface_id) ||
+    array_agg(lod3_multi_surface_id) ||
+    array_agg(lod4_multi_surface_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_tunnel(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  -- delete referenced parts
+  PERFORM
+    citydb.del_tunnel(array_agg(t.id))
+  FROM
+    citydb.tunnel t,
+    unnest($1) a(a_id)
+  WHERE
+    t.tunnel_parent_id = a.a_id
+    AND t.id != a.a_id;
+
+  -- delete referenced parts
+  PERFORM
+    citydb.del_tunnel(array_agg(t.id))
+  FROM
+    citydb.tunnel t,
+    unnest($1) a(a_id)
+  WHERE
+    t.tunnel_root_id = a.a_id
+    AND t.id != a.a_id;
+
+  --delete tunnel_hollow_spaces
+  PERFORM
+    citydb.del_tunnel_hollow_space(array_agg(t.id))
+  FROM
+    citydb.tunnel_hollow_space t,
+    unnest($1) a(a_id)
+  WHERE
+    t.tunnel_id = a.a_id;
+
+  --delete tunnel_installations
+  PERFORM
+    citydb.del_tunnel_installation(array_agg(t.id))
+  FROM
+    citydb.tunnel_installation t,
+    unnest($1) a(a_id)
+  WHERE
+    t.tunnel_id = a.a_id;
+
+  --delete tunnel_thematic_surfaces
+  PERFORM
+    citydb.del_tunnel_thematic_surface(array_agg(t.id))
+  FROM
+    citydb.tunnel_thematic_surface t,
+    unnest($1) a(a_id)
+  WHERE
+    t.tunnel_id = a.a_id;
+
+  -- delete citydb.tunnels
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.tunnel t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id,
+      lod1_solid_id,
+      lod2_solid_id,
+      lod3_solid_id,
+      lod4_solid_id,
+      lod1_multi_surface_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod2_multi_surface_id) ||
+    array_agg(lod3_multi_surface_id) ||
+    array_agg(lod4_multi_surface_id) ||
+    array_agg(lod1_solid_id) ||
+    array_agg(lod2_solid_id) ||
+    array_agg(lod3_solid_id) ||
+    array_agg(lod4_solid_id) ||
+    array_agg(lod1_multi_surface_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_tunnel_furniture(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  implicit_geometry_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  -- delete citydb.tunnel_furnitures
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.tunnel_furniture t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod4_implicit_rep_id,
+      lod4_brep_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod4_implicit_rep_id),
+    array_agg(lod4_brep_id)
+  INTO
+    deleted_ids,
+    implicit_geometry_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.implicit_geometry(s)
+  IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_implicit_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
+    LEFT JOIN
+      citydb.bridge_constr_element n1
+      ON n1.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n2
+      ON n2.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n3
+      ON n3.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n4
+      ON n4.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_furniture n5
+      ON n5.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n6
+      ON n6.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n7
+      ON n7.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n8
+      ON n8.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n9
+      ON n9.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n10
+      ON n10.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_furniture n11
+      ON n11.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n12
+      ON n12.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n13
+      ON n13.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n14
+      ON n14.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n15
+      ON n15.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n16
+      ON n16.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n17
+      ON n17.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n18
+      ON n18.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n19
+      ON n19.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n20
+      ON n20.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n21
+      ON n21.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n22
+      ON n22.lod0_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n23
+      ON n23.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n24
+      ON n24.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n25
+      ON n25.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n26
+      ON n26.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n27
+      ON n27.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n28
+      ON n28.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n29
+      ON n29.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_furniture n30
+      ON n30.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n31
+      ON n31.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n32
+      ON n32.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n33
+      ON n33.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n34
+      ON n34.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n35
+      ON n35.lod3_implicit_rep_id  = a.a_id
+    WHERE n1.lod3_implicit_rep_id IS NULL
+      AND n2.lod2_implicit_rep_id IS NULL
+      AND n3.lod1_implicit_rep_id IS NULL
+      AND n4.lod4_implicit_rep_id IS NULL
+      AND n5.lod4_implicit_rep_id IS NULL
+      AND n6.lod4_implicit_rep_id IS NULL
+      AND n7.lod3_implicit_rep_id IS NULL
+      AND n8.lod2_implicit_rep_id IS NULL
+      AND n9.lod4_implicit_rep_id IS NULL
+      AND n10.lod3_implicit_rep_id IS NULL
+      AND n11.lod4_implicit_rep_id IS NULL
+      AND n12.lod2_implicit_rep_id IS NULL
+      AND n13.lod3_implicit_rep_id IS NULL
+      AND n14.lod4_implicit_rep_id IS NULL
+      AND n15.lod1_implicit_rep_id IS NULL
+      AND n16.lod2_implicit_rep_id IS NULL
+      AND n17.lod3_implicit_rep_id IS NULL
+      AND n18.lod4_implicit_rep_id IS NULL
+      AND n19.lod4_implicit_rep_id IS NULL
+      AND n20.lod1_implicit_rep_id IS NULL
+      AND n21.lod2_implicit_rep_id IS NULL
+      AND n22.lod0_implicit_rep_id IS NULL
+      AND n23.lod3_implicit_rep_id IS NULL
+      AND n24.lod4_implicit_rep_id IS NULL
+      AND n25.lod3_implicit_rep_id IS NULL
+      AND n26.lod2_implicit_rep_id IS NULL
+      AND n27.lod3_implicit_rep_id IS NULL
+      AND n28.lod4_implicit_rep_id IS NULL
+      AND n29.lod1_implicit_rep_id IS NULL
+      AND n30.lod4_implicit_rep_id IS NULL
+      AND n31.lod4_implicit_rep_id IS NULL
+      AND n32.lod3_implicit_rep_id IS NULL
+      AND n33.lod2_implicit_rep_id IS NULL
+      AND n34.lod4_implicit_rep_id IS NULL
+      AND n35.lod3_implicit_rep_id IS NULL;
+  END IF;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_tunnel_hollow_space(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  --delete tunnel_furnitures
+  PERFORM
+    citydb.del_tunnel_furniture(array_agg(t.id))
+  FROM
+    citydb.tunnel_furniture t,
+    unnest($1) a(a_id)
+  WHERE
+    t.tunnel_hollow_space_id = a.a_id;
+
+  --delete tunnel_installations
+  PERFORM
+    citydb.del_tunnel_installation(array_agg(t.id))
+  FROM
+    citydb.tunnel_installation t,
+    unnest($1) a(a_id)
+  WHERE
+    t.tunnel_hollow_space_id = a.a_id;
+
+  --delete tunnel_thematic_surfaces
+  PERFORM
+    citydb.del_tunnel_thematic_surface(array_agg(t.id))
+  FROM
+    citydb.tunnel_thematic_surface t,
+    unnest($1) a(a_id)
+  WHERE
+    t.tunnel_hollow_space_id = a.a_id;
+
+  -- delete citydb.tunnel_hollow_spaces
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.tunnel_hollow_space t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod4_multi_surface_id,
+      lod4_solid_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod4_multi_surface_id) ||
+    array_agg(lod4_solid_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_tunnel_installation(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  implicit_geometry_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  --delete tunnel_thematic_surfaces
+  PERFORM
+    citydb.del_tunnel_thematic_surface(array_agg(t.id))
+  FROM
+    citydb.tunnel_thematic_surface t,
+    unnest($1) a(a_id)
+  WHERE
+    t.tunnel_installation_id = a.a_id;
+
+  -- delete citydb.tunnel_installations
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.tunnel_installation t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod4_implicit_rep_id,
+      lod2_implicit_rep_id,
+      lod3_implicit_rep_id,
+      lod2_brep_id,
+      lod3_brep_id,
+      lod4_brep_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod4_implicit_rep_id) ||
+    array_agg(lod2_implicit_rep_id) ||
+    array_agg(lod3_implicit_rep_id),
+    array_agg(lod2_brep_id) ||
+    array_agg(lod3_brep_id) ||
+    array_agg(lod4_brep_id)
+  INTO
+    deleted_ids,
+    implicit_geometry_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.implicit_geometry(s)
+  IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_implicit_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
+    LEFT JOIN
+      citydb.bridge_constr_element n1
+      ON n1.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n2
+      ON n2.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n3
+      ON n3.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n4
+      ON n4.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_furniture n5
+      ON n5.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n6
+      ON n6.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n7
+      ON n7.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n8
+      ON n8.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n9
+      ON n9.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n10
+      ON n10.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_furniture n11
+      ON n11.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n12
+      ON n12.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n13
+      ON n13.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n14
+      ON n14.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n15
+      ON n15.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n16
+      ON n16.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n17
+      ON n17.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n18
+      ON n18.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n19
+      ON n19.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n20
+      ON n20.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n21
+      ON n21.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n22
+      ON n22.lod0_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n23
+      ON n23.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n24
+      ON n24.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n25
+      ON n25.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n26
+      ON n26.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n27
+      ON n27.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n28
+      ON n28.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n29
+      ON n29.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_furniture n30
+      ON n30.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n31
+      ON n31.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n32
+      ON n32.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n33
+      ON n33.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n34
+      ON n34.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n35
+      ON n35.lod3_implicit_rep_id  = a.a_id
+    WHERE n1.lod3_implicit_rep_id IS NULL
+      AND n2.lod2_implicit_rep_id IS NULL
+      AND n3.lod1_implicit_rep_id IS NULL
+      AND n4.lod4_implicit_rep_id IS NULL
+      AND n5.lod4_implicit_rep_id IS NULL
+      AND n6.lod4_implicit_rep_id IS NULL
+      AND n7.lod3_implicit_rep_id IS NULL
+      AND n8.lod2_implicit_rep_id IS NULL
+      AND n9.lod4_implicit_rep_id IS NULL
+      AND n10.lod3_implicit_rep_id IS NULL
+      AND n11.lod4_implicit_rep_id IS NULL
+      AND n12.lod2_implicit_rep_id IS NULL
+      AND n13.lod3_implicit_rep_id IS NULL
+      AND n14.lod4_implicit_rep_id IS NULL
+      AND n15.lod1_implicit_rep_id IS NULL
+      AND n16.lod2_implicit_rep_id IS NULL
+      AND n17.lod3_implicit_rep_id IS NULL
+      AND n18.lod4_implicit_rep_id IS NULL
+      AND n19.lod4_implicit_rep_id IS NULL
+      AND n20.lod1_implicit_rep_id IS NULL
+      AND n21.lod2_implicit_rep_id IS NULL
+      AND n22.lod0_implicit_rep_id IS NULL
+      AND n23.lod3_implicit_rep_id IS NULL
+      AND n24.lod4_implicit_rep_id IS NULL
+      AND n25.lod3_implicit_rep_id IS NULL
+      AND n26.lod2_implicit_rep_id IS NULL
+      AND n27.lod3_implicit_rep_id IS NULL
+      AND n28.lod4_implicit_rep_id IS NULL
+      AND n29.lod1_implicit_rep_id IS NULL
+      AND n30.lod4_implicit_rep_id IS NULL
+      AND n31.lod4_implicit_rep_id IS NULL
+      AND n32.lod3_implicit_rep_id IS NULL
+      AND n33.lod2_implicit_rep_id IS NULL
+      AND n34.lod4_implicit_rep_id IS NULL
+      AND n35.lod3_implicit_rep_id IS NULL;
+  END IF;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_tunnel_opening(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  implicit_geometry_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  -- delete citydb.tunnel_openings
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.tunnel_opening t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod3_implicit_rep_id) ||
+    array_agg(lod4_implicit_rep_id),
+    array_agg(lod3_multi_surface_id) ||
+    array_agg(lod4_multi_surface_id)
+  INTO
+    deleted_ids,
+    implicit_geometry_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.implicit_geometry(s)
+  IF -1 = ALL(implicit_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_implicit_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
+    LEFT JOIN
+      citydb.bridge_constr_element n1
+      ON n1.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n2
+      ON n2.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n3
+      ON n3.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_constr_element n4
+      ON n4.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_furniture n5
+      ON n5.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n6
+      ON n6.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n7
+      ON n7.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_installation n8
+      ON n8.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n9
+      ON n9.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.bridge_opening n10
+      ON n10.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_furniture n11
+      ON n11.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n12
+      ON n12.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n13
+      ON n13.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.building_installation n14
+      ON n14.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n15
+      ON n15.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n16
+      ON n16.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n17
+      ON n17.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.city_furniture n18
+      ON n18.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n19
+      ON n19.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n20
+      ON n20.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n21
+      ON n21.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n22
+      ON n22.lod0_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.generic_cityobject n23
+      ON n23.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n24
+      ON n24.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.opening n25
+      ON n25.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n26
+      ON n26.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n27
+      ON n27.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n28
+      ON n28.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.solitary_vegetat_object n29
+      ON n29.lod1_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_furniture n30
+      ON n30.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n31
+      ON n31.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n32
+      ON n32.lod3_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_installation n33
+      ON n33.lod2_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n34
+      ON n34.lod4_implicit_rep_id  = a.a_id
+    LEFT JOIN
+      citydb.tunnel_opening n35
+      ON n35.lod3_implicit_rep_id  = a.a_id
+    WHERE n1.lod3_implicit_rep_id IS NULL
+      AND n2.lod2_implicit_rep_id IS NULL
+      AND n3.lod1_implicit_rep_id IS NULL
+      AND n4.lod4_implicit_rep_id IS NULL
+      AND n5.lod4_implicit_rep_id IS NULL
+      AND n6.lod4_implicit_rep_id IS NULL
+      AND n7.lod3_implicit_rep_id IS NULL
+      AND n8.lod2_implicit_rep_id IS NULL
+      AND n9.lod4_implicit_rep_id IS NULL
+      AND n10.lod3_implicit_rep_id IS NULL
+      AND n11.lod4_implicit_rep_id IS NULL
+      AND n12.lod2_implicit_rep_id IS NULL
+      AND n13.lod3_implicit_rep_id IS NULL
+      AND n14.lod4_implicit_rep_id IS NULL
+      AND n15.lod1_implicit_rep_id IS NULL
+      AND n16.lod2_implicit_rep_id IS NULL
+      AND n17.lod3_implicit_rep_id IS NULL
+      AND n18.lod4_implicit_rep_id IS NULL
+      AND n19.lod4_implicit_rep_id IS NULL
+      AND n20.lod1_implicit_rep_id IS NULL
+      AND n21.lod2_implicit_rep_id IS NULL
+      AND n22.lod0_implicit_rep_id IS NULL
+      AND n23.lod3_implicit_rep_id IS NULL
+      AND n24.lod4_implicit_rep_id IS NULL
+      AND n25.lod3_implicit_rep_id IS NULL
+      AND n26.lod2_implicit_rep_id IS NULL
+      AND n27.lod3_implicit_rep_id IS NULL
+      AND n28.lod4_implicit_rep_id IS NULL
+      AND n29.lod1_implicit_rep_id IS NULL
+      AND n30.lod4_implicit_rep_id IS NULL
+      AND n31.lod4_implicit_rep_id IS NULL
+      AND n32.lod3_implicit_rep_id IS NULL
+      AND n33.lod2_implicit_rep_id IS NULL
+      AND n34.lod4_implicit_rep_id IS NULL
+      AND n35.lod3_implicit_rep_id IS NULL;
+  END IF;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_tunnel_thematic_surface(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  tunnel_opening_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  -- delete references to tunnel_openings
+  WITH del_tunnel_opening_refs AS (
+    DELETE FROM
+      citydb.tunnel_open_to_them_srf t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.tunnel_thematic_surface_id = a.a_id
+    RETURNING
+      t.tunnel_opening_id
+  )
+  SELECT
+    array_agg(tunnel_opening_id)
+  INTO
+    tunnel_opening_ids
+  FROM
+    del_tunnel_opening_refs;
+
+  -- delete citydb.tunnel_opening(s)
+  IF -1 = ALL(tunnel_opening_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_tunnel_opening(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(tunnel_opening_ids) AS a_id) a;
+  END IF;
+
+  -- delete citydb.tunnel_thematic_surfaces
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.tunnel_thematic_surface t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod2_multi_surface_id) ||
+    array_agg(lod3_multi_surface_id) ||
+    array_agg(lod4_multi_surface_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_waterbody(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  waterboundary_surface_ids int[] := '{}';
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  -- delete references to waterboundary_surfaces
+  WITH del_waterboundary_surface_refs AS (
+    DELETE FROM
+      citydb.waterbod_to_waterbnd_srf t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.waterbody_id = a.a_id
+    RETURNING
+      t.waterboundary_surface_id
+  )
+  SELECT
+    array_agg(waterboundary_surface_id)
+  INTO
+    waterboundary_surface_ids
+  FROM
+    del_waterboundary_surface_refs;
+
+  -- delete citydb.waterboundary_surface(s)
+  IF -1 = ALL(waterboundary_surface_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_waterboundary_surface(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(waterboundary_surface_ids) AS a_id) a;
+  END IF;
+
+  -- delete citydb.waterbodys
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.waterbody t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod1_multi_surface_id,
+      lod1_solid_id,
+      lod2_solid_id,
+      lod3_solid_id,
+      lod4_solid_id,
+      lod0_multi_surface_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod1_multi_surface_id) ||
+    array_agg(lod1_solid_id) ||
+    array_agg(lod2_solid_id) ||
+    array_agg(lod3_solid_id) ||
+    array_agg(lod4_solid_id) ||
+    array_agg(lod0_multi_surface_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.del_waterboundary_surface(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+DECLARE
+  deleted_ids int[] := '{}';
+  object_id integer;
+  objectclass_id integer;
+  surface_geometry_ids int[] := '{}';
+BEGIN
+  -- delete citydb.waterboundary_surfaces
+  WITH delete_objects AS (
+    DELETE FROM
+      citydb.waterboundary_surface t
+    USING
+      unnest($1) a(a_id)
+    WHERE
+      t.id = a.a_id
+    RETURNING
+      id,
+      lod2_surface_id,
+      lod3_surface_id,
+      lod4_surface_id
+  )
+  SELECT
+    array_agg(id),
+    array_agg(lod2_surface_id) ||
+    array_agg(lod3_surface_id) ||
+    array_agg(lod4_surface_id)
+  INTO
+    deleted_ids,
+    surface_geometry_ids
+  FROM
+    delete_objects;
+
+  -- delete citydb.surface_geometry(s)
+  IF -1 = ALL(surface_geometry_ids) IS NOT NULL THEN
+    PERFORM
+      citydb.del_surface_geometry(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
+  END IF;
+
+  IF $2 <> 1 THEN
+    -- delete cityobject
+    PERFORM citydb.del_cityobject(deleted_ids, 2);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+

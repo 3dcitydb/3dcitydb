@@ -25,3721 +25,6584 @@
 -- limitations under the License.
 --
 
+-- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-08 11:15:37)
+-- del_address
+-- del_appearance
+-- del_breakline_relief
+-- del_bridge
+-- del_bridge_constr_element
+-- del_bridge_furniture
+-- del_bridge_installation
+-- del_bridge_opening
+-- del_bridge_room
+-- del_bridge_thematic_surface
+-- del_building
+-- del_building_furniture
+-- del_building_installation
+-- del_city_furniture
+-- del_citymodel
+-- del_cityobject
+-- del_cityobject_genericattrib
+-- del_cityobjectgroup
+-- del_cityobject_by_lineage
+-- del_external_reference
+-- del_generic_cityobject
+-- del_grid_coverage
+-- del_implicit_geometry
+-- del_land_use
+-- del_masspoint_relief
+-- del_opening
+-- del_plant_cover
+-- del_raster_relief
+-- del_relief_component
+-- del_relief_feature
+-- del_room
+-- del_solitary_vegetat_object
+-- del_surface_data
+-- del_surface_geometry
+-- del_tex_image
+-- del_thematic_surface
+-- del_tin_relief
+-- del_traffic_area
+-- del_transportation_complex
+-- del_tunnel
+-- del_tunnel_furniture
+-- del_tunnel_hollow_space
+-- del_tunnel_installation
+-- del_tunnel_opening
+-- del_tunnel_thematic_surface
+-- del_waterbody
+-- del_waterboundary_surface
+------------------------------------------
+
 CREATE OR REPLACE PACKAGE citydb_delete
 AS
-  function delete_surface_geometry(pid number, clean_apps int := 0, schema_name varchar2 := user) return id_array;
-  function delete_implicit_geometry(pid number, clean_apps int := 0, schema_name varchar2 := user) return number;
-  function delete_grid_coverage(pid number, schema_name varchar2 := user) return number;
-  function delete_citymodel(pid number, delete_members int := 0, schema_name varchar2 := user) return number;
-  function delete_genericattrib(pid number, delete_members int := 0, schema_name varchar2 := user) return number;
-  function delete_external_reference(pid number, schema_name varchar2 := user) return number;
-  function delete_appearance(pid number, cleanup int := 0, schema_name varchar2 := user) return number;
-  function delete_surface_data(pid number, schema_name varchar2 := user) return number;
-  function delete_cityobjectgroup(pid number, delete_members int := 0, schema_name varchar2 := user) return number;
-  function delete_thematic_surface(pid number, schema_name varchar2 := user) return number;
-  function delete_opening(pid number, schema_name varchar2 := user) return number;
-  function delete_address(pid number, schema_name varchar2 := user) return number;
-  function delete_building_installation(pid number, schema_name varchar2 := user) return number;
-  function delete_room(pid number, schema_name varchar2 := user) return number;
-  function delete_building_furniture(pid number, schema_name varchar2 := user) return number;
-  function delete_building(pid number, schema_name varchar2 := user) return number;
-  function delete_city_furniture(pid number, schema_name varchar2 := user) return number;
-  function delete_generic_cityobject(pid number, schema_name varchar2 := user) return number;
-  function delete_land_use(pid number, schema_name varchar2 := user) return number;
-  function delete_plant_cover(pid number, schema_name varchar2 := user) return number;
-  function delete_solitary_veg_obj(pid number, schema_name varchar2 := user) return number;
-  function delete_transport_complex(pid number, schema_name varchar2 := user) return number;
-  function delete_traffic_area(pid number, schema_name varchar2 := user) return number;
-  function delete_waterbnd_surface(pid number, schema_name varchar2 := user) return number;
-  function delete_waterbody(pid number, schema_name varchar2 := user) return number;
-  function delete_relief_feature(pid number, schema_name varchar2 := user) return number;
-  function delete_relief_component(pid number, schema_name varchar2 := user) return number;
-  function delete_tin_relief(pid number, schema_name varchar2 := user) return number;
-  function delete_masspoint_relief(pid number, schema_name varchar2 := user) return number;
-  function delete_breakline_relief(pid number, schema_name varchar2 := user) return number;
-  function delete_raster_relief(pid number, schema_name varchar2 := user) return number;
-  function delete_bridge(pid number, schema_name varchar2 := user) return number;
-  function delete_bridge_installation(pid number, schema_name varchar2 := user) return number;
-  function delete_bridge_thematic_surface(pid number, schema_name varchar2 := user) return number;
-  function delete_bridge_opening(pid number, schema_name varchar2 := user) return number;
-  function delete_bridge_furniture(pid number, schema_name varchar2 := user) return number;
-  function delete_bridge_room(pid number, schema_name varchar2 := user) return number;
-  function delete_bridge_constr_element(pid number, schema_name varchar2 := user) return number;
-  function delete_tunnel(pid number, schema_name varchar2 := user) return number;
-  function delete_tunnel_installation(pid number, schema_name varchar2 := user) return number;
-  function delete_tunnel_thematic_surface(pid number, schema_name varchar2 := user) return number;
-  function delete_tunnel_opening(pid number, schema_name varchar2 := user) return number;
-  function delete_tunnel_furniture(pid number, schema_name varchar2 := user) return number;
-  function delete_tunnel_hollow_space(pid number, schema_name varchar2 := user) return number;
-  function delete_cityobject(pid number, delete_members int := 0, cleanup int := 0, schema_name varchar2 := user) return number;
-
-  function cleanup_appearances(only_global int :=1, schema_name varchar2 := user) return id_array;
-  function cleanup_addresses(schema_name varchar2 := user) return id_array;
-  function cleanup_citymodels(schema_name varchar2 := user) return id_array;
-  function cleanup_cityobjectgroups(schema_name varchar2 := user) return id_array;
-  function cleanup_grid_coverages(schema_name varchar2 := user) return id_array;
-  function cleanup_implicit_geometries(clean_apps int := 0, schema_name varchar2 := user) return id_array;
-  function cleanup_tex_images(schema_name varchar2 := user) return id_array;
-  procedure cleanup_schema(schema_name varchar2 := user);
-  
-  function is_not_referenced(table_name varchar2, check_column varchar2, check_id number, not_column varchar2, not_id number, schema_name varchar2 := user) return boolean;
+  FUNCTION del_address(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_appearance(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_breakline_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_bridge(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_bridge_constr_element(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_bridge_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_bridge_installation(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_bridge_opening(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_bridge_room(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_bridge_thematic_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_building(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_building_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_building_installation(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_city_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_citymodel(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_cityobject(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_cityobject_genericattrib(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_cityobjectgroup(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_cityobject_by_lineage(lineage_value varchar2, objectclass_id int := 0) RETURN ID_ARRAY;
+  FUNCTION del_external_reference(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_generic_cityobject(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_grid_coverage(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_implicit_geometry(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_land_use(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_masspoint_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_opening(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_plant_cover(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_raster_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_relief_component(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_relief_feature(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_room(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_solitary_vegetat_object(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_surface_data(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_surface_geometry(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_tex_image(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_thematic_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_tin_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_traffic_area(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_transportation_complex(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_tunnel(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_tunnel_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_tunnel_hollow_space(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_tunnel_installation(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_tunnel_opening(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_tunnel_thematic_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_waterbody(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_waterboundary_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
 END citydb_delete;
 /
+---DELIMITER---
 
 CREATE OR REPLACE PACKAGE BODY citydb_delete
-AS
-  -- private procedures
-  function intern_delete_surface_geometry(pid number, schema_name varchar2 := user) return id_array;
-  function intern_delete_implicit_geom(pid number, schema_name varchar2 := user) return number;
-  function intern_delete_grid_coverage(pid number, schema_name varchar2 := user) return number;
-  function intern_delete_cityobject(pid number, schema_name varchar2 := user) return number;
-  function delete_citymodel(citymodel_rec citymodel%rowtype, delete_members int := 0, schema_name varchar2 := user) return number;
-  function intern_delete_genericattrib(pid number, delete_members int := 0, schema_name varchar2 := USER) return number;
-  function delete_appearance(appearance_rec appearance%rowtype, cleanup int := 0, schema_name varchar2 := user) return number;
-  function delete_surface_data(surface_data_rec surface_data%rowtype, schema_name varchar2 := user) return number;
-  function delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, delete_members int := 0, schema_name varchar2 := user) return number;
-  function delete_thematic_surface(thematic_surface_rec thematic_surface%rowtype, schema_name varchar2 := user) return number;
-  function delete_opening(opening_rec opening%rowtype, schema_name varchar2 := user) return number;
-  function delete_building_installation(building_installation_rec building_installation%rowtype, schema_name varchar2 := user) return number;
-  function delete_room(room_rec room%rowtype, schema_name varchar2 := user) return number;
-  function delete_building_furniture(building_furniture_rec building_furniture%rowtype, schema_name varchar2 := user) return number;
-  function delete_building(building_rec building%rowtype, schema_name varchar2 := user) return number;
-  function delete_city_furniture(city_furniture_rec city_furniture%rowtype, schema_name varchar2 := user) return number;
-  function delete_generic_cityobject(generic_cityobject_rec generic_cityobject%rowtype, schema_name varchar2 := user) return number;
-  function delete_land_use(land_use_rec land_use%rowtype, schema_name varchar2 := user) return number;
-  function delete_plant_cover(plant_cover_rec plant_cover%rowtype, schema_name varchar2 := user) return number;
-  function delete_solitary_veg_obj(solitary_veg_obj_rec solitary_vegetat_object%rowtype, schema_name varchar2 := user) return number;
-  function delete_traffic_area(traffic_area_rec traffic_area%rowtype, schema_name varchar2 := user) return number;
-  function delete_transport_complex(transport_complex_rec transportation_complex%rowtype, schema_name varchar2 := user) return number;
-  function delete_waterbody(waterbody_rec waterbody%rowtype, schema_name varchar2 := user) return number;
-  function delete_waterbnd_surface(waterbnd_surface_rec waterboundary_surface%rowtype, schema_name varchar2 := user) return number;
-  function delete_relief_feature(relief_feature_rec relief_feature%rowtype, schema_name varchar2 := user) return number;
-  function delete_relief_component(relief_component_rec relief_component%rowtype, schema_name varchar2 := user) return number;
-  function delete_tin_relief(tin_relief_rec tin_relief%rowtype, schema_name varchar2 := user) return number;
-  function delete_masspoint_relief(masspoint_relief_rec masspoint_relief%rowtype, schema_name varchar2 := user) return number;
-  function delete_breakline_relief(breakline_relief_rec breakline_relief%rowtype, schema_name varchar2 := user) return number;
-  function delete_raster_relief(raster_relief_rec raster_relief%rowtype, schema_name varchar2 := user) return number;
-  function delete_bridge(bridge_rec bridge%rowtype, schema_name varchar2 := user) return number;
-  function delete_bridge_thematic_surface(bridge_thematic_surface_rec bridge_thematic_surface%rowtype, schema_name varchar2 := user) return number;
-  function delete_bridge_installation(bridge_installation_rec bridge_installation%rowtype, schema_name varchar2 := user) return number;
-  function delete_bridge_room(bridge_room_rec bridge_room%rowtype, schema_name varchar2 := user) return number;
-  function delete_bridge_furniture(bridge_furniture_rec bridge_furniture%rowtype, schema_name varchar2 := user) return number;
-  function delete_bridge_opening(bridge_opening_rec bridge_opening%rowtype, schema_name varchar2 := user) return number;
-  function delete_bridge_constr_element(bridge_constr_element_rec bridge_constr_element%rowtype, schema_name varchar2 := user) return number;
-  function delete_tunnel(tunnel_rec tunnel%rowtype, schema_name varchar2 := user) return number;
-  function delete_tunnel_thematic_surface(tunnel_thematic_surface_rec tunnel_thematic_surface%rowtype, schema_name varchar2 := user) return number;
-  function delete_tunnel_installation(tunnel_installation_rec tunnel_installation%rowtype, schema_name varchar2 := user) return number;
-  function delete_tunnel_hollow_space(tunnel_hollow_space_rec tunnel_hollow_space%rowtype, schema_name varchar2 := user) return number;
-  function delete_tunnel_furniture(tunnel_furniture_rec tunnel_furniture%rowtype, schema_name varchar2 := user) return number;
-  function delete_tunnel_opening(tunnel_opening_rec tunnel_opening%rowtype, schema_name varchar2 := user) return number;
-  
-  procedure post_delete_implicit_geom(implicit_geometry_rec implicit_geometry%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_cityobject(pid number, schema_name varchar2 := user);
-  procedure pre_delete_citymodel(citymodel_rec citymodel%rowtype, delete_members int := 0, schema_name varchar2 := user);
-  procedure pre_delete_appearance(appearance_rec appearance%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_surface_data(surface_data_rec surface_data%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, delete_members int := 0, schema_name varchar2 := user);
-  procedure post_delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_thematic_surface(thematic_surface_rec thematic_surface%rowtype, schema_name varchar2 := user);
-  procedure post_delete_thematic_surface(thematic_surface_rec thematic_surface%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_opening(opening_rec opening%rowtype, schema_name varchar2 := user);
-  procedure post_delete_opening(opening_rec opening%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_building_inst(building_installation_rec building_installation%rowtype, schema_name varchar2 := user);
-  procedure post_delete_building_inst(building_installation_rec building_installation%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_room(room_rec room%rowtype, schema_name varchar2 := user);
-  procedure post_delete_room(room_rec room%rowtype, schema_name varchar2 := user);
-  procedure post_delete_building_furniture(building_furniture_rec building_furniture%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_building(building_rec building%rowtype, schema_name varchar2 := user);
-  procedure post_delete_building(building_rec building%rowtype, schema_name varchar2 := user);
-  procedure post_delete_city_furniture(city_furniture_rec city_furniture%rowtype, schema_name varchar2 := user);
-  procedure post_delete_generic_cityobject(generic_cityobject_rec generic_cityobject%rowtype, schema_name varchar2 := user);
-  procedure post_delete_land_use(land_use_rec land_use%rowtype, schema_name varchar2 := user);
-  procedure post_delete_plant_cover(plant_cover_rec plant_cover%rowtype, schema_name varchar2 := user);
-  procedure post_delete_solitary_veg_obj(solitary_veg_obj_rec solitary_vegetat_object%rowtype, schema_name varchar2 := user);
-  procedure post_delete_traffic_area(traffic_area_rec traffic_area%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_transport_complex(transport_complex_rec transportation_complex%rowtype, schema_name varchar2 := user);
-  procedure post_delete_transport_complex(transport_complex_rec transportation_complex%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_waterbody(waterbody_rec waterbody%rowtype, schema_name varchar2 := user);
-  procedure post_delete_waterbody(waterbody_rec waterbody%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_waterbnd_surface(waterbnd_surface_rec waterboundary_surface%rowtype, schema_name varchar2 := user);
-  procedure post_delete_waterbnd_surface(waterbnd_surface_rec waterboundary_surface%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_relief_feature(relief_feature_rec relief_feature%rowtype, schema_name varchar2 := user);
-  procedure post_delete_relief_feature(relief_feature_rec relief_feature%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_relief_component(relief_component_rec relief_component%rowtype, schema_name varchar2 := user);
-  procedure post_delete_relief_component(relief_component_rec relief_component%rowtype, schema_name varchar2 := user);
-  procedure post_delete_tin_relief(tin_relief_rec tin_relief%rowtype, schema_name varchar2 := user);
-  procedure post_delete_raster_relief(raster_relief_rec raster_relief%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_bridge(bridge_rec bridge%rowtype, schema_name varchar2 := user);
-  procedure post_delete_bridge(bridge_rec bridge%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_bridge_them_srf(bridge_thematic_surface_rec bridge_thematic_surface%rowtype, schema_name varchar2 := user);
-  procedure post_delete_bridge_them_srf(bridge_thematic_surface_rec bridge_thematic_surface%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_bridge_inst(bridge_installation_rec bridge_installation%rowtype, schema_name varchar2 := user);
-  procedure post_delete_bridge_inst(bridge_installation_rec bridge_installation%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_bridge_constr_elem(bridge_constr_element_rec bridge_constr_element%rowtype, schema_name varchar2 := user);
-  procedure post_delete_bridge_constr_elem(bridge_constr_element_rec bridge_constr_element%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_bridge_room(bridge_room_rec bridge_room%rowtype, schema_name varchar2 := user);
-  procedure post_delete_bridge_room(bridge_room_rec bridge_room%rowtype, schema_name varchar2 := user);
-  procedure post_delete_bridge_furniture(bridge_furniture_rec bridge_furniture%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_bridge_opening(bridge_opening_rec bridge_opening%rowtype, schema_name varchar2 := user);
-  procedure post_delete_bridge_opening(bridge_opening_rec bridge_opening%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_tunnel(tunnel_rec tunnel%rowtype, schema_name varchar2 := user);
-  procedure post_delete_tunnel(tunnel_rec tunnel%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_tunnel_them_srf(tunnel_thematic_surface_rec tunnel_thematic_surface%rowtype, schema_name varchar2 := user);
-  procedure post_delete_tunnel_them_srf(tunnel_thematic_surface_rec tunnel_thematic_surface%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_tunnel_inst(tunnel_installation_rec tunnel_installation%rowtype, schema_name varchar2 := user);
-  procedure post_delete_tunnel_inst(tunnel_installation_rec tunnel_installation%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_tunnel_hollow_space(tunnel_hollow_space_rec tunnel_hollow_space%rowtype, schema_name varchar2 := user);
-  procedure post_delete_tunnel_hollowspace(tunnel_hollow_space_rec tunnel_hollow_space%rowtype, schema_name varchar2 := user);
-  procedure post_delete_tunnel_furniture(tunnel_furniture_rec tunnel_furniture%rowtype, schema_name varchar2 := user);
-  procedure pre_delete_tunnel_opening(tunnel_opening_rec tunnel_opening%rowtype, schema_name varchar2 := user);
-  procedure post_delete_tunnel_opening(tunnel_opening_rec tunnel_opening%rowtype, schema_name varchar2 := user);
-
-  type ref_cursor is ref cursor;
-
-  /*
-    internal helpers
-  */
-  function is_not_referenced(table_name varchar2, check_column varchar2, check_id number, not_column varchar2, not_id number, schema_name varchar2 := user) return boolean
-  is
-    ref_cur ref_cursor;
-    dummy number;
-    is_not_referenced boolean;
-  begin
-    open ref_cur for 'select 1 from ' || schema_name || '.' || table_name || ' where ' || check_column || '=:1 and not ' || not_column || '=:2' using check_id, not_id;
-    loop 
-      fetch ref_cur into dummy;
-      is_not_referenced := ref_cur%notfound;
-      exit;
-    end loop;
-    close ref_cur;
-
-    return is_not_referenced;
-  end;
-
-  /*
-    internal: delete from SURFACE_GEOMETRY
-  */
-  function intern_delete_surface_geometry(pid number, schema_name varchar2 := user) return id_array
-  is
-    deleted_id number;
-    deleted_ids id_array := id_array();
-    geom_cur ref_cursor;
-    sg_id number;
-  begin
-    open geom_cur for 'select id from ' || schema_name || '.surface_geometry start with id=:1 connect by prior id=parent_id order by level desc' using pid;
-    loop
-      fetch geom_cur into sg_id;
-      exit when geom_cur%notfound;
-      execute immediate 'delete from ' || schema_name || '.textureparam where surface_geometry_id=:1' using sg_id;
-      execute immediate 'delete from ' || schema_name || '.surface_geometry where id=:1 returning id into :2' using sg_id, out deleted_id;
-      deleted_ids.extend;
-      deleted_ids(deleted_ids.count) := deleted_id;	  
-    end loop;
-    close geom_cur;
-
-    return deleted_ids;
-  exception
-    when others then
-      dbms_output.put_line('intern_delete_surface_geometry (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from IMPLICIT_GEOMETRY
-  */
-  function intern_delete_implicit_geom(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    implicit_geometry_rec implicit_geometry%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.implicit_geometry where id=:1'
-      into implicit_geometry_rec
-      using pid;
-
-    execute immediate 'delete from ' || schema_name || '.implicit_geometry where id=:1 returning id into :2' using pid, out deleted_id;
-    post_delete_implicit_geom(implicit_geometry_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('intern_delete_implicit_geom (id: ' || pid || '): ' || SQLERRM);
-  end; 
-
-  procedure post_delete_implicit_geom(implicit_geometry_rec implicit_geometry%rowtype, schema_name varchar2 := user)
-  is
-    dummy_ids id_array := id_array();
-  begin
-    if implicit_geometry_rec.relative_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(implicit_geometry_rec.relative_brep_id, schema_name);
-    end if;
-  exception
-    when others then
-      dbms_output.put_line('post_delete_implicit_geom (id: ' || implicit_geometry_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from GRID_COVERAGE
-  */
-  function intern_delete_grid_coverage(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.grid_coverage where id=:1 returning id into :2' using pid, out deleted_id;
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('intern_delete_grid_coverage (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from CITY_OBJECT
-  */
-  procedure pre_delete_cityobject(pid number, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    appearance_cur ref_cursor;
-    appearance_rec appearance%rowtype;
-  begin
-    execute immediate 'delete from ' || schema_name || '.cityobject_member where cityobject_id=:1' using pid;
-    execute immediate 'delete from ' || schema_name || '.group_to_cityobject where cityobject_id=:1' using pid;
-    execute immediate 'delete from ' || schema_name || '.generalization where generalizes_to_id=:1' using pid;
-    execute immediate 'delete from ' || schema_name || '.generalization where cityobject_id=:1' using pid;
-    execute immediate 'delete from ' || schema_name || '.external_reference where cityobject_id=:1' using pid;
-    execute immediate 'delete from ' || schema_name || '.cityobject_genericattrib where cityobject_id=:1' using pid;
-    execute immediate 'update ' || schema_name || '.cityobjectgroup set parent_cityobject_id=null where parent_cityobject_id=:1' using pid;
-
-    open appearance_cur for 'select * from ' || schema_name || '.appearance where cityobject_id=:1' using pid;
-    loop
-      fetch appearance_cur into appearance_rec;
-      exit when appearance_cur%notfound;
-      dummy_id := delete_appearance(appearance_rec, 0, schema_name);
-    end loop;
-    close appearance_cur;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_cityobject (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function intern_delete_cityobject(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_cityobject(pid, schema_name);
-    execute immediate 'delete from ' || schema_name || '.cityobject where id=:1 returning id into :2' using pid, out deleted_id;
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('intern_delete_cityobject (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from CITYMODEL
-  */
-  procedure pre_delete_citymodel(citymodel_rec citymodel%rowtype, delete_members int := 0, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-    member_cur ref_cursor;
-    member_id number;
-    appearance_cur ref_cursor;
-    appearance_rec appearance%rowtype;
-  begin
-    -- delete members
-    if delete_members <> 0 then
-      open member_cur for 'select cityobject_id from ' || schema_name || '.cityobject_member where citymodel_id=:1' USING citymodel_rec.id;
-      loop
-        fetch member_cur into member_id;
-        exit when member_cur%notfound;
-        begin
-          dummy_id := delete_cityobject(member_id, delete_members, 0, schema_name);
-        exception
-          when others then
-            dbms_output.put_line('pre_delete_citymodel: deletion of cityobject_member with ID ' || member_id || ' threw: ' || SQLERRM);
-        end;
-      end loop;
-      close member_cur;
-
-      -- cleanup
-      dummy_ids := cleanup_implicit_geometries(1, schema_name);
-      dummy_ids := cleanup_appearances(1, schema_name);      
-    end if;
-
-    execute immediate 'delete from ' || schema_name || '.cityobject_member where citymodel_id=:1' using citymodel_rec.id;
-
-    open appearance_cur for 'select * from ' || schema_name || '.appearance where citymodel_id=:1' using citymodel_rec.id;
-    loop
-      fetch appearance_cur into appearance_rec;
-      exit when appearance_cur%notfound;
-      dummy_id := delete_appearance(appearance_rec, 0, schema_name);
-    end loop;
-    close appearance_cur;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_citymodel (id: ' || citymodel_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_citymodel(citymodel_rec citymodel%rowtype, delete_members int := 0, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_citymodel(citymodel_rec, delete_members, schema_name);
-    execute immediate 'delete from ' || schema_name || '.citymodel where id=:1 returning id into :2' using citymodel_rec.id, out deleted_id;
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_citymodel (id: ' || citymodel_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from CITYOBJECT_GENERICATTRIB
-  */
-  function intern_delete_genericattrib(pid number, delete_members int := 0, schema_name varchar2 := user) return number
-  is
-    genattrib_parent_id number;
-    data_type int;
-    deleted_id number;
-  begin
-    -- get parent_id and data type
-    begin
-      execute immediate 'select parent_genattrib_id, datatype
-                           from ' || schema_name || '.cityobject_genericattrib WHERE id = :1'
-                           into genattrib_parent_id, data_type using pid;
-
-      exception
-        when no_data_found then
-          return null;
-    end;
-
-    -- if the attribute to be deleted is a set, first handle nested attributes
-    if data_type = 7 then
-      if delete_members <> 0 then
-        -- recursive delete of nested attributes
-        execute immediate 'delete from ' || schema_name || '.cityobject_genericattrib where id in (
-                             select id from ' || schema_name || '.cityobject_genericattrib start with parent_genattrib_id = :1 
-                               connect by prior id = parent_genattrib_id)' using pid;
-      else
-        -- recursive update of nested attributes
-        execute immediate 'merge into ' || schema_name || '.cityobject_genericattrib g using (
-                             with parts (id, parent_id, root_id) as (
-                               select id, :1 as parent_id, 
-                                 case when root_genattrib_id = :2 then id else root_genattrib_id end as root_id
-                                 from ' || schema_name || '.cityobject_genericattrib 
-                                   where parent_genattrib_id = :3
-                               union all
-                               select part.id, part.parent_genattrib_id as parent_id, p.root_id 
-                                 from ' || schema_name || '.cityobject_genericattrib part, parts p 
-                                   where part.parent_genattrib_id = p.id
-                             )
-                             select id, parent_id, root_id from parts) ga_set
-                          on (g.id = ga_set.id) when matched then 
-                            update set g.parent_genattrib_id = ga_set.parent_id, g.root_genattrib_id = ga_set.root_id'
-                            using genattrib_parent_id, pid, pid;
-      end if;
-    end if;
-
-    -- now delete the attribute
-    execute immediate 'delete from ' || schema_name || '.cityobject_genericattrib  where id=:1 returning id into :2' using pid, out deleted_id;
-
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('intern_delete_genericattrib (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from APPEARANCE
-  */
-  procedure pre_delete_appearance(appearance_rec appearance%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    surface_data_cur ref_cursor;
-    surface_data_rec surface_data%rowtype;
-  begin
-    -- delete surface data not being referenced by appearances any more
-    open surface_data_cur for 'select s.* from ' || schema_name || '.surface_data s, ' || schema_name || '.appear_to_surface_data ats
-        where s.id=ats.surface_data_id and ats.appearance_id=:1' using appearance_rec.id;
-    loop
-      fetch surface_data_cur into surface_data_rec;
-      exit when surface_data_cur%notfound;
-      if is_not_referenced('appear_to_surface_data', 'surface_data_id', surface_data_rec.id, 'appearance_id', appearance_rec.id, schema_name) then 
-        dummy_id := delete_surface_data(surface_data_rec, schema_name);
-      end if;
-    end loop;
-    close surface_data_cur;
-
-    execute immediate 'delete from ' || schema_name || '.appear_to_surface_data where appearance_id=:1' using appearance_rec.id;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_appearance (id: ' || appearance_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_appearance(appearance_rec appearance%rowtype, cleanup int := 0, schema_name varchar2 := user) return number
-  is
-    dummy_ids id_array := id_array();
-    deleted_id number;
-  begin
-    pre_delete_appearance(appearance_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.appearance where id=:1 returning id into :2' using appearance_rec.id, out deleted_id;
-
-    if cleanup <> 0 then
-      -- cleanup texture images    
-      dummy_ids := cleanup_tex_images(schema_name);
-    end if;
-
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_appearance (id: ' || appearance_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from SURFACE_DATA
-  */
-  procedure pre_delete_surface_data(surface_data_rec surface_data%rowtype, schema_name varchar2 := user)
-  is
-  begin
-    execute immediate 'delete from ' || schema_name || '.textureparam where surface_data_id=:1' using surface_data_rec.id;
-    execute immediate 'delete from ' || schema_name || '.appear_to_surface_data where surface_data_id=:1' using surface_data_rec.id;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_surface_data (id: ' || surface_data_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_surface_data(surface_data_rec surface_data%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_surface_data(surface_data_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.surface_data where id=:1 returning id into :2' using surface_data_rec.id, out deleted_id;
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_surface_data (id: ' || surface_data_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from CITYOBJECTGROUP
-  */
-  procedure pre_delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, delete_members int := 0, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-    member_cur ref_cursor;
-    member_id number;
-  begin
-    -- delete members
-    if delete_members <> 0 then
-      open member_cur for 'select cityobject_id from ' || schema_name || '.group_to_cityobject where cityobjectgroup_id=:1' USING cityobjectgroup_rec.id;
-      loop
-        fetch member_cur into member_id;
-        exit when member_cur%notfound;
-        begin
-          dummy_id := delete_cityobject(member_id, delete_members, 0, schema_name);
-        exception
-          when others then
-            dbms_output.put_line('pre_delete_cityobjectgroup: deletion of group_member with ID ' || member_id || ' threw: ' || SQLERRM);
-        end;
-      end loop;
-      close member_cur;
-
-      -- cleanup
-      dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
-      dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
-    end if;
-    
-    execute immediate 'delete from ' || schema_name || '.group_to_cityobject where cityobjectgroup_id=:1' using cityobjectgroup_rec.id;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_cityobjectgroup (id: ' || cityobjectgroup_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, delete_members int := 0, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_cityobjectgroup(cityobjectgroup_rec, delete_members, schema_name);
-    execute immediate 'delete from ' || schema_name || '.cityobjectgroup where id=:1 returning id into :2' using cityobjectgroup_rec.id, out deleted_id;
-    post_delete_cityobjectgroup(cityobjectgroup_rec, schema_name); 
-    return deleted_id;	
-  exception
-    when others then
-      dbms_output.put_line('delete_cityobjectgroup (id: ' || cityobjectgroup_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_cityobjectgroup(cityobjectgroup_rec cityobjectgroup%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if cityobjectgroup_rec.brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(cityobjectgroup_rec.brep_id, schema_name);
-    end if;  
-
-    dummy_id := intern_delete_cityobject(cityobjectgroup_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_cityobjectgroup (id: ' || cityobjectgroup_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from THEMATIC_SURFACE
-  */
-  procedure pre_delete_thematic_surface(thematic_surface_rec thematic_surface%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    opening_cur ref_cursor;
-    opening_rec opening%rowtype;
-  begin
-    -- delete openings not being referenced by a thematic surface any more
-    open opening_cur for 'select o.* from ' || schema_name || '.opening o, ' || schema_name || '.opening_to_them_surface otm 
-        where o.id=otm.opening_id and otm.thematic_surface_id=:1' using thematic_surface_rec.id;
-    loop
-      fetch opening_cur into opening_rec;
-      exit when opening_cur%notfound;
-      if is_not_referenced('opening_to_them_surface', 'opening_id', opening_rec.id, 'thematic_surface_id', thematic_surface_rec.id, schema_name) then 
-        dummy_id := delete_opening(opening_rec, schema_name);
-      end if;
-    end loop;
-    close opening_cur;
-
-    execute immediate 'delete from ' || schema_name || '.opening_to_them_surface where thematic_surface_id=:1' using thematic_surface_rec.id;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_thematic_surface (id: ' || thematic_surface_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_thematic_surface(thematic_surface_rec thematic_surface%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_thematic_surface(thematic_surface_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.thematic_surface where id=:1 returning id into :2' using thematic_surface_rec.id, out deleted_id;
-    post_delete_thematic_surface(thematic_surface_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_thematic_surface (id: ' || thematic_surface_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_thematic_surface(thematic_surface_rec thematic_surface%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if thematic_surface_rec.lod2_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(thematic_surface_rec.lod2_multi_surface_id, schema_name);
-    end if;
-    if thematic_surface_rec.lod3_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(thematic_surface_rec.lod3_multi_surface_id, schema_name);
-    end if;
-    if thematic_surface_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(thematic_surface_rec.lod4_multi_surface_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(thematic_surface_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_thematic_surface (id: ' || thematic_surface_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from OPENING
-  */
-  procedure pre_delete_opening(opening_rec opening%rowtype, schema_name varchar2 := user)
-  is
-  begin
-    execute immediate 'delete from ' || schema_name || '.opening_to_them_surface where opening_id=:1' using opening_rec.id;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_opening (id: ' || opening_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_opening(opening_rec opening%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_opening(opening_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.opening where id=:1 returning id into :2' using opening_rec.id, out deleted_id;
-    post_delete_opening(opening_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_opening (id: ' || opening_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_opening(opening_rec opening%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-    address_cur ref_cursor;
-    address_id number;
-  begin
-    if opening_rec.lod3_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(opening_rec.lod3_multi_surface_id, schema_name);
-    end if;
-    if opening_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(opening_rec.lod4_multi_surface_id, schema_name);
-    end if;
-
-    -- delete addresses not being referenced from buildings and openings any more
-    open address_cur for 'select a.id from ' || schema_name || '.address a left outer join ' || schema_name || '.address_to_building ab
-        on a.id=ab.address_id where a.id=:1 and ab.address_id is null' using opening_rec.address_id;
-    loop
-      fetch address_cur into address_id;
-      exit when address_cur%notfound;
-      if is_not_referenced('opening', 'address_id', address_id, 'id', opening_rec.id, schema_name) then
-        dummy_id := delete_address(address_id, schema_name);
-      end if;   
-    end loop;
-    close address_cur;
-
-    dummy_id := intern_delete_cityobject(opening_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_opening (id: ' || opening_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from BUILDING_INSTALLATION
-  */
-  procedure pre_delete_building_inst(building_installation_rec building_installation%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    thematic_surface_cur ref_cursor;
-    thematic_surface_rec thematic_surface%rowtype;
-  begin
-    open thematic_surface_cur for 'select * from ' || schema_name || '.thematic_surface where building_installation_id=:1' using building_installation_rec.id;
-    loop
-      fetch thematic_surface_cur into thematic_surface_rec;
-      exit when thematic_surface_cur%notfound;
-      dummy_id := delete_thematic_surface(thematic_surface_rec, schema_name);
-    end loop;
-    close thematic_surface_cur;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_building_inst (id: ' || building_installation_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_building_installation(building_installation_rec building_installation%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_building_inst(building_installation_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.building_installation where id=:1 returning id into :2' using building_installation_rec.id, out deleted_id;
-    post_delete_building_inst(building_installation_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_building_installation (id: ' || building_installation_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_building_inst(building_installation_rec building_installation%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if building_installation_rec.lod2_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(building_installation_rec.lod2_brep_id, schema_name);
-    end if;
-    if building_installation_rec.lod3_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(building_installation_rec.lod3_brep_id, schema_name);
-    end if;
-    if building_installation_rec.lod4_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(building_installation_rec.lod4_brep_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(building_installation_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_building_inst (id: ' || building_installation_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from ROOM
-  */
-  procedure pre_delete_room(room_rec room%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    thematic_surface_cur ref_cursor;
-    thematic_surface_rec thematic_surface%rowtype;
-    building_installation_cur ref_cursor;
-    building_installation_rec building_installation%rowtype;
-    building_furniture_cur ref_cursor;
-    building_furniture_rec building_furniture%rowtype;
-  begin
-    open thematic_surface_cur for 'select * from ' || schema_name || '.thematic_surface where room_id=:1' using room_rec.id;
-    loop
-      fetch thematic_surface_cur into thematic_surface_rec;
-      exit when thematic_surface_cur%notfound;
-      dummy_id := delete_thematic_surface(thematic_surface_rec, schema_name);
-    end loop;
-    close thematic_surface_cur;
-
-    open building_installation_cur for 'select * from ' || schema_name || '.building_installation where room_id=:1' using room_rec.id;
-    loop
-      fetch building_installation_cur into building_installation_rec;
-      exit when building_installation_cur%notfound;
-      dummy_id := delete_building_installation(building_installation_rec, schema_name);
-    end loop;
-    close building_installation_cur;
-
-    open building_furniture_cur for 'select * from ' || schema_name || '.building_furniture where room_id=:1' using room_rec.id;
-    loop
-      fetch building_furniture_cur into building_furniture_rec;
-      exit when building_furniture_cur%notfound;
-      dummy_id := delete_building_furniture(building_furniture_rec, schema_name);
-    end loop;
-    close building_furniture_cur;
-   exception
-    when others then
-      dbms_output.put_line('pre_delete_room (id: ' || room_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_room(room_rec room%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_room(room_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.room where id=:1 returning id into :2' using room_rec.id, out deleted_id;
-    post_delete_room(room_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_room (id: ' || room_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_room(room_rec room%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if room_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(room_rec.lod4_multi_surface_id, schema_name);
-    end if;
-    if room_rec.lod4_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(room_rec.lod4_solid_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(room_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_room (id: ' || room_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from BUILDING_FURNITURE
-  */
-  function delete_building_furniture(building_furniture_rec building_furniture%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.building_furniture where id=:1 returning id into :2' using building_furniture_rec.id, out deleted_id;
-    post_delete_building_furniture(building_furniture_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_building_furniture (id: ' || building_furniture_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_building_furniture(building_furniture_rec building_furniture%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if building_furniture_rec.lod4_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(building_furniture_rec.lod4_brep_id, schema_name);
-    end if;
-    
-    dummy_id := intern_delete_cityobject(building_furniture_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_building_furniture (id: ' || building_furniture_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from BUILDING
-  */
-  procedure pre_delete_building(building_rec building%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    building_part_cur ref_cursor;
-    building_part_rec building%rowtype;
-    thematic_surface_cur ref_cursor;
-    thematic_surface_rec thematic_surface%rowtype;
-    building_installation_cur ref_cursor;
-    building_installation_rec building_installation%rowtype;
-    room_cur ref_cursor;
-    room_rec room%rowtype;
-    address_cur ref_cursor;
-    address_id number;
-  begin
-    open building_part_cur for 'select * from ' || schema_name || '.building where id!=:1 and building_parent_id=:2' using building_rec.id, building_rec.id;
-    loop
-      fetch building_part_cur into building_part_rec;
-      exit when building_part_cur%notfound;
-      dummy_id := delete_building(building_part_rec, schema_name);
-    end loop;
-    close building_part_cur;
-
-    open thematic_surface_cur for 'select * from ' || schema_name || '.thematic_surface where building_id=:1' using building_rec.id;
-    loop
-      fetch thematic_surface_cur into thematic_surface_rec;
-      exit when thematic_surface_cur%notfound;
-      dummy_id := delete_thematic_surface(thematic_surface_rec, schema_name);
-    end loop;
-    close thematic_surface_cur;
-
-    open building_installation_cur for 'select * from ' || schema_name || '.building_installation where building_id=:1' using building_rec.id;
-    loop
-      fetch building_installation_cur into building_installation_rec;
-      exit when building_installation_cur%notfound;
-      dummy_id := delete_building_installation(building_installation_rec, schema_name);
-    end loop;
-    close building_installation_cur;
-
-    open room_cur for 'select * from ' || schema_name || '.room where building_id=:1' using building_rec.id;
-    loop
-      fetch room_cur into room_rec;
-      exit when room_cur%notfound;
-      dummy_id := delete_room(room_rec, schema_name);
-    end loop;
-    close room_cur;
-
-    -- delete addresses being not referenced from buildings any more
-    open address_cur for 'select address_id from ' || schema_name || '.address_to_building where building_id=:1' using building_rec.id;
-    loop
-      fetch address_cur into address_id;
-      exit when address_cur%notfound;
-      if is_not_referenced('address_to_building', 'address_id', address_id, 'building_id', building_rec.id, schema_name) then 
-        dummy_id := delete_address(address_id, schema_name);
-      end if;
-    end loop;
-    close address_cur;
-
-    execute immediate 'delete from ' || schema_name || '.address_to_building where building_id=:1' using building_rec.id;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_building (id: ' || building_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_building(building_rec building%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_building(building_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.building where id=:1 returning id into :2' using building_rec.id, out deleted_id;
-    post_delete_building(building_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_building (id: ' || building_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_building(building_rec building%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if building_rec.lod0_footprint_id is not null then
-      dummy_ids := intern_delete_surface_geometry(building_rec.lod0_footprint_id, schema_name);
-    end if; 
-    if building_rec.lod0_roofprint_id is not null then
-      dummy_ids := intern_delete_surface_geometry(building_rec.lod0_roofprint_id, schema_name);
-    end if;
-
-    if building_rec.lod1_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(building_rec.lod1_multi_surface_id, schema_name);
-    end if; 
-    if building_rec.lod2_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(building_rec.lod2_multi_surface_id, schema_name);
-    end if;
-    if building_rec.lod3_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(building_rec.lod3_multi_surface_id, schema_name);
-    end if;
-    if building_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(building_rec.lod4_multi_surface_id, schema_name);
-    end if;
-
-    if building_rec.lod1_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(building_rec.lod1_solid_id, schema_name);
-    end if; 
-    if building_rec.lod2_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(building_rec.lod2_solid_id, schema_name);
-    end if;
-    if building_rec.lod3_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(building_rec.lod3_solid_id, schema_name);
-    end if;
-    if building_rec.lod4_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(building_rec.lod4_solid_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(building_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_building (id: ' || building_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from CITY_FURNITURE
-  */
-  function delete_city_furniture(city_furniture_rec city_furniture%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.city_furniture where id=:1 returning id into :2' using city_furniture_rec.id, out deleted_id;
-    post_delete_city_furniture(city_furniture_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_city_furniture (id: ' || city_furniture_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_city_furniture(city_furniture_rec city_furniture%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if city_furniture_rec.lod1_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(city_furniture_rec.lod1_brep_id, schema_name);
-    end if; 
-    if city_furniture_rec.lod2_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(city_furniture_rec.lod2_brep_id, schema_name);
-    end if;
-    if city_furniture_rec.lod3_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(city_furniture_rec.lod3_brep_id, schema_name);
-    end if;
-    if city_furniture_rec.lod4_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(city_furniture_rec.lod4_brep_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(city_furniture_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_city_furniture (id: ' || city_furniture_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from GENERIC_CITYOBJECT
-  */
-  function delete_generic_cityobject(generic_cityobject_rec generic_cityobject%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.generic_cityobject where id=:1 returning id into :2' using generic_cityobject_rec.id, out deleted_id;
-    post_delete_generic_cityobject(generic_cityobject_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_generic_cityobject (id: ' || generic_cityobject_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_generic_cityobject(generic_cityobject_rec generic_cityobject%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if generic_cityobject_rec.lod0_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(generic_cityobject_rec.lod0_brep_id, schema_name);
-    end if; 
-    if generic_cityobject_rec.lod1_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(generic_cityobject_rec.lod1_brep_id, schema_name);
-    end if; 
-    if generic_cityobject_rec.lod2_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(generic_cityobject_rec.lod2_brep_id, schema_name);
-    end if;
-    if generic_cityobject_rec.lod3_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(generic_cityobject_rec.lod3_brep_id, schema_name);
-    end if;
-    if generic_cityobject_rec.lod4_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(generic_cityobject_rec.lod4_brep_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(generic_cityobject_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_generic_cityobject (id: ' || generic_cityobject_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from LAND_USE
-  */
-  function delete_land_use(land_use_rec land_use%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.land_use where id=:1 returning id into :2' using land_use_rec.id, out deleted_id;
-    post_delete_land_use(land_use_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_land_use (id: ' || land_use_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_land_use(land_use_rec land_use%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if land_use_rec.lod0_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(land_use_rec.lod0_multi_surface_id, schema_name);
-    end if; 
-    if land_use_rec.lod1_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(land_use_rec.lod1_multi_surface_id, schema_name);
-    end if; 
-    if land_use_rec.lod2_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(land_use_rec.lod2_multi_surface_id, schema_name);
-    end if;
-    if land_use_rec.lod3_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(land_use_rec.lod3_multi_surface_id, schema_name);
-    end if;
-    if land_use_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(land_use_rec.lod4_multi_surface_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(land_use_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_land_use (id: ' || land_use_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from PLANT_COVER
-  */
-  function delete_plant_cover(plant_cover_rec plant_cover%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.plant_cover where id=:1 returning id into :2' using plant_cover_rec.id, out deleted_id;
-    post_delete_plant_cover(plant_cover_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_plant_cover (id: ' || plant_cover_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_plant_cover(plant_cover_rec plant_cover%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if plant_cover_rec.lod1_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(plant_cover_rec.lod1_multi_surface_id, schema_name);
-    end if; 
-    if plant_cover_rec.lod2_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(plant_cover_rec.lod2_multi_surface_id, schema_name);
-    end if;
-    if plant_cover_rec.lod3_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(plant_cover_rec.lod3_multi_surface_id, schema_name);
-    end if;
-    if plant_cover_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(plant_cover_rec.lod4_multi_surface_id, schema_name);
-    end if;
-
-    if plant_cover_rec.lod1_multi_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(plant_cover_rec.lod1_multi_solid_id, schema_name);
-    end if; 
-    if plant_cover_rec.lod2_multi_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(plant_cover_rec.lod2_multi_solid_id, schema_name);
-    end if;
-    if plant_cover_rec.lod3_multi_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(plant_cover_rec.lod3_multi_solid_id, schema_name);
-    end if;
-    if plant_cover_rec.lod4_multi_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(plant_cover_rec.lod4_multi_solid_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(plant_cover_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_plant_cover (id: ' || plant_cover_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from SOLITARY_VEGETAT_OBJECT
-  */
-  function delete_solitary_veg_obj(solitary_veg_obj_rec solitary_vegetat_object%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.solitary_vegetat_object where id=:1 returning id into :2' using solitary_veg_obj_rec.id, out deleted_id;
-    post_delete_solitary_veg_obj(solitary_veg_obj_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_solitary_veg_obj (id: ' || solitary_veg_obj_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_solitary_veg_obj(solitary_veg_obj_rec solitary_vegetat_object%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if solitary_veg_obj_rec.lod1_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(solitary_veg_obj_rec.lod1_brep_id, schema_name);
-    end if; 
-    if solitary_veg_obj_rec.lod2_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(solitary_veg_obj_rec.lod2_brep_id, schema_name);
-    end if;
-    if solitary_veg_obj_rec.lod3_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(solitary_veg_obj_rec.lod3_brep_id, schema_name);
-    end if;
-    if solitary_veg_obj_rec.lod4_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(solitary_veg_obj_rec.lod4_brep_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(solitary_veg_obj_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_solitary_veg_obj (id: ' || solitary_veg_obj_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from TRAFFIC_AREA
-  */
-  function delete_traffic_area(traffic_area_rec traffic_area%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.traffic_area where id=:1 returning id into :2' using traffic_area_rec.id, out deleted_id;
-    post_delete_traffic_area(traffic_area_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_traffic_area (id: ' || traffic_area_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_traffic_area(traffic_area_rec traffic_area%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if traffic_area_rec.lod2_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(traffic_area_rec.lod2_multi_surface_id, schema_name);
-    end if;
-    if traffic_area_rec.lod3_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(traffic_area_rec.lod3_multi_surface_id, schema_name);
-    end if;
-    if traffic_area_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(traffic_area_rec.lod4_multi_surface_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(traffic_area_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_traffic_area (id: ' || traffic_area_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from TRANSPORTATION_COMPLEX
-  */
-  procedure pre_delete_transport_complex(transport_complex_rec transportation_complex%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    traffic_area_cur ref_cursor;
-    traffic_area_rec traffic_area%rowtype;
-  begin
-    open traffic_area_cur for 'select * from ' || schema_name || '.traffic_area where transportation_complex_id=:1' using transport_complex_rec.id;
-    loop
-      fetch traffic_area_cur into traffic_area_rec;
-      exit when traffic_area_cur%notfound;
-      dummy_id := delete_traffic_area(traffic_area_rec, schema_name);
-    end loop;
-    close traffic_area_cur;
-
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_transport_complex (id: ' || transport_complex_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_transport_complex(transport_complex_rec transportation_complex%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_transport_complex(transport_complex_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.transportation_complex where id=:1 returning id into :2' using transport_complex_rec.id, out deleted_id;
-    post_delete_transport_complex(transport_complex_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_transport_complex (id: ' || transport_complex_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_transport_complex(transport_complex_rec transportation_complex%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if transport_complex_rec.lod1_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(transport_complex_rec.lod1_multi_surface_id, schema_name);
-    end if; 
-    if transport_complex_rec.lod2_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(transport_complex_rec.lod2_multi_surface_id, schema_name);
-    end if;
-    if transport_complex_rec.lod3_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(transport_complex_rec.lod3_multi_surface_id, schema_name);
-    end if;
-    if transport_complex_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(transport_complex_rec.lod4_multi_surface_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(transport_complex_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_transport_complex (id: ' || transport_complex_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from WATERBODY
-  */
-  procedure pre_delete_waterbody(waterbody_rec waterbody%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    waterbnd_surface_cur ref_cursor;
-    waterbnd_surface_id number;
-  begin
-    -- delete water boundary surface being not referenced from waterbodies any more
-    open waterbnd_surface_cur for 'select waterboundary_surface_id from ' || schema_name || '.waterbod_to_waterbnd_srf where waterbody_id=:1' using waterbody_rec.id;
-    loop
-      fetch waterbnd_surface_cur into waterbnd_surface_id;
-      exit when waterbnd_surface_cur%notfound;
-      if is_not_referenced('waterbod_to_waterbnd_srf', 'waterboundary_surface_id', waterbnd_surface_id, 'waterbody_id', waterbody_rec.id, schema_name) then 
-        dummy_id := delete_waterbnd_surface(waterbnd_surface_id, schema_name);
-      end if;
-    end loop;
-    close waterbnd_surface_cur;
-
-    execute immediate 'delete from ' || schema_name || '.waterbod_to_waterbnd_srf where waterbody_id=:1' using waterbody_rec.id;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_waterbody (id: ' || waterbody_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_waterbody(waterbody_rec waterbody%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_waterbody(waterbody_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.waterbody where id=:1 returning id into :2' using waterbody_rec.id, out deleted_id;
-    post_delete_waterbody(waterbody_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_waterbody (id: ' || waterbody_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_waterbody(waterbody_rec waterbody%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if waterbody_rec.lod1_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(waterbody_rec.lod1_solid_id, schema_name);
-    end if; 
-    if waterbody_rec.lod2_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(waterbody_rec.lod2_solid_id, schema_name);
-    end if;
-    if waterbody_rec.lod3_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(waterbody_rec.lod3_solid_id, schema_name);
-    end if;
-    if waterbody_rec.lod4_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(waterbody_rec.lod4_solid_id, schema_name);
-    end if;
-    if waterbody_rec.lod0_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(waterbody_rec.lod0_multi_surface_id, schema_name);
-    end if;
-    if waterbody_rec.lod1_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(waterbody_rec.lod1_multi_surface_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(waterbody_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_waterbody (id: ' || waterbody_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure pre_delete_waterbnd_surface(waterbnd_surface_rec waterboundary_surface%rowtype, schema_name varchar2 := user)
-  is
-  begin
-    execute immediate 'delete from ' || schema_name || '.waterbod_to_waterbnd_srf where waterboundary_surface_id=:1' using waterbnd_surface_rec.id;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_waterbnd_surface (id: ' || waterbnd_surface_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_waterbnd_surface(waterbnd_surface_rec waterboundary_surface%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_waterbnd_surface(waterbnd_surface_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.waterboundary_surface where id=:1 returning id into :2' using waterbnd_surface_rec.id, out deleted_id;
-    post_delete_waterbnd_surface(waterbnd_surface_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_waterbnd_surface (id: ' || waterbnd_surface_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_waterbnd_surface(waterbnd_surface_rec waterboundary_surface%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if waterbnd_surface_rec.lod2_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(waterbnd_surface_rec.lod2_surface_id, schema_name);
-    end if;
-    if waterbnd_surface_rec.lod3_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(waterbnd_surface_rec.lod3_surface_id, schema_name);
-    end if;
-    if waterbnd_surface_rec.lod4_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(waterbnd_surface_rec.lod4_surface_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(waterbnd_surface_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_waterbnd_surface (id: ' || waterbnd_surface_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from RELIEF_FEATURE
-  */
-  procedure pre_delete_relief_feature(relief_feature_rec relief_feature%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    relief_component_cur ref_cursor;
-    component_id number;
-  begin
-    -- delete relief component being not referenced from relief features any more
-    open relief_component_cur for 'select relief_component_id from ' || schema_name || '.relief_feat_to_rel_comp where relief_feature_id=:1' using relief_feature_rec.id;
-    loop
-      fetch relief_component_cur into component_id;
-      exit when relief_component_cur%notfound;
-      if is_not_referenced('relief_feat_to_rel_comp', 'relief_component_id', component_id, 'relief_feature_id', relief_feature_rec.id, schema_name) then 
-        dummy_id := delete_relief_component(component_id, schema_name);
-      end if;
-    end loop;
-    close relief_component_cur;
-
-    execute immediate 'delete from ' || schema_name || '.relief_feat_to_rel_comp where relief_feature_id=:1' using relief_feature_rec.id;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_relief_feature (id: ' || relief_feature_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_relief_feature(relief_feature_rec relief_feature%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_relief_feature(relief_feature_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.relief_feature where id=:1 returning id into :2' using relief_feature_rec.id, out deleted_id;
-    post_delete_relief_feature(relief_feature_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_relief_feature (id: ' || relief_feature_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_relief_feature(relief_feature_rec relief_feature%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-  begin
-    dummy_id := intern_delete_cityobject(relief_feature_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_relief_feature (id: ' || relief_feature_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from RELIEF_COMPONENT
-  */
-  procedure pre_delete_relief_component(relief_component_rec relief_component%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.relief_feat_to_rel_comp where relief_component_id=:1' using relief_component_rec.id;
-
-    dummy_id := delete_tin_relief(relief_component_rec.id, schema_name);
-    dummy_id := delete_masspoint_relief(relief_component_rec.id, schema_name);
-    dummy_id := delete_breakline_relief(relief_component_rec.id, schema_name);
-    dummy_id := delete_raster_relief(relief_component_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_relief_component (id: ' || relief_component_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_relief_component(relief_component_rec relief_component%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_relief_component(relief_component_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.relief_component where id=:1 returning id into :2' using relief_component_rec.id, out deleted_id;
-    post_delete_relief_component(relief_component_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_relief_component (id: ' || relief_component_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_relief_component(relief_component_rec relief_component%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-  begin
-    dummy_id := intern_delete_cityobject(relief_component_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_relief_component (id: ' || relief_component_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from TIN_RELIEF
-  */
-  function delete_tin_relief(tin_relief_rec tin_relief%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.tin_relief where id=:1 returning id into :2' using tin_relief_rec.id, out deleted_id;
-    post_delete_tin_relief(tin_relief_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_tin_relief (id: ' || tin_relief_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_tin_relief(tin_relief_rec tin_relief%rowtype, schema_name varchar2 := user)
-  is
-    dummy_ids id_array := id_array();
-  begin
-    if tin_relief_rec.surface_geometry_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tin_relief_rec.surface_geometry_id, schema_name);
-    end if;
-  exception
-    when others then
-      dbms_output.put_line('post_delete_tin_relief (id: ' || tin_relief_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from MASSPOINT_RELIEF
-  */
-  function delete_masspoint_relief(masspoint_relief_rec masspoint_relief%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.masspoint_relief where id=:1 returning id into :2' using masspoint_relief_rec.id, out deleted_id;
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_masspoint_relief (id: ' || masspoint_relief_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from BREAKLINE_RELIEF
-  */
-  function delete_breakline_relief(breakline_relief_rec breakline_relief%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.breakline_relief where id=:1 returning id into :2' using breakline_relief_rec.id, out deleted_id;
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_breakline_relief (id: ' || breakline_relief_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from RASTER_RELIEF
-  */
-  function delete_raster_relief(raster_relief_rec raster_relief%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.raster_relief where id=:1 returning id into :2' using raster_relief_rec.id, out deleted_id;
-    post_delete_raster_relief(raster_relief_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_raster_relief (id: ' || raster_relief_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_raster_relief(raster_relief_rec raster_relief%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-  begin
-    dummy_id := intern_delete_grid_coverage(raster_relief_rec.coverage_id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_raster_relief (id: ' || raster_relief_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from BRIDGE
-  */
-  procedure pre_delete_bridge(bridge_rec bridge%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    bridge_part_cur ref_cursor;
-    bridge_part_rec bridge%rowtype;
-    bridge_thematic_surface_cur ref_cursor;
-    bridge_thematic_surface_rec bridge_thematic_surface%rowtype;
-    bridge_installation_cur ref_cursor;
-    bridge_installation_rec bridge_installation%rowtype;
-    bridge_constr_element_cur ref_cursor;
-    bridge_constr_element_rec bridge_constr_element%rowtype;
-    bridge_room_cur ref_cursor;
-    bridge_room_rec bridge_room%rowtype;
-    address_cur ref_cursor;
-    address_id number; 
-  begin
-    open bridge_part_cur for 'select * from ' || schema_name || '.bridge where id!=:1 and bridge_parent_id=:2' using bridge_rec.id, bridge_rec.id;
-    loop
-      fetch bridge_part_cur into bridge_part_rec;
-      exit when bridge_part_cur%notfound;
-      dummy_id := delete_bridge(bridge_part_rec, schema_name);
-    end loop;
-    close bridge_part_cur;
-
-    open bridge_thematic_surface_cur for 'select * from ' || schema_name || '.bridge_thematic_surface where bridge_id=:1' using bridge_rec.id;
-    loop
-      fetch bridge_thematic_surface_cur into bridge_thematic_surface_rec;
-      exit when bridge_thematic_surface_cur%notfound;
-      dummy_id := delete_bridge_thematic_surface(bridge_thematic_surface_rec, schema_name);
-    end loop;
-    close bridge_thematic_surface_cur;
-
-    open bridge_installation_cur for 'select * from ' || schema_name || '.bridge_installation where bridge_id=:1' using bridge_rec.id;
-    loop
-      fetch bridge_installation_cur into bridge_installation_rec;
-      exit when bridge_installation_cur%notfound;
-      dummy_id := delete_bridge_installation(bridge_installation_rec, schema_name);
-    end loop;
-    close bridge_installation_cur;
-
-    open bridge_constr_element_cur for 'select * from ' || schema_name || '.bridge_constr_element where bridge_id=:1' using bridge_rec.id;
-    loop
-      fetch bridge_constr_element_cur into bridge_constr_element_rec;
-      exit when bridge_constr_element_cur%notfound;
-      dummy_id := delete_bridge_constr_element(bridge_constr_element_rec, schema_name);
-    end loop;
-    close bridge_constr_element_cur;
-
-    open bridge_room_cur for 'select * from ' || schema_name || '.bridge_room where bridge_id=:1' using bridge_rec.id;
-    loop
-      fetch bridge_room_cur into bridge_room_rec;
-      exit when bridge_room_cur%notfound;
-      dummy_id := delete_bridge_room(bridge_room_rec, schema_name);
-    end loop;
-    close bridge_room_cur;
-
-    -- delete addresses being not referenced from bridges any more
-    open address_cur for 'select address_id from ' || schema_name || '.address_to_bridge where bridge_id=:1' using bridge_rec.id;
-    loop
-      fetch address_cur into address_id;
-      exit when address_cur%notfound;
-      if is_not_referenced('address_to_bridge', 'address_id', address_id, 'bridge_id', bridge_rec.id, schema_name) then 
-        dummy_id := delete_address(address_id, schema_name);
-      end if;
-    end loop;
-    close address_cur;
-
-    execute immediate 'delete from ' || schema_name || '.address_to_bridge where bridge_id=:1' using bridge_rec.id;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_bridge (id: ' || bridge_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_bridge(bridge_rec bridge%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_bridge(bridge_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.bridge where id=:1 returning id into :2' using bridge_rec.id, out deleted_id;
-    post_delete_bridge(bridge_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_bridge (id: ' || bridge_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_bridge(bridge_rec bridge%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if bridge_rec.lod1_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_rec.lod1_multi_surface_id, schema_name);
-    end if; 
-    if bridge_rec.lod2_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_rec.lod2_multi_surface_id, schema_name);
-    end if;
-    if bridge_rec.lod3_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_rec.lod3_multi_surface_id, schema_name);
-    end if;
-    if bridge_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_rec.lod4_multi_surface_id, schema_name);
-    end if;
-
-    if bridge_rec.lod1_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_rec.lod1_solid_id, schema_name);
-    end if; 
-    if bridge_rec.lod2_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_rec.lod2_solid_id, schema_name);
-    end if;
-    if bridge_rec.lod3_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_rec.lod3_solid_id, schema_name);
-    end if;
-    if bridge_rec.lod4_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_rec.lod4_solid_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(bridge_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_bridge (id: ' || bridge_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from BRIDGE_THEMATIC_SURFACE
-  */
-  procedure pre_delete_bridge_them_srf(bridge_thematic_surface_rec bridge_thematic_surface%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    bridge_opening_cur ref_cursor;
-    bridge_opening_rec bridge_opening%rowtype;
-  begin
-    -- delete bridge openings not being referenced by a bridge thematic surface any more
-    open bridge_opening_cur for 'select bo.* from ' || schema_name || '.bridge_opening bo, ' || schema_name || '.bridge_open_to_them_srf botm 
-        where bo.id=botm.bridge_opening_id and botm.bridge_thematic_surface_id=:1' using bridge_thematic_surface_rec.id;
-    loop
-      fetch bridge_opening_cur into bridge_opening_rec;
-      exit when bridge_opening_cur%notfound;
-      if is_not_referenced('bridge_open_to_them_srf', 'bridge_opening_id', bridge_opening_rec.id, 'bridge_thematic_surface_id', bridge_thematic_surface_rec.id, schema_name) then 
-        dummy_id := delete_bridge_opening(bridge_opening_rec, schema_name);
-      end if;
-    end loop;
-    close bridge_opening_cur;
-
-    execute immediate 'delete from ' || schema_name || '.bridge_open_to_them_srf where bridge_thematic_surface_id=:1' using bridge_thematic_surface_rec.id;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_bridge_them_srf (id: ' || bridge_thematic_surface_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_bridge_thematic_surface(bridge_thematic_surface_rec bridge_thematic_surface%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_bridge_them_srf(bridge_thematic_surface_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.bridge_thematic_surface where id=:1 returning id into :2' using bridge_thematic_surface_rec.id, out deleted_id;
-    post_delete_bridge_them_srf(bridge_thematic_surface_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_bridge_thematic_surface (id: ' || bridge_thematic_surface_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_bridge_them_srf(bridge_thematic_surface_rec bridge_thematic_surface%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if bridge_thematic_surface_rec.lod2_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_thematic_surface_rec.lod2_multi_surface_id, schema_name);
-    end if;
-    if bridge_thematic_surface_rec.lod3_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_thematic_surface_rec.lod3_multi_surface_id, schema_name);
-    end if;
-    if bridge_thematic_surface_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_thematic_surface_rec.lod4_multi_surface_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(bridge_thematic_surface_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_bridge_them_srf (id: ' || bridge_thematic_surface_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from BRIDGE_INSTALLATION
-  */
-  procedure pre_delete_bridge_inst(bridge_installation_rec bridge_installation%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    bridge_thematic_surface_cur ref_cursor;
-    bridge_thematic_surface_rec bridge_thematic_surface%rowtype;
-  begin
-    open bridge_thematic_surface_cur for 'select * from ' || schema_name || '.bridge_thematic_surface where bridge_installation_id=:1' using bridge_installation_rec.id;
-    loop
-      fetch bridge_thematic_surface_cur into bridge_thematic_surface_rec;
-      exit when bridge_thematic_surface_cur%notfound;
-      dummy_id := delete_bridge_thematic_surface(bridge_thematic_surface_rec, schema_name);
-    end loop;
-    close bridge_thematic_surface_cur;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_bridge_inst (id: ' || bridge_installation_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_bridge_installation(bridge_installation_rec bridge_installation%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_bridge_inst(bridge_installation_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.bridge_installation where id=:1 returning id into :2' using bridge_installation_rec.id, out deleted_id;
-    post_delete_bridge_inst(bridge_installation_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_bridge_installation (id: ' || bridge_installation_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_bridge_inst(bridge_installation_rec bridge_installation%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if bridge_installation_rec.lod2_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_installation_rec.lod2_brep_id, schema_name);
-    end if;
-    if bridge_installation_rec.lod3_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_installation_rec.lod3_brep_id, schema_name);
-    end if;
-    if bridge_installation_rec.lod4_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_installation_rec.lod4_brep_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(bridge_installation_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_bridge_inst (id: ' || bridge_installation_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from BRIDGE_CONSTR_ELEMENT
-  */
-  procedure pre_delete_bridge_constr_elem(bridge_constr_element_rec bridge_constr_element%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    bridge_thematic_surface_cur ref_cursor;
-    bridge_thematic_surface_rec bridge_thematic_surface%rowtype;
-  begin
-    open bridge_thematic_surface_cur for 'select * from ' || schema_name || '.bridge_thematic_surface where bridge_constr_element_id=:1' using bridge_constr_element_rec.id;
-    loop
-      fetch bridge_thematic_surface_cur into bridge_thematic_surface_rec;
-      exit when bridge_thematic_surface_cur%notfound;
-      dummy_id := delete_bridge_thematic_surface(bridge_thematic_surface_rec, schema_name);
-    end loop;
-    close bridge_thematic_surface_cur;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_bridge_constr_elem (id: ' || bridge_constr_element_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_bridge_constr_element(bridge_constr_element_rec bridge_constr_element%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_bridge_constr_elem(bridge_constr_element_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.bridge_constr_element where id=:1 returning id into :2' using bridge_constr_element_rec.id, out deleted_id;
-    post_delete_bridge_constr_elem(bridge_constr_element_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_bridge_constr_element (id: ' || bridge_constr_element_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_bridge_constr_elem(bridge_constr_element_rec bridge_constr_element%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if bridge_constr_element_rec.lod2_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_constr_element_rec.lod2_brep_id, schema_name);
-    end if;
-    if bridge_constr_element_rec.lod3_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_constr_element_rec.lod3_brep_id, schema_name);
-    end if;
-    if bridge_constr_element_rec.lod4_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_constr_element_rec.lod4_brep_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(bridge_constr_element_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_bridge_constr_elem (id: ' || bridge_constr_element_rec.id || '): ' || SQLERRM);
-  end;
-  
-  /*
-    internal: delete from BRIDGE_ROOM
-  */
-  procedure pre_delete_bridge_room(bridge_room_rec bridge_room%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    bridge_thematic_surface_cur ref_cursor;
-    bridge_thematic_surface_rec bridge_thematic_surface%rowtype;
-    bridge_installation_cur ref_cursor;
-    bridge_installation_rec bridge_installation%rowtype;
-    bridge_furniture_cur ref_cursor;
-    bridge_furniture_rec bridge_furniture%rowtype;
-  begin
-    open bridge_thematic_surface_cur for 'select * from ' || schema_name || '.bridge_thematic_surface where bridge_room_id=:1' using bridge_room_rec.id;
-    loop
-      fetch bridge_thematic_surface_cur into bridge_thematic_surface_rec;
-      exit when bridge_thematic_surface_cur%notfound;
-      dummy_id := delete_bridge_thematic_surface(bridge_thematic_surface_rec, schema_name);
-    end loop;
-    close bridge_thematic_surface_cur;
-
-    open bridge_installation_cur for 'select * from ' || schema_name || '.bridge_installation where bridge_room_id=:1' using bridge_room_rec.id;
-    loop
-      fetch bridge_installation_cur into bridge_installation_rec;
-      exit when bridge_installation_cur%notfound;
-      dummy_id := delete_bridge_installation(bridge_installation_rec, schema_name);
-    end loop;
-    close bridge_installation_cur;
-
-    open bridge_furniture_cur for 'select * from ' || schema_name || '.bridge_furniture where bridge_room_id=:1' using bridge_room_rec.id;
-    loop
-      fetch bridge_furniture_cur into bridge_furniture_rec;
-      exit when bridge_furniture_cur%notfound;
-      dummy_id := delete_bridge_furniture(bridge_furniture_rec, schema_name);
-    end loop;
-    close bridge_furniture_cur;
-   exception
-    when others then
-      dbms_output.put_line('pre_delete_bridge_room (id: ' || bridge_room_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_bridge_room(bridge_room_rec bridge_room%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_bridge_room(bridge_room_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.bridge_room where id=:1 returning id into :2' using bridge_room_rec.id, out deleted_id;
-    post_delete_bridge_room(bridge_room_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_bridge_room (id: ' || bridge_room_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_bridge_room(bridge_room_rec bridge_room%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if bridge_room_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_room_rec.lod4_multi_surface_id, schema_name);
-    end if;
-    if bridge_room_rec.lod4_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_room_rec.lod4_solid_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(bridge_room_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_bridge_room (id: ' || bridge_room_rec.id || '): ' || SQLERRM);
-  end;
-  
-  /*
-    internal: delete from BRIDGE_FURNITURE
-  */
-  function delete_bridge_furniture(bridge_furniture_rec bridge_furniture%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.bridge_furniture where id=:1 returning id into :2' using bridge_furniture_rec.id, out deleted_id;
-    post_delete_bridge_furniture(bridge_furniture_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_bridge_furniture (id: ' || bridge_furniture_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_bridge_furniture(bridge_furniture_rec bridge_furniture%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if bridge_furniture_rec.lod4_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_furniture_rec.lod4_brep_id, schema_name);
-    end if;
-    dummy_id := intern_delete_cityobject(bridge_furniture_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_bridge_furniture (id: ' || bridge_furniture_rec.id || '): ' || SQLERRM);
-  end;
-  
-  /*
-    internal: delete from BRIDGE_OPENING
-  */
-  procedure pre_delete_bridge_opening(bridge_opening_rec bridge_opening%rowtype, schema_name varchar2 := user)
-  is
-  begin
-    execute immediate 'delete from ' || schema_name || '.bridge_open_to_them_srf where bridge_opening_id=:1' using bridge_opening_rec.id;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_bridge_opening (id: ' || bridge_opening_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_bridge_opening(bridge_opening_rec bridge_opening%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_bridge_opening(bridge_opening_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.bridge_opening where id=:1 returning id into :2' using bridge_opening_rec.id, out deleted_id;
-    post_delete_bridge_opening(bridge_opening_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_bridge_opening (id: ' || bridge_opening_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_bridge_opening(bridge_opening_rec bridge_opening%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-    address_cur ref_cursor;
-    address_id number;
-  begin
-    if bridge_opening_rec.lod3_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_opening_rec.lod3_multi_surface_id, schema_name);
-    end if;
-    if bridge_opening_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(bridge_opening_rec.lod4_multi_surface_id, schema_name);
-    end if;
-
-    -- delete addresses not being referenced from buildings and openings any more
-    open address_cur for 'select a.id from ' || schema_name || '.address a left outer join ' || schema_name || '.address_to_bridge ab
-        on a.id=ab.address_id where a.id=:1 and ab.address_id is null' using bridge_opening_rec.address_id;
-    loop
-      fetch address_cur into address_id;
-      exit when address_cur%notfound;
-      if is_not_referenced('bridge_opening', 'address_id', address_id, 'id', bridge_opening_rec.id, schema_name) then
-        dummy_id := delete_address(address_id, schema_name);
-      end if;   
-    end loop;
-    close address_cur;
-
-    dummy_id := intern_delete_cityobject(bridge_opening_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_bridge_opening (id: ' || bridge_opening_rec.id || '): ' || SQLERRM);
-  end;
-  
-   /*
-    internal: delete from TUNNEL
-  */
-  procedure pre_delete_tunnel(tunnel_rec tunnel%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    tunnel_part_cur ref_cursor;
-    tunnel_part_rec tunnel%rowtype;
-    tunnel_thematic_surface_cur ref_cursor;
-    tunnel_thematic_surface_rec tunnel_thematic_surface%rowtype;
-    tunnel_installation_cur ref_cursor;
-    tunnel_installation_rec tunnel_installation%rowtype;
-    tunnel_hollow_space_cur ref_cursor;
-    tunnel_hollow_space_rec tunnel_hollow_space%rowtype;    
-  begin
-    open tunnel_part_cur for 'select * from ' || schema_name || '.tunnel where id!=:1 and tunnel_parent_id=:2' using tunnel_rec.id, tunnel_rec.id;
-    loop
-      fetch tunnel_part_cur into tunnel_part_rec;
-      exit when tunnel_part_cur%notfound;
-      dummy_id := delete_tunnel(tunnel_part_rec, schema_name);
-    end loop;
-    close tunnel_part_cur;
-    
-    open tunnel_thematic_surface_cur for 'select * from ' || schema_name || '.tunnel_thematic_surface where tunnel_id=:1' using tunnel_rec.id;
-    loop
-      fetch tunnel_thematic_surface_cur into tunnel_thematic_surface_rec;
-      exit when tunnel_thematic_surface_cur%notfound;
-      dummy_id := delete_tunnel_thematic_surface(tunnel_thematic_surface_rec, schema_name);
-    end loop;
-    close tunnel_thematic_surface_cur;
-    
-    open tunnel_installation_cur for 'select * from ' || schema_name || '.tunnel_installation where tunnel_id=:1' using tunnel_rec.id;
-    loop
-      fetch tunnel_installation_cur into tunnel_installation_rec;
-      exit when tunnel_installation_cur%notfound;
-      dummy_id := delete_tunnel_installation(tunnel_installation_rec, schema_name);
-    end loop;
-    close tunnel_installation_cur;
-    
-    open tunnel_hollow_space_cur for 'select * from ' || schema_name || '.tunnel_hollow_space where tunnel_id=:1' using tunnel_rec.id;
-    loop
-      fetch tunnel_hollow_space_cur into tunnel_hollow_space_rec;
-      exit when tunnel_hollow_space_cur%notfound;
-      dummy_id := delete_tunnel_hollow_space(tunnel_hollow_space_rec, schema_name);
-    end loop;
-    close tunnel_hollow_space_cur;
-        
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_tunnel (id: ' || tunnel_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_tunnel(tunnel_rec tunnel%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_tunnel(tunnel_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.tunnel where id=:1 returning id into :2' using tunnel_rec.id, out deleted_id;
-    post_delete_tunnel(tunnel_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_tunnel (id: ' || tunnel_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_tunnel(tunnel_rec tunnel%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if tunnel_rec.lod1_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_rec.lod1_multi_surface_id, schema_name);
-    end if; 
-    if tunnel_rec.lod2_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_rec.lod2_multi_surface_id, schema_name);
-    end if;
-    if tunnel_rec.lod3_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_rec.lod3_multi_surface_id, schema_name);
-    end if;
-    if tunnel_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_rec.lod4_multi_surface_id, schema_name);
-    end if;
-
-    if tunnel_rec.lod1_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_rec.lod1_solid_id, schema_name);
-    end if; 
-    if tunnel_rec.lod2_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_rec.lod2_solid_id, schema_name);
-    end if;
-    if tunnel_rec.lod3_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_rec.lod3_solid_id, schema_name);
-    end if;
-    if tunnel_rec.lod4_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_rec.lod4_solid_id, schema_name);
-    end if;
-    
-    dummy_id := intern_delete_cityobject(tunnel_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_tunnel (id: ' || tunnel_rec.id || '): ' || SQLERRM);
-  end;
-  
-  /*
-    internal: delete from TUNNEL_THEMATIC_SURFACE
-  */
-  procedure pre_delete_tunnel_them_srf(tunnel_thematic_surface_rec tunnel_thematic_surface%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    tunnel_opening_cur ref_cursor;
-    tunnel_opening_rec tunnel_opening%rowtype;
-  begin
-    -- delete tunnel openings not being referenced by a tunnel thematic surface any more
-    open tunnel_opening_cur for 'select o.* from ' || schema_name || '.tunnel_opening o, ' || schema_name || '.tunnel_open_to_them_srf otm 
-        where o.id=otm.tunnel_opening_id and otm.tunnel_thematic_surface_id=:1' using tunnel_thematic_surface_rec.id;
-    loop
-      fetch tunnel_opening_cur into tunnel_opening_rec;
-      exit when tunnel_opening_cur%notfound;
-      if is_not_referenced('tunnel_open_to_them_srf', 'tunnel_opening_id', tunnel_opening_rec.id, 'tunnel_thematic_surface_id', tunnel_thematic_surface_rec.id, schema_name) then 
-        dummy_id := delete_tunnel_opening(tunnel_opening_rec, schema_name);
-      end if;
-    end loop;
-    close tunnel_opening_cur;
-
-    execute immediate 'delete from ' || schema_name || '.tunnel_open_to_them_srf where tunnel_thematic_surface_id=:1' using tunnel_thematic_surface_rec.id;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_tunnel_them_srf (id: ' || tunnel_thematic_surface_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_tunnel_thematic_surface(tunnel_thematic_surface_rec tunnel_thematic_surface%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_tunnel_them_srf(tunnel_thematic_surface_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.tunnel_thematic_surface where id=:1 returning id into :2' using tunnel_thematic_surface_rec.id, out deleted_id;
-    post_delete_tunnel_them_srf(tunnel_thematic_surface_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_tunnel_thematic_surface (id: ' || tunnel_thematic_surface_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_tunnel_them_srf(tunnel_thematic_surface_rec tunnel_thematic_surface%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if tunnel_thematic_surface_rec.lod2_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_thematic_surface_rec.lod2_multi_surface_id, schema_name);
-    end if;
-    if tunnel_thematic_surface_rec.lod3_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_thematic_surface_rec.lod3_multi_surface_id, schema_name);
-    end if;
-    if tunnel_thematic_surface_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_thematic_surface_rec.lod4_multi_surface_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(tunnel_thematic_surface_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_tunnel_them_srf (id: ' || tunnel_thematic_surface_rec.id || '): ' || SQLERRM);
-  end;
-  
-  /*
-    internal: delete from TUNNEL_OPENING
-  */
-  procedure pre_delete_tunnel_opening(tunnel_opening_rec tunnel_opening%rowtype, schema_name varchar2 := user)
-  is
-  begin
-    execute immediate 'delete from ' || schema_name || '.tunnel_open_to_them_srf where tunnel_opening_id=:1' using tunnel_opening_rec.id;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_tunnel_opening (id: ' || tunnel_opening_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_tunnel_opening(tunnel_opening_rec tunnel_opening%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_tunnel_opening(tunnel_opening_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.tunnel_opening where id=:1 returning id into :2' using tunnel_opening_rec.id, out deleted_id;
-    post_delete_tunnel_opening(tunnel_opening_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_tunnel_opening (id: ' || tunnel_opening_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_tunnel_opening(tunnel_opening_rec tunnel_opening%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if tunnel_opening_rec.lod3_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_opening_rec.lod3_multi_surface_id, schema_name);
-    end if;
-    if tunnel_opening_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_opening_rec.lod4_multi_surface_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(tunnel_opening_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_tunnel_opening (id: ' || tunnel_opening_rec.id || '): ' || SQLERRM);
-  end;
-  
-  /*
-    internal: delete from TUNNEL_FURNITURE
-  */
-  function delete_tunnel_furniture(tunnel_furniture_rec tunnel_furniture%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.tunnel_furniture where id=:1 returning id into :2' using tunnel_furniture_rec.id, out deleted_id;
-    post_delete_tunnel_furniture(tunnel_furniture_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_tunnel_furniture (id: ' || tunnel_furniture_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_tunnel_furniture(tunnel_furniture_rec tunnel_furniture%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if tunnel_furniture_rec.lod4_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_furniture_rec.lod4_brep_id, schema_name);
-    end if;
-    dummy_id := intern_delete_cityobject(tunnel_furniture_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_tunnel_furniture (id: ' || tunnel_furniture_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from TUNNEL_INSTALLATION
-  */
-  procedure pre_delete_tunnel_inst(tunnel_installation_rec tunnel_installation%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    tunnel_thematic_surface_cur ref_cursor;
-    tunnel_thematic_surface_rec tunnel_thematic_surface%rowtype;
-  begin
-    open tunnel_thematic_surface_cur for 'select * from ' || schema_name || '.tunnel_thematic_surface where tunnel_installation_id=:1' using tunnel_installation_rec.id;
-    loop
-      fetch tunnel_thematic_surface_cur into tunnel_thematic_surface_rec;
-      exit when tunnel_thematic_surface_cur%notfound;
-      dummy_id := delete_tunnel_thematic_surface(tunnel_thematic_surface_rec, schema_name);
-    end loop;
-    close tunnel_thematic_surface_cur;
-  exception
-    when others then
-      dbms_output.put_line('pre_delete_tunnel_inst (id: ' || tunnel_installation_rec.id || '): ' || SQLERRM);
-  end;
-  
-  function delete_tunnel_installation(tunnel_installation_rec tunnel_installation%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_tunnel_inst(tunnel_installation_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.tunnel_installation where id=:1 returning id into :2' using tunnel_installation_rec.id, out deleted_id;
-    post_delete_tunnel_inst(tunnel_installation_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_tunnel_installation (id: ' || tunnel_installation_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_tunnel_inst(tunnel_installation_rec tunnel_installation%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if tunnel_installation_rec.lod2_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_installation_rec.lod2_brep_id, schema_name);
-    end if;
-    if tunnel_installation_rec.lod3_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_installation_rec.lod3_brep_id, schema_name);
-    end if;
-    if tunnel_installation_rec.lod4_brep_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_installation_rec.lod4_brep_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(tunnel_installation_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_tunnel_inst (id: ' || tunnel_installation_rec.id || '): ' || SQLERRM);
-  end;
-
-  /*
-    internal: delete from TUNNEL_HOLLOW_SPACE
-  */
-  procedure pre_delete_tunnel_hollow_space(tunnel_hollow_space_rec tunnel_hollow_space%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    tunnel_thematic_surface_cur ref_cursor;
-    tunnel_thematic_surface_rec tunnel_thematic_surface%rowtype;
-    tunnel_installation_cur ref_cursor;
-    tunnel_installation_rec tunnel_installation%rowtype;
-    tunnel_furniture_cur ref_cursor;
-    tunnel_furniture_rec tunnel_furniture%rowtype;
-  begin
-    open tunnel_thematic_surface_cur for 'select * from ' || schema_name || '.tunnel_thematic_surface where tunnel_hollow_space_id=:1' using tunnel_hollow_space_rec.id;
-    loop
-      fetch tunnel_thematic_surface_cur into tunnel_thematic_surface_rec;
-      exit when tunnel_thematic_surface_cur%notfound;
-      dummy_id := delete_tunnel_thematic_surface(tunnel_thematic_surface_rec, schema_name);
-    end loop;
-    close tunnel_thematic_surface_cur;
-    
-    open tunnel_installation_cur for 'select * from ' || schema_name || '.tunnel_installation where tunnel_hollow_space_id=:1' using tunnel_hollow_space_rec.id;
-    loop
-      fetch tunnel_installation_cur into tunnel_installation_rec;
-      exit when tunnel_installation_cur%notfound;
-      dummy_id := delete_tunnel_installation(tunnel_installation_rec, schema_name);
-    end loop;
-    close tunnel_installation_cur;
-
-    open tunnel_furniture_cur for 'select * from ' || schema_name || '.tunnel_furniture where tunnel_hollow_space_id=:1' using tunnel_hollow_space_rec.id;
-    loop
-      fetch tunnel_furniture_cur into tunnel_furniture_rec;
-      exit when tunnel_furniture_cur%notfound;
-      dummy_id := delete_tunnel_furniture(tunnel_furniture_rec, schema_name);
-    end loop;
-    close tunnel_furniture_cur;
-   exception
-    when others then
-      dbms_output.put_line('pre_delete_tunnel_hollow_space (id: ' || tunnel_hollow_space_rec.id || '): ' || SQLERRM);
-  end;
-
-  function delete_tunnel_hollow_space(tunnel_hollow_space_rec tunnel_hollow_space%rowtype, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    pre_delete_tunnel_hollow_space(tunnel_hollow_space_rec, schema_name);
-    execute immediate 'delete from ' || schema_name || '.tunnel_hollow_space where id=:1 returning id into :2' using tunnel_hollow_space_rec.id, out deleted_id;
-    post_delete_tunnel_hollowspace(tunnel_hollow_space_rec, schema_name);
-    return deleted_id;
-  exception
-    when others then
-      dbms_output.put_line('delete_tunnel_hollow_space (id: ' || tunnel_hollow_space_rec.id || '): ' || SQLERRM);
-  end;
-
-  procedure post_delete_tunnel_hollowspace(tunnel_hollow_space_rec tunnel_hollow_space%rowtype, schema_name varchar2 := user)
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-  begin
-    if tunnel_hollow_space_rec.lod4_multi_surface_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_hollow_space_rec.lod4_multi_surface_id, schema_name);
-    end if;
-    if tunnel_hollow_space_rec.lod4_solid_id is not null then
-      dummy_ids := intern_delete_surface_geometry(tunnel_hollow_space_rec.lod4_solid_id, schema_name);
-    end if;
-
-    dummy_id := intern_delete_cityobject(tunnel_hollow_space_rec.id, schema_name);
-  exception
-    when others then
-      dbms_output.put_line('post_delete_tunnel_hollowspace (id: ' || tunnel_hollow_space_rec.id || '): ' || SQLERRM);
-  end;
-  
-  /*
-    PUBLIC API PROCEDURES
-  */
-  function delete_surface_geometry(pid number, clean_apps int := 0, schema_name varchar2 := user) return id_array
-  is
-    deleted_ids id_array := id_array();
-    dummy_ids id_array := id_array();
-  begin
-    deleted_ids := intern_delete_surface_geometry(pid, schema_name);
-
-    if clean_apps <> 0 then
-      dummy_ids := cleanup_appearances(0, schema_name);
-    end if;
-
-    return deleted_ids;
-  exception
-    when no_data_found then
-      return deleted_ids;
-    when others then
-      dbms_output.put_line('delete_surface_geometry (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_implicit_geometry(pid number, clean_apps int := 0, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    dummy_ids id_array := id_array();
-  begin
-    deleted_id := intern_delete_implicit_geom(pid, schema_name);
-    
-    if clean_apps <> 0 then
-      dummy_ids := cleanup_appearances(0, schema_name);
-    end if;
-
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_implicit_geometry (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_grid_coverage(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    deleted_id := intern_delete_grid_coverage(pid, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_grid_coverage (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_citymodel(pid number, delete_members int := 0, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    citymodel_rec citymodel%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.citymodel where id=:1'
-      into citymodel_rec
-      using pid;
-
-    deleted_id := delete_citymodel(citymodel_rec, delete_members, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_citymodel (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_genericattrib(pid number, delete_members int := 0, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    deleted_id := intern_delete_genericattrib(pid, delete_members, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_genericattrib (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_external_reference(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.external_reference where id=:1 returning id into :2' using pid, out deleted_id;
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_external_reference (id: ' || pid || '): ' || SQLERRM);
-  end;
-  
-  function delete_appearance(pid number, cleanup int := 0, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    appearance_rec appearance%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.appearance where id=:1'
-      into appearance_rec
-      using pid;
-
-    deleted_id := delete_appearance(appearance_rec, cleanup, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_appearance (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_surface_data(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    surface_data_rec surface_data%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.surface_data where id=:1'
-      into surface_data_rec
-      using pid;
-
-    deleted_id := delete_surface_data(surface_data_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_surface_data (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_cityobjectgroup(pid number, delete_members int := 0, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    cityobjectgroup_rec cityobjectgroup%rowtype;
-  begin
-    dbms_output.put_line('delete_cityobjectgroup (id: ' || pid || ') ...');
-
-    execute immediate 'select * from ' || schema_name || '.cityobjectgroup where id=:1'
-      into cityobjectgroup_rec
-      using pid;
-
-    dbms_output.put_line('delete_cityobjectgroup(rec, delete_members, schema_name) ...');      
-    deleted_id := delete_cityobjectgroup(cityobjectgroup_rec, delete_members, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      dbms_output.put_line('No record found. (Call intern_delete_cityobject instead ...)');
-      deleted_id := intern_delete_cityobject(pid, schema_name);
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_cityobjectgroup (id: ' || pid || '): ' || SQLERRM);
-  end;
-  
-  function delete_address(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-  begin
-    execute immediate 'delete from ' || schema_name || '.address_to_building where address_id=:1' using pid;
-    execute immediate 'delete from ' || schema_name || '.address_to_bridge where address_id=:1' using pid;
-    execute immediate 'update ' || schema_name || '.opening set address_id=null where address_id=:1' using pid;
-    execute immediate 'update ' || schema_name || '.bridge_opening set address_id=null where address_id=:1' using pid;
-    execute immediate 'delete from ' || schema_name || '.address where id=:1' using pid;
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_address (id: ' || pid || '): ' || SQLERRM);
-  end;
-  
-  function delete_building(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    building_rec building%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.building where id=:1'
-      into building_rec
-      using pid;
-
-    deleted_id := delete_building(building_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_building (id: ' || pid || '): ' || SQLERRM);
-  end;
-  
-  function delete_thematic_surface(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    thematic_surface_rec thematic_surface%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.thematic_surface where id=:1'
-      into thematic_surface_rec
-      using pid;
-
-    deleted_id := delete_thematic_surface(thematic_surface_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_thematic_surface (id: ' || pid || '): ' || SQLERRM);
-  end;
-  
-  function delete_building_installation(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    building_installation_rec building_installation%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.building_installation where id=:1'
-      into building_installation_rec
-      using pid;
-
-    deleted_id := delete_building_installation(building_installation_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_building_installation (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_opening(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    opening_rec opening%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.opening where id=:1'
-      into opening_rec
-      using pid;
-    
-    deleted_id := delete_opening(opening_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_opening (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_room(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    room_rec room%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.room where id=:1'
-      into room_rec
-      using pid;
-
-    deleted_id := delete_room(room_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_room (id: ' || pid || '): ' || SQLERRM);
-  end;
-  
-  function delete_building_furniture(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    building_furniture_rec building_furniture%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.building_furniture where id=:1'
-      into building_furniture_rec
-      using pid;
-
-    deleted_id := delete_building_furniture(building_furniture_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_building_furniture (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_city_furniture(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    city_furniture_rec city_furniture%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.city_furniture where id=:1'
-      into city_furniture_rec
-      using pid;
-
-    deleted_id := delete_city_furniture(city_furniture_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_city_furniture (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_generic_cityobject(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    generic_cityobject_rec generic_cityobject%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.generic_cityobject where id=:1'
-      into generic_cityobject_rec
-      using pid;
-
-    deleted_id := delete_generic_cityobject(generic_cityobject_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_generic_cityobject (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_land_use(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    land_use_rec land_use%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.land_use where id=:1'
-      into land_use_rec
-      using pid;
-
-    deleted_id := delete_land_use(land_use_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_land_use (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_plant_cover(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    plant_cover_rec plant_cover%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.plant_cover where id=:1'
-      into plant_cover_rec
-      using pid;
-
-    deleted_id := delete_plant_cover(plant_cover_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_plant_cover (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_solitary_veg_obj(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    solitary_veg_obj_rec solitary_vegetat_object%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.solitary_vegetat_object where id=:1'
-      into solitary_veg_obj_rec
-      using pid;
-
-    deleted_id := delete_solitary_veg_obj(solitary_veg_obj_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_solitary_veg_obj (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_transport_complex(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    transport_complex_rec transportation_complex%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.transportation_complex where id=:1'
-      into transport_complex_rec
-      using pid;
-
-    deleted_id := delete_transport_complex(transport_complex_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_transport_complex (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_traffic_area(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    traffic_area_rec traffic_area%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.traffic_area where id=:1'
-      into traffic_area_rec
-      using pid;
-
-    deleted_id := delete_traffic_area(traffic_area_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_traffic_area (id: ' || pid || '): ' || SQLERRM);
-  end;
-  
-  function delete_waterbody(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    waterbody_rec waterbody%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.waterbody where id=:1'
-      into waterbody_rec
-      using pid;
-
-    deleted_id := delete_waterbody(waterbody_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_waterbody (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_waterbnd_surface(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    waterbnd_surface_rec waterboundary_surface%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.waterboundary_surface where id=:1'
-      into waterbnd_surface_rec
-      using pid;
-
-    deleted_id := delete_waterbnd_surface(waterbnd_surface_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_waterbnd_surface (id: ' || pid || '): ' || SQLERRM);
-  end;
-  
-  function delete_relief_feature(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    relief_feature_rec relief_feature%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.relief_feature where id=:1'
-      into relief_feature_rec
-      using pid;
-
-    deleted_id := delete_relief_feature(relief_feature_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_relief_feature (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_relief_component(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    relief_component_rec relief_component%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.relief_component where id=:1'
-      into relief_component_rec
-      using pid;
-
-    deleted_id := delete_relief_component(relief_component_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_relief_component (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_tin_relief(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    tin_relief_rec tin_relief%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.tin_relief where id=:1'
-      into tin_relief_rec
-      using pid;
-
-    deleted_id := delete_tin_relief(tin_relief_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_tin_relief (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_masspoint_relief(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    masspoint_relief_rec masspoint_relief%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.masspoint_relief where id=:1'
-      into masspoint_relief_rec
-      using pid;
-
-    deleted_id := delete_masspoint_relief(masspoint_relief_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_masspoint_relief (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_breakline_relief(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    breakline_relief_rec breakline_relief%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.breakline_relief where id=:1'
-      into breakline_relief_rec
-      using pid;
-
-    deleted_id := delete_breakline_relief(breakline_relief_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_breakline_relief (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_raster_relief(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    raster_relief_rec raster_relief%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.raster_relief where id=:1'
-      into raster_relief_rec
-      using pid;
-
-    deleted_id := delete_raster_relief(raster_relief_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_raster_relief (id: ' || pid || '): ' || SQLERRM);
-  end;
-  
-  function delete_bridge(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    bridge_rec bridge%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.bridge where id=:1'
-      into bridge_rec
-      using pid;
-
-    deleted_id := delete_bridge(bridge_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_bridge (id: ' || pid || '): ' || SQLERRM);
-  end;
-  
-  function delete_bridge_thematic_surface(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    bridge_thematic_surface_rec bridge_thematic_surface%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.bridge_thematic_surface where id=:1'
-      into bridge_thematic_surface_rec
-      using pid;
-
-    deleted_id := delete_bridge_thematic_surface(bridge_thematic_surface_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_bridge_thematic_surface (id: ' || pid || '): ' || SQLERRM);
-  end;
-  
-  function delete_bridge_installation(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    bridge_installation_rec bridge_installation%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.bridge_installation where id=:1'
-      into bridge_installation_rec
-      using pid;
-
-    deleted_id := delete_bridge_installation(bridge_installation_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_bridge_installation (id: ' || pid || '): ' || SQLERRM);
-  end;
-  
-  function delete_bridge_constr_element(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    bridge_constr_element_rec bridge_constr_element%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.bridge_constr_element where id=:1'
-      into bridge_constr_element_rec
-      using pid;
-
-    deleted_id := delete_bridge_constr_element(bridge_constr_element_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_bridge_constr_element (id: ' || pid || '): ' || SQLERRM);
-  end;
-  
-  function delete_bridge_opening(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    bridge_opening_rec bridge_opening%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.bridge_opening where id=:1'
-      into bridge_opening_rec
-      using pid;
-    
-    deleted_id := delete_bridge_opening(bridge_opening_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_bridge_opening (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_bridge_room(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    bridge_room_rec bridge_room%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.bridge_room where id=:1'
-      into bridge_room_rec
-      using pid;
-
-    deleted_id := delete_bridge_room(bridge_room_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_bridge_room (id: ' || pid || '): ' || SQLERRM);
-  end;
-  
-  function delete_bridge_furniture(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    bridge_furniture_rec bridge_furniture%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.bridge_furniture where id=:1'
-      into bridge_furniture_rec
-      using pid;
-
-    deleted_id := delete_bridge_furniture(bridge_furniture_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_bridge_furniture (id: ' || pid || '): ' || SQLERRM);
-  end; 
-  
-  function delete_tunnel(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    tunnel_rec tunnel%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.tunnel where id=:1'
-      into tunnel_rec
-      using pid;
-
-    deleted_id := delete_tunnel(tunnel_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_tunnel (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_tunnel_thematic_surface(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    tunnel_thematic_surface_rec tunnel_thematic_surface%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.tunnel_thematic_surface where id=:1'
-      into tunnel_thematic_surface_rec
-      using pid;
-
-    deleted_id := delete_tunnel_thematic_surface(tunnel_thematic_surface_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_tunnel_thematic_surface (id: ' || pid || '): ' || SQLERRM);
-  end;
-  
-  function delete_tunnel_installation(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    tunnel_installation_rec tunnel_installation%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.tunnel_installation where id=:1'
-      into tunnel_installation_rec
-      using pid;
-
-    deleted_id := delete_tunnel_installation(tunnel_installation_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_tunnel_installation (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_tunnel_opening(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    tunnel_opening_rec tunnel_opening%rowtype;
-  begin
-    execute immediate 'select * from ' || schema_name || '.tunnel_opening where id=:1'
-      into tunnel_opening_rec
-      using pid;
-    
-    deleted_id := delete_tunnel_opening(tunnel_opening_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_tunnel_opening (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_tunnel_hollow_space(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    tunnel_hollow_space_rec tunnel_hollow_space%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.tunnel_hollow_space where id=:1'
-      into tunnel_hollow_space_rec
-      using pid;
-
-    deleted_id := delete_tunnel_hollow_space(tunnel_hollow_space_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_tunnel_hollow_space (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  function delete_tunnel_furniture(pid number, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    tunnel_furniture_rec tunnel_furniture%rowtype;    
-  begin
-    execute immediate 'select * from ' || schema_name || '.tunnel_furniture where id=:1'
-      into tunnel_furniture_rec
-      using pid;
-
-    deleted_id := delete_tunnel_furniture(tunnel_furniture_rec, schema_name);
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_tunnel_furniture (id: ' || pid || '): ' || SQLERRM);
-  end;
-
-  /*
-  cleanup functions
-  */
-  function cleanup_implicit_geometries(clean_apps int := 0, schema_name varchar2 := user) return id_array
-  is
-    deleted_id number;
-    deleted_ids id_array := id_array();
-    dummy_ids id_array := id_array();
-    implicit_geom_cur ref_cursor;
-    implicit_geom_id number;
-  begin
-    open implicit_geom_cur for 'select ig.id from ' || schema_name || '.implicit_geometry ig
-        left join ' || schema_name || '.BUILDING_FURNITURE bldf4 on bldf4.LOD4_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.BUILDING_INSTALLATION bldi2 on bldi2.LOD2_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.BUILDING_INSTALLATION bldi3 on bldi3.LOD3_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.BUILDING_INSTALLATION bldi4 on bldi4.LOD4_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.OPENING op3 on op3.LOD3_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.OPENING op4 on op4.LOD4_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.CITY_FURNITURE cf1 on cf1.LOD1_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.CITY_FURNITURE cf2 on cf2.LOD2_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.CITY_FURNITURE cf3 on cf3.LOD3_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.CITY_FURNITURE cf4 on cf4.LOD4_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.GENERIC_CITYOBJECT gco0 on gco0.LOD0_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.GENERIC_CITYOBJECT gco1 on gco1.LOD1_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.GENERIC_CITYOBJECT gco2 on gco2.LOD2_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.GENERIC_CITYOBJECT gco3 on gco3.LOD3_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.GENERIC_CITYOBJECT gco4 on gco4.LOD4_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.SOLITARY_VEGETAT_OBJECT svo1 on svo1.LOD1_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.SOLITARY_VEGETAT_OBJECT svo2 on svo2.LOD2_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.SOLITARY_VEGETAT_OBJECT svo3 on svo3.LOD3_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.SOLITARY_VEGETAT_OBJECT svo4 on svo4.LOD4_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.BRIDGE_CONSTR_ELEMENT bce1 on bce1.LOD1_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.BRIDGE_CONSTR_ELEMENT bce2 on bce2.LOD2_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.BRIDGE_CONSTR_ELEMENT bce3 on bce3.LOD3_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.BRIDGE_CONSTR_ELEMENT bce4 on bce4.LOD4_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.BRIDGE_FURNITURE brdf4 on brdf4.LOD4_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.BRIDGE_INSTALLATION brdi2 on brdi2.LOD2_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.BRIDGE_INSTALLATION brdi3 on brdi3.LOD3_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.BRIDGE_INSTALLATION brdi4 on brdi4.LOD4_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.BRIDGE_OPENING brdo3 on brdo3.LOD3_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.BRIDGE_OPENING brdo4 on brdo4.LOD4_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.TUNNEL_FURNITURE tunf4 on tunf4.LOD4_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.TUNNEL_INSTALLATION tuni2 on tuni2.LOD2_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.TUNNEL_INSTALLATION tuni3 on tuni3.LOD3_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.TUNNEL_INSTALLATION tuni4 on tuni4.LOD4_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.TUNNEL_OPENING tuno3 on tuno3.LOD3_IMPLICIT_REP_ID = ig.id
-        left join ' || schema_name || '.TUNNEL_OPENING tuno4 on tuno4.LOD4_IMPLICIT_REP_ID = ig.id
-        where (bldf4.LOD4_IMPLICIT_REP_ID is null) and
-              (bldi2.LOD2_IMPLICIT_REP_ID is null) and
-              (bldi3.LOD3_IMPLICIT_REP_ID is null) and
-              (bldi4.LOD4_IMPLICIT_REP_ID is null) and
-              (op3.LOD3_IMPLICIT_REP_ID is null) and
-              (op4.LOD4_IMPLICIT_REP_ID is null) and
-              (cf1.LOD1_IMPLICIT_REP_ID is null) and
-              (cf2.LOD2_IMPLICIT_REP_ID is null) and
-              (cf3.LOD3_IMPLICIT_REP_ID is null) and
-              (cf4.LOD4_IMPLICIT_REP_ID is null) and
-              (gco0.LOD0_IMPLICIT_REP_ID is null) and
-              (gco1.LOD1_IMPLICIT_REP_ID is null) and
-              (gco2.LOD2_IMPLICIT_REP_ID is null) and
-              (gco3.LOD3_IMPLICIT_REP_ID is null) and
-              (gco4.LOD4_IMPLICIT_REP_ID is null) and
-              (svo1.LOD1_IMPLICIT_REP_ID is null) and
-              (svo2.LOD2_IMPLICIT_REP_ID is null) and
-              (svo3.LOD3_IMPLICIT_REP_ID is null) and
-              (svo4.LOD4_IMPLICIT_REP_ID is null) and
-              (bce1.LOD1_IMPLICIT_REP_ID is null) and
-              (bce2.LOD2_IMPLICIT_REP_ID is null) and
-              (bce3.LOD3_IMPLICIT_REP_ID is null) and
-              (bce4.LOD4_IMPLICIT_REP_ID is null) and
-              (brdf4.LOD4_IMPLICIT_REP_ID is null) and
-              (brdi2.LOD2_IMPLICIT_REP_ID is null) and
-              (brdi3.LOD3_IMPLICIT_REP_ID is null) and
-              (brdi4.LOD4_IMPLICIT_REP_ID is null) and
-              (brdo3.LOD3_IMPLICIT_REP_ID is null) and
-              (brdo4.LOD4_IMPLICIT_REP_ID is null) and
-              (tunf4.LOD4_IMPLICIT_REP_ID is null) and
-              (tuni2.LOD2_IMPLICIT_REP_ID is null) and
-              (tuni3.LOD3_IMPLICIT_REP_ID is null) and
-              (tuni4.LOD4_IMPLICIT_REP_ID is null) and
-              (tuno3.LOD3_IMPLICIT_REP_ID is null) and
-              (tuno4.LOD4_IMPLICIT_REP_ID is null)';
-    loop
-      fetch implicit_geom_cur into implicit_geom_id;
-      exit when implicit_geom_cur%notfound;
-      deleted_id := intern_delete_implicit_geom(implicit_geom_id, schema_name);
-      deleted_ids.extend;
-      deleted_ids(deleted_ids.count) := deleted_id;
-    end loop;
-    close implicit_geom_cur;
-    
-    if clean_apps <> 0 then
-      dummy_ids := cleanup_appearances(0, schema_name);
-    end if;
-
-    return deleted_ids;
-  exception
-    when others then
-      dbms_output.put_line('cleanup_implicit_geometries: ' || SQLERRM);
-  end;
-
-  function cleanup_grid_coverages(schema_name varchar2 := user) return id_array
-  is
-    deleted_id number;
-    deleted_ids id_array := id_array();
-    grid_coverage_cur ref_cursor;
-    grid_coverage_id number;
-  begin
-    open grid_coverage_cur for 'select gc.id from ' || schema_name || '.grid_coverage gc left outer join ' || schema_name || '.raster_relief rr
-        on gc.id=rr.coverage_id where rr.coverage_id is null';
-    loop
-      fetch grid_coverage_cur into grid_coverage_id;
-      exit when grid_coverage_cur%notfound;
-      execute immediate 'delete from ' || schema_name || '.grid_coverage where id=:1 returning id into :2' using grid_coverage_id, out deleted_id;
-      deleted_ids.extend;
-      deleted_ids(deleted_ids.count) := deleted_id;
-    end loop;
-    close grid_coverage_cur;
-
-    return deleted_ids;
-  exception
-    when others then
-      dbms_output.put_line('cleanup_grid_coverages: ' || SQLERRM);
-  end;
-
-  function cleanup_tex_images(schema_name varchar2 := user) return id_array
-  is
-    deleted_id number;
-    deleted_ids id_array := id_array();
-    tex_image_cur ref_cursor;
-    tex_image_id number;
-  begin
-    open tex_image_cur for 'select ti.id from ' || schema_name || '.tex_image ti left outer join ' || schema_name || '.surface_data sd
-        on ti.id=sd.tex_image_id where sd.tex_image_id is null';
-    loop
-      fetch tex_image_cur into tex_image_id;
-      exit when tex_image_cur%notfound;
-      execute immediate 'delete from ' || schema_name || '.tex_image where id=:1 returning id into :2' using tex_image_id, out deleted_id;
-      deleted_ids.extend;
-      deleted_ids(deleted_ids.count) := deleted_id;
-    end loop;
-    close tex_image_cur;
-
-    return deleted_ids;
-  exception
-    when others then
-      dbms_output.put_line('cleanup_tex_images: ' || SQLERRM);
-  end;
-
-  function cleanup_appearances(only_global int := 1, schema_name varchar2 := user) return id_array
-  is
-    dummy_id number;
-    dummy_ids id_array := id_array();
-    deleted_id number;
-    deleted_ids id_array := id_array();
-    surface_data_global_cur ref_cursor;
-    surface_data_global_rec surface_data%rowtype;
-    appearance_cur ref_cursor;
-    appearance_rec appearance%rowtype;
-  begin
-    -- global appearances are not related to a cityobject.
-    -- however, we assume that all surface geometries of a cityobject
-    -- have been deleted at this stage. thus, we can check and delete
-    -- surface data which does not have a valid texture parameterization
-    -- any more.
-    open surface_data_global_cur for 'select s.* from ' || schema_name || '.surface_data s left outer join ' || schema_name || '.textureparam t
-        on s.id=t.surface_data_id where t.surface_data_id is null';
-    loop
-      fetch surface_data_global_cur into surface_data_global_rec;
-      exit when surface_data_global_cur%notfound;
-      dummy_id := delete_surface_data(surface_data_global_rec, schema_name);
-    end loop;
-    close surface_data_global_cur;
-
-    -- delete appearances which does not have surface data any more
-    if only_global=1 then
-      open appearance_cur for 'select a.* from ' || schema_name || '.appearance a left outer join ' || schema_name || '.appear_to_surface_data asd
-        on a.id=asd.appearance_id where a.cityobject_id is null and asd.appearance_id is null';
-      loop
-        fetch appearance_cur into appearance_rec;
-        exit when appearance_cur%notfound;
-        deleted_id := delete_appearance(appearance_rec, 0, schema_name);
-        deleted_ids.extend;
-        deleted_ids(deleted_ids.count) := deleted_id;
-      end loop;
-      close appearance_cur;
-    else
-      open appearance_cur for 'select a.* from ' || schema_name || '.appearance a left outer join ' || schema_name || '.appear_to_surface_data asd
-        on a.id=asd.appearance_id where asd.appearance_id is null';
-      loop
-        fetch appearance_cur into appearance_rec;
-        exit when appearance_cur%notfound;
-        deleted_id := delete_appearance(appearance_rec, 0, schema_name);
-        deleted_ids.extend;
-        deleted_ids(deleted_ids.count) := deleted_id;
-      end loop;
-      close appearance_cur;
-    end if;
-
-    -- cleanup texture images    
-    dummy_ids := cleanup_tex_images(schema_name);
-
-    return deleted_ids;
-  exception
-    when others then
-      dbms_output.put_line('cleanup_appearances: ' || SQLERRM);
-  end;
-  
-  function cleanup_addresses(schema_name varchar2 := user) return id_array
-  is
-    deleted_id number;
-    deleted_ids id_array := id_array();
-    address_cur ref_cursor;
-    add_id number;
-  begin
-    open address_cur for 'select ad.id from ' || schema_name || '.address ad
-      left outer join ' || schema_name || '.address_to_building ad2b on ad2b.address_id = ad.id
-      left outer join ' || schema_name || '.address_to_bridge ad2brd on ad2brd.address_id = ad.id
-      left outer join ' || schema_name || '.opening o on o.address_id = ad.id
-      left outer join ' || schema_name || '.bridge_opening brdo on brdo.address_id = ad.id
-      where ad2b.building_id is null
-        and ad2brd.bridge_id is null
-        and o.address_id is null
-        and brdo.address_id is null';
-    loop
-      fetch address_cur into add_id;
-      exit when address_cur%notfound;
-      deleted_id := delete_address(add_id, schema_name);
-      deleted_ids.extend;
-      deleted_ids(deleted_ids.count) := deleted_id;
-    end loop;
-    close address_cur;
-
-    return deleted_ids;
-  exception  
-    when others then
-      dbms_output.put_line('cleanup_addresses: ' || SQLERRM);
-  end;
-
-  function cleanup_cityobjectgroups(schema_name varchar2 := user) return id_array
-  is
-    deleted_id number;
-    deleted_ids id_array := id_array();
-    group_cur ref_cursor;
-    group_rec cityobjectgroup%rowtype;
-  begin
-    open group_cur for 'select g.* from ' || schema_name || '.cityobjectgroup g left outer join ' || schema_name || '.group_to_cityobject gtc
-        on g.id=gtc.cityobjectgroup_id where gtc.cityobject_id is null';
-    loop
-      fetch group_cur into group_rec;
-      exit when group_cur%notfound;
-      deleted_id := delete_cityobjectgroup(group_rec, 0, schema_name);
-      deleted_ids.extend;
-      deleted_ids(deleted_ids.count) := deleted_id;
-    end loop;
-    close group_cur;
-
-    return deleted_ids;
-  exception
-    when others then
-      dbms_output.put_line('cleanup_cityobjectgroups: ' || SQLERRM);
-  end;
-
-  function cleanup_citymodels(schema_name varchar2 := user) return id_array
-  is
-    deleted_id number;
-    deleted_ids id_array := id_array();
-    citymodel_cur ref_cursor;
-    citymodel_rec citymodel%rowtype;
-  begin
-    open citymodel_cur for 'select c.* from ' || schema_name || '.citymodel c left outer join ' || schema_name || '.cityobject_member cm
-        on c.id=cm.citymodel_id where cm.cityobject_id is null';
-    loop
-      fetch citymodel_cur into citymodel_rec;
-      exit when citymodel_cur%notfound;
-      deleted_id := delete_citymodel(citymodel_rec, 0, schema_name);
-      deleted_ids.extend;
-      deleted_ids(deleted_ids.count) := deleted_id;
-    end loop;
-    close citymodel_cur;
-
-    return deleted_ids;
-  exception
-    when others then
-      dbms_output.put_line('cleanup_citymodel: ' || SQLERRM);
-  end;
-  
-  -- generic function to delete any cityobject  
-  function delete_cityobject(pid number, delete_members int := 0, cleanup int := 0, schema_name varchar2 := user) return number
-  is
-    deleted_id number;
-    dummy_ids id_array := id_array();
+AS 
+  FUNCTION del_address(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
     objectclass_id number;
-    objectclass_name varchar2(256);
-    object_gmlid varchar2(256);
-  begin
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete addresss
+    DELETE FROM
+      address t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id
+    BULK COLLECT INTO
+      deleted_ids;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_appearance(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_data_ids0 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete references to surface_datas
+    DELETE FROM
+      appear_to_surface_data t
+    WHERE EXISTS (
+      SELECT
+        1
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.appearance_id
+    )
+    RETURNING
+      surface_data_id
+    BULK COLLECT INTO
+      surface_data_ids0;
+
+    -- delete surface_data(s)
+    IF surface_data_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_data_ids0) a
+      LEFT JOIN
+        appear_to_surface_data n1
+        ON n1.surface_data_id  = a.COLUMN_VALUE
+      WHERE n1.surface_data_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_data(object_ids);
+      END IF;
+    END IF;
+
+    -- delete appearances
+    DELETE FROM
+      appearance t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id
+    BULK COLLECT INTO
+      deleted_ids;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_breakline_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete breakline_reliefs
+    DELETE FROM
+      breakline_relief t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id
+    BULK COLLECT INTO
+      deleted_ids;
+
+    IF caller <> 1 THEN
+      -- delete relief_component
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_relief_component(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_bridge(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    address_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids5 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids6 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids7 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids8 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids9 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete referenced parts
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      bridge t,
+      TABLE(pids) a
+    WHERE
+      t.bridge_parent_id = a.COLUMN_VALUE
+      AND t.id != a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_bridge(object_ids);
+    END IF;
+
+    -- delete referenced parts
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      bridge t,
+      TABLE(pids) a
+    WHERE
+      t.bridge_root_id = a.COLUMN_VALUE
+      AND t.id != a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_bridge(object_ids);
+    END IF;
+
+    -- delete references to addresss
+    DELETE FROM
+      address_to_bridge t
+    WHERE EXISTS (
+      SELECT
+        1
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.bridge_id
+    )
+    RETURNING
+      address_id
+    BULK COLLECT INTO
+      address_ids0;
+
+    -- delete address(s)
+    IF address_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(address_ids0) a
+      LEFT JOIN
+        address_to_bridge n1
+        ON n1.address_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        address_to_building n2
+        ON n2.address_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n3
+        ON n3.address_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n4
+        ON n4.address_id  = a.COLUMN_VALUE
+      WHERE n1.address_id IS NULL
+        AND n2.address_id IS NULL
+        AND n3.address_id IS NULL
+        AND n4.address_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_address(object_ids);
+      END IF;
+    END IF;
+
+    --delete bridge_constr_elements
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      bridge_constr_element t,
+      TABLE(pids) a
+    WHERE
+      t.bridge_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_bridge_constr_element(object_ids);
+    END IF;
+
+    --delete bridge_installations
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      bridge_installation t,
+      TABLE(pids) a
+    WHERE
+      t.bridge_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_bridge_installation(object_ids);
+    END IF;
+
+    --delete bridge_rooms
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      bridge_room t,
+      TABLE(pids) a
+    WHERE
+      t.bridge_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_bridge_room(object_ids);
+    END IF;
+
+    --delete bridge_thematic_surfaces
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      bridge_thematic_surface t,
+      TABLE(pids) a
+    WHERE
+      t.bridge_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_bridge_thematic_surface(object_ids);
+    END IF;
+
+    -- delete bridges
+    DELETE FROM
+      bridge t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod1_multi_surface_id,
+      lod1_solid_id,
+      lod2_multi_surface_id,
+      lod2_solid_id,
+      lod3_multi_surface_id,
+      lod3_solid_id,
+      lod4_multi_surface_id,
+      lod4_solid_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      surface_geometry_ids4,
+      surface_geometry_ids5,
+      surface_geometry_ids6,
+      surface_geometry_ids7,
+      surface_geometry_ids8,
+      surface_geometry_ids9;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids4;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids5;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids6;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids7;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids8;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids9;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids1 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids1) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_bridge_constr_element(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids5 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids6 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids7 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids8 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids9 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete bridge_constr_elements
+    DELETE FROM
+      bridge_constr_element t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod1_brep_id,
+      lod2_brep_id,
+      lod3_brep_id,
+      lod3_implicit_rep_id,
+      lod1_implicit_rep_id,
+      lod2_implicit_rep_id,
+      lod4_brep_id,
+      lod4_implicit_rep_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      surface_geometry_ids4,
+      implicit_geometry_ids6,
+      implicit_geometry_ids7,
+      implicit_geometry_ids8,
+      implicit_geometry_ids9;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids4;
+
+    -- collect all implicit_geometryids into one nested table
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids6;
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids7;
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids8;
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids9;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    -- delete implicit_geometry(s)
+    IF implicit_geometry_ids5 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(implicit_geometry_ids5) a
+      LEFT JOIN
+        bridge_constr_element n1
+        ON n1.lod4_brep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n2
+        ON n2.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n3
+        ON n3.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n4
+        ON n4.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_furniture n5
+        ON n5.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n6
+        ON n6.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n7
+        ON n7.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n8
+        ON n8.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n9
+        ON n9.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n10
+        ON n10.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_furniture n11
+        ON n11.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n12
+        ON n12.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n13
+        ON n13.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n14
+        ON n14.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n15
+        ON n15.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n16
+        ON n16.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n17
+        ON n17.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n18
+        ON n18.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n19
+        ON n19.lod0_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n20
+        ON n20.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n21
+        ON n21.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n22
+        ON n22.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n23
+        ON n23.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n24
+        ON n24.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n25
+        ON n25.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n26
+        ON n26.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n27
+        ON n27.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n28
+        ON n28.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n29
+        ON n29.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_furniture n30
+        ON n30.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n31
+        ON n31.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n32
+        ON n32.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n33
+        ON n33.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n34
+        ON n34.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n35
+        ON n35.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      WHERE n1.lod4_brep_id IS NULL
+        AND n2.lod2_implicit_rep_id IS NULL
+        AND n3.lod1_implicit_rep_id IS NULL
+        AND n4.lod4_implicit_rep_id IS NULL
+        AND n5.lod4_implicit_rep_id IS NULL
+        AND n6.lod2_implicit_rep_id IS NULL
+        AND n7.lod3_implicit_rep_id IS NULL
+        AND n8.lod4_implicit_rep_id IS NULL
+        AND n9.lod3_implicit_rep_id IS NULL
+        AND n10.lod4_implicit_rep_id IS NULL
+        AND n11.lod4_implicit_rep_id IS NULL
+        AND n12.lod2_implicit_rep_id IS NULL
+        AND n13.lod3_implicit_rep_id IS NULL
+        AND n14.lod4_implicit_rep_id IS NULL
+        AND n15.lod3_implicit_rep_id IS NULL
+        AND n16.lod2_implicit_rep_id IS NULL
+        AND n17.lod1_implicit_rep_id IS NULL
+        AND n18.lod4_implicit_rep_id IS NULL
+        AND n19.lod0_implicit_rep_id IS NULL
+        AND n20.lod1_implicit_rep_id IS NULL
+        AND n21.lod2_implicit_rep_id IS NULL
+        AND n22.lod3_implicit_rep_id IS NULL
+        AND n23.lod4_implicit_rep_id IS NULL
+        AND n24.lod3_implicit_rep_id IS NULL
+        AND n25.lod4_implicit_rep_id IS NULL
+        AND n26.lod1_implicit_rep_id IS NULL
+        AND n27.lod2_implicit_rep_id IS NULL
+        AND n28.lod4_implicit_rep_id IS NULL
+        AND n29.lod3_implicit_rep_id IS NULL
+        AND n30.lod4_implicit_rep_id IS NULL
+        AND n31.lod2_implicit_rep_id IS NULL
+        AND n32.lod3_implicit_rep_id IS NULL
+        AND n33.lod4_implicit_rep_id IS NULL
+        AND n34.lod3_implicit_rep_id IS NULL
+        AND n35.lod4_implicit_rep_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_implicit_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_bridge_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids3 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete bridge_furnitures
+    DELETE FROM
+      bridge_furniture t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod4_brep_id,
+      lod4_implicit_rep_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      implicit_geometry_ids3;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+
+    -- collect all implicit_geometryids into one nested table
+    implicit_geometry_ids2 := implicit_geometry_ids2 MULTISET UNION ALL implicit_geometry_ids3;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    -- delete implicit_geometry(s)
+    IF implicit_geometry_ids2 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(implicit_geometry_ids2) a
+      LEFT JOIN
+        bridge_constr_element n1
+        ON n1.lod4_brep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n2
+        ON n2.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n3
+        ON n3.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n4
+        ON n4.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_furniture n5
+        ON n5.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n6
+        ON n6.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n7
+        ON n7.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n8
+        ON n8.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n9
+        ON n9.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n10
+        ON n10.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_furniture n11
+        ON n11.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n12
+        ON n12.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n13
+        ON n13.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n14
+        ON n14.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n15
+        ON n15.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n16
+        ON n16.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n17
+        ON n17.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n18
+        ON n18.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n19
+        ON n19.lod0_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n20
+        ON n20.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n21
+        ON n21.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n22
+        ON n22.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n23
+        ON n23.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n24
+        ON n24.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n25
+        ON n25.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n26
+        ON n26.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n27
+        ON n27.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n28
+        ON n28.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n29
+        ON n29.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_furniture n30
+        ON n30.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n31
+        ON n31.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n32
+        ON n32.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n33
+        ON n33.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n34
+        ON n34.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n35
+        ON n35.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      WHERE n1.lod4_brep_id IS NULL
+        AND n2.lod2_implicit_rep_id IS NULL
+        AND n3.lod1_implicit_rep_id IS NULL
+        AND n4.lod4_implicit_rep_id IS NULL
+        AND n5.lod4_implicit_rep_id IS NULL
+        AND n6.lod2_implicit_rep_id IS NULL
+        AND n7.lod3_implicit_rep_id IS NULL
+        AND n8.lod4_implicit_rep_id IS NULL
+        AND n9.lod3_implicit_rep_id IS NULL
+        AND n10.lod4_implicit_rep_id IS NULL
+        AND n11.lod4_implicit_rep_id IS NULL
+        AND n12.lod2_implicit_rep_id IS NULL
+        AND n13.lod3_implicit_rep_id IS NULL
+        AND n14.lod4_implicit_rep_id IS NULL
+        AND n15.lod3_implicit_rep_id IS NULL
+        AND n16.lod2_implicit_rep_id IS NULL
+        AND n17.lod1_implicit_rep_id IS NULL
+        AND n18.lod4_implicit_rep_id IS NULL
+        AND n19.lod0_implicit_rep_id IS NULL
+        AND n20.lod1_implicit_rep_id IS NULL
+        AND n21.lod2_implicit_rep_id IS NULL
+        AND n22.lod3_implicit_rep_id IS NULL
+        AND n23.lod4_implicit_rep_id IS NULL
+        AND n24.lod3_implicit_rep_id IS NULL
+        AND n25.lod4_implicit_rep_id IS NULL
+        AND n26.lod1_implicit_rep_id IS NULL
+        AND n27.lod2_implicit_rep_id IS NULL
+        AND n28.lod4_implicit_rep_id IS NULL
+        AND n29.lod3_implicit_rep_id IS NULL
+        AND n30.lod4_implicit_rep_id IS NULL
+        AND n31.lod2_implicit_rep_id IS NULL
+        AND n32.lod3_implicit_rep_id IS NULL
+        AND n33.lod4_implicit_rep_id IS NULL
+        AND n34.lod3_implicit_rep_id IS NULL
+        AND n35.lod4_implicit_rep_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_implicit_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_bridge_installation(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids5 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids6 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids7 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    --delete bridge_thematic_surfaces
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      bridge_thematic_surface t,
+      TABLE(pids) a
+    WHERE
+      t.bridge_installation_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_bridge_thematic_surface(object_ids);
+    END IF;
+
+    -- delete bridge_installations
+    DELETE FROM
+      bridge_installation t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod2_brep_id,
+      lod3_brep_id,
+      lod4_brep_id,
+      lod2_implicit_rep_id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      implicit_geometry_ids5,
+      implicit_geometry_ids6,
+      implicit_geometry_ids7;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids3;
+
+    -- collect all implicit_geometryids into one nested table
+    implicit_geometry_ids4 := implicit_geometry_ids4 MULTISET UNION ALL implicit_geometry_ids5;
+    implicit_geometry_ids4 := implicit_geometry_ids4 MULTISET UNION ALL implicit_geometry_ids6;
+    implicit_geometry_ids4 := implicit_geometry_ids4 MULTISET UNION ALL implicit_geometry_ids7;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    -- delete implicit_geometry(s)
+    IF implicit_geometry_ids4 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(implicit_geometry_ids4) a
+      LEFT JOIN
+        bridge_constr_element n1
+        ON n1.lod4_brep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n2
+        ON n2.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n3
+        ON n3.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n4
+        ON n4.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_furniture n5
+        ON n5.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n6
+        ON n6.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n7
+        ON n7.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n8
+        ON n8.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n9
+        ON n9.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n10
+        ON n10.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_furniture n11
+        ON n11.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n12
+        ON n12.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n13
+        ON n13.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n14
+        ON n14.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n15
+        ON n15.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n16
+        ON n16.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n17
+        ON n17.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n18
+        ON n18.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n19
+        ON n19.lod0_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n20
+        ON n20.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n21
+        ON n21.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n22
+        ON n22.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n23
+        ON n23.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n24
+        ON n24.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n25
+        ON n25.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n26
+        ON n26.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n27
+        ON n27.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n28
+        ON n28.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n29
+        ON n29.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_furniture n30
+        ON n30.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n31
+        ON n31.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n32
+        ON n32.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n33
+        ON n33.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n34
+        ON n34.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n35
+        ON n35.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      WHERE n1.lod4_brep_id IS NULL
+        AND n2.lod2_implicit_rep_id IS NULL
+        AND n3.lod1_implicit_rep_id IS NULL
+        AND n4.lod4_implicit_rep_id IS NULL
+        AND n5.lod4_implicit_rep_id IS NULL
+        AND n6.lod2_implicit_rep_id IS NULL
+        AND n7.lod3_implicit_rep_id IS NULL
+        AND n8.lod4_implicit_rep_id IS NULL
+        AND n9.lod3_implicit_rep_id IS NULL
+        AND n10.lod4_implicit_rep_id IS NULL
+        AND n11.lod4_implicit_rep_id IS NULL
+        AND n12.lod2_implicit_rep_id IS NULL
+        AND n13.lod3_implicit_rep_id IS NULL
+        AND n14.lod4_implicit_rep_id IS NULL
+        AND n15.lod3_implicit_rep_id IS NULL
+        AND n16.lod2_implicit_rep_id IS NULL
+        AND n17.lod1_implicit_rep_id IS NULL
+        AND n18.lod4_implicit_rep_id IS NULL
+        AND n19.lod0_implicit_rep_id IS NULL
+        AND n20.lod1_implicit_rep_id IS NULL
+        AND n21.lod2_implicit_rep_id IS NULL
+        AND n22.lod3_implicit_rep_id IS NULL
+        AND n23.lod4_implicit_rep_id IS NULL
+        AND n24.lod3_implicit_rep_id IS NULL
+        AND n25.lod4_implicit_rep_id IS NULL
+        AND n26.lod1_implicit_rep_id IS NULL
+        AND n27.lod2_implicit_rep_id IS NULL
+        AND n28.lod4_implicit_rep_id IS NULL
+        AND n29.lod3_implicit_rep_id IS NULL
+        AND n30.lod4_implicit_rep_id IS NULL
+        AND n31.lod2_implicit_rep_id IS NULL
+        AND n32.lod3_implicit_rep_id IS NULL
+        AND n33.lod4_implicit_rep_id IS NULL
+        AND n34.lod3_implicit_rep_id IS NULL
+        AND n35.lod4_implicit_rep_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_implicit_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_bridge_opening(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    address_ids0 ID_ARRAY := ID_ARRAY();
+    address_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids5 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids6 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids7 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete bridge_openings
+    DELETE FROM
+      bridge_opening t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      address_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id
+    BULK COLLECT INTO
+      deleted_ids,
+      address_ids1,
+      surface_geometry_ids3,
+      surface_geometry_ids4,
+      implicit_geometry_ids6,
+      implicit_geometry_ids7;
+
+    -- collect all addressids into one nested table
+    address_ids0 := address_ids0 MULTISET UNION ALL address_ids1;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids2 := surface_geometry_ids2 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids2 := surface_geometry_ids2 MULTISET UNION ALL surface_geometry_ids4;
+
+    -- collect all implicit_geometryids into one nested table
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids6;
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids7;
+
+    -- delete address(s)
+    IF address_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(address_ids0) a
+      LEFT JOIN
+        address_to_bridge n1
+        ON n1.address_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        address_to_building n2
+        ON n2.address_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n3
+        ON n3.address_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n4
+        ON n4.address_id  = a.COLUMN_VALUE
+      WHERE n1.address_id IS NULL
+        AND n2.address_id IS NULL
+        AND n3.address_id IS NULL
+        AND n4.address_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_address(object_ids);
+      END IF;
+    END IF;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids2 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids2) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    -- delete implicit_geometry(s)
+    IF implicit_geometry_ids5 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(implicit_geometry_ids5) a
+      LEFT JOIN
+        bridge_constr_element n1
+        ON n1.lod4_brep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n2
+        ON n2.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n3
+        ON n3.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n4
+        ON n4.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_furniture n5
+        ON n5.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n6
+        ON n6.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n7
+        ON n7.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n8
+        ON n8.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n9
+        ON n9.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n10
+        ON n10.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_furniture n11
+        ON n11.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n12
+        ON n12.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n13
+        ON n13.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n14
+        ON n14.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n15
+        ON n15.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n16
+        ON n16.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n17
+        ON n17.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n18
+        ON n18.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n19
+        ON n19.lod0_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n20
+        ON n20.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n21
+        ON n21.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n22
+        ON n22.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n23
+        ON n23.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n24
+        ON n24.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n25
+        ON n25.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n26
+        ON n26.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n27
+        ON n27.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n28
+        ON n28.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n29
+        ON n29.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_furniture n30
+        ON n30.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n31
+        ON n31.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n32
+        ON n32.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n33
+        ON n33.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n34
+        ON n34.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n35
+        ON n35.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      WHERE n1.lod4_brep_id IS NULL
+        AND n2.lod2_implicit_rep_id IS NULL
+        AND n3.lod1_implicit_rep_id IS NULL
+        AND n4.lod4_implicit_rep_id IS NULL
+        AND n5.lod4_implicit_rep_id IS NULL
+        AND n6.lod2_implicit_rep_id IS NULL
+        AND n7.lod3_implicit_rep_id IS NULL
+        AND n8.lod4_implicit_rep_id IS NULL
+        AND n9.lod3_implicit_rep_id IS NULL
+        AND n10.lod4_implicit_rep_id IS NULL
+        AND n11.lod4_implicit_rep_id IS NULL
+        AND n12.lod2_implicit_rep_id IS NULL
+        AND n13.lod3_implicit_rep_id IS NULL
+        AND n14.lod4_implicit_rep_id IS NULL
+        AND n15.lod3_implicit_rep_id IS NULL
+        AND n16.lod2_implicit_rep_id IS NULL
+        AND n17.lod1_implicit_rep_id IS NULL
+        AND n18.lod4_implicit_rep_id IS NULL
+        AND n19.lod0_implicit_rep_id IS NULL
+        AND n20.lod1_implicit_rep_id IS NULL
+        AND n21.lod2_implicit_rep_id IS NULL
+        AND n22.lod3_implicit_rep_id IS NULL
+        AND n23.lod4_implicit_rep_id IS NULL
+        AND n24.lod3_implicit_rep_id IS NULL
+        AND n25.lod4_implicit_rep_id IS NULL
+        AND n26.lod1_implicit_rep_id IS NULL
+        AND n27.lod2_implicit_rep_id IS NULL
+        AND n28.lod4_implicit_rep_id IS NULL
+        AND n29.lod3_implicit_rep_id IS NULL
+        AND n30.lod4_implicit_rep_id IS NULL
+        AND n31.lod2_implicit_rep_id IS NULL
+        AND n32.lod3_implicit_rep_id IS NULL
+        AND n33.lod4_implicit_rep_id IS NULL
+        AND n34.lod3_implicit_rep_id IS NULL
+        AND n35.lod4_implicit_rep_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_implicit_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_bridge_room(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    --delete bridge_furnitures
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      bridge_furniture t,
+      TABLE(pids) a
+    WHERE
+      t.bridge_room_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_bridge_furniture(object_ids);
+    END IF;
+
+    --delete bridge_installations
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      bridge_installation t,
+      TABLE(pids) a
+    WHERE
+      t.bridge_room_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_bridge_installation(object_ids);
+    END IF;
+
+    --delete bridge_thematic_surfaces
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      bridge_thematic_surface t,
+      TABLE(pids) a
+    WHERE
+      t.bridge_room_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_bridge_thematic_surface(object_ids);
+    END IF;
+
+    -- delete bridge_rooms
+    DELETE FROM
+      bridge_room t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod4_multi_surface_id,
+      lod4_solid_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_bridge_thematic_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    bridge_opening_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete references to bridge_openings
+    DELETE FROM
+      bridge_open_to_them_srf t
+    WHERE EXISTS (
+      SELECT
+        1
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.bridge_thematic_surface_id
+    )
+    RETURNING
+      bridge_opening_id
+    BULK COLLECT INTO
+      bridge_opening_ids0;
+
+    -- delete bridge_opening(s)
+    IF bridge_opening_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(bridge_opening_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_bridge_opening(object_ids);
+      END IF;
+    END IF;
+
+    -- delete bridge_thematic_surfaces
+    DELETE FROM
+      bridge_thematic_surface t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      surface_geometry_ids4;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids4;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids1 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids1) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_building(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    address_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids5 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids6 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids7 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids8 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids9 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids10 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids11 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete referenced parts
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      building t,
+      TABLE(pids) a
+    WHERE
+      t.building_parent_id = a.COLUMN_VALUE
+      AND t.id != a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_building(object_ids);
+    END IF;
+
+    -- delete referenced parts
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      building t,
+      TABLE(pids) a
+    WHERE
+      t.building_root_id = a.COLUMN_VALUE
+      AND t.id != a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_building(object_ids);
+    END IF;
+
+    -- delete references to addresss
+    DELETE FROM
+      address_to_building t
+    WHERE EXISTS (
+      SELECT
+        1
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.building_id
+    )
+    RETURNING
+      address_id
+    BULK COLLECT INTO
+      address_ids0;
+
+    -- delete address(s)
+    IF address_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(address_ids0) a
+      LEFT JOIN
+        address_to_bridge n1
+        ON n1.address_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        address_to_building n2
+        ON n2.address_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n3
+        ON n3.address_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n4
+        ON n4.address_id  = a.COLUMN_VALUE
+      WHERE n1.address_id IS NULL
+        AND n2.address_id IS NULL
+        AND n3.address_id IS NULL
+        AND n4.address_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_address(object_ids);
+      END IF;
+    END IF;
+
+    --delete building_installations
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      building_installation t,
+      TABLE(pids) a
+    WHERE
+      t.building_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_building_installation(object_ids);
+    END IF;
+
+    --delete rooms
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      room t,
+      TABLE(pids) a
+    WHERE
+      t.building_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_room(object_ids);
+    END IF;
+
+    --delete thematic_surfaces
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      thematic_surface t,
+      TABLE(pids) a
+    WHERE
+      t.building_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_thematic_surface(object_ids);
+    END IF;
+
+    -- delete buildings
+    DELETE FROM
+      building t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod0_footprint_id,
+      lod0_roofprint_id,
+      lod1_multi_surface_id,
+      lod1_solid_id,
+      lod2_multi_surface_id,
+      lod2_solid_id,
+      lod3_multi_surface_id,
+      lod3_solid_id,
+      lod4_multi_surface_id,
+      lod4_solid_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      surface_geometry_ids4,
+      surface_geometry_ids5,
+      surface_geometry_ids6,
+      surface_geometry_ids7,
+      surface_geometry_ids8,
+      surface_geometry_ids9,
+      surface_geometry_ids10,
+      surface_geometry_ids11;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids4;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids5;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids6;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids7;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids8;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids9;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids10;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids11;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids1 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids1) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_building_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids3 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete building_furnitures
+    DELETE FROM
+      building_furniture t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod4_brep_id,
+      lod4_implicit_rep_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      implicit_geometry_ids3;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+
+    -- collect all implicit_geometryids into one nested table
+    implicit_geometry_ids2 := implicit_geometry_ids2 MULTISET UNION ALL implicit_geometry_ids3;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    -- delete implicit_geometry(s)
+    IF implicit_geometry_ids2 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(implicit_geometry_ids2) a
+      LEFT JOIN
+        bridge_constr_element n1
+        ON n1.lod4_brep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n2
+        ON n2.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n3
+        ON n3.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n4
+        ON n4.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_furniture n5
+        ON n5.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n6
+        ON n6.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n7
+        ON n7.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n8
+        ON n8.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n9
+        ON n9.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n10
+        ON n10.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_furniture n11
+        ON n11.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n12
+        ON n12.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n13
+        ON n13.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n14
+        ON n14.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n15
+        ON n15.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n16
+        ON n16.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n17
+        ON n17.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n18
+        ON n18.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n19
+        ON n19.lod0_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n20
+        ON n20.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n21
+        ON n21.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n22
+        ON n22.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n23
+        ON n23.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n24
+        ON n24.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n25
+        ON n25.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n26
+        ON n26.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n27
+        ON n27.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n28
+        ON n28.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n29
+        ON n29.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_furniture n30
+        ON n30.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n31
+        ON n31.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n32
+        ON n32.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n33
+        ON n33.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n34
+        ON n34.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n35
+        ON n35.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      WHERE n1.lod4_brep_id IS NULL
+        AND n2.lod2_implicit_rep_id IS NULL
+        AND n3.lod1_implicit_rep_id IS NULL
+        AND n4.lod4_implicit_rep_id IS NULL
+        AND n5.lod4_implicit_rep_id IS NULL
+        AND n6.lod2_implicit_rep_id IS NULL
+        AND n7.lod3_implicit_rep_id IS NULL
+        AND n8.lod4_implicit_rep_id IS NULL
+        AND n9.lod3_implicit_rep_id IS NULL
+        AND n10.lod4_implicit_rep_id IS NULL
+        AND n11.lod4_implicit_rep_id IS NULL
+        AND n12.lod2_implicit_rep_id IS NULL
+        AND n13.lod3_implicit_rep_id IS NULL
+        AND n14.lod4_implicit_rep_id IS NULL
+        AND n15.lod3_implicit_rep_id IS NULL
+        AND n16.lod2_implicit_rep_id IS NULL
+        AND n17.lod1_implicit_rep_id IS NULL
+        AND n18.lod4_implicit_rep_id IS NULL
+        AND n19.lod0_implicit_rep_id IS NULL
+        AND n20.lod1_implicit_rep_id IS NULL
+        AND n21.lod2_implicit_rep_id IS NULL
+        AND n22.lod3_implicit_rep_id IS NULL
+        AND n23.lod4_implicit_rep_id IS NULL
+        AND n24.lod3_implicit_rep_id IS NULL
+        AND n25.lod4_implicit_rep_id IS NULL
+        AND n26.lod1_implicit_rep_id IS NULL
+        AND n27.lod2_implicit_rep_id IS NULL
+        AND n28.lod4_implicit_rep_id IS NULL
+        AND n29.lod3_implicit_rep_id IS NULL
+        AND n30.lod4_implicit_rep_id IS NULL
+        AND n31.lod2_implicit_rep_id IS NULL
+        AND n32.lod3_implicit_rep_id IS NULL
+        AND n33.lod4_implicit_rep_id IS NULL
+        AND n34.lod3_implicit_rep_id IS NULL
+        AND n35.lod4_implicit_rep_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_implicit_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_building_installation(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids5 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids6 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids7 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    --delete thematic_surfaces
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      thematic_surface t,
+      TABLE(pids) a
+    WHERE
+      t.building_installation_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_thematic_surface(object_ids);
+    END IF;
+
+    -- delete building_installations
+    DELETE FROM
+      building_installation t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod2_brep_id,
+      lod3_brep_id,
+      lod4_brep_id,
+      lod2_implicit_rep_id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      implicit_geometry_ids5,
+      implicit_geometry_ids6,
+      implicit_geometry_ids7;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids3;
+
+    -- collect all implicit_geometryids into one nested table
+    implicit_geometry_ids4 := implicit_geometry_ids4 MULTISET UNION ALL implicit_geometry_ids5;
+    implicit_geometry_ids4 := implicit_geometry_ids4 MULTISET UNION ALL implicit_geometry_ids6;
+    implicit_geometry_ids4 := implicit_geometry_ids4 MULTISET UNION ALL implicit_geometry_ids7;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    -- delete implicit_geometry(s)
+    IF implicit_geometry_ids4 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(implicit_geometry_ids4) a
+      LEFT JOIN
+        bridge_constr_element n1
+        ON n1.lod4_brep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n2
+        ON n2.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n3
+        ON n3.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n4
+        ON n4.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_furniture n5
+        ON n5.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n6
+        ON n6.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n7
+        ON n7.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n8
+        ON n8.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n9
+        ON n9.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n10
+        ON n10.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_furniture n11
+        ON n11.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n12
+        ON n12.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n13
+        ON n13.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n14
+        ON n14.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n15
+        ON n15.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n16
+        ON n16.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n17
+        ON n17.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n18
+        ON n18.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n19
+        ON n19.lod0_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n20
+        ON n20.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n21
+        ON n21.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n22
+        ON n22.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n23
+        ON n23.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n24
+        ON n24.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n25
+        ON n25.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n26
+        ON n26.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n27
+        ON n27.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n28
+        ON n28.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n29
+        ON n29.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_furniture n30
+        ON n30.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n31
+        ON n31.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n32
+        ON n32.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n33
+        ON n33.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n34
+        ON n34.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n35
+        ON n35.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      WHERE n1.lod4_brep_id IS NULL
+        AND n2.lod2_implicit_rep_id IS NULL
+        AND n3.lod1_implicit_rep_id IS NULL
+        AND n4.lod4_implicit_rep_id IS NULL
+        AND n5.lod4_implicit_rep_id IS NULL
+        AND n6.lod2_implicit_rep_id IS NULL
+        AND n7.lod3_implicit_rep_id IS NULL
+        AND n8.lod4_implicit_rep_id IS NULL
+        AND n9.lod3_implicit_rep_id IS NULL
+        AND n10.lod4_implicit_rep_id IS NULL
+        AND n11.lod4_implicit_rep_id IS NULL
+        AND n12.lod2_implicit_rep_id IS NULL
+        AND n13.lod3_implicit_rep_id IS NULL
+        AND n14.lod4_implicit_rep_id IS NULL
+        AND n15.lod3_implicit_rep_id IS NULL
+        AND n16.lod2_implicit_rep_id IS NULL
+        AND n17.lod1_implicit_rep_id IS NULL
+        AND n18.lod4_implicit_rep_id IS NULL
+        AND n19.lod0_implicit_rep_id IS NULL
+        AND n20.lod1_implicit_rep_id IS NULL
+        AND n21.lod2_implicit_rep_id IS NULL
+        AND n22.lod3_implicit_rep_id IS NULL
+        AND n23.lod4_implicit_rep_id IS NULL
+        AND n24.lod3_implicit_rep_id IS NULL
+        AND n25.lod4_implicit_rep_id IS NULL
+        AND n26.lod1_implicit_rep_id IS NULL
+        AND n27.lod2_implicit_rep_id IS NULL
+        AND n28.lod4_implicit_rep_id IS NULL
+        AND n29.lod3_implicit_rep_id IS NULL
+        AND n30.lod4_implicit_rep_id IS NULL
+        AND n31.lod2_implicit_rep_id IS NULL
+        AND n32.lod3_implicit_rep_id IS NULL
+        AND n33.lod4_implicit_rep_id IS NULL
+        AND n34.lod3_implicit_rep_id IS NULL
+        AND n35.lod4_implicit_rep_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_implicit_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_city_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids5 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids6 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids7 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids8 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids9 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete city_furnitures
+    DELETE FROM
+      city_furniture t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod1_brep_id,
+      lod2_brep_id,
+      lod3_brep_id,
+      lod4_brep_id,
+      lod1_implicit_rep_id,
+      lod2_implicit_rep_id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      surface_geometry_ids4,
+      implicit_geometry_ids6,
+      implicit_geometry_ids7,
+      implicit_geometry_ids8,
+      implicit_geometry_ids9;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids4;
+
+    -- collect all implicit_geometryids into one nested table
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids6;
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids7;
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids8;
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids9;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    -- delete implicit_geometry(s)
+    IF implicit_geometry_ids5 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(implicit_geometry_ids5) a
+      LEFT JOIN
+        bridge_constr_element n1
+        ON n1.lod4_brep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n2
+        ON n2.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n3
+        ON n3.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n4
+        ON n4.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_furniture n5
+        ON n5.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n6
+        ON n6.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n7
+        ON n7.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n8
+        ON n8.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n9
+        ON n9.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n10
+        ON n10.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_furniture n11
+        ON n11.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n12
+        ON n12.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n13
+        ON n13.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n14
+        ON n14.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n15
+        ON n15.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n16
+        ON n16.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n17
+        ON n17.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n18
+        ON n18.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n19
+        ON n19.lod0_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n20
+        ON n20.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n21
+        ON n21.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n22
+        ON n22.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n23
+        ON n23.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n24
+        ON n24.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n25
+        ON n25.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n26
+        ON n26.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n27
+        ON n27.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n28
+        ON n28.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n29
+        ON n29.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_furniture n30
+        ON n30.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n31
+        ON n31.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n32
+        ON n32.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n33
+        ON n33.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n34
+        ON n34.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n35
+        ON n35.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      WHERE n1.lod4_brep_id IS NULL
+        AND n2.lod2_implicit_rep_id IS NULL
+        AND n3.lod1_implicit_rep_id IS NULL
+        AND n4.lod4_implicit_rep_id IS NULL
+        AND n5.lod4_implicit_rep_id IS NULL
+        AND n6.lod2_implicit_rep_id IS NULL
+        AND n7.lod3_implicit_rep_id IS NULL
+        AND n8.lod4_implicit_rep_id IS NULL
+        AND n9.lod3_implicit_rep_id IS NULL
+        AND n10.lod4_implicit_rep_id IS NULL
+        AND n11.lod4_implicit_rep_id IS NULL
+        AND n12.lod2_implicit_rep_id IS NULL
+        AND n13.lod3_implicit_rep_id IS NULL
+        AND n14.lod4_implicit_rep_id IS NULL
+        AND n15.lod3_implicit_rep_id IS NULL
+        AND n16.lod2_implicit_rep_id IS NULL
+        AND n17.lod1_implicit_rep_id IS NULL
+        AND n18.lod4_implicit_rep_id IS NULL
+        AND n19.lod0_implicit_rep_id IS NULL
+        AND n20.lod1_implicit_rep_id IS NULL
+        AND n21.lod2_implicit_rep_id IS NULL
+        AND n22.lod3_implicit_rep_id IS NULL
+        AND n23.lod4_implicit_rep_id IS NULL
+        AND n24.lod3_implicit_rep_id IS NULL
+        AND n25.lod4_implicit_rep_id IS NULL
+        AND n26.lod1_implicit_rep_id IS NULL
+        AND n27.lod2_implicit_rep_id IS NULL
+        AND n28.lod4_implicit_rep_id IS NULL
+        AND n29.lod3_implicit_rep_id IS NULL
+        AND n30.lod4_implicit_rep_id IS NULL
+        AND n31.lod2_implicit_rep_id IS NULL
+        AND n32.lod3_implicit_rep_id IS NULL
+        AND n33.lod4_implicit_rep_id IS NULL
+        AND n34.lod3_implicit_rep_id IS NULL
+        AND n35.lod4_implicit_rep_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_implicit_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_citymodel(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    cityobject_ids0 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    --delete appearances
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      appearance t,
+      TABLE(pids) a
+    WHERE
+      t.citymodel_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_appearance(object_ids);
+    END IF;
+
+    -- delete references to cityobjects
+    DELETE FROM
+      cityobject_member t
+    WHERE EXISTS (
+      SELECT
+        1
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.citymodel_id
+    )
+    RETURNING
+      cityobject_id
+    BULK COLLECT INTO
+      cityobject_ids0;
+
+    -- delete cityobject(s)
+    IF cityobject_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(cityobject_ids0) a
+      LEFT JOIN
+        cityobjectgroup n1
+        ON n1.parent_cityobject_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        cityobject_member n2
+        ON n2.cityobject_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        group_to_cityobject n3
+        ON n3.cityobject_id  = a.COLUMN_VALUE
+      WHERE n1.parent_cityobject_id IS NULL
+        AND n2.cityobject_id IS NULL
+        AND n3.cityobject_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(object_ids);
+      END IF;
+    END IF;
+
+    -- delete citymodels
+    DELETE FROM
+      citymodel t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id
+    BULK COLLECT INTO
+      deleted_ids;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_cityobject(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+  BEGIN
+    --delete appearances
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      appearance t,
+      TABLE(pids) a
+    WHERE
+      t.cityobject_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_appearance(object_ids);
+    END IF;
+
+    --delete cityobject_genericattribs
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      cityobject_genericattrib t,
+      TABLE(pids) a
+    WHERE
+      t.cityobject_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_cityobject_genericattrib(object_ids);
+    END IF;
+
+    --delete external_references
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      external_reference t,
+      TABLE(pids) a
+    WHERE
+      t.cityobject_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_external_reference(object_ids);
+    END IF;
+
+    IF caller <> 2 THEN
+      FOR i in 1..pids.count
+      LOOP
+        object_id := pids(i);
+        EXECUTE IMMEDIATE 'SELECT objectclass_id FROM cityobject WHERE id = :1' INTO objectclass_id USING object_id;
+
+          -- delete land_use
+          IF objectclass_id = 4 THEN
+            dummy_ids := del_land_use(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete generic_cityobject
+          IF objectclass_id = 5 THEN
+            dummy_ids := del_generic_cityobject(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete solitary_vegetat_object
+          IF objectclass_id = 7 THEN
+            dummy_ids := del_solitary_vegetat_object(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete plant_cover
+          IF objectclass_id = 8 THEN
+            dummy_ids := del_plant_cover(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete waterbody
+          IF objectclass_id = 9 THEN
+            dummy_ids := del_waterbody(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete waterboundary_surface
+          IF objectclass_id = 10 THEN
+            dummy_ids := del_waterboundary_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete waterboundary_surface
+          IF objectclass_id = 11 THEN
+            dummy_ids := del_waterboundary_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete waterboundary_surface
+          IF objectclass_id = 12 THEN
+            dummy_ids := del_waterboundary_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete waterboundary_surface
+          IF objectclass_id = 13 THEN
+            dummy_ids := del_waterboundary_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete relief_feature
+          IF objectclass_id = 14 THEN
+            dummy_ids := del_relief_feature(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete relief_component
+          IF objectclass_id = 15 THEN
+            dummy_ids := del_relief_component(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tin_relief
+          IF objectclass_id = 16 THEN
+            dummy_ids := del_tin_relief(ID_ARRAY(object_id), 0);
+          END IF;
+
+          -- delete masspoint_relief
+          IF objectclass_id = 17 THEN
+            dummy_ids := del_masspoint_relief(ID_ARRAY(object_id), 0);
+          END IF;
+
+          -- delete breakline_relief
+          IF objectclass_id = 18 THEN
+            dummy_ids := del_breakline_relief(ID_ARRAY(object_id), 0);
+          END IF;
+
+          -- delete raster_relief
+          IF objectclass_id = 19 THEN
+            dummy_ids := del_raster_relief(ID_ARRAY(object_id), 0);
+          END IF;
+
+          -- delete city_furniture
+          IF objectclass_id = 21 THEN
+            dummy_ids := del_city_furniture(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete cityobjectgroup
+          IF objectclass_id = 23 THEN
+            dummy_ids := del_cityobjectgroup(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete building
+          IF objectclass_id = 24 THEN
+            dummy_ids := del_building(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete building
+          IF objectclass_id = 25 THEN
+            dummy_ids := del_building(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete building
+          IF objectclass_id = 26 THEN
+            dummy_ids := del_building(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete building_installation
+          IF objectclass_id = 27 THEN
+            dummy_ids := del_building_installation(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete building_installation
+          IF objectclass_id = 28 THEN
+            dummy_ids := del_building_installation(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete thematic_surface
+          IF objectclass_id = 29 THEN
+            dummy_ids := del_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete thematic_surface
+          IF objectclass_id = 30 THEN
+            dummy_ids := del_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete thematic_surface
+          IF objectclass_id = 31 THEN
+            dummy_ids := del_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete thematic_surface
+          IF objectclass_id = 32 THEN
+            dummy_ids := del_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete thematic_surface
+          IF objectclass_id = 33 THEN
+            dummy_ids := del_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete thematic_surface
+          IF objectclass_id = 34 THEN
+            dummy_ids := del_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete thematic_surface
+          IF objectclass_id = 35 THEN
+            dummy_ids := del_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete thematic_surface
+          IF objectclass_id = 36 THEN
+            dummy_ids := del_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete opening
+          IF objectclass_id = 37 THEN
+            dummy_ids := del_opening(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete opening
+          IF objectclass_id = 38 THEN
+            dummy_ids := del_opening(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete opening
+          IF objectclass_id = 39 THEN
+            dummy_ids := del_opening(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete building_furniture
+          IF objectclass_id = 40 THEN
+            dummy_ids := del_building_furniture(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete room
+          IF objectclass_id = 41 THEN
+            dummy_ids := del_room(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete transportation_complex
+          IF objectclass_id = 42 THEN
+            dummy_ids := del_transportation_complex(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete transportation_complex
+          IF objectclass_id = 43 THEN
+            dummy_ids := del_transportation_complex(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete transportation_complex
+          IF objectclass_id = 44 THEN
+            dummy_ids := del_transportation_complex(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete transportation_complex
+          IF objectclass_id = 45 THEN
+            dummy_ids := del_transportation_complex(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete transportation_complex
+          IF objectclass_id = 46 THEN
+            dummy_ids := del_transportation_complex(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete traffic_area
+          IF objectclass_id = 47 THEN
+            dummy_ids := del_traffic_area(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete traffic_area
+          IF objectclass_id = 48 THEN
+            dummy_ids := del_traffic_area(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete appearance
+          IF objectclass_id = 50 THEN
+            dummy_ids := del_appearance(ID_ARRAY(object_id), 0);
+          END IF;
+
+          -- delete surface_data
+          IF objectclass_id = 51 THEN
+            dummy_ids := del_surface_data(ID_ARRAY(object_id), 0);
+          END IF;
+
+          -- delete surface_data
+          IF objectclass_id = 52 THEN
+            dummy_ids := del_surface_data(ID_ARRAY(object_id), 0);
+          END IF;
+
+          -- delete surface_data
+          IF objectclass_id = 53 THEN
+            dummy_ids := del_surface_data(ID_ARRAY(object_id), 0);
+          END IF;
+
+          -- delete surface_data
+          IF objectclass_id = 54 THEN
+            dummy_ids := del_surface_data(ID_ARRAY(object_id), 0);
+          END IF;
+
+          -- delete surface_data
+          IF objectclass_id = 55 THEN
+            dummy_ids := del_surface_data(ID_ARRAY(object_id), 0);
+          END IF;
+
+          -- delete citymodel
+          IF objectclass_id = 57 THEN
+            dummy_ids := del_citymodel(ID_ARRAY(object_id), 0);
+          END IF;
+
+          -- delete address
+          IF objectclass_id = 58 THEN
+            dummy_ids := del_address(ID_ARRAY(object_id), 0);
+          END IF;
+
+          -- delete implicit_geometry
+          IF objectclass_id = 59 THEN
+            dummy_ids := del_implicit_geometry(ID_ARRAY(object_id), 0);
+          END IF;
+
+          -- delete thematic_surface
+          IF objectclass_id = 60 THEN
+            dummy_ids := del_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete thematic_surface
+          IF objectclass_id = 61 THEN
+            dummy_ids := del_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge
+          IF objectclass_id = 62 THEN
+            dummy_ids := del_bridge(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge
+          IF objectclass_id = 63 THEN
+            dummy_ids := del_bridge(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge
+          IF objectclass_id = 64 THEN
+            dummy_ids := del_bridge(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_installation
+          IF objectclass_id = 65 THEN
+            dummy_ids := del_bridge_installation(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_installation
+          IF objectclass_id = 66 THEN
+            dummy_ids := del_bridge_installation(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_thematic_surface
+          IF objectclass_id = 67 THEN
+            dummy_ids := del_bridge_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_thematic_surface
+          IF objectclass_id = 68 THEN
+            dummy_ids := del_bridge_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_thematic_surface
+          IF objectclass_id = 69 THEN
+            dummy_ids := del_bridge_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_thematic_surface
+          IF objectclass_id = 70 THEN
+            dummy_ids := del_bridge_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_thematic_surface
+          IF objectclass_id = 71 THEN
+            dummy_ids := del_bridge_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_thematic_surface
+          IF objectclass_id = 72 THEN
+            dummy_ids := del_bridge_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_thematic_surface
+          IF objectclass_id = 73 THEN
+            dummy_ids := del_bridge_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_thematic_surface
+          IF objectclass_id = 74 THEN
+            dummy_ids := del_bridge_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_thematic_surface
+          IF objectclass_id = 75 THEN
+            dummy_ids := del_bridge_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_thematic_surface
+          IF objectclass_id = 76 THEN
+            dummy_ids := del_bridge_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_opening
+          IF objectclass_id = 77 THEN
+            dummy_ids := del_bridge_opening(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_opening
+          IF objectclass_id = 78 THEN
+            dummy_ids := del_bridge_opening(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_opening
+          IF objectclass_id = 79 THEN
+            dummy_ids := del_bridge_opening(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_furniture
+          IF objectclass_id = 80 THEN
+            dummy_ids := del_bridge_furniture(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_room
+          IF objectclass_id = 81 THEN
+            dummy_ids := del_bridge_room(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete bridge_constr_element
+          IF objectclass_id = 82 THEN
+            dummy_ids := del_bridge_constr_element(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel
+          IF objectclass_id = 83 THEN
+            dummy_ids := del_tunnel(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel
+          IF objectclass_id = 84 THEN
+            dummy_ids := del_tunnel(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel
+          IF objectclass_id = 85 THEN
+            dummy_ids := del_tunnel(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_installation
+          IF objectclass_id = 86 THEN
+            dummy_ids := del_tunnel_installation(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_installation
+          IF objectclass_id = 87 THEN
+            dummy_ids := del_tunnel_installation(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_thematic_surface
+          IF objectclass_id = 88 THEN
+            dummy_ids := del_tunnel_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_thematic_surface
+          IF objectclass_id = 89 THEN
+            dummy_ids := del_tunnel_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_thematic_surface
+          IF objectclass_id = 90 THEN
+            dummy_ids := del_tunnel_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_thematic_surface
+          IF objectclass_id = 91 THEN
+            dummy_ids := del_tunnel_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_thematic_surface
+          IF objectclass_id = 92 THEN
+            dummy_ids := del_tunnel_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_thematic_surface
+          IF objectclass_id = 93 THEN
+            dummy_ids := del_tunnel_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_thematic_surface
+          IF objectclass_id = 94 THEN
+            dummy_ids := del_tunnel_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_thematic_surface
+          IF objectclass_id = 95 THEN
+            dummy_ids := del_tunnel_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_thematic_surface
+          IF objectclass_id = 96 THEN
+            dummy_ids := del_tunnel_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_thematic_surface
+          IF objectclass_id = 97 THEN
+            dummy_ids := del_tunnel_thematic_surface(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_opening
+          IF objectclass_id = 98 THEN
+            dummy_ids := del_tunnel_opening(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_opening
+          IF objectclass_id = 99 THEN
+            dummy_ids := del_tunnel_opening(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_opening
+          IF objectclass_id = 100 THEN
+            dummy_ids := del_tunnel_opening(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_furniture
+          IF objectclass_id = 101 THEN
+            dummy_ids := del_tunnel_furniture(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete tunnel_hollow_space
+          IF objectclass_id = 102 THEN
+            dummy_ids := del_tunnel_hollow_space(ID_ARRAY(object_id), 1);
+          END IF;
+      END LOOP;
+    END IF;
   
-    execute immediate 'select co.objectclass_id, oc.classname, co.gmlid from ' || schema_name || '.cityobject co join ' || schema_name || '.objectclass oc on (oc.id=co.objectclass_id) where co.id=:1'
-      into objectclass_id, objectclass_name, object_gmlid
-      using pid;
+    -- delete cityobjects
+    DELETE FROM
+      cityobject t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id
+    BULK COLLECT INTO
+      deleted_ids;
 
-    dbms_output.put_line('delete_cityobject ([' || objectclass_name || '] id=' || pid || ', gmlid=' || object_gmlid || ')');
-    
-    case 
-      when objectclass_id = 4 then deleted_id := delete_land_use(pid, schema_name);
-      when objectclass_id = 5 then deleted_id := delete_generic_cityobject(pid, schema_name);
-      when objectclass_id = 7 then deleted_id := delete_solitary_veg_obj(pid, schema_name);
-      when objectclass_id = 8 then deleted_id := delete_plant_cover(pid, schema_name);
-      when objectclass_id = 9 then deleted_id := delete_waterbody(pid, schema_name);
-      when objectclass_id = 11 or 
-           objectclass_id = 12 or 
-           objectclass_id = 13 then deleted_id := delete_waterbnd_surface(pid, schema_name);
-      when objectclass_id = 14 then deleted_id := delete_relief_feature(pid, schema_name);
-      when objectclass_id = 16 or 
-           objectclass_id = 17 or 
-           objectclass_id = 18 or 
-           objectclass_id = 19 then deleted_id := delete_relief_component(pid, schema_name);
-      when objectclass_id = 21 then deleted_id := delete_city_furniture(pid, schema_name);
-      when objectclass_id = 23 then deleted_id := delete_cityobjectgroup(pid, delete_members, schema_name);
-      when objectclass_id = 25 or 
-           objectclass_id = 26 then deleted_id := delete_building(pid, schema_name);
-      when objectclass_id = 27 or 
-           objectclass_id = 28 then deleted_id := delete_building_installation(pid, schema_name);
-      when objectclass_id = 30 or 
-           objectclass_id = 31 or 
-           objectclass_id = 32 or 
-           objectclass_id = 33 or 
-           objectclass_id = 34 or 
-           objectclass_id = 35 or 
-           objectclass_id = 36 then deleted_id := delete_thematic_surface(pid, schema_name);
-      when objectclass_id = 38 or 
-           objectclass_id = 39 then deleted_id := delete_opening(pid, schema_name);
-      when objectclass_id = 40 then deleted_id := delete_building_furniture(pid, schema_name);
-      when objectclass_id = 41 then deleted_id := delete_room(pid, schema_name);
-      when objectclass_id = 43 or 
-           objectclass_id = 44 or 
-           objectclass_id = 45 or 
-           objectclass_id = 46 then deleted_id := delete_transport_complex(pid, schema_name);
-      when objectclass_id = 47 or 
-           objectclass_id = 48 then deleted_id := delete_traffic_area(pid, schema_name);
-      when objectclass_id = 60 or 
-           objectclass_id = 61 then deleted_id := delete_thematic_surface(pid, schema_name);
-      when objectclass_id = 63 or 
-           objectclass_id = 64 then deleted_id := delete_bridge(pid, schema_name);
-      when objectclass_id = 65 or 
-           objectclass_id = 66 then deleted_id := delete_bridge_installation(pid, schema_name);
-      when objectclass_id = 68 or 
-           objectclass_id = 69 or 
-           objectclass_id = 70 or 
-           objectclass_id = 71 or 
-           objectclass_id = 72 or 
-           objectclass_id = 73 or 
-           objectclass_id = 74 or 
-           objectclass_id = 75 or 
-           objectclass_id = 76 then deleted_id := delete_bridge_thematic_surface(pid, schema_name);
-      when objectclass_id = 78 or 
-           objectclass_id = 79 then deleted_id := delete_bridge_opening(pid, schema_name);
-      when objectclass_id = 80 then deleted_id := delete_bridge_furniture(pid, schema_name);
-      when objectclass_id = 81 then deleted_id := delete_bridge_room(pid, schema_name);
-      when objectclass_id = 82 then deleted_id := delete_bridge_constr_element(pid, schema_name);
-      when objectclass_id = 84 or 
-           objectclass_id = 85 then deleted_id := delete_tunnel(pid, schema_name);
-      when objectclass_id = 86 or 
-           objectclass_id = 87 then deleted_id := delete_tunnel_installation(pid, schema_name);
-      when objectclass_id = 89 or 
-           objectclass_id = 90 or 
-           objectclass_id = 91 or 
-           objectclass_id = 92 or 
-           objectclass_id = 93 or 
-           objectclass_id = 94 or 
-           objectclass_id = 95 or 
-           objectclass_id = 96 or 
-           objectclass_id = 97 then deleted_id := delete_tunnel_thematic_surface(pid, schema_name);
-      when objectclass_id = 99 or 
-           objectclass_id = 100 then deleted_id := delete_tunnel_opening(pid, schema_name);
-      when objectclass_id = 101 then deleted_id := delete_tunnel_furniture(pid, schema_name);
-      when objectclass_id = 102 then deleted_id := delete_tunnel_hollow_space(pid, schema_name);
-      else
-        -- do nothing
-        null;
-    end case;
-    
-    if cleanup <> 0 then
-      dummy_ids := cleanup_implicit_geometries(1, schema_name);
-      dummy_ids := cleanup_appearances(1, schema_name);
-      dummy_ids := cleanup_citymodels(schema_name);
-    end if;
+    RETURN deleted_ids;
 
-    return deleted_id;
-  exception
-    when no_data_found then
-      return deleted_id;
-    when others then
-      dbms_output.put_line('delete_cityobject (id: ' || pid || '): ' || SQLERRM);
-  end;
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
 
-  -- truncates all tables and reset sequences
-  procedure cleanup_schema(schema_name varchar2 := user)
-  is
-    dummy_str strarray;
-    seq_value number;
-  begin
-    -- disable spatial indexes
-    dummy_str := citydb_idx.drop_spatial_indexes(schema_name);
+  FUNCTION del_cityobject_genericattrib(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete cityobject_genericattribs
+    DELETE FROM
+      cityobject_genericattrib t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      surface_geometry_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1;
 
-    -- clear tables
-    execute immediate 'delete from ' || schema_name || '.address_to_building';
-    execute immediate 'delete from ' || schema_name || '.address_to_bridge';
-    execute immediate 'delete from ' || schema_name || '.opening_to_them_surface';
-    execute immediate 'delete from ' || schema_name || '.bridge_open_to_them_srf';
-    execute immediate 'delete from ' || schema_name || '.tunnel_open_to_them_srf';
-    execute immediate 'delete from ' || schema_name || '.group_to_cityobject';
-    execute immediate 'delete from ' || schema_name || '.waterbod_to_waterbnd_srf';
-    execute immediate 'delete from ' || schema_name || '.relief_feat_to_rel_comp';
-    execute immediate 'delete from ' || schema_name || '.appear_to_surface_data';
-    execute immediate 'delete from ' || schema_name || '.opening';
-    execute immediate 'delete from ' || schema_name || '.thematic_surface';
-    execute immediate 'delete from ' || schema_name || '.building_installation';
-    execute immediate 'delete from ' || schema_name || '.building_furniture';
-    execute immediate 'delete from ' || schema_name || '.room';
-    execute immediate 'delete from ' || schema_name || '.building';
-    execute immediate 'delete from ' || schema_name || '.bridge_opening';
-    execute immediate 'delete from ' || schema_name || '.bridge_thematic_surface';
-    execute immediate 'delete from ' || schema_name || '.bridge_constr_element';
-    execute immediate 'delete from ' || schema_name || '.bridge_installation';
-    execute immediate 'delete from ' || schema_name || '.bridge_furniture';
-    execute immediate 'delete from ' || schema_name || '.bridge_room';
-    execute immediate 'delete from ' || schema_name || '.bridge';
-    execute immediate 'delete from ' || schema_name || '.address';
-    execute immediate 'delete from ' || schema_name || '.tunnel_opening';
-    execute immediate 'delete from ' || schema_name || '.tunnel_thematic_surface';
-    execute immediate 'delete from ' || schema_name || '.tunnel_installation';
-    execute immediate 'delete from ' || schema_name || '.tunnel_furniture';
-    execute immediate 'delete from ' || schema_name || '.tunnel_hollow_space';
-    execute immediate 'delete from ' || schema_name || '.tunnel';
-    execute immediate 'delete from ' || schema_name || '.city_furniture';
-    execute immediate 'delete from ' || schema_name || '.cityobjectgroup';
-    execute immediate 'delete from ' || schema_name || '.generic_cityobject';
-    execute immediate 'delete from ' || schema_name || '.land_use';
-    execute immediate 'delete from ' || schema_name || '.breakline_relief';
-    execute immediate 'delete from ' || schema_name || '.masspoint_relief';
-    execute immediate 'delete from ' || schema_name || '.raster_relief';
-    execute immediate 'delete from ' || schema_name || '.tin_relief';
-    execute immediate 'delete from ' || schema_name || '.relief_component';
-    execute immediate 'delete from ' || schema_name || '.relief_feature';
-    execute immediate 'delete from ' || schema_name || '.grid_coverage';
-    execute immediate 'delete from ' || schema_name || '.plant_cover';
-    execute immediate 'delete from ' || schema_name || '.solitary_vegetat_object';
-    execute immediate 'delete from ' || schema_name || '.traffic_area';
-    execute immediate 'delete from ' || schema_name || '.transportation_complex';
-    execute immediate 'delete from ' || schema_name || '.waterboundary_surface';
-    execute immediate 'delete from ' || schema_name || '.waterbody';
-    execute immediate 'delete from ' || schema_name || '.textureparam';
-    execute immediate 'delete from ' || schema_name || '.surface_data';
-    execute immediate 'delete from ' || schema_name || '.tex_image';
-    execute immediate 'delete from ' || schema_name || '.appearance';
-    execute immediate 'delete from ' || schema_name || '.implicit_geometry';
-    execute immediate 'delete from ' || schema_name || '.surface_geometry';
-    execute immediate 'delete from ' || schema_name || '.cityobject_genericattrib';
-    execute immediate 'delete from ' || schema_name || '.external_reference';
-    execute immediate 'delete from ' || schema_name || '.generalization';
-    execute immediate 'delete from ' || schema_name || '.cityobject_member';
-    execute immediate 'delete from ' || schema_name || '.cityobject';
-    execute immediate 'delete from ' || schema_name || '.citymodel';
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
 
-    -- reset sequences
-    execute immediate 'select ' || schema_name || '.address_seq.nextval from dual' into seq_value;
-    if (seq_value = 1) then
-      execute immediate 'select ' || schema_name || '.address_seq.nextval from dual' into seq_value;
-    end if;
-    execute immediate 'alter sequence ' || schema_name || '.address_seq increment by ' || (seq_value-1)*-1;
-    execute immediate 'select ' || schema_name || '.address_seq.nextval from dual';
-    execute immediate 'alter sequence ' || schema_name || '.address_seq increment by 1';
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
 
-    execute immediate 'select ' || schema_name || '.appearance_seq.nextval from dual' into seq_value;
-    if (seq_value = 1) then
-      execute immediate 'select ' || schema_name || '.appearance_seq.nextval from dual' into seq_value;
-    end if;
-    execute immediate 'alter sequence ' || schema_name || '.appearance_seq increment by ' || (seq_value-1)*-1;
-    execute immediate 'select ' || schema_name || '.appearance_seq.nextval from dual';
-    execute immediate 'alter sequence ' || schema_name || '.appearance_seq increment by 1';
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
 
-    execute immediate 'select ' || schema_name || '.citymodel_seq.nextval from dual' into seq_value;
-    if (seq_value = 1) then
-      execute immediate 'select ' || schema_name || '.citymodel_seq.nextval from dual' into seq_value;
-    end if;
-    execute immediate 'alter sequence ' || schema_name || '.citymodel_seq increment by ' || (seq_value-1)*-1;
-    execute immediate 'select ' || schema_name || '.citymodel_seq.nextval from dual';
-    execute immediate 'alter sequence ' || schema_name || '.citymodel_seq increment by 1';
+    RETURN deleted_ids;
 
-    execute immediate 'select ' || schema_name || '.cityobject_genericatt_seq.nextval from dual' into seq_value;
-    if (seq_value = 1) then
-      execute immediate 'select ' || schema_name || '.cityobject_genericatt_seq.nextval from dual' into seq_value;
-    end if;
-    execute immediate 'alter sequence ' || schema_name || '.cityobject_genericatt_seq increment by ' || (seq_value-1)*-1;
-    execute immediate 'select ' || schema_name || '.cityobject_genericatt_seq.nextval from dual';
-    execute immediate 'alter sequence ' || schema_name || '.cityobject_genericatt_seq increment by 1';
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
 
-    execute immediate 'select ' || schema_name || '.cityobject_seq.nextval from dual' into seq_value;
-    if (seq_value = 1) then
-      execute immediate 'select ' || schema_name || '.cityobject_seq.nextval from dual' into seq_value;
-    end if;
-    execute immediate 'alter sequence ' || schema_name || '.cityobject_seq increment by ' || (seq_value-1)*-1;
-    execute immediate 'select ' || schema_name || '.cityobject_seq.nextval from dual';
-    execute immediate 'alter sequence ' || schema_name || '.cityobject_seq increment by 1';
+  FUNCTION del_cityobjectgroup(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    cityobject_ids0 ID_ARRAY := ID_ARRAY();
+    cityobject_ids1 ID_ARRAY := ID_ARRAY();
+    cityobject_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete references to cityobjects
+    DELETE FROM
+      group_to_cityobject t
+    WHERE EXISTS (
+      SELECT
+        1
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.cityobjectgroup_id
+    )
+    RETURNING
+      cityobject_id
+    BULK COLLECT INTO
+      cityobject_ids0;
 
-    execute immediate 'select ' || schema_name || '.external_ref_seq.nextval from dual' into seq_value;
-    if (seq_value = 1) then
-      execute immediate 'select ' || schema_name || '.external_ref_seq.nextval from dual' into seq_value;
-    end if;
-    execute immediate 'alter sequence ' || schema_name || '.external_ref_seq increment by ' || (seq_value-1)*-1;
-    execute immediate 'select ' || schema_name || '.external_ref_seq.nextval from dual';
-    execute immediate 'alter sequence ' || schema_name || '.external_ref_seq increment by 1';
+    -- delete cityobject(s)
+    IF cityobject_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(cityobject_ids0) a
+      LEFT JOIN
+        cityobjectgroup n1
+        ON n1.parent_cityobject_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        cityobject_member n2
+        ON n2.cityobject_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        group_to_cityobject n3
+        ON n3.cityobject_id  = a.COLUMN_VALUE
+      WHERE n1.parent_cityobject_id IS NULL
+        AND n2.cityobject_id IS NULL
+        AND n3.cityobject_id IS NULL;
 
-    execute immediate 'select ' || schema_name || '.grid_coverage_seq.nextval from dual' into seq_value;
-    if (seq_value = 1) then
-      execute immediate 'select ' || schema_name || '.grid_coverage_seq.nextval from dual' into seq_value;
-    end if;
-    execute immediate 'alter sequence ' || schema_name || '.grid_coverage_seq increment by ' || (seq_value-1)*-1;
-    execute immediate 'select ' || schema_name || '.grid_coverage_seq.nextval from dual';
-    execute immediate 'alter sequence ' || schema_name || '.grid_coverage_seq increment by 1';
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(object_ids);
+      END IF;
+    END IF;
 
-    execute immediate 'select ' || schema_name || '.grid_coverage_rdt_seq.nextval from dual' into seq_value;
-    if (seq_value = 1) then
-      execute immediate 'select ' || schema_name || '.grid_coverage_rdt_seq.nextval from dual' into seq_value;
-    end if;
-    execute immediate 'alter sequence ' || schema_name || '.grid_coverage_rdt_seq increment by ' || (seq_value-1)*-1;
-    execute immediate 'select ' || schema_name || '.grid_coverage_rdt_seq.nextval from dual';
-    execute immediate 'alter sequence ' || schema_name || '.grid_coverage_rdt_seq increment by 1';
+    -- delete cityobjectgroups
+    DELETE FROM
+      cityobjectgroup t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      parent_cityobject_id,
+      brep_id
+    BULK COLLECT INTO
+      deleted_ids,
+      cityobject_ids2,
+      surface_geometry_ids4;
 
-    execute immediate 'select ' || schema_name || '.implicit_geometry_seq.nextval from dual' into seq_value;
-    if (seq_value = 1) then
-      execute immediate 'select ' || schema_name || '.implicit_geometry_seq.nextval from dual' into seq_value;
-    end if;
-    execute immediate 'alter sequence ' || schema_name || '.implicit_geometry_seq increment by ' || (seq_value-1)*-1;
-    execute immediate 'select ' || schema_name || '.implicit_geometry_seq.nextval from dual';
-    execute immediate 'alter sequence ' || schema_name || '.implicit_geometry_seq increment by 1';
+    -- collect all cityobjectids into one nested table
+    cityobject_ids1 := cityobject_ids1 MULTISET UNION ALL cityobject_ids2;
 
-    execute immediate 'select ' || schema_name || '.surface_data_seq.nextval from dual' into seq_value;
-    if (seq_value = 1) then
-      execute immediate 'select ' || schema_name || '.surface_data_seq.nextval from dual' into seq_value;
-    end if;
-    execute immediate 'alter sequence ' || schema_name || '.surface_data_seq increment by ' || (seq_value-1)*-1;
-    execute immediate 'select ' || schema_name || '.surface_data_seq.nextval from dual';
-    execute immediate 'alter sequence ' || schema_name || '.surface_data_seq increment by 1';
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids3 := surface_geometry_ids3 MULTISET UNION ALL surface_geometry_ids4;
 
-    execute immediate 'select ' || schema_name || '.surface_geometry_seq.nextval from dual' into seq_value;
-    if (seq_value = 1) then
-      execute immediate 'select ' || schema_name || '.surface_geometry_seq.nextval from dual' into seq_value;
-    end if;
-    execute immediate 'alter sequence ' || schema_name || '.surface_geometry_seq increment by ' || (seq_value-1)*-1;
-    execute immediate 'select ' || schema_name || '.surface_geometry_seq.nextval from dual';
-    execute immediate 'alter sequence ' || schema_name || '.surface_geometry_seq increment by 1';
+    -- delete cityobject(s)
+    IF cityobject_ids1 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(cityobject_ids1) a
+      LEFT JOIN
+        cityobjectgroup n1
+        ON n1.parent_cityobject_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        cityobject_member n2
+        ON n2.cityobject_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        group_to_cityobject n3
+        ON n3.cityobject_id  = a.COLUMN_VALUE
+      WHERE n1.parent_cityobject_id IS NULL
+        AND n2.cityobject_id IS NULL
+        AND n3.cityobject_id IS NULL;
 
-    execute immediate 'select ' || schema_name || '.tex_image_seq.nextval from dual' into seq_value;
-    if (seq_value = 1) then
-      execute immediate 'select ' || schema_name || '.tex_image_seq.nextval from dual' into seq_value;
-    end if;
-    execute immediate 'alter sequence ' || schema_name || '.tex_image_seq increment by ' || (seq_value-1)*-1;
-    execute immediate 'select ' || schema_name || '.tex_image_seq.nextval from dual';
-    execute immediate 'alter sequence ' || schema_name || '.tex_image_seq increment by 1';
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(object_ids);
+      END IF;
+    END IF;
 
-    -- recreate spatial indexes
-    dummy_str := citydb_idx.create_spatial_indexes(schema_name);
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids3 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids3) a;
 
-  exception
-    when others then
-      dbms_output.put_line('cleanup_schema: ' || SQLERRM);
-  end;
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_cityobject_by_lineage(lineage_value varchar2, objectclass_id int := 0) RETURN ID_ARRAY 
+  IS
+    deleted_ids id_array := id_array();
+    dummy_ids id_array := id_array();
+  BEGIN
+    IF objectclass_id = 0 THEN
+      SELECT
+        c.id
+      BULK COLLECT INTO
+        deleted_ids
+      FROM
+        cityobject c
+      WHERE
+        c.lineage = lineage_value;
+    ELSE
+      SELECT
+        c.id
+      BULK COLLECT INTO
+        deleted_ids
+      FROM
+        cityobject c
+      WHERE
+        c.lineage = lineage_value AND c.objectclass_id = objectclass_id;
+    END IF;
+
+    IF deleted_ids IS NOT EMPTY THEN
+      FOR i in 1..deleted_ids.count
+      LOOP
+        dummy_ids := del_cityobject(ID_ARRAY(deleted_ids(i)), 1);
+      END LOOP;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_external_reference(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete external_references
+    DELETE FROM
+      external_reference t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id
+    BULK COLLECT INTO
+      deleted_ids;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_generic_cityobject(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids5 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids6 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids7 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids8 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids9 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids10 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids11 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete generic_cityobjects
+    DELETE FROM
+      generic_cityobject t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod0_brep_id,
+      lod1_brep_id,
+      lod2_brep_id,
+      lod3_brep_id,
+      lod4_brep_id,
+      lod0_implicit_rep_id,
+      lod1_implicit_rep_id,
+      lod2_implicit_rep_id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      surface_geometry_ids4,
+      surface_geometry_ids5,
+      implicit_geometry_ids7,
+      implicit_geometry_ids8,
+      implicit_geometry_ids9,
+      implicit_geometry_ids10,
+      implicit_geometry_ids11;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids4;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids5;
+
+    -- collect all implicit_geometryids into one nested table
+    implicit_geometry_ids6 := implicit_geometry_ids6 MULTISET UNION ALL implicit_geometry_ids7;
+    implicit_geometry_ids6 := implicit_geometry_ids6 MULTISET UNION ALL implicit_geometry_ids8;
+    implicit_geometry_ids6 := implicit_geometry_ids6 MULTISET UNION ALL implicit_geometry_ids9;
+    implicit_geometry_ids6 := implicit_geometry_ids6 MULTISET UNION ALL implicit_geometry_ids10;
+    implicit_geometry_ids6 := implicit_geometry_ids6 MULTISET UNION ALL implicit_geometry_ids11;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    -- delete implicit_geometry(s)
+    IF implicit_geometry_ids6 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(implicit_geometry_ids6) a
+      LEFT JOIN
+        bridge_constr_element n1
+        ON n1.lod4_brep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n2
+        ON n2.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n3
+        ON n3.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n4
+        ON n4.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_furniture n5
+        ON n5.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n6
+        ON n6.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n7
+        ON n7.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n8
+        ON n8.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n9
+        ON n9.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n10
+        ON n10.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_furniture n11
+        ON n11.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n12
+        ON n12.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n13
+        ON n13.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n14
+        ON n14.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n15
+        ON n15.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n16
+        ON n16.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n17
+        ON n17.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n18
+        ON n18.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n19
+        ON n19.lod0_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n20
+        ON n20.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n21
+        ON n21.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n22
+        ON n22.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n23
+        ON n23.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n24
+        ON n24.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n25
+        ON n25.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n26
+        ON n26.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n27
+        ON n27.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n28
+        ON n28.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n29
+        ON n29.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_furniture n30
+        ON n30.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n31
+        ON n31.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n32
+        ON n32.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n33
+        ON n33.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n34
+        ON n34.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n35
+        ON n35.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      WHERE n1.lod4_brep_id IS NULL
+        AND n2.lod2_implicit_rep_id IS NULL
+        AND n3.lod1_implicit_rep_id IS NULL
+        AND n4.lod4_implicit_rep_id IS NULL
+        AND n5.lod4_implicit_rep_id IS NULL
+        AND n6.lod2_implicit_rep_id IS NULL
+        AND n7.lod3_implicit_rep_id IS NULL
+        AND n8.lod4_implicit_rep_id IS NULL
+        AND n9.lod3_implicit_rep_id IS NULL
+        AND n10.lod4_implicit_rep_id IS NULL
+        AND n11.lod4_implicit_rep_id IS NULL
+        AND n12.lod2_implicit_rep_id IS NULL
+        AND n13.lod3_implicit_rep_id IS NULL
+        AND n14.lod4_implicit_rep_id IS NULL
+        AND n15.lod3_implicit_rep_id IS NULL
+        AND n16.lod2_implicit_rep_id IS NULL
+        AND n17.lod1_implicit_rep_id IS NULL
+        AND n18.lod4_implicit_rep_id IS NULL
+        AND n19.lod0_implicit_rep_id IS NULL
+        AND n20.lod1_implicit_rep_id IS NULL
+        AND n21.lod2_implicit_rep_id IS NULL
+        AND n22.lod3_implicit_rep_id IS NULL
+        AND n23.lod4_implicit_rep_id IS NULL
+        AND n24.lod3_implicit_rep_id IS NULL
+        AND n25.lod4_implicit_rep_id IS NULL
+        AND n26.lod1_implicit_rep_id IS NULL
+        AND n27.lod2_implicit_rep_id IS NULL
+        AND n28.lod4_implicit_rep_id IS NULL
+        AND n29.lod3_implicit_rep_id IS NULL
+        AND n30.lod4_implicit_rep_id IS NULL
+        AND n31.lod2_implicit_rep_id IS NULL
+        AND n32.lod3_implicit_rep_id IS NULL
+        AND n33.lod4_implicit_rep_id IS NULL
+        AND n34.lod3_implicit_rep_id IS NULL
+        AND n35.lod4_implicit_rep_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_implicit_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_grid_coverage(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete grid_coverages
+    DELETE FROM
+      grid_coverage t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id
+    BULK COLLECT INTO
+      deleted_ids;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_implicit_geometry(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete implicit_geometrys
+    DELETE FROM
+      implicit_geometry t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      relative_brep_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_land_use(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids5 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete land_uses
+    DELETE FROM
+      land_use t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod0_multi_surface_id,
+      lod1_multi_surface_id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      surface_geometry_ids4,
+      surface_geometry_ids5;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids4;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids5;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_masspoint_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete masspoint_reliefs
+    DELETE FROM
+      masspoint_relief t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id
+    BULK COLLECT INTO
+      deleted_ids;
+
+    IF caller <> 1 THEN
+      -- delete relief_component
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_relief_component(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_opening(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    address_ids0 ID_ARRAY := ID_ARRAY();
+    address_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids5 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids6 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids7 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete openings
+    DELETE FROM
+      opening t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      address_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id
+    BULK COLLECT INTO
+      deleted_ids,
+      address_ids1,
+      surface_geometry_ids3,
+      surface_geometry_ids4,
+      implicit_geometry_ids6,
+      implicit_geometry_ids7;
+
+    -- collect all addressids into one nested table
+    address_ids0 := address_ids0 MULTISET UNION ALL address_ids1;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids2 := surface_geometry_ids2 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids2 := surface_geometry_ids2 MULTISET UNION ALL surface_geometry_ids4;
+
+    -- collect all implicit_geometryids into one nested table
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids6;
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids7;
+
+    -- delete address(s)
+    IF address_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(address_ids0) a
+      LEFT JOIN
+        address_to_bridge n1
+        ON n1.address_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        address_to_building n2
+        ON n2.address_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n3
+        ON n3.address_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n4
+        ON n4.address_id  = a.COLUMN_VALUE
+      WHERE n1.address_id IS NULL
+        AND n2.address_id IS NULL
+        AND n3.address_id IS NULL
+        AND n4.address_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_address(object_ids);
+      END IF;
+    END IF;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids2 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids2) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    -- delete implicit_geometry(s)
+    IF implicit_geometry_ids5 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(implicit_geometry_ids5) a
+      LEFT JOIN
+        bridge_constr_element n1
+        ON n1.lod4_brep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n2
+        ON n2.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n3
+        ON n3.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n4
+        ON n4.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_furniture n5
+        ON n5.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n6
+        ON n6.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n7
+        ON n7.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n8
+        ON n8.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n9
+        ON n9.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n10
+        ON n10.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_furniture n11
+        ON n11.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n12
+        ON n12.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n13
+        ON n13.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n14
+        ON n14.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n15
+        ON n15.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n16
+        ON n16.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n17
+        ON n17.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n18
+        ON n18.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n19
+        ON n19.lod0_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n20
+        ON n20.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n21
+        ON n21.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n22
+        ON n22.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n23
+        ON n23.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n24
+        ON n24.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n25
+        ON n25.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n26
+        ON n26.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n27
+        ON n27.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n28
+        ON n28.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n29
+        ON n29.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_furniture n30
+        ON n30.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n31
+        ON n31.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n32
+        ON n32.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n33
+        ON n33.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n34
+        ON n34.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n35
+        ON n35.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      WHERE n1.lod4_brep_id IS NULL
+        AND n2.lod2_implicit_rep_id IS NULL
+        AND n3.lod1_implicit_rep_id IS NULL
+        AND n4.lod4_implicit_rep_id IS NULL
+        AND n5.lod4_implicit_rep_id IS NULL
+        AND n6.lod2_implicit_rep_id IS NULL
+        AND n7.lod3_implicit_rep_id IS NULL
+        AND n8.lod4_implicit_rep_id IS NULL
+        AND n9.lod3_implicit_rep_id IS NULL
+        AND n10.lod4_implicit_rep_id IS NULL
+        AND n11.lod4_implicit_rep_id IS NULL
+        AND n12.lod2_implicit_rep_id IS NULL
+        AND n13.lod3_implicit_rep_id IS NULL
+        AND n14.lod4_implicit_rep_id IS NULL
+        AND n15.lod3_implicit_rep_id IS NULL
+        AND n16.lod2_implicit_rep_id IS NULL
+        AND n17.lod1_implicit_rep_id IS NULL
+        AND n18.lod4_implicit_rep_id IS NULL
+        AND n19.lod0_implicit_rep_id IS NULL
+        AND n20.lod1_implicit_rep_id IS NULL
+        AND n21.lod2_implicit_rep_id IS NULL
+        AND n22.lod3_implicit_rep_id IS NULL
+        AND n23.lod4_implicit_rep_id IS NULL
+        AND n24.lod3_implicit_rep_id IS NULL
+        AND n25.lod4_implicit_rep_id IS NULL
+        AND n26.lod1_implicit_rep_id IS NULL
+        AND n27.lod2_implicit_rep_id IS NULL
+        AND n28.lod4_implicit_rep_id IS NULL
+        AND n29.lod3_implicit_rep_id IS NULL
+        AND n30.lod4_implicit_rep_id IS NULL
+        AND n31.lod2_implicit_rep_id IS NULL
+        AND n32.lod3_implicit_rep_id IS NULL
+        AND n33.lod4_implicit_rep_id IS NULL
+        AND n34.lod3_implicit_rep_id IS NULL
+        AND n35.lod4_implicit_rep_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_implicit_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_plant_cover(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids5 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids6 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids7 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids8 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete plant_covers
+    DELETE FROM
+      plant_cover t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod1_multi_solid_id,
+      lod1_multi_surface_id,
+      lod2_multi_solid_id,
+      lod2_multi_surface_id,
+      lod3_multi_solid_id,
+      lod3_multi_surface_id,
+      lod4_multi_solid_id,
+      lod4_multi_surface_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      surface_geometry_ids4,
+      surface_geometry_ids5,
+      surface_geometry_ids6,
+      surface_geometry_ids7,
+      surface_geometry_ids8;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids4;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids5;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids6;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids7;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids8;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_raster_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    grid_coverage_ids0 ID_ARRAY := ID_ARRAY();
+    grid_coverage_ids1 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete raster_reliefs
+    DELETE FROM
+      raster_relief t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      coverage_id
+    BULK COLLECT INTO
+      deleted_ids,
+      grid_coverage_ids1;
+
+    -- collect all grid_coverageids into one nested table
+    grid_coverage_ids0 := grid_coverage_ids0 MULTISET UNION ALL grid_coverage_ids1;
+
+    -- delete grid_coverage(s)
+    IF grid_coverage_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(grid_coverage_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_grid_coverage(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete relief_component
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_relief_component(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_relief_component(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+  BEGIN
+    IF caller <> 2 THEN
+      FOR i in 1..pids.count
+      LOOP
+        object_id := pids(i);
+        EXECUTE IMMEDIATE 'SELECT objectclass_id FROM relief_component WHERE id = :1' INTO objectclass_id USING object_id;
+
+          -- delete tin_relief
+          IF objectclass_id = 16 THEN
+            dummy_ids := del_tin_relief(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete masspoint_relief
+          IF objectclass_id = 17 THEN
+            dummy_ids := del_masspoint_relief(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete breakline_relief
+          IF objectclass_id = 18 THEN
+            dummy_ids := del_breakline_relief(ID_ARRAY(object_id), 1);
+          END IF;
+
+          -- delete raster_relief
+          IF objectclass_id = 19 THEN
+            dummy_ids := del_raster_relief(ID_ARRAY(object_id), 1);
+          END IF;
+      END LOOP;
+    END IF;
+  
+    -- delete relief_components
+    DELETE FROM
+      relief_component t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id
+    BULK COLLECT INTO
+      deleted_ids;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_relief_feature(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    relief_component_ids0 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete references to relief_components
+    DELETE FROM
+      relief_feat_to_rel_comp t
+    WHERE EXISTS (
+      SELECT
+        1
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.relief_feature_id
+    )
+    RETURNING
+      relief_component_id
+    BULK COLLECT INTO
+      relief_component_ids0;
+
+    -- delete relief_component(s)
+    IF relief_component_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(relief_component_ids0) a
+      LEFT JOIN
+        relief_feat_to_rel_comp n1
+        ON n1.relief_component_id  = a.COLUMN_VALUE
+      WHERE n1.relief_component_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_relief_component(object_ids);
+      END IF;
+    END IF;
+
+    -- delete relief_features
+    DELETE FROM
+      relief_feature t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id
+    BULK COLLECT INTO
+      deleted_ids;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_room(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    --delete building_furnitures
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      building_furniture t,
+      TABLE(pids) a
+    WHERE
+      t.room_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_building_furniture(object_ids);
+    END IF;
+
+    --delete building_installations
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      building_installation t,
+      TABLE(pids) a
+    WHERE
+      t.room_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_building_installation(object_ids);
+    END IF;
+
+    --delete thematic_surfaces
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      thematic_surface t,
+      TABLE(pids) a
+    WHERE
+      t.room_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_thematic_surface(object_ids);
+    END IF;
+
+    -- delete rooms
+    DELETE FROM
+      room t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod4_multi_surface_id,
+      lod4_solid_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_solitary_vegetat_object(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids5 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids6 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids7 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids8 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids9 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete solitary_vegetat_objects
+    DELETE FROM
+      solitary_vegetat_object t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod1_brep_id,
+      lod2_brep_id,
+      lod3_brep_id,
+      lod4_brep_id,
+      lod1_implicit_rep_id,
+      lod2_implicit_rep_id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      surface_geometry_ids4,
+      implicit_geometry_ids6,
+      implicit_geometry_ids7,
+      implicit_geometry_ids8,
+      implicit_geometry_ids9;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids4;
+
+    -- collect all implicit_geometryids into one nested table
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids6;
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids7;
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids8;
+    implicit_geometry_ids5 := implicit_geometry_ids5 MULTISET UNION ALL implicit_geometry_ids9;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    -- delete implicit_geometry(s)
+    IF implicit_geometry_ids5 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(implicit_geometry_ids5) a
+      LEFT JOIN
+        bridge_constr_element n1
+        ON n1.lod4_brep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n2
+        ON n2.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n3
+        ON n3.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n4
+        ON n4.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_furniture n5
+        ON n5.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n6
+        ON n6.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n7
+        ON n7.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n8
+        ON n8.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n9
+        ON n9.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n10
+        ON n10.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_furniture n11
+        ON n11.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n12
+        ON n12.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n13
+        ON n13.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n14
+        ON n14.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n15
+        ON n15.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n16
+        ON n16.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n17
+        ON n17.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n18
+        ON n18.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n19
+        ON n19.lod0_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n20
+        ON n20.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n21
+        ON n21.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n22
+        ON n22.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n23
+        ON n23.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n24
+        ON n24.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n25
+        ON n25.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n26
+        ON n26.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n27
+        ON n27.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n28
+        ON n28.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n29
+        ON n29.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_furniture n30
+        ON n30.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n31
+        ON n31.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n32
+        ON n32.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n33
+        ON n33.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n34
+        ON n34.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n35
+        ON n35.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      WHERE n1.lod4_brep_id IS NULL
+        AND n2.lod2_implicit_rep_id IS NULL
+        AND n3.lod1_implicit_rep_id IS NULL
+        AND n4.lod4_implicit_rep_id IS NULL
+        AND n5.lod4_implicit_rep_id IS NULL
+        AND n6.lod2_implicit_rep_id IS NULL
+        AND n7.lod3_implicit_rep_id IS NULL
+        AND n8.lod4_implicit_rep_id IS NULL
+        AND n9.lod3_implicit_rep_id IS NULL
+        AND n10.lod4_implicit_rep_id IS NULL
+        AND n11.lod4_implicit_rep_id IS NULL
+        AND n12.lod2_implicit_rep_id IS NULL
+        AND n13.lod3_implicit_rep_id IS NULL
+        AND n14.lod4_implicit_rep_id IS NULL
+        AND n15.lod3_implicit_rep_id IS NULL
+        AND n16.lod2_implicit_rep_id IS NULL
+        AND n17.lod1_implicit_rep_id IS NULL
+        AND n18.lod4_implicit_rep_id IS NULL
+        AND n19.lod0_implicit_rep_id IS NULL
+        AND n20.lod1_implicit_rep_id IS NULL
+        AND n21.lod2_implicit_rep_id IS NULL
+        AND n22.lod3_implicit_rep_id IS NULL
+        AND n23.lod4_implicit_rep_id IS NULL
+        AND n24.lod3_implicit_rep_id IS NULL
+        AND n25.lod4_implicit_rep_id IS NULL
+        AND n26.lod1_implicit_rep_id IS NULL
+        AND n27.lod2_implicit_rep_id IS NULL
+        AND n28.lod4_implicit_rep_id IS NULL
+        AND n29.lod3_implicit_rep_id IS NULL
+        AND n30.lod4_implicit_rep_id IS NULL
+        AND n31.lod2_implicit_rep_id IS NULL
+        AND n32.lod3_implicit_rep_id IS NULL
+        AND n33.lod4_implicit_rep_id IS NULL
+        AND n34.lod3_implicit_rep_id IS NULL
+        AND n35.lod4_implicit_rep_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_implicit_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_surface_data(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    tex_image_ids0 ID_ARRAY := ID_ARRAY();
+    tex_image_ids1 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete surface_datas
+    DELETE FROM
+      surface_data t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      tex_image_id
+    BULK COLLECT INTO
+      deleted_ids,
+      tex_image_ids1;
+
+    -- collect all tex_imageids into one nested table
+    tex_image_ids0 := tex_image_ids0 MULTISET UNION ALL tex_image_ids1;
+
+    -- delete tex_image(s)
+    IF tex_image_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(tex_image_ids0) a
+      LEFT JOIN
+        surface_data n1
+        ON n1.tex_image_id  = a.COLUMN_VALUE
+      WHERE n1.tex_image_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_tex_image(object_ids);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_surface_geometry(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete referenced parts
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      surface_geometry t,
+      TABLE(pids) a
+    WHERE
+      t.parent_id = a.COLUMN_VALUE
+      AND t.id != a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_surface_geometry(object_ids);
+    END IF;
+
+    -- delete referenced parts
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      surface_geometry t,
+      TABLE(pids) a
+    WHERE
+      t.root_id = a.COLUMN_VALUE
+      AND t.id != a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_surface_geometry(object_ids);
+    END IF;
+
+    -- delete surface_geometrys
+    DELETE FROM
+      surface_geometry t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id
+    BULK COLLECT INTO
+      deleted_ids;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_tex_image(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete tex_images
+    DELETE FROM
+      tex_image t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id
+    BULK COLLECT INTO
+      deleted_ids;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_thematic_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    opening_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete references to openings
+    DELETE FROM
+      opening_to_them_surface t
+    WHERE EXISTS (
+      SELECT
+        1
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.thematic_surface_id
+    )
+    RETURNING
+      opening_id
+    BULK COLLECT INTO
+      opening_ids0;
+
+    -- delete opening(s)
+    IF opening_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(opening_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_opening(object_ids);
+      END IF;
+    END IF;
+
+    -- delete thematic_surfaces
+    DELETE FROM
+      thematic_surface t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      surface_geometry_ids4;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids4;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids1 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids1) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_tin_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete tin_reliefs
+    DELETE FROM
+      tin_relief t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      surface_geometry_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete relief_component
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_relief_component(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_traffic_area(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete traffic_areas
+    DELETE FROM
+      traffic_area t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2,
+      surface_geometry_ids3;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids3;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_transportation_complex(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    --delete traffic_areas
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      traffic_area t,
+      TABLE(pids) a
+    WHERE
+      t.transportation_complex_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_traffic_area(object_ids);
+    END IF;
+
+    -- delete transportation_complexs
+    DELETE FROM
+      transportation_complex t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod1_multi_surface_id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      surface_geometry_ids4;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids4;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_tunnel(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids5 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids6 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids7 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids8 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete referenced parts
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      tunnel t,
+      TABLE(pids) a
+    WHERE
+      t.tunnel_parent_id = a.COLUMN_VALUE
+      AND t.id != a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_tunnel(object_ids);
+    END IF;
+
+    -- delete referenced parts
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      tunnel t,
+      TABLE(pids) a
+    WHERE
+      t.tunnel_root_id = a.COLUMN_VALUE
+      AND t.id != a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_tunnel(object_ids);
+    END IF;
+
+    --delete tunnel_hollow_spaces
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      tunnel_hollow_space t,
+      TABLE(pids) a
+    WHERE
+      t.tunnel_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_tunnel_hollow_space(object_ids);
+    END IF;
+
+    --delete tunnel_installations
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      tunnel_installation t,
+      TABLE(pids) a
+    WHERE
+      t.tunnel_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_tunnel_installation(object_ids);
+    END IF;
+
+    --delete tunnel_thematic_surfaces
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      tunnel_thematic_surface t,
+      TABLE(pids) a
+    WHERE
+      t.tunnel_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_tunnel_thematic_surface(object_ids);
+    END IF;
+
+    -- delete tunnels
+    DELETE FROM
+      tunnel t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod1_multi_surface_id,
+      lod1_solid_id,
+      lod2_multi_surface_id,
+      lod2_solid_id,
+      lod3_multi_surface_id,
+      lod3_solid_id,
+      lod4_multi_surface_id,
+      lod4_solid_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      surface_geometry_ids4,
+      surface_geometry_ids5,
+      surface_geometry_ids6,
+      surface_geometry_ids7,
+      surface_geometry_ids8;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids4;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids5;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids6;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids7;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids8;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_tunnel_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids3 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete tunnel_furnitures
+    DELETE FROM
+      tunnel_furniture t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod4_brep_id,
+      lod4_implicit_rep_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      implicit_geometry_ids3;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+
+    -- collect all implicit_geometryids into one nested table
+    implicit_geometry_ids2 := implicit_geometry_ids2 MULTISET UNION ALL implicit_geometry_ids3;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    -- delete implicit_geometry(s)
+    IF implicit_geometry_ids2 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(implicit_geometry_ids2) a
+      LEFT JOIN
+        bridge_constr_element n1
+        ON n1.lod4_brep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n2
+        ON n2.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n3
+        ON n3.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n4
+        ON n4.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_furniture n5
+        ON n5.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n6
+        ON n6.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n7
+        ON n7.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n8
+        ON n8.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n9
+        ON n9.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n10
+        ON n10.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_furniture n11
+        ON n11.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n12
+        ON n12.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n13
+        ON n13.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n14
+        ON n14.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n15
+        ON n15.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n16
+        ON n16.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n17
+        ON n17.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n18
+        ON n18.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n19
+        ON n19.lod0_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n20
+        ON n20.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n21
+        ON n21.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n22
+        ON n22.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n23
+        ON n23.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n24
+        ON n24.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n25
+        ON n25.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n26
+        ON n26.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n27
+        ON n27.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n28
+        ON n28.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n29
+        ON n29.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_furniture n30
+        ON n30.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n31
+        ON n31.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n32
+        ON n32.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n33
+        ON n33.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n34
+        ON n34.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n35
+        ON n35.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      WHERE n1.lod4_brep_id IS NULL
+        AND n2.lod2_implicit_rep_id IS NULL
+        AND n3.lod1_implicit_rep_id IS NULL
+        AND n4.lod4_implicit_rep_id IS NULL
+        AND n5.lod4_implicit_rep_id IS NULL
+        AND n6.lod2_implicit_rep_id IS NULL
+        AND n7.lod3_implicit_rep_id IS NULL
+        AND n8.lod4_implicit_rep_id IS NULL
+        AND n9.lod3_implicit_rep_id IS NULL
+        AND n10.lod4_implicit_rep_id IS NULL
+        AND n11.lod4_implicit_rep_id IS NULL
+        AND n12.lod2_implicit_rep_id IS NULL
+        AND n13.lod3_implicit_rep_id IS NULL
+        AND n14.lod4_implicit_rep_id IS NULL
+        AND n15.lod3_implicit_rep_id IS NULL
+        AND n16.lod2_implicit_rep_id IS NULL
+        AND n17.lod1_implicit_rep_id IS NULL
+        AND n18.lod4_implicit_rep_id IS NULL
+        AND n19.lod0_implicit_rep_id IS NULL
+        AND n20.lod1_implicit_rep_id IS NULL
+        AND n21.lod2_implicit_rep_id IS NULL
+        AND n22.lod3_implicit_rep_id IS NULL
+        AND n23.lod4_implicit_rep_id IS NULL
+        AND n24.lod3_implicit_rep_id IS NULL
+        AND n25.lod4_implicit_rep_id IS NULL
+        AND n26.lod1_implicit_rep_id IS NULL
+        AND n27.lod2_implicit_rep_id IS NULL
+        AND n28.lod4_implicit_rep_id IS NULL
+        AND n29.lod3_implicit_rep_id IS NULL
+        AND n30.lod4_implicit_rep_id IS NULL
+        AND n31.lod2_implicit_rep_id IS NULL
+        AND n32.lod3_implicit_rep_id IS NULL
+        AND n33.lod4_implicit_rep_id IS NULL
+        AND n34.lod3_implicit_rep_id IS NULL
+        AND n35.lod4_implicit_rep_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_implicit_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete tunnel_hollow_space
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_tunnel_hollow_space(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_tunnel_hollow_space(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    --delete tunnel_installations
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      tunnel_installation t,
+      TABLE(pids) a
+    WHERE
+      t.tunnel_hollow_space_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_tunnel_installation(object_ids);
+    END IF;
+
+    --delete tunnel_thematic_surfaces
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      tunnel_thematic_surface t,
+      TABLE(pids) a
+    WHERE
+      t.tunnel_hollow_space_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_tunnel_thematic_surface(object_ids);
+    END IF;
+
+    -- delete tunnel_furnitures
+    IF pids IS NOT EMPTY THEN
+      dummy_ids := del_tunnel_furniture(pids, 1);
+    END IF;
+
+    -- delete tunnel_hollow_spaces
+    DELETE FROM
+      tunnel_hollow_space t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod4_multi_surface_id,
+      lod4_solid_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_tunnel_installation(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids5 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids6 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids7 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    --delete tunnel_thematic_surfaces
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      tunnel_thematic_surface t,
+      TABLE(pids) a
+    WHERE
+      t.tunnel_installation_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_tunnel_thematic_surface(object_ids);
+    END IF;
+
+    -- delete tunnel_installations
+    DELETE FROM
+      tunnel_installation t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod2_brep_id,
+      lod3_brep_id,
+      lod4_brep_id,
+      lod2_implicit_rep_id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      implicit_geometry_ids5,
+      implicit_geometry_ids6,
+      implicit_geometry_ids7;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids3;
+
+    -- collect all implicit_geometryids into one nested table
+    implicit_geometry_ids4 := implicit_geometry_ids4 MULTISET UNION ALL implicit_geometry_ids5;
+    implicit_geometry_ids4 := implicit_geometry_ids4 MULTISET UNION ALL implicit_geometry_ids6;
+    implicit_geometry_ids4 := implicit_geometry_ids4 MULTISET UNION ALL implicit_geometry_ids7;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    -- delete implicit_geometry(s)
+    IF implicit_geometry_ids4 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(implicit_geometry_ids4) a
+      LEFT JOIN
+        bridge_constr_element n1
+        ON n1.lod4_brep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n2
+        ON n2.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n3
+        ON n3.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n4
+        ON n4.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_furniture n5
+        ON n5.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n6
+        ON n6.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n7
+        ON n7.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n8
+        ON n8.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n9
+        ON n9.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n10
+        ON n10.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_furniture n11
+        ON n11.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n12
+        ON n12.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n13
+        ON n13.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n14
+        ON n14.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n15
+        ON n15.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n16
+        ON n16.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n17
+        ON n17.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n18
+        ON n18.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n19
+        ON n19.lod0_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n20
+        ON n20.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n21
+        ON n21.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n22
+        ON n22.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n23
+        ON n23.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n24
+        ON n24.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n25
+        ON n25.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n26
+        ON n26.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n27
+        ON n27.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n28
+        ON n28.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n29
+        ON n29.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_furniture n30
+        ON n30.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n31
+        ON n31.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n32
+        ON n32.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n33
+        ON n33.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n34
+        ON n34.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n35
+        ON n35.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      WHERE n1.lod4_brep_id IS NULL
+        AND n2.lod2_implicit_rep_id IS NULL
+        AND n3.lod1_implicit_rep_id IS NULL
+        AND n4.lod4_implicit_rep_id IS NULL
+        AND n5.lod4_implicit_rep_id IS NULL
+        AND n6.lod2_implicit_rep_id IS NULL
+        AND n7.lod3_implicit_rep_id IS NULL
+        AND n8.lod4_implicit_rep_id IS NULL
+        AND n9.lod3_implicit_rep_id IS NULL
+        AND n10.lod4_implicit_rep_id IS NULL
+        AND n11.lod4_implicit_rep_id IS NULL
+        AND n12.lod2_implicit_rep_id IS NULL
+        AND n13.lod3_implicit_rep_id IS NULL
+        AND n14.lod4_implicit_rep_id IS NULL
+        AND n15.lod3_implicit_rep_id IS NULL
+        AND n16.lod2_implicit_rep_id IS NULL
+        AND n17.lod1_implicit_rep_id IS NULL
+        AND n18.lod4_implicit_rep_id IS NULL
+        AND n19.lod0_implicit_rep_id IS NULL
+        AND n20.lod1_implicit_rep_id IS NULL
+        AND n21.lod2_implicit_rep_id IS NULL
+        AND n22.lod3_implicit_rep_id IS NULL
+        AND n23.lod4_implicit_rep_id IS NULL
+        AND n24.lod3_implicit_rep_id IS NULL
+        AND n25.lod4_implicit_rep_id IS NULL
+        AND n26.lod1_implicit_rep_id IS NULL
+        AND n27.lod2_implicit_rep_id IS NULL
+        AND n28.lod4_implicit_rep_id IS NULL
+        AND n29.lod3_implicit_rep_id IS NULL
+        AND n30.lod4_implicit_rep_id IS NULL
+        AND n31.lod2_implicit_rep_id IS NULL
+        AND n32.lod3_implicit_rep_id IS NULL
+        AND n33.lod4_implicit_rep_id IS NULL
+        AND n34.lod3_implicit_rep_id IS NULL
+        AND n35.lod4_implicit_rep_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_implicit_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_tunnel_opening(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    implicit_geometry_ids5 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete tunnel_openings
+    DELETE FROM
+      tunnel_opening t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id,
+      lod3_implicit_rep_id,
+      lod4_implicit_rep_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2,
+      implicit_geometry_ids4,
+      implicit_geometry_ids5;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+
+    -- collect all implicit_geometryids into one nested table
+    implicit_geometry_ids3 := implicit_geometry_ids3 MULTISET UNION ALL implicit_geometry_ids4;
+    implicit_geometry_ids3 := implicit_geometry_ids3 MULTISET UNION ALL implicit_geometry_ids5;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    -- delete implicit_geometry(s)
+    IF implicit_geometry_ids3 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(implicit_geometry_ids3) a
+      LEFT JOIN
+        bridge_constr_element n1
+        ON n1.lod4_brep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n2
+        ON n2.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n3
+        ON n3.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_constr_element n4
+        ON n4.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_furniture n5
+        ON n5.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n6
+        ON n6.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n7
+        ON n7.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_installation n8
+        ON n8.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n9
+        ON n9.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        bridge_opening n10
+        ON n10.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_furniture n11
+        ON n11.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n12
+        ON n12.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n13
+        ON n13.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        building_installation n14
+        ON n14.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n15
+        ON n15.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n16
+        ON n16.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n17
+        ON n17.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        city_furniture n18
+        ON n18.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n19
+        ON n19.lod0_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n20
+        ON n20.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n21
+        ON n21.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n22
+        ON n22.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        generic_cityobject n23
+        ON n23.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n24
+        ON n24.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        opening n25
+        ON n25.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n26
+        ON n26.lod1_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n27
+        ON n27.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n28
+        ON n28.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        solitary_vegetat_object n29
+        ON n29.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_furniture n30
+        ON n30.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n31
+        ON n31.lod2_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n32
+        ON n32.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_installation n33
+        ON n33.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n34
+        ON n34.lod3_implicit_rep_id  = a.COLUMN_VALUE
+      LEFT JOIN
+        tunnel_opening n35
+        ON n35.lod4_implicit_rep_id  = a.COLUMN_VALUE
+      WHERE n1.lod4_brep_id IS NULL
+        AND n2.lod2_implicit_rep_id IS NULL
+        AND n3.lod1_implicit_rep_id IS NULL
+        AND n4.lod4_implicit_rep_id IS NULL
+        AND n5.lod4_implicit_rep_id IS NULL
+        AND n6.lod2_implicit_rep_id IS NULL
+        AND n7.lod3_implicit_rep_id IS NULL
+        AND n8.lod4_implicit_rep_id IS NULL
+        AND n9.lod3_implicit_rep_id IS NULL
+        AND n10.lod4_implicit_rep_id IS NULL
+        AND n11.lod4_implicit_rep_id IS NULL
+        AND n12.lod2_implicit_rep_id IS NULL
+        AND n13.lod3_implicit_rep_id IS NULL
+        AND n14.lod4_implicit_rep_id IS NULL
+        AND n15.lod3_implicit_rep_id IS NULL
+        AND n16.lod2_implicit_rep_id IS NULL
+        AND n17.lod1_implicit_rep_id IS NULL
+        AND n18.lod4_implicit_rep_id IS NULL
+        AND n19.lod0_implicit_rep_id IS NULL
+        AND n20.lod1_implicit_rep_id IS NULL
+        AND n21.lod2_implicit_rep_id IS NULL
+        AND n22.lod3_implicit_rep_id IS NULL
+        AND n23.lod4_implicit_rep_id IS NULL
+        AND n24.lod3_implicit_rep_id IS NULL
+        AND n25.lod4_implicit_rep_id IS NULL
+        AND n26.lod1_implicit_rep_id IS NULL
+        AND n27.lod2_implicit_rep_id IS NULL
+        AND n28.lod4_implicit_rep_id IS NULL
+        AND n29.lod3_implicit_rep_id IS NULL
+        AND n30.lod4_implicit_rep_id IS NULL
+        AND n31.lod2_implicit_rep_id IS NULL
+        AND n32.lod3_implicit_rep_id IS NULL
+        AND n33.lod4_implicit_rep_id IS NULL
+        AND n34.lod3_implicit_rep_id IS NULL
+        AND n35.lod4_implicit_rep_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_implicit_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_tunnel_thematic_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    tunnel_opening_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete references to tunnel_openings
+    DELETE FROM
+      tunnel_open_to_them_srf t
+    WHERE EXISTS (
+      SELECT
+        1
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.tunnel_thematic_surface_id
+    )
+    RETURNING
+      tunnel_opening_id
+    BULK COLLECT INTO
+      tunnel_opening_ids0;
+
+    -- delete tunnel_opening(s)
+    IF tunnel_opening_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(tunnel_opening_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_tunnel_opening(object_ids);
+      END IF;
+    END IF;
+
+    -- delete tunnel_thematic_surfaces
+    DELETE FROM
+      tunnel_thematic_surface t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod2_multi_surface_id,
+      lod3_multi_surface_id,
+      lod4_multi_surface_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      surface_geometry_ids4;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids4;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids1 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids1) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_waterbody(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    waterboundary_surface_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids5 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids6 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids7 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete references to waterboundary_surfaces
+    DELETE FROM
+      waterbod_to_waterbnd_srf t
+    WHERE EXISTS (
+      SELECT
+        1
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.waterbody_id
+    )
+    RETURNING
+      waterboundary_surface_id
+    BULK COLLECT INTO
+      waterboundary_surface_ids0;
+
+    -- delete waterboundary_surface(s)
+    IF waterboundary_surface_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(waterboundary_surface_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_waterboundary_surface(object_ids);
+      END IF;
+    END IF;
+
+    -- delete waterbodys
+    DELETE FROM
+      waterbody t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod0_multi_surface_id,
+      lod1_multi_surface_id,
+      lod1_solid_id,
+      lod2_solid_id,
+      lod3_solid_id,
+      lod4_solid_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids2,
+      surface_geometry_ids3,
+      surface_geometry_ids4,
+      surface_geometry_ids5,
+      surface_geometry_ids6,
+      surface_geometry_ids7;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids3;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids4;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids5;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids6;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids7;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids1 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids1) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_waterboundary_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  IS
+    object_id number;
+    objectclass_id number;
+    object_ids ID_ARRAY := ID_ARRAY();
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    dummy_ids ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
+  BEGIN
+    -- delete waterboundary_surfaces
+    DELETE FROM
+      waterboundary_surface t
+    WHERE EXISTS (
+      SELECT
+        a.COLUMN_VALUE
+      FROM
+        TABLE(pids) a
+      WHERE
+        a.COLUMN_VALUE = t.id
+      )
+    RETURNING
+      id,
+      lod2_surface_id,
+      lod3_surface_id,
+      lod4_surface_id
+    BULK COLLECT INTO
+      deleted_ids,
+      surface_geometry_ids1,
+      surface_geometry_ids2,
+      surface_geometry_ids3;
+
+    -- collect all surface_geometryids into one nested table
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids1;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids2;
+    surface_geometry_ids0 := surface_geometry_ids0 MULTISET UNION ALL surface_geometry_ids3;
+
+    -- delete surface_geometry(s)
+    IF surface_geometry_ids0 IS NOT EMPTY THEN
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(surface_geometry_ids0) a;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_surface_geometry(object_ids);
+      END IF;
+    END IF;
+
+    IF caller <> 1 THEN
+      -- delete cityobject
+      IF deleted_ids IS NOT EMPTY THEN
+        dummy_ids := del_cityobject(deleted_ids, 2);
+      END IF;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
 
 END citydb_delete;
 /

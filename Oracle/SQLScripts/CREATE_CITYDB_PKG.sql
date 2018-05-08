@@ -27,7 +27,7 @@
 
 VARIABLE DELETE_FILE VARCHAR2(50);
 
-SELECT 'Creating packages ''citydb_util'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', ''citydb_delete'', and corresponding types' as message from DUAL;
+SELECT 'Creating packages ''citydb_util'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete'', and corresponding types' as message from DUAL;
 @@PL_SQL/CITYDB_PKG/UTIL/UTIL.sql;
 @@PL_SQL/CITYDB_PKG/INDEX/IDX.sql;
 @@PL_SQL/CITYDB_PKG/SRS/SRS.sql;
@@ -48,6 +48,5 @@ column mc new_value DELETE_FILE2 print
 select :DELETE_FILE mc from dual;
 @@&DELETE_FILE2;
 
-@@PL_SQL/CITYDB_PKG/DELETE/DELETE_BY_LINEAGE;
-SELECT 'Packages ''citydb_util'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', and ''citydb_delete'' created' as message from DUAL;
+SELECT 'Packages ''citydb_util'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', and ''citydb_delete'' created' as message from DUAL;
 
