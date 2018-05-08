@@ -77,6 +77,6 @@ IF /i NOT "%var%"=="" (
 :: Run CREATE_DB.sql to create the 3D City Database instance ------------------
 echo.
 echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%"...
-psql -h "%PGHOST%" -p "%PGPORT%" -d "%CITYDB%" -U "%PGUSER%" -f "CREATE_DB.sql" -v srsno="%SRSNO%" -v gmlsrsname="%GMLSRSNAME%"
+psql -d "%CITYDB%" -f "CREATE_DB.sql" -v srsno="%SRSNO%" -v gmlsrsname="%GMLSRSNAME%"
 
 pause
