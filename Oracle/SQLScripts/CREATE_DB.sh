@@ -11,7 +11,7 @@ export USERNAME=your_username
 #------------------------------------------------------------------------------
 
 # add sqlplus to PATH
-PATH=$SQLPLUSBIN:$PATH
+export PATH="$SQLPLUSBIN:$PATH"
 
 # cd to path of the shell script
 cd "$( cd "$( dirname "$0" )" && pwd )" > /dev/null
@@ -49,11 +49,11 @@ while [ 1 ]; do
   echo 'Please enter a valid SRID (e.g. Berlin: 81989002).'
   read -p "(default SRID=81989002): " SRSNO
   SRSNO=${SRSNO:-81989002}
-  
+
   if [[ ! $SRSNO =~ $re ]]; then
     echo
     echo 'SRID must be numeric. Please retry.'
-  else 
+  else
     break;
   fi
 done
@@ -70,15 +70,15 @@ while [ 1 ]; do
   echo 'Shall versioning be enabled (yes/no)?'
   read -p "(default VERSIONING=no): " VERSIONING
   VERSIONING=${VERSIONING:-no}
-  
+
   # to lower case
   VERSIONING=$(echo "$VERSIONING" | awk '{print tolower($0)}')
-  
+
   if [  "$VERSIONING" = "yes" ] || [ "$VERSIONING" = "no" ] ; then
     break;
   else
     echo
-    echo "Illegal input! Enter yes or no."  
+    echo "Illegal input! Enter yes or no."
   fi
 done
 
@@ -88,15 +88,15 @@ while [ 1 ]; do
   echo 'Which database license are you using (Spatial=S/Locator=L)?'
   read -p "(default DBVERSION=S): " DBVERSION
   DBVERSION=${DBVERSION:-S}
- 
+
  # to upper case
   DBVERSION=$(echo "$DBVERSION" | awk '{print toupper($0)}')
-  
+
   if [ "$DBVERSION" = "S" ] || [ "$DBVERSION" = "L" ] ; then
     break;
   else
     echo
-    echo "Illegal input! Enter S or L."  
+    echo "Illegal input! Enter S or L."
   fi
 done
 
@@ -106,5 +106,4 @@ echo "Connecting to the database \"$USERNAME@$HOST:$PORT/$SID\"..."
 sqlplus "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @CREATE_DB.sql "${SRSNO}" "${GMLSRSNAME}" "${VERSIONING}" "${DBVERSION}"
 
 echo
-echo 'Press ENTER to quit.'
-read
+read -rp 'Press ENTER to quit.' _

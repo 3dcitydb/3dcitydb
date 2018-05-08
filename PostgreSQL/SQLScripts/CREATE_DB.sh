@@ -11,7 +11,7 @@ export PGUSER=your_username
 #------------------------------------------------------------------------------
 
 # add psql to PATH
-PATH=$PGBIN:$PATH
+export PATH="$PGBIN:$PATH"
 
 # cd to path of the shell script
 cd "$( cd "$( dirname "$0" )" && pwd )" > /dev/null
@@ -49,11 +49,11 @@ while [ 1 ]; do
   echo 'Please enter a valid SRID (e.g., 3068 for DHDN/Soldner Berlin).'
   read -p "(default SRID=3068): " SRSNO
   SRSNO=${SRSNO:-3068}
-   
+
   if [[ ! $SRSNO =~ $re ]]; then
     echo
     echo 'SRID must be numeric. Please retry.'
-  else 
+  else
     break;
   fi
 done
@@ -70,5 +70,4 @@ echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\"..."
 psql -d "$CITYDB" -f "CREATE_DB.sql" -v srsno="$SRSNO" -v gmlsrsname="$GMLSRSNAME"
 
 echo
-echo 'Press ENTER to quit.'
-read
+read -rp 'Press ENTER to quit.' _
