@@ -56,6 +56,9 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 \i UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
 \i UTIL/CREATE_DB/AGGREGATION_INFO_INSTANCES.sql
 
+--// create local PL/pgSQL functions
+\i PL_pgSQL/CITYDB_PKG/DELETE/DELETE.sql
+
 \echo
 \echo 'Created schema' :target '.'
 
