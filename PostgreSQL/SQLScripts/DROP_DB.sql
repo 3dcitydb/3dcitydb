@@ -30,7 +30,7 @@ SET client_min_messages TO WARNING;
 
 --// drop 3DCityDB schemas
 \echo
-\echo 'Removing 3DCityDB schemas ...'
+\echo 'Dropping 3DCityDB schemas ...'
 DROP SCHEMA IF EXISTS citydb_pkg CASCADE;
 
 DO $$
