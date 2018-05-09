@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-08 13:16:23)
+-- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-09 15:15:21)
 -- del_address
 -- del_appearance
 -- del_breakline_relief
@@ -464,16 +464,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids1 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids1) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids1);
     END IF;
 
     IF caller <> 1 THEN
@@ -555,16 +546,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     -- delete implicit_geometry(s)
@@ -776,16 +758,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     -- delete implicit_geometry(s)
@@ -1028,16 +1001,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     -- delete implicit_geometry(s)
@@ -1294,16 +1258,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids2 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids2) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids2);
     END IF;
 
     -- delete implicit_geometry(s)
@@ -1557,16 +1512,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     IF caller <> 1 THEN
@@ -1615,16 +1561,7 @@ AS
 
     -- delete bridge_opening(s)
     IF bridge_opening_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(bridge_opening_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_bridge_opening(object_ids);
-      END IF;
+      dummy_ids := del_bridge_opening(bridge_opening_ids0);
     END IF;
 
     -- delete bridge_thematic_surfaces
@@ -1656,16 +1593,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids1 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids1) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids1);
     END IF;
 
     IF caller <> 1 THEN
@@ -1876,16 +1804,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids1 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids1) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids1);
     END IF;
 
     IF caller <> 1 THEN
@@ -1943,16 +1862,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     -- delete implicit_geometry(s)
@@ -2195,16 +2105,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     -- delete implicit_geometry(s)
@@ -2440,16 +2341,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     -- delete implicit_geometry(s)
@@ -3294,16 +3186,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     RETURN deleted_ids;
@@ -3423,16 +3306,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids3 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids3) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids3);
     END IF;
 
     IF caller <> 1 THEN
@@ -3594,16 +3468,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     -- delete implicit_geometry(s)
@@ -3808,16 +3673,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     RETURN deleted_ids;
@@ -3877,16 +3733,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     IF caller <> 1 THEN
@@ -4028,16 +3875,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids2 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids2) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids2);
     END IF;
 
     -- delete implicit_geometry(s)
@@ -4270,16 +4108,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     IF caller <> 1 THEN
@@ -4515,16 +4344,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     IF caller <> 1 THEN
@@ -4606,16 +4426,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     -- delete implicit_geometry(s)
@@ -4971,16 +4782,7 @@ AS
 
     -- delete opening(s)
     IF opening_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(opening_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_opening(object_ids);
-      END IF;
+      dummy_ids := del_opening(opening_ids0);
     END IF;
 
     -- delete thematic_surfaces
@@ -5012,16 +4814,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids1 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids1) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids1);
     END IF;
 
     IF caller <> 1 THEN
@@ -5072,16 +4865,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     IF caller <> 1 THEN
@@ -5140,16 +4924,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     IF caller <> 1 THEN
@@ -5227,16 +5002,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     IF caller <> 1 THEN
@@ -5392,16 +5158,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     IF caller <> 1 THEN
@@ -5459,16 +5216,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     -- delete implicit_geometry(s)
@@ -5712,16 +5460,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     IF caller <> 1 THEN
@@ -5810,16 +5549,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     -- delete implicit_geometry(s)
@@ -6039,16 +5769,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     -- delete implicit_geometry(s)
@@ -6251,16 +5972,7 @@ AS
 
     -- delete tunnel_opening(s)
     IF tunnel_opening_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(tunnel_opening_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_tunnel_opening(object_ids);
-      END IF;
+      dummy_ids := del_tunnel_opening(tunnel_opening_ids0);
     END IF;
 
     -- delete tunnel_thematic_surfaces
@@ -6292,16 +6004,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids1 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids1) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids1);
     END IF;
 
     IF caller <> 1 THEN
@@ -6353,16 +6056,7 @@ AS
 
     -- delete waterboundary_surface(s)
     IF waterboundary_surface_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(waterboundary_surface_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_waterboundary_surface(object_ids);
-      END IF;
+      dummy_ids := del_waterboundary_surface(waterboundary_surface_ids0);
     END IF;
 
     -- delete waterbodys
@@ -6403,16 +6097,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids1 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids1) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids1);
     END IF;
 
     IF caller <> 1 THEN
@@ -6471,16 +6156,7 @@ AS
 
     -- delete surface_geometry(s)
     IF surface_geometry_ids0 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(surface_geometry_ids0) a;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_surface_geometry(object_ids);
-      END IF;
+      dummy_ids := del_surface_geometry(surface_geometry_ids0);
     END IF;
 
     IF caller <> 1 THEN
