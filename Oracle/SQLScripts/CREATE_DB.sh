@@ -102,7 +102,7 @@ done
 
 # Run CREATE_DB.sql to create the 3D City Database instance -------------------
 echo
-echo "Connecting to the database \"$USERNAME@$HOST:$PORT/$SID\"..."
+echo "Connecting to the database \"$USERNAME@$HOST:$PORT/$SID\" ..."
 sqlplus "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @CREATE_DB.sql "${SRSNO}" "${GMLSRSNAME}" "${VERSIONING}" "${DBVERSION}"
 
 echo
