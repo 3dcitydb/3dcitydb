@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Shell script to create an instance of the 3D City Database
 # on Oracle Spatial/Locator
 
@@ -106,4 +106,5 @@ echo "Connecting to the database \"$USERNAME@$HOST:$PORT/$SID\"..."
 sqlplus "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @CREATE_DB.sql "${SRSNO}" "${GMLSRSNAME}" "${VERSIONING}" "${DBVERSION}"
 
 echo
-read -rp 'Press ENTER to quit.' _
+read -rsn1 -p 'Press ENTER to quit.'
+echo
