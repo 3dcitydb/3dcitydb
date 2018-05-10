@@ -3799,7 +3799,7 @@ LANGUAGE plpgsql STRICT;
 /**********************
 * GENERIC CITYOBJECT
 **********************/
-CREATE OR REPLACE FUNCTION delete_generic_cityobjec(
+CREATE OR REPLACE FUNCTION delete_generic_cityobject(
     pids integer[],
     objclass_ids integer[] DEFAULT '{}'::integer[])
   RETURNS SETOF integer AS
@@ -3902,7 +3902,7 @@ END;
 $BODY$
 LANGUAGE plpgsql STRICT;
 
-CREATE OR REPLACE FUNCTION delete_generic_cityobjec(
+CREATE OR REPLACE FUNCTION delete_generic_cityobject(
     pid integer,
     objclass_id integer DEFAULT 0)
   RETURNS integer AS
