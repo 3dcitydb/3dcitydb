@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-08 15:41:51)
+-- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-11 12:22:05)
 -- del_address
 -- del_appearance
 -- del_breakline_relief
@@ -44,6 +44,7 @@
 -- del_cityobject
 -- del_cityobject_genericattrib
 -- del_cityobjectgroup
+-- cleanup_global_appearances
 -- del_cityobject_by_lineage
 -- del_external_reference
 -- del_generic_cityobject
@@ -424,13 +425,13 @@ BEGIN
       (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
     LEFT JOIN
       bridge_constr_element n1
-      ON n1.lod3_implicit_rep_id  = a.a_id
+      ON n1.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n2
       ON n2.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n3
-      ON n3.lod1_implicit_rep_id  = a.a_id
+      ON n3.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n4
       ON n4.lod4_implicit_rep_id  = a.a_id
@@ -439,19 +440,19 @@ BEGIN
       ON n5.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n6
-      ON n6.lod4_implicit_rep_id  = a.a_id
+      ON n6.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n7
       ON n7.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n8
-      ON n8.lod2_implicit_rep_id  = a.a_id
+      ON n8.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n9
-      ON n9.lod4_implicit_rep_id  = a.a_id
+      ON n9.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n10
-      ON n10.lod3_implicit_rep_id  = a.a_id
+      ON n10.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       building_furniture n11
       ON n11.lod4_implicit_rep_id  = a.a_id
@@ -478,7 +479,7 @@ BEGIN
       ON n18.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n19
-      ON n19.lod4_implicit_rep_id  = a.a_id
+      ON n19.lod0_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n20
       ON n20.lod1_implicit_rep_id  = a.a_id
@@ -487,56 +488,56 @@ BEGIN
       ON n21.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n22
-      ON n22.lod0_implicit_rep_id  = a.a_id
+      ON n22.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n23
-      ON n23.lod3_implicit_rep_id  = a.a_id
+      ON n23.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n24
-      ON n24.lod4_implicit_rep_id  = a.a_id
+      ON n24.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n25
-      ON n25.lod3_implicit_rep_id  = a.a_id
+      ON n25.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n26
-      ON n26.lod2_implicit_rep_id  = a.a_id
+      ON n26.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n27
-      ON n27.lod3_implicit_rep_id  = a.a_id
+      ON n27.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n28
-      ON n28.lod4_implicit_rep_id  = a.a_id
+      ON n28.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n29
-      ON n29.lod1_implicit_rep_id  = a.a_id
+      ON n29.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_furniture n30
       ON n30.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n31
-      ON n31.lod4_implicit_rep_id  = a.a_id
+      ON n31.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n32
       ON n32.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n33
-      ON n33.lod2_implicit_rep_id  = a.a_id
+      ON n33.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n34
-      ON n34.lod4_implicit_rep_id  = a.a_id
+      ON n34.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n35
-      ON n35.lod3_implicit_rep_id  = a.a_id
-    WHERE n1.lod3_implicit_rep_id IS NULL
+      ON n35.lod4_implicit_rep_id  = a.a_id
+    WHERE n1.lod1_implicit_rep_id IS NULL
       AND n2.lod2_implicit_rep_id IS NULL
-      AND n3.lod1_implicit_rep_id IS NULL
+      AND n3.lod3_implicit_rep_id IS NULL
       AND n4.lod4_implicit_rep_id IS NULL
       AND n5.lod4_implicit_rep_id IS NULL
-      AND n6.lod4_implicit_rep_id IS NULL
+      AND n6.lod2_implicit_rep_id IS NULL
       AND n7.lod3_implicit_rep_id IS NULL
-      AND n8.lod2_implicit_rep_id IS NULL
-      AND n9.lod4_implicit_rep_id IS NULL
-      AND n10.lod3_implicit_rep_id IS NULL
+      AND n8.lod4_implicit_rep_id IS NULL
+      AND n9.lod3_implicit_rep_id IS NULL
+      AND n10.lod4_implicit_rep_id IS NULL
       AND n11.lod4_implicit_rep_id IS NULL
       AND n12.lod2_implicit_rep_id IS NULL
       AND n13.lod3_implicit_rep_id IS NULL
@@ -545,23 +546,23 @@ BEGIN
       AND n16.lod2_implicit_rep_id IS NULL
       AND n17.lod3_implicit_rep_id IS NULL
       AND n18.lod4_implicit_rep_id IS NULL
-      AND n19.lod4_implicit_rep_id IS NULL
+      AND n19.lod0_implicit_rep_id IS NULL
       AND n20.lod1_implicit_rep_id IS NULL
       AND n21.lod2_implicit_rep_id IS NULL
-      AND n22.lod0_implicit_rep_id IS NULL
-      AND n23.lod3_implicit_rep_id IS NULL
-      AND n24.lod4_implicit_rep_id IS NULL
-      AND n25.lod3_implicit_rep_id IS NULL
-      AND n26.lod2_implicit_rep_id IS NULL
-      AND n27.lod3_implicit_rep_id IS NULL
-      AND n28.lod4_implicit_rep_id IS NULL
-      AND n29.lod1_implicit_rep_id IS NULL
+      AND n22.lod3_implicit_rep_id IS NULL
+      AND n23.lod4_implicit_rep_id IS NULL
+      AND n24.lod3_implicit_rep_id IS NULL
+      AND n25.lod4_implicit_rep_id IS NULL
+      AND n26.lod1_implicit_rep_id IS NULL
+      AND n27.lod2_implicit_rep_id IS NULL
+      AND n28.lod3_implicit_rep_id IS NULL
+      AND n29.lod4_implicit_rep_id IS NULL
       AND n30.lod4_implicit_rep_id IS NULL
-      AND n31.lod4_implicit_rep_id IS NULL
+      AND n31.lod2_implicit_rep_id IS NULL
       AND n32.lod3_implicit_rep_id IS NULL
-      AND n33.lod2_implicit_rep_id IS NULL
-      AND n34.lod4_implicit_rep_id IS NULL
-      AND n35.lod3_implicit_rep_id IS NULL;
+      AND n33.lod4_implicit_rep_id IS NULL
+      AND n34.lod3_implicit_rep_id IS NULL
+      AND n35.lod4_implicit_rep_id IS NULL;
   END IF;
 
   -- delete surface_geometry(s)
@@ -625,13 +626,13 @@ BEGIN
       (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
     LEFT JOIN
       bridge_constr_element n1
-      ON n1.lod3_implicit_rep_id  = a.a_id
+      ON n1.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n2
       ON n2.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n3
-      ON n3.lod1_implicit_rep_id  = a.a_id
+      ON n3.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n4
       ON n4.lod4_implicit_rep_id  = a.a_id
@@ -640,19 +641,19 @@ BEGIN
       ON n5.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n6
-      ON n6.lod4_implicit_rep_id  = a.a_id
+      ON n6.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n7
       ON n7.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n8
-      ON n8.lod2_implicit_rep_id  = a.a_id
+      ON n8.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n9
-      ON n9.lod4_implicit_rep_id  = a.a_id
+      ON n9.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n10
-      ON n10.lod3_implicit_rep_id  = a.a_id
+      ON n10.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       building_furniture n11
       ON n11.lod4_implicit_rep_id  = a.a_id
@@ -679,7 +680,7 @@ BEGIN
       ON n18.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n19
-      ON n19.lod4_implicit_rep_id  = a.a_id
+      ON n19.lod0_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n20
       ON n20.lod1_implicit_rep_id  = a.a_id
@@ -688,56 +689,56 @@ BEGIN
       ON n21.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n22
-      ON n22.lod0_implicit_rep_id  = a.a_id
+      ON n22.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n23
-      ON n23.lod3_implicit_rep_id  = a.a_id
+      ON n23.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n24
-      ON n24.lod4_implicit_rep_id  = a.a_id
+      ON n24.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n25
-      ON n25.lod3_implicit_rep_id  = a.a_id
+      ON n25.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n26
-      ON n26.lod2_implicit_rep_id  = a.a_id
+      ON n26.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n27
-      ON n27.lod3_implicit_rep_id  = a.a_id
+      ON n27.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n28
-      ON n28.lod4_implicit_rep_id  = a.a_id
+      ON n28.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n29
-      ON n29.lod1_implicit_rep_id  = a.a_id
+      ON n29.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_furniture n30
       ON n30.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n31
-      ON n31.lod4_implicit_rep_id  = a.a_id
+      ON n31.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n32
       ON n32.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n33
-      ON n33.lod2_implicit_rep_id  = a.a_id
+      ON n33.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n34
-      ON n34.lod4_implicit_rep_id  = a.a_id
+      ON n34.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n35
-      ON n35.lod3_implicit_rep_id  = a.a_id
-    WHERE n1.lod3_implicit_rep_id IS NULL
+      ON n35.lod4_implicit_rep_id  = a.a_id
+    WHERE n1.lod1_implicit_rep_id IS NULL
       AND n2.lod2_implicit_rep_id IS NULL
-      AND n3.lod1_implicit_rep_id IS NULL
+      AND n3.lod3_implicit_rep_id IS NULL
       AND n4.lod4_implicit_rep_id IS NULL
       AND n5.lod4_implicit_rep_id IS NULL
-      AND n6.lod4_implicit_rep_id IS NULL
+      AND n6.lod2_implicit_rep_id IS NULL
       AND n7.lod3_implicit_rep_id IS NULL
-      AND n8.lod2_implicit_rep_id IS NULL
-      AND n9.lod4_implicit_rep_id IS NULL
-      AND n10.lod3_implicit_rep_id IS NULL
+      AND n8.lod4_implicit_rep_id IS NULL
+      AND n9.lod3_implicit_rep_id IS NULL
+      AND n10.lod4_implicit_rep_id IS NULL
       AND n11.lod4_implicit_rep_id IS NULL
       AND n12.lod2_implicit_rep_id IS NULL
       AND n13.lod3_implicit_rep_id IS NULL
@@ -746,23 +747,23 @@ BEGIN
       AND n16.lod2_implicit_rep_id IS NULL
       AND n17.lod3_implicit_rep_id IS NULL
       AND n18.lod4_implicit_rep_id IS NULL
-      AND n19.lod4_implicit_rep_id IS NULL
+      AND n19.lod0_implicit_rep_id IS NULL
       AND n20.lod1_implicit_rep_id IS NULL
       AND n21.lod2_implicit_rep_id IS NULL
-      AND n22.lod0_implicit_rep_id IS NULL
-      AND n23.lod3_implicit_rep_id IS NULL
-      AND n24.lod4_implicit_rep_id IS NULL
-      AND n25.lod3_implicit_rep_id IS NULL
-      AND n26.lod2_implicit_rep_id IS NULL
-      AND n27.lod3_implicit_rep_id IS NULL
-      AND n28.lod4_implicit_rep_id IS NULL
-      AND n29.lod1_implicit_rep_id IS NULL
+      AND n22.lod3_implicit_rep_id IS NULL
+      AND n23.lod4_implicit_rep_id IS NULL
+      AND n24.lod3_implicit_rep_id IS NULL
+      AND n25.lod4_implicit_rep_id IS NULL
+      AND n26.lod1_implicit_rep_id IS NULL
+      AND n27.lod2_implicit_rep_id IS NULL
+      AND n28.lod3_implicit_rep_id IS NULL
+      AND n29.lod4_implicit_rep_id IS NULL
       AND n30.lod4_implicit_rep_id IS NULL
-      AND n31.lod4_implicit_rep_id IS NULL
+      AND n31.lod2_implicit_rep_id IS NULL
       AND n32.lod3_implicit_rep_id IS NULL
-      AND n33.lod2_implicit_rep_id IS NULL
-      AND n34.lod4_implicit_rep_id IS NULL
-      AND n35.lod3_implicit_rep_id IS NULL;
+      AND n33.lod4_implicit_rep_id IS NULL
+      AND n34.lod3_implicit_rep_id IS NULL
+      AND n35.lod4_implicit_rep_id IS NULL;
   END IF;
 
   -- delete surface_geometry(s)
@@ -843,13 +844,13 @@ BEGIN
       (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
     LEFT JOIN
       bridge_constr_element n1
-      ON n1.lod3_implicit_rep_id  = a.a_id
+      ON n1.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n2
       ON n2.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n3
-      ON n3.lod1_implicit_rep_id  = a.a_id
+      ON n3.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n4
       ON n4.lod4_implicit_rep_id  = a.a_id
@@ -858,19 +859,19 @@ BEGIN
       ON n5.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n6
-      ON n6.lod4_implicit_rep_id  = a.a_id
+      ON n6.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n7
       ON n7.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n8
-      ON n8.lod2_implicit_rep_id  = a.a_id
+      ON n8.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n9
-      ON n9.lod4_implicit_rep_id  = a.a_id
+      ON n9.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n10
-      ON n10.lod3_implicit_rep_id  = a.a_id
+      ON n10.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       building_furniture n11
       ON n11.lod4_implicit_rep_id  = a.a_id
@@ -897,7 +898,7 @@ BEGIN
       ON n18.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n19
-      ON n19.lod4_implicit_rep_id  = a.a_id
+      ON n19.lod0_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n20
       ON n20.lod1_implicit_rep_id  = a.a_id
@@ -906,56 +907,56 @@ BEGIN
       ON n21.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n22
-      ON n22.lod0_implicit_rep_id  = a.a_id
+      ON n22.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n23
-      ON n23.lod3_implicit_rep_id  = a.a_id
+      ON n23.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n24
-      ON n24.lod4_implicit_rep_id  = a.a_id
+      ON n24.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n25
-      ON n25.lod3_implicit_rep_id  = a.a_id
+      ON n25.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n26
-      ON n26.lod2_implicit_rep_id  = a.a_id
+      ON n26.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n27
-      ON n27.lod3_implicit_rep_id  = a.a_id
+      ON n27.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n28
-      ON n28.lod4_implicit_rep_id  = a.a_id
+      ON n28.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n29
-      ON n29.lod1_implicit_rep_id  = a.a_id
+      ON n29.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_furniture n30
       ON n30.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n31
-      ON n31.lod4_implicit_rep_id  = a.a_id
+      ON n31.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n32
       ON n32.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n33
-      ON n33.lod2_implicit_rep_id  = a.a_id
+      ON n33.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n34
-      ON n34.lod4_implicit_rep_id  = a.a_id
+      ON n34.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n35
-      ON n35.lod3_implicit_rep_id  = a.a_id
-    WHERE n1.lod3_implicit_rep_id IS NULL
+      ON n35.lod4_implicit_rep_id  = a.a_id
+    WHERE n1.lod1_implicit_rep_id IS NULL
       AND n2.lod2_implicit_rep_id IS NULL
-      AND n3.lod1_implicit_rep_id IS NULL
+      AND n3.lod3_implicit_rep_id IS NULL
       AND n4.lod4_implicit_rep_id IS NULL
       AND n5.lod4_implicit_rep_id IS NULL
-      AND n6.lod4_implicit_rep_id IS NULL
+      AND n6.lod2_implicit_rep_id IS NULL
       AND n7.lod3_implicit_rep_id IS NULL
-      AND n8.lod2_implicit_rep_id IS NULL
-      AND n9.lod4_implicit_rep_id IS NULL
-      AND n10.lod3_implicit_rep_id IS NULL
+      AND n8.lod4_implicit_rep_id IS NULL
+      AND n9.lod3_implicit_rep_id IS NULL
+      AND n10.lod4_implicit_rep_id IS NULL
       AND n11.lod4_implicit_rep_id IS NULL
       AND n12.lod2_implicit_rep_id IS NULL
       AND n13.lod3_implicit_rep_id IS NULL
@@ -964,23 +965,23 @@ BEGIN
       AND n16.lod2_implicit_rep_id IS NULL
       AND n17.lod3_implicit_rep_id IS NULL
       AND n18.lod4_implicit_rep_id IS NULL
-      AND n19.lod4_implicit_rep_id IS NULL
+      AND n19.lod0_implicit_rep_id IS NULL
       AND n20.lod1_implicit_rep_id IS NULL
       AND n21.lod2_implicit_rep_id IS NULL
-      AND n22.lod0_implicit_rep_id IS NULL
-      AND n23.lod3_implicit_rep_id IS NULL
-      AND n24.lod4_implicit_rep_id IS NULL
-      AND n25.lod3_implicit_rep_id IS NULL
-      AND n26.lod2_implicit_rep_id IS NULL
-      AND n27.lod3_implicit_rep_id IS NULL
-      AND n28.lod4_implicit_rep_id IS NULL
-      AND n29.lod1_implicit_rep_id IS NULL
+      AND n22.lod3_implicit_rep_id IS NULL
+      AND n23.lod4_implicit_rep_id IS NULL
+      AND n24.lod3_implicit_rep_id IS NULL
+      AND n25.lod4_implicit_rep_id IS NULL
+      AND n26.lod1_implicit_rep_id IS NULL
+      AND n27.lod2_implicit_rep_id IS NULL
+      AND n28.lod3_implicit_rep_id IS NULL
+      AND n29.lod4_implicit_rep_id IS NULL
       AND n30.lod4_implicit_rep_id IS NULL
-      AND n31.lod4_implicit_rep_id IS NULL
+      AND n31.lod2_implicit_rep_id IS NULL
       AND n32.lod3_implicit_rep_id IS NULL
-      AND n33.lod2_implicit_rep_id IS NULL
-      AND n34.lod4_implicit_rep_id IS NULL
-      AND n35.lod3_implicit_rep_id IS NULL;
+      AND n33.lod4_implicit_rep_id IS NULL
+      AND n34.lod3_implicit_rep_id IS NULL
+      AND n35.lod4_implicit_rep_id IS NULL;
   END IF;
 
   -- delete surface_geometry(s)
@@ -1052,13 +1053,13 @@ BEGIN
       (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
     LEFT JOIN
       bridge_constr_element n1
-      ON n1.lod3_implicit_rep_id  = a.a_id
+      ON n1.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n2
       ON n2.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n3
-      ON n3.lod1_implicit_rep_id  = a.a_id
+      ON n3.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n4
       ON n4.lod4_implicit_rep_id  = a.a_id
@@ -1067,19 +1068,19 @@ BEGIN
       ON n5.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n6
-      ON n6.lod4_implicit_rep_id  = a.a_id
+      ON n6.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n7
       ON n7.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n8
-      ON n8.lod2_implicit_rep_id  = a.a_id
+      ON n8.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n9
-      ON n9.lod4_implicit_rep_id  = a.a_id
+      ON n9.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n10
-      ON n10.lod3_implicit_rep_id  = a.a_id
+      ON n10.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       building_furniture n11
       ON n11.lod4_implicit_rep_id  = a.a_id
@@ -1106,7 +1107,7 @@ BEGIN
       ON n18.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n19
-      ON n19.lod4_implicit_rep_id  = a.a_id
+      ON n19.lod0_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n20
       ON n20.lod1_implicit_rep_id  = a.a_id
@@ -1115,56 +1116,56 @@ BEGIN
       ON n21.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n22
-      ON n22.lod0_implicit_rep_id  = a.a_id
+      ON n22.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n23
-      ON n23.lod3_implicit_rep_id  = a.a_id
+      ON n23.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n24
-      ON n24.lod4_implicit_rep_id  = a.a_id
+      ON n24.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n25
-      ON n25.lod3_implicit_rep_id  = a.a_id
+      ON n25.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n26
-      ON n26.lod2_implicit_rep_id  = a.a_id
+      ON n26.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n27
-      ON n27.lod3_implicit_rep_id  = a.a_id
+      ON n27.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n28
-      ON n28.lod4_implicit_rep_id  = a.a_id
+      ON n28.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n29
-      ON n29.lod1_implicit_rep_id  = a.a_id
+      ON n29.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_furniture n30
       ON n30.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n31
-      ON n31.lod4_implicit_rep_id  = a.a_id
+      ON n31.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n32
       ON n32.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n33
-      ON n33.lod2_implicit_rep_id  = a.a_id
+      ON n33.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n34
-      ON n34.lod4_implicit_rep_id  = a.a_id
+      ON n34.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n35
-      ON n35.lod3_implicit_rep_id  = a.a_id
-    WHERE n1.lod3_implicit_rep_id IS NULL
+      ON n35.lod4_implicit_rep_id  = a.a_id
+    WHERE n1.lod1_implicit_rep_id IS NULL
       AND n2.lod2_implicit_rep_id IS NULL
-      AND n3.lod1_implicit_rep_id IS NULL
+      AND n3.lod3_implicit_rep_id IS NULL
       AND n4.lod4_implicit_rep_id IS NULL
       AND n5.lod4_implicit_rep_id IS NULL
-      AND n6.lod4_implicit_rep_id IS NULL
+      AND n6.lod2_implicit_rep_id IS NULL
       AND n7.lod3_implicit_rep_id IS NULL
-      AND n8.lod2_implicit_rep_id IS NULL
-      AND n9.lod4_implicit_rep_id IS NULL
-      AND n10.lod3_implicit_rep_id IS NULL
+      AND n8.lod4_implicit_rep_id IS NULL
+      AND n9.lod3_implicit_rep_id IS NULL
+      AND n10.lod4_implicit_rep_id IS NULL
       AND n11.lod4_implicit_rep_id IS NULL
       AND n12.lod2_implicit_rep_id IS NULL
       AND n13.lod3_implicit_rep_id IS NULL
@@ -1173,23 +1174,23 @@ BEGIN
       AND n16.lod2_implicit_rep_id IS NULL
       AND n17.lod3_implicit_rep_id IS NULL
       AND n18.lod4_implicit_rep_id IS NULL
-      AND n19.lod4_implicit_rep_id IS NULL
+      AND n19.lod0_implicit_rep_id IS NULL
       AND n20.lod1_implicit_rep_id IS NULL
       AND n21.lod2_implicit_rep_id IS NULL
-      AND n22.lod0_implicit_rep_id IS NULL
-      AND n23.lod3_implicit_rep_id IS NULL
-      AND n24.lod4_implicit_rep_id IS NULL
-      AND n25.lod3_implicit_rep_id IS NULL
-      AND n26.lod2_implicit_rep_id IS NULL
-      AND n27.lod3_implicit_rep_id IS NULL
-      AND n28.lod4_implicit_rep_id IS NULL
-      AND n29.lod1_implicit_rep_id IS NULL
+      AND n22.lod3_implicit_rep_id IS NULL
+      AND n23.lod4_implicit_rep_id IS NULL
+      AND n24.lod3_implicit_rep_id IS NULL
+      AND n25.lod4_implicit_rep_id IS NULL
+      AND n26.lod1_implicit_rep_id IS NULL
+      AND n27.lod2_implicit_rep_id IS NULL
+      AND n28.lod3_implicit_rep_id IS NULL
+      AND n29.lod4_implicit_rep_id IS NULL
       AND n30.lod4_implicit_rep_id IS NULL
-      AND n31.lod4_implicit_rep_id IS NULL
+      AND n31.lod2_implicit_rep_id IS NULL
       AND n32.lod3_implicit_rep_id IS NULL
-      AND n33.lod2_implicit_rep_id IS NULL
-      AND n34.lod4_implicit_rep_id IS NULL
-      AND n35.lod3_implicit_rep_id IS NULL;
+      AND n33.lod4_implicit_rep_id IS NULL
+      AND n34.lod3_implicit_rep_id IS NULL
+      AND n35.lod4_implicit_rep_id IS NULL;
   END IF;
 
   -- delete surface_geometry(s)
@@ -1592,13 +1593,13 @@ BEGIN
       (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
     LEFT JOIN
       bridge_constr_element n1
-      ON n1.lod3_implicit_rep_id  = a.a_id
+      ON n1.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n2
       ON n2.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n3
-      ON n3.lod1_implicit_rep_id  = a.a_id
+      ON n3.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n4
       ON n4.lod4_implicit_rep_id  = a.a_id
@@ -1607,19 +1608,19 @@ BEGIN
       ON n5.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n6
-      ON n6.lod4_implicit_rep_id  = a.a_id
+      ON n6.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n7
       ON n7.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n8
-      ON n8.lod2_implicit_rep_id  = a.a_id
+      ON n8.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n9
-      ON n9.lod4_implicit_rep_id  = a.a_id
+      ON n9.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n10
-      ON n10.lod3_implicit_rep_id  = a.a_id
+      ON n10.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       building_furniture n11
       ON n11.lod4_implicit_rep_id  = a.a_id
@@ -1646,7 +1647,7 @@ BEGIN
       ON n18.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n19
-      ON n19.lod4_implicit_rep_id  = a.a_id
+      ON n19.lod0_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n20
       ON n20.lod1_implicit_rep_id  = a.a_id
@@ -1655,56 +1656,56 @@ BEGIN
       ON n21.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n22
-      ON n22.lod0_implicit_rep_id  = a.a_id
+      ON n22.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n23
-      ON n23.lod3_implicit_rep_id  = a.a_id
+      ON n23.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n24
-      ON n24.lod4_implicit_rep_id  = a.a_id
+      ON n24.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n25
-      ON n25.lod3_implicit_rep_id  = a.a_id
+      ON n25.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n26
-      ON n26.lod2_implicit_rep_id  = a.a_id
+      ON n26.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n27
-      ON n27.lod3_implicit_rep_id  = a.a_id
+      ON n27.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n28
-      ON n28.lod4_implicit_rep_id  = a.a_id
+      ON n28.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n29
-      ON n29.lod1_implicit_rep_id  = a.a_id
+      ON n29.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_furniture n30
       ON n30.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n31
-      ON n31.lod4_implicit_rep_id  = a.a_id
+      ON n31.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n32
       ON n32.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n33
-      ON n33.lod2_implicit_rep_id  = a.a_id
+      ON n33.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n34
-      ON n34.lod4_implicit_rep_id  = a.a_id
+      ON n34.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n35
-      ON n35.lod3_implicit_rep_id  = a.a_id
-    WHERE n1.lod3_implicit_rep_id IS NULL
+      ON n35.lod4_implicit_rep_id  = a.a_id
+    WHERE n1.lod1_implicit_rep_id IS NULL
       AND n2.lod2_implicit_rep_id IS NULL
-      AND n3.lod1_implicit_rep_id IS NULL
+      AND n3.lod3_implicit_rep_id IS NULL
       AND n4.lod4_implicit_rep_id IS NULL
       AND n5.lod4_implicit_rep_id IS NULL
-      AND n6.lod4_implicit_rep_id IS NULL
+      AND n6.lod2_implicit_rep_id IS NULL
       AND n7.lod3_implicit_rep_id IS NULL
-      AND n8.lod2_implicit_rep_id IS NULL
-      AND n9.lod4_implicit_rep_id IS NULL
-      AND n10.lod3_implicit_rep_id IS NULL
+      AND n8.lod4_implicit_rep_id IS NULL
+      AND n9.lod3_implicit_rep_id IS NULL
+      AND n10.lod4_implicit_rep_id IS NULL
       AND n11.lod4_implicit_rep_id IS NULL
       AND n12.lod2_implicit_rep_id IS NULL
       AND n13.lod3_implicit_rep_id IS NULL
@@ -1713,23 +1714,23 @@ BEGIN
       AND n16.lod2_implicit_rep_id IS NULL
       AND n17.lod3_implicit_rep_id IS NULL
       AND n18.lod4_implicit_rep_id IS NULL
-      AND n19.lod4_implicit_rep_id IS NULL
+      AND n19.lod0_implicit_rep_id IS NULL
       AND n20.lod1_implicit_rep_id IS NULL
       AND n21.lod2_implicit_rep_id IS NULL
-      AND n22.lod0_implicit_rep_id IS NULL
-      AND n23.lod3_implicit_rep_id IS NULL
-      AND n24.lod4_implicit_rep_id IS NULL
-      AND n25.lod3_implicit_rep_id IS NULL
-      AND n26.lod2_implicit_rep_id IS NULL
-      AND n27.lod3_implicit_rep_id IS NULL
-      AND n28.lod4_implicit_rep_id IS NULL
-      AND n29.lod1_implicit_rep_id IS NULL
+      AND n22.lod3_implicit_rep_id IS NULL
+      AND n23.lod4_implicit_rep_id IS NULL
+      AND n24.lod3_implicit_rep_id IS NULL
+      AND n25.lod4_implicit_rep_id IS NULL
+      AND n26.lod1_implicit_rep_id IS NULL
+      AND n27.lod2_implicit_rep_id IS NULL
+      AND n28.lod3_implicit_rep_id IS NULL
+      AND n29.lod4_implicit_rep_id IS NULL
       AND n30.lod4_implicit_rep_id IS NULL
-      AND n31.lod4_implicit_rep_id IS NULL
+      AND n31.lod2_implicit_rep_id IS NULL
       AND n32.lod3_implicit_rep_id IS NULL
-      AND n33.lod2_implicit_rep_id IS NULL
-      AND n34.lod4_implicit_rep_id IS NULL
-      AND n35.lod3_implicit_rep_id IS NULL;
+      AND n33.lod4_implicit_rep_id IS NULL
+      AND n34.lod3_implicit_rep_id IS NULL
+      AND n35.lod4_implicit_rep_id IS NULL;
   END IF;
 
   -- delete surface_geometry(s)
@@ -1810,13 +1811,13 @@ BEGIN
       (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
     LEFT JOIN
       bridge_constr_element n1
-      ON n1.lod3_implicit_rep_id  = a.a_id
+      ON n1.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n2
       ON n2.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n3
-      ON n3.lod1_implicit_rep_id  = a.a_id
+      ON n3.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n4
       ON n4.lod4_implicit_rep_id  = a.a_id
@@ -1825,19 +1826,19 @@ BEGIN
       ON n5.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n6
-      ON n6.lod4_implicit_rep_id  = a.a_id
+      ON n6.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n7
       ON n7.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n8
-      ON n8.lod2_implicit_rep_id  = a.a_id
+      ON n8.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n9
-      ON n9.lod4_implicit_rep_id  = a.a_id
+      ON n9.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n10
-      ON n10.lod3_implicit_rep_id  = a.a_id
+      ON n10.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       building_furniture n11
       ON n11.lod4_implicit_rep_id  = a.a_id
@@ -1864,7 +1865,7 @@ BEGIN
       ON n18.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n19
-      ON n19.lod4_implicit_rep_id  = a.a_id
+      ON n19.lod0_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n20
       ON n20.lod1_implicit_rep_id  = a.a_id
@@ -1873,56 +1874,56 @@ BEGIN
       ON n21.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n22
-      ON n22.lod0_implicit_rep_id  = a.a_id
+      ON n22.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n23
-      ON n23.lod3_implicit_rep_id  = a.a_id
+      ON n23.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n24
-      ON n24.lod4_implicit_rep_id  = a.a_id
+      ON n24.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n25
-      ON n25.lod3_implicit_rep_id  = a.a_id
+      ON n25.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n26
-      ON n26.lod2_implicit_rep_id  = a.a_id
+      ON n26.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n27
-      ON n27.lod3_implicit_rep_id  = a.a_id
+      ON n27.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n28
-      ON n28.lod4_implicit_rep_id  = a.a_id
+      ON n28.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n29
-      ON n29.lod1_implicit_rep_id  = a.a_id
+      ON n29.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_furniture n30
       ON n30.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n31
-      ON n31.lod4_implicit_rep_id  = a.a_id
+      ON n31.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n32
       ON n32.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n33
-      ON n33.lod2_implicit_rep_id  = a.a_id
+      ON n33.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n34
-      ON n34.lod4_implicit_rep_id  = a.a_id
+      ON n34.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n35
-      ON n35.lod3_implicit_rep_id  = a.a_id
-    WHERE n1.lod3_implicit_rep_id IS NULL
+      ON n35.lod4_implicit_rep_id  = a.a_id
+    WHERE n1.lod1_implicit_rep_id IS NULL
       AND n2.lod2_implicit_rep_id IS NULL
-      AND n3.lod1_implicit_rep_id IS NULL
+      AND n3.lod3_implicit_rep_id IS NULL
       AND n4.lod4_implicit_rep_id IS NULL
       AND n5.lod4_implicit_rep_id IS NULL
-      AND n6.lod4_implicit_rep_id IS NULL
+      AND n6.lod2_implicit_rep_id IS NULL
       AND n7.lod3_implicit_rep_id IS NULL
-      AND n8.lod2_implicit_rep_id IS NULL
-      AND n9.lod4_implicit_rep_id IS NULL
-      AND n10.lod3_implicit_rep_id IS NULL
+      AND n8.lod4_implicit_rep_id IS NULL
+      AND n9.lod3_implicit_rep_id IS NULL
+      AND n10.lod4_implicit_rep_id IS NULL
       AND n11.lod4_implicit_rep_id IS NULL
       AND n12.lod2_implicit_rep_id IS NULL
       AND n13.lod3_implicit_rep_id IS NULL
@@ -1931,23 +1932,23 @@ BEGIN
       AND n16.lod2_implicit_rep_id IS NULL
       AND n17.lod3_implicit_rep_id IS NULL
       AND n18.lod4_implicit_rep_id IS NULL
-      AND n19.lod4_implicit_rep_id IS NULL
+      AND n19.lod0_implicit_rep_id IS NULL
       AND n20.lod1_implicit_rep_id IS NULL
       AND n21.lod2_implicit_rep_id IS NULL
-      AND n22.lod0_implicit_rep_id IS NULL
-      AND n23.lod3_implicit_rep_id IS NULL
-      AND n24.lod4_implicit_rep_id IS NULL
-      AND n25.lod3_implicit_rep_id IS NULL
-      AND n26.lod2_implicit_rep_id IS NULL
-      AND n27.lod3_implicit_rep_id IS NULL
-      AND n28.lod4_implicit_rep_id IS NULL
-      AND n29.lod1_implicit_rep_id IS NULL
+      AND n22.lod3_implicit_rep_id IS NULL
+      AND n23.lod4_implicit_rep_id IS NULL
+      AND n24.lod3_implicit_rep_id IS NULL
+      AND n25.lod4_implicit_rep_id IS NULL
+      AND n26.lod1_implicit_rep_id IS NULL
+      AND n27.lod2_implicit_rep_id IS NULL
+      AND n28.lod3_implicit_rep_id IS NULL
+      AND n29.lod4_implicit_rep_id IS NULL
       AND n30.lod4_implicit_rep_id IS NULL
-      AND n31.lod4_implicit_rep_id IS NULL
+      AND n31.lod2_implicit_rep_id IS NULL
       AND n32.lod3_implicit_rep_id IS NULL
-      AND n33.lod2_implicit_rep_id IS NULL
-      AND n34.lod4_implicit_rep_id IS NULL
-      AND n35.lod3_implicit_rep_id IS NULL;
+      AND n33.lod4_implicit_rep_id IS NULL
+      AND n34.lod3_implicit_rep_id IS NULL
+      AND n35.lod4_implicit_rep_id IS NULL;
   END IF;
 
   -- delete surface_geometry(s)
@@ -2023,13 +2024,13 @@ BEGIN
       (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
     LEFT JOIN
       bridge_constr_element n1
-      ON n1.lod3_implicit_rep_id  = a.a_id
+      ON n1.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n2
       ON n2.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n3
-      ON n3.lod1_implicit_rep_id  = a.a_id
+      ON n3.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n4
       ON n4.lod4_implicit_rep_id  = a.a_id
@@ -2038,19 +2039,19 @@ BEGIN
       ON n5.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n6
-      ON n6.lod4_implicit_rep_id  = a.a_id
+      ON n6.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n7
       ON n7.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n8
-      ON n8.lod2_implicit_rep_id  = a.a_id
+      ON n8.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n9
-      ON n9.lod4_implicit_rep_id  = a.a_id
+      ON n9.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n10
-      ON n10.lod3_implicit_rep_id  = a.a_id
+      ON n10.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       building_furniture n11
       ON n11.lod4_implicit_rep_id  = a.a_id
@@ -2077,7 +2078,7 @@ BEGIN
       ON n18.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n19
-      ON n19.lod4_implicit_rep_id  = a.a_id
+      ON n19.lod0_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n20
       ON n20.lod1_implicit_rep_id  = a.a_id
@@ -2086,56 +2087,56 @@ BEGIN
       ON n21.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n22
-      ON n22.lod0_implicit_rep_id  = a.a_id
+      ON n22.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n23
-      ON n23.lod3_implicit_rep_id  = a.a_id
+      ON n23.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n24
-      ON n24.lod4_implicit_rep_id  = a.a_id
+      ON n24.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n25
-      ON n25.lod3_implicit_rep_id  = a.a_id
+      ON n25.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n26
-      ON n26.lod2_implicit_rep_id  = a.a_id
+      ON n26.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n27
-      ON n27.lod3_implicit_rep_id  = a.a_id
+      ON n27.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n28
-      ON n28.lod4_implicit_rep_id  = a.a_id
+      ON n28.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n29
-      ON n29.lod1_implicit_rep_id  = a.a_id
+      ON n29.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_furniture n30
       ON n30.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n31
-      ON n31.lod4_implicit_rep_id  = a.a_id
+      ON n31.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n32
       ON n32.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n33
-      ON n33.lod2_implicit_rep_id  = a.a_id
+      ON n33.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n34
-      ON n34.lod4_implicit_rep_id  = a.a_id
+      ON n34.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n35
-      ON n35.lod3_implicit_rep_id  = a.a_id
-    WHERE n1.lod3_implicit_rep_id IS NULL
+      ON n35.lod4_implicit_rep_id  = a.a_id
+    WHERE n1.lod1_implicit_rep_id IS NULL
       AND n2.lod2_implicit_rep_id IS NULL
-      AND n3.lod1_implicit_rep_id IS NULL
+      AND n3.lod3_implicit_rep_id IS NULL
       AND n4.lod4_implicit_rep_id IS NULL
       AND n5.lod4_implicit_rep_id IS NULL
-      AND n6.lod4_implicit_rep_id IS NULL
+      AND n6.lod2_implicit_rep_id IS NULL
       AND n7.lod3_implicit_rep_id IS NULL
-      AND n8.lod2_implicit_rep_id IS NULL
-      AND n9.lod4_implicit_rep_id IS NULL
-      AND n10.lod3_implicit_rep_id IS NULL
+      AND n8.lod4_implicit_rep_id IS NULL
+      AND n9.lod3_implicit_rep_id IS NULL
+      AND n10.lod4_implicit_rep_id IS NULL
       AND n11.lod4_implicit_rep_id IS NULL
       AND n12.lod2_implicit_rep_id IS NULL
       AND n13.lod3_implicit_rep_id IS NULL
@@ -2144,23 +2145,23 @@ BEGIN
       AND n16.lod2_implicit_rep_id IS NULL
       AND n17.lod3_implicit_rep_id IS NULL
       AND n18.lod4_implicit_rep_id IS NULL
-      AND n19.lod4_implicit_rep_id IS NULL
+      AND n19.lod0_implicit_rep_id IS NULL
       AND n20.lod1_implicit_rep_id IS NULL
       AND n21.lod2_implicit_rep_id IS NULL
-      AND n22.lod0_implicit_rep_id IS NULL
-      AND n23.lod3_implicit_rep_id IS NULL
-      AND n24.lod4_implicit_rep_id IS NULL
-      AND n25.lod3_implicit_rep_id IS NULL
-      AND n26.lod2_implicit_rep_id IS NULL
-      AND n27.lod3_implicit_rep_id IS NULL
-      AND n28.lod4_implicit_rep_id IS NULL
-      AND n29.lod1_implicit_rep_id IS NULL
+      AND n22.lod3_implicit_rep_id IS NULL
+      AND n23.lod4_implicit_rep_id IS NULL
+      AND n24.lod3_implicit_rep_id IS NULL
+      AND n25.lod4_implicit_rep_id IS NULL
+      AND n26.lod1_implicit_rep_id IS NULL
+      AND n27.lod2_implicit_rep_id IS NULL
+      AND n28.lod3_implicit_rep_id IS NULL
+      AND n29.lod4_implicit_rep_id IS NULL
       AND n30.lod4_implicit_rep_id IS NULL
-      AND n31.lod4_implicit_rep_id IS NULL
+      AND n31.lod2_implicit_rep_id IS NULL
       AND n32.lod3_implicit_rep_id IS NULL
-      AND n33.lod2_implicit_rep_id IS NULL
-      AND n34.lod4_implicit_rep_id IS NULL
-      AND n35.lod3_implicit_rep_id IS NULL;
+      AND n33.lod4_implicit_rep_id IS NULL
+      AND n34.lod3_implicit_rep_id IS NULL
+      AND n35.lod4_implicit_rep_id IS NULL;
   END IF;
 
   -- delete surface_geometry(s)
@@ -2931,6 +2932,34 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
+CREATE OR REPLACE FUNCTION cleanup_global_appearances() RETURNS integer AS
+$body$
+-- Function for cleaning up global appearance
+DECLARE
+  deleted_id int;
+  app_id int;
+  deleted_count integer := 0;
+BEGIN
+  PERFORM del_surface_data(array_agg(s.id))
+    FROM surface_data s 
+    LEFT OUTER JOIN textureparam t ON s.id = t.surface_data_id
+    WHERE t.surface_data_id IS NULL;
+
+    FOR app_id IN
+      SELECT a.id FROM appearance a
+        LEFT OUTER JOIN appear_to_surface_data asd ON a.id=asd.appearance_id
+          WHERE a.cityobject_id IS NULL AND asd.appearance_id IS NULL
+    LOOP
+      DELETE FROM appearance WHERE id = app_id RETURNING id INTO deleted_id;
+      deleted_count := deleted_count + 1;
+    END LOOP;
+
+  RETURN deleted_count;
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
 CREATE OR REPLACE FUNCTION del_cityobject_by_lineage(lineage_value TEXT, objectclass_id INTEGER DEFAULT 0) RETURNS SETOF int AS
 $body$
 -- Function for deleting cityobjects by lineage value
@@ -3053,13 +3082,13 @@ BEGIN
       (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
     LEFT JOIN
       bridge_constr_element n1
-      ON n1.lod3_implicit_rep_id  = a.a_id
+      ON n1.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n2
       ON n2.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n3
-      ON n3.lod1_implicit_rep_id  = a.a_id
+      ON n3.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n4
       ON n4.lod4_implicit_rep_id  = a.a_id
@@ -3068,19 +3097,19 @@ BEGIN
       ON n5.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n6
-      ON n6.lod4_implicit_rep_id  = a.a_id
+      ON n6.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n7
       ON n7.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n8
-      ON n8.lod2_implicit_rep_id  = a.a_id
+      ON n8.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n9
-      ON n9.lod4_implicit_rep_id  = a.a_id
+      ON n9.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n10
-      ON n10.lod3_implicit_rep_id  = a.a_id
+      ON n10.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       building_furniture n11
       ON n11.lod4_implicit_rep_id  = a.a_id
@@ -3107,7 +3136,7 @@ BEGIN
       ON n18.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n19
-      ON n19.lod4_implicit_rep_id  = a.a_id
+      ON n19.lod0_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n20
       ON n20.lod1_implicit_rep_id  = a.a_id
@@ -3116,56 +3145,56 @@ BEGIN
       ON n21.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n22
-      ON n22.lod0_implicit_rep_id  = a.a_id
+      ON n22.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n23
-      ON n23.lod3_implicit_rep_id  = a.a_id
+      ON n23.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n24
-      ON n24.lod4_implicit_rep_id  = a.a_id
+      ON n24.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n25
-      ON n25.lod3_implicit_rep_id  = a.a_id
+      ON n25.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n26
-      ON n26.lod2_implicit_rep_id  = a.a_id
+      ON n26.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n27
-      ON n27.lod3_implicit_rep_id  = a.a_id
+      ON n27.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n28
-      ON n28.lod4_implicit_rep_id  = a.a_id
+      ON n28.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n29
-      ON n29.lod1_implicit_rep_id  = a.a_id
+      ON n29.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_furniture n30
       ON n30.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n31
-      ON n31.lod4_implicit_rep_id  = a.a_id
+      ON n31.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n32
       ON n32.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n33
-      ON n33.lod2_implicit_rep_id  = a.a_id
+      ON n33.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n34
-      ON n34.lod4_implicit_rep_id  = a.a_id
+      ON n34.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n35
-      ON n35.lod3_implicit_rep_id  = a.a_id
-    WHERE n1.lod3_implicit_rep_id IS NULL
+      ON n35.lod4_implicit_rep_id  = a.a_id
+    WHERE n1.lod1_implicit_rep_id IS NULL
       AND n2.lod2_implicit_rep_id IS NULL
-      AND n3.lod1_implicit_rep_id IS NULL
+      AND n3.lod3_implicit_rep_id IS NULL
       AND n4.lod4_implicit_rep_id IS NULL
       AND n5.lod4_implicit_rep_id IS NULL
-      AND n6.lod4_implicit_rep_id IS NULL
+      AND n6.lod2_implicit_rep_id IS NULL
       AND n7.lod3_implicit_rep_id IS NULL
-      AND n8.lod2_implicit_rep_id IS NULL
-      AND n9.lod4_implicit_rep_id IS NULL
-      AND n10.lod3_implicit_rep_id IS NULL
+      AND n8.lod4_implicit_rep_id IS NULL
+      AND n9.lod3_implicit_rep_id IS NULL
+      AND n10.lod4_implicit_rep_id IS NULL
       AND n11.lod4_implicit_rep_id IS NULL
       AND n12.lod2_implicit_rep_id IS NULL
       AND n13.lod3_implicit_rep_id IS NULL
@@ -3174,23 +3203,23 @@ BEGIN
       AND n16.lod2_implicit_rep_id IS NULL
       AND n17.lod3_implicit_rep_id IS NULL
       AND n18.lod4_implicit_rep_id IS NULL
-      AND n19.lod4_implicit_rep_id IS NULL
+      AND n19.lod0_implicit_rep_id IS NULL
       AND n20.lod1_implicit_rep_id IS NULL
       AND n21.lod2_implicit_rep_id IS NULL
-      AND n22.lod0_implicit_rep_id IS NULL
-      AND n23.lod3_implicit_rep_id IS NULL
-      AND n24.lod4_implicit_rep_id IS NULL
-      AND n25.lod3_implicit_rep_id IS NULL
-      AND n26.lod2_implicit_rep_id IS NULL
-      AND n27.lod3_implicit_rep_id IS NULL
-      AND n28.lod4_implicit_rep_id IS NULL
-      AND n29.lod1_implicit_rep_id IS NULL
+      AND n22.lod3_implicit_rep_id IS NULL
+      AND n23.lod4_implicit_rep_id IS NULL
+      AND n24.lod3_implicit_rep_id IS NULL
+      AND n25.lod4_implicit_rep_id IS NULL
+      AND n26.lod1_implicit_rep_id IS NULL
+      AND n27.lod2_implicit_rep_id IS NULL
+      AND n28.lod3_implicit_rep_id IS NULL
+      AND n29.lod4_implicit_rep_id IS NULL
       AND n30.lod4_implicit_rep_id IS NULL
-      AND n31.lod4_implicit_rep_id IS NULL
+      AND n31.lod2_implicit_rep_id IS NULL
       AND n32.lod3_implicit_rep_id IS NULL
-      AND n33.lod2_implicit_rep_id IS NULL
-      AND n34.lod4_implicit_rep_id IS NULL
-      AND n35.lod3_implicit_rep_id IS NULL;
+      AND n33.lod4_implicit_rep_id IS NULL
+      AND n34.lod3_implicit_rep_id IS NULL
+      AND n35.lod4_implicit_rep_id IS NULL;
   END IF;
 
   -- delete surface_geometry(s)
@@ -3432,13 +3461,13 @@ BEGIN
       (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
     LEFT JOIN
       bridge_constr_element n1
-      ON n1.lod3_implicit_rep_id  = a.a_id
+      ON n1.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n2
       ON n2.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n3
-      ON n3.lod1_implicit_rep_id  = a.a_id
+      ON n3.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n4
       ON n4.lod4_implicit_rep_id  = a.a_id
@@ -3447,19 +3476,19 @@ BEGIN
       ON n5.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n6
-      ON n6.lod4_implicit_rep_id  = a.a_id
+      ON n6.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n7
       ON n7.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n8
-      ON n8.lod2_implicit_rep_id  = a.a_id
+      ON n8.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n9
-      ON n9.lod4_implicit_rep_id  = a.a_id
+      ON n9.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n10
-      ON n10.lod3_implicit_rep_id  = a.a_id
+      ON n10.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       building_furniture n11
       ON n11.lod4_implicit_rep_id  = a.a_id
@@ -3486,7 +3515,7 @@ BEGIN
       ON n18.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n19
-      ON n19.lod4_implicit_rep_id  = a.a_id
+      ON n19.lod0_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n20
       ON n20.lod1_implicit_rep_id  = a.a_id
@@ -3495,56 +3524,56 @@ BEGIN
       ON n21.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n22
-      ON n22.lod0_implicit_rep_id  = a.a_id
+      ON n22.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n23
-      ON n23.lod3_implicit_rep_id  = a.a_id
+      ON n23.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n24
-      ON n24.lod4_implicit_rep_id  = a.a_id
+      ON n24.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n25
-      ON n25.lod3_implicit_rep_id  = a.a_id
+      ON n25.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n26
-      ON n26.lod2_implicit_rep_id  = a.a_id
+      ON n26.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n27
-      ON n27.lod3_implicit_rep_id  = a.a_id
+      ON n27.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n28
-      ON n28.lod4_implicit_rep_id  = a.a_id
+      ON n28.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n29
-      ON n29.lod1_implicit_rep_id  = a.a_id
+      ON n29.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_furniture n30
       ON n30.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n31
-      ON n31.lod4_implicit_rep_id  = a.a_id
+      ON n31.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n32
       ON n32.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n33
-      ON n33.lod2_implicit_rep_id  = a.a_id
+      ON n33.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n34
-      ON n34.lod4_implicit_rep_id  = a.a_id
+      ON n34.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n35
-      ON n35.lod3_implicit_rep_id  = a.a_id
-    WHERE n1.lod3_implicit_rep_id IS NULL
+      ON n35.lod4_implicit_rep_id  = a.a_id
+    WHERE n1.lod1_implicit_rep_id IS NULL
       AND n2.lod2_implicit_rep_id IS NULL
-      AND n3.lod1_implicit_rep_id IS NULL
+      AND n3.lod3_implicit_rep_id IS NULL
       AND n4.lod4_implicit_rep_id IS NULL
       AND n5.lod4_implicit_rep_id IS NULL
-      AND n6.lod4_implicit_rep_id IS NULL
+      AND n6.lod2_implicit_rep_id IS NULL
       AND n7.lod3_implicit_rep_id IS NULL
-      AND n8.lod2_implicit_rep_id IS NULL
-      AND n9.lod4_implicit_rep_id IS NULL
-      AND n10.lod3_implicit_rep_id IS NULL
+      AND n8.lod4_implicit_rep_id IS NULL
+      AND n9.lod3_implicit_rep_id IS NULL
+      AND n10.lod4_implicit_rep_id IS NULL
       AND n11.lod4_implicit_rep_id IS NULL
       AND n12.lod2_implicit_rep_id IS NULL
       AND n13.lod3_implicit_rep_id IS NULL
@@ -3553,23 +3582,23 @@ BEGIN
       AND n16.lod2_implicit_rep_id IS NULL
       AND n17.lod3_implicit_rep_id IS NULL
       AND n18.lod4_implicit_rep_id IS NULL
-      AND n19.lod4_implicit_rep_id IS NULL
+      AND n19.lod0_implicit_rep_id IS NULL
       AND n20.lod1_implicit_rep_id IS NULL
       AND n21.lod2_implicit_rep_id IS NULL
-      AND n22.lod0_implicit_rep_id IS NULL
-      AND n23.lod3_implicit_rep_id IS NULL
-      AND n24.lod4_implicit_rep_id IS NULL
-      AND n25.lod3_implicit_rep_id IS NULL
-      AND n26.lod2_implicit_rep_id IS NULL
-      AND n27.lod3_implicit_rep_id IS NULL
-      AND n28.lod4_implicit_rep_id IS NULL
-      AND n29.lod1_implicit_rep_id IS NULL
+      AND n22.lod3_implicit_rep_id IS NULL
+      AND n23.lod4_implicit_rep_id IS NULL
+      AND n24.lod3_implicit_rep_id IS NULL
+      AND n25.lod4_implicit_rep_id IS NULL
+      AND n26.lod1_implicit_rep_id IS NULL
+      AND n27.lod2_implicit_rep_id IS NULL
+      AND n28.lod3_implicit_rep_id IS NULL
+      AND n29.lod4_implicit_rep_id IS NULL
       AND n30.lod4_implicit_rep_id IS NULL
-      AND n31.lod4_implicit_rep_id IS NULL
+      AND n31.lod2_implicit_rep_id IS NULL
       AND n32.lod3_implicit_rep_id IS NULL
-      AND n33.lod2_implicit_rep_id IS NULL
-      AND n34.lod4_implicit_rep_id IS NULL
-      AND n35.lod3_implicit_rep_id IS NULL;
+      AND n33.lod4_implicit_rep_id IS NULL
+      AND n34.lod3_implicit_rep_id IS NULL
+      AND n35.lod4_implicit_rep_id IS NULL;
   END IF;
 
   -- delete surface_geometry(s)
@@ -3991,13 +4020,13 @@ BEGIN
       (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
     LEFT JOIN
       bridge_constr_element n1
-      ON n1.lod3_implicit_rep_id  = a.a_id
+      ON n1.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n2
       ON n2.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n3
-      ON n3.lod1_implicit_rep_id  = a.a_id
+      ON n3.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n4
       ON n4.lod4_implicit_rep_id  = a.a_id
@@ -4006,19 +4035,19 @@ BEGIN
       ON n5.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n6
-      ON n6.lod4_implicit_rep_id  = a.a_id
+      ON n6.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n7
       ON n7.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n8
-      ON n8.lod2_implicit_rep_id  = a.a_id
+      ON n8.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n9
-      ON n9.lod4_implicit_rep_id  = a.a_id
+      ON n9.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n10
-      ON n10.lod3_implicit_rep_id  = a.a_id
+      ON n10.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       building_furniture n11
       ON n11.lod4_implicit_rep_id  = a.a_id
@@ -4045,7 +4074,7 @@ BEGIN
       ON n18.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n19
-      ON n19.lod4_implicit_rep_id  = a.a_id
+      ON n19.lod0_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n20
       ON n20.lod1_implicit_rep_id  = a.a_id
@@ -4054,56 +4083,56 @@ BEGIN
       ON n21.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n22
-      ON n22.lod0_implicit_rep_id  = a.a_id
+      ON n22.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n23
-      ON n23.lod3_implicit_rep_id  = a.a_id
+      ON n23.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n24
-      ON n24.lod4_implicit_rep_id  = a.a_id
+      ON n24.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n25
-      ON n25.lod3_implicit_rep_id  = a.a_id
+      ON n25.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n26
-      ON n26.lod2_implicit_rep_id  = a.a_id
+      ON n26.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n27
-      ON n27.lod3_implicit_rep_id  = a.a_id
+      ON n27.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n28
-      ON n28.lod4_implicit_rep_id  = a.a_id
+      ON n28.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n29
-      ON n29.lod1_implicit_rep_id  = a.a_id
+      ON n29.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_furniture n30
       ON n30.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n31
-      ON n31.lod4_implicit_rep_id  = a.a_id
+      ON n31.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n32
       ON n32.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n33
-      ON n33.lod2_implicit_rep_id  = a.a_id
+      ON n33.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n34
-      ON n34.lod4_implicit_rep_id  = a.a_id
+      ON n34.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n35
-      ON n35.lod3_implicit_rep_id  = a.a_id
-    WHERE n1.lod3_implicit_rep_id IS NULL
+      ON n35.lod4_implicit_rep_id  = a.a_id
+    WHERE n1.lod1_implicit_rep_id IS NULL
       AND n2.lod2_implicit_rep_id IS NULL
-      AND n3.lod1_implicit_rep_id IS NULL
+      AND n3.lod3_implicit_rep_id IS NULL
       AND n4.lod4_implicit_rep_id IS NULL
       AND n5.lod4_implicit_rep_id IS NULL
-      AND n6.lod4_implicit_rep_id IS NULL
+      AND n6.lod2_implicit_rep_id IS NULL
       AND n7.lod3_implicit_rep_id IS NULL
-      AND n8.lod2_implicit_rep_id IS NULL
-      AND n9.lod4_implicit_rep_id IS NULL
-      AND n10.lod3_implicit_rep_id IS NULL
+      AND n8.lod4_implicit_rep_id IS NULL
+      AND n9.lod3_implicit_rep_id IS NULL
+      AND n10.lod4_implicit_rep_id IS NULL
       AND n11.lod4_implicit_rep_id IS NULL
       AND n12.lod2_implicit_rep_id IS NULL
       AND n13.lod3_implicit_rep_id IS NULL
@@ -4112,23 +4141,23 @@ BEGIN
       AND n16.lod2_implicit_rep_id IS NULL
       AND n17.lod3_implicit_rep_id IS NULL
       AND n18.lod4_implicit_rep_id IS NULL
-      AND n19.lod4_implicit_rep_id IS NULL
+      AND n19.lod0_implicit_rep_id IS NULL
       AND n20.lod1_implicit_rep_id IS NULL
       AND n21.lod2_implicit_rep_id IS NULL
-      AND n22.lod0_implicit_rep_id IS NULL
-      AND n23.lod3_implicit_rep_id IS NULL
-      AND n24.lod4_implicit_rep_id IS NULL
-      AND n25.lod3_implicit_rep_id IS NULL
-      AND n26.lod2_implicit_rep_id IS NULL
-      AND n27.lod3_implicit_rep_id IS NULL
-      AND n28.lod4_implicit_rep_id IS NULL
-      AND n29.lod1_implicit_rep_id IS NULL
+      AND n22.lod3_implicit_rep_id IS NULL
+      AND n23.lod4_implicit_rep_id IS NULL
+      AND n24.lod3_implicit_rep_id IS NULL
+      AND n25.lod4_implicit_rep_id IS NULL
+      AND n26.lod1_implicit_rep_id IS NULL
+      AND n27.lod2_implicit_rep_id IS NULL
+      AND n28.lod3_implicit_rep_id IS NULL
+      AND n29.lod4_implicit_rep_id IS NULL
       AND n30.lod4_implicit_rep_id IS NULL
-      AND n31.lod4_implicit_rep_id IS NULL
+      AND n31.lod2_implicit_rep_id IS NULL
       AND n32.lod3_implicit_rep_id IS NULL
-      AND n33.lod2_implicit_rep_id IS NULL
-      AND n34.lod4_implicit_rep_id IS NULL
-      AND n35.lod3_implicit_rep_id IS NULL;
+      AND n33.lod4_implicit_rep_id IS NULL
+      AND n34.lod3_implicit_rep_id IS NULL
+      AND n35.lod4_implicit_rep_id IS NULL;
   END IF;
 
   -- delete surface_geometry(s)
@@ -4680,13 +4709,13 @@ BEGIN
       (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
     LEFT JOIN
       bridge_constr_element n1
-      ON n1.lod3_implicit_rep_id  = a.a_id
+      ON n1.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n2
       ON n2.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n3
-      ON n3.lod1_implicit_rep_id  = a.a_id
+      ON n3.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n4
       ON n4.lod4_implicit_rep_id  = a.a_id
@@ -4695,19 +4724,19 @@ BEGIN
       ON n5.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n6
-      ON n6.lod4_implicit_rep_id  = a.a_id
+      ON n6.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n7
       ON n7.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n8
-      ON n8.lod2_implicit_rep_id  = a.a_id
+      ON n8.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n9
-      ON n9.lod4_implicit_rep_id  = a.a_id
+      ON n9.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n10
-      ON n10.lod3_implicit_rep_id  = a.a_id
+      ON n10.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       building_furniture n11
       ON n11.lod4_implicit_rep_id  = a.a_id
@@ -4734,7 +4763,7 @@ BEGIN
       ON n18.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n19
-      ON n19.lod4_implicit_rep_id  = a.a_id
+      ON n19.lod0_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n20
       ON n20.lod1_implicit_rep_id  = a.a_id
@@ -4743,56 +4772,56 @@ BEGIN
       ON n21.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n22
-      ON n22.lod0_implicit_rep_id  = a.a_id
+      ON n22.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n23
-      ON n23.lod3_implicit_rep_id  = a.a_id
+      ON n23.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n24
-      ON n24.lod4_implicit_rep_id  = a.a_id
+      ON n24.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n25
-      ON n25.lod3_implicit_rep_id  = a.a_id
+      ON n25.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n26
-      ON n26.lod2_implicit_rep_id  = a.a_id
+      ON n26.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n27
-      ON n27.lod3_implicit_rep_id  = a.a_id
+      ON n27.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n28
-      ON n28.lod4_implicit_rep_id  = a.a_id
+      ON n28.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n29
-      ON n29.lod1_implicit_rep_id  = a.a_id
+      ON n29.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_furniture n30
       ON n30.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n31
-      ON n31.lod4_implicit_rep_id  = a.a_id
+      ON n31.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n32
       ON n32.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n33
-      ON n33.lod2_implicit_rep_id  = a.a_id
+      ON n33.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n34
-      ON n34.lod4_implicit_rep_id  = a.a_id
+      ON n34.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n35
-      ON n35.lod3_implicit_rep_id  = a.a_id
-    WHERE n1.lod3_implicit_rep_id IS NULL
+      ON n35.lod4_implicit_rep_id  = a.a_id
+    WHERE n1.lod1_implicit_rep_id IS NULL
       AND n2.lod2_implicit_rep_id IS NULL
-      AND n3.lod1_implicit_rep_id IS NULL
+      AND n3.lod3_implicit_rep_id IS NULL
       AND n4.lod4_implicit_rep_id IS NULL
       AND n5.lod4_implicit_rep_id IS NULL
-      AND n6.lod4_implicit_rep_id IS NULL
+      AND n6.lod2_implicit_rep_id IS NULL
       AND n7.lod3_implicit_rep_id IS NULL
-      AND n8.lod2_implicit_rep_id IS NULL
-      AND n9.lod4_implicit_rep_id IS NULL
-      AND n10.lod3_implicit_rep_id IS NULL
+      AND n8.lod4_implicit_rep_id IS NULL
+      AND n9.lod3_implicit_rep_id IS NULL
+      AND n10.lod4_implicit_rep_id IS NULL
       AND n11.lod4_implicit_rep_id IS NULL
       AND n12.lod2_implicit_rep_id IS NULL
       AND n13.lod3_implicit_rep_id IS NULL
@@ -4801,23 +4830,23 @@ BEGIN
       AND n16.lod2_implicit_rep_id IS NULL
       AND n17.lod3_implicit_rep_id IS NULL
       AND n18.lod4_implicit_rep_id IS NULL
-      AND n19.lod4_implicit_rep_id IS NULL
+      AND n19.lod0_implicit_rep_id IS NULL
       AND n20.lod1_implicit_rep_id IS NULL
       AND n21.lod2_implicit_rep_id IS NULL
-      AND n22.lod0_implicit_rep_id IS NULL
-      AND n23.lod3_implicit_rep_id IS NULL
-      AND n24.lod4_implicit_rep_id IS NULL
-      AND n25.lod3_implicit_rep_id IS NULL
-      AND n26.lod2_implicit_rep_id IS NULL
-      AND n27.lod3_implicit_rep_id IS NULL
-      AND n28.lod4_implicit_rep_id IS NULL
-      AND n29.lod1_implicit_rep_id IS NULL
+      AND n22.lod3_implicit_rep_id IS NULL
+      AND n23.lod4_implicit_rep_id IS NULL
+      AND n24.lod3_implicit_rep_id IS NULL
+      AND n25.lod4_implicit_rep_id IS NULL
+      AND n26.lod1_implicit_rep_id IS NULL
+      AND n27.lod2_implicit_rep_id IS NULL
+      AND n28.lod3_implicit_rep_id IS NULL
+      AND n29.lod4_implicit_rep_id IS NULL
       AND n30.lod4_implicit_rep_id IS NULL
-      AND n31.lod4_implicit_rep_id IS NULL
+      AND n31.lod2_implicit_rep_id IS NULL
       AND n32.lod3_implicit_rep_id IS NULL
-      AND n33.lod2_implicit_rep_id IS NULL
-      AND n34.lod4_implicit_rep_id IS NULL
-      AND n35.lod3_implicit_rep_id IS NULL;
+      AND n33.lod4_implicit_rep_id IS NULL
+      AND n34.lod3_implicit_rep_id IS NULL
+      AND n35.lod4_implicit_rep_id IS NULL;
   END IF;
 
   -- delete surface_geometry(s)
@@ -4976,13 +5005,13 @@ BEGIN
       (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
     LEFT JOIN
       bridge_constr_element n1
-      ON n1.lod3_implicit_rep_id  = a.a_id
+      ON n1.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n2
       ON n2.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n3
-      ON n3.lod1_implicit_rep_id  = a.a_id
+      ON n3.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n4
       ON n4.lod4_implicit_rep_id  = a.a_id
@@ -4991,19 +5020,19 @@ BEGIN
       ON n5.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n6
-      ON n6.lod4_implicit_rep_id  = a.a_id
+      ON n6.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n7
       ON n7.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n8
-      ON n8.lod2_implicit_rep_id  = a.a_id
+      ON n8.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n9
-      ON n9.lod4_implicit_rep_id  = a.a_id
+      ON n9.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n10
-      ON n10.lod3_implicit_rep_id  = a.a_id
+      ON n10.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       building_furniture n11
       ON n11.lod4_implicit_rep_id  = a.a_id
@@ -5030,7 +5059,7 @@ BEGIN
       ON n18.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n19
-      ON n19.lod4_implicit_rep_id  = a.a_id
+      ON n19.lod0_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n20
       ON n20.lod1_implicit_rep_id  = a.a_id
@@ -5039,56 +5068,56 @@ BEGIN
       ON n21.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n22
-      ON n22.lod0_implicit_rep_id  = a.a_id
+      ON n22.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n23
-      ON n23.lod3_implicit_rep_id  = a.a_id
+      ON n23.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n24
-      ON n24.lod4_implicit_rep_id  = a.a_id
+      ON n24.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n25
-      ON n25.lod3_implicit_rep_id  = a.a_id
+      ON n25.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n26
-      ON n26.lod2_implicit_rep_id  = a.a_id
+      ON n26.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n27
-      ON n27.lod3_implicit_rep_id  = a.a_id
+      ON n27.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n28
-      ON n28.lod4_implicit_rep_id  = a.a_id
+      ON n28.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n29
-      ON n29.lod1_implicit_rep_id  = a.a_id
+      ON n29.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_furniture n30
       ON n30.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n31
-      ON n31.lod4_implicit_rep_id  = a.a_id
+      ON n31.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n32
       ON n32.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n33
-      ON n33.lod2_implicit_rep_id  = a.a_id
+      ON n33.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n34
-      ON n34.lod4_implicit_rep_id  = a.a_id
+      ON n34.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n35
-      ON n35.lod3_implicit_rep_id  = a.a_id
-    WHERE n1.lod3_implicit_rep_id IS NULL
+      ON n35.lod4_implicit_rep_id  = a.a_id
+    WHERE n1.lod1_implicit_rep_id IS NULL
       AND n2.lod2_implicit_rep_id IS NULL
-      AND n3.lod1_implicit_rep_id IS NULL
+      AND n3.lod3_implicit_rep_id IS NULL
       AND n4.lod4_implicit_rep_id IS NULL
       AND n5.lod4_implicit_rep_id IS NULL
-      AND n6.lod4_implicit_rep_id IS NULL
+      AND n6.lod2_implicit_rep_id IS NULL
       AND n7.lod3_implicit_rep_id IS NULL
-      AND n8.lod2_implicit_rep_id IS NULL
-      AND n9.lod4_implicit_rep_id IS NULL
-      AND n10.lod3_implicit_rep_id IS NULL
+      AND n8.lod4_implicit_rep_id IS NULL
+      AND n9.lod3_implicit_rep_id IS NULL
+      AND n10.lod4_implicit_rep_id IS NULL
       AND n11.lod4_implicit_rep_id IS NULL
       AND n12.lod2_implicit_rep_id IS NULL
       AND n13.lod3_implicit_rep_id IS NULL
@@ -5097,23 +5126,23 @@ BEGIN
       AND n16.lod2_implicit_rep_id IS NULL
       AND n17.lod3_implicit_rep_id IS NULL
       AND n18.lod4_implicit_rep_id IS NULL
-      AND n19.lod4_implicit_rep_id IS NULL
+      AND n19.lod0_implicit_rep_id IS NULL
       AND n20.lod1_implicit_rep_id IS NULL
       AND n21.lod2_implicit_rep_id IS NULL
-      AND n22.lod0_implicit_rep_id IS NULL
-      AND n23.lod3_implicit_rep_id IS NULL
-      AND n24.lod4_implicit_rep_id IS NULL
-      AND n25.lod3_implicit_rep_id IS NULL
-      AND n26.lod2_implicit_rep_id IS NULL
-      AND n27.lod3_implicit_rep_id IS NULL
-      AND n28.lod4_implicit_rep_id IS NULL
-      AND n29.lod1_implicit_rep_id IS NULL
+      AND n22.lod3_implicit_rep_id IS NULL
+      AND n23.lod4_implicit_rep_id IS NULL
+      AND n24.lod3_implicit_rep_id IS NULL
+      AND n25.lod4_implicit_rep_id IS NULL
+      AND n26.lod1_implicit_rep_id IS NULL
+      AND n27.lod2_implicit_rep_id IS NULL
+      AND n28.lod3_implicit_rep_id IS NULL
+      AND n29.lod4_implicit_rep_id IS NULL
       AND n30.lod4_implicit_rep_id IS NULL
-      AND n31.lod4_implicit_rep_id IS NULL
+      AND n31.lod2_implicit_rep_id IS NULL
       AND n32.lod3_implicit_rep_id IS NULL
-      AND n33.lod2_implicit_rep_id IS NULL
-      AND n34.lod4_implicit_rep_id IS NULL
-      AND n35.lod3_implicit_rep_id IS NULL;
+      AND n33.lod4_implicit_rep_id IS NULL
+      AND n34.lod3_implicit_rep_id IS NULL
+      AND n35.lod4_implicit_rep_id IS NULL;
   END IF;
 
   -- delete surface_geometry(s)
@@ -5181,13 +5210,13 @@ BEGIN
       (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
     LEFT JOIN
       bridge_constr_element n1
-      ON n1.lod3_implicit_rep_id  = a.a_id
+      ON n1.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n2
       ON n2.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n3
-      ON n3.lod1_implicit_rep_id  = a.a_id
+      ON n3.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_constr_element n4
       ON n4.lod4_implicit_rep_id  = a.a_id
@@ -5196,19 +5225,19 @@ BEGIN
       ON n5.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n6
-      ON n6.lod4_implicit_rep_id  = a.a_id
+      ON n6.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n7
       ON n7.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_installation n8
-      ON n8.lod2_implicit_rep_id  = a.a_id
+      ON n8.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n9
-      ON n9.lod4_implicit_rep_id  = a.a_id
+      ON n9.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       bridge_opening n10
-      ON n10.lod3_implicit_rep_id  = a.a_id
+      ON n10.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       building_furniture n11
       ON n11.lod4_implicit_rep_id  = a.a_id
@@ -5235,7 +5264,7 @@ BEGIN
       ON n18.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n19
-      ON n19.lod4_implicit_rep_id  = a.a_id
+      ON n19.lod0_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n20
       ON n20.lod1_implicit_rep_id  = a.a_id
@@ -5244,56 +5273,56 @@ BEGIN
       ON n21.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n22
-      ON n22.lod0_implicit_rep_id  = a.a_id
+      ON n22.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       generic_cityobject n23
-      ON n23.lod3_implicit_rep_id  = a.a_id
+      ON n23.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n24
-      ON n24.lod4_implicit_rep_id  = a.a_id
+      ON n24.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       opening n25
-      ON n25.lod3_implicit_rep_id  = a.a_id
+      ON n25.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n26
-      ON n26.lod2_implicit_rep_id  = a.a_id
+      ON n26.lod1_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n27
-      ON n27.lod3_implicit_rep_id  = a.a_id
+      ON n27.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n28
-      ON n28.lod4_implicit_rep_id  = a.a_id
+      ON n28.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       solitary_vegetat_object n29
-      ON n29.lod1_implicit_rep_id  = a.a_id
+      ON n29.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_furniture n30
       ON n30.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n31
-      ON n31.lod4_implicit_rep_id  = a.a_id
+      ON n31.lod2_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n32
       ON n32.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_installation n33
-      ON n33.lod2_implicit_rep_id  = a.a_id
+      ON n33.lod4_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n34
-      ON n34.lod4_implicit_rep_id  = a.a_id
+      ON n34.lod3_implicit_rep_id  = a.a_id
     LEFT JOIN
       tunnel_opening n35
-      ON n35.lod3_implicit_rep_id  = a.a_id
-    WHERE n1.lod3_implicit_rep_id IS NULL
+      ON n35.lod4_implicit_rep_id  = a.a_id
+    WHERE n1.lod1_implicit_rep_id IS NULL
       AND n2.lod2_implicit_rep_id IS NULL
-      AND n3.lod1_implicit_rep_id IS NULL
+      AND n3.lod3_implicit_rep_id IS NULL
       AND n4.lod4_implicit_rep_id IS NULL
       AND n5.lod4_implicit_rep_id IS NULL
-      AND n6.lod4_implicit_rep_id IS NULL
+      AND n6.lod2_implicit_rep_id IS NULL
       AND n7.lod3_implicit_rep_id IS NULL
-      AND n8.lod2_implicit_rep_id IS NULL
-      AND n9.lod4_implicit_rep_id IS NULL
-      AND n10.lod3_implicit_rep_id IS NULL
+      AND n8.lod4_implicit_rep_id IS NULL
+      AND n9.lod3_implicit_rep_id IS NULL
+      AND n10.lod4_implicit_rep_id IS NULL
       AND n11.lod4_implicit_rep_id IS NULL
       AND n12.lod2_implicit_rep_id IS NULL
       AND n13.lod3_implicit_rep_id IS NULL
@@ -5302,23 +5331,23 @@ BEGIN
       AND n16.lod2_implicit_rep_id IS NULL
       AND n17.lod3_implicit_rep_id IS NULL
       AND n18.lod4_implicit_rep_id IS NULL
-      AND n19.lod4_implicit_rep_id IS NULL
+      AND n19.lod0_implicit_rep_id IS NULL
       AND n20.lod1_implicit_rep_id IS NULL
       AND n21.lod2_implicit_rep_id IS NULL
-      AND n22.lod0_implicit_rep_id IS NULL
-      AND n23.lod3_implicit_rep_id IS NULL
-      AND n24.lod4_implicit_rep_id IS NULL
-      AND n25.lod3_implicit_rep_id IS NULL
-      AND n26.lod2_implicit_rep_id IS NULL
-      AND n27.lod3_implicit_rep_id IS NULL
-      AND n28.lod4_implicit_rep_id IS NULL
-      AND n29.lod1_implicit_rep_id IS NULL
+      AND n22.lod3_implicit_rep_id IS NULL
+      AND n23.lod4_implicit_rep_id IS NULL
+      AND n24.lod3_implicit_rep_id IS NULL
+      AND n25.lod4_implicit_rep_id IS NULL
+      AND n26.lod1_implicit_rep_id IS NULL
+      AND n27.lod2_implicit_rep_id IS NULL
+      AND n28.lod3_implicit_rep_id IS NULL
+      AND n29.lod4_implicit_rep_id IS NULL
       AND n30.lod4_implicit_rep_id IS NULL
-      AND n31.lod4_implicit_rep_id IS NULL
+      AND n31.lod2_implicit_rep_id IS NULL
       AND n32.lod3_implicit_rep_id IS NULL
-      AND n33.lod2_implicit_rep_id IS NULL
-      AND n34.lod4_implicit_rep_id IS NULL
-      AND n35.lod3_implicit_rep_id IS NULL;
+      AND n33.lod4_implicit_rep_id IS NULL
+      AND n34.lod3_implicit_rep_id IS NULL
+      AND n35.lod4_implicit_rep_id IS NULL;
   END IF;
 
   -- delete surface_geometry(s)
