@@ -33,6 +33,7 @@ SET VER OFF
 DEFINE DBVERSION=&1;
 
 VARIABLE BATCHFILE VARCHAR2(50);
+VARIABLE GEORASTER_SUPPORT NUMBER;
 
 BEGIN
   IF NOT (upper('&DBVERSION')='L' or upper('&DBVERSION')='S') THEN
@@ -40,6 +41,20 @@ BEGIN
   ELSE 
   	:BATCHFILE := 'DROP_DB2';
   END IF;  
+END;
+/
+
+-- Check for SDO_GEORASTER support
+BEGIN
+  :GEORASTER_SUPPORT := 0;
+  IF (upper('&DBVERSION')='S') THEN
+    SELECT COUNT(*) INTO :GEORASTER_SUPPORT FROM ALL_SYNONYMS
+	WHERE SYNONYM_NAME='SDO_GEORASTER';
+  END IF;
+
+  IF :GEORASTER_SUPPORT = 0 THEN
+	dbms_output.put_line('NOTE: The data type SDO_GEORASTER is not available for this database. Raster relief tables will not be created.');
+  END IF;
 END;
 /
 
