@@ -59,7 +59,7 @@ SET "num="&for /f "delims=0123456789" %%i in ("%var%") do set num=%%i
 IF defined num (
   echo.
   echo SRID must be numeric. Please retry.
-  GOTO :srid
+  GOTO srid
 )
 
 :: Prompt for GMLSRSNAME ------------------------------------------------------
@@ -93,7 +93,7 @@ IF /i "%VERSIONING%"=="yes" (set res=t)
 IF "%res%"=="f" (
   echo.
   echo Illegal input! Enter yes or no.
-  GOTO :versioning
+  GOTO versioning
 )
 
 :: Prompt for DBVERSION -------------------------------------------------------
@@ -115,7 +115,7 @@ IF /i "%DBVERSION%"=="l" (set res=t)
 IF "%res%"=="f" (
   echo.
   echo Illegal input! Enter S or L.
-  GOTO :dbversion
+  GOTO dbversion
 )
 
 :: Run CREATE_DB.sql to create the 3D City Database instance ------------------

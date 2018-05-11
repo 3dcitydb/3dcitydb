@@ -60,7 +60,7 @@ SET "num="&for /f "delims=0123456789" %%i in ("%var%") do set num=%%i
 IF defined num (
   echo.
   echo SRID must be numeric. Please retry.
-  GOTO :srid
+  GOTO srid
 )
 
 :: Prompt for GMLSRSNAME ------------------------------------------------------

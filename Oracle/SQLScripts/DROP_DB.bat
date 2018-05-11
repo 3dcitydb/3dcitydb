@@ -61,7 +61,7 @@ IF /i "%DBVERSION%"=="l" (set res=t)
 IF "%res%"=="f" (
   echo.
   echo Illegal input! Enter S or L.
-  GOTO :dbversion
+  GOTO dbversion
 )
 
 :: Run DROP_DB.sql to drop the 3D City Database instance ----------------------
