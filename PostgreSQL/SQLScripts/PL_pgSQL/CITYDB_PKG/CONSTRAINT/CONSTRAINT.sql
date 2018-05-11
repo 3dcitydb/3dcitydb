@@ -182,6 +182,8 @@ JOIN
 WHERE
   c.contype = 'f'
   AND c.confrelid = 'surface_geometry'::regclass::oid
+  AND c.conrelid <> 'surface_geometry'::regclass::oid
+  AND c.confdeltype <> 'c'
   AND n.nspname = $2;
 $$
 LANGUAGE sql STRICT;
@@ -215,6 +217,7 @@ JOIN
   ON t.tgconstraint = c.oid
 WHERE
   c.contype = 'f'
+  AND c.confdeltype <> 'c'
   AND n.nspname = $2;
 $$
 LANGUAGE sql STRICT;
