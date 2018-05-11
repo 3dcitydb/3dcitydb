@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-11 12:18:19)
+-- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-11 15:28:23)
 -- del_address
 -- del_appearance
 -- del_breakline_relief
@@ -5424,9 +5424,9 @@ AS
     END IF;
 
     IF caller <> 1 THEN
-      -- delete tunnel_hollow_space
+      -- delete cityobject
       IF deleted_ids IS NOT EMPTY THEN
-        dummy_ids := del_tunnel_hollow_space(deleted_ids, 2);
+        dummy_ids := del_cityobject(deleted_ids, 2);
       END IF;
     END IF;
 
@@ -5449,6 +5449,21 @@ AS
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
   BEGIN
+    --delete tunnel_furnitures
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      tunnel_furniture t,
+      TABLE(pids) a
+    WHERE
+      t.tunnel_hollow_space_id = a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_tunnel_furniture(object_ids);
+    END IF;
+
     --delete tunnel_installations
     SELECT
       t.id
@@ -5477,11 +5492,6 @@ AS
 
     IF object_ids IS NOT EMPTY THEN
       dummy_ids := del_tunnel_thematic_surface(object_ids);
-    END IF;
-
-    -- delete tunnel_furnitures
-    IF pids IS NOT EMPTY THEN
-      dummy_ids := del_tunnel_furniture(pids, 1);
     END IF;
 
     -- delete tunnel_hollow_spaces
