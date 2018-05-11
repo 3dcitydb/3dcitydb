@@ -1,18 +1,17 @@
 @echo off
 :: Shell script to create an instance of the 3D City Database
-:: on PostgreSQL/PostGIS
+:: on Oracle Spatial/Locator
 
 :: Provide your database details here -----------------------------------------
-set PGBIN=path_to_psql
-set PGHOST=your_host_address
-set PGPORT=5432
-set CITYDB=your_database
-set PGUSER=your_username
+set SQLPLUSBIN=path_to_sqlplus
+set HOST=your_host_address
+set PORT=1521
+set SID=your_SID_or_database_name
+set USERNAME=your_username
 ::-----------------------------------------------------------------------------
 
-:: add PGBIN to PATH
-set PATH=%PGBIN%;%PATH%
-
+:: add sqlplus to PATH
+set PATH=%SQLPLUSBIN%;%PATH%
 :: cd to path of the shell script
 cd /d %~dp0
 
@@ -46,13 +45,13 @@ echo ###########################################################################
 :srid
 set var=
 echo.
-echo Please enter a valid SRID (e.g., 3068 for DHDN/Soldner Berlin).
-set /p var="(default SRID=3068): "
+echo Please enter a valid SRID (e.g. Berlin: 81989002).
+set /p var="(default SRID=81989002): "
 
 IF /i NOT "%var%"=="" (
   set SRSNO=%var%
 ) else (
-  set SRSNO=3068
+  set SRSNO=81989002
 )
 
 :: SRID is numeric?
@@ -64,6 +63,7 @@ IF defined num (
 )
 
 :: Prompt for GMLSRSNAME ------------------------------------------------------
+set var=
 echo.
 echo Please enter the corresponding gml:srsName to be used in GML exports.
 set /p var="(default GMLSRSNAME=urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783): "
@@ -74,9 +74,53 @@ IF /i NOT "%var%"=="" (
   set GMLSRSNAME=urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783
 )
 
+:: Prompt for VERSIONING ------------------------------------------------------
+:versioning
+set var=
+echo.
+echo Shall versioning be enabled (yes/no)?
+set /p var="(default VERSIONING=no): "
+
+IF /i NOT "%var%"=="" (
+  set VERSIONING=%var%
+) else (
+  set VERSIONING=no
+)
+
+set res=f
+IF /i "%VERSIONING%"=="no" (set res=t)
+IF /i "%VERSIONING%"=="yes" (set res=t)
+IF "%res%"=="f" (
+  echo.
+  echo Illegal input! Enter yes or no.
+  GOTO :versioning
+)
+
+:: Prompt for DBVERSION -------------------------------------------------------
+:dbversion
+set var=
+echo.
+echo Which database license are you using (Spatial=S/Locator=L)?
+set /p var="(default DBVERSION=S): "
+
+IF /i NOT "%var%"=="" (
+  set DBVERSION=%var%
+) else (
+  set DBVERSION=S
+)
+
+set res=f
+IF /i "%DBVERSION%"=="s" (set res=t)
+IF /i "%DBVERSION%"=="l" (set res=t)
+IF "%res%"=="f" (
+  echo.
+  echo Illegal input! Enter S or L.
+  GOTO :dbversion
+)
+
 :: Run CREATE_DB.sql to create the 3D City Database instance ------------------
 echo.
-echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "CREATE_DB.sql" -v srsno="%SRSNO%" -v gmlsrsname="%GMLSRSNAME%"
+echo Connecting to the database "%USERNAME%@%HOST%:%PORT%/%SID%" ...
+sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @CREATE_DB.sql "%SRSNO%" "%GMLSRSNAME%" "%VERSIONING%" "%DBVERSION%"
 
 pause

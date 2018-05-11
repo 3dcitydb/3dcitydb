@@ -77,4 +77,4 @@ select :VERSIONBATCHFILE mc2 from dual;
 SHOW ERRORS;
 COMMIT;
 
-SELECT 'DB creation complete!' as message from DUAL;
+SELECT '3DCityDB creation complete!' as message from DUAL;

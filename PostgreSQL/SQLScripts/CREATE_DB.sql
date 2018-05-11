@@ -25,16 +25,18 @@
 -- limitations under the License.
 --
 
--- This script is called from CREATE_DB.bat
+-- This script is called from CREATE_DB.bat/CREATE_DB.sh
 \pset footer off
 SET client_min_messages TO WARNING;
 \set ON_ERROR_STOP ON
 
-\echo
-\prompt 'Please enter a valid SRID (e.g., 3068 for DHDN/Soldner Berlin): ' SRS_NO
-\prompt 'Please enter the corresponding SRSName to be used in GML exports (e.g., urn:ogc:def:crs,crs:EPSG::3068,crs:EPSG::5783): ' GMLSRSNAME
+-- Parse arguments srsno, gmlsrsname
+\echo :srsno
+\echo :gmlsrsname
 
-\set SRSNO :SRS_NO
+\set SRSNO :srsno
+\set SRS_NO :srsno
+\set GMLSRSNAME :gmlsrsname
 
 --// check if the PostGIS extension is available
 SELECT postgis_version();
