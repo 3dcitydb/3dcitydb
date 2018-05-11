@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Shell script to drop an instance of the 3D City Database
 # on Oracle Spatial/Locator
 
