@@ -66,7 +66,7 @@ GMLSRSNAME=${GMLSRSNAME:-urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783}
 
 # Run CREATE_DB.sql to create the 3D City Database instance -------------------
 echo
-echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\"..."
+echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
 psql -d "$CITYDB" -f "CREATE_DB.sql" -v srsno="$SRSNO" -v gmlsrsname="$GMLSRSNAME"
 
 echo

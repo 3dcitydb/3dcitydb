@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2017
+-- Copyright 2013 - 2018
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -88,19 +88,19 @@ CREATE OR REPLACE TYPE DB_INFO_TABLE IS TABLE OF DB_INFO_OBJ;
 CREATE OR REPLACE PACKAGE citydb_util
 AS
   FUNCTION citydb_version RETURN DB_VERSION_TABLE;
-  FUNCTION versioning_table(table_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
+  FUNCTION versioning_table(tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION versioning_db(schema_name VARCHAR2 := USER) RETURN VARCHAR2;
-  PROCEDURE db_info(schema_srid OUT DATABASE_SRS.SRID%TYPE, schema_gml_srs_name OUT DATABASE_SRS.GML_SRS_NAME%TYPE, versioning OUT VARCHAR2);
-  FUNCTION db_metadata RETURN DB_INFO_TABLE;
+  PROCEDURE db_info(schema_name VARCHAR2 := USER, schema_srid OUT INTEGER, schema_gml_srs_name OUT VARCHAR2, versioning OUT VARCHAR2);
+  FUNCTION db_metadata(schema_name VARCHAR2 := USER) RETURN DB_INFO_TABLE;
   FUNCTION split(list VARCHAR2, delim VARCHAR2 := ',') RETURN STRARRAY;
   FUNCTION min(a NUMBER, b NUMBER) RETURN NUMBER;
-  PROCEDURE update_schema_constraints(on_delete_param VARCHAR2 := 'CASCADE', schema_name VARCHAR2 := USER);
-  PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param VARCHAR2 := 'CASCADE', schema_name VARCHAR2 := USER);
-  FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER, schema_name VARCHAR2 := USER) RETURN ID_ARRAY;
+  PROCEDURE update_schema_constraints(on_delete_param CHAR := 'a', schema_name VARCHAR2 := USER);
+  PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param CHAR := 'a', schema_name VARCHAR2 := USER);
+  FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER) RETURN ID_ARRAY;
   FUNCTION string2id_array(str VARCHAR2, delim VARCHAR2 := ',') RETURN ID_ARRAY;
   FUNCTION get_id_array_size(id_arr ID_ARRAY) RETURN NUMBER;
   FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
-  FUNCTION construct_solid(geom_root_id NUMBER, schema_name VARCHAR2 := USER) RETURN SDO_GEOMETRY;
+  FUNCTION construct_solid(geom_root_id NUMBER) RETURN SDO_GEOMETRY;
   FUNCTION to_2d(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
   FUNCTION sdo2geojson3d(p_geometry in sdo_geometry, p_decimal_places in pls_integer default 2, p_compress_tags in pls_integer default 0, p_relative2mbr in pls_integer default 0) RETURN CLOB DETERMINISTIC;
   FUNCTION ST_Affine(p_geometry IN mdsys.sdo_geometry, p_a IN NUMBER, p_b IN NUMBER, p_c IN NUMBER, p_d IN NUMBER, p_e IN NUMBER, p_f IN NUMBER, p_g IN NUMBER, p_h IN NUMBER, p_i IN NUMBER, p_xoff IN NUMBER, p_yoff IN NUMBER, p_zoff IN NUMBER) RETURN mdsys.sdo_geometry deterministic;
@@ -132,23 +132,33 @@ AS
   /*****************************************************************
   * versioning_table
   *
-  * @param table_name name of the unversioned table, i.e., omit
-  *                   suffixes such as _LT
-  * @param schema_name name of schema of target table
+  * @param tab_name     name of the unversioned table, i.e., omit
+  *                     suffixes such as _LT
+  * @param schema_name  name of schema of target table
   * @return VARCHAR2 'ON' for version-enabled, 'OFF' otherwise
   ******************************************************************/
   FUNCTION versioning_table(
-    table_name VARCHAR2, 
+    tab_name VARCHAR2, 
     schema_name VARCHAR2 := USER
     ) RETURN VARCHAR2
   IS
-    status USER_TABLES.STATUS%TYPE;
+    tab_status ALL_TABLES.STATUS%TYPE;
   BEGIN
-    EXECUTE IMMEDIATE 'SELECT status FROM all_tables WHERE owner=:1 AND table_name=:2' INTO status USING upper(schema_name), upper(table_name) || '_LT';
+    SELECT
+      status
+    INTO
+      tab_status
+    FROM
+      all_tables
+    WHERE
+      owner = upper(schema_name)
+      AND table_name = upper(tab_name) || '_LT';
+
     RETURN 'ON';
-  EXCEPTION
-    WHEN others THEN
-      RETURN 'OFF';
+
+    EXCEPTION
+      WHEN OTHERS THEN
+        RETURN 'OFF';
   END; 
 
   /*****************************************************************
@@ -185,23 +195,33 @@ AS
   /*****************************************************************
   * db_info
   *
+  * @param schema_name name of user schema
   * @param schema_srid database srid
   * @param schema_gml_srs_name database srs name
   * @param versioning database versioning
-  * @param schema_name name of user schema
   ******************************************************************/
-  PROCEDURE db_info(schema_srid OUT DATABASE_SRS.SRID%TYPE, schema_gml_srs_name OUT DATABASE_SRS.GML_SRS_NAME%TYPE, versioning OUT VARCHAR2) 
+  PROCEDURE db_info(
+    schema_name VARCHAR2 := USER,
+    schema_srid OUT INTEGER,
+    schema_gml_srs_name OUT VARCHAR2,
+    versioning OUT VARCHAR2
+  )
   IS
   BEGIN
-    EXECUTE IMMEDIATE 'SELECT SRID, GML_SRS_NAME from DATABASE_SRS' INTO schema_srid, schema_gml_srs_name;
-    versioning := versioning_db(USER);
+    EXECUTE IMMEDIATE
+      'SELECT srid, gml_srs_name FROM '||schema_name||'.database_srs'
+       INTO schema_srid, schema_gml_srs_name;
+
+    versioning := versioning_db(schema_name);
   END;
 
   /*****************************************************************
   * db_metadata
   *
+  * @param schema_name name of user schema
+  * @return DB_INFO_TABLE object
   ******************************************************************/
-  FUNCTION db_metadata RETURN DB_INFO_TABLE
+  FUNCTION db_metadata(schema_name VARCHAR2 := USER) RETURN DB_INFO_TABLE
   IS
     info_ret DB_INFO_TABLE;
     info_tmp DB_INFO_OBJ;
@@ -212,16 +232,51 @@ AS
 
     info_tmp := DB_INFO_OBJ(0, NULL, NULL, 0, NULL, NULL);
   
-    EXECUTE IMMEDIATE 'select SRID, GML_SRS_NAME from DATABASE_SRS' INTO info_tmp.schema_srid, info_tmp.schema_gml_srs_name;
-    EXECUTE IMMEDIATE 'select COORD_REF_SYS_NAME, COORD_REF_SYS_KIND from SDO_COORD_REF_SYS where SRID=:1' INTO info_tmp.coord_ref_sys_name, info_tmp.coord_ref_sys_kind USING info_tmp.schema_srid;
-    EXECUTE IMMEDIATE 'SELECT count(*) FROM all_tab_cols WHERE column_name = ''WKTEXT3D'' AND table_name = ''CS_SRS''' INTO wktext3d_exists;
-	IF wktext3d_exists = 1 THEN
-	    EXECUTE IMMEDIATE 'select nvl(WKTEXT3D, WKTEXT) from CS_SRS where SRID=:1' INTO info_tmp.wktext USING info_tmp.schema_srid;
-	ELSE
-		EXECUTE IMMEDIATE 'select WKTEXT from CS_SRS where SRID=:1' INTO info_tmp.wktext USING info_tmp.schema_srid;
-	END IF;
+    EXECUTE IMMEDIATE
+      'SELECT srid, gml_srs_name FROM '||schema_name||'.database_srs'
+       INTO info_tmp.schema_srid, info_tmp.schema_gml_srs_name;
 
-    info_tmp.versioning := versioning_db;
+    SELECT
+      coord_ref_sys_name,
+      coord_ref_sys_kind
+    INTO
+      info_tmp.coord_ref_sys_name,
+      info_tmp.coord_ref_sys_kind
+    FROM
+      sdo_coord_ref_sys
+    WHERE srid = info_tmp.schema_srid;
+
+    SELECT
+      count(*)
+    INTO
+      wktext3d_exists
+    FROM
+      all_tab_cols
+    WHERE
+      column_name = 'WKTEXT3D'
+      AND table_name = 'CS_SRS';
+
+    IF wktext3d_exists = 1 THEN
+      SELECT
+        NVL(wktext3d, wktext)
+      INTO
+        info_tmp.wktext
+      FROM
+        cs_srs
+      WHERE
+        srid = info_tmp.schema_srid;
+    ELSE
+      SELECT
+        wktext
+      INTO
+        info_tmp.wktext
+      FROM
+        cs_srs
+      WHERE
+        srid= info_tmp.schema_srid;
+    END IF;
+
+    info_tmp.versioning := versioning_db(schema_name);
     info_ret(info_ret.count) := info_tmp;
     RETURN info_ret;
   END;
@@ -275,15 +330,14 @@ AS
   /******************************************************************
   * update_table_constraint
   *
-  * Removes a constraint to add it again with parameters
-  * ON UPDATE CASCADE ON DELETE CASCADE or NO ACTION
+  * Removes a constraint to add it again with given ON DELETE parameter
   *
   * @param fkey_name name of the foreign key that is updated 
   * @param table_name defines the table to which the constraint belongs to
   * @param column_name defines the column the constraint is relying on
   * @param ref_table name of referenced table
   * @param ref_column name of referencing column of referenced table
-  * @param on_delete_param whether CASCADE or NO ACTION
+  * @param delete_param whether NO ACTION, RESTIRCT, CASCADE or SET NULL
   * @param schema_name name of schema of target constraints
   ******************************************************************/
   PROCEDURE update_table_constraint(
@@ -292,20 +346,35 @@ AS
     column_name VARCHAR2,
     ref_table VARCHAR2,
     ref_column VARCHAR2,
-    on_delete_param VARCHAR2 := 'CASCADE',
+    on_delete_param CHAR := 'a',
     schema_name VARCHAR2 := USER
     )
   IS
+    delete_param VARCHAR2(20);
   BEGIN
     IF versioning_table(table_name, schema_name) = 'ON' OR versioning_table(ref_table, schema_name) = 'ON' THEN
       dbms_output.put_line('Can not perform operation with version enabled tables.');
       RETURN;
     END IF;
 
-    EXECUTE IMMEDIATE 'ALTER TABLE ' || upper(schema_name) || '.' || table_name || ' DROP CONSTRAINT ' || fkey_name;
-    EXECUTE IMMEDIATE 'ALTER TABLE ' || upper(schema_name) || '.' || table_name || ' ADD CONSTRAINT ' || fkey_name || 
-                         ' FOREIGN KEY (' || column_name || ') REFERENCES ' || upper(schema_name) || '.' || ref_table || '(' || ref_column || ')'
-                         || on_delete_param;
+    CASE on_delete_param
+      WHEN 'c' THEN delete_param := ' ON DELETE CASCADE';
+      WHEN 'n' THEN delete_param := ' ON DELETE SET NULL';
+      ELSE delete_param := '';
+    END CASE;
+
+    EXECUTE IMMEDIATE 
+      'ALTER TABLE '
+      || upper(schema_name) || '.' || upper(table_name)
+      || ' DROP CONSTRAINT ' || upper(fkey_name);
+    EXECUTE IMMEDIATE
+      'ALTER TABLE '
+      || upper(schema_name) || '.' || upper(table_name)
+      || ' ADD CONSTRAINT ' || upper(fkey_name)
+      || ' FOREIGN KEY (' || upper(column_name) || ')'
+      || ' REFERENCES ' || upper(schema_name) || '.' || upper(ref_table) || '(' || upper(ref_column) || ')'
+      || delete_param;
+
     EXCEPTION
       WHEN OTHERS THEN
         dbms_output.put_line('Error on constraint ' || fkey_name || ': ' || SQLERRM);
@@ -315,38 +384,50 @@ AS
   * update_schema_constraints
   *
   * calls update_table_constraint for updating all the constraints
-  * in the user schema
+  * in the specified schema where options for on_delete_param are:
+  * a = NO ACTION
+  * c = CASCADE
+  * n = SET NULL
   *
-  * @param on_delete_param whether CASCADE (default) or NO ACTION
+  * @param on_delete_param default is 'a' = NO ACTION
   * @param schema_name name of schema of target constraints
   ******************************************************************/
   PROCEDURE update_schema_constraints(
-    on_delete_param VARCHAR2 := 'CASCADE',
+    on_delete_param CHAR := 'a',
     schema_name VARCHAR2 := USER
     )
   IS
-    delete_param VARCHAR2(30) := 'ON DELETE CASCADE';
-    deferrable_param VARCHAR2(30);
   BEGIN
-    IF on_delete_param <> 'CASCADE' THEN
-      delete_param := '';
-      dbms_output.put_line('Constraints are set to ON DELETE NO ACTION');
-    ELSE
-      dbms_output.put_line('Constraints are set to ON DELETE CASCADE');
-    END IF;
-
-    FOR rec IN (SELECT acc1.constraint_name AS fkey, acc1.table_name AS t, acc1.column_name AS c, 
-                  ac2.table_name AS ref_t, acc2.column_name AS ref_c, acc1.owner AS schema
-                FROM all_cons_columns acc1
-                JOIN all_constraints ac1 ON acc1.owner = ac1.owner 
-                  AND acc1.constraint_name = ac1.constraint_name
-                JOIN all_constraints ac2 ON ac1.r_owner = ac2.owner 
-                  AND ac1.r_constraint_name = ac2.constraint_name
-                JOIN all_cons_columns acc2 ON ac2.owner = acc2.owner 
-                  AND ac2.constraint_name = acc2.constraint_name 
-                  AND acc2.position = acc1.position     
-                WHERE acc1.owner = upper(schema_name) AND ac1.constraint_type = 'R') LOOP
-      update_table_constraint(rec.fkey, rec.t, rec.c, rec.ref_t, rec.ref_c, delete_param, schema_name);
+    FOR rec IN (
+      SELECT
+        acc1.constraint_name AS fkey,
+        acc1.table_name AS t,
+        acc1.column_name AS c, 
+        ac2.table_name AS ref_t,
+        acc2.column_name AS ref_c,
+        acc1.owner AS schema
+      FROM
+        all_cons_columns acc1
+      JOIN
+        all_constraints ac1
+        ON acc1.constraint_name = ac1.constraint_name
+       AND acc1.owner = ac1.owner 
+       AND acc1.table_name = ac1.table_name
+      JOIN
+        all_constraints ac2
+        ON acc1.constraint_name = ac2.constraint_name
+       AND acc1.owner = ac2.owner 
+       AND acc1.table_name = ac2.table_name
+      JOIN
+        all_cons_columns acc2
+        ON ac2.owner = acc2.owner 
+       AND ac2.constraint_name = acc2.constraint_name 
+       AND acc2.position = acc1.position     
+      WHERE
+        acc1.owner = upper(schema_name)
+        AND ac1.constraint_type = 'R'
+    ) LOOP
+      update_table_constraint(rec.fkey, rec.t, rec.c, rec.ref_t, rec.ref_c, on_delete_param, schema_name);
     END LOOP;
   END;
 
@@ -355,19 +436,21 @@ AS
   *
   * @param seq_name name of the sequence
   * @param count number of values to be queried from the sequence
-  * @param schema_name name of schema of target sequence
   * @return ID_ARRAY array of sequence values
   ******************************************************************/
   FUNCTION get_seq_values(
     seq_name VARCHAR2, 
-    seq_count NUMBER,
-    schema_name VARCHAR2 := USER
+    seq_count NUMBER
     ) RETURN ID_ARRAY
   IS
     seq_tbl ID_ARRAY;
   BEGIN
-    EXECUTE IMMEDIATE 'SELECT ' || upper(schema_name) || '.' || seq_name || '.nextval FROM dual CONNECT BY level <= :1' 
-                         BULK COLLECT INTO seq_tbl USING seq_count;
+    EXECUTE IMMEDIATE
+      'SELECT ' || upper(seq_name) || '.nextval '
+      || 'FROM dual CONNECT BY level <= :1' 
+      BULK COLLECT INTO seq_tbl
+      USING seq_count;
+
     RETURN seq_tbl;
   END;
 
@@ -384,12 +467,21 @@ AS
   IS
     arr ID_ARRAY;
   BEGIN
-    EXECUTE IMMEDIATE 'WITH split_str AS (
-                         SELECT regexp_substr(:1, :2, 1, LEVEL) AS str_parts FROM dual 
-                           CONNECT BY regexp_substr(:3, :4, 1, LEVEL) IS NOT NULL
-                       )
-                       SELECT to_number(replace(str_parts,''.'','','')) FROM split_str'
-                       BULK COLLECT INTO arr USING str, '[^'||delim||']+', str, '[^'||delim||']+';
+    WITH split_str AS (
+      SELECT
+        regexp_substr(str, '[^'||delim||']+', 1, LEVEL) AS str_parts
+      FROM
+        dual
+      CONNECT BY
+        regexp_substr(str, '[^'||delim||']+', 1, LEVEL) IS NOT NULL
+    )
+    SELECT
+      to_number(replace(str_parts,'.',','))
+    BULK COLLECT INTO
+      arr
+    FROM
+      split_str;
+
     RETURN arr;
   END;
 
@@ -509,12 +601,10 @@ AS
   * construct_solid
   *
   * @param geom_root_id identifier to group geometries of a solid
-  * @param schema_name name of schema
   * @return SDO_GEOMETRY the constructed solid geometry
   ******************************************************************/
   FUNCTION construct_solid(
-    geom_root_id NUMBER,
-    schema_name VARCHAR2 := USER
+    geom_root_id NUMBER
     ) RETURN SDO_GEOMETRY
   IS
     column_srid NUMBER;
@@ -526,11 +616,27 @@ AS
     solid_null_ex EXCEPTION;
     --solid_invalid_ex EXCEPTION;
   BEGIN
-    SELECT srid INTO column_srid FROM user_sdo_geom_metadata WHERE table_name = 'SURFACE_GEOMETRY' AND column_name = 'SOLID_GEOMETRY';
+    SELECT
+      srid
+    INTO
+      column_srid
+    FROM
+      user_sdo_geom_metadata
+    WHERE
+      table_name = 'SURFACE_GEOMETRY'
+      AND column_name = 'SOLID_GEOMETRY';
 
-    OPEN geom_cur FOR 'SELECT geometry FROM ' || schema_name || '.surface_geometry
-                         WHERE (root_id = :1 OR parent_id = :2) 
-                           AND geometry IS NOT NULL ORDER BY id' USING geom_root_id, geom_root_id;
+    OPEN geom_cur FOR
+      SELECT
+        geometry
+      FROM
+        surface_geometry
+      WHERE
+        (root_id = geom_root_id
+        OR parent_id = geom_root_id) 
+        AND geometry IS NOT NULL
+      ORDER BY
+        id;
     LOOP
       FETCH geom_cur INTO solid_part;
       EXIT WHEN geom_cur%NOTFOUND;
