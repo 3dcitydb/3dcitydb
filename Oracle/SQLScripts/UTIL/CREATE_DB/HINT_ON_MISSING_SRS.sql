@@ -27,7 +27,5 @@
 
 SET FEEDBACK OFF
 
-prompt Your chosen SRID wasn't found in the MDSYS.CS_SRS table! 
-prompt If you want to use this db schema for storing the DHDN Soldner-Berlin data
-prompt please execute as user SYS (with SYSDBA option) 
-prompt SQL script "UTIL/SRS/SOLDNER_BERLIN_SRS.sql"
+prompt Your chosen SRID wasn't found in the MDSYS.CS_SRS table!
+prompt Choose an existing SRID or manually add your SRID to MDSYS.CS_SRS.

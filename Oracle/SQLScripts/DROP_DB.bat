@@ -49,19 +49,19 @@ echo.
 echo Which database license are you using (Spatial=S/Locator=L)?
 set /p var="(default DBVERSION=S): "
 
-IF /i NOT "%var%"=="" (
+if /i not "%var%"=="" (
   set DBVERSION=%var%
 ) else (
   set DBVERSION=S
 )
 
 set res=f
-IF /i "%DBVERSION%"=="s" (set res=t)
-IF /i "%DBVERSION%"=="l" (set res=t)
-IF "%res%"=="f" (
+if /i "%DBVERSION%"=="s" (set res=t)
+if /i "%DBVERSION%"=="l" (set res=t)
+if "%res%"=="f" (
   echo.
   echo Illegal input! Enter S or L.
-  GOTO dbversion
+  goto dbversion
 )
 
 :: Run DROP_DB.sql to drop the 3D City Database instance ----------------------
