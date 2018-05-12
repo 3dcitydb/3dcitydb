@@ -46,23 +46,44 @@ echo '##########################################################################
 re='^[0-9]+$'
 while [ 1 ]; do
   echo
-  echo 'Please enter a valid SRID (e.g., 3068 for DHDN/Soldner Berlin).'
-  read -p "(default SRID=3068): " SRSNO
-  SRSNO=${SRSNO:-3068}
+  echo 'Please enter a valid SRID (e.g., EPSG code of the CRS to be used).'
+  read -p "(SRID must be an integer greater than zero): " SRSNO
+  SRSNO=${SRSNO:-0}
 
-  if [[ ! $SRSNO =~ $re ]]; then
+  if [[ ! $SRSNO =~ $re ]] || [ $SRSNO -le 0 ]; then
     echo
-    echo 'SRID must be numeric. Please retry.'
+    echo 'Illegal input! Enter a positive integer for the SRID.'
+  else
+    break;
+  fi
+done
+
+# Prompt for HEIGHT_EPSG ------------------------------------------------------
+while [ 1 ]; do
+  echo
+  echo "Please enter the EPSG code of the height system (use 0 if unknown or '$SRSNO' is already 3D)."
+  read -p "(default HEIGHT_EPSG=0): " HEIGHT_EPSG
+  HEIGHT_EPSG=${HEIGHT_EPSG:-0}
+
+  if [[ ! $HEIGHT_EPSG =~ $re ]]; then
+    echo
+    echo 'Illegal input! Enter 0 or a positive integer for the HEIGHT_EPSG.'
   else
     break;
   fi
 done
 
 # Prompt for GMLSRSNAME -------------------------------------------------------
+if [ $HEIGHT_EPSG -gt 0 ]; then
+  GMLSRSNAME=urn:ogc:def:crs,crs:EPSG::$SRSNO,crs:EPSG::$HEIGHT_EPSG
+else
+  GMLSRSNAME=urn:ogc:def:crs:EPSG::$SRSNO
+fi
+
 echo
 echo 'Please enter the corresponding gml:srsName to be used in GML exports.'
-read -p '(default GMLSRSNAME=urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783): ' GMLSRSNAME
-GMLSRSNAME=${GMLSRSNAME:-urn:ogc:def:crs,crs:EPSG:6.12:3068,crs:EPSG:6.12:5783}
+read -p "(default GMLSRSNAME=$GMLSRSNAME): " var
+GMLSRSNAME=${var:-$GMLSRSNAME}
 
 # Run CREATE_DB.sql to create the 3D City Database instance -------------------
 echo

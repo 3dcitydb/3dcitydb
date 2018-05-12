@@ -30,12 +30,7 @@
 SET client_min_messages TO WARNING;
 \set ON_ERROR_STOP ON
 
--- Parse arguments srsno, gmlsrsname
-\echo :srsno
-\echo :gmlsrsname
-
 \set SRSNO :srsno
-\set SRS_NO :srsno
 \set GMLSRSNAME :gmlsrsname
 
 --// check if the PostGIS extension is available
@@ -72,9 +67,9 @@ ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
 --// checks if the chosen SRID is provided by the spatial_ref_sys table
 \echo
 \echo 'Checking spatial reference system ...'
-SELECT citydb_pkg.check_srid(:SRS_NO);
+SELECT citydb_pkg.check_srid(:SRSNO);
 
 \echo 'Setting spatial reference system of 3DCityDB instance ...'
-INSERT INTO citydb.DATABASE_SRS(SRID,GML_SRS_NAME) VALUES (:SRS_NO,:'GMLSRSNAME');
-SELECT citydb_pkg.change_schema_srid(:SRS_NO,:'GMLSRSNAME');
+INSERT INTO citydb.DATABASE_SRS(SRID,GML_SRS_NAME) VALUES (:SRSNO,:'GMLSRSNAME');
+SELECT citydb_pkg.change_schema_srid(:SRSNO,:'GMLSRSNAME');
 \echo 'Done'
