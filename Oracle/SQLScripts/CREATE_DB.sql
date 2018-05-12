@@ -62,13 +62,6 @@ BEGIN
 END;
 /
 
--- set GMLSRSNAME variable
-COLUMN gsn new_value GMLSRSNAME print
-SELECT CASE
-  WHEN &VERTNO = 0 THEN 'urn:ogc:def:crs,crs:EPSG::' || &SRSNO
-  ELSE 'urn:ogc:def:crs,crs:EPSG::' || &SRSNO || ',crs:EPSG::' || &VERTNO
-  END gsn FROM dual;
-
 -- Check for SDO_GEORASTER support
 BEGIN
   :GEORASTER_SUPPORT := 0;
@@ -83,7 +76,7 @@ BEGIN
 END;
 /
 
--- transfer the value from the bind variable to the substitution variable
+-- Transfer the value from the bind variable to the substitution variable
 COLUMN mc new_value BATCHFILE2 print
 SELECT :BATCHFILE mc FROM dual;
 
