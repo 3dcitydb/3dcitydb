@@ -1,6 +1,6 @@
 #!/bin/bash
 # Shell script to drop an instance of the 3D City Database
-# on PostgreSQL/PostGIS 
+# on PostgreSQL/PostGIS
 
 # Provide your database details here ------------------------------------------
 export PGBIN=path_to_psql
