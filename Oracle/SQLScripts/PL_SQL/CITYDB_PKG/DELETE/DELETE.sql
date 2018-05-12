@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-11 15:18:44)
+-- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-12 10:16:42)
 -- del_address
 -- del_appearance
 -- del_breakline_relief
@@ -96,7 +96,7 @@ AS
   FUNCTION del_cityobject(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_cityobject_genericattrib(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_cityobjectgroup(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
-  FUNCTION cleanup_global_appearances RETURN number;
+  FUNCTION cleanup_global_appearances RETURN ID_ARRAY;
   FUNCTION del_cityobject_by_lineage(lineage_value varchar2, objectclass_id int := 0) RETURN ID_ARRAY;
   FUNCTION del_external_reference(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_generic_cityobject(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
@@ -3335,7 +3335,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION cleanup_global_appearances RETURN number
+  FUNCTION cleanup_global_appearances RETURN ID_ARRAY
   IS
     deleted_ids ID_ARRAY := ID_ARRAY();
     surface_data_ids ID_ARRAY;
@@ -3375,11 +3375,11 @@ AS
       deleted_ids := del_appearance(appearance_ids);
     END IF;
 
-    RETURN deleted_ids.count;
+    RETURN deleted_ids;
 
     EXCEPTION
       WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids.count;
+        RETURN deleted_ids;
   END;
   ------------------------------------------
 

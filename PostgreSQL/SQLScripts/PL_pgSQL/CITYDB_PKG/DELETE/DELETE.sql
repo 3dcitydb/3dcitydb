@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-11 12:22:05)
+-- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-12 10:20:09)
 -- del_address
 -- del_appearance
 -- del_breakline_relief
@@ -2932,13 +2932,12 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION cleanup_global_appearances() RETURNS integer AS
+CREATE OR REPLACE FUNCTION cleanup_global_appearances() RETURNS SETOF int AS
 $body$
 -- Function for cleaning up global appearance
 DECLARE
   deleted_id int;
   app_id int;
-  deleted_count integer := 0;
 BEGIN
   PERFORM del_surface_data(array_agg(s.id))
     FROM surface_data s 
@@ -2951,10 +2950,10 @@ BEGIN
           WHERE a.cityobject_id IS NULL AND asd.appearance_id IS NULL
     LOOP
       DELETE FROM appearance WHERE id = app_id RETURNING id INTO deleted_id;
-      deleted_count := deleted_count + 1;
+      RETURN NEXT deleted_id;
     END LOOP;
 
-  RETURN deleted_count;
+  RETURN;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -5588,4 +5587,5 @@ END;
 $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
+
 
