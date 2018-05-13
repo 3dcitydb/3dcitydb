@@ -25,7 +25,8 @@
 -- limitations under the License.
 --
 
-VARIABLE DELETE_FILE VARCHAR2(50);
+-- parse arguments
+DEFINE DBVERSION=&1;
 
 SELECT 'Creating packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', ''citydb_delete'', and corresponding types' as message from DUAL;
 @@PL_SQL/CITYDB_PKG/UTIL/UTIL.sql;
@@ -35,21 +36,26 @@ SELECT 'Creating packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx''
 @@PL_SQL/CITYDB_PKG/STATISTICS/STAT.sql;
 @@PL_SQL/CITYDB_PKG/ENVELOPE/ENVELOPE.sql;
 
+-- check for SDO_GEORASTER support
+VARIABLE GEORASTER_SUPPORT NUMBER;
 BEGIN
-  :GEORASTER_SUPPORT := :GEORASTER_SUPPORT;
-  IF (upper('&DBVERSION')='S' and :GEORASTER_SUPPORT <> 0) THEN
-    :DELETE_FILE := 'PL_SQL/CITYDB_PKG/DELETE/DELETE.sql';
-  ELSE
-    :DELETE_FILE := 'PL_SQL/CITYDB_PKG/DELETE/DELETE2.sql';
+  :GEORASTER_SUPPORT := 0;
+  IF (upper('&DBVERSION')='S') THEN
+    SELECT COUNT(*) INTO :GEORASTER_SUPPORT FROM ALL_SYNONYMS
+	WHERE SYNONYM_NAME='SDO_GEORASTER';
   END IF;
 END;
 /
 
--- Transfer the value from the bind variable to the substitution variable
-column mc new_value DELETE_FILE2 print
-select :DELETE_FILE mc from dual;
-@@&DELETE_FILE2;
+-- create delete scripts
+column script new_value DELETE
+SELECT
+  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'PL_SQL/CITYDB_PKG/DELETE/DELETE_GEORASTER.sql'
+  ELSE 'PL_SQL/CITYDB_PKG/DELETE/DELETE.sql'
+  END AS script
+FROM dual;
+
+@@&DELETE
 
 @@PL_SQL/CITYDB_PKG/DELETE/DELETE_BY_LINEAGE;
 SELECT 'Packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', and ''citydb_delete'' created' as message from DUAL;
-

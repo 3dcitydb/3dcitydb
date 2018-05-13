@@ -69,8 +69,6 @@ AS
   FUNCTION delete_group_with_members(pids ID_ARRAY) RETURN ID_ARRAY;
   FUNCTION delete_external_reference(pid NUMBER) RETURN NUMBER;
   FUNCTION delete_external_reference(pids ID_ARRAY) RETURN ID_ARRAY;
-  FUNCTION delete_grid_coverage(pid NUMBER) RETURN NUMBER;
-  FUNCTION delete_grid_coverage(pids ID_ARRAY) RETURN ID_ARRAY;
   FUNCTION delete_genericattrib(pid NUMBER) RETURN NUMBER;
   FUNCTION delete_genericattrib(pids ID_ARRAY) RETURN ID_ARRAY;
   FUNCTION delete_generic_cityobject(pid NUMBER, objclass_id NUMBER := 0) RETURN NUMBER;
@@ -667,9 +665,9 @@ AS
     RETURN deleted_ids;
   END;
 
-  /*********************
-  * GEOMETRY & RASTER
-  *********************/
+  /************
+  * GEOMETRY
+  ************/
   /*
   SURFACE GEOMETRY
   */
@@ -798,50 +796,6 @@ AS
           AND n1.relative_brep_id IS NULL
       );
     END IF;
-
-    RETURN deleted_id;
-  END;
-
-
-  /*
-  GRID COVERAGE
-  */
-  FUNCTION delete_grid_coverage(pids ID_ARRAY) RETURN ID_ARRAY
-  IS
-    deleted_ids ID_ARRAY := ID_ARRAY();
-  BEGIN
-    -- delete grid_coverages
-    DELETE FROM
-      grid_coverage t
-    WHERE EXISTS (
-      SELECT
-        a.COLUMN_VALUE
-      FROM
-        TABLE(pids) a
-      WHERE
-        a.COLUMN_VALUE = t.id
-      )
-    RETURNING
-      id
-    BULK COLLECT INTO
-      deleted_ids;
-
-    RETURN deleted_ids;
-  END;
-
-  FUNCTION delete_grid_coverage(pid NUMBER) RETURN NUMBER
-  IS
-    deleted_id NUMBER;
-  BEGIN
-    -- delete grid_coverage
-    DELETE FROM
-      grid_coverage
-    WHERE
-      id = pid
-    RETURNING
-      id
-    INTO
-      deleted_id;
 
     RETURN deleted_id;
   END;
@@ -4750,148 +4704,6 @@ AS
 
 
   /*
-  RASTER RELIEF
-  */
-  FUNCTION delete_raster_relief(pids ID_ARRAY, objclass_ids ID_ARRAY := ID_ARRAY()) RETURN ID_ARRAY
-  IS
-    deleted_ids ID_ARRAY := ID_ARRAY();
-    class_ids ID_ARRAY;
-    grid_coverag_ids ID_ARRAY;
-    dummy_ids ID_ARRAY;
-  BEGIN
-    -- fetch objectclass_id if not set
-    IF objclass_ids IS EMPTY THEN
-      SELECT
-        DISTINCT t.objectclass_id
-      BULK COLLECT INTO
-        class_ids
-      FROM
-        raster_relief t,
-        TABLE(pids) a
-      WHERE
-        t.id = a.COLUMN_VALUE;
-    ELSE
-      class_ids := SET(objclass_ids);
-    END IF;
-
-    IF class_ids IS EMPTY THEN
-      DBMS_OUTPUT.PUT_LINE('Objectclass_id unknown! Check OBJECTCLASS table.');
-      RETURN NULL;
-    END IF;
-
-    -- delete raster_reliefs
-    DELETE FROM
-      raster_relief t
-    WHERE EXISTS (
-      SELECT
-        a.COLUMN_VALUE
-      FROM
-        TABLE(pids) a
-      WHERE
-        a.COLUMN_VALUE = t.id
-      )
-      AND t.objectclass_id MEMBER OF class_ids
-    RETURNING
-      id,
-      coverage_id
-    BULK COLLECT INTO
-      deleted_ids,
-      grid_coverag_ids;
-
-    -- delete grid_coverage(s) not being referenced any more
-    IF grid_coverag_ids IS NOT EMPTY THEN
-      DELETE FROM
-        grid_coverage m
-      WHERE EXISTS (
-        SELECT DISTINCT
-          a.COLUMN_VALUE
-        FROM
-          TABLE(grid_coverag_ids) a
-        LEFT JOIN
-          raster_relief n1
-          ON n1.coverage_id = a.COLUMN_VALUE
-        WHERE
-          m.id = a.COLUMN_VALUE
-          AND n1.coverage_id IS NULL
-      );
-    END IF;
-
-    -- delete relief_components
-    IF deleted_ids IS NOT EMPTY THEN
-      dummy_ids := delete_relief_component_post(deleted_ids, class_ids);
-    END IF;
-
-    RETURN deleted_ids;
-  END;
-
-  FUNCTION delete_raster_relief(pid NUMBER, objclass_id NUMBER := 0) RETURN NUMBER
-  IS
-    deleted_id NUMBER;
-    class_id NUMBER;
-    grid_coverag_ref_id NUMBER;
-    dummy_ids ID_ARRAY;
-    dummy_id NUMBER;
-  BEGIN
-    -- fetch objectclass_id if not set
-    IF objclass_id = 0 THEN
-      SELECT
-        objectclass_id
-      INTO
-        class_id
-      FROM
-        raster_relief
-      WHERE
-        id = pid;
-    ELSE
-      class_id := objclass_id;
-    END IF;
-
-    IF class_id IS NULL THEN
-      DBMS_OUTPUT.PUT_LINE('Objectclass_id unknown! Check OBJECTCLASS table.');
-      RETURN NULL;
-    END IF;
-
-    -- delete raster_relief
-    DELETE FROM
-      raster_relief
-    WHERE
-      id = pid
-      AND objectclass_id = class_id
-    RETURNING
-      id,
-      coverage_id
-    INTO
-      deleted_id,
-      grid_coverag_ref_id;
-
-    -- delete grid_coverage not being referenced any more
-    IF grid_coverag_ref_id IS NOT NULL THEN
-      DELETE FROM
-        grid_coverage m
-      WHERE EXISTS (
-        SELECT
-          1
-        FROM
-          TABLE(ID_ARRAY(grid_coverag_ref_id)) a
-        LEFT JOIN
-          raster_relief n1
-          ON n1.coverage_id = a.COLUMN_VALUE
-        WHERE
-          m.id = a.COLUMN_VALUE
-          AND n1.coverage_id IS NULL
-      );
-    END IF;
-
-    -- delete relief_component
-    IF deleted_id IS NOT NULL THEN
-      dummy_id := delete_relief_component_post(deleted_id, class_id);
-    END IF;
-
-    RETURN deleted_id;
-  END;
-
-
-  /*
   TIN RELIEF
   */
   FUNCTION delete_tin_relief(pids ID_ARRAY, objclass_ids ID_ARRAY := ID_ARRAY()) RETURN ID_ARRAY
@@ -5030,7 +4842,7 @@ AS
 
     -- delete raster_reliefs
     IF class_ids MULTISET INTERSECT ID_ARRAY(19) IS NOT EMPTY THEN
-      deleted_ids := deleted_ids MULTISET UNION ALL COALESCE(delete_raster_relief(pids, class_ids), ID_ARRAY());
+      deleted_ids := NULL;
     END IF;
 
     -- delete tin_reliefs
@@ -5081,7 +4893,7 @@ AS
 
     -- delete raster_relief
     IF class_id IN (19) THEN
-      deleted_id := delete_raster_relief(pid, class_id);
+      deleted_id := NULL;
     END IF;
 
     -- delete tin_relief
@@ -7876,7 +7688,6 @@ AS
     EXECUTE IMMEDIATE 'TRUNCATE TABLE land_use';
     EXECUTE IMMEDIATE 'TRUNCATE TABLE breakline_relief';
     EXECUTE IMMEDIATE 'TRUNCATE TABLE masspoint_relief';
-    EXECUTE IMMEDIATE 'TRUNCATE TABLE raster_relief';
     EXECUTE IMMEDIATE 'TRUNCATE TABLE tin_relief';
     EXECUTE IMMEDIATE 'TRUNCATE TABLE relief_feat_to_rel_comp';
     EXECUTE IMMEDIATE 'TRUNCATE TABLE relief_component';
@@ -7888,7 +7699,6 @@ AS
     EXECUTE IMMEDIATE 'TRUNCATE TABLE waterbod_to_waterbnd_srf';
     EXECUTE IMMEDIATE 'TRUNCATE TABLE waterboundary_surface';
     EXECUTE IMMEDIATE 'TRUNCATE TABLE waterbody';
-    EXECUTE IMMEDIATE 'TRUNCATE TABLE grid_coverage';
     EXECUTE IMMEDIATE 'TRUNCATE TABLE textureparam';
     EXECUTE IMMEDIATE 'TRUNCATE TABLE appear_to_surface_data';
     EXECUTE IMMEDIATE 'TRUNCATE TABLE surface_data';
@@ -7951,22 +7761,6 @@ AS
     EXECUTE IMMEDIATE 'ALTER SEQUENCE external_ref_seq INCREMENT BY ' || (seq_value-1)*-1;
     dummy_id := external_ref_seq.nextval;
     EXECUTE IMMEDIATE 'ALTER SEQUENCE external_ref_seq INCREMENT BY 1';
-
-    SELECT grid_coverage_seq.nextval INTO seq_value FROM dual;
-    IF (seq_value = 1) THEN
-      SELECT grid_coverage_seq.nextval INTO seq_value FROM dual;
-    END IF;
-    EXECUTE IMMEDIATE 'ALTER SEQUENCE grid_coverage_seq INCREMENT BY ' || (seq_value-1)*-1;
-    dummy_id := grid_coverage_seq.nextval;
-    EXECUTE IMMEDIATE 'ALTER SEQUENCE grid_coverage_seq INCREMENT BY 1';
-
-    SELECT grid_coverage_rdt_seq.nextval INTO seq_value FROM dual;
-    IF (seq_value = 1) THEN
-      SELECT grid_coverage_rdt_seq.nextval INTO seq_value FROM dual;
-    END IF;
-    EXECUTE IMMEDIATE 'ALTER SEQUENCE grid_coverage_rdt_seq INCREMENT BY ' || (seq_value-1)*-1;
-    dummy_id := grid_coverage_rdt_seq.nextval;
-    EXECUTE IMMEDIATE 'ALTER SEQUENCE grid_coverage_rdt_seq INCREMENT BY 1';
 
     SELECT implicit_geometry_seq.nextval INTO seq_value FROM dual;
     IF (seq_value = 1) THEN

@@ -25,20 +25,8 @@
 -- limitations under the License.
 --
 
-SET SERVEROUTPUT ON
-SET FEEDBACK ON
-SET VER OFF
+@@SEQUENCES.sql
 
-prompt
-prompt DisableVersioning procedure will be started
-accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Spatial=S/Locator=L, default is S): '
-prompt
+CREATE SEQUENCE GRID_COVERAGE_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1 NOCACHE;  
 
-column script new_value BATCHFILE
-SELECT
-  CASE WHEN NOT (upper('&DBVERSION')='L' or upper('&DBVERSION')='S') THEN 'UTIL/CREATE_DB/HINT_ON_MISTYPED_DBVERSION.sql'
-  ELSE 'DISABLE_VERSIONING2.sql'
-  END AS script
-FROM dual;
-
-@@&BATCHFILE &DBVERSION
+CREATE SEQUENCE GRID_COVERAGE_RDT_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1 NOCACHE;

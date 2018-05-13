@@ -37,7 +37,6 @@ DEFINE DBVERSION=&4;
 
 VARIABLE SRID NUMBER;
 VARIABLE BATCHFILE VARCHAR2(50);
-VARIABLE GEORASTER_SUPPORT NUMBER;
 
 WHENEVER SQLERROR CONTINUE;
 
@@ -60,25 +59,11 @@ BEGIN
 END;
 /
 
--- Check for SDO_GEORASTER support
-BEGIN
-  :GEORASTER_SUPPORT := 0;
-  IF (upper('&DBVERSION')='S') THEN
-    SELECT COUNT(*) INTO :GEORASTER_SUPPORT FROM ALL_SYNONYMS
-      WHERE SYNONYM_NAME='SDO_GEORASTER';
-  END IF;
-
-  IF :GEORASTER_SUPPORT = 0 THEN 
-    dbms_output.put_line('NOTE: The data type SDO_GEORASTER is not available for this database. Raster relief tables will not be created.');
-  END IF;
-END;
-/
-
 -- Transfer the value from the bind variable to the substitution variable
-COLUMN mc new_value BATCHFILE2 print
-SELECT :BATCHFILE mc FROM dual;
+column script new_value BATCHFILE2 print
+select :BATCHFILE script from dual;
 
-START &BATCHFILE2
+START &BATCHFILE2 &SRSNO &GMLSRSNAME &VERSIONING &DBVERSION
 
 QUIT;
 /
