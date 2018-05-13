@@ -62,7 +62,7 @@ COMMIT;
 @@SCHEMA/INDEXES/SIMPLE_INDEX.sql
 @@SCHEMA/INDEXES/SPATIAL_INDEX.sql
 
---// (possibly) activate versioning
+--// activate versioning if requested
 BEGIN
   IF ('&VERSIONING'='yes' OR '&VERSIONING'='YES' OR '&VERSIONING'='y' OR '&VERSIONING'='Y') THEN
     :VERSIONBATCHFILE := 'ENABLE_VERSIONING2.sql';
@@ -71,13 +71,14 @@ BEGIN
   END IF;
 END;
 /
+
 -- Transfer the value from the bind variable to the substitution variable
-column mc2 new_value VERSIONBATCHFILE2 print
-select :VERSIONBATCHFILE mc2 from dual;
+COLUMN mc2 new_value VERSIONBATCHFILE2 print
+SELECT :VERSIONBATCHFILE mc2 FROM dual;
 
 START &VERSIONBATCHFILE2
 
 SHOW ERRORS;
 COMMIT;
 
-SELECT '3DCityDB creation complete!' as message from DUAL;
+SELECT '3DCityDB creation complete!' AS message FROM dual;
