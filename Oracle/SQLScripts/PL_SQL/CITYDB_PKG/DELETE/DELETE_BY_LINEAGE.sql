@@ -60,7 +60,7 @@ AS
       fetch building_cur into building_id;
       exit when building_cur%notfound;
       begin
-        deleted_id := citydb_delete.delete_building(building_id, schema_name);
+        deleted_id := citydb_delete.delete_building(building_id);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       exception
@@ -71,9 +71,7 @@ AS
     close building_cur;
     
     -- cleanup
-    dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1);
 
     return deleted_ids;
   exception
@@ -94,7 +92,7 @@ AS
       fetch bridge_cur into bridge_id;
       exit when bridge_cur%notfound;
       begin
-        deleted_id := citydb_delete.delete_bridge(bridge_id, schema_name);
+        deleted_id := citydb_delete.delete_bridge(bridge_id);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       exception
@@ -105,9 +103,7 @@ AS
     close bridge_cur;
 
     -- cleanup
-    dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1);
 
     return deleted_ids;
   exception
@@ -128,7 +124,7 @@ AS
       fetch tunnel_cur into tunnel_id;
       exit when tunnel_cur%notfound;
       begin
-        deleted_id := citydb_delete.delete_tunnel(tunnel_id, schema_name);
+        deleted_id := citydb_delete.delete_tunnel(tunnel_id);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       exception
@@ -139,9 +135,7 @@ AS
     close tunnel_cur;
 
     -- cleanup
-    dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1);
 
     return deleted_ids;
   exception
@@ -162,7 +156,7 @@ AS
       fetch city_furniture_cur into city_furniture_id;
       exit when city_furniture_cur%notfound;
       begin
-        deleted_id := citydb_delete.delete_city_furniture(city_furniture_id, schema_name);
+        deleted_id := citydb_delete.delete_city_furniture(city_furniture_id);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       exception
@@ -173,9 +167,7 @@ AS
     close city_furniture_cur;
 
     -- cleanup
-    dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1);
 
     return deleted_ids;
   exception
@@ -196,7 +188,7 @@ AS
       fetch generic_cityobject_cur into generic_cityobject_id;
       exit when generic_cityobject_cur%notfound;
       begin
-        deleted_id := citydb_delete.delete_generic_cityobject(generic_cityobject_id, schema_name);
+        deleted_id := citydb_delete.delete_generic_cityobject(generic_cityobject_id);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       exception
@@ -207,9 +199,7 @@ AS
     close generic_cityobject_cur;
 
     -- cleanup
-    dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1);
 
     return deleted_ids;
   exception
@@ -230,7 +220,7 @@ AS
       fetch land_use_cur into land_use_id;
       exit when land_use_cur%notfound;
       begin
-        deleted_id := citydb_delete.delete_land_use(land_use_id, schema_name);
+        deleted_id := citydb_delete.delete_land_use(land_use_id);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       exception
@@ -241,8 +231,7 @@ AS
     close land_use_cur;
 
     -- cleanup
-    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1);
 
     return deleted_ids;
   exception
@@ -263,7 +252,7 @@ AS
       fetch plant_cover_cur into plant_cover_id;
       exit when plant_cover_cur%notfound;
       begin
-        deleted_id := citydb_delete.delete_plant_cover(plant_cover_id, schema_name);
+        deleted_id := citydb_delete.delete_plant_cover(plant_cover_id);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       exception
@@ -274,8 +263,7 @@ AS
     close plant_cover_cur;
 
     -- cleanup
-    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1);
 
     return deleted_ids;
   exception
@@ -296,7 +284,7 @@ AS
       fetch solitary_veg_obj_cur into solitary_veg_obj_id;
       exit when solitary_veg_obj_cur%notfound;
       begin
-        deleted_id := citydb_delete.delete_solitary_veg_obj(solitary_veg_obj_id, schema_name);
+        deleted_id := citydb_delete.delete_solitary_veg_obj(solitary_veg_obj_id);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       exception
@@ -307,9 +295,7 @@ AS
     close solitary_veg_obj_cur;
 
     -- cleanup
-    dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1);
 
     return deleted_ids;
   exception
@@ -330,7 +316,7 @@ AS
       fetch transport_complex_cur into transport_complex_id;
       exit when transport_complex_cur%notfound;
       begin
-        deleted_id := citydb_delete.delete_transport_complex(transport_complex_id, schema_name);
+        deleted_id := citydb_delete.delete_transport_complex(transport_complex_id);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       exception
@@ -341,8 +327,7 @@ AS
     close transport_complex_cur;
 
     -- cleanup
-    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1);
 
     return deleted_ids;
   exception
@@ -363,7 +348,7 @@ AS
       fetch waterbody_cur into waterbody_id;
       exit when waterbody_cur%notfound;
       begin
-        deleted_id := citydb_delete.delete_waterbody(waterbody_id, schema_name);
+        deleted_id := citydb_delete.delete_waterbody(waterbody_id);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       exception
@@ -374,8 +359,7 @@ AS
     close waterbody_cur;
 
     -- cleanup
-    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1);
 
     return deleted_ids;
   exception
@@ -396,7 +380,11 @@ AS
       fetch cityobjectgroup_cur into cityobjectgroup_id;
       exit when cityobjectgroup_cur%notfound;
       begin
-        deleted_id := citydb_delete.delete_cityobjectgroup(cityobjectgroup_id, delete_members, schema_name);
+        if delete_members <> 0 then
+          deleted_id := citydb_delete.delete_group_with_members(cityobjectgroup_id);
+        else
+          deleted_id := citydb_delete.delete_cityobjectgroup(cityobjectgroup_id);
+        end if;
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       exception
@@ -407,8 +395,7 @@ AS
     close cityobjectgroup_cur;
 
     -- cleanup
-    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1);
 
     return deleted_ids;
   exception
@@ -429,7 +416,7 @@ AS
       fetch relief_feature_cur into relief_feature_id;
       exit when relief_feature_cur%notfound;
       begin
-        deleted_id := citydb_delete.delete_relief_feature(relief_feature_id, schema_name);
+        deleted_id := citydb_delete.delete_relief_feature(relief_feature_id);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       exception
@@ -440,8 +427,7 @@ AS
     close relief_feature_cur;
 
     -- cleanup
-    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1);
 
     return deleted_ids;
   exception
@@ -462,7 +448,7 @@ AS
       fetch cityobject_cur into cityobject_id;
       exit when cityobject_cur%notfound;
       begin
-        deleted_id := citydb_delete.delete_cityobject(cityobject_id, delete_members, 0, schema_name);
+        deleted_id := citydb_delete.delete_cityobject(cityobject_id);
         deleted_ids.extend;
         deleted_ids(deleted_ids.count) := deleted_id;
       exception
@@ -473,9 +459,7 @@ AS
     close cityobject_cur;
 
     -- cleanup
-    dummy_ids := citydb_delete.cleanup_implicit_geometries(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_appearances(1, schema_name);
-    dummy_ids := citydb_delete.cleanup_citymodels(schema_name);
+    dummy_ids := citydb_delete.cleanup_appearances(1);
 
     return deleted_ids;
   exception
