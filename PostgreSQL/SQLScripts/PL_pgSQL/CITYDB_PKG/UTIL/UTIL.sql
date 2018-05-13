@@ -236,3 +236,89 @@ $$
 SELECT nextval($1)::int FROM generate_series(1, $2);
 $$
 LANGUAGE sql STRICT;
+
+
+/*****************************************************************
+* cleanup_schema
+*
+* @param schema_name name of schema to be cleaned up
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_schema(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID AS
+$$
+DECLARE
+  tab TEXT;
+  seq TEXT;
+BEGIN
+  -- truncate tables
+  FOR tab IN
+    WITH RECURSIVE table_dependency(table_oid) AS (
+      SELECT DISTINCT ON (c.conrelid)
+        c.conrelid AS table_oid,
+        1 AS depth
+      FROM
+        pg_constraint c
+      JOIN
+        pg_namespace n
+        ON n.oid = c.connamespace
+      WHERE
+        n.nspname = 'citydb'
+        AND c.conrelid <> 'database_srs'::regclass::oid
+        AND c.conrelid <> 'objectclass'::regclass::oid
+        AND c.conrelid <> 'schema_to_objectclass'::regclass::oid
+        AND c.conrelid <> 'schema'::regclass::oid
+        AND c.conrelid <> 'schema_referencing'::regclass::oid
+        AND c.conrelid <> 'ade'::regclass::oid
+        AND c.contype = 'f'
+        AND c.conrelid <> c.confrelid
+      UNION ALL
+        SELECT DISTINCT ON (c.conrelid)
+          c.conrelid AS table_oid,
+          d.depth + 1 AS depth
+        FROM
+          pg_constraint c
+        JOIN
+          pg_namespace n
+          ON n.oid = c.connamespace
+        JOIN table_dependency d
+          ON d.table_oid = c.confrelid
+        WHERE
+          n.nspname = 'citydb'
+          AND c.conrelid <> 'database_srs'::regclass::oid
+          AND c.conrelid <> 'objectclass'::regclass::oid
+          AND c.conrelid <> 'schema_to_objectclass'::regclass::oid
+          AND c.conrelid <> 'schema'::regclass::oid
+          AND c.conrelid <> 'schema_referencing'::regclass::oid
+          AND c.conrelid <> 'ade'::regclass::oid
+          AND c.contype = 'f'
+          AND d.table_oid <> c.conrelid
+    )
+    SELECT
+      table_oid::regclass::text AS table_name,
+      max(depth) AS rel_depth
+    FROM
+      table_dependency
+    GROUP BY
+      table_oid
+    ORDER BY
+      rel_depth DESC
+  LOOP
+    EXECUTE format('TRUNCATE TABLE %I.%I CASCADE', schema_name, tab);
+  END LOOP;
+
+  -- reset sequences
+  FOR seq IN
+    SELECT
+      c.relname
+    FROM
+      pg_class c,
+      pg_namespace n
+    WHERE
+      c.relnamespace = n.oid
+      AND n.nspname = $1
+      AND relkind = 'S'
+  LOOP
+    EXECUTE format('ALTER SEQUENCE %I.%I RESTART', schema_name, seq);
+  END LOOP;
+END;
+$$
+LANGUAGE plpgsql STRICT;
