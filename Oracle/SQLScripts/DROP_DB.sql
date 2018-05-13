@@ -32,33 +32,14 @@ SET VER OFF
 -- parge arguments
 DEFINE DBVERSION=&1;
 
-VARIABLE BATCHFILE VARCHAR2(50);
-VARIABLE GEORASTER_SUPPORT NUMBER;
+column script new_value BATCHFILE
+SELECT
+  CASE WHEN NOT (upper('&DBVERSION')='L' or upper('&DBVERSION')='S') THEN 'UTIL/CREATE_DB/HINT_ON_MISTYPED_DBVERSION.sql'
+  ELSE 'DROP_DB2.sql'
+  END AS script
+FROM dual;
 
-BEGIN
-  IF NOT (upper('&DBVERSION')='L' or upper('&DBVERSION')='S') THEN
-  	:BATCHFILE := 'UTIL/CREATE_DB/HINT_ON_MISTYPED_DBVERSION';	
-  ELSE 
-  	:BATCHFILE := 'DROP_DB2';
-  END IF;  
-END;
-/
-
--- Check for SDO_GEORASTER support
-BEGIN
-  :GEORASTER_SUPPORT := 0;
-  IF (upper('&DBVERSION')='S') THEN
-    SELECT COUNT(*) INTO :GEORASTER_SUPPORT FROM ALL_SYNONYMS
-	WHERE SYNONYM_NAME='SDO_GEORASTER';
-  END IF;
-END;
-/
-
--- Transfer the value from the bind variable to the substitution variable
-column mc new_value BATCHFILE2 print
-select :BATCHFILE mc from dual;
-
-@@&BATCHFILE2
+@@&BATCHFILE &DBVERSION
 
 QUIT;
 /

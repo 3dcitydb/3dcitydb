@@ -25,20 +25,8 @@
 -- limitations under the License.
 --
 
-SET SERVEROUTPUT ON
-SET FEEDBACK ON
-SET VER OFF
+@@SIMPLE_INDEXES.sql
 
-prompt
-prompt DisableVersioning procedure will be started
-accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Spatial=S/Locator=L, default is S): '
-prompt
+CREATE INDEX RASTER_RELIEF_COVERAGE_FKX ON RASTER_RELIEF (COVERAGE_ID);  
 
-column script new_value BATCHFILE
-SELECT
-  CASE WHEN NOT (upper('&DBVERSION')='L' or upper('&DBVERSION')='S') THEN 'UTIL/CREATE_DB/HINT_ON_MISTYPED_DBVERSION.sql'
-  ELSE 'DISABLE_VERSIONING2.sql'
-  END AS script
-FROM dual;
-
-@@&BATCHFILE &DBVERSION
+CREATE INDEX RASTER_RELIEF_OBJCLASS_FKX ON RASTER_RELIEF (OBJECTCLASS_ID);

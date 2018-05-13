@@ -29,6 +29,7 @@ CREATE OR REPLACE PACKAGE citydb_delete
 AS
   function delete_surface_geometry(pid number, clean_apps int := 0, schema_name varchar2 := user) return id_array;
   function delete_implicit_geometry(pid number, clean_apps int := 0, schema_name varchar2 := user) return number;
+  function delete_grid_coverage(pid number, schema_name varchar2 := user) return number;
   function delete_citymodel(pid number, delete_members int := 0, schema_name varchar2 := user) return number;
   function delete_genericattrib(pid number, delete_members int := 0, schema_name varchar2 := user) return number;
   function delete_external_reference(pid number, schema_name varchar2 := user) return number;
@@ -56,6 +57,7 @@ AS
   function delete_tin_relief(pid number, schema_name varchar2 := user) return number;
   function delete_masspoint_relief(pid number, schema_name varchar2 := user) return number;
   function delete_breakline_relief(pid number, schema_name varchar2 := user) return number;
+  function delete_raster_relief(pid number, schema_name varchar2 := user) return number;
   function delete_bridge(pid number, schema_name varchar2 := user) return number;
   function delete_bridge_installation(pid number, schema_name varchar2 := user) return number;
   function delete_bridge_thematic_surface(pid number, schema_name varchar2 := user) return number;
@@ -75,6 +77,7 @@ AS
   function cleanup_addresses(schema_name varchar2 := user) return id_array;
   function cleanup_citymodels(schema_name varchar2 := user) return id_array;
   function cleanup_cityobjectgroups(schema_name varchar2 := user) return id_array;
+  function cleanup_grid_coverages(schema_name varchar2 := user) return id_array;
   function cleanup_implicit_geometries(clean_apps int := 0, schema_name varchar2 := user) return id_array;
   function cleanup_tex_images(schema_name varchar2 := user) return id_array;
   procedure cleanup_schema(schema_name varchar2 := user);
@@ -88,6 +91,7 @@ AS
   -- private procedures
   function intern_delete_surface_geometry(pid number, schema_name varchar2 := user) return id_array;
   function intern_delete_implicit_geom(pid number, schema_name varchar2 := user) return number;
+  function intern_delete_grid_coverage(pid number, schema_name varchar2 := user) return number;
   function intern_delete_cityobject(pid number, schema_name varchar2 := user) return number;
   function delete_citymodel(citymodel_rec citymodel%rowtype, delete_members int := 0, schema_name varchar2 := user) return number;
   function intern_delete_genericattrib(pid number, delete_members int := 0, schema_name varchar2 := USER) return number;
@@ -114,6 +118,7 @@ AS
   function delete_tin_relief(tin_relief_rec tin_relief%rowtype, schema_name varchar2 := user) return number;
   function delete_masspoint_relief(masspoint_relief_rec masspoint_relief%rowtype, schema_name varchar2 := user) return number;
   function delete_breakline_relief(breakline_relief_rec breakline_relief%rowtype, schema_name varchar2 := user) return number;
+  function delete_raster_relief(raster_relief_rec raster_relief%rowtype, schema_name varchar2 := user) return number;
   function delete_bridge(bridge_rec bridge%rowtype, schema_name varchar2 := user) return number;
   function delete_bridge_thematic_surface(bridge_thematic_surface_rec bridge_thematic_surface%rowtype, schema_name varchar2 := user) return number;
   function delete_bridge_installation(bridge_installation_rec bridge_installation%rowtype, schema_name varchar2 := user) return number;
@@ -163,6 +168,7 @@ AS
   procedure pre_delete_relief_component(relief_component_rec relief_component%rowtype, schema_name varchar2 := user);
   procedure post_delete_relief_component(relief_component_rec relief_component%rowtype, schema_name varchar2 := user);
   procedure post_delete_tin_relief(tin_relief_rec tin_relief%rowtype, schema_name varchar2 := user);
+  procedure post_delete_raster_relief(raster_relief_rec raster_relief%rowtype, schema_name varchar2 := user);
   procedure pre_delete_bridge(bridge_rec bridge%rowtype, schema_name varchar2 := user);
   procedure post_delete_bridge(bridge_rec bridge%rowtype, schema_name varchar2 := user);
   procedure pre_delete_bridge_them_srf(bridge_thematic_surface_rec bridge_thematic_surface%rowtype, schema_name varchar2 := user);
@@ -267,6 +273,20 @@ AS
   exception
     when others then
       dbms_output.put_line('post_delete_implicit_geom (id: ' || implicit_geometry_rec.id || '): ' || SQLERRM);
+  end;
+
+  /*
+    internal: delete from GRID_COVERAGE
+  */
+  function intern_delete_grid_coverage(pid number, schema_name varchar2 := user) return number
+  is
+    deleted_id number;
+  begin
+    execute immediate 'delete from ' || schema_name || '.grid_coverage where id=:1 returning id into :2' using pid, out deleted_id;
+    return deleted_id;
+  exception
+    when others then
+      dbms_output.put_line('intern_delete_grid_coverage (id: ' || pid || '): ' || SQLERRM);
   end;
 
   /*
@@ -1439,6 +1459,7 @@ AS
     dummy_id := delete_tin_relief(relief_component_rec.id, schema_name);
     dummy_id := delete_masspoint_relief(relief_component_rec.id, schema_name);
     dummy_id := delete_breakline_relief(relief_component_rec.id, schema_name);
+    dummy_id := delete_raster_relief(relief_component_rec.id, schema_name);
   exception
     when others then
       dbms_output.put_line('pre_delete_relief_component (id: ' || relief_component_rec.id || '): ' || SQLERRM);
@@ -1520,6 +1541,31 @@ AS
   exception
     when others then
       dbms_output.put_line('delete_breakline_relief (id: ' || breakline_relief_rec.id || '): ' || SQLERRM);
+  end;
+
+  /*
+    internal: delete from RASTER_RELIEF
+  */
+  function delete_raster_relief(raster_relief_rec raster_relief%rowtype, schema_name varchar2 := user) return number
+  is
+    deleted_id number;
+  begin
+    execute immediate 'delete from ' || schema_name || '.raster_relief where id=:1 returning id into :2' using raster_relief_rec.id, out deleted_id;
+    post_delete_raster_relief(raster_relief_rec, schema_name);
+    return deleted_id;
+  exception
+    when others then
+      dbms_output.put_line('delete_raster_relief (id: ' || raster_relief_rec.id || '): ' || SQLERRM);
+  end;
+
+  procedure post_delete_raster_relief(raster_relief_rec raster_relief%rowtype, schema_name varchar2 := user)
+  is
+    dummy_id number;
+  begin
+    dummy_id := intern_delete_grid_coverage(raster_relief_rec.coverage_id, schema_name);
+  exception
+    when others then
+      dbms_output.put_line('post_delete_raster_relief (id: ' || raster_relief_rec.id || '): ' || SQLERRM);
   end;
 
   /*
@@ -2380,6 +2426,19 @@ AS
       dbms_output.put_line('delete_implicit_geometry (id: ' || pid || '): ' || SQLERRM);
   end;
 
+  function delete_grid_coverage(pid number, schema_name varchar2 := user) return number
+  is
+    deleted_id number;
+  begin
+    deleted_id := intern_delete_grid_coverage(pid, schema_name);
+    return deleted_id;
+  exception
+    when no_data_found then
+      return deleted_id;
+    when others then
+      dbms_output.put_line('delete_grid_coverage (id: ' || pid || '): ' || SQLERRM);
+  end;
+
   function delete_citymodel(pid number, delete_members int := 0, schema_name varchar2 := user) return number
   is
     deleted_id number;
@@ -2859,6 +2918,24 @@ AS
     when others then
       dbms_output.put_line('delete_breakline_relief (id: ' || pid || '): ' || SQLERRM);
   end;
+
+  function delete_raster_relief(pid number, schema_name varchar2 := user) return number
+  is
+    deleted_id number;
+    raster_relief_rec raster_relief%rowtype;    
+  begin
+    execute immediate 'select * from ' || schema_name || '.raster_relief where id=:1'
+      into raster_relief_rec
+      using pid;
+
+    deleted_id := delete_raster_relief(raster_relief_rec, schema_name);
+    return deleted_id;
+  exception
+    when no_data_found then
+      return deleted_id;
+    when others then
+      dbms_output.put_line('delete_raster_relief (id: ' || pid || '): ' || SQLERRM);
+  end;
   
   function delete_bridge(pid number, schema_name varchar2 := user) return number
   is
@@ -3195,6 +3272,30 @@ AS
       dbms_output.put_line('cleanup_implicit_geometries: ' || SQLERRM);
   end;
 
+  function cleanup_grid_coverages(schema_name varchar2 := user) return id_array
+  is
+    deleted_id number;
+    deleted_ids id_array := id_array();
+    grid_coverage_cur ref_cursor;
+    grid_coverage_id number;
+  begin
+    open grid_coverage_cur for 'select gc.id from ' || schema_name || '.grid_coverage gc left outer join ' || schema_name || '.raster_relief rr
+        on gc.id=rr.coverage_id where rr.coverage_id is null';
+    loop
+      fetch grid_coverage_cur into grid_coverage_id;
+      exit when grid_coverage_cur%notfound;
+      execute immediate 'delete from ' || schema_name || '.grid_coverage where id=:1 returning id into :2' using grid_coverage_id, out deleted_id;
+      deleted_ids.extend;
+      deleted_ids(deleted_ids.count) := deleted_id;
+    end loop;
+    close grid_coverage_cur;
+
+    return deleted_ids;
+  exception
+    when others then
+      dbms_output.put_line('cleanup_grid_coverages: ' || SQLERRM);
+  end;
+
   function cleanup_tex_images(schema_name varchar2 := user) return id_array
   is
     deleted_id number;
@@ -3511,9 +3612,11 @@ AS
     execute immediate 'delete from ' || schema_name || '.land_use';
     execute immediate 'delete from ' || schema_name || '.breakline_relief';
     execute immediate 'delete from ' || schema_name || '.masspoint_relief';
+    execute immediate 'delete from ' || schema_name || '.raster_relief';
     execute immediate 'delete from ' || schema_name || '.tin_relief';
     execute immediate 'delete from ' || schema_name || '.relief_component';
     execute immediate 'delete from ' || schema_name || '.relief_feature';
+    execute immediate 'delete from ' || schema_name || '.grid_coverage';
     execute immediate 'delete from ' || schema_name || '.plant_cover';
     execute immediate 'delete from ' || schema_name || '.solitary_vegetat_object';
     execute immediate 'delete from ' || schema_name || '.traffic_area';
@@ -3581,6 +3684,22 @@ AS
     execute immediate 'alter sequence ' || schema_name || '.external_ref_seq increment by ' || (seq_value-1)*-1;
     execute immediate 'select ' || schema_name || '.external_ref_seq.nextval from dual';
     execute immediate 'alter sequence ' || schema_name || '.external_ref_seq increment by 1';
+
+    execute immediate 'select ' || schema_name || '.grid_coverage_seq.nextval from dual' into seq_value;
+    if (seq_value = 1) then
+      execute immediate 'select ' || schema_name || '.grid_coverage_seq.nextval from dual' into seq_value;
+    end if;
+    execute immediate 'alter sequence ' || schema_name || '.grid_coverage_seq increment by ' || (seq_value-1)*-1;
+    execute immediate 'select ' || schema_name || '.grid_coverage_seq.nextval from dual';
+    execute immediate 'alter sequence ' || schema_name || '.grid_coverage_seq increment by 1';
+
+    execute immediate 'select ' || schema_name || '.grid_coverage_rdt_seq.nextval from dual' into seq_value;
+    if (seq_value = 1) then
+      execute immediate 'select ' || schema_name || '.grid_coverage_rdt_seq.nextval from dual' into seq_value;
+    end if;
+    execute immediate 'alter sequence ' || schema_name || '.grid_coverage_rdt_seq increment by ' || (seq_value-1)*-1;
+    execute immediate 'select ' || schema_name || '.grid_coverage_rdt_seq.nextval from dual';
+    execute immediate 'alter sequence ' || schema_name || '.grid_coverage_rdt_seq increment by 1';
 
     execute immediate 'select ' || schema_name || '.implicit_geometry_seq.nextval from dual' into seq_value;
     if (seq_value = 1) then
