@@ -31,23 +31,14 @@ SET VER OFF
 
 prompt
 prompt EnableVersioning procedure will be started
-accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Oracle Spaital(S)/Oracle Locator(L), default is S): '
+accept DBVERSION CHAR DEFAULT 'S' PROMPT 'Which database license are you using? (Spatial=S/Locator=L, default is S): '
 prompt
 
-VARIABLE VERSIONING_BATCHFILE VARCHAR2(50);
+column script new_value BATCHFILE
+SELECT
+  CASE WHEN NOT (upper('&DBVERSION')='L' or upper('&DBVERSION')='S') THEN 'UTIL/CREATE_DB/HINT_ON_MISTYPED_DBVERSION.sql'
+  ELSE 'ENABLE_VERSIONING2.sql'
+  END AS script
+FROM dual;
 
-BEGIN
-  IF NOT ('&DBVERSION'='L' or '&DBVERSION'='l' or '&DBVERSION'='S' or '&DBVERSION'='s') THEN
-	:VERSIONING_BATCHFILE := 'UTIL/CREATE_DB/HINT_ON_MISTYPED_DBVERSION';
-  ELSE 
-	:VERSIONING_BATCHFILE := 'ENABLE_VERSIONING2';  	
-  END IF;  
-END;
-/
-
--- Transfer the value from the bind variable to the substitution variable
-column mc new_value VERSIONING_BATCHFILE2 print
-select :VERSIONING_BATCHFILE mc from dual;
-
-@@&VERSIONING_BATCHFILE2
-
+@@&BATCHFILE &DBVERSION
