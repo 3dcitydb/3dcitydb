@@ -31,7 +31,6 @@ SET VER OFF
 
 VARIABLE VERSIONBATCHFILE VARCHAR2(50);
 
-
 --// create tables
 @@SCHEMA/TABLES/TABLES.sql
 
@@ -55,14 +54,12 @@ COMMIT;
 --// create objectclass instances
 @@UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
 
---// (possibly) activate versioning
-BEGIN
-  :VERSIONBATCHFILE := 'UTIL/CREATE_DB/DO_NOTHING.sql';
-END;
-/
+--// activate versioning if requested
 BEGIN
   IF ('&VERSIONING'='yes' OR '&VERSIONING'='YES' OR '&VERSIONING'='y' OR '&VERSIONING'='Y') THEN
     :VERSIONBATCHFILE := 'ENABLE_VERSIONING2.sql';
+  ELSE
+    :VERSIONBATCHFILE := 'UTIL/CREATE_DB/DO_NOTHING.sql';
   END IF;
 END;
 /
