@@ -6142,7 +6142,7 @@ AS
       tunnel_installation_id = pid;
 
     IF child_ids IS NOT EMPTY THEN
-      dummy_ids := delete_tunnel_thema_batch(child_ids, SET(child_class_ids));
+      dummy_ids := delete_tunnel_them_srf(child_ids, SET(child_class_ids));
     END IF;
 
     -- delete tunnel_installation
@@ -6185,7 +6185,7 @@ AS
         AND n3.lod4_implicit_rep_id IS NULL;
 
       IF implicit_geometry_pids IS NOT EMPTY THEN
-        dummy_ids := delete_implicit_geo_batch(implicit_geometry_pids);
+        dummy_ids := delete_implicit_geometry(implicit_geometry_pids);
       END IF;
     END IF;
 
