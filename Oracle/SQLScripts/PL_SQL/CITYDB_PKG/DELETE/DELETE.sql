@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-12 10:16:42)
+-- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-12 09:47:56)
 -- del_address
 -- del_appearance
 -- del_breakline_relief
@@ -48,13 +48,11 @@
 -- del_cityobject_by_lineage
 -- del_external_reference
 -- del_generic_cityobject
--- del_grid_coverage
 -- del_implicit_geometry
 -- del_land_use
 -- del_masspoint_relief
 -- del_opening
 -- del_plant_cover
--- del_raster_relief
 -- del_relief_component
 -- del_relief_feature
 -- del_room
@@ -100,13 +98,11 @@ AS
   FUNCTION del_cityobject_by_lineage(lineage_value varchar2, objectclass_id int := 0) RETURN ID_ARRAY;
   FUNCTION del_external_reference(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_generic_cityobject(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
-  FUNCTION del_grid_coverage(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_implicit_geometry(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_land_use(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_masspoint_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_opening(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_plant_cover(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
-  FUNCTION del_raster_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_relief_component(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_relief_feature(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_room(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
@@ -2738,11 +2734,6 @@ AS
             dummy_ids := del_breakline_relief(ID_ARRAY(object_id), 0);
           END IF;
 
-          -- delete raster_relief
-          IF objectclass_id = 19 THEN
-            dummy_ids := del_raster_relief(ID_ARRAY(object_id), 0);
-          END IF;
-
           -- delete city_furniture
           IF objectclass_id = 21 THEN
             dummy_ids := del_city_furniture(ID_ARRAY(object_id), 1);
@@ -3699,38 +3690,6 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_grid_coverage(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
-  IS
-    object_id number;
-    objectclass_id number;
-    object_ids ID_ARRAY := ID_ARRAY();
-    deleted_ids ID_ARRAY := ID_ARRAY();
-    dummy_ids ID_ARRAY := ID_ARRAY();
-  BEGIN
-    -- delete grid_coverages
-    DELETE FROM
-      grid_coverage t
-    WHERE EXISTS (
-      SELECT
-        a.COLUMN_VALUE
-      FROM
-        TABLE(pids) a
-      WHERE
-        a.COLUMN_VALUE = t.id
-      )
-    RETURNING
-      id
-    BULK COLLECT INTO
-      deleted_ids;
-
-    RETURN deleted_ids;
-
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
-  END;
-  ------------------------------------------
-
   FUNCTION del_implicit_geometry(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
   IS
     object_id number;
@@ -4217,57 +4176,6 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_raster_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
-  IS
-    object_id number;
-    objectclass_id number;
-    object_ids ID_ARRAY := ID_ARRAY();
-    deleted_ids ID_ARRAY := ID_ARRAY();
-    dummy_ids ID_ARRAY := ID_ARRAY();
-    grid_coverage_ids0 ID_ARRAY := ID_ARRAY();
-    grid_coverage_ids1 ID_ARRAY := ID_ARRAY();
-  BEGIN
-    -- delete raster_reliefs
-    DELETE FROM
-      raster_relief t
-    WHERE EXISTS (
-      SELECT
-        a.COLUMN_VALUE
-      FROM
-        TABLE(pids) a
-      WHERE
-        a.COLUMN_VALUE = t.id
-      )
-    RETURNING
-      id,
-      coverage_id
-    BULK COLLECT INTO
-      deleted_ids,
-      grid_coverage_ids1;
-
-    -- collect all grid_coverageids into one nested table
-    grid_coverage_ids0 := grid_coverage_ids0 MULTISET UNION ALL grid_coverage_ids1;
-
-    -- delete grid_coverage(s)
-    IF grid_coverage_ids0 IS NOT EMPTY THEN
-      dummy_ids := del_grid_coverage(grid_coverage_ids0);
-    END IF;
-
-    IF caller <> 1 THEN
-      -- delete relief_component
-      IF deleted_ids IS NOT EMPTY THEN
-        dummy_ids := del_relief_component(deleted_ids, 2);
-      END IF;
-    END IF;
-
-    RETURN deleted_ids;
-
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
-  END;
-  ------------------------------------------
-
   FUNCTION del_relief_component(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
   IS
     object_id number;
@@ -4295,11 +4203,6 @@ AS
           -- delete breakline_relief
           IF objectclass_id = 18 THEN
             dummy_ids := del_breakline_relief(ID_ARRAY(object_id), 1);
-          END IF;
-
-          -- delete raster_relief
-          IF objectclass_id = 19 THEN
-            dummy_ids := del_raster_relief(ID_ARRAY(object_id), 1);
           END IF;
       END LOOP;
     END IF;
