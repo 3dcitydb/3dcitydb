@@ -56,5 +56,4 @@ FROM dual;
 
 @@&DELETE
 
-@@PL_SQL/CITYDB_PKG/DELETE/DELETE_BY_LINEAGE;
 SELECT 'Packages ''citydb_util'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', and ''citydb_delete'' created' as message from DUAL;
