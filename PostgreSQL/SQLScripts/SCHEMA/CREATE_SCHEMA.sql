@@ -28,12 +28,10 @@
 \pset footer off
 SET client_min_messages TO WARNING;
 \set ON_ERROR_STOP ON
+\set target :schemaname
+\set tmp_delete_filename :tmp_delete_filename
 
-\echo
-\echo 'List of existing data schemas:'
-SELECT nspname AS schema_name FROM pg_catalog.pg_class c JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace WHERE c.relname = 'database_srs'
- AND c.relkind = 'r';
-\prompt 'Please enter a name for the new data schema (e.g., citydb2): ' target
+\echo 'Creating schema' :target'....'
 
 --// create schema
 CREATE SCHEMA :"target";
@@ -59,10 +57,10 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 --// create schema FUNCTIONS
 \i OBJECTCLASS/OBJCLASS.sql
 \i ENVELOPE/ENVELOPE.sql
-\i DELETE/DELETE.sql
+\i DELETE/:tmp_delete_filename
 
 \echo
-\echo 'Created schema' :target '.'
+\echo 'Created schema' :target'.'
 
 \echo 'Setting spatial reference system of schema' :target ' (will be the same as of schema citydb) ...'
 \set target_quoted '\'':target'\''

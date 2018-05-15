@@ -25,14 +25,6 @@
 -- limitations under the License.
 --
 
-SET client_min_messages TO WARNING;
-\set target :schemaname
-
-\echo 'Dropping schema' :target'....'
-
---// drop schemas
-DROP SCHEMA :target CASCADE;
-
-\echo
-\echo 'Schema' :target 'successfully removed!'
-\echo
+\echo 'List of the existing data schemas:'
+SELECT nspname AS schema_name FROM pg_catalog.pg_class c JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace WHERE c.relname = 'database_srs'
+ AND c.relkind = 'r';
