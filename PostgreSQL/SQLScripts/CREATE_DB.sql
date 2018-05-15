@@ -50,8 +50,13 @@ SET search_path TO citydb, :current_path;
 \i SCHEMA/SCHEMA.sql
 
 --// fill tables OBJECTCLASS
-\i UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
+\i SCHEMA/OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
 \i UTIL/CREATE_DB/AGGREGATION_INFO_INSTANCES.sql
+
+--// create schema FUNCTIONS
+\i SCHEMA/OBJECTCLASS/OBJCLASS.sql
+\i SCHEMA/ENVELOPE/ENVELOPE.sql
+\i SCHEMA/DELETE/DELETE.sql
 
 --// create CITYDB_PKG (additional schema with PL/pgSQL-Functions)
 \echo

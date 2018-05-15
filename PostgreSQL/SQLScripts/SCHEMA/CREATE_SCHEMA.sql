@@ -50,14 +50,16 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 --// create TABLES, SEQUENCES, CONSTRAINTS, INDEXES
 \echo
 \echo 'Setting up database schema ...'
-\i SCHEMA/SCHEMA.sql
+\i SCHEMA.sql
 
---// fill tables OBJECTCLASS and AGGREGATION_INFO
-\i UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
+--// fill tables OBJECTCLASS
+\i OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
 \i UTIL/CREATE_DB/AGGREGATION_INFO_INSTANCES.sql
 
---// create local PL/pgSQL functions
-\i PL_pgSQL/CITYDB_PKG/DELETE/DELETE.sql
+--// create schema FUNCTIONS
+\i OBJECTCLASS/OBJCLASS.sql
+\i ENVELOPE/ENVELOPE.sql
+\i DELETE/DELETE.sql
 
 \echo
 \echo 'Created schema' :target '.'

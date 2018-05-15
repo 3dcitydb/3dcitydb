@@ -84,6 +84,18 @@ FROM dual;
 
 @@&CONSTRAINTS
 
+-- citydb packages
+@@CREATE_CITYDB_PKG.sql &DBVERSION
+
+-- create objectclass instances and functions
+@@SCHEMA/OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
+@@UTIL/CREATE_DB/AGGREGATION_INFO_INSTANCES.sql
+@@SCHEMA/OBJECTCLASS/OBJCLASS.sql
+
+-- create spatial metadata
+exec citydb_constraint.set_schema_sdo_metadata(USER);
+COMMIT;
+
 -- build indexes
 column script new_value SIMPLE_INDEXES
 SELECT
@@ -95,10 +107,6 @@ FROM dual;
 @@&SIMPLE_INDEXES
 @@SCHEMA/INDEXES/SPATIAL_INDEXES.sql
 
--- create objectclass instances
-@@UTIL/CREATE_DB/OBJECTCLASS_INSTANCES.sql
-@@UTIL/CREATE_DB/AGGREGATION_INFO_INSTANCES.sql
-
 -- activate versioning if requested
 column script new_value VERSIONING
 SELECT
@@ -109,10 +117,7 @@ FROM dual;
 
 @@&VERSIONING &DBVERSION
 
--- citydb packages
-@@CREATE_CITYDB_PKG.sql &DBVERSION
-
 SHOW ERRORS;
 COMMIT;
 
-SELECT '3DCityDB creation complete!' as message from DUAL;
+SELECT '3DCityDB creation complete!' AS message FROM dual;

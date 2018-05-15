@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
-SELECT 'Deleting packages ''citydb_util'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete'' and corresponding types' as message from DUAL;
+SELECT 'Deleting packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete'' and corresponding types' as message from DUAL;
 
 --// drop index table and corresponding sequence
 DROP TABLE INDEX_TABLE CASCADE CONSTRAINTS;
@@ -42,10 +42,11 @@ DROP TYPE DB_INFO_OBJ;
 
 --// drop packages
 DROP PACKAGE citydb_util;
+DROP PACKAGE citydb_constraint;
 DROP PACKAGE citydb_idx;
 DROP PACKAGE citydb_srs;
 DROP PACKAGE citydb_stat;
 DROP PACKAGE citydb_envelope;
 DROP PACKAGE citydb_delete;
 
-SELECT 'Packages ''citydb_util'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', and ''citydb_delete'' deleted' as message from DUAL;
+SELECT 'Packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', and ''citydb_delete'' deleted' as message from DUAL;

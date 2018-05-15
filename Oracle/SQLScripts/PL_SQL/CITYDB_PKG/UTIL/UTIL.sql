@@ -92,14 +92,13 @@ AS
   FUNCTION versioning_db(schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   PROCEDURE db_info(schema_name VARCHAR2 := USER, schema_srid OUT INTEGER, schema_gml_srs_name OUT VARCHAR2, versioning OUT VARCHAR2);
   FUNCTION db_metadata(schema_name VARCHAR2 := USER) RETURN DB_INFO_TABLE;
+  FUNCTION get_short_name(table_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION split(list VARCHAR2, delim VARCHAR2 := ',') RETURN STRARRAY;
   FUNCTION min(a NUMBER, b NUMBER) RETURN NUMBER;
-  PROCEDURE update_schema_constraints(on_delete_param CHAR := 'a', schema_name VARCHAR2 := USER);
-  PROCEDURE update_table_constraint(fkey_name VARCHAR2, table_name VARCHAR2, column_name VARCHAR2, ref_table VARCHAR2, ref_column VARCHAR2, on_delete_param CHAR := 'a', schema_name VARCHAR2 := USER);
   FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER) RETURN ID_ARRAY;
   FUNCTION string2id_array(str VARCHAR2, delim VARCHAR2 := ',') RETURN ID_ARRAY;
+  FUNCTION id_array2string(ids ID_ARRAY, delim VARCHAR2 := ',') RETURN VARCHAR2;
   FUNCTION get_id_array_size(id_arr ID_ARRAY) RETURN NUMBER;
-  FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2;
   FUNCTION construct_solid(geom_root_id NUMBER) RETURN SDO_GEOMETRY;
   FUNCTION to_2d(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
   FUNCTION sdo2geojson3d(p_geometry in sdo_geometry, p_decimal_places in pls_integer default 2, p_compress_tags in pls_integer default 0, p_relative2mbr in pls_integer default 0) RETURN CLOB DETERMINISTIC;
@@ -273,12 +272,30 @@ AS
       FROM
         cs_srs
       WHERE
-        srid= info_tmp.schema_srid;
+        srid = info_tmp.schema_srid;
     END IF;
 
     info_tmp.versioning := versioning_db(schema_name);
     info_ret(info_ret.count) := info_tmp;
     RETURN info_ret;
+  END;
+
+  /*****************************************************************
+  * get_short_name
+  *
+  * @param table_name name of table that needs to be shortened
+  * @param schema_name name of schema to query short name
+  *
+  * @RETURN INTEGER SET list of sequence values from given sequence
+  ******************************************************************/
+  FUNCTION get_short_name(
+    table_name VARCHAR2,
+    schema_name VARCHAR2 := USER
+    ) RETURN VARCHAR2
+  IS
+  BEGIN
+    -- TODO: query a table that stores the short version of a table (maybe objectclass?)
+    RETURN substr(lower(table_name), 1, 12);
   END;
 
   /*****************************************************************
@@ -325,110 +342,6 @@ AS
     ELSE
       RETURN b;
     END IF;
-  END;
-
-  /******************************************************************
-  * update_table_constraint
-  *
-  * Removes a constraint to add it again with given ON DELETE parameter
-  *
-  * @param fkey_name name of the foreign key that is updated 
-  * @param table_name defines the table to which the constraint belongs to
-  * @param column_name defines the column the constraint is relying on
-  * @param ref_table name of referenced table
-  * @param ref_column name of referencing column of referenced table
-  * @param delete_param whether NO ACTION, RESTIRCT, CASCADE or SET NULL
-  * @param schema_name name of schema of target constraints
-  ******************************************************************/
-  PROCEDURE update_table_constraint(
-    fkey_name VARCHAR2,
-    table_name VARCHAR2,
-    column_name VARCHAR2,
-    ref_table VARCHAR2,
-    ref_column VARCHAR2,
-    on_delete_param CHAR := 'a',
-    schema_name VARCHAR2 := USER
-    )
-  IS
-    delete_param VARCHAR2(20);
-  BEGIN
-    IF versioning_table(table_name, schema_name) = 'ON' OR versioning_table(ref_table, schema_name) = 'ON' THEN
-      dbms_output.put_line('Can not perform operation with version enabled tables.');
-      RETURN;
-    END IF;
-
-    CASE on_delete_param
-      WHEN 'c' THEN delete_param := ' ON DELETE CASCADE';
-      WHEN 'n' THEN delete_param := ' ON DELETE SET NULL';
-      ELSE delete_param := '';
-    END CASE;
-
-    EXECUTE IMMEDIATE 
-      'ALTER TABLE '
-      || upper(schema_name) || '.' || upper(table_name)
-      || ' DROP CONSTRAINT ' || upper(fkey_name);
-    EXECUTE IMMEDIATE
-      'ALTER TABLE '
-      || upper(schema_name) || '.' || upper(table_name)
-      || ' ADD CONSTRAINT ' || upper(fkey_name)
-      || ' FOREIGN KEY (' || upper(column_name) || ')'
-      || ' REFERENCES ' || upper(schema_name) || '.' || upper(ref_table) || '(' || upper(ref_column) || ')'
-      || delete_param;
-
-    EXCEPTION
-      WHEN OTHERS THEN
-        dbms_output.put_line('Error on constraint ' || fkey_name || ': ' || SQLERRM);
-  END;
-
-  /******************************************************************
-  * update_schema_constraints
-  *
-  * calls update_table_constraint for updating all the constraints
-  * in the specified schema where options for on_delete_param are:
-  * a = NO ACTION
-  * c = CASCADE
-  * n = SET NULL
-  *
-  * @param on_delete_param default is 'a' = NO ACTION
-  * @param schema_name name of schema of target constraints
-  ******************************************************************/
-  PROCEDURE update_schema_constraints(
-    on_delete_param CHAR := 'a',
-    schema_name VARCHAR2 := USER
-    )
-  IS
-  BEGIN
-    FOR rec IN (
-      SELECT
-        acc1.constraint_name AS fkey,
-        acc1.table_name AS t,
-        acc1.column_name AS c, 
-        ac2.table_name AS ref_t,
-        acc2.column_name AS ref_c,
-        acc1.owner AS schema
-      FROM
-        all_cons_columns acc1
-      JOIN
-        all_constraints ac1
-        ON acc1.constraint_name = ac1.constraint_name
-       AND acc1.owner = ac1.owner 
-       AND acc1.table_name = ac1.table_name
-      JOIN
-        all_constraints ac2
-        ON acc1.constraint_name = ac2.constraint_name
-       AND acc1.owner = ac2.owner 
-       AND acc1.table_name = ac2.table_name
-      JOIN
-        all_cons_columns acc2
-        ON ac2.owner = acc2.owner 
-       AND ac2.constraint_name = acc2.constraint_name 
-       AND acc2.position = acc1.position     
-      WHERE
-        acc1.owner = upper(schema_name)
-        AND ac1.constraint_type = 'R'
-    ) LOOP
-      update_table_constraint(rec.fkey, rec.t, rec.c, rec.ref_t, rec.ref_c, on_delete_param, schema_name);
-    END LOOP;
   END;
 
   /*****************************************************************
@@ -486,6 +399,29 @@ AS
   END;
 
   /*****************************************************************
+  * id_array2string
+  *
+  * converts an ID_ARRAY object into a string
+  *      
+  * @param ID_ARRAY array of number
+  * @param delim delimiter used in string, defaults to ','
+  * @return VARCHAR2 string representation of ID array content
+  ******************************************************************/
+  FUNCTION id_array2string(ids ID_ARRAY, delim VARCHAR2 := ',') RETURN VARCHAR2
+  IS
+    arr_string VARCHAR2(32767);
+  BEGIN
+    SELECT
+      LISTAGG(column_value, delim) WITHIN GROUP (ORDER BY column_value)
+    INTO
+      arr_string
+    FROM
+      TABLE(ids);
+
+    RETURN arr_string;
+  END;
+
+  /*****************************************************************
   * get_id_array_size
   *
   * returns the size of a given ID_ARRAY object
@@ -500,102 +436,6 @@ AS
     arr_count := id_arr.count;
     RETURN arr_count;
   END;
-
-
-  /*****************************************************************
-  * objectclass_id_to_table_name
-  *
-  * @param class_id objectclass_id identifier
-  * @return VARCHAR2 name of table that stores objects referred 
-  *                  to the given objectclass_id
-  ******************************************************************/
-  FUNCTION objectclass_id_to_table_name(class_id NUMBER) RETURN VARCHAR2
-  IS
-    table_name VARCHAR2(30) := '';
-  BEGIN
-    CASE 
-      WHEN class_id = 4 THEN table_name := 'land_use';
-      WHEN class_id = 5 THEN table_name := 'generic_cityobject';
-      WHEN class_id = 7 THEN table_name := 'solitary_vegetat_object';
-      WHEN class_id = 8 THEN table_name := 'plant_cover';
-      WHEN class_id = 9 THEN table_name := 'waterbody';
-      WHEN class_id = 11 OR 
-           class_id = 12 OR 
-           class_id = 13 THEN table_name := 'waterboundary_surface';
-      WHEN class_id = 14 THEN table_name := 'relief_feature';
-      WHEN class_id = 16 OR 
-           class_id = 17 OR 
-           class_id = 18 OR 
-           class_id = 19 THEN table_name := 'relief_component';
-      WHEN class_id = 21 THEN table_name := 'city_furniture';
-      WHEN class_id = 23 THEN table_name := 'cityobjectgroup';
-      WHEN class_id = 25 OR 
-           class_id = 26 THEN table_name := 'building';
-      WHEN class_id = 27 OR 
-           class_id = 28 THEN table_name := 'building_installation';
-      WHEN class_id = 30 OR 
-           class_id = 31 OR 
-           class_id = 32 OR 
-           class_id = 33 OR 
-           class_id = 34 OR 
-           class_id = 35 OR
-           class_id = 36 OR
-           class_id = 60 OR
-           class_id = 61 THEN table_name := 'thematic_surface';
-      WHEN class_id = 38 OR 
-           class_id = 39 THEN table_name := 'opening';
-      WHEN class_id = 40 THEN table_name := 'building_furniture';
-      WHEN class_id = 41 THEN table_name := 'room';
-      WHEN class_id = 43 OR 
-           class_id = 44 OR 
-           class_id = 45 OR 
-           class_id = 46 THEN table_name := 'transportation_complex';
-      WHEN class_id = 47 OR 
-           class_id = 48 THEN table_name := 'traffic_area';
-      WHEN class_id = 57 THEN table_name := 'citymodel';
-      WHEN class_id = 63 OR
-           class_id = 64 THEN table_name := 'bridge';
-      WHEN class_id = 65 OR
-           class_id = 66 THEN table_name := 'bridge_installation';
-      WHEN class_id = 68 OR 
-           class_id = 69 OR 
-           class_id = 70 OR 
-           class_id = 71 OR 
-           class_id = 72 OR
-           class_id = 73 OR
-           class_id = 74 OR
-           class_id = 75 OR
-           class_id = 76 THEN table_name := 'bridge_thematic_surface';
-      WHEN class_id = 78 OR 
-           class_id = 79 THEN table_name := 'bridge_opening';		 
-      WHEN class_id = 80 THEN table_name := 'bridge_furniture';
-      WHEN class_id = 81 THEN table_name := 'bridge_room';
-      WHEN class_id = 82 THEN table_name := 'bridge_constr_element';
-      WHEN class_id = 84 OR
-           class_id = 85 THEN table_name := 'tunnel';
-      WHEN class_id = 86 OR
-           class_id = 87 THEN table_name := 'tunnel_installation';
-      WHEN class_id = 88 OR 
-           class_id = 89 OR 
-           class_id = 90 OR 
-           class_id = 91 OR 
-           class_id = 92 OR
-           class_id = 93 OR
-           class_id = 94 OR
-           class_id = 95 OR
-           class_id = 96 THEN table_name := 'tunnel_thematic_surface';
-      WHEN class_id = 99 OR 
-           class_id = 100 THEN table_name := 'tunnel_opening';		 
-      WHEN class_id = 101 THEN table_name := 'tunnel_furniture';
-      WHEN class_id = 102 THEN table_name := 'tunnel_hollow_space';
-    ELSE
-      dbms_output.put_line('Table name unknown.');
-      NULL;
-    END CASE;
-
-    RETURN table_name;
-  END;
-  
 
   /*****************************************************************
   * construct_solid
