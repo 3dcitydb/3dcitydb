@@ -11,7 +11,7 @@ set PGUSER=your_username
 ::-----------------------------------------------------------------------------
 
 :: add PGBIN to PATH
-set PATH=%PGBIN%;%PATH%
+set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
 
 :: cd to path of the shell script
 cd /d %~dp0
