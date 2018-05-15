@@ -54,7 +54,7 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 
 --// fill tables OBJECTCLASS
 \i OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
-\i UTIL/CREATE_DB/AGGREGATION_INFO_INSTANCES.sql
+\i OBJECTCLASS/AGGREGATION_INFO_INSTANCES.sql
 
 --// create schema FUNCTIONS
 \i OBJECTCLASS/OBJCLASS.sql
