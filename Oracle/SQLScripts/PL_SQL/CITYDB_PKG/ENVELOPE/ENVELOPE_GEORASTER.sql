@@ -863,6 +863,49 @@ AS
             WHEN OTHERS THEN
               bbox := NULL;
         END;
+      WHEN class_id = 19 THEN
+        BEGIN
+          -- get spatial extent of raster relief
+          SELECT
+            gc.id,
+            citydb_envelope.box2envelope(SDO_AGGR_MBR(
+              gc.rasterproperty.spatialExtent
+            ))
+          INTO
+            grid_id,
+            bbox
+          FROM
+            grid_coverage gc,
+            raster_relief rast 
+          WHERE
+            rast.coverage_id = gc.id
+            AND rast.id = co_id;
+
+          EXCEPTION
+            WHEN OTHERS THEN
+              BEGIN
+                -- generate spatial extent of raster relief
+                UPDATE
+                  grid_coverage gc
+                SET
+                  gc.rasterproperty.spatialExtent = sdo_geor.generateSpatialExtent(gc.rasterproperty) 
+                WHERE
+                  gc.id = grid_id;
+
+                SELECT
+                  citydb_envelope.box2envelope(SDO_AGGR_MBR(gc.rasterproperty.spatialExtent))
+                INTO
+                  bbox
+                FROM
+                  grid_coverage gc
+                WHERE
+                  id = grid_id;
+
+                EXCEPTION
+                  WHEN OTHERS THEN
+                    bbox := NULL;
+              END;
+        END;
       END CASE;
 
     IF set_envelope <> 0 AND bbox IS NOT NULL THEN
