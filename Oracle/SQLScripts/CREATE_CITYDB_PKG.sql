@@ -34,7 +34,6 @@ SELECT 'Creating packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx''
 @@PL_SQL/CITYDB_PKG/INDEX/IDX.sql;
 @@PL_SQL/CITYDB_PKG/SRS/SRS.sql;
 @@PL_SQL/CITYDB_PKG/STATISTICS/STAT.sql;
-@@PL_SQL/CITYDB_PKG/ENVELOPE/ENVELOPE.sql;
 
 -- check for SDO_GEORASTER support
 VARIABLE GEORASTER_SUPPORT NUMBER;
@@ -56,5 +55,15 @@ SELECT
 FROM dual;
 
 @@&DELETE
+
+-- create envelope scripts
+column script new_value ENVELOPE
+SELECT
+  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'PL_SQL/CITYDB_PKG/ENVELOPE/ENVELOPE_GEORASTER.sql'
+  ELSE 'PL_SQL/CITYDB_PKG/ENVELOPE/ENVELOPE.sql'
+  END AS script
+FROM dual;
+
+@@&ENVELOPE
 
 SELECT 'Packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', and ''citydb_delete'' created' as message from DUAL;
