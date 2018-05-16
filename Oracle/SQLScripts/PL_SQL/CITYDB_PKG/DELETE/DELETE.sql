@@ -25,7 +25,9 @@
 -- limitations under the License.
 --
 
--- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-12 09:47:56)
+-- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-16 17:06:51)
+-- cleanup_global_appearances
+-- cleanup_schema
 -- del_address
 -- del_appearance
 -- del_breakline_relief
@@ -42,10 +44,9 @@
 -- del_city_furniture
 -- del_citymodel
 -- del_cityobject
+-- del_cityobject_by_lineage
 -- del_cityobject_genericattrib
 -- del_cityobjectgroup
--- cleanup_global_appearances
--- del_cityobject_by_lineage
 -- del_external_reference
 -- del_generic_cityobject
 -- del_implicit_geometry
@@ -76,6 +77,8 @@
 
 CREATE OR REPLACE PACKAGE citydb_delete
 AS
+  FUNCTION cleanup_global_appearances RETURN ID_ARRAY;
+  PROCEDURE cleanup_schema;
   FUNCTION del_address(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_appearance(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_breakline_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
@@ -92,10 +95,9 @@ AS
   FUNCTION del_city_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_citymodel(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_cityobject(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
+  FUNCTION del_cityobject_by_lineage(lineage_value varchar2, objectclass_id int := 0) RETURN ID_ARRAY;
   FUNCTION del_cityobject_genericattrib(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_cityobjectgroup(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
-  FUNCTION cleanup_global_appearances RETURN ID_ARRAY;
-  FUNCTION del_cityobject_by_lineage(lineage_value varchar2, objectclass_id int := 0) RETURN ID_ARRAY;
   FUNCTION del_external_reference(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_generic_cityobject(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
   FUNCTION del_implicit_geometry(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
@@ -128,7 +130,117 @@ END citydb_delete;
 
 CREATE OR REPLACE PACKAGE BODY citydb_delete
 AS 
-  FUNCTION del_address(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION cleanup_global_appearances RETURN ID_ARRAY
+  IS
+    deleted_ids ID_ARRAY := ID_ARRAY();
+    surface_data_ids ID_ARRAY;
+    appearance_ids ID_ARRAY;
+    dummy_ids ID_ARRAY := ID_ARRAY();
+  BEGIN
+    SELECT
+      s.id
+    BULK COLLECT INTO
+      surface_data_ids
+    FROM
+      surface_data s
+    LEFT OUTER JOIN
+      textureparam t 
+      ON s.id=t.surface_data_id
+    WHERE
+      t.surface_data_id IS NULL;
+
+    IF surface_data_ids IS NOT EMPTY THEN
+      dummy_ids := del_surface_data(surface_data_ids);
+    END IF;
+
+    SELECT
+        a.id
+      BULK COLLECT INTO
+        appearance_ids
+      FROM
+        appearance a
+      LEFT OUTER JOIN
+        appear_to_surface_data asd
+        ON a.id=asd.appearance_id
+      WHERE
+        a.cityobject_id IS NULL
+        AND asd.appearance_id IS NULL;
+
+    IF appearance_ids IS NOT EMPTY THEN
+      deleted_ids := del_appearance(appearance_ids);
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  PROCEDURE cleanup_schema
+  IS
+    dummy_str strarray;
+    seq_value number;
+  BEGIN
+
+    dummy_str := citydb_idx.drop_spatial_indexes();
+
+    for uc in (
+      select constraint_name, table_name from user_constraints
+    )
+    LOOP
+      execute immediate 'alter table '||uc.table_name||' disable constraint '||uc.constraint_name||'';
+    END loop;
+
+    for ut in (
+      select table_name FROM user_tables
+      WHERE table_name NOT IN ('DATABASE_SRS', 'OBJECTCLASS', 'INDEX_TABLE', 'ADE', 'SCHEMA', 'SCHEMA_TO_OBJECTCLASS', 'SCHEMA_REFERENCING', 'AGGREGATION_INFO')
+      AND table_name NOT LIKE '%\_AUX' ESCAPE '\'
+      AND table_name NOT LIKE '%TMP\_%' ESCAPE '\'
+      AND table_name NOT LIKE '%MDRT%'
+      AND table_name NOT LIKE '%MDXT%'
+      AND table_name NOT LIKE '%MDNT%'
+    )
+    LOOP
+      execute immediate 'truncate table '||ut.table_name||'';
+    END loop;
+
+    for uc in (
+      select constraint_name, table_name from user_constraints
+    )
+    LOOP
+      execute immediate 'alter table '||uc.table_name||' enable constraint '||uc.constraint_name||'';
+    END loop;
+
+    for us in (
+      select sequence_name from user_sequences
+      WHERE sequence_name NOT IN ('INDEX_TABLE_SEQ', 'ADE_SEQ', 'SCHEMA_SEQ')
+      AND sequence_name NOT LIKE '%\_AUX' ESCAPE '\'
+      AND sequence_name NOT LIKE '%TMP\_%' ESCAPE '\'
+      AND sequence_name NOT LIKE '%MDRS%'
+      AND sequence_name NOT LIKE '%MDXS%'
+      AND sequence_name NOT LIKE '%MDNS%'
+    )
+    LOOP
+      execute immediate 'select ' || us.sequence_name || '.nextval from dual' into seq_value;
+      if (seq_value = 1) then
+        execute immediate 'select ' || us.sequence_name || '.nextval from dual' into seq_value;
+      end if;
+      execute immediate 'alter sequence ' || us.sequence_name || ' increment by ' || (seq_value-1)*-1;
+      execute immediate 'select ' || us.sequence_name || '.nextval from dual' into seq_value;
+      execute immediate 'alter sequence ' || us.sequence_name || ' increment by 1';
+    END LOOP;
+
+    dummy_str := citydb_idx.create_spatial_indexes();
+
+    EXCEPTION
+      WHEN others THEN
+        dbms_output.put_line('cleanup_schema: ' || SQLERRM);
+  END;
+  ------------------------------------------
+
+  FUNCTION del_address(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -160,7 +272,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_appearance(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_appearance(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -227,7 +339,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_breakline_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_breakline_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -266,7 +378,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_bridge(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_bridge(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -484,7 +596,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_bridge_constr_element(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_bridge_constr_element(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -720,7 +832,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_bridge_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_bridge_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -932,7 +1044,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_bridge_installation(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_bridge_installation(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -1175,7 +1287,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_bridge_opening(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_bridge_opening(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -1432,7 +1544,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_bridge_room(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_bridge_room(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -1532,7 +1644,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_bridge_thematic_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_bridge_thematic_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -1613,7 +1725,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_building(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_building(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -1824,7 +1936,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_building_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_building_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -2036,7 +2148,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_building_installation(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_building_installation(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -2279,7 +2391,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_city_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_city_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -2515,7 +2627,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_citymodel(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_citymodel(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -2605,7 +2717,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_cityobject(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_cityobject(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -3155,7 +3267,47 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_cityobject_genericattrib(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_cityobject_by_lineage(lineage_value varchar2, objectclass_id int := 0) RETURN ID_ARRAY
+  IS
+    deleted_ids id_array := id_array();
+    dummy_ids id_array := id_array();
+  BEGIN
+    IF objectclass_id = 0 THEN
+      SELECT
+        c.id
+      BULK COLLECT INTO
+        deleted_ids
+      FROM
+        cityobject c
+      WHERE
+        c.lineage = lineage_value;
+    ELSE
+      SELECT
+        c.id
+      BULK COLLECT INTO
+        deleted_ids
+      FROM
+        cityobject c
+      WHERE
+        c.lineage = lineage_value AND c.objectclass_id = objectclass_id;
+    END IF;
+
+    IF deleted_ids IS NOT EMPTY THEN
+      FOR i in 1..deleted_ids.count
+      LOOP
+        dummy_ids := del_cityobject(ID_ARRAY(deleted_ids(i)), 1);
+      END LOOP;
+    END IF;
+
+    RETURN deleted_ids;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN deleted_ids;
+  END;
+  ------------------------------------------
+
+  FUNCTION del_cityobject_genericattrib(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -3199,7 +3351,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_cityobjectgroup(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_cityobjectgroup(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -3326,95 +3478,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION cleanup_global_appearances RETURN ID_ARRAY
-  IS
-    deleted_ids ID_ARRAY := ID_ARRAY();
-    surface_data_ids ID_ARRAY;
-    appearance_ids ID_ARRAY;
-    dummy_ids ID_ARRAY := ID_ARRAY();
-  BEGIN
-    SELECT
-      s.id
-    BULK COLLECT INTO
-      surface_data_ids
-    FROM
-      surface_data s
-    LEFT OUTER JOIN
-      textureparam t 
-      ON s.id=t.surface_data_id
-    WHERE
-      t.surface_data_id IS NULL;
-
-    IF surface_data_ids IS NOT EMPTY THEN
-      dummy_ids := del_surface_data(surface_data_ids);
-    END IF;
-
-    SELECT
-        a.id
-      BULK COLLECT INTO
-        appearance_ids
-      FROM
-        appearance a
-      LEFT OUTER JOIN
-        appear_to_surface_data asd
-        ON a.id=asd.appearance_id
-      WHERE
-        a.cityobject_id IS NULL
-        AND asd.appearance_id IS NULL;
-
-    IF appearance_ids IS NOT EMPTY THEN
-      deleted_ids := del_appearance(appearance_ids);
-    END IF;
-
-    RETURN deleted_ids;
-
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
-  END;
-  ------------------------------------------
-
-  FUNCTION del_cityobject_by_lineage(lineage_value varchar2, objectclass_id int := 0) RETURN ID_ARRAY 
-  IS
-    deleted_ids id_array := id_array();
-    dummy_ids id_array := id_array();
-  BEGIN
-    IF objectclass_id = 0 THEN
-      SELECT
-        c.id
-      BULK COLLECT INTO
-        deleted_ids
-      FROM
-        cityobject c
-      WHERE
-        c.lineage = lineage_value;
-    ELSE
-      SELECT
-        c.id
-      BULK COLLECT INTO
-        deleted_ids
-      FROM
-        cityobject c
-      WHERE
-        c.lineage = lineage_value AND c.objectclass_id = objectclass_id;
-    END IF;
-
-    IF deleted_ids IS NOT EMPTY THEN
-      FOR i in 1..deleted_ids.count
-      LOOP
-        dummy_ids := del_cityobject(ID_ARRAY(deleted_ids(i)), 1);
-      END LOOP;
-    END IF;
-
-    RETURN deleted_ids;
-
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
-  END;
-  ------------------------------------------
-
-  FUNCTION del_external_reference(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_external_reference(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -3446,7 +3510,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_generic_cityobject(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_generic_cityobject(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -3690,7 +3754,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_implicit_geometry(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_implicit_geometry(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -3734,7 +3798,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_land_use(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_land_use(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -3801,7 +3865,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_masspoint_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_masspoint_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -3840,7 +3904,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_opening(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_opening(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -4097,7 +4161,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_plant_cover(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_plant_cover(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -4176,7 +4240,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_relief_component(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_relief_component(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -4238,7 +4302,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_relief_feature(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_relief_feature(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -4312,7 +4376,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_room(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_room(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -4412,7 +4476,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_solitary_vegetat_object(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_solitary_vegetat_object(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -4648,7 +4712,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_surface_data(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_surface_data(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -4705,7 +4769,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_surface_geometry(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_surface_geometry(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -4769,7 +4833,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_tex_image(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_tex_image(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -4801,7 +4865,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_thematic_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_thematic_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -4882,7 +4946,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_tin_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_tin_relief(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -4933,7 +4997,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_traffic_area(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_traffic_area(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -4992,7 +5056,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_transportation_complex(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_transportation_complex(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -5070,7 +5134,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_tunnel(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_tunnel(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -5226,7 +5290,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_tunnel_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_tunnel_furniture(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -5438,7 +5502,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_tunnel_hollow_space(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_tunnel_hollow_space(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -5538,7 +5602,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_tunnel_installation(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_tunnel_installation(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -5781,7 +5845,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_tunnel_opening(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_tunnel_opening(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -6001,7 +6065,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_tunnel_thematic_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_tunnel_thematic_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -6082,7 +6146,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_waterbody(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_waterbody(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;
@@ -6175,7 +6239,7 @@ AS
   END;
   ------------------------------------------
 
-  FUNCTION del_waterboundary_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY 
+  FUNCTION del_waterboundary_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
   IS
     object_id number;
     objectclass_id number;

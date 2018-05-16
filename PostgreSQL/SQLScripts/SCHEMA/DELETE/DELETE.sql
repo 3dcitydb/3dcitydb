@@ -25,7 +25,9 @@
 -- limitations under the License.
 --
 
--- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-15 16:11:50)
+-- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-16 17:40:36)
+-- cleanup_global_appearances
+-- cleanup_schema
 -- del_address
 -- del_appearance
 -- del_breakline_relief
@@ -42,10 +44,9 @@
 -- del_city_furniture
 -- del_citymodel
 -- del_cityobject
+-- del_cityobject_by_lineage
 -- del_cityobject_genericattrib
 -- del_cityobjectgroup
--- cleanup_global_appearances
--- del_cityobject_by_lineage
 -- del_external_reference
 -- del_generic_cityobject
 -- del_grid_coverage
@@ -76,6 +77,65 @@
 -- del_waterboundary_surface
 ------------------------------------------
 
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.cleanup_global_appearances() RETURNS SETOF int AS
+$body$
+-- Function for cleaning up global appearance
+DECLARE
+  deleted_id int;
+  app_id int;
+BEGIN
+  PERFORM citydb.del_surface_data(array_agg(s.id))
+    FROM citydb.surface_data s 
+    LEFT OUTER JOIN citydb.textureparam t ON s.id = t.surface_data_id
+    WHERE t.surface_data_id IS NULL;
+
+    FOR app_id IN
+      SELECT a.id FROM citydb.appearance a
+        LEFT OUTER JOIN appear_to_surface_data asd ON a.id=asd.appearance_id
+          WHERE a.cityobject_id IS NULL AND asd.appearance_id IS NULL
+    LOOP
+      DELETE FROM citydb.appearance WHERE id = app_id RETURNING id INTO deleted_id;
+      RETURN NEXT deleted_id;
+    END LOOP;
+
+  RETURN;
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.cleanup_schema() RETURNS SETOF void AS
+$body$
+-- Function for cleaning up global appearance
+DECLARE
+  rec RECORD;
+BEGIN
+  FOR rec IN
+    SELECT table_name FROM information_schema.tables where table_schema = 'citydb'
+    AND table_name != 'database_srs'
+    AND table_name != 'objectclass'
+    AND table_name != 'ade'
+    AND table_name != 'schema'
+    AND table_name != 'schema_to_objectclass'
+    AND table_name != 'schema_referencing'
+    AND table_name != 'aggregation_info'
+    AND table_name NOT LIKE 'tmp_%'
+  LOOP
+    EXECUTE format('TRUNCATE TABLE citydb.%I CASCADE', rec.table_name);
+  END LOOP;
+
+  FOR rec IN 
+    SELECT sequence_name FROM information_schema.sequences where sequence_schema = 'citydb'
+    AND sequence_name != 'ade_seq'
+    AND sequence_name != 'schema_seq'
+  LOOP
+    EXECUTE format('ALTER SEQUENCE citydb.%I RESTART', rec.sequence_name);	
+  END LOOP;
+END;
+$body$
+LANGUAGE plpgsql;
 ------------------------------------------
 
 CREATE OR REPLACE FUNCTION citydb.del_address(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
@@ -2800,6 +2860,39 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
+CREATE OR REPLACE FUNCTION citydb.del_cityobject_by_lineage(lineage_value TEXT, objectclass_id INTEGER DEFAULT 0) RETURNS SETOF int AS
+$body$
+-- Function for deleting cityobjects by lineage value
+DECLARE
+  deleted_ids int[] := '{}';
+BEGIN
+  IF $2 = 0 THEN
+    SELECT array_agg(c.id) FROM
+      citydb.cityobject c
+    INTO
+      deleted_ids
+    WHERE
+      c.lineage = $1;
+  ELSE
+    SELECT array_agg(c.id) FROM
+      citydb.cityobject c
+    INTO
+      deleted_ids
+    WHERE
+      c.lineage = $1 AND c.objectclass_id = $2;
+  END IF;
+
+  IF -1 = ALL(deleted_ids) IS NOT NULL THEN
+    PERFORM citydb.del_cityobject(deleted_ids);
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+------------------------------------------
+
 CREATE OR REPLACE FUNCTION citydb.del_cityobject_genericattrib(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
 $body$
 DECLARE
@@ -2923,66 +3016,6 @@ BEGIN
   IF $2 <> 1 THEN
     -- delete cityobject
     PERFORM citydb.del_cityobject(deleted_ids, 2);
-  END IF;
-
-  RETURN QUERY
-    SELECT unnest(deleted_ids);
-END;
-$body$
-LANGUAGE plpgsql STRICT;
-------------------------------------------
-
-CREATE OR REPLACE FUNCTION citydb.cleanup_global_appearances() RETURNS SETOF int AS
-$body$
--- Function for cleaning up global appearance
-DECLARE
-  deleted_id int;
-  app_id int;
-BEGIN
-  PERFORM citydb.del_surface_data(array_agg(s.id))
-    FROM citydb.surface_data s 
-    LEFT OUTER JOIN citydb.textureparam t ON s.id = t.surface_data_id
-    WHERE t.surface_data_id IS NULL;
-
-    FOR app_id IN
-      SELECT a.id FROM citydb.appearance a
-        LEFT OUTER JOIN appear_to_surface_data asd ON a.id=asd.appearance_id
-          WHERE a.cityobject_id IS NULL AND asd.appearance_id IS NULL
-    LOOP
-      DELETE FROM citydb.appearance WHERE id = app_id RETURNING id INTO deleted_id;
-      RETURN NEXT deleted_id;
-    END LOOP;
-
-  RETURN;
-END;
-$body$
-LANGUAGE plpgsql STRICT;
-------------------------------------------
-
-CREATE OR REPLACE FUNCTION citydb.del_cityobject_by_lineage(lineage_value TEXT, objectclass_id INTEGER DEFAULT 0) RETURNS SETOF int AS
-$body$
--- Function for deleting cityobjects by lineage value
-DECLARE
-  deleted_ids int[] := '{}';
-BEGIN
-  IF $2 = 0 THEN
-    SELECT array_agg(c.id) FROM
-      citydb.cityobject c
-    INTO
-      deleted_ids
-    WHERE
-      c.lineage = $1;
-  ELSE
-    SELECT array_agg(c.id) FROM
-      citydb.cityobject c
-    INTO
-      deleted_ids
-    WHERE
-      c.lineage = $1 AND c.objectclass_id = $2;
-  END IF;
-
-  IF -1 = ALL(deleted_ids) IS NOT NULL THEN
-    PERFORM citydb.del_cityobject(deleted_ids);
   END IF;
 
   RETURN QUERY
