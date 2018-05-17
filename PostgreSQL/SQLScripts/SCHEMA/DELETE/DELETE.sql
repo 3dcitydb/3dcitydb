@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-16 17:40:36)
+-- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-17 13:58:50)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -108,19 +108,19 @@ LANGUAGE plpgsql STRICT;
 
 CREATE OR REPLACE FUNCTION citydb.cleanup_schema() RETURNS SETOF void AS
 $body$
--- Function for cleaning up global appearance
+-- Function for cleaning up data schema
 DECLARE
   rec RECORD;
 BEGIN
   FOR rec IN
     SELECT table_name FROM information_schema.tables where table_schema = 'citydb'
-    AND table_name != 'database_srs'
-    AND table_name != 'objectclass'
-    AND table_name != 'ade'
-    AND table_name != 'schema'
-    AND table_name != 'schema_to_objectclass'
-    AND table_name != 'schema_referencing'
-    AND table_name != 'aggregation_info'
+    AND table_name <> 'database_srs'
+    AND table_name <> 'objectclass'
+    AND table_name <> 'ade'
+    AND table_name <> 'schema'
+    AND table_name <> 'schema_to_objectclass'
+    AND table_name <> 'schema_referencing'
+    AND table_name <> 'aggregation_info'
     AND table_name NOT LIKE 'tmp_%'
   LOOP
     EXECUTE format('TRUNCATE TABLE citydb.%I CASCADE', rec.table_name);
@@ -128,8 +128,8 @@ BEGIN
 
   FOR rec IN 
     SELECT sequence_name FROM information_schema.sequences where sequence_schema = 'citydb'
-    AND sequence_name != 'ade_seq'
-    AND sequence_name != 'schema_seq'
+    AND sequence_name <> 'ade_seq'
+    AND sequence_name <> 'schema_seq'
   LOOP
     EXECUTE format('ALTER SEQUENCE citydb.%I RESTART', rec.sequence_name);	
   END LOOP;
@@ -287,7 +287,7 @@ BEGIN
     unnest($1) a(a_id)
   WHERE
     t.bridge_parent_id = a.a_id
-    AND t.id != a.a_id;
+    AND t.id <> a.a_id;
 
   -- delete referenced parts
   PERFORM
@@ -297,7 +297,7 @@ BEGIN
     unnest($1) a(a_id)
   WHERE
     t.bridge_root_id = a.a_id
-    AND t.id != a.a_id;
+    AND t.id <> a.a_id;
 
   -- delete references to addresss
   WITH del_address_refs AS (
@@ -1472,7 +1472,7 @@ BEGIN
     unnest($1) a(a_id)
   WHERE
     t.building_parent_id = a.a_id
-    AND t.id != a.a_id;
+    AND t.id <> a.a_id;
 
   -- delete referenced parts
   PERFORM
@@ -1482,7 +1482,7 @@ BEGIN
     unnest($1) a(a_id)
   WHERE
     t.building_root_id = a.a_id
-    AND t.id != a.a_id;
+    AND t.id <> a.a_id;
 
   -- delete references to addresss
   WITH del_address_refs AS (
@@ -4275,7 +4275,7 @@ BEGIN
     unnest($1) a(a_id)
   WHERE
     t.parent_id = a.a_id
-    AND t.id != a.a_id;
+    AND t.id <> a.a_id;
 
   -- delete referenced parts
   PERFORM
@@ -4285,7 +4285,7 @@ BEGIN
     unnest($1) a(a_id)
   WHERE
     t.root_id = a.a_id
-    AND t.id != a.a_id;
+    AND t.id <> a.a_id;
 
   -- delete citydb.surface_geometrys
   WITH delete_objects AS (
@@ -4606,7 +4606,7 @@ BEGIN
     unnest($1) a(a_id)
   WHERE
     t.tunnel_parent_id = a.a_id
-    AND t.id != a.a_id;
+    AND t.id <> a.a_id;
 
   -- delete referenced parts
   PERFORM
@@ -4616,7 +4616,7 @@ BEGIN
     unnest($1) a(a_id)
   WHERE
     t.tunnel_root_id = a.a_id
-    AND t.id != a.a_id;
+    AND t.id <> a.a_id;
 
   --delete tunnel_hollow_spaces
   PERFORM

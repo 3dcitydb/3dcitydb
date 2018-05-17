@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-16 17:02:16)
+-- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-17 14:03:20)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -410,7 +410,7 @@ AS
       TABLE(pids) a
     WHERE
       t.bridge_parent_id = a.COLUMN_VALUE
-      AND t.id != a.COLUMN_VALUE;
+      AND t.id <> a.COLUMN_VALUE;
 
     IF object_ids IS NOT EMPTY THEN
       dummy_ids := del_bridge(object_ids);
@@ -426,7 +426,7 @@ AS
       TABLE(pids) a
     WHERE
       t.bridge_root_id = a.COLUMN_VALUE
-      AND t.id != a.COLUMN_VALUE;
+      AND t.id <> a.COLUMN_VALUE;
 
     IF object_ids IS NOT EMPTY THEN
       dummy_ids := del_bridge(object_ids);
@@ -1759,7 +1759,7 @@ AS
       TABLE(pids) a
     WHERE
       t.building_parent_id = a.COLUMN_VALUE
-      AND t.id != a.COLUMN_VALUE;
+      AND t.id <> a.COLUMN_VALUE;
 
     IF object_ids IS NOT EMPTY THEN
       dummy_ids := del_building(object_ids);
@@ -1775,7 +1775,7 @@ AS
       TABLE(pids) a
     WHERE
       t.building_root_id = a.COLUMN_VALUE
-      AND t.id != a.COLUMN_VALUE;
+      AND t.id <> a.COLUMN_VALUE;
 
     IF object_ids IS NOT EMPTY THEN
       dummy_ids := del_building(object_ids);
@@ -4884,7 +4884,7 @@ AS
       TABLE(pids) a
     WHERE
       t.parent_id = a.COLUMN_VALUE
-      AND t.id != a.COLUMN_VALUE;
+      AND t.id <> a.COLUMN_VALUE;
 
     IF object_ids IS NOT EMPTY THEN
       dummy_ids := del_surface_geometry(object_ids);
@@ -4900,7 +4900,7 @@ AS
       TABLE(pids) a
     WHERE
       t.root_id = a.COLUMN_VALUE
-      AND t.id != a.COLUMN_VALUE;
+      AND t.id <> a.COLUMN_VALUE;
 
     IF object_ids IS NOT EMPTY THEN
       dummy_ids := del_surface_geometry(object_ids);
@@ -5258,7 +5258,7 @@ AS
       TABLE(pids) a
     WHERE
       t.tunnel_parent_id = a.COLUMN_VALUE
-      AND t.id != a.COLUMN_VALUE;
+      AND t.id <> a.COLUMN_VALUE;
 
     IF object_ids IS NOT EMPTY THEN
       dummy_ids := del_tunnel(object_ids);
@@ -5274,7 +5274,7 @@ AS
       TABLE(pids) a
     WHERE
       t.tunnel_root_id = a.COLUMN_VALUE
-      AND t.id != a.COLUMN_VALUE;
+      AND t.id <> a.COLUMN_VALUE;
 
     IF object_ids IS NOT EMPTY THEN
       dummy_ids := del_tunnel(object_ids);
