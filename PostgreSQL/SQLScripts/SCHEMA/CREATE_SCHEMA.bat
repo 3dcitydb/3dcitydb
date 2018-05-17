@@ -57,7 +57,12 @@ set DELETE_FILE_PATH=DELETE\DELETE.sql
 set TMP_DELETE_FILENAME=DELETE_TMP.sql 
 set TMP_DELETE_FILE_PATH=DELETE\%TMP_DELETE_FILENAME%
 
-powershell -Command "(gc %DELETE_FILE_PATH%) -replace '%PLACEHOLDER%', '%SCHEMANAME%' | Out-File %TMP_DELETE_FILE_PATH% -encoding Ascii"
+setlocal enabledelayedexpansion
+for /f "tokens=* delims=" %%A in (%DELETE_FILE_PATH%) do (
+SET string=%%A
+SET "modified=!string:%PLACEHOLDER%=%SCHEMANAME%!"
+echo !modified! >> !TMP_DELETE_FILE_PATH!
+)
 
 REM Run CREATE_SCHEMA.sql to create a new data schema %var%
 "%PGBIN%\psql" -d "%CITYDB%" -f "CREATE_SCHEMA.sql" -v schemaname="%SCHEMANAME%" -v tmp_delete_filename="%TMP_DELETE_FILENAME%" 
