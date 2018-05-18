@@ -77,33 +77,6 @@ CREATE OR REPLACE TYPE BODY INDEX_OBJ IS
 END;
 /
 
-/******************************************************************
-* INDEX_TABLE that holds INDEX_OBJ instances
-* 
-******************************************************************/
-CREATE TABLE INDEX_TABLE (
-  ID NUMBER PRIMARY KEY,
-  obj INDEX_OBJ
-);
-
-CREATE SEQUENCE INDEX_TABLE_SEQ INCREMENT BY 1 START WITH 1 MINVALUE 1;
-
-/******************************************************************
-* Populate INDEX_TABLE with INDEX_OBJ instances
-* 
-******************************************************************/
-INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('CITYOBJECT_ENVELOPE_SPX', 'CITYOBJECT', 'ENVELOPE', 'PARALLEL'));
-INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('SURFACE_GEOM_SPX', 'SURFACE_GEOMETRY', 'GEOMETRY', 'PARALLEL'));
-INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_spatial_3d('SURFACE_GEOM_SOLID_SPX', 'SURFACE_GEOMETRY', 'SOLID_GEOMETRY', 'PARAMETERS (''sdo_indx_dims=3'') PARALLEL'));
-INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('CITYOBJECT_INX', 'CITYOBJECT', 'GMLID, GMLID_CODESPACE'));
-INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('CITYOBJECT_LINEAGE_INX', 'CITYOBJECT', 'LINEAGE'));
-INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('SURFACE_GEOM_INX', 'SURFACE_GEOMETRY', 'GMLID, GMLID_CODESPACE'));
-INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('APPEARANCE_INX', 'APPEARANCE', 'GMLID, GMLID_CODESPACE'));
-INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('APPEARANCE_THEME_INX', 'APPEARANCE', 'THEME'));
-INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('SURFACE_DATA_INX', 'SURFACE_DATA', 'GMLID, GMLID_CODESPACE'));
-INSERT INTO index_table (id, obj) VALUES (INDEX_TABLE_SEQ.nextval, INDEX_OBJ.construct_normal('ADDRESS_INX', 'ADDRESS', 'GMLID, GMLID_CODESPACE'));
-COMMIT;
-
 /*****************************************************************
 * PACKAGE citydb_idx
 * 

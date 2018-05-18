@@ -63,6 +63,9 @@ SET search_path TO citydb, :current_path;
 \echo 'Creating additional schema ''citydb_pkg'' ...'
 \i CREATE_CITYDB_PKG.sql
 
+--// create and fill INDEX_TABLE
+\i SCHEMA/INDEX_TABLE/INDEX_TABLE.sql
+
 --// update search_path on database level
 ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
 

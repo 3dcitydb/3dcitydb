@@ -46,7 +46,7 @@
 *   drop_indexes(type INTEGER, schema_name TEXT DEFAULT 'citydb') RETURNS text[]
 *   drop_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[]
 *   drop_spatial_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[]
-*   get_index(idx_table_name TEXT, idx_column_name TEXT) RETURNS citydb_pkg.INDEX_OBJ
+*   get_index(idx_table_name TEXT, idx_column_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS citydb_pkg.INDEX_OBJ
 *   index_status(idx citydb_pkg.INDEX_OBJ, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   index_status(idx_table_name TEXT, idx_column_name TEXT, schema_name TEXT) RETURNS TEXT
 *   status_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[]
@@ -104,33 +104,6 @@ $$
 SELECT ($1, $2, $3, 0, $4, 0)::citydb_pkg.INDEX_OBJ;
 $$
 LANGUAGE 'sql' IMMUTABLE STRICT;
-
-
-/******************************************************************
-* INDEX_TABLE that holds INDEX_OBJ instances
-* 
-******************************************************************/
-DROP TABLE IF EXISTS citydb_pkg.INDEX_TABLE;
-CREATE TABLE citydb_pkg.INDEX_TABLE (
-  ID   SERIAL PRIMARY KEY,
-  obj  citydb_pkg.INDEX_OBJ
-);
-
-
-/******************************************************************
-* Populate INDEX_TABLE with INDEX_OBJ instances
-* 
-******************************************************************/
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_spatial_2d('cityobject_envelope_spx', 'cityobject', 'envelope'));
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_spatial_2d('surface_geom_spx', 'surface_geometry', 'geometry'));
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_spatial_2d('surface_geom_solid_spx', 'surface_geometry', 'solid_geometry'));
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('cityobject_inx', 'cityobject', 'gmlid, gmlid_codespace'));
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('cityobject_lineage_inx', 'cityobject', 'lineage'));
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('surface_geom_inx', 'surface_geometry', 'gmlid, gmlid_codespace'));
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('appearance_inx', 'appearance', 'gmlid, gmlid_codespace'));
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('appearance_theme_inx', 'appearance', 'theme'));
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('surface_data_inx', 'surface_data', 'gmlid, gmlid_codespace'));
-INSERT INTO citydb_pkg.index_table (obj) VALUES (citydb_pkg.construct_normal('address_inx', 'address', 'gmlid, gmlid_codespace'));
 
 
 /*****************************************************************
@@ -330,8 +303,8 @@ DECLARE
   sql_error_msg TEXT;
   rec RECORD;
 BEGIN
-  FOR rec IN
-    SELECT * FROM citydb_pkg.index_table WHERE (obj).type = $1
+  FOR rec IN EXECUTE format('
+    SELECT * FROM %I.index_table WHERE (obj).type = %L', $2, $1)
   LOOP
     sql_error_msg := citydb_pkg.create_index(rec.obj, $2);
     idx_log := array_append(
@@ -370,8 +343,8 @@ DECLARE
   sql_error_msg TEXT;
   rec RECORD;
 BEGIN
-  FOR rec IN
-    SELECT * FROM citydb_pkg.index_table WHERE (obj).type = $1
+  FOR rec IN EXECUTE format('
+    SELECT * FROM %I.index_table WHERE (obj).type = %L', $2, $1)
   LOOP
     sql_error_msg := citydb_pkg.drop_index(rec.obj, $2);
     idx_log := array_append(
@@ -399,20 +372,27 @@ LANGUAGE plpgsql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.status_spatial_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS
 $$
-SELECT
-  array_agg(
-    citydb_pkg.index_status(obj, $1) 
-    || ':' || (obj).index_name 
-    || ':' || $1
-    || ':' || (obj).table_name 
-    || ':' || (obj).attribute_name
-  ) AS log
-FROM
-  citydb_pkg.index_table
-WHERE
-  (obj).type = 1;
+DECLARE
+  idx_log text[] := '{}';
+BEGIN
+	EXECUTE format('
+		SELECT
+		  array_agg(
+		    concat(citydb_pkg.index_status(obj,' || '''%I''' || '),' || ''':''' || ',' ||
+		    '(obj).index_name,' || ''':''' || ',' ||
+		    '''%I'',' || ''':''' || ',' ||		    
+		    '(obj).table_name,' || ''':''' || ',' ||
+		    '(obj).attribute_name
+		  )) AS log
+		FROM
+		  %I.index_table
+		WHERE
+		  (obj).type = 1',$1, $1, $1) INTO idx_log;
+	  
+  RETURN idx_log;
+END;
 $$
-LANGUAGE sql STRICT;
+LANGUAGE plpgsql STRICT;
 
 
 /******************************************************************
@@ -423,20 +403,27 @@ LANGUAGE sql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.status_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[] AS
 $$
-SELECT
-  array_agg(
-    citydb_pkg.index_status(obj, $1) 
-    || ':' || (obj).index_name 
-    || ':' || $1
-    || ':' || (obj).table_name 
-    || ':' || (obj).attribute_name
-  ) AS log
-FROM
-  citydb_pkg.index_table
-WHERE
-  (obj).type = 0;
+DECLARE
+  idx_log text[] := '{}';
+BEGIN
+	EXECUTE format('
+		SELECT
+		  array_agg(
+		    concat(citydb_pkg.index_status(obj,' || '''%I''' || '),' || ''':''' || ',' ||
+		    '(obj).index_name,' || ''':''' || ',' ||
+		    '''%I'',' || ''':''' || ',' ||		    
+		    '(obj).table_name,' || ''':''' || ',' ||
+		    '(obj).attribute_name
+		  )) AS log
+		FROM
+		  %I.index_table
+		WHERE
+		  (obj).type = 0',$1, $1, $1) INTO idx_log;
+		  
+	RETURN idx_log;
+END;
 $$
-LANGUAGE sql STRICT;
+LANGUAGE plpgsql STRICT;
 
 
 /******************************************************************
@@ -506,15 +493,34 @@ LANGUAGE sql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_index(
   idx_table_name TEXT, 
-  idx_column_name TEXT
+  idx_column_name TEXT,
+  schema_name TEXT DEFAULT 'citydb'
   ) RETURNS citydb_pkg.INDEX_OBJ AS 
 $$
-SELECT
-  obj
-FROM
-  citydb_pkg.index_table 
-WHERE
-  (obj).table_name = lower($1)
-  AND (obj).attribute_name = lower($2);
+DECLARE
+  idx_obj citydb_pkg.INDEX_OBJ;
+  index_name TEXT;
+  table_name TEXT;
+  attribute_name TEXT;
+  type NUMERIC(1);
+  srid INTEGER;
+  is_3d NUMERIC(1, 0);
+BEGIN
+  EXECUTE format('
+		SELECT
+		  (obj).index_name,
+		  (obj).table_name,
+		  (obj).attribute_name,
+		  (obj).type,
+		  (obj).srid,
+		  (obj).is_3d
+		FROM
+		  %I.index_table 
+		WHERE
+		  (obj).table_name = lower('||'''%I'''||')
+		  AND (obj).attribute_name = lower('||'''%I'''||')', $3, $1, $2) INTO index_name, table_name, attribute_name, type, srid, is_3d;
+		  
+  RETURN (index_name, table_name, attribute_name, type, srid, is_3d)::citydb_pkg.INDEX_OBJ;
+END;
 $$
-LANGUAGE sql STRICT;
+LANGUAGE plpgsql STRICT;

@@ -90,6 +90,9 @@ FROM dual;
 -- create objectclass instances and functions
 @@SCHEMA/OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
 @@SCHEMA/OBJECTCLASS/AGGREGATION_INFO_INSTANCES.sql
+@@SCHEMA/INDEX_TABLE/INDEX_TABLE.sql
+
+--// create and fill INDEX_TABLE
 @@SCHEMA/OBJECTCLASS/OBJCLASS.sql
 
 -- create spatial metadata
