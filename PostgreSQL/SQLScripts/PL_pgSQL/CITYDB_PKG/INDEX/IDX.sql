@@ -498,7 +498,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_index(
   ) RETURNS citydb_pkg.INDEX_OBJ AS 
 $$
 DECLARE
-  idx_obj citydb_pkg.INDEX_OBJ;
   index_name TEXT;
   table_name TEXT;
   attribute_name TEXT;
@@ -517,10 +516,14 @@ BEGIN
 		FROM
 		  %I.index_table 
 		WHERE
-		  (obj).table_name = lower('||'''%I'''||')
-		  AND (obj).attribute_name = lower('||'''%I'''||')', $3, $1, $2) INTO index_name, table_name, attribute_name, type, srid, is_3d;
-		  
-  RETURN (index_name, table_name, attribute_name, type, srid, is_3d)::citydb_pkg.INDEX_OBJ;
+		  (obj).table_name = lower(''%I'')
+		  AND (obj).attribute_name = lower(''%I'')', $3, $1, $2) INTO index_name, table_name, attribute_name, type, srid, is_3d;
+
+  IF index_name IS NOT NULL THEN
+    RETURN (index_name, table_name, attribute_name, type, srid, is_3d)::citydb_pkg.INDEX_OBJ;
+  ELSE
+    RETURN NULL;
+  END IF;
 END;
 $$
 LANGUAGE plpgsql STRICT;
