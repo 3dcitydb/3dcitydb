@@ -29,11 +29,11 @@
 DEFINE DBVERSION=&1;
 
 SELECT 'Creating packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', ''citydb_delete'', and corresponding types' as message from DUAL;
-@@PL_SQL/CITYDB_PKG/UTIL/UTIL.sql;
-@@PL_SQL/CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql;
-@@PL_SQL/CITYDB_PKG/INDEX/IDX.sql;
-@@PL_SQL/CITYDB_PKG/SRS/SRS.sql;
-@@PL_SQL/CITYDB_PKG/STATISTICS/STAT.sql;
+@@CITYDB_PKG/UTIL/UTIL.sql;
+@@CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql;
+@@CITYDB_PKG/INDEX/IDX.sql;
+@@CITYDB_PKG/SRS/SRS.sql;
+@@CITYDB_PKG/STATISTICS/STAT.sql;
 
 -- check for SDO_GEORASTER support
 VARIABLE GEORASTER_SUPPORT NUMBER;
@@ -49,8 +49,8 @@ END;
 -- create delete scripts
 column script new_value DELETE
 SELECT
-  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'PL_SQL/CITYDB_PKG/DELETE/DELETE_GEORASTER.sql'
-  ELSE 'PL_SQL/CITYDB_PKG/DELETE/DELETE.sql'
+  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'CITYDB_PKG/DELETE/DELETE_GEORASTER.sql'
+  ELSE 'CITYDB_PKG/DELETE/DELETE.sql'
   END AS script
 FROM dual;
 
@@ -59,8 +59,8 @@ FROM dual;
 -- create envelope scripts
 column script new_value ENVELOPE
 SELECT
-  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'PL_SQL/CITYDB_PKG/ENVELOPE/ENVELOPE_GEORASTER.sql'
-  ELSE 'PL_SQL/CITYDB_PKG/ENVELOPE/ENVELOPE.sql'
+  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'CITYDB_PKG/ENVELOPE/ENVELOPE_GEORASTER.sql'
+  ELSE 'CITYDB_PKG/ENVELOPE/ENVELOPE.sql'
   END AS script
 FROM dual;
 
