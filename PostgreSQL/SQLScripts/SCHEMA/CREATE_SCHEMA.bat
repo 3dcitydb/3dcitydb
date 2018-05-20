@@ -75,7 +75,7 @@ set TMP_DELETE_FILE=DELETE\%SCHEMA_NAME%_DELETE.sql
 
 echo Done.
 
-:: Run CREATE_SCHEMA.sql to create a new data schema --------------------------
+:: Run CREATE_SCHEMA.sql to create a new 3DCityDB schema ----------------------
 echo.
 echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
 "%PGBIN%\psql" -d "%CITYDB%" -f "CREATE_SCHEMA.sql" -v schema_name="%SCHEMA_NAME%" -v tmp_delete_file="%TMP_DELETE_FILE%" 

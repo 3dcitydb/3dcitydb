@@ -110,7 +110,7 @@ while [ 1 ]; do
   read -p "(default DBVERSION=S): " DBVERSION
   DBVERSION=${DBVERSION:-S}
 
- # to upper case
+  # to upper case
   DBVERSION=$(echo "$DBVERSION" | awk '{print toupper($0)}')
 
   if [ "$DBVERSION" = "S" ] || [ "$DBVERSION" = "L" ] ; then

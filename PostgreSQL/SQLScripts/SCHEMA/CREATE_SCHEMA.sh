@@ -69,7 +69,7 @@ TMP_DELETE_FILE=DELETE/${SCHEMA_NAME}_DELETE.sql
 sed 's/'$TOKEN'/'$SCHEMA_NAME'/g' $DELETE_FILE > $TMP_DELETE_FILE
 echo 'Done.'
 
-# Run CREATE_SCHEMA.sql to create a new data schema ---------------------------
+# Run CREATE_SCHEMA.sql to create a new 3DCityDB schema -----------------------
 echo
 echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
 psql -d "$CITYDB" -f "CREATE_SCHEMA.sql" -v schema_name="$SCHEMA_NAME" -v tmp_delete_file="$TMP_DELETE_FILE"

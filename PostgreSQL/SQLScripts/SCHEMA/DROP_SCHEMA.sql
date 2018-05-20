@@ -25,14 +25,16 @@
 -- limitations under the License.
 --
 
+\pset footer off
 SET client_min_messages TO WARNING;
-\set target :schemaname
+\set ON_ERROR_STOP ON
 
-\echo 'Dropping schema' :target'....'
+\set SCHEMA_NAME :schema_name
+
+\echo 'Dropping 3DCityDB schema "':SCHEMA_NAME'" ...'
 
 --// drop schemas
-DROP SCHEMA :target CASCADE;
+DROP SCHEMA :SCHEMA_NAME CASCADE;
 
 \echo
-\echo 'Schema' :target 'successfully removed!'
-\echo
+\echo '3DCityDB schema "':SCHEMA_NAME'" successfully removed!'
