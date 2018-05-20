@@ -49,18 +49,18 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 --// create TABLES, SEQUENCES, CONSTRAINTS, INDEXES
 \echo
 \echo 'Setting up database schema ...'
-\i SCHEMA.sql
+\i ../../SCHEMA/SCHEMA.sql
 
 --// fill tables OBJECTCLASS
-\i OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
-\i OBJECTCLASS/AGGREGATION_INFO_INSTANCES.sql
+\i ../../SCHEMA/OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
+\i ../../SCHEMA/OBJECTCLASS/AGGREGATION_INFO_INSTANCES.sql
 
 --// create and fill INDEX_TABLE
-\i INDEX_TABLE/INDEX_TABLE.sql
+\i ../../SCHEMA/INDEX_TABLE/INDEX_TABLE.sql
 
 --// create schema FUNCTIONS
-\i OBJECTCLASS/OBJCLASS.sql
-\i ENVELOPE/ENVELOPE.sql
+\i ../../SCHEMA/OBJECTCLASS/OBJCLASS.sql
+\i ../../SCHEMA/ENVELOPE/ENVELOPE.sql
 \i :TMP_DELETE_FILE
 
 \echo

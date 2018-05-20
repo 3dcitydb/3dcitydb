@@ -63,8 +63,8 @@ if /i not "%var%"=="" set SCHEMA_NAME=%var%
 echo.
 echo|set /p="Preparing SQL scripts for setting up "%SCHEMA_NAME%" ... "
 set TOKEN=citydb
-set DELETE_FILE=DELETE\DELETE.sql
-set TMP_DELETE_FILE=DELETE\%SCHEMA_NAME%_DELETE.sql
+set DELETE_FILE=..\..\SCHEMA\DELETE\DELETE.sql
+set TMP_DELETE_FILE=TMP_%SCHEMA_NAME%_DELETE.sql
 
 (for /f "delims=" %%A in (%DELETE_FILE%) do (
   set line=%%A
