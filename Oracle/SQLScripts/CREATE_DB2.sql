@@ -110,7 +110,7 @@ FROM dual;
 -- activate versioning if requested
 column script new_value VERSIONING
 SELECT
-  CASE WHEN upper('&VERSIONING')='YES' OR upper('&VERSIONING')='Y' THEN 'ENABLE_VERSIONING2.sql'
+  CASE WHEN upper('&VERSIONING')='YES' OR upper('&VERSIONING')='Y' THEN 'UTIL/VERSIONING/ENABLE_VERSIONING.sql'
   ELSE 'UTIL/HINTS/DO_NOTHING.sql'
   END AS script
 FROM dual;

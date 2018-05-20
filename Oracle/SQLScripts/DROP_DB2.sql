@@ -29,7 +29,7 @@
 DEFINE DBVERSION=&1;
 
 -- disable versioning (if it was enabled before)
-@@DISABLE_VERSIONING2.sql &DBVERSION
+@@UTIL/VERSIONING/DISABLE_VERSIONING.sql &DBVERSION
 
 SELECT 'Dropping 3DCityDB tables and user objects' as message from DUAL;
 BEGIN
