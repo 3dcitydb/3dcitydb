@@ -27,8 +27,8 @@ echo '3D City Database - The Open Source CityGML Database'
 echo
 echo '######################################################################################'
 echo
-echo 'Welcome to the 3DCityDB Setup Script. This script will guide you through the process'
-echo 'of setting up a 3DCityDB instance. Please follow the instructions of the script.'
+echo 'This script will guide you through the process of setting up an additioanl 3DCityDB'
+echo 'schema for an existing database. Please follow the instructions of the script.'
 echo 'Enter the required parameters when prompted and press ENTER to confirm.'
 echo 'Just press ENTER to use the default values.'
 echo
@@ -42,30 +42,40 @@ echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
 echo '######################################################################################'
 
-# List the existing data schemas ------------------------------------------------------
+# List the existing 3DCityDB schemas ------------------------------------------
+echo
+echo "Reading existing 3DCityDB schemas from the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
 psql -d "$CITYDB" -f "QUERY_SCHEMA.sql"
 
-#  Prompt for SCHEMANAME ------------------------------------------------------
-PLACEHOLDER=citydb
-SCHEMANAME=citydb2
+if [[ $? -ne 0 ]] ; then
+  echo 'Failed to read 3DCityDB schemas from database.'
+  read -rsn1 -p 'Press ENTER to quit.'
+  exit 1
+fi
 
-echo 'Please enter the name of the data schema you want to create.'
-read -p "(default SCHEMANAME=$SCHEMANAME): " var
-SCHEMANAME=${var:-$SCHEMANAME}
+# Prompt for schema name ------------------------------------------------------
+SCHEMA_NAME=citydb2
+echo 'Please enter the name of the 3DCityDB schema you want to create.'
+read -p "(default SCHEMA_NAME=$SCHEMA_NAME): " var
+SCHEMA_NAME=${var:-$SCHEMA_NAME}
 
-DELETE_FILE_PATH=DELETE/DELETE.sql
-TMP_DELETE_FILENAME=DELETE_TMP.sql 
-TMP_DELETE_FILE_PATH=DELETE/$TMP_DELETE_FILENAME
+# Create temporary SQL scripts ------------------------------------------------
+echo
+echo -n "Preparing SQL scripts for setting up \"$SCHEMA_NAME\" ... "
+TOKEN=citydb
+DELETE_FILE=DELETE/DELETE.sql
+TMP_DELETE_FILE=DELETE/${SCHEMA_NAME}_DELETE.sql
 
-#cp $DELETE_FILE_PATH $TMP_DELETE_FILE_PATH
-sed 's/'$PLACEHOLDER'/'$SCHEMANAME'/g' $DELETE_FILE_PATH > $TMP_DELETE_FILE_PATH
+sed 's/'$TOKEN'/'$SCHEMA_NAME'/g' $DELETE_FILE > $TMP_DELETE_FILE
+echo 'Done.'
 
-# Run CREATE_SCHEMA.sql to create a new data schema
+# Run CREATE_SCHEMA.sql to create a new data schema ---------------------------
 echo
 echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "CREATE_SCHEMA.sql" -v schemaname="$SCHEMANAME" -v tmp_delete_filename="$TMP_DELETE_FILENAME" 
+psql -d "$CITYDB" -f "CREATE_SCHEMA.sql" -v schema_name="$SCHEMA_NAME" -v tmp_delete_file="$TMP_DELETE_FILE"
 
-rm -f $TMP_DELETE_FILE_PATH
+# Remove temporary SQL scripts ------------------------------------------------
+rm -f $TMP_DELETE_FILE
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'

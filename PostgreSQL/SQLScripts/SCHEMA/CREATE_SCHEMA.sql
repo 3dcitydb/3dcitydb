@@ -28,18 +28,19 @@
 \pset footer off
 SET client_min_messages TO WARNING;
 \set ON_ERROR_STOP ON
-\set target :schemaname
-\set tmp_delete_filename :tmp_delete_filename
 
-\echo 'Creating schema' :target'....'
+\set SCHEMA_NAME :schema_name
+\set TMP_DELETE_FILE :tmp_delete_file
+
+\echo 'Creating 3DCityDB schema "':SCHEMA_NAME'" ...'
 
 --// create schema
-CREATE SCHEMA :"target";
+CREATE SCHEMA :"SCHEMA_NAME";
 
 --// set search_path for this session
 SELECT current_setting('search_path') AS current_path;
 \gset
-SET search_path TO :"target", :current_path;
+SET search_path TO :"SCHEMA_NAME", :current_path;
 
 --// check if the PostGIS extension and the citydb_pkg package are available
 SELECT postgis_version();
@@ -60,13 +61,13 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 --// create schema FUNCTIONS
 \i OBJECTCLASS/OBJCLASS.sql
 \i ENVELOPE/ENVELOPE.sql
-\i DELETE/:tmp_delete_filename
+\i :TMP_DELETE_FILE
 
 \echo
-\echo 'Created schema' :target'.'
+\echo 'Created 3DCityDB schema "':SCHEMA_NAME'".'
 
-\echo 'Setting spatial reference system of schema' :target ' (will be the same as of schema citydb) ...'
-\set target_quoted '\'':target'\''
-INSERT INTO :target.DATABASE_SRS SELECT srid, gml_srs_name FROM citydb.database_srs LIMIT 1;
-SELECT citydb_pkg.change_schema_srid(database_srs.srid, database_srs.gml_srs_name, 0, :target_quoted) FROM citydb.database_srs LIMIT 1;
+\echo 'Setting spatial reference system for schema "':SCHEMA_NAME'" (will be the same as for schema "citydb") ...'
+\set SCHEMA_NAME_QUOTED '\'':SCHEMA_NAME'\''
+INSERT INTO :SCHEMA_NAME.DATABASE_SRS SELECT srid, gml_srs_name FROM citydb.database_srs LIMIT 1;
+SELECT citydb_pkg.change_schema_srid(database_srs.srid, database_srs.gml_srs_name, 0, :SCHEMA_NAME_QUOTED) FROM citydb.database_srs LIMIT 1;
 \echo 'Done'

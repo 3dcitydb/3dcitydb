@@ -27,8 +27,8 @@ echo 3D City Database - The Open Source CityGML Database
 echo.
 echo ######################################################################################
 echo.
-echo Welcome to the 3DCityDB Setup Script. This script will guide you through the process
-echo of setting up a 3DCityDB instance. Please follow the instructions of the script.
+echo This script will guide you through the process of setting up an additioanl 3DCityDB
+echo schema for an existing database. Please follow the instructions of the script.
 echo Enter the required parameters when prompted and press ENTER to confirm.
 echo Just press ENTER to use the default values.
 echo.
@@ -42,31 +42,45 @@ echo    https://github.com/3dcitydb/3dcitydb/issues
 echo.
 echo ######################################################################################
 
-:: List the existing data schemas ------------------------------------------------------
+:: List the existing 3DCityDB schemas -----------------------------------------
+echo.
+echo Reading existing 3DCityDB schemas from the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
 "%PGBIN%\psql" -d "%CITYDB%" -f "QUERY_SCHEMA.sql"
 
-:: Prompt for SCHEMANAME ------------------------------------------------------
-set PLACEHOLDER=citydb
-set SCHEMANAME=citydb2
-
-echo Please enter the name of the data schema you want to create.
-set /p var="(default SCHEMANAME=%SCHEMANAME%): "
-if /i not "%var%"=="" set SCHEMANAME=%var%
-
-set DELETE_FILE_PATH=DELETE\DELETE.sql
-set TMP_DELETE_FILENAME=DELETE_TMP.sql 
-set TMP_DELETE_FILE_PATH=DELETE\%TMP_DELETE_FILENAME%
-
-setlocal enabledelayedexpansion
-for /f "tokens=* delims=" %%A in (%DELETE_FILE_PATH%) do (
-SET string=%%A
-SET "modified=!string:%PLACEHOLDER%=%SCHEMANAME%!"
-echo !modified! >> !TMP_DELETE_FILE_PATH!
+if errorlevel 1 (
+  echo Failed to read 3DCityDB schemas from database.
+  pause
+  exit /b %errorlevel%
 )
 
-REM Run CREATE_SCHEMA.sql to create a new data schema %var%
-"%PGBIN%\psql" -d "%CITYDB%" -f "CREATE_SCHEMA.sql" -v schemaname="%SCHEMANAME%" -v tmp_delete_filename="%TMP_DELETE_FILENAME%" 
+:: Prompt for schema name -----------------------------------------------------
+set SCHEMA_NAME=citydb2
+echo Please enter the name of the 3DCityDB schema you want to create.
+set /p var="(default SCHEMA_NAME=%SCHEMA_NAME%): "
+if /i not "%var%"=="" set SCHEMA_NAME=%var%
 
-del %TMP_DELETE_FILE_PATH% >nul 2>&1
+:: Create temporary SQL scripts -----------------------------------------------
+echo.
+echo|set /p="Preparing SQL scripts for setting up "%SCHEMA_NAME%" ... "
+set TOKEN=citydb
+set DELETE_FILE=DELETE\DELETE.sql
+set TMP_DELETE_FILE=DELETE\%SCHEMA_NAME%_DELETE.sql
+
+(for /f "delims=" %%A in (%DELETE_FILE%) do (
+  set line=%%A
+  setlocal enabledelayedexpansion
+  echo !line:%TOKEN%=%SCHEMA_NAME%!
+  endlocal
+)) > %TMP_DELETE_FILE%
+
+echo Done.
+
+:: Run CREATE_SCHEMA.sql to create a new data schema --------------------------
+echo.
+echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
+"%PGBIN%\psql" -d "%CITYDB%" -f "CREATE_SCHEMA.sql" -v schema_name="%SCHEMA_NAME%" -v tmp_delete_file="%TMP_DELETE_FILE%" 
+
+:: Remove temporary SQL scripts -----------------------------------------------
+del %TMP_DELETE_FILE% >nul 2>&1
 
 pause
