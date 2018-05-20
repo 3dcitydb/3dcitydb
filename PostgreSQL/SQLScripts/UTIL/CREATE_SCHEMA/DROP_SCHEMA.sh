@@ -25,7 +25,7 @@ echo '                     |__/          '
 echo
 echo '3D City Database - The Open Source CityGML Database'
 echo
-echo '######################################################################################'
+echo '############################################################################'
 echo
 echo 'This script will drop a 3DCityDB schema including all data. Note that this'
 echo 'operation cannot be undone. Please follow the instructions of the script.'
@@ -40,7 +40,7 @@ echo 'Having problems or need support?'
 echo '   Please file an issue here:'
 echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
-echo '######################################################################################'
+echo '############################################################################'
 
 # List the existing 3DCityDB schemas ------------------------------------------
 echo
