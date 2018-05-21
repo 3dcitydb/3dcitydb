@@ -32,14 +32,33 @@ SET VER OFF
 -- parge arguments
 DEFINE DBVERSION=&1;
 
-column script new_value BATCHFILE
-SELECT
-  CASE WHEN NOT (upper('&DBVERSION')='L' or upper('&DBVERSION')='S') THEN 'UTIL/HINTS/HINT_ON_MISTYPED_DBVERSION.sql'
-  ELSE 'DROP_DB2.sql'
-  END AS script
-FROM dual;
+-- disable versioning (if it was enabled before)
+@@UTIL/VERSIONING/DISABLE_VERSIONING.sql &DBVERSION
 
-@@&BATCHFILE &DBVERSION
+SELECT 'Dropping 3DCityDB tables and user objects' as message from DUAL;
+BEGIN
+  FOR cur_rec IN (SELECT object_name, object_type
+                    FROM user_objects
+                    WHERE object_type IN ('TABLE', 'VIEW', 'PACKAGE', 'PROCEDURE', 'FUNCTION', 'SEQUENCE', 'TYPE')) LOOP
+    BEGIN
+	  IF cur_rec.object_type = 'TABLE' THEN
+	    EXECUTE IMMEDIATE 'DROP ' || cur_rec.object_type || ' "' || cur_rec.object_name || '" CASCADE CONSTRAINTS';
+	  ELSIF cur_rec.object_type = 'TYPE' THEN
+	    EXECUTE IMMEDIATE 'DROP ' || cur_rec.object_type || ' "' || cur_rec.object_name || '" FORCE';
+      ELSE
+	    EXECUTE IMMEDIATE 'DROP ' || cur_rec.object_type || ' "' || cur_rec.object_name || '"';
+      END IF;
+    EXCEPTION
+	  WHEN OTHERS THEN
+        NULL;
+    END;
+  END LOOP;
+END;
+/
+
+PURGE RECYCLEBIN;
+
+SELECT '3DCityDB instance successfully removed!' as message from DUAL;
 
 QUIT;
 /

@@ -35,35 +35,114 @@ DEFINE GMLSRSNAME=&2;
 DEFINE VERSIONING=&3;
 DEFINE DBVERSION=&4;
 
+--check if the chosen SRID is provided by the MDSYS.CS_SRS table
 VARIABLE SRID NUMBER;
-VARIABLE BATCHFILE VARCHAR2(50);
+VARIABLE HINTFILE VARCHAR2(50);
 
 WHENEVER SQLERROR CONTINUE;
 
 BEGIN
+  :HINTFILE := 'UTIL/HINTS/DO_NOTHING';
+  
   SELECT SRID INTO :SRID FROM MDSYS.CS_SRS WHERE SRID=&SRSNO;
-
-  IF (:SRID = &SRSNO) THEN
-    IF NOT (upper('&DBVERSION')='L' or upper('&DBVERSION')='S') THEN
-      :BATCHFILE := 'UTIL/HINTS/HINT_ON_MISTYPED_DBVERSION';
-    ELSE
-      :BATCHFILE := 'CREATE_DB2';
-    END IF;
-  ELSE 
-    :BATCHFILE := 'UTIL/HINTS/HINT_ON_MISSING_SRS';
-  END IF;
-
+  
   EXCEPTION
     WHEN NO_DATA_FOUND THEN
-      :BATCHFILE := 'UTIL/HINTS/HINT_ON_MISSING_SRS';
+      :HINTFILE := 'UTIL/HINTS/HINT_ON_MISSING_SRS';
 END;
 /
 
--- Transfer the value from the bind variable to the substitution variable
-column script new_value BATCHFILE2 print
-select :BATCHFILE script from dual;
+-- transfer the value from the bind variable to the substitution variable
+column script new_value HINTFILE2 print
+SELECT :HINTFILE script FROM dual;
+@@&HINTFILE2
 
-START &BATCHFILE2 &SRSNO &GMLSRSNAME &VERSIONING &DBVERSION
+-- check for SDO_GEORASTER support
+VARIABLE GEORASTER_SUPPORT NUMBER;
+BEGIN
+  :GEORASTER_SUPPORT := 0;
+  IF (upper('&DBVERSION')='S') THEN
+    SELECT COUNT(*) INTO :GEORASTER_SUPPORT FROM ALL_SYNONYMS
+	WHERE SYNONYM_NAME='SDO_GEORASTER';
+  END IF;
+
+  IF :GEORASTER_SUPPORT = 0 THEN
+	dbms_output.put_line('NOTE: The data type SDO_GEORASTER is not available for this database. Raster relief tables will not be created.');
+  END IF;
+END;
+/
+
+-- create tables
+column script new_value TABLES
+SELECT
+  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'SCHEMA/TABLES/TABLES_GEORASTER.sql'
+  ELSE 'SCHEMA/TABLES/TABLES.sql'
+  END AS script
+FROM dual;
+
+@@&TABLES
+
+-- populate database SRS
+INSERT INTO DATABASE_SRS(SRID,GML_SRS_NAME) VALUES (&SRSNO,'&GMLSRSNAME');
+COMMIT;
+
+-- create sequences
+column script new_value SEQUENCES
+SELECT
+  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'SCHEMA/SEQUENCES/SEQUENCES_GEORASTER.sql'
+  ELSE 'SCHEMA/SEQUENCES/SEQUENCES.sql'
+  END AS script
+FROM dual;
+
+@@&SEQUENCES
+
+-- activate constraints
+column script new_value CONSTRAINTS
+SELECT
+  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'SCHEMA/CONSTRAINTS/CONSTRAINTS_GEORASTER.sql'
+  ELSE 'SCHEMA/CONSTRAINTS/CONSTRAINTS.sql'
+  END AS script
+FROM dual;
+
+@@&CONSTRAINTS
+
+-- citydb packages
+@@CREATE_CITYDB_PKG.sql &DBVERSION
+
+-- create objectclass instances and functions
+@@SCHEMA/OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
+@@SCHEMA/OBJECTCLASS/AGGREGATION_INFO_INSTANCES.sql
+@@SCHEMA/OBJECTCLASS/OBJCLASS.sql
+
+-- create spatial metadata
+exec citydb_constraint.set_schema_sdo_metadata(USER);
+COMMIT;
+
+-- build indexes
+column script new_value SIMPLE_INDEXES
+SELECT
+  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'SCHEMA/INDEXES/SIMPLE_INDEXES_GEORASTER.sql'
+  ELSE 'SCHEMA/INDEXES/SIMPLE_INDEXES.sql'
+  END AS script
+FROM dual;
+
+@@&SIMPLE_INDEXES
+@@SCHEMA/INDEXES/SPATIAL_INDEXES.sql
+
+-- activate versioning if requested
+column script new_value VERSIONING
+SELECT
+  CASE WHEN upper('&VERSIONING')='YES' OR upper('&VERSIONING')='Y' THEN 'UTIL/VERSIONING/ENABLE_VERSIONING.sql'
+  ELSE 'UTIL/HINTS/DO_NOTHING.sql'
+  END AS script
+FROM dual;
+
+@@&VERSIONING &DBVERSION
+
+SHOW ERRORS;
+COMMIT;
+
+SELECT '3DCityDB creation complete!' AS message FROM dual;
 
 QUIT;
 /

@@ -29,3 +29,6 @@ SET FEEDBACK OFF
 
 prompt Your chosen SRID wasn't found in the MDSYS.CS_SRS table!
 prompt Choose an existing SRID or manually add your SRID to MDSYS.CS_SRS.
+
+QUIT;
+/
