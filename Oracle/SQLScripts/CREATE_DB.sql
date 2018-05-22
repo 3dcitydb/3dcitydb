@@ -107,7 +107,45 @@ FROM dual;
 @@&CONSTRAINTS
 
 -- citydb packages
-@@CITYDB_PKG/CREATE_CITYDB_PKG.sql &DBVERSION
+SELECT 'Creating packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', ''citydb_delete'', and corresponding types' as message from DUAL;
+@@CITYDB_PKG/UTIL/UTIL.sql;
+@@CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql;
+@@CITYDB_PKG/INDEX/IDX.sql;
+@@CITYDB_PKG/SRS/SRS.sql;
+@@CITYDB_PKG/STATISTICS/STAT.sql;
+
+-- check for SDO_GEORASTER support
+VARIABLE GEORASTER_SUPPORT NUMBER;
+BEGIN
+  :GEORASTER_SUPPORT := 0;
+  IF (upper('&DBVERSION')='S') THEN
+    SELECT COUNT(*) INTO :GEORASTER_SUPPORT FROM ALL_SYNONYMS
+	WHERE SYNONYM_NAME='SDO_GEORASTER';
+  END IF;
+END;
+/
+
+-- create delete scripts
+column script new_value DELETE
+SELECT
+  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'CITYDB_PKG/DELETE/DELETE_GEORASTER.sql'
+  ELSE 'CITYDB_PKG/DELETE/DELETE.sql'
+  END AS script
+FROM dual;
+
+@@&DELETE
+
+-- create envelope scripts
+column script new_value ENVELOPE
+SELECT
+  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'CITYDB_PKG/ENVELOPE/ENVELOPE_GEORASTER.sql'
+  ELSE 'CITYDB_PKG/ENVELOPE/ENVELOPE.sql'
+  END AS script
+FROM dual;
+
+@@&ENVELOPE
+
+SELECT 'Packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', and ''citydb_delete'' created' as message from DUAL;
 
 -- create objectclass instances and functions
 @@SCHEMA/OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
