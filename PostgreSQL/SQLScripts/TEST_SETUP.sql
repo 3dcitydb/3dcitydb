@@ -63,7 +63,7 @@ SET search_path TO citydb, :current_path;
 --// create CITYDB_PKG (additional schema with PL/pgSQL-Functions)
 \echo
 \echo 'Creating additional schema ''citydb_pkg'' ...'
-\i CREATE_CITYDB_PKG.sql
+\i CITYDB_PKG/CREATE_CITYDB_PKG.sql
 
 --// update search_path on database level
 ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;

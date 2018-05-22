@@ -107,7 +107,7 @@ FROM dual;
 @@&CONSTRAINTS
 
 -- citydb packages
-@@CREATE_CITYDB_PKG.sql &DBVERSION
+@@CITYDB_PKG/CREATE_CITYDB_PKG.sql &DBVERSION
 
 -- create objectclass instances and functions
 @@SCHEMA/OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
