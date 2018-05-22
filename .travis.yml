@@ -17,4 +17,4 @@ before_script:
     - cd PostgreSQL/SQLScripts
 
 script:
-    - psql -U postgres -d citydb_testdb -a -f TEST_SETUP.sql
+    - psql -U postgres -d citydb_testdb -a -f UTIL/TEST/TEST_SETUP.sql
