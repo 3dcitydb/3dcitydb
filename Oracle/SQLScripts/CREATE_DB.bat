@@ -20,6 +20,7 @@ if NOT [%1]==[] (
   GOTO:args
 )
 
+:: INTERACTIVE MODE -----------------------------------------------------------
 :: Prompt for SRSNO -----------------------------------------------------------
 :srid
 set var=
@@ -40,7 +41,6 @@ IF defined num (
   echo SRID must be numeric. Please retry.
   goto:srid
 )
-
 
 :: Prompt for GMLSRSNAME ------------------------------------------------------
 set var=
@@ -100,7 +100,7 @@ IF "%res%"=="f" (
 sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @CREATE_DB.sql "%SRSNO%" "%GMLSRSNAME%" "%VERSIONING%" "%DBVERSION%"
 GOTO:EOF
 
-:: Correct number of args present? --------------------------------------------
+:: Correct number of args supplied? -------------------------------------------
 :args
 set argC=0
 for %%x in (%*) do Set /A argC+=1
