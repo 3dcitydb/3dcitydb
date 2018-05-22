@@ -1,5 +1,5 @@
 @echo off
-:: Shell script to drop an instance of the 3D City Database
+:: Shell script to remove a read-only user for a specific database schema
 :: on PostgreSQL/PostGIS
 
 :: Provide your database details here -----------------------------------------
@@ -11,7 +11,7 @@ set PGUSER=your_username
 ::-----------------------------------------------------------------------------
 
 :: add PGBIN to PATH
-set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
+set PATH=%PGBIN%;%PATH%
 
 :: cd to path of the shell script
 cd /d %~dp0
@@ -27,8 +27,8 @@ echo 3D City Database - The Open Source CityGML Database
 echo.
 echo ################################################################################
 echo.
-echo This script will drop the 3DCityDB instance including all data. Note that this
-echo operation cannot be undone.
+echo This script will remove a read-only user for a specific database schema. 
+echo Note that this operation cannot be undone.
 echo.
 echo Documentation and help:
 echo    3DCityDB website:    https://www.3dcitydb.org
@@ -40,9 +40,10 @@ echo    https://github.com/3dcitydb/3dcitydb/issues
 echo.
 echo ################################################################################
 
-REM Run DROP_DB.sql to drop the 3D City Database instance ---------------------
-echo.
-echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "DROP_DB.sql"
+:: cd to path of the SQL scripts
+cd ..\..\SQLScripts\UTIL\RO_USER
+
+:: Run CREATE_RO_USER.sql to remove a read-only user for a specific schema
+"%PGBIN%\psql" -d "%CITYDB%" -f "DROP_RO_USER.sql"
 
 pause

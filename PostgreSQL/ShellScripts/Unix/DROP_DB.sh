@@ -40,6 +40,9 @@ echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
 echo '################################################################################'
 
+:: cd to path of the SQL scripts
+cd ../../SQLScripts
+
 # Run DROP_DB.sql to drop the 3D City Database instance -----------------------
 echo
 echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."

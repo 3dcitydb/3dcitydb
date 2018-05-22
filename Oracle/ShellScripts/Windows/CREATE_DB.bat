@@ -41,6 +41,9 @@ echo    https://github.com/3dcitydb/3dcitydb/issues
 echo.
 echo ######################################################################################
 
+:: cd to path of the SQL scripts
+cd ..\..\SQLScripts
+
 :: Prompt for SRSNO -----------------------------------------------------------
 :srid
 set var=
@@ -147,6 +150,7 @@ if "%res%"=="f" (
 :: Run CREATE_DB.sql to create the 3D City Database instance ------------------
 echo.
 echo Connecting to the database "%USERNAME%@%HOST%:%PORT%/%SID%" ...
+cd ..\..\SQLScripts
 sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @CREATE_DB.sql "%SRSNO%" "%GMLSRSNAME%" "%VERSIONING%" "%DBVERSION%"
 
 pause
