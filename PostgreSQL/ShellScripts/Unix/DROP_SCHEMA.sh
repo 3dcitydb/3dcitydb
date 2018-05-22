@@ -37,7 +37,7 @@ echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
 echo '############################################################################'
 
-:: cd to path of the SQL scripts
+# cd to path of the SQL scripts
 cd ../../SQLScripts/UTIL/SCHEMAS
 
 # List the existing 3DCityDB schemas ------------------------------------------
