@@ -17,4 +17,4 @@ before_script:
     - cd PostgreSQL/SQLScripts
 
 script:
-    - psql -U postgres -d citydb_testdb -a -f UTIL/TEST/TEST_SETUP.sql
+    - psql -U postgres -d citydb_testdb -a -f CREATE_DB.sql -v srsno=3068 -v gmlsrsname=urn:ogc:def:crs,crs:EPSG::3068,crs:EPSG::5783
