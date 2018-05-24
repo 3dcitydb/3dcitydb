@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-17 13:58:50)
+-- Automatically generated database script (Creation Date: 2018-05-24 11:09:42)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -75,10 +75,8 @@
 -- del_tunnel_thematic_surface
 -- del_waterbody
 -- del_waterboundary_surface
-------------------------------------------
 
 ------------------------------------------
-
 CREATE OR REPLACE FUNCTION citydb.cleanup_global_appearances() RETURNS SETOF int AS
 $body$
 -- Function for cleaning up global appearance
@@ -2901,6 +2899,26 @@ DECLARE
   objectclass_id integer;
   surface_geometry_ids int[] := '{}';
 BEGIN
+  -- delete referenced parts
+  PERFORM
+    citydb.del_cityobject_genericattrib(array_agg(t.id))
+  FROM
+    citydb.cityobject_genericattrib t,
+    unnest($1) a(a_id)
+  WHERE
+    t.parent_genattrib_id = a.a_id
+    AND t.id <> a.a_id;
+
+  -- delete referenced parts
+  PERFORM
+    citydb.del_cityobject_genericattrib(array_agg(t.id))
+  FROM
+    citydb.cityobject_genericattrib t,
+    unnest($1) a(a_id)
+  WHERE
+    t.root_genattrib_id = a.a_id
+    AND t.id <> a.a_id;
+
   -- delete citydb.cityobject_genericattribs
   WITH delete_objects AS (
     DELETE FROM

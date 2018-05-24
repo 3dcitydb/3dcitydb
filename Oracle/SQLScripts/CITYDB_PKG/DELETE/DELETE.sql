@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated 3DcityDB-delete-functions (Creation Date: 2018-05-17 14:10:11)
+-- Automatically generated database script (Creation Date: 2018-05-24 11:16:57)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -73,8 +73,8 @@
 -- del_tunnel_thematic_surface
 -- del_waterbody
 -- del_waterboundary_surface
-------------------------------------------
 
+------------------------------------------
 CREATE OR REPLACE PACKAGE citydb_delete
 AS
   FUNCTION cleanup_global_appearances RETURN ID_ARRAY;
@@ -126,8 +126,8 @@ AS
   FUNCTION del_waterboundary_surface(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
 END citydb_delete;
 /
----DELIMITER---
 
+------------------------------------------
 CREATE OR REPLACE PACKAGE BODY citydb_delete
 AS 
   FUNCTION cleanup_global_appearances RETURN ID_ARRAY
@@ -3317,6 +3317,38 @@ AS
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
   BEGIN
+    -- delete referenced parts
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      cityobject_genericattrib t,
+      TABLE(pids) a
+    WHERE
+      t.parent_genattrib_id = a.COLUMN_VALUE
+      AND t.id <> a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_cityobject_genericattrib(object_ids);
+    END IF;
+
+    -- delete referenced parts
+    SELECT
+      t.id
+    BULK COLLECT INTO
+      object_ids
+    FROM
+      cityobject_genericattrib t,
+      TABLE(pids) a
+    WHERE
+      t.root_genattrib_id = a.COLUMN_VALUE
+      AND t.id <> a.COLUMN_VALUE;
+
+    IF object_ids IS NOT EMPTY THEN
+      dummy_ids := del_cityobject_genericattrib(object_ids);
+    END IF;
+
     -- delete cityobject_genericattribs
     DELETE FROM
       cityobject_genericattrib t
