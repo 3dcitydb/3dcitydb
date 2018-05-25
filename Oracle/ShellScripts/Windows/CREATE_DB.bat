@@ -86,6 +86,7 @@ if defined num (
 
 :: Prompt for GMLSRSNAME ------------------------------------------------------
 :srsname
+set var=
 if %HEIGHT_EPSG% GTR 0 (
   set GMLSRSNAME=urn:ogc:def:crs,crs:EPSG::%SRSNO%,crs:EPSG::%HEIGHT_EPSG%
 ) else (
