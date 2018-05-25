@@ -199,7 +199,6 @@ AS
         owner = upper(USER)
         AND constraint_type = 'R'
         AND r_constraint_name = 'SURFACE_GEOMETRY_PK'
-        AND table_name <> 'SURFACE_GEOMETRY'
         AND delete_rule <> 'CASCADE'
     ) LOOP
       set_enabled_fkey(rec.fkey, rec.t, enable, schema_name);

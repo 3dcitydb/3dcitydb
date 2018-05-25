@@ -182,7 +182,6 @@ JOIN
 WHERE
   c.contype = 'f'
   AND c.confrelid = 'surface_geometry'::regclass::oid
-  AND c.conrelid <> 'surface_geometry'::regclass::oid
   AND c.confdeltype <> 'c'
   AND n.nspname = $2;
 $$
