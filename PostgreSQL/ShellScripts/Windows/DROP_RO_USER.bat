@@ -73,7 +73,7 @@ echo Please enter name of schema "%USERNAME%" has access to.
 set /p var="(default SCHEMA_NAME=%SCHEMA_NAME%): "
 if /i not "%var%"=="" set SCHEMA_NAME=%var%
 
-:: Run CREATE_RO_USER.sql to remove a read-only user for a specific schema
+:: Run DROP_RO_USER.sql to remove a read-only user for a specific schema ------
 echo.
 echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
 "%PGBIN%\psql" -d "%CITYDB%" -f "DROP_RO_USER.sql" -v username="%USERNAME%" -v schema_name="%SCHEMA_NAME%"
