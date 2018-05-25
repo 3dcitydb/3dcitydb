@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-05-25 11:52:28)
+-- Automatically generated database script (Creation Date: 2018-05-25 13:25:05)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -344,7 +344,7 @@ AS
     dummy_ids := del_addresss(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -395,7 +395,7 @@ AS
     dummy_ids := del_appearances(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -481,7 +481,7 @@ AS
     dummy_ids := del_breakline_reliefs(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -539,7 +539,7 @@ AS
     dummy_ids := del_bridges(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -558,7 +558,7 @@ AS
     dummy_ids := del_bridge_constr_elements(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -813,7 +813,7 @@ AS
     dummy_ids := del_bridge_furnitures(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -1044,7 +1044,7 @@ AS
     dummy_ids := del_bridge_installations(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -1306,7 +1306,7 @@ AS
     dummy_ids := del_bridge_openings(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -1582,7 +1582,7 @@ AS
     dummy_ids := del_bridge_rooms(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -1701,7 +1701,7 @@ AS
     dummy_ids := del_bridge_thematic_surfaces(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -2019,7 +2019,7 @@ AS
     dummy_ids := del_buildings(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -2038,7 +2038,7 @@ AS
     dummy_ids := del_building_furnitures(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -2269,7 +2269,7 @@ AS
     dummy_ids := del_building_installations(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -2742,7 +2742,7 @@ AS
     dummy_ids := del_city_furnitures(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -2997,7 +2997,7 @@ AS
     dummy_ids := del_citymodels(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -3106,7 +3106,7 @@ AS
     dummy_ids := del_cityobjects(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -3125,7 +3125,7 @@ AS
     dummy_ids := del_cityobject_genericattribs(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -3220,7 +3220,7 @@ AS
     dummy_ids := del_cityobjectgroups(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -3961,7 +3961,7 @@ AS
     dummy_ids := del_external_references(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -4012,7 +4012,7 @@ AS
     dummy_ids := del_generic_cityobjects(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -4275,7 +4275,7 @@ AS
     dummy_ids := del_grid_coverages(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -4326,7 +4326,7 @@ AS
     dummy_ids := del_implicit_geometrys(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -4389,7 +4389,7 @@ AS
     dummy_ids := del_land_uses(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -4475,7 +4475,7 @@ AS
     dummy_ids := del_masspoint_reliefs(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -4533,7 +4533,7 @@ AS
     dummy_ids := del_openings(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -4809,7 +4809,7 @@ AS
     dummy_ids := del_plant_covers(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -4907,7 +4907,7 @@ AS
     dummy_ids := del_raster_reliefs(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -4977,7 +4977,7 @@ AS
     dummy_ids := del_relief_components(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -5063,7 +5063,7 @@ AS
     dummy_ids := del_relief_features(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -5156,7 +5156,7 @@ AS
     dummy_ids := del_rooms(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -5275,7 +5275,7 @@ AS
     dummy_ids := del_solitary_vegetat_objects(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -5530,7 +5530,7 @@ AS
     dummy_ids := del_surface_datas(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -5606,7 +5606,7 @@ AS
     dummy_ids := del_surface_geometrys(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -5689,7 +5689,7 @@ AS
     dummy_ids := del_tex_images(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -5740,7 +5740,7 @@ AS
     dummy_ids := del_thematic_surfaces(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -5840,7 +5840,7 @@ AS
     dummy_ids := del_tin_reliefs(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -5910,7 +5910,7 @@ AS
     dummy_ids := del_traffic_areas(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -5988,7 +5988,7 @@ AS
     dummy_ids := del_transportation_complexs(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -6085,7 +6085,7 @@ AS
     dummy_ids := del_tunnels(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -6104,7 +6104,7 @@ AS
     dummy_ids := del_tunnel_furnitures(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -6335,7 +6335,7 @@ AS
     dummy_ids := del_tunnel_hollow_spaces(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -6454,7 +6454,7 @@ AS
     dummy_ids := del_tunnel_installations(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -6716,7 +6716,7 @@ AS
     dummy_ids := del_tunnel_openings(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -6955,7 +6955,7 @@ AS
     dummy_ids := del_tunnel_thematic_surfaces(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -7211,7 +7211,7 @@ AS
     dummy_ids := del_waterbodys(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -7323,7 +7323,7 @@ AS
     dummy_ids := del_waterboundary_surfaces(ID_ARRAY(pid));
 
     IF dummy_ids IS NOT EMPTY THEN
-      deleted_id := dummy_ids(0);
+      deleted_id := dummy_ids(1);
     END IF;
 
     RETURN deleted_id;
@@ -7395,3 +7395,4 @@ AS
 
 END citydb_delete;
 /
+
