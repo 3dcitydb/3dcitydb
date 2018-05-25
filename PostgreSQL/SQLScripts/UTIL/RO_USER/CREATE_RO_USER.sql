@@ -25,27 +25,26 @@
 -- limitations under the License.
 --
 
--- the script can be called by using the psql-console e.g. with this command:
--- path_to_your_psql -h host -p 5432 -U Username -d database -f "path_to_this_file"
+\pset footer off
+SET client_min_messages TO WARNING;
+\set ON_ERROR_STOP ON
 
-\prompt 'Please enter a username for the read-only user: ' RO_USERNAME
-\prompt 'Please enter a password for the read-only user: ' RO_PASSWORD
-\prompt 'Please enter name of schema the user shall have access to: ' target
-
-\set tschema :"target"
-
-\echo
-\echo 'Creating read-only ':RO_USERNAME' user for schema ':target
-
-CREATE ROLE :"RO_USERNAME" WITH NOINHERIT LOGIN PASSWORD :'RO_PASSWORD';
-
-GRANT CONNECT, TEMP ON DATABASE :"DBNAME" TO :"RO_USERNAME";
-GRANT USAGE ON SCHEMA :"target" TO :"RO_USERNAME";
-GRANT SELECT ON ALL TABLES IN SCHEMA :"target" TO :"RO_USERNAME";
-GRANT USAGE ON SCHEMA citydb_pkg TO :"RO_USERNAME";
-GRANT SELECT ON ALL TABLES IN SCHEMA citydb_pkg TO :"RO_USERNAME";
-GRANT USAGE ON SCHEMA public TO :"RO_USERNAME";
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO :"RO_USERNAME";
+\set USERNAME :username
+\set PASSWORD :password
+\set SCHEMA_NAME :schema_name
 
 \echo
-\echo 'Read-only user ':RO_USERNAME' for schema ':target' successfully created.' 
+\echo 'Creating read-only ':USERNAME' user for schema ':SCHEMA_NAME
+
+CREATE ROLE :"USERNAME" WITH NOINHERIT LOGIN PASSWORD :'PASSWORD';
+
+GRANT CONNECT, TEMP ON DATABASE :"DBNAME" TO :"USERNAME";
+GRANT USAGE ON SCHEMA :"SCHEMA_NAME" TO :"USERNAME";
+GRANT SELECT ON ALL TABLES IN SCHEMA :"SCHEMA_NAME" TO :"USERNAME";
+GRANT USAGE ON SCHEMA citydb_pkg TO :"USERNAME";
+GRANT SELECT ON ALL TABLES IN SCHEMA citydb_pkg TO :"USERNAME";
+GRANT USAGE ON SCHEMA public TO :"USERNAME";
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO :"USERNAME";
+
+\echo
+\echo 'Read-only user "':USERNAME'" for schema "':SCHEMA_NAME'" successfully created.'

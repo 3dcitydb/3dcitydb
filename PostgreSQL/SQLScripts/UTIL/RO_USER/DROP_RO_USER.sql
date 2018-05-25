@@ -25,26 +25,25 @@
 -- limitations under the License.
 --
 
--- the script can be called by using the psql-console e.g. with this command:
--- path_to_your_psql -h host -p 5432 -U Username -d database -f "path_to_this_file"
+\pset footer off
+SET client_min_messages TO WARNING;
+\set ON_ERROR_STOP ON
 
-\prompt 'Please enter the name of read-only user: ' RO_USERNAME
-\prompt 'Please enter name of schema the user has access to: ' target
-
-\set tschema :"target"
+\set USERNAME :username
+\set SCHEMA_NAME :schema_name
 
 \echo
 \echo 'Revoking user priviliges ...'
 
-REVOKE SELECT ON ALL TABLES IN SCHEMA :"target" FROM :"RO_USERNAME";
-REVOKE USAGE ON SCHEMA :"target" FROM :"RO_USERNAME";
-REVOKE SELECT ON ALL TABLES IN SCHEMA citydb_pkg FROM :"RO_USERNAME";
-REVOKE USAGE ON SCHEMA citydb_pkg FROM :"RO_USERNAME";
-REVOKE SELECT ON ALL TABLES IN SCHEMA public FROM :"RO_USERNAME";
-REVOKE USAGE ON SCHEMA public FROM :"RO_USERNAME";
-REVOKE CONNECT, TEMP ON DATABASE :"DBNAME" FROM :"RO_USERNAME";
+REVOKE SELECT ON ALL TABLES IN SCHEMA :"SCHEMA_NAME" FROM :"USERNAME";
+REVOKE USAGE ON SCHEMA :"SCHEMA_NAME" FROM :"USERNAME";
+REVOKE SELECT ON ALL TABLES IN SCHEMA citydb_pkg FROM :"USERNAME";
+REVOKE USAGE ON SCHEMA citydb_pkg FROM :"USERNAME";
+REVOKE SELECT ON ALL TABLES IN SCHEMA public FROM :"USERNAME";
+REVOKE USAGE ON SCHEMA public FROM :"USERNAME";
+REVOKE CONNECT, TEMP ON DATABASE :"DBNAME" FROM :"USERNAME";
 
-DROP ROLE :"RO_USERNAME";
+DROP ROLE :"USERNAME";
 
 \echo
-\echo 'Read-only user ':RO_USERNAME' for schema ':target' successfully removed.' 
+\echo 'Read-only user "':USERNAME'" for schema "':SCHEMA_NAME'" successfully removed.' 
