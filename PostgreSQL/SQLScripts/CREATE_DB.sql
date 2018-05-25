@@ -25,7 +25,6 @@
 -- limitations under the License.
 --
 
--- This script is called from CREATE_DB.bat/CREATE_DB.sh
 \pset footer off
 SET client_min_messages TO WARNING;
 \set ON_ERROR_STOP ON

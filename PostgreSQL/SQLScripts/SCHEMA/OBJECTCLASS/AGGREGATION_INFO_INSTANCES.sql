@@ -81,7 +81,7 @@ VALUES (106,21,0,1,1);
 
 --cityobject_genericattrib & cityobject_genericattrib
 INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, MIN_OCCURS, MAX_OCCURS, IS_COMPOSITE)
-VALUES (112,113,0,NULL,0);
+VALUES (112,113,0,NULL,1);
 
 --cityobject_genericattrib & cityobject
 INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, MIN_OCCURS, MAX_OCCURS, IS_COMPOSITE)
