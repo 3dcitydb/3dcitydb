@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-05-25 13:35:27)
+-- Automatically generated database script (Creation Date: 2018-05-26 10:01:14)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -2544,7 +2544,7 @@ AS
       building t,
       TABLE(pids) a
     WHERE
-      t.building_parent_id = a.COLUMN_VALUE
+      t.building_root_id = a.COLUMN_VALUE
       AND t.id <> a.COLUMN_VALUE;
 
     IF object_ids IS NOT EMPTY THEN
@@ -2560,7 +2560,7 @@ AS
       building t,
       TABLE(pids) a
     WHERE
-      t.building_root_id = a.COLUMN_VALUE
+      t.building_parent_id = a.COLUMN_VALUE
       AND t.id <> a.COLUMN_VALUE;
 
     IF object_ids IS NOT EMPTY THEN
@@ -3049,17 +3049,13 @@ AS
       FROM
         TABLE(cityobject_ids0) a
       LEFT JOIN
-        cityobjectgroup n1
-        ON n1.parent_cityobject_id  = a.COLUMN_VALUE
+        cityobject_member n1
+        ON n1.cityobject_id  = a.COLUMN_VALUE
       LEFT JOIN
-        cityobject_member n2
+        group_to_cityobject n2
         ON n2.cityobject_id  = a.COLUMN_VALUE
-      LEFT JOIN
-        group_to_cityobject n3
-        ON n3.cityobject_id  = a.COLUMN_VALUE
-      WHERE n1.parent_cityobject_id IS NULL
-        AND n2.cityobject_id IS NULL
-        AND n3.cityobject_id IS NULL;
+      WHERE n1.cityobject_id IS NULL
+        AND n2.cityobject_id IS NULL;
 
       IF object_ids IS NOT EMPTY THEN
         dummy_ids := del_cityobjects(object_ids);
@@ -3231,10 +3227,8 @@ AS
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
     cityobject_ids0 ID_ARRAY := ID_ARRAY();
-    cityobject_ids1 ID_ARRAY := ID_ARRAY();
-    cityobject_ids2 ID_ARRAY := ID_ARRAY();
-    surface_geometry_ids3 ID_ARRAY := ID_ARRAY();
-    surface_geometry_ids4 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
+    surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
   BEGIN
     -- delete references to cityobjects
     DELETE FROM
@@ -3261,17 +3255,13 @@ AS
       FROM
         TABLE(cityobject_ids0) a
       LEFT JOIN
-        cityobjectgroup n1
-        ON n1.parent_cityobject_id  = a.COLUMN_VALUE
+        cityobject_member n1
+        ON n1.cityobject_id  = a.COLUMN_VALUE
       LEFT JOIN
-        cityobject_member n2
+        group_to_cityobject n2
         ON n2.cityobject_id  = a.COLUMN_VALUE
-      LEFT JOIN
-        group_to_cityobject n3
-        ON n3.cityobject_id  = a.COLUMN_VALUE
-      WHERE n1.parent_cityobject_id IS NULL
-        AND n2.cityobject_id IS NULL
-        AND n3.cityobject_id IS NULL;
+      WHERE n1.cityobject_id IS NULL
+        AND n2.cityobject_id IS NULL;
 
       IF object_ids IS NOT EMPTY THEN
         dummy_ids := del_cityobjects(object_ids);
@@ -3291,48 +3281,17 @@ AS
       )
     RETURNING
       id,
-      parent_cityobject_id,
       brep_id
     BULK COLLECT INTO
       deleted_ids,
-      cityobject_ids2,
-      surface_geometry_ids4;
-
-    -- collect all cityobjectids into one nested table
-    cityobject_ids1 := cityobject_ids1 MULTISET UNION ALL cityobject_ids2;
+      surface_geometry_ids2;
 
     -- collect all surface_geometryids into one nested table
-    surface_geometry_ids3 := surface_geometry_ids3 MULTISET UNION ALL surface_geometry_ids4;
-
-    -- delete cityobject(s)
-    IF cityobject_ids1 IS NOT EMPTY THEN
-      SELECT DISTINCT
-        a.COLUMN_VALUE
-      BULK COLLECT INTO
-        object_ids
-      FROM
-        TABLE(cityobject_ids1) a
-      LEFT JOIN
-        cityobjectgroup n1
-        ON n1.parent_cityobject_id  = a.COLUMN_VALUE
-      LEFT JOIN
-        cityobject_member n2
-        ON n2.cityobject_id  = a.COLUMN_VALUE
-      LEFT JOIN
-        group_to_cityobject n3
-        ON n3.cityobject_id  = a.COLUMN_VALUE
-      WHERE n1.parent_cityobject_id IS NULL
-        AND n2.cityobject_id IS NULL
-        AND n3.cityobject_id IS NULL;
-
-      IF object_ids IS NOT EMPTY THEN
-        dummy_ids := del_cityobjects(object_ids);
-      END IF;
-    END IF;
+    surface_geometry_ids1 := surface_geometry_ids1 MULTISET UNION ALL surface_geometry_ids2;
 
     -- delete surface_geometry(s)
-    IF surface_geometry_ids3 IS NOT EMPTY THEN
-      dummy_ids := del_surface_geometrys(surface_geometry_ids3);
+    IF surface_geometry_ids1 IS NOT EMPTY THEN
+      dummy_ids := del_surface_geometrys(surface_geometry_ids1);
     END IF;
 
     IF caller <> 1 THEN

@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-05-25 10:29:46)
+-- Automatically generated database script (Creation Date: 2018-05-26 09:25:29)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -2513,14 +2513,10 @@ BEGIN
       citydb.cityobject_member n1
       ON n1.cityobject_id  = a.a_id
     LEFT JOIN
-      citydb.cityobjectgroup n2
-      ON n2.parent_cityobject_id  = a.a_id
-    LEFT JOIN
-      citydb.group_to_cityobject n3
-      ON n3.cityobject_id  = a.a_id
+      citydb.group_to_cityobject n2
+      ON n2.cityobject_id  = a.a_id
     WHERE n1.cityobject_id IS NULL
-      AND n2.parent_cityobject_id IS NULL
-      AND n3.cityobject_id IS NULL;
+      AND n2.cityobject_id IS NULL;
   END IF;
 
   -- delete citydb.citymodels
@@ -2685,14 +2681,10 @@ BEGIN
       citydb.cityobject_member n1
       ON n1.cityobject_id  = a.a_id
     LEFT JOIN
-      citydb.cityobjectgroup n2
-      ON n2.parent_cityobject_id  = a.a_id
-    LEFT JOIN
-      citydb.group_to_cityobject n3
-      ON n3.cityobject_id  = a.a_id
+      citydb.group_to_cityobject n2
+      ON n2.cityobject_id  = a.a_id
     WHERE n1.cityobject_id IS NULL
-      AND n2.parent_cityobject_id IS NULL
-      AND n3.cityobject_id IS NULL;
+      AND n2.cityobject_id IS NULL;
   END IF;
 
   -- delete citydb.cityobjectgroups
