@@ -4968,11 +4968,11 @@ CREATE INDEX surface_data_objclass_fkx ON surface_data
 CREATE TABLE aggregation_info(
 	child_id integer NOT NULL,
 	parent_id integer NOT NULL,
+	join_table_or_column_name character varying(30) NOT NULL,
 	min_occurs integer,
 	max_occurs integer,
 	is_composite numeric,
-	CONSTRAINT aggregation_info_pk PRIMARY KEY (child_id,parent_id)
-	 WITH (FILLFACTOR = 100)
+	CONSTRAINT aggregation_info_pk PRIMARY KEY (child_id,parent_id,join_table_or_column_name)
 
 );
 -- ddl-end --
@@ -7041,4 +7041,3 @@ ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_fk2 FOREIGN KEY (pa
 REFERENCES objectclass (id) MATCH FULL
 ON DELETE CASCADE ON UPDATE NO ACTION;
 -- ddl-end --
-

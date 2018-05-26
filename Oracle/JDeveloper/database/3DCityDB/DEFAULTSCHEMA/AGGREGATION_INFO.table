@@ -21,6 +21,21 @@
       <notNull>true</notNull>
     </column>
     <column>
+      <name>JOIN_TABLE_OR_COLUMN_NAME</name>
+      <dataTypeUsage>
+        <attributeValues>
+          <entry>
+            <key>size</key>
+            <value class="java.lang.Long">30</value>
+          </entry>
+        </attributeValues>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <typeName>VARCHAR2</typeName>
+        </dataTypeID>
+      </dataTypeUsage>
+      <notNull>true</notNull>
+    </column>
+    <column>
       <name>MIN_OCCURS</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -59,6 +74,52 @@
     </column>
   </columns>
   <constraints>
+    <constraint class="oracle.javatools.db.PKConstraint">
+      <name>AGGREGATION_INFO_PK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>CHILD_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>AGGREGATION_INFO</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>PARENT_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>AGGREGATION_INFO</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>JOIN_TABLE_OR_COLUMN_NAME</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>AGGREGATION_INFO</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <indexID class="oracle.javatools.db.NameBasedID">
+        <name>AGGREGATION_INFO_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>AGGREGATION_INFO</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
+        <type>INDEX</type>
+      </indexID>
+    </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <name>AGGREGATION_INFO_FK1</name>
       <columnIDs>
@@ -113,42 +174,6 @@
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
-    <constraint class="oracle.javatools.db.PKConstraint">
-      <name>AGGREGATION_INFO_PK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>CHILD_ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>AGGREGATION_INFO</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>PARENT_ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>AGGREGATION_INFO</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.NameBasedID">
-        <name>AGGREGATION_INFO_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>AGGREGATION_INFO</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>DEFAULTSCHEMA</schemaName>
-        <type>INDEX</type>
-      </indexID>
-    </constraint>
   </constraints>
   <indexes>
     <index>
@@ -160,6 +185,10 @@
         </columnExpression>
         <columnExpression>
           <expressionSource>PARENT_ID</expressionSource>
+          <orderType>ASC</orderType>
+        </columnExpression>
+        <columnExpression>
+          <expressionSource>JOIN_TABLE_OR_COLUMN_NAME</expressionSource>
           <orderType>ASC</orderType>
         </columnExpression>
       </columnExpressions>

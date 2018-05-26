@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="14394,10134" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="13703,9959" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -136,7 +136,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="cityobject_member">
 	<schema name="citydb"/>
 	<tag name="core_module"/>
-	<position x="19760" y="11620"/>
+	<position x="19760" y="11623"/>
 	<column name="citymodel_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -158,7 +158,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="generalization">
 	<schema name="citydb"/>
 	<tag name="core_module"/>
-	<position x="19660" y="12100"/>
+	<position x="19660" y="12103"/>
 	<column name="cityobject_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -180,7 +180,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="cityobjectgroup">
 	<schema name="citydb"/>
 	<tag name="city_object_group_module"/>
-	<position x="20440" y="11480"/>
+	<position x="20440" y="11483"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -222,7 +222,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="group_to_cityobject">
 	<schema name="citydb"/>
 	<tag name="city_object_group_module"/>
-	<position x="20440" y="11900"/>
+	<position x="20440" y="11903"/>
 	<column name="cityobject_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -240,7 +240,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="database_srs">
 	<schema name="citydb"/>
 	<tag name="global"/>
-	<position x="17520" y="11160"/>
+	<position x="17520" y="11163"/>
 	<column name="srid" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -255,7 +255,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="objectclass">
 	<schema name="citydb"/>
 	<tag name="global"/>
-	<position x="18820" y="13080"/>
+	<position x="18820" y="13083"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -295,7 +295,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="city_furniture">
 	<schema name="citydb"/>
 	<tag name="city_furniture_module"/>
-	<position x="17560" y="13880"/>
+	<position x="17560" y="13883"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -407,7 +407,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="generic_cityobject">
 	<schema name="citydb"/>
 	<tag name="generics_module"/>
-	<position x="18240" y="10880"/>
+	<position x="18240" y="10883"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -537,7 +537,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="address_to_building">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="20480" y="16340"/>
+	<position x="20480" y="16343"/>
 	<column name="building_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -552,7 +552,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="building">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="20380" y="14080"/>
+	<position x="20380" y="14083"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -678,7 +678,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="building_furniture">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="19560" y="15420"/>
+	<position x="19560" y="15423"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -729,7 +729,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="building_installation">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="19580" y="14160"/>
+	<position x="19580" y="14163"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -813,7 +813,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="opening">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="20420" y="15860"/>
+	<position x="20420" y="15863"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -855,7 +855,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="opening_to_them_surface">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="20520" y="15660"/>
+	<position x="20520" y="15663"/>
 	<column name="opening_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -870,7 +870,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="room">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="19560" y="15000"/>
+	<position x="19560" y="15003"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -912,7 +912,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="thematic_surface">
 	<schema name="citydb"/>
 	<tag name="buidling_module"/>
-	<position x="20540" y="15280"/>
+	<position x="20540" y="15283"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -959,7 +959,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="textureparam">
 	<schema name="citydb"/>
 	<tag name="appearance_module"/>
-	<position x="21260" y="12080"/>
+	<position x="21260" y="12083"/>
 	<column name="surface_geometry_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -986,7 +986,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="appear_to_surface_data">
 	<schema name="citydb"/>
 	<tag name="appearance_module"/>
-	<position x="21380" y="11360"/>
+	<position x="21380" y="11363"/>
 	<column name="surface_data_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1001,7 +1001,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="breakline_relief">
 	<schema name="citydb"/>
 	<tag name="relief_module"/>
-	<position x="22540" y="12780"/>
+	<position x="22540" y="12783"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1022,7 +1022,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="masspoint_relief">
 	<schema name="citydb"/>
 	<tag name="relief_module"/>
-	<position x="22580" y="12640"/>
+	<position x="22580" y="12643"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1040,7 +1040,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="relief_component">
 	<schema name="citydb"/>
 	<tag name="relief_module"/>
-	<position x="21860" y="12660"/>
+	<position x="21860" y="12663"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1064,7 +1064,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="relief_feat_to_rel_comp">
 	<schema name="citydb"/>
 	<tag name="relief_module"/>
-	<position x="21900" y="12480"/>
+	<position x="21900" y="12483"/>
 	<column name="relief_component_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1079,7 +1079,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="relief_feature">
 	<schema name="citydb"/>
 	<tag name="relief_module"/>
-	<position x="21980" y="12360"/>
+	<position x="21980" y="12363"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1100,7 +1100,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tin_relief">
 	<schema name="citydb"/>
 	<tag name="relief_module"/>
-	<position x="22460" y="12200"/>
+	<position x="22460" y="12203"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1133,7 +1133,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="transportation_complex">
 	<schema name="citydb"/>
 	<tag name="transportation_module"/>
-	<position x="21960" y="13320"/>
+	<position x="21960" y="13323"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1181,7 +1181,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="traffic_area">
 	<schema name="citydb"/>
 	<tag name="transportation_module"/>
-	<position x="21900" y="12880"/>
+	<position x="21900" y="12883"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1232,7 +1232,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="land_use">
 	<schema name="citydb"/>
 	<tag name="land_use_module"/>
-	<position x="17040" y="12420"/>
+	<position x="17040" y="12423"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1280,7 +1280,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="plant_cover">
 	<schema name="citydb"/>
 	<tag name="vegetation_module"/>
-	<position x="17040" y="12800"/>
+	<position x="17040" y="12803"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1343,7 +1343,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="solitary_vegetat_object">
 	<schema name="citydb"/>
 	<tag name="vegetation_module"/>
-	<position x="17000" y="13340"/>
+	<position x="17000" y="13343"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1460,7 +1460,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="waterbody">
 	<schema name="citydb"/>
 	<tag name="waterbody_module"/>
-	<position x="17360" y="11920"/>
+	<position x="17360" y="11923"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1517,7 +1517,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="waterbod_to_waterbnd_srf">
 	<schema name="citydb"/>
 	<tag name="waterbody_module"/>
-	<position x="16920" y="11600"/>
+	<position x="16920" y="11603"/>
 	<column name="waterboundary_surface_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1532,7 +1532,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="waterboundary_surface">
 	<schema name="citydb"/>
 	<tag name="waterbody_module"/>
-	<position x="17620" y="11600"/>
+	<position x="17620" y="11603"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1562,7 +1562,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="raster_relief">
 	<schema name="citydb"/>
 	<tag name="relief_module"/>
-	<position x="22560" y="12480"/>
+	<position x="22560" y="12483"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1583,7 +1583,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tunnel">
 	<schema name="citydb"/>
 	<tag name="tunnel_module"/>
-	<position x="18700" y="15680"/>
+	<position x="18700" y="15683"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1673,7 +1673,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tunnel_open_to_them_srf">
 	<schema name="citydb"/>
 	<tag name="tunnel_module"/>
-	<position x="17780" y="16300"/>
+	<position x="17780" y="16303"/>
 	<column name="tunnel_opening_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1688,7 +1688,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tunnel_hollow_space">
 	<schema name="citydb"/>
 	<tag name="tunnel_module"/>
-	<position x="16960" y="15720"/>
+	<position x="16960" y="15723"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1730,7 +1730,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tunnel_thematic_surface">
 	<schema name="citydb"/>
 	<tag name="tunnel_module"/>
-	<position x="17740" y="15320"/>
+	<position x="17740" y="15323"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1770,7 +1770,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tunnel_opening">
 	<schema name="citydb"/>
 	<tag name="tunnel_module"/>
-	<position x="17720" y="16540"/>
+	<position x="17720" y="16543"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1809,7 +1809,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tunnel_installation">
 	<schema name="citydb"/>
 	<tag name="tunnel_module"/>
-	<position x="16920" y="14920"/>
+	<position x="16920" y="14923"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1893,7 +1893,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tunnel_furniture">
 	<schema name="citydb"/>
 	<tag name="tunnel_module"/>
-	<position x="16940" y="16060"/>
+	<position x="16940" y="16063"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -1944,7 +1944,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="21500" y="15760"/>
+	<position x="21500" y="15763"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2037,7 +2037,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge_furniture">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="22860" y="15480"/>
+	<position x="22860" y="15483"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2088,7 +2088,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge_installation">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="22160" y="14160"/>
+	<position x="22160" y="14163"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2172,7 +2172,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge_opening">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="22160" y="16600"/>
+	<position x="22160" y="16603"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2214,7 +2214,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge_open_to_them_srf">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="22180" y="15860"/>
+	<position x="22180" y="15863"/>
 	<column name="bridge_opening_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2229,7 +2229,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge_room">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="22900" y="14940"/>
+	<position x="22900" y="14943"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2271,7 +2271,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge_thematic_surface">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="22200" y="15140"/>
+	<position x="22200" y="15143"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2307,7 +2307,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bridge_constr_element">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="22900" y="13720"/>
+	<position x="22900" y="13723"/>
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2415,7 +2415,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="address_to_bridge">
 	<schema name="citydb"/>
 	<tag name="bridge_module"/>
-	<position x="20940" y="16400"/>
+	<position x="20940" y="16403"/>
 	<column name="bridge_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -2437,7 +2437,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="cityobject">
 	<schema name="citydb"/>
 	<tag name="core_module"/>
-	<position x="19600" y="13540"/>
+	<position x="19600" y="13543"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.cityobject_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2497,7 +2497,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="appearance">
 	<schema name="citydb"/>
 	<tag name="appearance_module"/>
-	<position x="21320" y="11020"/>
+	<position x="21320" y="11023"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.appearance_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2533,7 +2533,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="implicit_geometry">
 	<schema name="citydb"/>
 	<tag name="core_module"/>
-	<position x="19640" y="12320"/>
+	<position x="19640" y="12323"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.implicit_geometry_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2560,7 +2560,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="surface_geometry">
 	<schema name="citydb"/>
 	<tag name="global"/>
-	<position x="20460" y="12560"/>
+	<position x="20460" y="12563"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.surface_geometry_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2611,7 +2611,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="address">
 	<schema name="citydb"/>
 	<tag name="core_module"/>
-	<position x="20400" y="16640"/>
+	<position x="20400" y="16643"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.address_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2656,7 +2656,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="surface_data">
 	<schema name="citydb"/>
 	<tag name="appearance_module"/>
-	<position x="21280" y="11520"/>
+	<position x="21280" y="11523"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.surface_data_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2731,7 +2731,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="citymodel">
 	<schema name="citydb"/>
 	<tag name="core_module"/>
-	<position x="19660" y="11120"/>
+	<position x="19660" y="11123"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.citymodel_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2779,7 +2779,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="cityobject_genericattrib">
 	<schema name="citydb"/>
 	<tag name="generics_module"/>
-	<position x="18940" y="11380"/>
+	<position x="18940" y="11383"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.cityobject_genericatt_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2836,7 +2836,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="external_reference">
 	<schema name="citydb"/>
 	<tag name="core_module"/>
-	<position x="19620" y="11840"/>
+	<position x="19620" y="11843"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.external_ref_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2860,7 +2860,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="tex_image">
 	<schema name="citydb"/>
 	<tag name="appearance_module"/>
-	<position x="22040" y="11740"/>
+	<position x="22040" y="11743"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.tex_image_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -2884,7 +2884,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="grid_coverage">
 	<schema name="citydb"/>
 	<tag name="global"/>
-	<position x="22660" y="12000"/>
+	<position x="22660" y="12003"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.grid_coverage_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -5747,7 +5747,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="schema">
 	<schema name="citydb"/>
 	<tag name="global"/>
-	<position x="19620" y="12740"/>
+	<position x="19620" y="12743"/>
 	<column name="id" not-null="true" sequence="citydb.schema_seq">
 		<type name="integer"/>
 	</column>
@@ -5783,7 +5783,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="schema_to_objectclass">
 	<schema name="citydb"/>
 	<tag name="global"/>
-	<position x="18880" y="12740"/>
+	<position x="18880" y="12743"/>
 	<column name="schema_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -5822,7 +5822,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="schema_referencing">
 	<schema name="citydb"/>
 	<tag name="global"/>
-	<position x="19480" y="13180"/>
+	<position x="19480" y="13183"/>
 	<column name="referencing_id" not-null="true">
 		<type name="integer"/>
 	</column>
@@ -6037,7 +6037,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="ade">
 	<schema name="citydb"/>
 	<tag name="global"/>
-	<position x="19900" y="13160"/>
+	<position x="19900" y="13163"/>
 	<column name="id" not-null="true" sequence="citydb.ade_seq">
 		<type name="integer"/>
 	</column>
@@ -6084,12 +6084,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="aggregation_info">
 	<schema name="citydb"/>
 	<tag name="global"/>
-	<position x="18860" y="13380"/>
+	<position x="18860" y="13383"/>
 	<column name="child_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="parent_id" not-null="true">
 		<type name="integer"/>
+	</column>
+	<column name="join_table_or_column_name" not-null="true">
+		<type name="character varying" length="30"/>
 	</column>
 	<column name="min_occurs">
 		<type name="integer"/>
@@ -6100,8 +6103,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="is_composite">
 		<type name="numeric"/>
 	</column>
-	<constraint name="aggregation_info_pk" type="pk-constr" factor="100" table="citydb.aggregation_info">
-		<columns names="child_id,parent_id" ref-type="src-columns"/>
+	<constraint name="aggregation_info_pk" type="pk-constr" table="citydb.aggregation_info">
+		<columns names="child_id,parent_id,join_table_or_column_name" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -7995,9 +7998,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.objectclass"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="19122" y="13146.9"/>
-	<position x="19122" y="13071"/>
-	<position x="19015.3" y="13071"/>
+		<position x="19122" y="13149.9"/>
+	<position x="19122" y="13074"/>
+	<position x="19015.3" y="13074"/>
 	</line>
 	<label ref-type="name-label">
 		<position x="0" y="0"/>
@@ -8135,9 +8138,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.building"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="20823" y="14421.3"/>
-	<position x="20823" y="14071"/>
-	<position x="20669.3" y="14071"/>
+		<position x="20823" y="14424.3"/>
+	<position x="20823" y="14074"/>
+	<position x="20669.3" y="14074"/>
 	</line>
 	<label ref-type="src-label">
 		<position x="0" y="0"/>
@@ -9090,9 +9093,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.tunnel"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="19112" y="15942.9"/>
-	<position x="19112" y="15671"/>
-	<position x="18968.7" y="15671"/>
+		<position x="19112" y="15945.9"/>
+	<position x="19112" y="15674"/>
+	<position x="18968.7" y="15674"/>
 	</line>
 	<label ref-type="name-label">
 		<position x="102.641" y="19.7661"/>
@@ -9481,9 +9484,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.bridge"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="21912" y="16028.5"/>
-	<position x="21912" y="15751"/>
-	<position x="21768.7" y="15751"/>
+		<position x="21912" y="16031.5"/>
+	<position x="21912" y="15754"/>
+	<position x="21768.7" y="15754"/>
 	</line>
 	<label ref-type="name-label">
 		<position x="-28.8014" y="-0.745261"/>
@@ -10047,9 +10050,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.surface_geometry"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="20858" y="12682.9"/>
-	<position x="20858" y="12551"/>
-	<position x="20719.3" y="12551"/>
+		<position x="20858" y="12685.9"/>
+	<position x="20858" y="12554"/>
+	<position x="20719.3" y="12554"/>
 	</line>
 	<label ref-type="name-label">
 		<position x="-17.1186" y="-1.78"/>
@@ -10086,9 +10089,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.cityobject_genericattrib"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="19324" y="11502.9"/>
-	<position x="19324" y="11371"/>
-	<position x="19190" y="11371"/>
+		<position x="19324" y="11505.9"/>
+	<position x="19324" y="11374"/>
+	<position x="19190" y="11374"/>
 	</line>
 	<label ref-type="name-label">
 		<position x="0" y="0"/>
