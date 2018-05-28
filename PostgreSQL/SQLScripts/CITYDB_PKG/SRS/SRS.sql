@@ -240,7 +240,7 @@ BEGIN
     ELSE
       EXECUTE update_string || ', srid = $1' USING $1;
 
-      -- change srid of each spatially column
+      -- change srid of spatial columns in given schema with current srid
       PERFORM citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $3, type, f_table_schema) 
         FROM geometry_columns 
         WHERE f_table_schema = $4
