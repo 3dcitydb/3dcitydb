@@ -324,6 +324,9 @@ AS
       WHERE
         owner = upper(schema_name)
         AND data_type = 'SDO_GEOMETRY'
+      ORDER BY
+        table_name,
+        column_name
     )
     LOOP
       -- handle edge cases
@@ -331,8 +334,8 @@ AS
         set_column_sdo_metadata(rec.c, 2, 0, rec.t, schema_name);
       ELSIF rec.t = 'IMPLICIT_GEOMETRY' OR rec.c = 'IMPLICIT_GEOMETRY' THEN
         set_column_sdo_metadata(rec.c, 3, 0, rec.t, schema_name);
-      ELSIF rec.t = 'RELIEF_COMPONENT' AND rec.c = 'EXTENT' 
-         OR rec.t = 'SURFACE_DATA' AND rec.c = 'GT_REFERENCE_POINT' THEN
+      ELSIF (rec.t = 'RELIEF_COMPONENT' AND rec.c = 'EXTENT') 
+         OR (rec.t = 'SURFACE_DATA' AND rec.c = 'GT_REFERENCE_POINT') THEN
         set_column_sdo_metadata(rec.c, 2, schema_srid, rec.t, schema_name);
       ELSE
         -- use 3rd dim and schema srid by default
