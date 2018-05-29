@@ -2,13 +2,8 @@
 # Shell script to drop a schema from a 3DCityDB instance
 # on PostgreSQL/PostGIS
 
-# Provide your database details here ------------------------------------------
-export PGBIN=path_to_psql
-export PGHOST=your_host_address
-export PGPORT=5432
-export CITYDB=your_database
-export PGUSER=your_username
-#------------------------------------------------------------------------------
+# read database connection details 
+source CONNECTION_DETAILS.sh
 
 # add psql to PATH
 export PATH="$PGBIN:$PATH"
@@ -42,7 +37,7 @@ echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
 echo '############################################################################'
 
-:: cd to path of the SQL scripts
+# cd to path of the SQL scripts
 cd ../../SQLScripts/UTIL/SCHEMAS
 
 # List the existing 3DCityDB schemas ------------------------------------------

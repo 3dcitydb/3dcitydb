@@ -2,13 +2,8 @@
 :: Shell script to create an instance of the 3D City Database
 :: on Oracle Spatial/Locator
 
-:: Provide your database details here -----------------------------------------
-set SQLPLUSBIN=path_to_sqlplus
-set HOST=your_host_address
-set PORT=1521
-set SID=your_SID_or_database_name
-set USERNAME=your_username
-::-----------------------------------------------------------------------------
+:: read database connection details  
+call CONNECTION_DETAILS.bat
 
 :: add sqlplus to PATH
 set PATH=%SQLPLUSBIN%;%PATH%
@@ -91,6 +86,7 @@ if defined num (
 
 :: Prompt for GMLSRSNAME ------------------------------------------------------
 :srsname
+set var=
 if %HEIGHT_EPSG% GTR 0 (
   set GMLSRSNAME=urn:ogc:def:crs,crs:EPSG::%SRSNO%,crs:EPSG::%HEIGHT_EPSG%
 ) else (
@@ -150,7 +146,6 @@ if "%res%"=="f" (
 :: Run CREATE_DB.sql to create the 3D City Database instance ------------------
 echo.
 echo Connecting to the database "%USERNAME%@%HOST%:%PORT%/%SID%" ...
-cd ..\..\SQLScripts
 sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @CREATE_DB.sql "%SRSNO%" "%GMLSRSNAME%" "%VERSIONING%" "%DBVERSION%"
 
 pause

@@ -1,7 +1,7 @@
 :: Provide your database details here -----------------------------------------
-set SQLPLUSBIN=D:\software\sqlplus\instantclient_12_2
-set HOST=oracletest
+set SQLPLUSBIN=path_to_sqlplus
+set HOST=your_host_address
 set PORT=1521
-set SID=pdborcl
-set USERNAME=aaa
+set SID=your_SID_or_database_name
+set USERNAME=your_username
 ::-----------------------------------------------------------------------------

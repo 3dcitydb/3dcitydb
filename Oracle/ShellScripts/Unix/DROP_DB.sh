@@ -2,13 +2,8 @@
 # Shell script to drop an instance of the 3D City Database
 # on Oracle Spatial/Locator
 
-# Provide your database details here ------------------------------------------
-export SQLPLUSBIN=path_to_sqlplus
-export HOST=your_host_address
-export PORT=1521
-export SID=your_SID_or_database_name
-export USERNAME=your_username
-#-------------------------------------------------------------------------------
+# read database connection details  
+source CONNECTION_DETAILS.sh
 
 # add sqlplus to PATH
 export PATH=$SQLPLUSBIN:$PATH
@@ -42,7 +37,7 @@ echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
 echo '################################################################################'
 
-:: cd to path of the SQL scripts
+# cd to path of the SQL scripts
 cd ../../SQLScripts
 
 # Prompt for DBVERSION --------------------------------------------------------

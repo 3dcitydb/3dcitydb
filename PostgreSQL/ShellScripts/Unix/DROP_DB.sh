@@ -2,13 +2,8 @@
 # Shell script to drop an instance of the 3D City Database
 # on PostgreSQL/PostGIS
 
-# Provide your database details here ------------------------------------------
-export PGBIN=path_to_psql
-export PGHOST=your_host_address
-export PGPORT=5432
-export CITYDB=your_database
-export PGUSER=your_username
-#------------------------------------------------------------------------------
+# read database connection details 
+source CONNECTION_DETAILS.sh
 
 # add psql to PATH
 export PATH=$PGBIN:$PATH
@@ -40,7 +35,7 @@ echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
 echo '################################################################################'
 
-:: cd to path of the SQL scripts
+# cd to path of the SQL scripts
 cd ../../SQLScripts
 
 # Run DROP_DB.sql to drop the 3D City Database instance -----------------------
