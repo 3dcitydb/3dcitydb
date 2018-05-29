@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-05-26 09:25:29)
+-- Automatically generated database script (Creation Date: 2018-05-29 09:29:57)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -160,6 +160,7 @@ BEGIN
     SELECT table_name FROM information_schema.tables where table_schema = 'citydb'
     AND table_name <> 'database_srs'
     AND table_name <> 'objectclass'
+    AND table_name <> 'index_table'
     AND table_name <> 'ade'
     AND table_name <> 'schema'
     AND table_name <> 'schema_to_objectclass'
