@@ -214,17 +214,12 @@ AS
 
     -- get name of spatial index
     BEGIN
-      SELECT
-        index_name
-      INTO
-        idx_name
-      FROM
-        all_ind_columns
-      WHERE
-        table_name = upper(tab_name)
-        AND column_name = upper(col_name)
-        AND index_owner = upper(schema_name);
-
+      EXECUTE IMMEDIATE
+        'SELECT index_name FROM all_ind_columns
+           WHERE table_name = :1 AND column_name = :2 AND index_owner = :3'
+      INTO idx_name
+      USING upper(tab_name), upper(col_name), upper(schema_name);
+      
       -- create INDEX_OBJ
       IF dim = 3 THEN
         idx := INDEX_OBJ.construct_spatial_3d(idx_name, internal_tab_name, col_name);
