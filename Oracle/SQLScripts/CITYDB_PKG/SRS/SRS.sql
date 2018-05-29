@@ -199,7 +199,7 @@ AS
     is_valid := citydb_idx.index_status(tab_name, col_name, schema_name) = 'VALID';
 
     -- update metadata as the index was switched off before transaction
-    IF schema_name = USER THEN
+    IF upper(schema_name) = USER THEN
       UPDATE
         user_sdo_geom_metadata
       SET
