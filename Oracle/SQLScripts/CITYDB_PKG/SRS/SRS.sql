@@ -199,7 +199,7 @@ AS
     is_valid := citydb_idx.index_status(tab_name, col_name, schema_name) = 'VALID';
 
     -- update metadata as the index was switched off before transaction
-    IF schema_name = USER THEN
+    IF upper(schema_name) = USER THEN
       UPDATE
         user_sdo_geom_metadata
       SET
@@ -214,17 +214,12 @@ AS
 
     -- get name of spatial index
     BEGIN
-      SELECT
-        index_name
-      INTO
-        idx_name
-      FROM
-        all_ind_columns
-      WHERE
-        table_name = upper(tab_name)
-        AND column_name = upper(col_name)
-        AND index_owner = upper(schema_name);
-
+      EXECUTE IMMEDIATE
+        'SELECT index_name FROM all_ind_columns
+           WHERE table_name = :1 AND column_name = :2 AND index_owner = :3'
+      INTO idx_name
+      USING upper(tab_name), upper(col_name), upper(schema_name);
+      
       -- create INDEX_OBJ
       IF dim = 3 THEN
         idx := INDEX_OBJ.construct_spatial_3d(idx_name, internal_tab_name, col_name);
@@ -273,29 +268,43 @@ AS
     schema_name VARCHAR2 := USER
   )
   IS
-    unknown_srs_ex EXCEPTION;
+    current_srid NUMBER;
+    update_string VARCHAR2(100) := 'UPDATE '|| schema_name ||'.database_srs SET gml_srs_name = :1';
   BEGIN
+    -- check if user selected valid srid
+    -- will raise an exception if not
     IF citydb_srs.check_srid(schema_srid) <> 'SRID ok' THEN
       dbms_output.put_line('Your chosen SRID was not found in the MDSYS.CS_SRS table! Chosen SRID was ' || schema_srid);
-    ELSE
-      -- update entry in DATABASE_SRS table first
-      EXECUTE IMMEDIATE
-        'UPDATE '|| schema_name ||'.database_srs SET srid = :1, gml_srs_name = :2'
-           USING schema_srid, schema_gml_srs_name;
-      COMMIT;
+      RETURN;
+    END IF;
 
-      -- change srid of each spatially enabled table
+    -- get current srid for given schema
+    EXECUTE IMMEDIATE
+      'SELECT srid FROM '||schema_name||'.database_srs'
+      INTO current_srid;
+
+    -- update entry in DATABASE_SRS table first
+    IF current_srid = schema_srid THEN
+      EXECUTE IMMEDIATE update_string USING schema_gml_srs_name;
+    ELSE
+      EXECUTE IMMEDIATE update_string || ', srid = :2' USING schema_gml_srs_name, schema_srid;
+
+      -- change srid of spatial columns in given schema with current srid
       FOR rec IN (
         SELECT
           table_name AS t,
           column_name AS c,
-          get_dim(column_name, table_name, schema_name) AS dim
+          citydb_srs.get_dim(column_name, table_name, schema_name) AS dim
         FROM
           all_sdo_geom_metadata
         WHERE
           owner = upper(schema_name)
+          AND srid = current_srid
+        ORDER BY
+          table_name,
+          column_name
         ) 
-	  LOOP
+      LOOP
         change_column_srid(rec.t, rec.c, rec.dim, schema_srid, transform, schema_name);
       END LOOP;
       dbms_output.put_line('Schema SRID sucessfully changed to ' || schema_srid);
