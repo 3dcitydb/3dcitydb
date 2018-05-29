@@ -223,27 +223,30 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_schema_srid(
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS SETOF VOID AS $$
 DECLARE
-  is_set_srs_info INTEGER;
+  current_srid INTEGER;
+  update_string TEXT := format('UPDATE %I.database_srs SET gml_srs_name = %L', $4, $2);
 BEGIN
   -- check if user selected valid srid
   -- will raise an exception if not
   PERFORM citydb_pkg.check_srid($1);
-  
-  SELECT 1 INTO is_set_srs_info FROM pg_tables 
-    WHERE schemaname = $4 AND tablename = 'database_srs';
 
-  IF is_set_srs_info IS NOT NULL THEN
-    -- update entry in DATABASE_SRS table first
-    EXECUTE format('UPDATE %I.database_srs SET srid = %L, gml_srs_name = %L', schema_name, $1, $2);
+  -- get current srid for given schema
+  EXECUTE format('SELECT srid FROM %I.database_srs', $4) INTO current_srid;
+
+  IF current_srid IS NOT NULL THEN
+    -- update entry in database_srs table first
+    IF current_srid = schema_srid THEN
+      EXECUTE update_string;
+    ELSE
+      EXECUTE update_string || ', srid = $1' USING $1;
+
+      -- change srid of spatial columns in given schema with current srid
+      PERFORM citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $3, type, f_table_schema) 
+        FROM geometry_columns 
+        WHERE f_table_schema = $4
+          AND srid = current_srid;
+    END IF;
   END IF;
-
-  -- change srid of each spatially enabled table
-  PERFORM citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $3, type, f_table_schema) 
-    FROM geometry_columns 
-      WHERE f_table_schema = $4
-        AND f_geometry_column != 'implicit_geometry'
-        AND f_geometry_column != 'relative_other_geom'
-        AND f_geometry_column != 'texture_coordinates';
 END;
 $$
 LANGUAGE plpgsql STRICT;
