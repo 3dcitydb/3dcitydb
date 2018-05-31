@@ -207,7 +207,7 @@ AS
       FROM
         all_ind_columns
       WHERE
-        table_name = upper(internal_tab_name)
+        table_name = upper(tab_name)
         AND column_name = upper(col_name)
         AND index_owner = upper(schema_name);
 
@@ -228,7 +228,7 @@ AS
 
     IF transform <> 0 THEN
       -- coordinates of existent geometries will be transformed
-      SDO_CS.TRANSFORM_LAYER(upper(internal_tab_name), upper(col_name), 'CS_TRANSFORM_TABLE', schema_srid);
+      SDO_CS.TRANSFORM_LAYER(upper(tab_name), upper(col_name), 'CS_TRANSFORM_TABLE', schema_srid);
       EXECUTE IMMEDIATE 'CREATE INDEX sdo_rowid_idx ON cs_transform_table (sdo_rowid)';
       EXECUTE IMMEDIATE
         'UPDATE ' || schema_name || '.' || tab_name || ' t SET ' || col_name || ' =
@@ -238,7 +238,7 @@ AS
       /*
       -- row-level alternative
       EXECUTE IMMEDIATE
-        'UPDATE ' || schema_name || '.' || internal_tab_name || ' SET ' || col_name || ' = sdo_cs.transform( ' || col_name || ', :1) WHERE ' || col_name || ' IS NOT NULL'
+        'UPDATE ' || schema_name || '.' || tab_name || ' SET ' || col_name || ' = sdo_cs.transform( ' || col_name || ', :1) WHERE ' || col_name || ' IS NOT NULL'
         USING schema_srid;
       */
     ELSE
