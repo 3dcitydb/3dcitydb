@@ -182,6 +182,7 @@ AS
     schema_name VARCHAR2 := USER
   )
   IS
+    executive VARCHAR2(30) := USER; 
     internal_tab_name VARCHAR2(30);
     is_versioned BOOLEAN := FALSE;
     is_valid BOOLEAN;
@@ -248,23 +249,31 @@ AS
         USING schema_srid;
     END IF;
 
-    -- update spatial metadata
-    IF upper(schema_name) = USER THEN
-      UPDATE
-        user_sdo_geom_metadata
-      SET
-        srid = schema_srid
-      WHERE
-        table_name = upper(tab_name)
-        AND column_name = upper(col_name);
-
-      IF is_valid THEN
-        -- create spatial index (incl. new spatial metadata)
-        sql_err_code := citydb_idx.create_index(idx, is_versioned, schema_name);
-      END IF;
-    ELSE
-      dbms_output.put_line('Did not update user_sdo_geom_metadata view and recreate spatial indexes for ' || schema_name || '. This user needs to call citydb_srs.sync_spatial_metadata procedure.');
+    -- change schema to update user_sdo_geom_metadata
+    IF upper(schema_name) <> executive THEN
+      EXECUTE IMMEDIATE 'ALTER SESSION SET CURRENT_SCHEMA = ' || upper(schema_name);
     END IF;
+
+    -- update spatial metadata
+    UPDATE
+      user_sdo_geom_metadata
+    SET
+      srid = schema_srid
+    WHERE
+      table_name = upper(tab_name)
+      AND column_name = upper(col_name);
+
+    IF upper(schema_name) <> executive THEN
+      EXECUTE IMMEDIATE 'ALTER SESSION SET CURRENT_SCHEMA = ' || executive;
+    END IF;
+    
+    IF is_valid THEN
+      -- create spatial index (incl. new spatial metadata)
+      sql_err_code := citydb_idx.create_index(idx, is_versioned, schema_name);
+    END IF;
+    /*ELSE
+      dbms_output.put_line('Did not update user_sdo_geom_metadata view and recreate spatial indexes for ' || schema_name || '. This user needs to call citydb_srs.sync_spatial_metadata procedure.');
+    END IF;*/
   END;
 
   /*****************************************************************
