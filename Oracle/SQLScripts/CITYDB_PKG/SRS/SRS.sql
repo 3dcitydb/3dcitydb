@@ -349,7 +349,7 @@ AS
     SET
       srid = schema_srid
     WHERE
-      srid <> old_schema_srid;
+      srid = old_schema_srid;
 
     COMMIT;
 
