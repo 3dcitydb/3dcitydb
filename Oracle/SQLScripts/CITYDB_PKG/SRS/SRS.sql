@@ -30,7 +30,7 @@
 * 
 * utility methods for spatial reference system in the database
 ******************************************************************/
-CREATE OR REPLACE PACKAGE citydb_srs
+CREATE OR REPLACE PACKAGE citydb_srs AUTHID CURRENT_USER
 AS
   FUNCTION transform_or_null(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
   FUNCTION is_coord_ref_sys_3d(schema_srid NUMBER) RETURN NUMBER;
@@ -39,7 +39,7 @@ AS
   FUNCTION get_dim(col_name VARCHAR2, tab_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN NUMBER;
   PROCEDURE change_column_srid(tab_name VARCHAR2, col_name VARCHAR2, dim NUMBER, schema_srid NUMBER, transform NUMBER := 0, schema_name VARCHAR2 := USER);
   PROCEDURE change_schema_srid(schema_srid NUMBER, schema_gml_srs_name VARCHAR2, transform NUMBER := 0, schema_name VARCHAR2 := USER);
-  PROCEDURE sync_spatial_metadata;
+  PROCEDURE sync_spatial_metadata(old_schema_srid NUMBER);
 END citydb_srs;
 /
 
@@ -182,6 +182,7 @@ AS
     schema_name VARCHAR2 := USER
   )
   IS
+    executive VARCHAR2(30) := USER; 
     internal_tab_name VARCHAR2(30);
     is_versioned BOOLEAN := FALSE;
     is_valid BOOLEAN;
@@ -196,30 +197,21 @@ AS
       internal_tab_name := tab_name;
     END IF;
 
-    is_valid := citydb_idx.index_status(tab_name, col_name, schema_name) = 'VALID';
-
-    -- update metadata as the index was switched off before transaction
-    IF upper(schema_name) = USER THEN
-      UPDATE
-        user_sdo_geom_metadata
-      SET
-        srid = schema_srid
-      WHERE
-        table_name = upper(tab_name)
-        AND column_name = upper(col_name);
-    ELSE
-      dbms_output.put_line('Did not update user_sdo_geom_metadata view for ' || schema_name || '. This user needs to call citydb_srs.sync_spatial_metadata procedure.');
-    END IF;
-    COMMIT;
+    is_valid := citydb_idx.index_status(internal_tab_name, col_name, schema_name) = 'VALID';
 
     -- get name of spatial index
     BEGIN
-      EXECUTE IMMEDIATE
-        'SELECT index_name FROM all_ind_columns
-           WHERE table_name = :1 AND column_name = :2 AND index_owner = :3'
-      INTO idx_name
-      USING upper(tab_name), upper(col_name), upper(schema_name);
-      
+      SELECT
+        index_name
+      INTO
+        idx_name
+      FROM
+        all_ind_columns
+      WHERE
+        table_name = upper(tab_name)
+        AND column_name = upper(col_name)
+        AND index_owner = upper(schema_name);
+
       -- create INDEX_OBJ
       IF dim = 3 THEN
         idx := INDEX_OBJ.construct_spatial_3d(idx_name, internal_tab_name, col_name);
@@ -237,20 +229,51 @@ AS
 
     IF transform <> 0 THEN
       -- coordinates of existent geometries will be transformed
+      SDO_CS.TRANSFORM_LAYER(upper(tab_name), upper(col_name), 'CS_TRANSFORM_TABLE', schema_srid);
+      EXECUTE IMMEDIATE 'CREATE INDEX sdo_rowid_idx ON cs_transform_table (sdo_rowid)';
+      EXECUTE IMMEDIATE
+        'UPDATE ' || schema_name || '.' || tab_name || ' t SET ' || col_name || ' =
+          (SELECT geometry FROM cs_transform_table cs WHERE cs.sdo_rowid = t.rowid)';
+      EXECUTE IMMEDIATE 'DROP TABLE cs_transform_table';
+
+      /*
+      -- row-level alternative
       EXECUTE IMMEDIATE
         'UPDATE ' || schema_name || '.' || tab_name || ' SET ' || col_name || ' = sdo_cs.transform( ' || col_name || ', :1) WHERE ' || col_name || ' IS NOT NULL'
         USING schema_srid;
+      */
     ELSE
-      -- only srid paramter of geometries is updated
+      -- only srid parameter of geometries is updated
       EXECUTE IMMEDIATE
         'UPDATE ' || schema_name || '.' || tab_name || ' t SET t.' || col_name || '.SDO_SRID = :1 WHERE t.' || col_name || ' IS NOT NULL'
         USING schema_srid;
     END IF;
 
+    -- change schema to update user_sdo_geom_metadata
+    IF upper(schema_name) <> executive THEN
+      EXECUTE IMMEDIATE 'ALTER SESSION SET CURRENT_SCHEMA = ' || upper(schema_name);
+    END IF;
+
+    -- update spatial metadata
+    UPDATE
+      user_sdo_geom_metadata
+    SET
+      srid = schema_srid
+    WHERE
+      table_name = upper(tab_name)
+      AND column_name = upper(col_name);
+
+    IF upper(schema_name) <> executive THEN
+      EXECUTE IMMEDIATE 'ALTER SESSION SET CURRENT_SCHEMA = ' || executive;
+    END IF;
+    
     IF is_valid THEN
       -- create spatial index (incl. new spatial metadata)
       sql_err_code := citydb_idx.create_index(idx, is_versioned, schema_name);
     END IF;
+    /*ELSE
+      dbms_output.put_line('Did not update user_sdo_geom_metadata view and recreate spatial indexes for ' || schema_name || '. This user needs to call citydb_srs.sync_spatial_metadata procedure.');
+    END IF;*/
   END;
 
   /*****************************************************************
@@ -315,9 +338,11 @@ AS
   * sync_spatial_metadata
   *
   *****************************************************************/
-  PROCEDURE sync_spatial_metadata
+  PROCEDURE sync_spatial_metadata(old_schema_srid NUMBER)
   IS
     schema_srid NUMBER;
+    idx_name VARCHAR2(30);
+    create_ddl VARCHAR2(1000);
   BEGIN
     -- fetch SRID in user schema
     SELECT
@@ -333,7 +358,52 @@ AS
     SET
       srid = schema_srid
     WHERE
-      srid <> schema_srid;
+      srid = old_schema_srid;
+
+    COMMIT;
+
+    -- create spatial indexes
+    FOR rec IN (
+      SELECT
+        m.table_name AS t,
+        m.column_name AS c,
+        (i.obj).index_name AS i,
+        (i.obj).parameters AS params
+      FROM
+        user_sdo_geom_metadata m
+      LEFT JOIN
+        index_table i
+        ON (i.obj).table_name = m.table_name
+       AND (i.obj).attribute_name = m.column_name
+      WHERE
+        srid = schema_srid
+      )
+    LOOP
+      BEGIN
+        IF rec.i IS NULL THEN
+          idx_name := substr(lower(rec.t), 1, 12) || '_' || substr(lower(rec.c), 1, 12) || '_SPX';
+        ELSE
+          idx_name := rec.i;
+        END IF;
+
+        create_ddl :=
+          'CREATE INDEX '
+            || idx_name
+            || ' ON ' || rec.t
+            || ' (' || rec.c || ')'
+            || ' INDEXTYPE IS MDSYS.SPATIAL_INDEX';
+
+        IF rec.params IS NOT NULL THEN
+          create_ddl := create_ddl || ' ' || rec.params;
+        END IF;
+
+        EXECUTE IMMEDIATE create_ddl;
+  
+        EXCEPTION
+          WHEN others THEN
+            dbms_output.put_line('Could not create spatial index on column ' || rec.c || ' of ' || rec.t ||' table: ' || SQLERRM);
+      END;
+    END LOOP;
   END;
 
 END citydb_srs;
