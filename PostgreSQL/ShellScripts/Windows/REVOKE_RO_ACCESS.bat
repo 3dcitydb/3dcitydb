@@ -1,5 +1,5 @@
 @echo off
-:: Shell script to create a read-only user for a specific database schema
+:: Shell script to remove a read-only user for a specific database schema
 :: on PostgreSQL/PostGIS
 
 :: read database connection details  
@@ -20,10 +20,10 @@ echo                      ^|__/
 echo.
 echo 3D City Database - The Open Source CityGML Database
 echo.
-echo ###############################################################################
+echo ######################################################################################
 echo.
-echo This script will guide you through the process of setting up a read-only user
-echo for a specific 3DCityDB schema. Please follow the instructions of the script.
+echo This script will revoke read-only access on a 3DCityDB schema from a user. Note that
+echo this operation cannot be undone. Please follow the instructions of the script.
 echo Enter the required parameters when prompted and press ENTER to confirm.
 echo Just press ENTER to use the default values.
 echo.
@@ -35,16 +35,16 @@ echo Having problems or need support?
 echo    Please file an issue here:
 echo    https://github.com/3dcitydb/3dcitydb/issues
 echo.
-echo ###############################################################################
+echo ######################################################################################
 
 :: cd to path of the SQL scripts
-cd ..\..\SQLScripts\UTIL\RO_USER
+cd ..\..\SQLScripts\UTIL\RO_ACCESS
 
 :: Prompt for USERNAME --------------------------------------------------------
 :username
 set var=
 echo.
-echo Please enter a username for the read-only user.
+echo Please enter the username of the read-only user.
 set /p var="(USERNAME must not be empty): "
 
 if /i not "%var%"=="" (
@@ -53,21 +53,6 @@ if /i not "%var%"=="" (
   echo.
   echo Illegal input! USERNAME must not be empty.
   goto username
-)
-
-:: Prompt for PASSWORD --------------------------------------------------------
-:password
-set var=
-echo.
-echo Please enter a password for the read-only user.
-set /p var="(PASSWORD must not be empty): "
-
-if /i not "%var%"=="" (
-  set PASSWORD=%var%
-) else (
-  echo.
-  echo Illegal input! PASSWORD must not be empty.
-  goto password
 )
 
 :: List the existing 3DCityDB schemas -----------------------------------------
@@ -84,13 +69,13 @@ if errorlevel 1 (
 :: Prompt for schema name -----------------------------------------------------
 set var=
 set SCHEMA_NAME=citydb
-echo Please enter the name of the 3DCityDB schema "%USERNAME%" shall have access to.
+echo Please enter name of schema "%USERNAME%" has access to.
 set /p var="(default SCHEMA_NAME=%SCHEMA_NAME%): "
 if /i not "%var%"=="" set SCHEMA_NAME=%var%
 
-:: Run CREATE_RO_USER.sql to create a read-only user for a specific schema ----
+:: Run REVOKE_RO_ACCESS.sql to revoke read-only access on a specific schema ---
 echo.
 echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-"%PGBIN%\psql" -d "%CITYDB%" -f "CREATE_RO_USER.sql" -v username="%USERNAME%" -v password="%PASSWORD%" -v schema_name="%SCHEMA_NAME%"
+"%PGBIN%\psql" -d "%CITYDB%" -f "REVOKE_RO_ACCESS.sql" -v username="%USERNAME%" -v schema_name="%SCHEMA_NAME%"
 
 pause

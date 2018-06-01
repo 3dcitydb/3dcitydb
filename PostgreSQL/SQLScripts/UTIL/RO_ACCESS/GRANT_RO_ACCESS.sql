@@ -30,13 +30,10 @@ SET client_min_messages TO WARNING;
 \set ON_ERROR_STOP ON
 
 \set USERNAME :username
-\set PASSWORD :password
 \set SCHEMA_NAME :schema_name
 
 \echo
-\echo 'Creating read-only ':USERNAME' user for schema ':SCHEMA_NAME
-
-CREATE ROLE :"USERNAME" WITH NOINHERIT LOGIN PASSWORD :'PASSWORD';
+\echo 'Granting read-only priviliges on schema "':SCHEMA_NAME'" to user "':USERNAME'" ...'
 
 GRANT CONNECT, TEMP ON DATABASE :"DBNAME" TO :"USERNAME";
 GRANT USAGE ON SCHEMA :"SCHEMA_NAME" TO :"USERNAME";
@@ -47,4 +44,4 @@ GRANT USAGE ON SCHEMA public TO :"USERNAME";
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO :"USERNAME";
 
 \echo
-\echo 'Read-only user "':USERNAME'" for schema "':SCHEMA_NAME'" successfully created.'
+\echo 'Read-only priviliges successfully granted.'
