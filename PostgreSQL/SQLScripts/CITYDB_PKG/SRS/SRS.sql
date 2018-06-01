@@ -169,9 +169,9 @@ BEGIN
   JOIN pg_am pgam ON pgam.oid = pgc_i.relam
   JOIN pg_attribute pga ON pga.attrelid = pgc_i.oid
   JOIN pg_namespace pgns ON pgns.oid = pgc_i.relnamespace
-  WHERE pgns.nspname = $7
-    AND pgc_t.relname = $1
-    AND pga.attname = $2
+  WHERE pgns.nspname = lower($7)
+    AND pgc_t.relname = lower($1)
+    AND pga.attname = lower($2)
     AND pgam.amname = 'gist';
 
   IF idx_name IS NOT NULL THEN
@@ -243,7 +243,7 @@ BEGIN
       -- change srid of spatial columns in given schema with current srid
       PERFORM citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $3, type, f_table_schema) 
         FROM geometry_columns
-        WHERE f_table_schema = $4
+        WHERE f_table_schema = lower($4)
           AND srid = current_srid
           AND f_geometry_column <> 'implicit_geometry'
           AND f_geometry_column <> 'relative_other_geom'
