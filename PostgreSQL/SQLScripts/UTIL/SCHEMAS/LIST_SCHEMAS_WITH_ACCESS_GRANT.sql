@@ -28,7 +28,7 @@
 \set USERNAME :username
 \set USERNAME_QUOTED '\'':username'\''
 
-\echo 'List 3DCityDB schemas with usage privilege for "':USERNAME'":'
+\echo 'List of 3DCityDB schemas with usage privilege for "':USERNAME'":'
 WITH schema_names AS (
   SELECT n.nspname AS schema_name
     FROM pg_catalog.pg_namespace n
