@@ -82,6 +82,6 @@ ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
 SELECT citydb_pkg.check_srid(:SRSNO);
 
 \echo 'Setting spatial reference system of 3DCityDB instance ...'
-INSERT INTO citydb.DATABASE_SRS(SRID,GML_SRS_NAME) VALUES (:SRSNO,:'GMLSRSNAME');
+INSERT INTO citydb.DATABASE_SRS(SRID,GML_SRS_NAME) VALUES (0,'init');
 SELECT citydb_pkg.change_schema_srid(:SRSNO,:'GMLSRSNAME');
 \echo 'Done'

@@ -190,7 +190,7 @@ BEGIN
     END IF;
 
     -- coordinates of existent geometries will be transformed
-    EXECUTE format('ALTER TABLE %I.%I ALTER COLUMN %I TYPE geometry(%I,%L) USING ST_Transform(%I,%L)',
+    EXECUTE format('ALTER TABLE %I.%I ALTER COLUMN %I TYPE geometry(%I,%L) USING ST_Transform(%I,%L::int)',
                      $7, $1, $2, geometry_type, $4, $2, $4);
   ELSE
     -- only metadata of geometry columns is updated, coordinates keep unchanged
@@ -242,9 +242,12 @@ BEGIN
 
       -- change srid of spatial columns in given schema with current srid
       PERFORM citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $3, type, f_table_schema) 
-        FROM geometry_columns 
+        FROM geometry_columns
         WHERE f_table_schema = $4
-          AND srid = current_srid;
+          AND srid = current_srid
+          AND f_geometry_column <> 'implicit_geometry'
+          AND f_geometry_column <> 'relative_other_geom'
+          AND f_geometry_column <> 'texture_coordinates';
     END IF;
   END IF;
 END;
