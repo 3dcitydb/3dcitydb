@@ -55,10 +55,10 @@ if /i not "%var%"=="" (
   goto username
 )
 
-:: List the existing 3DCityDB schemas -----------------------------------------
+:: List the 3DCityDB schemas granted to USERNAME ------------------------------
 echo.
-echo Reading existing 3DCityDB schemas from the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-"%PGBIN%\psql" -d "%CITYDB%" -f "..\SCHEMAS\LIST_SCHEMAS.sql"
+echo Reading 3DCityDB schemas granted to "%USERNAME%" from the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
+"%PGBIN%\psql" -d "%CITYDB%" -f "..\SCHEMAS\LIST_SCHEMAS_WITH_ACCESS_GRANT.sql" -v username="%USERNAME%"
 
 if errorlevel 1 (
   echo Failed to read 3DCityDB schemas from database.
@@ -69,7 +69,7 @@ if errorlevel 1 (
 :: Prompt for schema name -----------------------------------------------------
 set var=
 set SCHEMA_NAME=citydb
-echo Please enter name of schema "%USERNAME%" has access to.
+echo Please enter the name of the 3DCityDB schema that shall be revoked from "%USERNAME%".
 set /p var="(default SCHEMA_NAME=%SCHEMA_NAME%): "
 if /i not "%var%"=="" set SCHEMA_NAME=%var%
 

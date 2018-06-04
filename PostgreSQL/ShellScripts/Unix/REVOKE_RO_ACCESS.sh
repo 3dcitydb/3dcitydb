@@ -54,10 +54,10 @@ while [ 1 ]; do
   fi
 done
 
-# List the existing 3DCityDB schemas ------------------------------------------
+# List the 3DCityDB schemas granted to USERNAME -------------------------------
 echo
-echo "Reading existing 3DCityDB schemas from the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "../SCHEMAS/LIST_SCHEMAS.sql"
+echo "Reading 3DCityDB schemas granted to \"$USERNAME\" from the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
+psql -d "$CITYDB" -f "../SCHEMAS/LIST_SCHEMAS_WITH_ACCESS_GRANT.sql" -v username="$USERNAME"
 
 if [[ $? -ne 0 ]] ; then
   echo 'Failed to read 3DCityDB schemas from database.'
@@ -67,7 +67,7 @@ fi
 
 # Prompt for schema name ------------------------------------------------------
 SCHEMA_NAME=citydb
-echo "Please enter name of schema \"$USERNAME\" has access to."
+echo "Please enter the name of the 3DCityDB schema that shall be revoked from \"$USERNAME\"."
 read -p "(default SCHEMA_NAME=$SCHEMA_NAME): " var
 SCHEMA_NAME=${var:-$SCHEMA_NAME}
 
