@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-05-26 09:53:35)
+-- Automatically generated database script (Creation Date: 2018-06-04 14:14:48)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -330,9 +330,6 @@ AS
 
     dummy_str := citydb_idx.create_spatial_indexes();
 
-    EXCEPTION
-      WHEN others THEN
-        dbms_output.put_line('cleanup_schema: ' || SQLERRM);
   END;
   ------------------------------------------
 
@@ -349,9 +346,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -400,9 +394,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -486,9 +477,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -544,9 +532,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -563,9 +548,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -818,9 +800,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -1049,9 +1028,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -1311,9 +1287,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -1587,9 +1560,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -1706,9 +1676,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -2024,9 +1991,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -2043,9 +2007,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -2274,9 +2235,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -2747,9 +2705,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -3002,9 +2957,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -3107,9 +3059,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -3126,9 +3075,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -3221,9 +3167,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -3925,9 +3868,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -3976,9 +3916,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -4239,9 +4176,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -4290,9 +4224,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -4353,9 +4284,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -4439,9 +4367,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -4497,9 +4422,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -4773,9 +4695,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -4871,9 +4790,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -4941,9 +4857,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -5027,9 +4940,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -5120,9 +5030,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -5239,9 +5146,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -5494,9 +5398,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -5570,9 +5471,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -5653,9 +5551,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -5704,9 +5599,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -5804,9 +5696,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -5874,9 +5763,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -5952,9 +5838,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -6049,9 +5932,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -6068,9 +5948,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -6299,9 +6176,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -6418,9 +6292,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -6680,9 +6551,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -6919,9 +6787,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -7175,9 +7040,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
@@ -7287,9 +7149,6 @@ AS
 
     RETURN deleted_id;
 
-    EXCEPTION
-      WHEN OTHERS THEN
-        RETURN deleted_id;
   END;
   ------------------------------------------
 
