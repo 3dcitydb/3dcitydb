@@ -58,7 +58,7 @@ if /i not "%var%"=="" (
 :: List the existing 3DCityDB schemas -----------------------------------------
 echo.
 echo Reading existing 3DCityDB schemas from the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-"%PGBIN%\psql" -d "%CITYDB%" -f "..\SCHEMAS\QUERY_SCHEMA.sql"
+"%PGBIN%\psql" -d "%CITYDB%" -f "..\SCHEMAS\LIST_SCHEMAS.sql"
 
 if errorlevel 1 (
   echo Failed to read 3DCityDB schemas from database.
