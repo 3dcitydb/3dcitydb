@@ -43,7 +43,7 @@ cd ../../SQLScripts/UTIL/SCHEMAS
 # List the existing 3DCityDB schemas ------------------------------------------
 echo
 echo "Reading existing 3DCityDB schemas from the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "QUERY_SCHEMA.sql"
+psql -d "$CITYDB" -f "LIST_SCHEMAS.sql"
 
 if [[ $? -ne 0 ]] ; then
   echo 'Failed to read 3DCityDB schemas from database.'
