@@ -22,7 +22,7 @@ echo '3D City Database - The Open Source CityGML Database'
 echo
 echo '######################################################################################'
 echo
-echo 'This script will drop a read-only user for a specific 3DCityDB schema. Note that'
+echo 'This script will revoke read-only access on a 3DCityDB schema from a user. Note that'
 echo 'this operation cannot be undone. Please follow the instructions of the script.'
 echo 'Enter the required parameters when prompted and press ENTER to confirm.'
 echo 'Just press ENTER to use the default values.'
@@ -38,7 +38,7 @@ echo
 echo '######################################################################################'
 
 # cd to path of the SQL scripts
-cd ../../SQLScripts/UTIL/RO_USER
+cd ../../SQLScripts/UTIL/RO_ACCESS
 
 # Prompt for USERNAME ---------------------------------------------------------
 while [ 1 ]; do
@@ -71,10 +71,10 @@ echo "Please enter name of schema \"$USERNAME\" has access to."
 read -p "(default SCHEMA_NAME=$SCHEMA_NAME): " var
 SCHEMA_NAME=${var:-$SCHEMA_NAME}
 
-# Run DROP_RO_USER.sql to remove a read-only user for a specific schema -------
+# Run REVOKE_RO_ACCESS.sql to revoke read-only access on a specific schema ----
 echo
 echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "DROP_RO_USER.sql" -v username="$USERNAME" -v schema_name="$SCHEMA_NAME"
+psql -d "$CITYDB" -f "REVOKE_RO_ACCESS.sql" -v username="$USERNAME" -v schema_name="$SCHEMA_NAME"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'

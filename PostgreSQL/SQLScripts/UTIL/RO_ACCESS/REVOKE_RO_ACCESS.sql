@@ -33,7 +33,7 @@ SET client_min_messages TO WARNING;
 \set SCHEMA_NAME :schema_name
 
 \echo
-\echo 'Revoking user priviliges ...'
+\echo 'Revoking read-only priviliges on schema "':SCHEMA_NAME'" from "':USERNAME'" ...' 
 
 REVOKE SELECT ON ALL TABLES IN SCHEMA :"SCHEMA_NAME" FROM :"USERNAME";
 REVOKE USAGE ON SCHEMA :"SCHEMA_NAME" FROM :"USERNAME";
@@ -43,7 +43,5 @@ REVOKE SELECT ON ALL TABLES IN SCHEMA public FROM :"USERNAME";
 REVOKE USAGE ON SCHEMA public FROM :"USERNAME";
 REVOKE CONNECT, TEMP ON DATABASE :"DBNAME" FROM :"USERNAME";
 
-DROP ROLE :"USERNAME";
-
 \echo
-\echo 'Read-only user "':USERNAME'" for schema "':SCHEMA_NAME'" successfully removed.' 
+\echo 'Read-only priviliges successfully revoked.'
