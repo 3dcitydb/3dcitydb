@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-06-05 11:43:24)
+-- Automatically generated database script (Creation Date: 2018-06-07 10:38:12)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -203,6 +203,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   -- delete citydb.addresss
   WITH delete_objects AS (
@@ -253,6 +254,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_data_ids int[] := '{}';
 BEGIN
   -- delete references to surface_datas
@@ -334,6 +336,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   -- delete citydb.breakline_reliefs
   WITH delete_objects AS (
@@ -401,6 +404,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -632,6 +636,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -851,6 +856,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -1087,6 +1093,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
   address_ids int[] := '{}';
@@ -1338,6 +1345,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   --delete bridge_furnitures
@@ -1434,6 +1442,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   bridge_opening_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -1520,6 +1529,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   address_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -1712,6 +1722,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -1931,6 +1942,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -2155,6 +2167,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   address_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -2330,6 +2343,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -2561,6 +2575,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   cityobject_ids int[] := '{}';
 BEGIN
   --delete appearances
@@ -2667,6 +2682,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete referenced parts
@@ -2749,6 +2765,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   cityobject_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -2839,6 +2856,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   --delete appearances
   PERFORM
@@ -2868,9 +2886,16 @@ BEGIN
     t.cityobject_id = a.a_id;
 
   IF $2 <> 2 THEN
-    FOREACH object_id IN ARRAY $1
+    FOR rec IN
+      SELECT
+        co.id, co.objectclass_id
+      FROM
+        cityobject co, unnest($1) a(a_id)
+      WHERE
+        co.id = a.a_id
     LOOP
-      EXECUTE format('SELECT objectclass_id FROM citydb.cityobject WHERE id = %L', object_id) INTO objectclass_id;
+      object_id := rec.id::integer;
+      objectclass_id := rec.objectclass_id::integer;
 
       -- delete land_use
       IF objectclass_id = 4 THEN
@@ -3430,6 +3455,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   -- delete citydb.external_references
   WITH delete_objects AS (
@@ -3480,6 +3506,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -3715,6 +3742,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   -- delete citydb.grid_coverages
   WITH delete_objects AS (
@@ -3765,6 +3793,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete citydb.implicit_geometrys
@@ -3827,6 +3856,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete citydb.land_uses
@@ -3902,6 +3932,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   -- delete citydb.masspoint_reliefs
   WITH delete_objects AS (
@@ -3957,6 +3988,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
   address_ids int[] := '{}';
@@ -4208,6 +4240,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete citydb.plant_covers
@@ -4289,6 +4322,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   grid_coverage_ids int[] := '{}';
 BEGIN
   -- delete citydb.raster_reliefs
@@ -4356,11 +4390,19 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   IF $2 <> 2 THEN
-    FOREACH object_id IN ARRAY $1
+    FOR rec IN
+      SELECT
+        co.id, co.objectclass_id
+      FROM
+        cityobject co, unnest($1) a(a_id)
+      WHERE
+        co.id = a.a_id
     LOOP
-      EXECUTE format('SELECT objectclass_id FROM citydb.relief_component WHERE id = %L', object_id) INTO objectclass_id;
+      object_id := rec.id::integer;
+      objectclass_id := rec.objectclass_id::integer;
 
       -- delete tin_relief
       IF objectclass_id = 16 THEN
@@ -4442,6 +4484,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   relief_component_ids int[] := '{}';
 BEGIN
   -- delete references to relief_components
@@ -4528,6 +4571,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   --delete building_furnitures
@@ -4624,6 +4668,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -4855,6 +4900,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   tex_image_ids int[] := '{}';
 BEGIN
   -- delete citydb.surface_datas
@@ -4921,6 +4967,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   -- delete referenced parts
   PERFORM
@@ -4991,6 +5038,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   -- delete citydb.tex_images
   WITH delete_objects AS (
@@ -5041,6 +5089,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   opening_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -5139,6 +5188,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete citydb.tin_reliefs
@@ -5206,6 +5256,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete citydb.traffic_areas
@@ -5277,6 +5328,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   --delete traffic_areas
@@ -5371,6 +5423,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -5590,6 +5643,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   --delete tunnel_furnitures
@@ -5686,6 +5740,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -5922,6 +5977,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -6145,6 +6201,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   tunnel_opening_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -6231,6 +6288,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete referenced parts
@@ -6359,6 +6417,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   waterboundary_surface_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -6463,6 +6522,7 @@ DECLARE
   deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete citydb.waterboundary_surfaces
