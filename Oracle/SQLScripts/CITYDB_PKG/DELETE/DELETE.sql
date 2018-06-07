@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-06-05 15:58:48)
+-- Automatically generated database script (Creation Date: 2018-06-07 10:18:04)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -348,6 +348,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     -- delete addresss
     DELETE FROM
@@ -401,6 +402,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_data_ids0 ID_ARRAY := ID_ARRAY();
   BEGIN
     -- delete references to surface_datas
@@ -489,6 +491,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     -- delete breakline_reliefs
     DELETE FROM
@@ -568,6 +571,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -825,6 +829,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     implicit_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -1058,6 +1063,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -1322,6 +1328,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     address_ids0 ID_ARRAY := ID_ARRAY();
     address_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -1600,6 +1607,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -1721,6 +1729,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     bridge_opening_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -1804,6 +1813,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     address_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -2062,6 +2072,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     implicit_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -2295,6 +2306,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -2540,6 +2552,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     address_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -2772,6 +2785,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -3029,6 +3043,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     cityobject_ids0 ID_ARRAY := ID_ARRAY();
   BEGIN
     --delete appearances
@@ -3155,6 +3170,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
   BEGIN
@@ -3252,6 +3268,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     cityobject_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -3344,6 +3361,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     --delete appearances
     SELECT
@@ -3391,10 +3409,16 @@ AS
     END IF;
 
     IF caller <> 2 THEN
-      FOR i in 1..pids.count
+      OPEN cur FOR
+        SELECT
+          co.id, co.objectclass_id
+        FROM
+          cityobject co, TABLE(pids) a
+        WHERE
+          a.COLUMN_VALUE = co.id;
       LOOP
-        object_id := pids(i);
-        EXECUTE IMMEDIATE 'SELECT objectclass_id FROM cityobject WHERE id = :1' INTO objectclass_id USING object_id;
+        FETCH cur into object_id, objectclass_id;
+        EXIT WHEN cur%notfound;
 
           -- delete land_use
           IF objectclass_id = 4 THEN
@@ -3867,6 +3891,7 @@ AS
           END IF;
         END IF;
       END LOOP;
+      CLOSE cur;
     END IF;
   
     -- delete cityobjects
@@ -3957,6 +3982,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     -- delete external_references
     DELETE FROM
@@ -4010,6 +4036,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -4275,6 +4302,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
   BEGIN
@@ -4340,6 +4368,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -4428,6 +4457,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     -- delete masspoint_reliefs
     DELETE FROM
@@ -4488,6 +4518,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     address_ids0 ID_ARRAY := ID_ARRAY();
     address_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -4766,6 +4797,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -4866,12 +4898,19 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     IF caller <> 2 THEN
-      FOR i in 1..pids.count
+      OPEN cur FOR
+        SELECT
+          co.id, co.objectclass_id
+        FROM
+          cityobject co, TABLE(pids) a
+        WHERE
+          a.COLUMN_VALUE = co.id;
       LOOP
-        object_id := pids(i);
-        EXECUTE IMMEDIATE 'SELECT objectclass_id FROM relief_component WHERE id = :1' INTO objectclass_id USING object_id;
+        FETCH cur into object_id, objectclass_id;
+        EXIT WHEN cur%notfound;
 
           -- delete tin_relief
           IF objectclass_id = 16 THEN
@@ -4894,6 +4933,7 @@ AS
           END IF;
         END IF;
       END LOOP;
+      CLOSE cur;
     END IF;
   
     -- delete relief_components
@@ -4955,6 +4995,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     relief_component_ids0 ID_ARRAY := ID_ARRAY();
   BEGIN
     -- delete references to relief_components
@@ -5050,6 +5091,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -5171,6 +5213,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -5428,6 +5471,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     tex_image_ids0 ID_ARRAY := ID_ARRAY();
     tex_image_ids1 ID_ARRAY := ID_ARRAY();
   BEGIN
@@ -5506,6 +5550,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     -- delete referenced parts
     SELECT
@@ -5591,6 +5636,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     -- delete tex_images
     DELETE FROM
@@ -5644,6 +5690,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     opening_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -5746,6 +5793,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
   BEGIN
@@ -5818,6 +5866,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -5898,6 +5947,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -6016,6 +6066,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     implicit_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -6249,6 +6300,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -6370,6 +6422,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -6634,6 +6687,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -6875,6 +6929,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     tunnel_opening_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -6958,6 +7013,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -7135,6 +7191,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     waterboundary_surface_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -7249,6 +7306,7 @@ AS
     deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -7304,4 +7362,3 @@ AS
 
 END citydb_delete;
 /
-
