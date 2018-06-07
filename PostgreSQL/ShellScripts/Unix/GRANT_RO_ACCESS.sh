@@ -27,6 +27,8 @@ echo '3DCityDB schema to an existing user. Please follow the instructions of the
 echo 'Enter the required parameters when prompted and press ENTER to confirm.'
 echo 'Just press ENTER to use the default values.'
 echo
+echo 'Note: This script requires superuser privileges.'
+echo
 echo 'Documentation and help:'
 echo '   3DCityDB website:    https://www.3dcitydb.org'
 echo '   3DCityDB on GitHub:  https://github.com/3dcitydb'
