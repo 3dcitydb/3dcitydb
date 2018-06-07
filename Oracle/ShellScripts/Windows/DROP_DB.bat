@@ -65,6 +65,7 @@ if "%res%"=="f" (
 :: Run DROP_DB.sql to drop the 3D City Database instance ----------------------
 echo.
 echo Connecting to the database "%USERNAME%@%HOST%:%PORT%/%SID%" ...
-sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @DROP_DB.sql "%DBVERSION%"
+echo|set /p="Enter password: "
+sqlplus -S -L "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @DROP_DB.sql "%DBVERSION%"
 
 pause

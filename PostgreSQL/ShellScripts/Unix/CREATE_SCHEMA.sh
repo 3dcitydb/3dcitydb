@@ -2,7 +2,7 @@
 # Shell script to create an new data schema for a 3DCityDB instance
 # on PostgreSQL/PostGIS
 
-# read database connection details 
+# read database connection details
 source CONNECTION_DETAILS.sh
 
 # add psql to PATH
@@ -48,6 +48,7 @@ psql -d "$CITYDB" -f "LIST_SCHEMAS.sql"
 if [[ $? -ne 0 ]] ; then
   echo 'Failed to read 3DCityDB schemas from database.'
   read -rsn1 -p 'Press ENTER to quit.'
+  echo
   exit 1
 fi
 

@@ -2,7 +2,7 @@
 # Shell script to drop an instance of the 3D City Database
 # on Oracle Spatial/Locator
 
-# read database connection details  
+# read database connection details
 source CONNECTION_DETAILS.sh
 
 # add sqlplus to PATH
@@ -61,7 +61,8 @@ done
 # Run DROP_DB.sql to drop the 3D City Database instance -----------------------
 echo
 echo "Connecting to the database \"$USERNAME@$HOST:$PORT/$SID\" ..."
-sqlplus "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @DROP_DB.sql "${DBVERSION}"
+echo -n "Enter password: "
+sqlplus -S -L "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @DROP_DB.sql "${DBVERSION}"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'
