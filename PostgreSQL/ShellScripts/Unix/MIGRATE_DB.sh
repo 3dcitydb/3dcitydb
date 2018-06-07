@@ -60,7 +60,7 @@ done
 while [ 1 ]; do
   if [ $VERS% -le 2 ]; then
     echo
-    echo No texture URI is used for multiple texture files (yes/no):?
+    echo 'No texture URI is used for multiple texture files (yes/no):?'
     read -p "(default TEXOP=no): " TEXOP
   fi
   TEXOP=${TEXOP:-no}
