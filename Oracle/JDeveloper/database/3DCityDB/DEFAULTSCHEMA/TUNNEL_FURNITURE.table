@@ -117,7 +117,7 @@
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>true</notNull>
+      <notNull>false</notNull>
     </column>
     <column>
       <name>LOD4_BREP_ID</name>

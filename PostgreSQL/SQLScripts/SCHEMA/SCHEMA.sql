@@ -377,7 +377,7 @@ CREATE TABLE building_furniture(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	room_id integer NOT NULL,
+	room_id integer,
 	lod4_brep_id integer,
 	lod4_other_geom geometry(GEOMETRYZ),
 	lod4_implicit_rep_id integer,
@@ -465,7 +465,7 @@ CREATE TABLE room(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	building_id integer NOT NULL,
+	building_id integer,
 	lod4_multi_surface_id integer,
 	lod4_solid_id integer,
 	CONSTRAINT room_pk PRIMARY KEY (id)
@@ -659,7 +659,7 @@ CREATE TABLE traffic_area(
 	lod2_multi_surface_id integer,
 	lod3_multi_surface_id integer,
 	lod4_multi_surface_id integer,
-	transportation_complex_id integer NOT NULL,
+	transportation_complex_id integer,
 	CONSTRAINT traffic_area_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -883,7 +883,7 @@ CREATE TABLE tunnel_hollow_space(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	tunnel_id integer NOT NULL,
+	tunnel_id integer,
 	lod4_multi_surface_id integer,
 	lod4_solid_id integer,
 	CONSTRAINT tunnel_hollow_space_pk PRIMARY KEY (id)
@@ -985,7 +985,7 @@ CREATE TABLE tunnel_furniture(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	tunnel_hollow_space_id integer NOT NULL,
+	tunnel_hollow_space_id integer,
 	lod4_brep_id integer,
 	lod4_other_geom geometry(GEOMETRYZ),
 	lod4_implicit_rep_id integer,
@@ -1045,7 +1045,7 @@ CREATE TABLE bridge_furniture(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	bridge_room_id integer NOT NULL,
+	bridge_room_id integer,
 	lod4_brep_id integer,
 	lod4_other_geom geometry(GEOMETRYZ),
 	lod4_implicit_rep_id integer,
@@ -1133,7 +1133,7 @@ CREATE TABLE bridge_room(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	bridge_id integer NOT NULL,
+	bridge_id integer,
 	lod4_multi_surface_id integer,
 	lod4_solid_id integer,
 	CONSTRAINT bridge_room_pk PRIMARY KEY (id)
@@ -1229,7 +1229,7 @@ CREATE SEQUENCE grid_coverage_seq
 -- DROP TABLE IF EXISTS cityobject CASCADE;
 CREATE TABLE cityobject(
 	id integer NOT NULL DEFAULT nextval('cityobject_seq'::regclass),
-	objectclass_id integer NOT NULL,
+	objectclass_id integer,
 	gmlid character varying(256),
 	gmlid_codespace varchar(1000),
 	name character varying(1000),
@@ -1399,7 +1399,7 @@ CREATE TABLE cityobject_genericattrib(
 	blobval bytea,
 	geomval geometry(GEOMETRYZ),
 	surface_geometry_id integer,
-	cityobject_id integer NOT NULL,
+	cityobject_id integer,
 	CONSTRAINT cityobj_genericattrib_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -1413,7 +1413,7 @@ CREATE TABLE external_reference(
 	infosys character varying(4000),
 	name character varying(4000),
 	uri character varying(4000),
-	cityobject_id integer NOT NULL,
+	cityobject_id integer,
 	CONSTRAINT external_reference_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
