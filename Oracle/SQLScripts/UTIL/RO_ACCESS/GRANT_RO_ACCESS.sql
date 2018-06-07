@@ -49,13 +49,13 @@ BEGIN
 	  AND table_name = 'DATABASE_SRS';
 		
   IF owner_list.COUNT > 0 THEN
-	dbms_output.put_line('Error: "'||ro_user||'" already is granted access to the following schemas:');
+	dbms_output.put_line('Error: "'||ro_user||'" is already granted access to the following schemas:');
 	FOR i IN 1..owner_list.COUNT LOOP
 	  dbms_output.put_line(owner_list(i));
 	END LOOP;
 	  
 	dbms_output.put_line(chr(10));
-	dbms_output.put_line('Remove these grants first.');	
+	dbms_output.put_line('Revoke these grants first.');	
     :MESSAGE := 'Failed to grant read-only priviliges.';
   ELSE
     -- GRANT ACCESS
