@@ -32,34 +32,28 @@ SET client_min_messages TO WARNING;
 
 --// set variables
 \set VERS :version
-\set TEXOP :texop
 
 SELECT current_setting('search_path') AS current_path \gset
 SELECT srid FROM database_srs \gset
 
---// create FUNCTIONS necessary for migration process
-\echo
-\echo 'Creating helper functions for migration process in geodb_pkg schema ...'
---\i V2_to_V4/FUNCTIONS.sql
-
 --// create SEQUENCES
 \echo
 \echo 'Create sequences that are new in v4 ...'
-\i V3_to_V4/SEQUENCES.sql
+\i SEQUENCES.sql
 
 --// create TABLES
 \echo
 \echo 'Create new tables of v4 and alter existing tables ...'
-\i V3_to_V4/TABLES.sql
+\i TABLES.sql
 
 --// update table OBJECTCLASS
-\i V3_to_V4/OBJECTCLASS_INSTANCES_V4.sql
-\i ../SCHEMA/OBJECTCLASS/AGGREGATION_INFO_INSTANCES.sql
+\i OBJECTCLASS_INSTANCES_V4.sql
+\i ../../SCHEMA/OBJECTCLASS/AGGREGATION_INFO_INSTANCES.sql
 
 --// create schema FUNCTIONS
-\i ../SCHEMA/OBJECTCLASS/OBJCLASS.sql
-\i ../SCHEMA/ENVELOPE/ENVELOPE.sql
-\i ../SCHEMA/DELETE/DELETE.sql
+\i ../../SCHEMA/OBJECTCLASS/OBJCLASS.sql
+\i ../../SCHEMA/ENVELOPE/ENVELOPE.sql
+\i ../../SCHEMA/DELETE/DELETE.sql
 
 --// create CITYDB_PKG (additional schema with PL/pgSQL-Functions)
 \echo
@@ -67,26 +61,21 @@ SELECT srid FROM database_srs \gset
 DROP SCHEMA IF EXISTS citydb_pkg CASCADE;
 CREATE SCHEMA citydb_pkg;
 
-\i ../CITYDB_PKG/UTIL/UTIL.sql
-\i ../CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql
-\i ../CITYDB_PKG/INDEX/IDX.sql
-\i ../CITYDB_PKG/SRS/SRS.sql
-\i ../CITYDB_PKG/STATISTICS/STAT.sql
+\i ../../CITYDB_PKG/UTIL/UTIL.sql
+\i ../../CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql
+\i ../../CITYDB_PKG/INDEX/IDX.sql
+\i ../../CITYDB_PKG/SRS/SRS.sql
+\i ../../CITYDB_PKG/STATISTICS/STAT.sql
 
 --// adding CONSTRAINTS in new schema
 \echo
 \echo 'Update primary keys, foreign keys and not null constraints ...'
-\i V3_to_V4/CONSTRAINTS.sql
+\i CONSTRAINTS.sql
 
 --// creating INDEXES in new schema
 \echo
 \echo 'Update indexes ...'
-\i V3_to_V4/INDEXES.sql
-
---// removing v2.x schema (if the user wants to)
---\echo
---\echo 'Removing database elements of 3DCityDB v2.x schema ...'
---\i V2_to_V4/DROP_DB_V2.sql
+\i INDEXES.sql
 
 --// update search_path on database level
 ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;

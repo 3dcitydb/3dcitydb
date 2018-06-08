@@ -37,9 +37,6 @@ echo    https://github.com/3dcitydb/3dcitydb/issues
 echo.
 echo ######################################################################################
 
-:: cd to path of the SQL scripts
-cd ..\..\SQLScripts\MIGRATION
-
 :: Prompt for VERS ------------------------------------------------------------
 :version
 set var=
@@ -58,8 +55,10 @@ set "num="&for /f "delims=0123456789" %%i in ("%var%") do set num=%%i
 if defined num goto invalid_version
 if %VERS% LEQ 0 goto invalid_version
 if %VERS% LEQ 2 (
+  cd ..\..\SQLScripts\MIGRATION\V2_to_V4
   goto texop2
 ) else (
+  cd ..\..\SQLScripts\MIGRATION\V3_to_V4
   goto texop3
 )
 

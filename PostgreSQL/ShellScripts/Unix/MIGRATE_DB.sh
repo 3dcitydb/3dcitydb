@@ -37,9 +37,6 @@ echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
 echo '######################################################################################'
 
-# cd to path of the SQL scripts
-cd ../../SQLScripts/MIGRATION
-
 # Prompt for VERS ------------------------------------------------------------
 re='^[0-9]+$'
 while [ 1 ]; do
@@ -59,9 +56,12 @@ done
 # Prompt for TEXOP ------------------------------------------------------
 while [ 1 ]; do
   if [ $VERS% -le 2 ]; then
+    cd ../../SQLScripts/MIGRATION/V2_to_V4
     echo
     echo 'No texture URI is used for multiple texture files (yes/no):?'
     read -p "(default TEXOP=no): " TEXOP
+  else
+    cd ../../SQLScripts/MIGRATION/V3_to_V4
   fi
   TEXOP=${TEXOP:-no}
   
