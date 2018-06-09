@@ -1,11 +1,11 @@
 #!/bin/bash
-# Shell script to create a read-only user for a specific database schema
+# Shell script to grant read-only access to a 3DCityDB schema
 # on PostgreSQL/PostGIS
 
 # read database connection details
 source CONNECTION_DETAILS.sh
 
-# add psql to PATH
+# add PGBIN to PATH
 export PATH="$PGBIN:$PATH"
 
 # cd to path of the shell script
@@ -58,7 +58,7 @@ done
 
 # List the existing 3DCityDB schemas ------------------------------------------
 echo
-echo "Reading existing 3DCityDB schemas from the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
+echo "Reading 3DCityDB schemas \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
 psql -d "$CITYDB" -f "../SCHEMAS/LIST_SCHEMAS.sql"
 
 if [[ $? -ne 0 ]] ; then
@@ -76,7 +76,7 @@ SCHEMA_NAME=${var:-$SCHEMA_NAME}
 
 # Run GRANT_RO_ACCESS.sql to grant read-only access on a specific schema ------
 echo
-echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
+echo "Connecting to \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
 psql -d "$CITYDB" -f "GRANT_RO_ACCESS.sql" -v ro_username="$RO_USERNAME" -v schema_name="$SCHEMA_NAME"
 
 echo

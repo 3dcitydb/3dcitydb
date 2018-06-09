@@ -6,7 +6,7 @@
 call CONNECTION_DETAILS.bat
 
 :: add PGBIN to PATH
-set PATH=%PGBIN%;%PATH%
+set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
 
 :: cd to path of the shell script
 cd /d %~dp0
@@ -42,7 +42,7 @@ cd ..\..\SQLScripts\UTIL\SCHEMAS
 
 :: List the existing 3DCityDB schemas -----------------------------------------
 echo.
-echo Reading existing 3DCityDB schemas from the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
+echo Reading 3DCityDB schemas "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
 "%PGBIN%\psql" -d "%CITYDB%" -f "LIST_SCHEMAS.sql"
 
 if errorlevel 1 (
@@ -68,7 +68,7 @@ if /i not "%var%"=="" (
 
 :: Run DROP_SCHEMA.sql to remove the selected 3DCityDB schema -----------------
 echo.
-echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
+echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
 "%PGBIN%\psql" -d "%CITYDB%" -f "DROP_SCHEMA.sql" -v schema_name="%SCHEMA_NAME%"
 
 pause

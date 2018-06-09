@@ -1,11 +1,11 @@
 @echo off
-:: Shell script to remove a read-only user for a specific database schema
+:: Shell script to revoke read-only access from a 3DCityDB schema
 :: on Oracle Spatial/Locator
 
 :: read database connection details
 call CONNECTION_DETAILS.bat
 
-:: add sqlplus to PATH
+:: add SQLPLUSBIN to PATH
 set PATH=%SQLPLUSBIN%;%PATH%
 
 :: cd to path of the shell script
@@ -59,7 +59,7 @@ if /i not "%var%"=="" (
 
 :: Run REVOKE_RO_ACCESS.sql to revoke read-only access on a specific schema ---
 echo.
-echo Connecting to the database "%SYSDBA_USERNAME%@%HOST%:%PORT%/%SID%" ...
+echo Connecting to "%SYSDBA_USERNAME%@%HOST%:%PORT%/%SID%" ...
 echo|set /p="Enter password: "
 sqlplus -S -L "%SYSDBA_USERNAME%@\"%HOST%:%PORT%/%SID%\"" AS SYSDBA @REVOKE_RO_ACCESS.sql "%RO_USERNAME%" "%USERNAME%"
 

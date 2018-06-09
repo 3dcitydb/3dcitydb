@@ -1,12 +1,12 @@
 @echo off
-:: Shell script to create a read-only user for a specific database schema
+:: Shell script to grant read-only access to a 3DCityDB schema
 :: on PostgreSQL/PostGIS
 
 :: read database connection details  
 call CONNECTION_DETAILS.bat
 
 :: add PGBIN to PATH
-set PATH=%PGBIN%;%PATH%
+set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
 
 :: cd to path of the shell script
 cd /d %~dp0
@@ -59,7 +59,7 @@ if /i not "%var%"=="" (
 
 :: List the existing 3DCityDB schemas -----------------------------------------
 echo.
-echo Reading existing 3DCityDB schemas from the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
+echo Reading 3DCityDB schemas from "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
 "%PGBIN%\psql" -d "%CITYDB%" -f "..\SCHEMAS\LIST_SCHEMAS.sql"
 
 if errorlevel 1 (
@@ -77,7 +77,7 @@ if /i not "%var%"=="" set SCHEMA_NAME=%var%
 
 :: Run GRANT_RO_ACCESS.sql to grant read-only access on a specific schema -----
 echo.
-echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
+echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
 "%PGBIN%\psql" -d "%CITYDB%" -f "GRANT_RO_ACCESS.sql" -v ro_username="%RO_USERNAME%" -v schema_name="%SCHEMA_NAME%"
 
 pause

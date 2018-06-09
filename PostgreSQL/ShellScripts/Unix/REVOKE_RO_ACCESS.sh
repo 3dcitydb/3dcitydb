@@ -1,11 +1,11 @@
 #!/bin/bash
-# Shell script to remove a read-only user for a specific database schema
+# Shell script to revoke read-only access from a 3DCityDB schema
 # on PostgreSQL/PostGIS
 
 # read database connection details
 source CONNECTION_DETAILS.sh
 
-# add psql to PATH
+# add PGBIN to PATH
 export PATH="$PGBIN:$PATH"
 
 # cd to path of the shell script
@@ -58,7 +58,7 @@ done
 
 # List the 3DCityDB schemas granted to RO_USERNAME ----------------------------
 echo
-echo "Reading 3DCityDB schemas granted to \"$RO_USERNAME\" from the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
+echo "Reading 3DCityDB schemas granted to \"$RO_USERNAME\" from \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
 psql -d "$CITYDB" -f "../SCHEMAS/LIST_SCHEMAS_WITH_ACCESS_GRANT.sql" -v username="$RO_USERNAME"
 
 if [[ $? -ne 0 ]] ; then
@@ -76,7 +76,7 @@ SCHEMA_NAME=${var:-$SCHEMA_NAME}
 
 # Run REVOKE_RO_ACCESS.sql to revoke read-only access on a specific schema ----
 echo
-echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
+echo "Connecting to \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
 psql -d "$CITYDB" -f "REVOKE_RO_ACCESS.sql" -v ro_username="$RO_USERNAME" -v schema_name="$SCHEMA_NAME"
 
 echo

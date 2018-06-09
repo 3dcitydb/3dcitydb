@@ -1,11 +1,11 @@
 #!/bin/bash
-# Shell script to create a read-only user for a specific database schema
+# Shell script to grant read-only access to a 3DCityDB schema
 # on Oracle Spatial/Locator
 
 # read database connection details
 source CONNECTION_DETAILS.sh
 
-# add sqlplus to PATH
+# add SQLPLUSBIN to PATH
 export PATH="$SQLPLUSBIN:$PATH"
 
 # cd to path of the shell script
@@ -58,7 +58,7 @@ done
 
 # Run GRANT_RO_ACCESS.sql to grant read-only access on a specific schema ------
 echo
-echo "Connecting to the database \"$SYSDBA_USERNAME@$HOST:$PORT/$SID\" ..."
+echo "Connecting to \"$SYSDBA_USERNAME@$HOST:$PORT/$SID\" ..."
 echo -n "Enter password: "
 sqlplus -S -L "${SYSDBA_USERNAME}@\"${HOST}:${PORT}/${SID}\"" AS SYSDBA @GRANT_RO_ACCESS.sql "${RO_USERNAME}" "${USERNAME}"
 

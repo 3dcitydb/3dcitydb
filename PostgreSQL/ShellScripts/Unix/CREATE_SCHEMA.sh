@@ -1,11 +1,11 @@
 #!/bin/bash
-# Shell script to create an new data schema for a 3DCityDB instance
+# Shell script to create an new new 3DCityDB schema
 # on PostgreSQL/PostGIS
 
 # read database connection details
 source CONNECTION_DETAILS.sh
 
-# add psql to PATH
+# add PGBIN to PATH
 export PATH="$PGBIN:$PATH"
 
 # cd to path of the shell script
@@ -22,7 +22,7 @@ echo '3D City Database - The Open Source CityGML Database'
 echo
 echo '#####################################################################################'
 echo
-echo 'This script will guide you through the process of setting up an additioanl 3DCityDB'
+echo 'This script will guide you through the process of setting up an additional 3DCityDB'
 echo 'schema for an existing database. Please follow the instructions of the script.'
 echo 'Enter the required parameters when prompted and press ENTER to confirm.'
 echo 'Just press ENTER to use the default values.'
@@ -42,7 +42,7 @@ cd ../../SQLScripts/UTIL/SCHEMAS
 
 # List the existing 3DCityDB schemas ------------------------------------------
 echo
-echo "Reading existing 3DCityDB schemas from the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
+echo "Reading 3DCityDB schemas from \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
 psql -d "$CITYDB" -f "LIST_SCHEMAS.sql"
 
 if [[ $? -ne 0 ]] ; then
@@ -70,7 +70,7 @@ echo 'Done.'
 
 # Run CREATE_SCHEMA.sql to create a new 3DCityDB schema -----------------------
 echo
-echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
+echo "Connecting to \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
 psql -d "$CITYDB" -f "CREATE_SCHEMA.sql" -v schema_name="$SCHEMA_NAME" -v tmp_delete_file="$TMP_DELETE_FILE"
 
 # Remove temporary SQL scripts ------------------------------------------------

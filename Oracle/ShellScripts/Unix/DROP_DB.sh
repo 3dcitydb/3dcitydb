@@ -5,8 +5,8 @@
 # read database connection details
 source CONNECTION_DETAILS.sh
 
-# add sqlplus to PATH
-export PATH=$SQLPLUSBIN:$PATH
+# add SQLPLUSBIN to PATH
+export PATH="$SQLPLUSBIN:$PATH"
 
 # cd to path of the shell script
 cd "$( cd "$( dirname "$0" )" && pwd )" > /dev/null
@@ -60,7 +60,7 @@ done
 
 # Run DROP_DB.sql to drop the 3D City Database instance -----------------------
 echo
-echo "Connecting to the database \"$USERNAME@$HOST:$PORT/$SID\" ..."
+echo "Connecting to \"$USERNAME@$HOST:$PORT/$SID\" ..."
 echo -n "Enter password: "
 sqlplus -S -L "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @DROP_DB.sql "${DBVERSION}"
 
