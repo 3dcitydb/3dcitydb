@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-06-12 10:26:21)
+-- Automatically generated database script (Creation Date: 2018-06-12 17:54:37)
 -- box2envelope
 -- env_address
 -- env_appearance
@@ -2496,12 +2496,12 @@ BEGIN
 
   IF objclass_id <> 0 THEN
     SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
-      SELECT citydb.env_cityobject(id, 1) AS geom
+      SELECT citydb.env_cityobject(id, set_envelope) AS geom
         FROM citydb.cityobject WHERE objectclass_id = objclass_id
     ) g;
   ELSE
     SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
-      SELECT citydb.env_cityobject(id, 1) AS geom
+      SELECT citydb.env_cityobject(id, set_envelope) AS geom
         FROM citydb.cityobject
     ) g;
   END IF;
