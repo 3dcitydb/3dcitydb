@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
---// PRIMARY KEYS (and CHECKs)
+--// PRIMARY KEYS, DEFAULTs and CHECKs
 ALTER TABLE citydb.address
   ADD CONSTRAINT address_pk PRIMARY KEY (id),
   ALTER COLUMN id SET DEFAULT nextval('citydb.address_seq'::regclass);
@@ -1280,9 +1280,16 @@ ALTER TABLE citydb.waterbody
     ON DELETE NO ACTION ON UPDATE CASCADE;
 
 /*************************************************
-* create not null constraints new in v4.0.0
+* create not null constraints
 *
 **************************************************/
+ALTER TABLE citydb.cityobject_genericattrib
+  ALTER COLUMN attrname SET NOT NULL,
+  ALTER COLUMN cityobject_id SET NOT NULL;
+
+ALTER TABLE citydb.external_reference
+  ALTER COLUMN cityobject_id SET NOT NULL;
+
 DO
 $$
 DECLARE
