@@ -190,6 +190,33 @@ ALTER TABLE citydb.waterbody
     ON DELETE NO ACTION ON UPDATE CASCADE;
 
 /*************************************************
+* update delete rule for some foreign keys
+*
+**************************************************/
+DO
+$$
+BEGIN
+  PERFORM citydb_pkg.set_fkey_delete_rule('address_to_bridge_fk', 'address_to_bridge', 'address_id', 'address', 'id', 'c', 'citydb');
+  PERFORM citydb_pkg.set_fkey_delete_rule('address_to_building_fk', 'address_to_building', 'address_id', 'address', 'id', 'c', 'citydb');
+  PERFORM citydb_pkg.set_fkey_delete_rule('app_to_surf_data_fk', 'appear_to_surface_data', 'surface_data_id', 'surface_data', 'id', 'c', 'citydb');
+  PERFORM citydb_pkg.set_fkey_delete_rule('brd_open_to_them_srf_fk', 'bridge_open_to_them_srf', 'bridge_opening_id', 'bridge_opening', 'id', 'c', 'citydb');
+  PERFORM citydb_pkg.set_fkey_delete_rule('cityobject_member_fk', 'cityobject_member', 'cityobject_id', 'cityobject', 'id', 'c', 'citydb');
+  PERFORM citydb_pkg.set_fkey_delete_rule('cityobject_member_fk1', 'cityobject_member', 'citymodel_id', 'citymodel', 'id', 'c', 'citydb');
+  PERFORM citydb_pkg.set_fkey_delete_rule('general_cityobject_fk', 'generalization', 'cityobject_id', 'cityobject', 'id', 'c', 'citydb');
+  PERFORM citydb_pkg.set_fkey_delete_rule('general_generalizes_to_fk', 'generalization', 'generalizes_to_id', 'cityobject', 'id', 'c', 'citydb');
+  PERFORM citydb_pkg.set_fkey_delete_rule('group_to_cityobject_fk', 'group_to_cityobject', 'cityobject_id', 'cityobject', 'id', 'c', 'citydb');
+  PERFORM citydb_pkg.set_fkey_delete_rule('group_to_cityobject_fk1', 'group_to_cityobject', 'cityobjectgroup_id', 'cityobjectgroup', 'id', 'c', 'citydb');
+  PERFORM citydb_pkg.set_fkey_delete_rule('open_to_them_surface_fk', 'opening_to_them_surface', 'opening_id', 'opening', 'id', 'c', 'citydb');
+  PERFORM citydb_pkg.set_fkey_delete_rule('rel_feat_to_rel_comp_fk', 'relief_feat_to_rel_comp', 'relief_component_id', 'relief_component', 'id', 'c', 'citydb');
+  PERFORM citydb_pkg.set_fkey_delete_rule('texparam_geom_fk', 'textureparam', 'surface_geometry_id', 'surface_geometry', 'id', 'c', 'citydb');
+  PERFORM citydb_pkg.set_fkey_delete_rule('texparam_surface_data_fk', 'textureparam', 'surface_data_id', 'surface_data', 'id', 'c', 'citydb');
+  PERFORM citydb_pkg.set_fkey_delete_rule('tun_open_to_them_srf_fk', 'tunnel_open_to_them_srf', 'tunnel_opening_id', 'tunnel_opening', 'id', 'c', 'citydb');
+  PERFORM citydb_pkg.set_fkey_delete_rule('waterbod_to_waterbnd_fk', 'waterbod_to_waterbnd_srf', 'waterboundary_surface_id', 'waterboundary_surface', 'id', 'c', 'citydb');
+END;
+$$
+LANGUAGE plpgsql;
+
+/*************************************************
 * drop not null constraints obsolete in v4.0.0
 *
 **************************************************/
