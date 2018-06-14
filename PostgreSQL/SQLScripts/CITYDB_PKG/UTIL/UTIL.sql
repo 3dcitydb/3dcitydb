@@ -55,6 +55,7 @@
 *   min(a NUMERIC, b NUMERIC) RETURNS NUMERIC
 *   versioning_db(schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   versioning_table(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
+*   drop_tmp_tables(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 ******************************************************************/
 
 /*****************************************************************
@@ -236,3 +237,26 @@ $$
 SELECT nextval($1)::int FROM generate_series(1, $2);
 $$
 LANGUAGE sql STRICT;
+
+
+/*****************************************************************
+* drop_tmp_tables
+* 
+* drop all tables prefixed with "tmp_"
+*
+* @param schema_name name of schema of target tables
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.drop_tmp_tables(
+  schema_name TEXT DEFAULT 'citydb'
+  ) RETURNS SETOF VOID AS 
+$$
+DECLARE
+  rec RECORD;
+BEGIN
+  FOR rec IN SELECT table_name FROM information_schema.tables WHERE table_schema = $1 AND table_name LIKE 'tmp_%' LOOP
+    EXECUTE format('DROP TABLE %I.%I', $1, rec.table_name); 	
+  END LOOP; 
+END;
+$$
+LANGUAGE plpgsql STRICT;
+

@@ -103,6 +103,7 @@ AS
   FUNCTION to_2d(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
   FUNCTION sdo2geojson3d(p_geometry in sdo_geometry, p_decimal_places in pls_integer default 2, p_compress_tags in pls_integer default 0, p_relative2mbr in pls_integer default 0) RETURN CLOB DETERMINISTIC;
   FUNCTION ST_Affine(p_geometry IN mdsys.sdo_geometry, p_a IN NUMBER, p_b IN NUMBER, p_c IN NUMBER, p_d IN NUMBER, p_e IN NUMBER, p_f IN NUMBER, p_g IN NUMBER, p_h IN NUMBER, p_i IN NUMBER, p_xoff IN NUMBER, p_yoff IN NUMBER, p_zoff IN NUMBER) RETURN mdsys.sdo_geometry deterministic;
+  PROCEDURE drop_tmp_tables(schema_name VARCHAR2 := USER);
 END citydb_util;
 /
 
@@ -1195,6 +1196,33 @@ AS
     WHEN NULL_PARAMETER THEN
       raise_application_error(-20127, 'Input parameters must not be null', TRUE);
   END ST_Affine;
-  
+
+  /*****************************************************************
+  * drop_tmp_tables
+  *
+  * drop all tables prefixed with "tmp_"
+  *
+  * @param schema_name name of user schema
+  ******************************************************************/  
+  PROCEDURE drop_tmp_tables(
+    schema_name VARCHAR2 := USER
+    )
+  IS
+  BEGIN
+    FOR rec IN (
+      SELECT
+        table_name
+      FROM
+        all_tables
+      WHERE
+        owner = upper(schema_name)
+        AND table_name LIKE '%TMP_%'
+    ) LOOP  
+        EXECUTE IMMEDIATE
+          'DROP TABLE '
+          || upper(schema_name) || '.' || upper(rec.table_name);
+    END LOOP;
+  END;				 
+		  
 END citydb_util;
 /
