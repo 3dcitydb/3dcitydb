@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-06-12 17:54:37)
+-- Automatically generated database script (Creation Date: 2018-06-14 16:57:14)
 -- box2envelope
 -- env_address
 -- env_appearance
@@ -71,7 +71,7 @@
 -- env_waterboundary_surface
 -- get_envelope_cityobjects
 -- get_envelope_implicit_geometry
--- set_envelope_cityobjects_if_null
+-- update_bounds
 
 ------------------------------------------
 CREATE OR REPLACE FUNCTION citydb.box2envelope(box BOX3D) RETURNS GEOMETRY AS
@@ -107,23 +107,21 @@ CREATE OR REPLACE FUNCTION citydb.env_address(co_id INTEGER, set_envelope INTEGE
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox1 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- multiPoint
     SELECT multi_point AS geom FROM citydb.address WHERE id = co_id  AND multi_point IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -133,23 +131,21 @@ CREATE OR REPLACE FUNCTION citydb.env_appearance(co_id INTEGER, set_envelope INT
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox1 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- _SurfaceData
-    SELECT citydb.env_surface_data(id, set_envelope) AS geom FROM citydb.surface_data c, citydb.appear_to_surface_data p2c WHERE c.id = surface_data_id AND p2c.appearance_id = co_id
+    SELECT citydb.env_surface_data(c.id, set_envelope) AS geom FROM citydb.surface_data c, citydb.appear_to_surface_data p2c WHERE c.id = surface_data_id AND p2c.appearance_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -159,32 +155,30 @@ CREATE OR REPLACE FUNCTION citydb.env_breakline_relief(co_id INTEGER, set_envelo
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_relief_component(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_relief_component(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- ridgeOrValleyLines
     SELECT ridge_or_valley_lines AS geom FROM citydb.breakline_relief WHERE id = co_id  AND ridge_or_valley_lines IS NOT NULL
       UNION ALL
     -- breaklines
     SELECT break_lines AS geom FROM citydb.breakline_relief WHERE id = co_id  AND break_lines IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -194,19 +188,17 @@ CREATE OR REPLACE FUNCTION citydb.env_bridge(co_id INTEGER, set_envelope INTEGER
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
-  bbox4 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod1Solid
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.bridge t WHERE sg.root_id = t.lod1_solid_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -252,9 +244,10 @@ BEGIN
     -- lod4TerrainIntersection
     SELECT lod4_terrain_intersection AS geom FROM citydb.bridge WHERE id = co_id  AND lod4_terrain_intersection IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- BridgeConstructionElement
     SELECT citydb.env_bridge_constr_element(id, set_envelope) AS geom FROM citydb.bridge_constr_element WHERE bridge_id = co_id
       UNION ALL
@@ -274,17 +267,15 @@ BEGIN
     SELECT citydb.env_bridge(id, set_envelope) AS geom FROM citydb.bridge WHERE bridge_parent_id = co_id
       UNION ALL
     -- Address
-    SELECT citydb.env_address(id, set_envelope) AS geom FROM citydb.address c, citydb.address_to_bridge p2c WHERE c.id = address_id AND p2c.bridge_id = co_id
+    SELECT citydb.env_address(c.id, set_envelope) AS geom FROM citydb.address c, citydb.address_to_bridge p2c WHERE c.id = address_id AND p2c.bridge_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -294,17 +285,17 @@ CREATE OR REPLACE FUNCTION citydb.env_bridge_constr_element(co_id INTEGER, set_e
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod1Geometry
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.bridge_constr_element t WHERE sg.root_id = t.lod1_brep_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -353,15 +344,13 @@ BEGIN
     -- lod4ImplicitRepresentation
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.bridge_constr_element WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -371,17 +360,17 @@ CREATE OR REPLACE FUNCTION citydb.env_bridge_furniture(co_id INTEGER, set_envelo
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod4Geometry
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.bridge_furniture t WHERE sg.root_id = t.lod4_brep_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -391,15 +380,13 @@ BEGIN
     -- lod4ImplicitRepresentation
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.bridge_furniture WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -409,18 +396,17 @@ CREATE OR REPLACE FUNCTION citydb.env_bridge_installation(co_id INTEGER, set_env
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod2Geometry
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.bridge_installation t WHERE sg.root_id = t.lod2_brep_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -457,24 +443,23 @@ BEGIN
     -- lod4ImplicitRepresentation
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.bridge_installation WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- _BoundarySurface
     SELECT citydb.env_bridge_thematic_surface(id, set_envelope) AS geom FROM citydb.bridge_thematic_surface WHERE bridge_installation_id = co_id
       UNION ALL
     -- _BoundarySurface
     SELECT citydb.env_bridge_thematic_surface(id, set_envelope) AS geom FROM citydb.bridge_thematic_surface WHERE bridge_installation_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -484,19 +469,17 @@ CREATE OR REPLACE FUNCTION citydb.env_bridge_opening(co_id INTEGER, set_envelope
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
-  bbox4 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod3MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.bridge_opening t WHERE sg.root_id = t.lod3_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -509,21 +492,20 @@ BEGIN
     -- lod4ImplicitRepresentation
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.bridge_opening WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- Address
     SELECT citydb.env_address(c.id, set_envelope) AS geom FROM citydb.bridge_opening p, address c WHERE p.id = co_id AND p.address_id = c.id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -533,27 +515,27 @@ CREATE OR REPLACE FUNCTION citydb.env_bridge_room(co_id INTEGER, set_envelope IN
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod4Solid
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.bridge_room t WHERE sg.root_id = t.lod4_solid_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
     -- lod4MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.bridge_room t WHERE sg.root_id = t.lod4_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- _BoundarySurface
     SELECT citydb.env_bridge_thematic_surface(id, set_envelope) AS geom FROM citydb.bridge_thematic_surface WHERE bridge_room_id = co_id
       UNION ALL
@@ -563,15 +545,13 @@ BEGIN
     -- IntBridgeInstallation
     SELECT citydb.env_bridge_installation(id, set_envelope) AS geom FROM citydb.bridge_installation WHERE bridge_room_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -581,19 +561,17 @@ CREATE OR REPLACE FUNCTION citydb.env_bridge_thematic_surface(co_id INTEGER, set
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
-  bbox4 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod2MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.bridge_thematic_surface t WHERE sg.root_id = t.lod2_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -603,21 +581,20 @@ BEGIN
     -- lod4MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.bridge_thematic_surface t WHERE sg.root_id = t.lod4_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- _BridgeOpening
-    SELECT citydb.env_bridge_opening(id, set_envelope) AS geom FROM citydb.bridge_opening c, citydb.bridge_open_to_them_srf p2c WHERE c.id = bridge_opening_id AND p2c.bridge_thematic_surface_id = co_id
+    SELECT citydb.env_bridge_opening(c.id, set_envelope) AS geom FROM citydb.bridge_opening c, citydb.bridge_open_to_them_srf p2c WHERE c.id = bridge_opening_id AND p2c.bridge_thematic_surface_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -627,19 +604,17 @@ CREATE OR REPLACE FUNCTION citydb.env_building(co_id INTEGER, set_envelope INTEG
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
-  bbox4 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod0FootPrint
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.building t WHERE sg.root_id = t.lod0_footprint_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -691,9 +666,10 @@ BEGIN
     -- lod4TerrainIntersection
     SELECT lod4_terrain_intersection AS geom FROM citydb.building WHERE id = co_id  AND lod4_terrain_intersection IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- BuildingInstallation
     SELECT citydb.env_building_installation(id, set_envelope) AS geom FROM citydb.building_installation WHERE building_id = co_id
       UNION ALL
@@ -710,17 +686,15 @@ BEGIN
     SELECT citydb.env_building(id, set_envelope) AS geom FROM citydb.building WHERE building_parent_id = co_id
       UNION ALL
     -- Address
-    SELECT citydb.env_address(id, set_envelope) AS geom FROM citydb.address c, citydb.address_to_building p2c WHERE c.id = address_id AND p2c.building_id = co_id
+    SELECT citydb.env_address(c.id, set_envelope) AS geom FROM citydb.address c, citydb.address_to_building p2c WHERE c.id = address_id AND p2c.building_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -730,17 +704,17 @@ CREATE OR REPLACE FUNCTION citydb.env_building_furniture(co_id INTEGER, set_enve
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod4Geometry
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.building_furniture t WHERE sg.root_id = t.lod4_brep_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -750,15 +724,13 @@ BEGIN
     -- lod4ImplicitRepresentation
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.building_furniture WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -768,18 +740,17 @@ CREATE OR REPLACE FUNCTION citydb.env_building_installation(co_id INTEGER, set_e
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod2Geometry
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.building_installation t WHERE sg.root_id = t.lod2_brep_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -816,24 +787,23 @@ BEGIN
     -- lod4ImplicitRepresentation
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.building_installation WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- _BoundarySurface
     SELECT citydb.env_thematic_surface(id, set_envelope) AS geom FROM citydb.thematic_surface WHERE building_installation_id = co_id
       UNION ALL
     -- _BoundarySurface
     SELECT citydb.env_thematic_surface(id, set_envelope) AS geom FROM citydb.thematic_surface WHERE building_installation_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -843,17 +813,17 @@ CREATE OR REPLACE FUNCTION citydb.env_city_furniture(co_id INTEGER, set_envelope
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod1Geometry
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.city_furniture t WHERE sg.root_id = t.lod1_brep_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -902,15 +872,13 @@ BEGIN
     -- lod4ImplicitRepresentation
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.city_furniture WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -920,16 +888,14 @@ CREATE OR REPLACE FUNCTION citydb.env_citymodel(co_id INTEGER, set_envelope INTE
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -939,329 +905,327 @@ CREATE OR REPLACE FUNCTION citydb.env_cityobject(co_id INTEGER, set_envelope INT
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox1 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- boundedBy
     SELECT envelope AS geom FROM citydb.cityobject WHERE id = co_id  AND envelope IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- Appearance
     SELECT citydb.env_appearance(id, set_envelope) AS geom FROM citydb.appearance WHERE cityobject_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   IF caller <> 2 THEN
     SELECT objectclass_id INTO class_id FROM citydb.cityobject WHERE id = co_id;
     CASE
       -- land_use
       WHEN class_id = 4 THEN
-        bbox3 := citydb.env_land_use(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_land_use(co_id, set_envelope, 1);
       -- generic_cityobject
       WHEN class_id = 5 THEN
-        bbox3 := citydb.env_generic_cityobject(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_generic_cityobject(co_id, set_envelope, 1);
       -- solitary_vegetat_object
       WHEN class_id = 7 THEN
-        bbox3 := citydb.env_solitary_vegetat_object(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_solitary_vegetat_object(co_id, set_envelope, 1);
       -- plant_cover
       WHEN class_id = 8 THEN
-        bbox3 := citydb.env_plant_cover(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_plant_cover(co_id, set_envelope, 1);
       -- waterbody
       WHEN class_id = 9 THEN
-        bbox3 := citydb.env_waterbody(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_waterbody(co_id, set_envelope, 1);
       -- waterboundary_surface
       WHEN class_id = 10 THEN
-        bbox3 := citydb.env_waterboundary_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_waterboundary_surface(co_id, set_envelope, 1);
       -- waterboundary_surface
       WHEN class_id = 11 THEN
-        bbox3 := citydb.env_waterboundary_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_waterboundary_surface(co_id, set_envelope, 1);
       -- waterboundary_surface
       WHEN class_id = 12 THEN
-        bbox3 := citydb.env_waterboundary_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_waterboundary_surface(co_id, set_envelope, 1);
       -- waterboundary_surface
       WHEN class_id = 13 THEN
-        bbox3 := citydb.env_waterboundary_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_waterboundary_surface(co_id, set_envelope, 1);
       -- relief_feature
       WHEN class_id = 14 THEN
-        bbox3 := citydb.env_relief_feature(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_relief_feature(co_id, set_envelope, 1);
       -- relief_component
       WHEN class_id = 15 THEN
-        bbox3 := citydb.env_relief_component(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_relief_component(co_id, set_envelope, 1);
       -- tin_relief
       WHEN class_id = 16 THEN
-        bbox3 := citydb.env_tin_relief(co_id, set_envelope, 0);
+        dummy_bbox := citydb.env_tin_relief(co_id, set_envelope, 0);
       -- masspoint_relief
       WHEN class_id = 17 THEN
-        bbox3 := citydb.env_masspoint_relief(co_id, set_envelope, 0);
+        dummy_bbox := citydb.env_masspoint_relief(co_id, set_envelope, 0);
       -- breakline_relief
       WHEN class_id = 18 THEN
-        bbox3 := citydb.env_breakline_relief(co_id, set_envelope, 0);
+        dummy_bbox := citydb.env_breakline_relief(co_id, set_envelope, 0);
       -- raster_relief
       WHEN class_id = 19 THEN
-        bbox3 := citydb.env_raster_relief(co_id, set_envelope, 0);
+        dummy_bbox := citydb.env_raster_relief(co_id, set_envelope, 0);
       -- city_furniture
       WHEN class_id = 21 THEN
-        bbox3 := citydb.env_city_furniture(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_city_furniture(co_id, set_envelope, 1);
       -- cityobjectgroup
       WHEN class_id = 23 THEN
-        bbox3 := citydb.env_cityobjectgroup(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_cityobjectgroup(co_id, set_envelope, 1);
       -- building
       WHEN class_id = 24 THEN
-        bbox3 := citydb.env_building(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_building(co_id, set_envelope, 1);
       -- building
       WHEN class_id = 25 THEN
-        bbox3 := citydb.env_building(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_building(co_id, set_envelope, 1);
       -- building
       WHEN class_id = 26 THEN
-        bbox3 := citydb.env_building(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_building(co_id, set_envelope, 1);
       -- building_installation
       WHEN class_id = 27 THEN
-        bbox3 := citydb.env_building_installation(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_building_installation(co_id, set_envelope, 1);
       -- building_installation
       WHEN class_id = 28 THEN
-        bbox3 := citydb.env_building_installation(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_building_installation(co_id, set_envelope, 1);
       -- thematic_surface
       WHEN class_id = 29 THEN
-        bbox3 := citydb.env_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_thematic_surface(co_id, set_envelope, 1);
       -- thematic_surface
       WHEN class_id = 30 THEN
-        bbox3 := citydb.env_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_thematic_surface(co_id, set_envelope, 1);
       -- thematic_surface
       WHEN class_id = 31 THEN
-        bbox3 := citydb.env_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_thematic_surface(co_id, set_envelope, 1);
       -- thematic_surface
       WHEN class_id = 32 THEN
-        bbox3 := citydb.env_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_thematic_surface(co_id, set_envelope, 1);
       -- thematic_surface
       WHEN class_id = 33 THEN
-        bbox3 := citydb.env_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_thematic_surface(co_id, set_envelope, 1);
       -- thematic_surface
       WHEN class_id = 34 THEN
-        bbox3 := citydb.env_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_thematic_surface(co_id, set_envelope, 1);
       -- thematic_surface
       WHEN class_id = 35 THEN
-        bbox3 := citydb.env_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_thematic_surface(co_id, set_envelope, 1);
       -- thematic_surface
       WHEN class_id = 36 THEN
-        bbox3 := citydb.env_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_thematic_surface(co_id, set_envelope, 1);
       -- opening
       WHEN class_id = 37 THEN
-        bbox3 := citydb.env_opening(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_opening(co_id, set_envelope, 1);
       -- opening
       WHEN class_id = 38 THEN
-        bbox3 := citydb.env_opening(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_opening(co_id, set_envelope, 1);
       -- opening
       WHEN class_id = 39 THEN
-        bbox3 := citydb.env_opening(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_opening(co_id, set_envelope, 1);
       -- building_furniture
       WHEN class_id = 40 THEN
-        bbox3 := citydb.env_building_furniture(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_building_furniture(co_id, set_envelope, 1);
       -- room
       WHEN class_id = 41 THEN
-        bbox3 := citydb.env_room(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_room(co_id, set_envelope, 1);
       -- transportation_complex
       WHEN class_id = 42 THEN
-        bbox3 := citydb.env_transportation_complex(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_transportation_complex(co_id, set_envelope, 1);
       -- transportation_complex
       WHEN class_id = 43 THEN
-        bbox3 := citydb.env_transportation_complex(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_transportation_complex(co_id, set_envelope, 1);
       -- transportation_complex
       WHEN class_id = 44 THEN
-        bbox3 := citydb.env_transportation_complex(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_transportation_complex(co_id, set_envelope, 1);
       -- transportation_complex
       WHEN class_id = 45 THEN
-        bbox3 := citydb.env_transportation_complex(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_transportation_complex(co_id, set_envelope, 1);
       -- transportation_complex
       WHEN class_id = 46 THEN
-        bbox3 := citydb.env_transportation_complex(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_transportation_complex(co_id, set_envelope, 1);
       -- traffic_area
       WHEN class_id = 47 THEN
-        bbox3 := citydb.env_traffic_area(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_traffic_area(co_id, set_envelope, 1);
       -- traffic_area
       WHEN class_id = 48 THEN
-        bbox3 := citydb.env_traffic_area(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_traffic_area(co_id, set_envelope, 1);
       -- appearance
       WHEN class_id = 50 THEN
-        bbox3 := citydb.env_appearance(co_id, set_envelope, 0);
+        dummy_bbox := citydb.env_appearance(co_id, set_envelope, 0);
       -- surface_data
       WHEN class_id = 51 THEN
-        bbox3 := citydb.env_surface_data(co_id, set_envelope, 0);
+        dummy_bbox := citydb.env_surface_data(co_id, set_envelope, 0);
       -- surface_data
       WHEN class_id = 52 THEN
-        bbox3 := citydb.env_surface_data(co_id, set_envelope, 0);
+        dummy_bbox := citydb.env_surface_data(co_id, set_envelope, 0);
       -- surface_data
       WHEN class_id = 53 THEN
-        bbox3 := citydb.env_surface_data(co_id, set_envelope, 0);
+        dummy_bbox := citydb.env_surface_data(co_id, set_envelope, 0);
       -- surface_data
       WHEN class_id = 54 THEN
-        bbox3 := citydb.env_surface_data(co_id, set_envelope, 0);
+        dummy_bbox := citydb.env_surface_data(co_id, set_envelope, 0);
       -- surface_data
       WHEN class_id = 55 THEN
-        bbox3 := citydb.env_surface_data(co_id, set_envelope, 0);
+        dummy_bbox := citydb.env_surface_data(co_id, set_envelope, 0);
       -- textureparam
       WHEN class_id = 56 THEN
-        bbox3 := citydb.env_textureparam(co_id, set_envelope, 0);
+        dummy_bbox := citydb.env_textureparam(co_id, set_envelope, 0);
       -- citymodel
       WHEN class_id = 57 THEN
-        bbox3 := citydb.env_citymodel(co_id, set_envelope, 0);
+        dummy_bbox := citydb.env_citymodel(co_id, set_envelope, 0);
       -- address
       WHEN class_id = 58 THEN
-        bbox3 := citydb.env_address(co_id, set_envelope, 0);
+        dummy_bbox := citydb.env_address(co_id, set_envelope, 0);
       -- implicit_geometry
       WHEN class_id = 59 THEN
-        bbox3 := citydb.env_implicit_geometry(co_id, set_envelope, 0);
+        dummy_bbox := citydb.env_implicit_geometry(co_id, set_envelope, 0);
       -- thematic_surface
       WHEN class_id = 60 THEN
-        bbox3 := citydb.env_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_thematic_surface(co_id, set_envelope, 1);
       -- thematic_surface
       WHEN class_id = 61 THEN
-        bbox3 := citydb.env_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_thematic_surface(co_id, set_envelope, 1);
       -- bridge
       WHEN class_id = 62 THEN
-        bbox3 := citydb.env_bridge(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge(co_id, set_envelope, 1);
       -- bridge
       WHEN class_id = 63 THEN
-        bbox3 := citydb.env_bridge(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge(co_id, set_envelope, 1);
       -- bridge
       WHEN class_id = 64 THEN
-        bbox3 := citydb.env_bridge(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge(co_id, set_envelope, 1);
       -- bridge_installation
       WHEN class_id = 65 THEN
-        bbox3 := citydb.env_bridge_installation(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_installation(co_id, set_envelope, 1);
       -- bridge_installation
       WHEN class_id = 66 THEN
-        bbox3 := citydb.env_bridge_installation(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_installation(co_id, set_envelope, 1);
       -- bridge_thematic_surface
       WHEN class_id = 67 THEN
-        bbox3 := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
       -- bridge_thematic_surface
       WHEN class_id = 68 THEN
-        bbox3 := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
       -- bridge_thematic_surface
       WHEN class_id = 69 THEN
-        bbox3 := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
       -- bridge_thematic_surface
       WHEN class_id = 70 THEN
-        bbox3 := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
       -- bridge_thematic_surface
       WHEN class_id = 71 THEN
-        bbox3 := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
       -- bridge_thematic_surface
       WHEN class_id = 72 THEN
-        bbox3 := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
       -- bridge_thematic_surface
       WHEN class_id = 73 THEN
-        bbox3 := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
       -- bridge_thematic_surface
       WHEN class_id = 74 THEN
-        bbox3 := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
       -- bridge_thematic_surface
       WHEN class_id = 75 THEN
-        bbox3 := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
       -- bridge_thematic_surface
       WHEN class_id = 76 THEN
-        bbox3 := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_thematic_surface(co_id, set_envelope, 1);
       -- bridge_opening
       WHEN class_id = 77 THEN
-        bbox3 := citydb.env_bridge_opening(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_opening(co_id, set_envelope, 1);
       -- bridge_opening
       WHEN class_id = 78 THEN
-        bbox3 := citydb.env_bridge_opening(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_opening(co_id, set_envelope, 1);
       -- bridge_opening
       WHEN class_id = 79 THEN
-        bbox3 := citydb.env_bridge_opening(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_opening(co_id, set_envelope, 1);
       -- bridge_furniture
       WHEN class_id = 80 THEN
-        bbox3 := citydb.env_bridge_furniture(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_furniture(co_id, set_envelope, 1);
       -- bridge_room
       WHEN class_id = 81 THEN
-        bbox3 := citydb.env_bridge_room(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_room(co_id, set_envelope, 1);
       -- bridge_constr_element
       WHEN class_id = 82 THEN
-        bbox3 := citydb.env_bridge_constr_element(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_bridge_constr_element(co_id, set_envelope, 1);
       -- tunnel
       WHEN class_id = 83 THEN
-        bbox3 := citydb.env_tunnel(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel(co_id, set_envelope, 1);
       -- tunnel
       WHEN class_id = 84 THEN
-        bbox3 := citydb.env_tunnel(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel(co_id, set_envelope, 1);
       -- tunnel
       WHEN class_id = 85 THEN
-        bbox3 := citydb.env_tunnel(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel(co_id, set_envelope, 1);
       -- tunnel_installation
       WHEN class_id = 86 THEN
-        bbox3 := citydb.env_tunnel_installation(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_installation(co_id, set_envelope, 1);
       -- tunnel_installation
       WHEN class_id = 87 THEN
-        bbox3 := citydb.env_tunnel_installation(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_installation(co_id, set_envelope, 1);
       -- tunnel_thematic_surface
       WHEN class_id = 88 THEN
-        bbox3 := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
       -- tunnel_thematic_surface
       WHEN class_id = 89 THEN
-        bbox3 := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
       -- tunnel_thematic_surface
       WHEN class_id = 90 THEN
-        bbox3 := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
       -- tunnel_thematic_surface
       WHEN class_id = 91 THEN
-        bbox3 := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
       -- tunnel_thematic_surface
       WHEN class_id = 92 THEN
-        bbox3 := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
       -- tunnel_thematic_surface
       WHEN class_id = 93 THEN
-        bbox3 := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
       -- tunnel_thematic_surface
       WHEN class_id = 94 THEN
-        bbox3 := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
       -- tunnel_thematic_surface
       WHEN class_id = 95 THEN
-        bbox3 := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
       -- tunnel_thematic_surface
       WHEN class_id = 96 THEN
-        bbox3 := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
       -- tunnel_thematic_surface
       WHEN class_id = 97 THEN
-        bbox3 := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_thematic_surface(co_id, set_envelope, 1);
       -- tunnel_opening
       WHEN class_id = 98 THEN
-        bbox3 := citydb.env_tunnel_opening(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_opening(co_id, set_envelope, 1);
       -- tunnel_opening
       WHEN class_id = 99 THEN
-        bbox3 := citydb.env_tunnel_opening(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_opening(co_id, set_envelope, 1);
       -- tunnel_opening
       WHEN class_id = 100 THEN
-        bbox3 := citydb.env_tunnel_opening(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_opening(co_id, set_envelope, 1);
       -- tunnel_furniture
       WHEN class_id = 101 THEN
-        bbox3 := citydb.env_tunnel_furniture(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_furniture(co_id, set_envelope, 1);
       -- tunnel_hollow_space
       WHEN class_id = 102 THEN
-        bbox3 := citydb.env_tunnel_hollow_space(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tunnel_hollow_space(co_id, set_envelope, 1);
       -- textureparam
       WHEN class_id = 103 THEN
-        bbox3 := citydb.env_textureparam(co_id, set_envelope, 0);
+        dummy_bbox := citydb.env_textureparam(co_id, set_envelope, 0);
       -- textureparam
       WHEN class_id = 104 THEN
-        bbox3 := citydb.env_textureparam(co_id, set_envelope, 0);
-    ELSE
+        dummy_bbox := citydb.env_textureparam(co_id, set_envelope, 0);
+      ELSE
     END CASE;
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1271,39 +1235,37 @@ CREATE OR REPLACE FUNCTION citydb.env_cityobjectgroup(co_id INTEGER, set_envelop
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- geometry
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.cityobjectgroup t WHERE sg.root_id = t.brep_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
     -- geometry
     SELECT other_geom AS geom FROM citydb.cityobjectgroup WHERE id = co_id  AND other_geom IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- _CityObject
-    SELECT citydb.env_cityobject(id, set_envelope) AS geom FROM citydb.cityobject c, citydb.group_to_cityobject p2c WHERE c.id = cityobject_id AND p2c.cityobjectgroup_id = co_id
+    SELECT citydb.env_cityobject(c.id, set_envelope) AS geom FROM citydb.cityobject c, citydb.group_to_cityobject p2c WHERE c.id = cityobject_id AND p2c.cityobjectgroup_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1313,17 +1275,17 @@ CREATE OR REPLACE FUNCTION citydb.env_generic_cityobject(co_id INTEGER, set_enve
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod0Geometry
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.generic_cityobject t WHERE sg.root_id = t.lod0_brep_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -1384,15 +1346,13 @@ BEGIN
     -- lod4ImplicitRepresentation
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.generic_cityobject WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1402,16 +1362,14 @@ CREATE OR REPLACE FUNCTION citydb.env_implicit_geometry(co_id INTEGER, set_envel
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1421,17 +1379,17 @@ CREATE OR REPLACE FUNCTION citydb.env_land_use(co_id INTEGER, set_envelope INTEG
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod0MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.land_use t WHERE sg.root_id = t.lod0_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -1447,15 +1405,13 @@ BEGIN
     -- lod4MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.land_use t WHERE sg.root_id = t.lod4_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1465,29 +1421,27 @@ CREATE OR REPLACE FUNCTION citydb.env_masspoint_relief(co_id INTEGER, set_envelo
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_relief_component(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_relief_component(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- reliefPoints
     SELECT relief_points AS geom FROM citydb.masspoint_relief WHERE id = co_id  AND relief_points IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1497,19 +1451,17 @@ CREATE OR REPLACE FUNCTION citydb.env_opening(co_id INTEGER, set_envelope INTEGE
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
-  bbox4 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod3MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.opening t WHERE sg.root_id = t.lod3_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -1522,21 +1474,20 @@ BEGIN
     -- lod4ImplicitRepresentation
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.opening WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- Address
     SELECT citydb.env_address(c.id, set_envelope) AS geom FROM citydb.opening p, address c WHERE p.id = co_id AND p.address_id = c.id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1546,17 +1497,17 @@ CREATE OR REPLACE FUNCTION citydb.env_plant_cover(co_id INTEGER, set_envelope IN
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod1MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.plant_cover t WHERE sg.root_id = t.lod1_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -1581,15 +1532,13 @@ BEGIN
     -- lod4MultiSolid
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.plant_cover t WHERE sg.root_id = t.lod4_multi_solid_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1599,22 +1548,20 @@ CREATE OR REPLACE FUNCTION citydb.env_raster_relief(co_id INTEGER, set_envelope 
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_relief_component(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_relief_component(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1624,49 +1571,47 @@ CREATE OR REPLACE FUNCTION citydb.env_relief_component(co_id INTEGER, set_envelo
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- extent
     SELECT extent AS geom FROM citydb.relief_component WHERE id = co_id  AND extent IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   IF caller <> 2 THEN
-    SELECT objectclass_id INTO class_id FROM citydb.cityobject WHERE id = co_id;
+    SELECT objectclass_id INTO class_id FROM citydb.relief_component WHERE id = co_id;
     CASE
       -- tin_relief
       WHEN class_id = 16 THEN
-        bbox3 := citydb.env_tin_relief(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_tin_relief(co_id, set_envelope, 1);
       -- masspoint_relief
       WHEN class_id = 17 THEN
-        bbox3 := citydb.env_masspoint_relief(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_masspoint_relief(co_id, set_envelope, 1);
       -- breakline_relief
       WHEN class_id = 18 THEN
-        bbox3 := citydb.env_breakline_relief(co_id, set_envelope, 1);
+        dummy_bbox := citydb.env_breakline_relief(co_id, set_envelope, 1);
       -- raster_relief
       WHEN class_id = 19 THEN
-        bbox3 := citydb.env_raster_relief(co_id, set_envelope, 1);
-    ELSE
+        dummy_bbox := citydb.env_raster_relief(co_id, set_envelope, 1);
+      ELSE
     END CASE;
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1676,29 +1621,27 @@ CREATE OR REPLACE FUNCTION citydb.env_relief_feature(co_id INTEGER, set_envelope
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- _ReliefComponent
-    SELECT citydb.env_relief_component(id, set_envelope) AS geom FROM citydb.relief_component c, citydb.relief_feat_to_rel_comp p2c WHERE c.id = relief_component_id AND p2c.relief_feature_id = co_id
+    SELECT citydb.env_relief_component(c.id, set_envelope) AS geom FROM citydb.relief_component c, citydb.relief_feat_to_rel_comp p2c WHERE c.id = relief_component_id AND p2c.relief_feature_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1708,27 +1651,27 @@ CREATE OR REPLACE FUNCTION citydb.env_room(co_id INTEGER, set_envelope INTEGER D
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod4Solid
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.room t WHERE sg.root_id = t.lod4_solid_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
     -- lod4MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.room t WHERE sg.root_id = t.lod4_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- _BoundarySurface
     SELECT citydb.env_thematic_surface(id, set_envelope) AS geom FROM citydb.thematic_surface WHERE room_id = co_id
       UNION ALL
@@ -1738,15 +1681,13 @@ BEGIN
     -- IntBuildingInstallation
     SELECT citydb.env_building_installation(id, set_envelope) AS geom FROM citydb.building_installation WHERE room_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1756,17 +1697,17 @@ CREATE OR REPLACE FUNCTION citydb.env_solitary_vegetat_object(co_id INTEGER, set
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod1Geometry
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.solitary_vegetat_object t WHERE sg.root_id = t.lod1_brep_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -1803,15 +1744,13 @@ BEGIN
     -- lod4ImplicitRepresentation
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.solitary_vegetat_object WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1821,24 +1760,21 @@ CREATE OR REPLACE FUNCTION citydb.env_surface_data(co_id INTEGER, set_envelope I
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox1 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- referencePoint
     SELECT gt_reference_point AS geom FROM citydb.surface_data WHERE id = co_id  AND gt_reference_point IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1848,16 +1784,14 @@ CREATE OR REPLACE FUNCTION citydb.env_textureparam(co_id INTEGER, set_envelope I
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1867,19 +1801,17 @@ CREATE OR REPLACE FUNCTION citydb.env_thematic_surface(co_id INTEGER, set_envelo
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
-  bbox4 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod2MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.thematic_surface t WHERE sg.root_id = t.lod2_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -1889,21 +1821,20 @@ BEGIN
     -- lod4MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.thematic_surface t WHERE sg.root_id = t.lod4_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- _Opening
-    SELECT citydb.env_opening(id, set_envelope) AS geom FROM citydb.opening c, citydb.opening_to_them_surface p2c WHERE c.id = opening_id AND p2c.thematic_surface_id = co_id
+    SELECT citydb.env_opening(c.id, set_envelope) AS geom FROM citydb.opening c, citydb.opening_to_them_surface p2c WHERE c.id = opening_id AND p2c.thematic_surface_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1913,29 +1844,27 @@ CREATE OR REPLACE FUNCTION citydb.env_tin_relief(co_id INTEGER, set_envelope INT
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_relief_component(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_relief_component(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- tin
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.tin_relief t WHERE sg.root_id = t.surface_geometry_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1945,17 +1874,17 @@ CREATE OR REPLACE FUNCTION citydb.env_traffic_area(co_id INTEGER, set_envelope I
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod2MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.traffic_area t WHERE sg.root_id = t.lod2_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -1974,15 +1903,13 @@ BEGIN
     -- lod4MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.traffic_area t WHERE sg.root_id = t.lod4_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -1992,19 +1919,17 @@ CREATE OR REPLACE FUNCTION citydb.env_transportation_complex(co_id INTEGER, set_
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
-  bbox4 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod0Network
     SELECT lod0_network AS geom FROM citydb.transportation_complex WHERE id = co_id  AND lod0_network IS NOT NULL
       UNION ALL
@@ -2020,24 +1945,23 @@ BEGIN
     -- lod4MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.transportation_complex t WHERE sg.root_id = t.lod4_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- TrafficArea
     SELECT citydb.env_traffic_area(id, set_envelope) AS geom FROM citydb.traffic_area WHERE transportation_complex_id = co_id
       UNION ALL
     -- AuxiliaryTrafficArea
     SELECT citydb.env_traffic_area(id, set_envelope) AS geom FROM citydb.traffic_area WHERE transportation_complex_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -2047,19 +1971,17 @@ CREATE OR REPLACE FUNCTION citydb.env_tunnel(co_id INTEGER, set_envelope INTEGER
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
-  bbox4 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod1Solid
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.tunnel t WHERE sg.root_id = t.lod1_solid_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -2105,9 +2027,10 @@ BEGIN
     -- lod4TerrainIntersection
     SELECT lod4_terrain_intersection AS geom FROM citydb.tunnel WHERE id = co_id  AND lod4_terrain_intersection IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- TunnelInstallation
     SELECT citydb.env_tunnel_installation(id, set_envelope) AS geom FROM citydb.tunnel_installation WHERE tunnel_id = co_id
       UNION ALL
@@ -2123,15 +2046,13 @@ BEGIN
     -- TunnelPart
     SELECT citydb.env_tunnel(id, set_envelope) AS geom FROM citydb.tunnel WHERE tunnel_parent_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -2141,17 +2062,17 @@ CREATE OR REPLACE FUNCTION citydb.env_tunnel_furniture(co_id INTEGER, set_envelo
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod4Geometry
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.tunnel_furniture t WHERE sg.root_id = t.lod4_brep_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -2161,15 +2082,13 @@ BEGIN
     -- lod4ImplicitRepresentation
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.tunnel_furniture WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -2179,27 +2098,27 @@ CREATE OR REPLACE FUNCTION citydb.env_tunnel_hollow_space(co_id INTEGER, set_env
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod4Solid
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.tunnel_hollow_space t WHERE sg.root_id = t.lod4_solid_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
     -- lod4MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.tunnel_hollow_space t WHERE sg.root_id = t.lod4_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- _BoundarySurface
     SELECT citydb.env_tunnel_thematic_surface(id, set_envelope) AS geom FROM citydb.tunnel_thematic_surface WHERE tunnel_hollow_space_id = co_id
       UNION ALL
@@ -2209,15 +2128,13 @@ BEGIN
     -- IntTunnelInstallation
     SELECT citydb.env_tunnel_installation(id, set_envelope) AS geom FROM citydb.tunnel_installation WHERE tunnel_hollow_space_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -2227,18 +2144,17 @@ CREATE OR REPLACE FUNCTION citydb.env_tunnel_installation(co_id INTEGER, set_env
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod2Geometry
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.tunnel_installation t WHERE sg.root_id = t.lod2_brep_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -2275,24 +2191,23 @@ BEGIN
     -- lod4ImplicitRepresentation
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.tunnel_installation WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- _BoundarySurface
     SELECT citydb.env_tunnel_thematic_surface(id, set_envelope) AS geom FROM citydb.tunnel_thematic_surface WHERE tunnel_installation_id = co_id
       UNION ALL
     -- _BoundarySurface
     SELECT citydb.env_tunnel_thematic_surface(id, set_envelope) AS geom FROM citydb.tunnel_thematic_surface WHERE tunnel_installation_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -2302,18 +2217,17 @@ CREATE OR REPLACE FUNCTION citydb.env_tunnel_opening(co_id INTEGER, set_envelope
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod3MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.tunnel_opening t WHERE sg.root_id = t.lod3_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -2326,15 +2240,13 @@ BEGIN
     -- lod4ImplicitRepresentation
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.tunnel_opening WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -2344,19 +2256,17 @@ CREATE OR REPLACE FUNCTION citydb.env_tunnel_thematic_surface(co_id INTEGER, set
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
-  bbox4 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod2MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.tunnel_thematic_surface t WHERE sg.root_id = t.lod2_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -2366,21 +2276,20 @@ BEGIN
     -- lod4MultiSurface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.tunnel_thematic_surface t WHERE sg.root_id = t.lod4_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- _Opening
-    SELECT citydb.env_tunnel_opening(id, set_envelope) AS geom FROM citydb.tunnel_opening c, citydb.tunnel_open_to_them_srf p2c WHERE c.id = tunnel_opening_id AND p2c.tunnel_thematic_surface_id = co_id
+    SELECT citydb.env_tunnel_opening(c.id, set_envelope) AS geom FROM citydb.tunnel_opening c, citydb.tunnel_open_to_them_srf p2c WHERE c.id = tunnel_opening_id AND p2c.tunnel_thematic_surface_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -2390,18 +2299,17 @@ CREATE OR REPLACE FUNCTION citydb.env_waterbody(co_id INTEGER, set_envelope INTE
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod0MultiCurve
     SELECT lod0_multi_curve AS geom FROM citydb.waterbody WHERE id = co_id  AND lod0_multi_curve IS NOT NULL
       UNION ALL
@@ -2426,21 +2334,20 @@ BEGIN
     -- lod4Solid
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.waterbody t WHERE sg.root_id = t.lod4_solid_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
   -- bbox from aggregating objects
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox3 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- _WaterBoundarySurface
-    SELECT citydb.env_waterboundary_surface(id, set_envelope) AS geom FROM citydb.waterboundary_surface c, citydb.waterbod_to_waterbnd_srf p2c WHERE c.id = waterboundary_surface_id AND p2c.waterbody_id = co_id
+    SELECT citydb.env_waterboundary_surface(c.id, set_envelope) AS geom FROM citydb.waterboundary_surface c, citydb.waterbod_to_waterbnd_srf p2c WHERE c.id = waterboundary_surface_id AND p2c.waterbody_id = co_id
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2, bbox3]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -2450,18 +2357,17 @@ CREATE OR REPLACE FUNCTION citydb.env_waterboundary_surface(co_id INTEGER, set_e
 $body$
 DECLARE
   class_id INTEGER DEFAULT 0;
-  bbox0 GEOMETRY;
-  bbox1 GEOMETRY;
-  bbox2 GEOMETRY;
-  bbox3 GEOMETRY;
+  bbox GEOMETRY;
+  dummy_bbox GEOMETRY;
 BEGIN
   -- bbox from parent table
   IF caller <> 1 THEN
-    bbox1 := citydb.env_cityobject(co_id, set_envelope, 2);
+    dummy_bbox := citydb.env_cityobject(co_id, set_envelope, 2);
+    bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
   -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox2 FROM (
+  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- lod2Surface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.waterboundary_surface t WHERE sg.root_id = t.lod2_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
       UNION ALL
@@ -2471,15 +2377,13 @@ BEGIN
     -- lod4Surface
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.waterboundary_surface t WHERE sg.root_id = t.lod4_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
+  bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  -- assemble all bboxes
-  bbox0 := citydb.box2envelope(ST_Union(ARRAY[bbox0, bbox1, bbox2]));
-
-  IF set_envelope <> 0 AND bbox0 IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox0 WHERE id = co_id;
+  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
-  RETURN bbox0;
+  RETURN bbox;
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -2489,22 +2393,28 @@ CREATE OR REPLACE FUNCTION citydb.get_envelope_cityobjects(objclass_id INTEGER D
 $body$
 DECLARE
   bbox GEOMETRY;
+  filter TEXT;
 BEGIN
-  IF set_envelope = 1 AND only_if_null <> 0 THEN
-    RETURN set_envelope_cityobjects_if_null(objclass_id);
+  IF only_if_null <> 0 THEN
+    filter := ' WHERE envelope IS NULL';
   END IF;
 
   IF objclass_id <> 0 THEN
-    SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
-      SELECT citydb.env_cityobject(id, set_envelope) AS geom
-        FROM citydb.cityobject WHERE objectclass_id = objclass_id
-    ) g;
-  ELSE
-    SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
-      SELECT citydb.env_cityobject(id, set_envelope) AS geom
-        FROM citydb.cityobject
-    ) g;
+    IF filter IS NULL THEN
+      filter := ' WHERE ';
+    ELSE
+      filter := filter || ' AND ';
+    END IF;
+    filter := filter || 'objectclass_id = ' || objclass_id::TEXT;
   END IF;
+
+  IF filter IS NULL THEN
+    filter := '';
+  END IF;
+
+  EXECUTE 'SELECT citydb.box2envelope(ST_3DExtent(geom)) FROM (
+    SELECT citydb.env_cityobject(id, $1) AS geom
+      FROM citydb.cityobject' || filter || ')g' INTO bbox USING set_envelope; 
 
   RETURN bbox;
 END;
@@ -2572,25 +2482,27 @@ $body$
 LANGUAGE plpgsql STABLE;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.set_envelope_cityobjects_if_null(objclass_id INTEGER DEFAULT 0) RETURNS GEOMETRY AS
+CREATE OR REPLACE FUNCTION citydb.update_bounds(old_box GEOMETRY, new_box GEOMETRY) RETURNS GEOMETRY AS
 $body$
 DECLARE
-  bbox GEOMETRY;
+  updated_box GEOMETRY;
 BEGIN
-  IF objclass_id <> 0 THEN
-    SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
-      SELECT citydb.env_cityobject(id, 1) AS geom
-        FROM citydb.cityobject WHERE envelope IS NULL AND objectclass_id = objclass_id
-    ) g;
+  IF old_box IS NULL AND new_box IS NULL THEN
+    RETURN NULL;
   ELSE
-    SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox FROM (
-      SELECT citydb.env_cityobject(id, 1) AS geom
-        FROM citydb.cityobject WHERE envelope IS NULL
-    ) g;
+    IF old_box IS NULL THEN
+      RETURN new_box;
+    END IF;
+
+    IF new_box IS NULL THEN
+      RETURN old_box;
+    END IF;
+
+    updated_box := citydb.box2envelope(ST_3DExtent(ST_Collect(old_box, new_box)));
   END IF;
 
-  RETURN bbox;
+  RETURN updated_box;
 END;
 $body$
-LANGUAGE plpgsql STRICT;
+LANGUAGE plpgsql STABLE;
 ------------------------------------------
