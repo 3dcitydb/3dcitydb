@@ -75,6 +75,9 @@ CREATE SCHEMA citydb_pkg;
 \i ../../CITYDB_PKG/SRS/SRS.sql
 \i ../../CITYDB_PKG/STATISTICS/STAT.sql
 
+--// create and fill INDEX_TABLE
+\i ../../SCHEMA/INDEX_TABLE/INDEX_TABLE.sql
+
 --// adding CONSTRAINTS in new schema
 \echo
 \echo 'Update primary keys, foreign keys and not null constraints ...'
