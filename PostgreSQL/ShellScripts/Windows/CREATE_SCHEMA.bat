@@ -63,6 +63,8 @@ echo|set /p="Preparing SQL scripts for setting up "%SCHEMA_NAME%" ... "
 set TOKEN=citydb
 set DELETE_FILE=..\..\SCHEMA\DELETE\DELETE.sql
 set TMP_DELETE_FILE=TMP_%SCHEMA_NAME%_DELETE.sql
+set ENVELOPE_FILE=..\..\SCHEMA\ENVELOPE\ENVELOPE.sql
+set TMP_ENVELOPE_FILE=TMP_%SCHEMA_NAME%_ENVELOPE.sql
 
 (for /f "delims=" %%A in (%DELETE_FILE%) do (
   set line=%%A
@@ -71,14 +73,22 @@ set TMP_DELETE_FILE=TMP_%SCHEMA_NAME%_DELETE.sql
   endlocal
 )) > %TMP_DELETE_FILE%
 
+(for /f "delims=" %%A in (%ENVELOPE_FILE%) do (
+  set line=%%A
+  setlocal enabledelayedexpansion
+  echo !line:%TOKEN%=%SCHEMA_NAME%!
+  endlocal
+)) > %TMP_ENVELOPE_FILE%
+
 echo Done.
 
 :: Run CREATE_SCHEMA.sql to create a new 3DCityDB schema ----------------------
 echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-"%PGBIN%\psql" -d "%CITYDB%" -f "CREATE_SCHEMA.sql" -v schema_name="%SCHEMA_NAME%" -v tmp_delete_file="%TMP_DELETE_FILE%" 
+"%PGBIN%\psql" -d "%CITYDB%" -f "CREATE_SCHEMA.sql" -v schema_name="%SCHEMA_NAME%" -v tmp_delete_file="%TMP_DELETE_FILE%" -v tmp_envelope_file="%TMP_ENVELOPE_FILE%" 
 
 :: Remove temporary SQL scripts -----------------------------------------------
 del %TMP_DELETE_FILE% >nul 2>&1
+del %TMP_ENVELOPE_FILE% >nul 2>&1
 
 pause
