@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-06-15 14:48:24)
+-- Automatically generated database script (Creation Date: 2018-06-15 15:41:27)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -3180,7 +3180,7 @@ BEGIN
         WHEN objectclass_id = 102 THEN
           dummy_id := citydb.del_tunnel_hollow_spaces(array_agg(object_id), 1);
         ELSE
-          dummy_id := dummy_id;
+          dummy_id := NULL;
       END CASE;
 
       IF dummy_id = object_id THEN
@@ -4233,7 +4233,7 @@ BEGIN
         WHEN objectclass_id = 19 THEN
           dummy_id := citydb.del_raster_reliefs(array_agg(object_id), 1);
         ELSE
-          dummy_id := dummy_id;
+          dummy_id := NULL;
       END CASE;
 
       IF dummy_id = object_id THEN

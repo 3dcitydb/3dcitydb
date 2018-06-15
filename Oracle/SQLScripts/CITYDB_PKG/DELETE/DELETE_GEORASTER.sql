@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-06-15 14:51:24)
+-- Automatically generated database script (Creation Date: 2018-06-15 15:40:43)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -3711,7 +3711,7 @@ AS
           WHEN objectclass_id = 102 THEN
             dummy_ids := del_tunnel_hollow_spaces(ID_ARRAY(object_id), 1);
           ELSE
-            dummy_ids := dummy_ids;
+            dummy_ids := NULL;
         END CASE;
 
         IF dummy_ids IS NOT EMPTY THEN
@@ -4881,7 +4881,7 @@ AS
           WHEN objectclass_id = 19 THEN
             dummy_ids := del_raster_reliefs(ID_ARRAY(object_id), 1);
           ELSE
-            dummy_ids := dummy_ids;
+            dummy_ids := NULL;
         END CASE;
 
         IF dummy_ids IS NOT EMPTY THEN
