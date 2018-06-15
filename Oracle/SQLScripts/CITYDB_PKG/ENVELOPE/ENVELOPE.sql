@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-06-14 16:48:00)
+-- Automatically generated database script (Creation Date: 2018-06-15 11:18:38)
 -- box2envelope
 -- env_address
 -- env_appearance
@@ -50,7 +50,6 @@
 -- env_masspoint_relief
 -- env_opening
 -- env_plant_cover
--- env_raster_relief
 -- env_relief_component
 -- env_relief_feature
 -- env_room
@@ -100,7 +99,6 @@ AS
   FUNCTION env_masspoint_relief(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY;
   FUNCTION env_opening(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY;
   FUNCTION env_plant_cover(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY;
-  FUNCTION env_raster_relief(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY;
   FUNCTION env_relief_component(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY;
   FUNCTION env_relief_feature(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY;
   FUNCTION env_room(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY;
@@ -1828,28 +1826,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox
     FROM
       collect_geom;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
-    RETURN bbox;
-
-  END;
-  ------------------------------------------
-
-  FUNCTION env_raster_relief(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
-  IS
-    bbox SDO_GEOMETRY;
-    class_id NUMBER;
-    dummy_box SDO_GEOMETRY;
-    nested_feat_cur sys_refcursor;
-    nested_feat_id NUMBER;
-  BEGIN
-    -- bbox from parent table
-    IF caller <> 1 THEN
-      bbox := env_relief_component(co_id, set_envelope, 2);
-    END IF;
 
     IF set_envelope <> 0 AND bbox IS NOT NULL THEN
       UPDATE cityobject SET envelope = bbox WHERE id = co_id;
