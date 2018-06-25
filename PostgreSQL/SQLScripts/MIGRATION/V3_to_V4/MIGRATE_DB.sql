@@ -30,12 +30,6 @@
 \pset footer off
 SET client_min_messages TO WARNING;
 
---// set variables
-\set VERS :version
-
-SELECT current_setting('search_path') AS current_path \gset
-SELECT srid FROM database_srs \gset
-
 --// create SEQUENCES
 \echo
 \echo 'Create sequences that are new in v4 ...'
@@ -76,9 +70,6 @@ CREATE SCHEMA citydb_pkg;
 \echo
 \echo 'Update indexes ...'
 \i INDEXES.sql
-
---// update search_path on database level
-ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
 
 \echo
 \echo '3DCityDB migration complete!'

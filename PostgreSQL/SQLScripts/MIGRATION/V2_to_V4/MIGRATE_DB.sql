@@ -31,11 +31,8 @@
 SET client_min_messages TO WARNING;
 
 --// set variables
-\set VERS :version
 \set TEXOP :texop
-
 SELECT srid FROM database_srs \gset
-
 SELECT current_setting('search_path') AS current_path \gset
 SET search_path TO citydb, public;
 
@@ -47,7 +44,7 @@ SET search_path TO citydb, public;
 --// create SEQUENCES
 \echo
 \echo 'Create sequences that are new in v4 ...'
---\i SEQUENCES.sql
+\i SEQUENCES.sql
 
 --// create TABLES
 \echo

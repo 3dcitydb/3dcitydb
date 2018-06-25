@@ -76,7 +76,7 @@ done
 # Run MIGRATE_DB.sql to create the 3D City Database instance -------------------
 echo
 echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "MIGRATE_DB.sql" -version="$VERS" -texop="$TEXOP"
+psql -d "$CITYDB" -f "MIGRATE_DB.sql" -texop="$TEXOP"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'

@@ -97,6 +97,6 @@ set TEXOP=no
 :run
 echo.
 echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "MIGRATE_DB.sql" -v version="%VERS%" -v texop="%TEXOP%"
+psql -d "%CITYDB%" -f "MIGRATE_DB.sql" -v texop="%TEXOP%"
 
 pause
