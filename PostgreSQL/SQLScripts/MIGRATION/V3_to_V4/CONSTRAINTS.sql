@@ -250,6 +250,7 @@ BEGIN
       AND c.relkind = 'r'
       AND n.nspname = 'citydb'
       AND a.attname = 'objectclass_id'
+      AND NOT a.attnotnull
   )
   LOOP
     EXECUTE format('ALTER TABLE citydb.%I ALTER COLUMN objectclass_id SET NOT NULL', tab);
