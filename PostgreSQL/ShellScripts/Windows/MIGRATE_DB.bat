@@ -67,7 +67,7 @@ echo.
 echo Illegal input! Enter a positive integer for the version.
 goto version
 
-:: Prompt for TEXOP ------------------------------------------------------
+:: Prompt for TEXOP -----------------------------------------------------------
 :texop2
 set var=
 echo.
@@ -93,7 +93,7 @@ goto run
 :texop3
 set TEXOP=no
 
-:: Run MIGRATE_DB.sql to create the 3D City Database instance ----------------
+:: Run MIGRATE_DB.sql to create the 3D City Database instance -----------------
 :run
 echo.
 echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
