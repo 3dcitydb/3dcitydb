@@ -37,7 +37,7 @@ echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
 echo '######################################################################################'
 
-# Prompt for VERS ------------------------------------------------------------
+# Prompt for VERS -------------------------------------------------------------
 re='^[0-9]+$'
 while [ 1 ]; do
   echo
@@ -53,12 +53,24 @@ while [ 1 ]; do
   fi
 done
 
-# Prompt for TEXOP ------------------------------------------------------
+# Prompt for V2USER and TEXOP -------------------------------------------------
 while [ 1 ]; do
   if [ $VERS% -le 2 ]; then
     cd ../../SQLScripts/MIGRATION/V2_to_V4
+
     echo
-    echo 'No texture URI is used for multiple texture files (yes/no):?'
+    echo 'Enter the user name of 3DCityDB v2.1 instance.'
+    read -p "(V2USER must already exist in database): " V2USER
+  
+    if [[ -z "$V2USER" ]]; then
+      echo
+      echo 'Illegal input! V2USER must not be empty.'
+    else
+      break;
+    fi
+    
+    echo
+    echo 'No texture URI is used for multiple texture files (yes/no)?'
     read -p "(default TEXOP=no): " TEXOP
   else
     cd ../../SQLScripts/MIGRATION/V3_to_V4
@@ -91,10 +103,10 @@ while [ 1 ]; do
   fi
 done
 
-# Run MIGRATE_DB.sql to create the 3D City Database instance -------------------
+# Run MIGRATE_DB.sql to create the 3D City Database instance ------------------
 echo
 echo "Connecting to the database \"$USERNAME@$HOST:$PORT/$SID\" ..."
-sqlplus "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @MIGRATE_DB.sql "${TEXOP}" "${DBVERSION}"
+sqlplus "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @MIGRATE_DB.sql "${TEXOP}" "${DBVERSION}" "${V2USER}"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'

@@ -56,10 +56,10 @@ if defined num goto invalid_version
 if %VERS% LEQ 0 goto invalid_version
 if %VERS% LEQ 2 (
   cd ..\..\SQLScripts\MIGRATION\V2_to_V4
-  goto texop2
+  goto v2
 ) else (
   cd ..\..\SQLScripts\MIGRATION\V3_to_V4
-  goto texop3
+  goto v3
 )
 
 :invalid_version
@@ -67,11 +67,26 @@ echo.
 echo Illegal input! Enter a positive integer for the version.
 goto version
 
-:: Prompt for TEXOP ------------------------------------------------------
-:texop2
+:v2
+:: Prompt for V2USER ----------------------------------------------------------
 set var=
 echo.
-echo No texture URI is used for multiple texture files (yes/no):?
+echo Enter the user name of 3DCityDB v2.1 instance.
+set /p var="(V2USER must already exist in database): "
+
+if /i not "%var%"=="" (
+  set V2USER=%var%
+) else (
+  echo.
+  echo Illegal input! V2USER must not be empty.
+  goto v2
+)
+
+:: Prompt for TEXOP -----------------------------------------------------------
+:texop
+set var=
+echo.
+echo No texture URI is used for multiple texture files (yes/no)?
 set /p var="(default TEXOP=no): "
 
 if /i not "%var%"=="" (
@@ -90,8 +105,9 @@ if "%res%"=="f" (
 )
 goto dbversion
 
-:texop3
+:v3
 set TEXOP=no
+set V2USER=""
 
 :: Prompt for DBVERSION -------------------------------------------------------
 :dbversion
@@ -118,6 +134,6 @@ if "%res%"=="f" (
 :: Run MIGRATE_DB.sql to create the 3D City Database instance ----------------
 echo.
 echo Connecting to the database "%USERNAME%@%HOST%:%PORT%/%SID%" ...
-sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @MIGRATE_DB.sql "%TEXOP%" "%DBVERSION%"
+sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @MIGRATE_DB.sql "%TEXOP%" "%DBVERSION%" "%V2USER%"
 
 pause
