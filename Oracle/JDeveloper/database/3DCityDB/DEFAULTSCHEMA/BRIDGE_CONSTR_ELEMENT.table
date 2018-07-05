@@ -935,7 +935,7 @@
       <systemGenerated>false</systemGenerated>
     </index>
     <index>
-      <name>BRIDGE_CONST_LOD1XGEOM_SKX</name>
+      <name>BRIDGE_CONST_LOD1XGEOM_SPX</name>
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD1_OTHER_GEOM</expressionSource>
@@ -971,7 +971,7 @@
       <systemGenerated>false</systemGenerated>
     </index>
     <index>
-      <name>BRIDGE_CONST_LOD2XGEOM_SKX</name>
+      <name>BRIDGE_CONST_LOD2XGEOM_SPX</name>
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD2_OTHER_GEOM</expressionSource>
@@ -1007,7 +1007,7 @@
       <systemGenerated>false</systemGenerated>
     </index>
     <index>
-      <name>BRIDGE_CONST_LOD3XGEOM_SKX</name>
+      <name>BRIDGE_CONST_LOD3XGEOM_SPX</name>
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD3_OTHER_GEOM</expressionSource>
@@ -1043,7 +1043,7 @@
       <systemGenerated>false</systemGenerated>
     </index>
     <index>
-      <name>BRIDGE_CONST_LOD4XGEOM_SKX</name>
+      <name>BRIDGE_CONST_LOD4XGEOM_SPX</name>
       <columnExpressions>
         <columnExpression>
           <expressionSource>LOD4_OTHER_GEOM</expressionSource>
