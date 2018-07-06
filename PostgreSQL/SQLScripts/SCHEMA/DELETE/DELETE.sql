@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-05-29 09:29:57)
+-- Automatically generated database script (Creation Date: 2018-06-15 15:41:27)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -199,8 +199,11 @@ CREATE OR REPLACE FUNCTION citydb.del_addresss(int[], caller INTEGER DEFAULT 0) 
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   -- delete citydb.addresss
   WITH delete_objects AS (
@@ -219,6 +222,10 @@ BEGIN
     deleted_ids
   FROM
     delete_objects;
+
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
 
   RETURN QUERY
     SELECT unnest(deleted_ids);
@@ -243,8 +250,11 @@ CREATE OR REPLACE FUNCTION citydb.del_appearances(int[], caller INTEGER DEFAULT 
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_data_ids int[] := '{}';
 BEGIN
   -- delete references to surface_datas
@@ -295,6 +305,10 @@ BEGIN
   FROM
     delete_objects;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -318,8 +332,11 @@ CREATE OR REPLACE FUNCTION citydb.del_breakline_reliefs(int[], caller INTEGER DE
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   -- delete citydb.breakline_reliefs
   WITH delete_objects AS (
@@ -342,6 +359,10 @@ BEGIN
   IF $2 <> 1 THEN
     -- delete relief_component
     PERFORM citydb.del_relief_components(deleted_ids, 2);
+  END IF;
+
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
   END IF;
 
   RETURN QUERY
@@ -379,8 +400,11 @@ CREATE OR REPLACE FUNCTION citydb.del_bridge_constr_elements(int[], caller INTEG
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -581,6 +605,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -604,8 +632,11 @@ CREATE OR REPLACE FUNCTION citydb.del_bridge_furnitures(int[], caller INTEGER DE
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -794,6 +825,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -817,8 +852,11 @@ CREATE OR REPLACE FUNCTION citydb.del_bridge_installations(int[], caller INTEGER
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -1024,6 +1062,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -1047,8 +1089,11 @@ CREATE OR REPLACE FUNCTION citydb.del_bridge_openings(int[], caller INTEGER DEFA
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
   address_ids int[] := '{}';
@@ -1269,6 +1314,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -1292,8 +1341,11 @@ CREATE OR REPLACE FUNCTION citydb.del_bridge_rooms(int[], caller INTEGER DEFAULT
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   --delete bridge_furnitures
@@ -1359,6 +1411,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -1382,8 +1438,11 @@ CREATE OR REPLACE FUNCTION citydb.del_bridge_thematic_surfaces(int[], caller INT
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   bridge_opening_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -1451,6 +1510,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -1462,8 +1525,11 @@ CREATE OR REPLACE FUNCTION citydb.del_bridges(int[], caller INTEGER DEFAULT 0) R
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   address_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -1613,6 +1679,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -1648,8 +1718,11 @@ CREATE OR REPLACE FUNCTION citydb.del_building_furnitures(int[], caller INTEGER 
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -1838,6 +1911,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -1861,8 +1938,11 @@ CREATE OR REPLACE FUNCTION citydb.del_building_installations(int[], caller INTEG
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -2068,6 +2148,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -2079,8 +2163,11 @@ CREATE OR REPLACE FUNCTION citydb.del_buildings(int[], caller INTEGER DEFAULT 0)
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   address_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -2225,6 +2312,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -2248,8 +2339,11 @@ CREATE OR REPLACE FUNCTION citydb.del_city_furnitures(int[], caller INTEGER DEFA
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -2450,6 +2544,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -2473,8 +2571,11 @@ CREATE OR REPLACE FUNCTION citydb.del_citymodels(int[], caller INTEGER DEFAULT 0
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   cityobject_ids int[] := '{}';
 BEGIN
   --delete appearances
@@ -2538,6 +2639,10 @@ BEGIN
   FROM
     delete_objects;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -2573,8 +2678,11 @@ CREATE OR REPLACE FUNCTION citydb.del_cityobject_genericattribs(int[], caller IN
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete referenced parts
@@ -2626,6 +2734,10 @@ BEGIN
       (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -2649,8 +2761,11 @@ CREATE OR REPLACE FUNCTION citydb.del_cityobjectgroups(int[], caller INTEGER DEF
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   cityobject_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -2722,6 +2837,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -2733,8 +2852,11 @@ CREATE OR REPLACE FUNCTION citydb.del_cityobjects(int[], caller INTEGER DEFAULT 
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   --delete appearances
   PERFORM
@@ -2764,478 +2886,305 @@ BEGIN
     t.cityobject_id = a.a_id;
 
   IF $2 <> 2 THEN
-    FOREACH object_id IN ARRAY $1
+    FOR rec IN
+      SELECT
+        co.id, co.objectclass_id
+      FROM
+        citydb.cityobject co, unnest($1) a(a_id)
+      WHERE
+        co.id = a.a_id
     LOOP
-      EXECUTE format('SELECT objectclass_id FROM citydb.cityobject WHERE id = %L', object_id) INTO objectclass_id;
-
-      -- delete land_use
-      IF objectclass_id = 4 THEN
-        PERFORM citydb.del_land_uses(array_agg(object_id), 1);
-      END IF;
-
-      -- delete generic_cityobject
-      IF objectclass_id = 5 THEN
-        PERFORM citydb.del_generic_cityobjects(array_agg(object_id), 1);
-      END IF;
-
-      -- delete solitary_vegetat_object
-      IF objectclass_id = 7 THEN
-        PERFORM citydb.del_solitary_vegetat_objects(array_agg(object_id), 1);
-      END IF;
-
-      -- delete plant_cover
-      IF objectclass_id = 8 THEN
-        PERFORM citydb.del_plant_covers(array_agg(object_id), 1);
-      END IF;
-
-      -- delete waterbody
-      IF objectclass_id = 9 THEN
-        PERFORM citydb.del_waterbodys(array_agg(object_id), 1);
-      END IF;
-
-      -- delete waterboundary_surface
-      IF objectclass_id = 10 THEN
-        PERFORM citydb.del_waterboundary_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete waterboundary_surface
-      IF objectclass_id = 11 THEN
-        PERFORM citydb.del_waterboundary_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete waterboundary_surface
-      IF objectclass_id = 12 THEN
-        PERFORM citydb.del_waterboundary_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete waterboundary_surface
-      IF objectclass_id = 13 THEN
-        PERFORM citydb.del_waterboundary_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete relief_feature
-      IF objectclass_id = 14 THEN
-        PERFORM citydb.del_relief_features(array_agg(object_id), 1);
-      END IF;
-
-      -- delete relief_component
-      IF objectclass_id = 15 THEN
-        PERFORM citydb.del_relief_components(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tin_relief
-      IF objectclass_id = 16 THEN
-        PERFORM citydb.del_tin_reliefs(array_agg(object_id), 0);
-      END IF;
-
-      -- delete masspoint_relief
-      IF objectclass_id = 17 THEN
-        PERFORM citydb.del_masspoint_reliefs(array_agg(object_id), 0);
-      END IF;
-
-      -- delete breakline_relief
-      IF objectclass_id = 18 THEN
-        PERFORM citydb.del_breakline_reliefs(array_agg(object_id), 0);
-      END IF;
-
-      -- delete raster_relief
-      IF objectclass_id = 19 THEN
-        PERFORM citydb.del_raster_reliefs(array_agg(object_id), 0);
-      END IF;
-
-      -- delete city_furniture
-      IF objectclass_id = 21 THEN
-        PERFORM citydb.del_city_furnitures(array_agg(object_id), 1);
-      END IF;
-
-      -- delete cityobjectgroup
-      IF objectclass_id = 23 THEN
-        PERFORM citydb.del_cityobjectgroups(array_agg(object_id), 1);
-      END IF;
-
-      -- delete building
-      IF objectclass_id = 24 THEN
-        PERFORM citydb.del_buildings(array_agg(object_id), 1);
-      END IF;
-
-      -- delete building
-      IF objectclass_id = 25 THEN
-        PERFORM citydb.del_buildings(array_agg(object_id), 1);
-      END IF;
-
-      -- delete building
-      IF objectclass_id = 26 THEN
-        PERFORM citydb.del_buildings(array_agg(object_id), 1);
-      END IF;
-
-      -- delete building_installation
-      IF objectclass_id = 27 THEN
-        PERFORM citydb.del_building_installations(array_agg(object_id), 1);
-      END IF;
-
-      -- delete building_installation
-      IF objectclass_id = 28 THEN
-        PERFORM citydb.del_building_installations(array_agg(object_id), 1);
-      END IF;
-
-      -- delete thematic_surface
-      IF objectclass_id = 29 THEN
-        PERFORM citydb.del_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete thematic_surface
-      IF objectclass_id = 30 THEN
-        PERFORM citydb.del_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete thematic_surface
-      IF objectclass_id = 31 THEN
-        PERFORM citydb.del_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete thematic_surface
-      IF objectclass_id = 32 THEN
-        PERFORM citydb.del_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete thematic_surface
-      IF objectclass_id = 33 THEN
-        PERFORM citydb.del_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete thematic_surface
-      IF objectclass_id = 34 THEN
-        PERFORM citydb.del_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete thematic_surface
-      IF objectclass_id = 35 THEN
-        PERFORM citydb.del_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete thematic_surface
-      IF objectclass_id = 36 THEN
-        PERFORM citydb.del_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete opening
-      IF objectclass_id = 37 THEN
-        PERFORM citydb.del_openings(array_agg(object_id), 1);
-      END IF;
-
-      -- delete opening
-      IF objectclass_id = 38 THEN
-        PERFORM citydb.del_openings(array_agg(object_id), 1);
-      END IF;
-
-      -- delete opening
-      IF objectclass_id = 39 THEN
-        PERFORM citydb.del_openings(array_agg(object_id), 1);
-      END IF;
-
-      -- delete building_furniture
-      IF objectclass_id = 40 THEN
-        PERFORM citydb.del_building_furnitures(array_agg(object_id), 1);
-      END IF;
-
-      -- delete room
-      IF objectclass_id = 41 THEN
-        PERFORM citydb.del_rooms(array_agg(object_id), 1);
-      END IF;
-
-      -- delete transportation_complex
-      IF objectclass_id = 42 THEN
-        PERFORM citydb.del_transportation_complexs(array_agg(object_id), 1);
-      END IF;
-
-      -- delete transportation_complex
-      IF objectclass_id = 43 THEN
-        PERFORM citydb.del_transportation_complexs(array_agg(object_id), 1);
-      END IF;
-
-      -- delete transportation_complex
-      IF objectclass_id = 44 THEN
-        PERFORM citydb.del_transportation_complexs(array_agg(object_id), 1);
-      END IF;
-
-      -- delete transportation_complex
-      IF objectclass_id = 45 THEN
-        PERFORM citydb.del_transportation_complexs(array_agg(object_id), 1);
-      END IF;
-
-      -- delete transportation_complex
-      IF objectclass_id = 46 THEN
-        PERFORM citydb.del_transportation_complexs(array_agg(object_id), 1);
-      END IF;
-
-      -- delete traffic_area
-      IF objectclass_id = 47 THEN
-        PERFORM citydb.del_traffic_areas(array_agg(object_id), 1);
-      END IF;
-
-      -- delete traffic_area
-      IF objectclass_id = 48 THEN
-        PERFORM citydb.del_traffic_areas(array_agg(object_id), 1);
-      END IF;
-
-      -- delete appearance
-      IF objectclass_id = 50 THEN
-        PERFORM citydb.del_appearances(array_agg(object_id), 0);
-      END IF;
-
-      -- delete surface_data
-      IF objectclass_id = 51 THEN
-        PERFORM citydb.del_surface_datas(array_agg(object_id), 0);
-      END IF;
-
-      -- delete surface_data
-      IF objectclass_id = 52 THEN
-        PERFORM citydb.del_surface_datas(array_agg(object_id), 0);
-      END IF;
-
-      -- delete surface_data
-      IF objectclass_id = 53 THEN
-        PERFORM citydb.del_surface_datas(array_agg(object_id), 0);
-      END IF;
-
-      -- delete surface_data
-      IF objectclass_id = 54 THEN
-        PERFORM citydb.del_surface_datas(array_agg(object_id), 0);
-      END IF;
-
-      -- delete surface_data
-      IF objectclass_id = 55 THEN
-        PERFORM citydb.del_surface_datas(array_agg(object_id), 0);
-      END IF;
-
-      -- delete citymodel
-      IF objectclass_id = 57 THEN
-        PERFORM citydb.del_citymodels(array_agg(object_id), 0);
-      END IF;
-
-      -- delete address
-      IF objectclass_id = 58 THEN
-        PERFORM citydb.del_addresss(array_agg(object_id), 0);
-      END IF;
-
-      -- delete implicit_geometry
-      IF objectclass_id = 59 THEN
-        PERFORM citydb.del_implicit_geometrys(array_agg(object_id), 0);
-      END IF;
-
-      -- delete thematic_surface
-      IF objectclass_id = 60 THEN
-        PERFORM citydb.del_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete thematic_surface
-      IF objectclass_id = 61 THEN
-        PERFORM citydb.del_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge
-      IF objectclass_id = 62 THEN
-        PERFORM citydb.del_bridges(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge
-      IF objectclass_id = 63 THEN
-        PERFORM citydb.del_bridges(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge
-      IF objectclass_id = 64 THEN
-        PERFORM citydb.del_bridges(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_installation
-      IF objectclass_id = 65 THEN
-        PERFORM citydb.del_bridge_installations(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_installation
-      IF objectclass_id = 66 THEN
-        PERFORM citydb.del_bridge_installations(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_thematic_surface
-      IF objectclass_id = 67 THEN
-        PERFORM citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_thematic_surface
-      IF objectclass_id = 68 THEN
-        PERFORM citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_thematic_surface
-      IF objectclass_id = 69 THEN
-        PERFORM citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_thematic_surface
-      IF objectclass_id = 70 THEN
-        PERFORM citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_thematic_surface
-      IF objectclass_id = 71 THEN
-        PERFORM citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_thematic_surface
-      IF objectclass_id = 72 THEN
-        PERFORM citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_thematic_surface
-      IF objectclass_id = 73 THEN
-        PERFORM citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_thematic_surface
-      IF objectclass_id = 74 THEN
-        PERFORM citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_thematic_surface
-      IF objectclass_id = 75 THEN
-        PERFORM citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_thematic_surface
-      IF objectclass_id = 76 THEN
-        PERFORM citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_opening
-      IF objectclass_id = 77 THEN
-        PERFORM citydb.del_bridge_openings(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_opening
-      IF objectclass_id = 78 THEN
-        PERFORM citydb.del_bridge_openings(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_opening
-      IF objectclass_id = 79 THEN
-        PERFORM citydb.del_bridge_openings(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_furniture
-      IF objectclass_id = 80 THEN
-        PERFORM citydb.del_bridge_furnitures(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_room
-      IF objectclass_id = 81 THEN
-        PERFORM citydb.del_bridge_rooms(array_agg(object_id), 1);
-      END IF;
-
-      -- delete bridge_constr_element
-      IF objectclass_id = 82 THEN
-        PERFORM citydb.del_bridge_constr_elements(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel
-      IF objectclass_id = 83 THEN
-        PERFORM citydb.del_tunnels(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel
-      IF objectclass_id = 84 THEN
-        PERFORM citydb.del_tunnels(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel
-      IF objectclass_id = 85 THEN
-        PERFORM citydb.del_tunnels(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_installation
-      IF objectclass_id = 86 THEN
-        PERFORM citydb.del_tunnel_installations(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_installation
-      IF objectclass_id = 87 THEN
-        PERFORM citydb.del_tunnel_installations(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_thematic_surface
-      IF objectclass_id = 88 THEN
-        PERFORM citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_thematic_surface
-      IF objectclass_id = 89 THEN
-        PERFORM citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_thematic_surface
-      IF objectclass_id = 90 THEN
-        PERFORM citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_thematic_surface
-      IF objectclass_id = 91 THEN
-        PERFORM citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_thematic_surface
-      IF objectclass_id = 92 THEN
-        PERFORM citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_thematic_surface
-      IF objectclass_id = 93 THEN
-        PERFORM citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_thematic_surface
-      IF objectclass_id = 94 THEN
-        PERFORM citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_thematic_surface
-      IF objectclass_id = 95 THEN
-        PERFORM citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_thematic_surface
-      IF objectclass_id = 96 THEN
-        PERFORM citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_thematic_surface
-      IF objectclass_id = 97 THEN
-        PERFORM citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_opening
-      IF objectclass_id = 98 THEN
-        PERFORM citydb.del_tunnel_openings(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_opening
-      IF objectclass_id = 99 THEN
-        PERFORM citydb.del_tunnel_openings(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_opening
-      IF objectclass_id = 100 THEN
-        PERFORM citydb.del_tunnel_openings(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_furniture
-      IF objectclass_id = 101 THEN
-        PERFORM citydb.del_tunnel_furnitures(array_agg(object_id), 1);
-      END IF;
-
-      -- delete tunnel_hollow_space
-      IF objectclass_id = 102 THEN
-        PERFORM citydb.del_tunnel_hollow_spaces(array_agg(object_id), 1);
+      object_id := rec.id::integer;
+      objectclass_id := rec.objectclass_id::integer;
+      CASE
+        -- delete land_use
+        WHEN objectclass_id = 4 THEN
+          dummy_id := citydb.del_land_uses(array_agg(object_id), 1);
+        -- delete generic_cityobject
+        WHEN objectclass_id = 5 THEN
+          dummy_id := citydb.del_generic_cityobjects(array_agg(object_id), 1);
+        -- delete solitary_vegetat_object
+        WHEN objectclass_id = 7 THEN
+          dummy_id := citydb.del_solitary_vegetat_objects(array_agg(object_id), 1);
+        -- delete plant_cover
+        WHEN objectclass_id = 8 THEN
+          dummy_id := citydb.del_plant_covers(array_agg(object_id), 1);
+        -- delete waterbody
+        WHEN objectclass_id = 9 THEN
+          dummy_id := citydb.del_waterbodys(array_agg(object_id), 1);
+        -- delete waterboundary_surface
+        WHEN objectclass_id = 10 THEN
+          dummy_id := citydb.del_waterboundary_surfaces(array_agg(object_id), 1);
+        -- delete waterboundary_surface
+        WHEN objectclass_id = 11 THEN
+          dummy_id := citydb.del_waterboundary_surfaces(array_agg(object_id), 1);
+        -- delete waterboundary_surface
+        WHEN objectclass_id = 12 THEN
+          dummy_id := citydb.del_waterboundary_surfaces(array_agg(object_id), 1);
+        -- delete waterboundary_surface
+        WHEN objectclass_id = 13 THEN
+          dummy_id := citydb.del_waterboundary_surfaces(array_agg(object_id), 1);
+        -- delete relief_feature
+        WHEN objectclass_id = 14 THEN
+          dummy_id := citydb.del_relief_features(array_agg(object_id), 1);
+        -- delete relief_component
+        WHEN objectclass_id = 15 THEN
+          dummy_id := citydb.del_relief_components(array_agg(object_id), 1);
+        -- delete tin_relief
+        WHEN objectclass_id = 16 THEN
+          dummy_id := citydb.del_tin_reliefs(array_agg(object_id), 0);
+        -- delete masspoint_relief
+        WHEN objectclass_id = 17 THEN
+          dummy_id := citydb.del_masspoint_reliefs(array_agg(object_id), 0);
+        -- delete breakline_relief
+        WHEN objectclass_id = 18 THEN
+          dummy_id := citydb.del_breakline_reliefs(array_agg(object_id), 0);
+        -- delete raster_relief
+        WHEN objectclass_id = 19 THEN
+          dummy_id := citydb.del_raster_reliefs(array_agg(object_id), 0);
+        -- delete city_furniture
+        WHEN objectclass_id = 21 THEN
+          dummy_id := citydb.del_city_furnitures(array_agg(object_id), 1);
+        -- delete cityobjectgroup
+        WHEN objectclass_id = 23 THEN
+          dummy_id := citydb.del_cityobjectgroups(array_agg(object_id), 1);
+        -- delete building
+        WHEN objectclass_id = 24 THEN
+          dummy_id := citydb.del_buildings(array_agg(object_id), 1);
+        -- delete building
+        WHEN objectclass_id = 25 THEN
+          dummy_id := citydb.del_buildings(array_agg(object_id), 1);
+        -- delete building
+        WHEN objectclass_id = 26 THEN
+          dummy_id := citydb.del_buildings(array_agg(object_id), 1);
+        -- delete building_installation
+        WHEN objectclass_id = 27 THEN
+          dummy_id := citydb.del_building_installations(array_agg(object_id), 1);
+        -- delete building_installation
+        WHEN objectclass_id = 28 THEN
+          dummy_id := citydb.del_building_installations(array_agg(object_id), 1);
+        -- delete thematic_surface
+        WHEN objectclass_id = 29 THEN
+          dummy_id := citydb.del_thematic_surfaces(array_agg(object_id), 1);
+        -- delete thematic_surface
+        WHEN objectclass_id = 30 THEN
+          dummy_id := citydb.del_thematic_surfaces(array_agg(object_id), 1);
+        -- delete thematic_surface
+        WHEN objectclass_id = 31 THEN
+          dummy_id := citydb.del_thematic_surfaces(array_agg(object_id), 1);
+        -- delete thematic_surface
+        WHEN objectclass_id = 32 THEN
+          dummy_id := citydb.del_thematic_surfaces(array_agg(object_id), 1);
+        -- delete thematic_surface
+        WHEN objectclass_id = 33 THEN
+          dummy_id := citydb.del_thematic_surfaces(array_agg(object_id), 1);
+        -- delete thematic_surface
+        WHEN objectclass_id = 34 THEN
+          dummy_id := citydb.del_thematic_surfaces(array_agg(object_id), 1);
+        -- delete thematic_surface
+        WHEN objectclass_id = 35 THEN
+          dummy_id := citydb.del_thematic_surfaces(array_agg(object_id), 1);
+        -- delete thematic_surface
+        WHEN objectclass_id = 36 THEN
+          dummy_id := citydb.del_thematic_surfaces(array_agg(object_id), 1);
+        -- delete opening
+        WHEN objectclass_id = 37 THEN
+          dummy_id := citydb.del_openings(array_agg(object_id), 1);
+        -- delete opening
+        WHEN objectclass_id = 38 THEN
+          dummy_id := citydb.del_openings(array_agg(object_id), 1);
+        -- delete opening
+        WHEN objectclass_id = 39 THEN
+          dummy_id := citydb.del_openings(array_agg(object_id), 1);
+        -- delete building_furniture
+        WHEN objectclass_id = 40 THEN
+          dummy_id := citydb.del_building_furnitures(array_agg(object_id), 1);
+        -- delete room
+        WHEN objectclass_id = 41 THEN
+          dummy_id := citydb.del_rooms(array_agg(object_id), 1);
+        -- delete transportation_complex
+        WHEN objectclass_id = 42 THEN
+          dummy_id := citydb.del_transportation_complexs(array_agg(object_id), 1);
+        -- delete transportation_complex
+        WHEN objectclass_id = 43 THEN
+          dummy_id := citydb.del_transportation_complexs(array_agg(object_id), 1);
+        -- delete transportation_complex
+        WHEN objectclass_id = 44 THEN
+          dummy_id := citydb.del_transportation_complexs(array_agg(object_id), 1);
+        -- delete transportation_complex
+        WHEN objectclass_id = 45 THEN
+          dummy_id := citydb.del_transportation_complexs(array_agg(object_id), 1);
+        -- delete transportation_complex
+        WHEN objectclass_id = 46 THEN
+          dummy_id := citydb.del_transportation_complexs(array_agg(object_id), 1);
+        -- delete traffic_area
+        WHEN objectclass_id = 47 THEN
+          dummy_id := citydb.del_traffic_areas(array_agg(object_id), 1);
+        -- delete traffic_area
+        WHEN objectclass_id = 48 THEN
+          dummy_id := citydb.del_traffic_areas(array_agg(object_id), 1);
+        -- delete appearance
+        WHEN objectclass_id = 50 THEN
+          dummy_id := citydb.del_appearances(array_agg(object_id), 0);
+        -- delete surface_data
+        WHEN objectclass_id = 51 THEN
+          dummy_id := citydb.del_surface_datas(array_agg(object_id), 0);
+        -- delete surface_data
+        WHEN objectclass_id = 52 THEN
+          dummy_id := citydb.del_surface_datas(array_agg(object_id), 0);
+        -- delete surface_data
+        WHEN objectclass_id = 53 THEN
+          dummy_id := citydb.del_surface_datas(array_agg(object_id), 0);
+        -- delete surface_data
+        WHEN objectclass_id = 54 THEN
+          dummy_id := citydb.del_surface_datas(array_agg(object_id), 0);
+        -- delete surface_data
+        WHEN objectclass_id = 55 THEN
+          dummy_id := citydb.del_surface_datas(array_agg(object_id), 0);
+        -- delete citymodel
+        WHEN objectclass_id = 57 THEN
+          dummy_id := citydb.del_citymodels(array_agg(object_id), 0);
+        -- delete address
+        WHEN objectclass_id = 58 THEN
+          dummy_id := citydb.del_addresss(array_agg(object_id), 0);
+        -- delete implicit_geometry
+        WHEN objectclass_id = 59 THEN
+          dummy_id := citydb.del_implicit_geometrys(array_agg(object_id), 0);
+        -- delete thematic_surface
+        WHEN objectclass_id = 60 THEN
+          dummy_id := citydb.del_thematic_surfaces(array_agg(object_id), 1);
+        -- delete thematic_surface
+        WHEN objectclass_id = 61 THEN
+          dummy_id := citydb.del_thematic_surfaces(array_agg(object_id), 1);
+        -- delete bridge
+        WHEN objectclass_id = 62 THEN
+          dummy_id := citydb.del_bridges(array_agg(object_id), 1);
+        -- delete bridge
+        WHEN objectclass_id = 63 THEN
+          dummy_id := citydb.del_bridges(array_agg(object_id), 1);
+        -- delete bridge
+        WHEN objectclass_id = 64 THEN
+          dummy_id := citydb.del_bridges(array_agg(object_id), 1);
+        -- delete bridge_installation
+        WHEN objectclass_id = 65 THEN
+          dummy_id := citydb.del_bridge_installations(array_agg(object_id), 1);
+        -- delete bridge_installation
+        WHEN objectclass_id = 66 THEN
+          dummy_id := citydb.del_bridge_installations(array_agg(object_id), 1);
+        -- delete bridge_thematic_surface
+        WHEN objectclass_id = 67 THEN
+          dummy_id := citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
+        -- delete bridge_thematic_surface
+        WHEN objectclass_id = 68 THEN
+          dummy_id := citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
+        -- delete bridge_thematic_surface
+        WHEN objectclass_id = 69 THEN
+          dummy_id := citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
+        -- delete bridge_thematic_surface
+        WHEN objectclass_id = 70 THEN
+          dummy_id := citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
+        -- delete bridge_thematic_surface
+        WHEN objectclass_id = 71 THEN
+          dummy_id := citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
+        -- delete bridge_thematic_surface
+        WHEN objectclass_id = 72 THEN
+          dummy_id := citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
+        -- delete bridge_thematic_surface
+        WHEN objectclass_id = 73 THEN
+          dummy_id := citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
+        -- delete bridge_thematic_surface
+        WHEN objectclass_id = 74 THEN
+          dummy_id := citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
+        -- delete bridge_thematic_surface
+        WHEN objectclass_id = 75 THEN
+          dummy_id := citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
+        -- delete bridge_thematic_surface
+        WHEN objectclass_id = 76 THEN
+          dummy_id := citydb.del_bridge_thematic_surfaces(array_agg(object_id), 1);
+        -- delete bridge_opening
+        WHEN objectclass_id = 77 THEN
+          dummy_id := citydb.del_bridge_openings(array_agg(object_id), 1);
+        -- delete bridge_opening
+        WHEN objectclass_id = 78 THEN
+          dummy_id := citydb.del_bridge_openings(array_agg(object_id), 1);
+        -- delete bridge_opening
+        WHEN objectclass_id = 79 THEN
+          dummy_id := citydb.del_bridge_openings(array_agg(object_id), 1);
+        -- delete bridge_furniture
+        WHEN objectclass_id = 80 THEN
+          dummy_id := citydb.del_bridge_furnitures(array_agg(object_id), 1);
+        -- delete bridge_room
+        WHEN objectclass_id = 81 THEN
+          dummy_id := citydb.del_bridge_rooms(array_agg(object_id), 1);
+        -- delete bridge_constr_element
+        WHEN objectclass_id = 82 THEN
+          dummy_id := citydb.del_bridge_constr_elements(array_agg(object_id), 1);
+        -- delete tunnel
+        WHEN objectclass_id = 83 THEN
+          dummy_id := citydb.del_tunnels(array_agg(object_id), 1);
+        -- delete tunnel
+        WHEN objectclass_id = 84 THEN
+          dummy_id := citydb.del_tunnels(array_agg(object_id), 1);
+        -- delete tunnel
+        WHEN objectclass_id = 85 THEN
+          dummy_id := citydb.del_tunnels(array_agg(object_id), 1);
+        -- delete tunnel_installation
+        WHEN objectclass_id = 86 THEN
+          dummy_id := citydb.del_tunnel_installations(array_agg(object_id), 1);
+        -- delete tunnel_installation
+        WHEN objectclass_id = 87 THEN
+          dummy_id := citydb.del_tunnel_installations(array_agg(object_id), 1);
+        -- delete tunnel_thematic_surface
+        WHEN objectclass_id = 88 THEN
+          dummy_id := citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
+        -- delete tunnel_thematic_surface
+        WHEN objectclass_id = 89 THEN
+          dummy_id := citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
+        -- delete tunnel_thematic_surface
+        WHEN objectclass_id = 90 THEN
+          dummy_id := citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
+        -- delete tunnel_thematic_surface
+        WHEN objectclass_id = 91 THEN
+          dummy_id := citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
+        -- delete tunnel_thematic_surface
+        WHEN objectclass_id = 92 THEN
+          dummy_id := citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
+        -- delete tunnel_thematic_surface
+        WHEN objectclass_id = 93 THEN
+          dummy_id := citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
+        -- delete tunnel_thematic_surface
+        WHEN objectclass_id = 94 THEN
+          dummy_id := citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
+        -- delete tunnel_thematic_surface
+        WHEN objectclass_id = 95 THEN
+          dummy_id := citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
+        -- delete tunnel_thematic_surface
+        WHEN objectclass_id = 96 THEN
+          dummy_id := citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
+        -- delete tunnel_thematic_surface
+        WHEN objectclass_id = 97 THEN
+          dummy_id := citydb.del_tunnel_thematic_surfaces(array_agg(object_id), 1);
+        -- delete tunnel_opening
+        WHEN objectclass_id = 98 THEN
+          dummy_id := citydb.del_tunnel_openings(array_agg(object_id), 1);
+        -- delete tunnel_opening
+        WHEN objectclass_id = 99 THEN
+          dummy_id := citydb.del_tunnel_openings(array_agg(object_id), 1);
+        -- delete tunnel_opening
+        WHEN objectclass_id = 100 THEN
+          dummy_id := citydb.del_tunnel_openings(array_agg(object_id), 1);
+        -- delete tunnel_furniture
+        WHEN objectclass_id = 101 THEN
+          dummy_id := citydb.del_tunnel_furnitures(array_agg(object_id), 1);
+        -- delete tunnel_hollow_space
+        WHEN objectclass_id = 102 THEN
+          dummy_id := citydb.del_tunnel_hollow_spaces(array_agg(object_id), 1);
+        ELSE
+          dummy_id := NULL;
+      END CASE;
+
+      IF dummy_id = object_id THEN
+        deleted_child_ids := array_append(deleted_child_ids, dummy_id);
       END IF;
     END LOOP;
   END IF;
@@ -3257,6 +3206,10 @@ BEGIN
     deleted_ids
   FROM
     delete_objects;
+
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
 
   RETURN QUERY
     SELECT unnest(deleted_ids);
@@ -3314,8 +3267,11 @@ CREATE OR REPLACE FUNCTION citydb.del_external_references(int[], caller INTEGER 
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   -- delete citydb.external_references
   WITH delete_objects AS (
@@ -3334,6 +3290,10 @@ BEGIN
     deleted_ids
   FROM
     delete_objects;
+
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
 
   RETURN QUERY
     SELECT unnest(deleted_ids);
@@ -3358,8 +3318,11 @@ CREATE OR REPLACE FUNCTION citydb.del_generic_cityobjects(int[], caller INTEGER 
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -3564,6 +3527,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -3587,8 +3554,11 @@ CREATE OR REPLACE FUNCTION citydb.del_grid_coverages(int[], caller INTEGER DEFAU
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   -- delete citydb.grid_coverages
   WITH delete_objects AS (
@@ -3607,6 +3577,10 @@ BEGIN
     deleted_ids
   FROM
     delete_objects;
+
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
 
   RETURN QUERY
     SELECT unnest(deleted_ids);
@@ -3631,8 +3605,11 @@ CREATE OR REPLACE FUNCTION citydb.del_implicit_geometrys(int[], caller INTEGER D
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete citydb.implicit_geometrys
@@ -3664,6 +3641,10 @@ BEGIN
       (SELECT DISTINCT unnest(surface_geometry_ids) AS a_id) a;
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -3687,8 +3668,11 @@ CREATE OR REPLACE FUNCTION citydb.del_land_uses(int[], caller INTEGER DEFAULT 0)
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete citydb.land_uses
@@ -3733,6 +3717,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -3756,8 +3744,11 @@ CREATE OR REPLACE FUNCTION citydb.del_masspoint_reliefs(int[], caller INTEGER DE
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   -- delete citydb.masspoint_reliefs
   WITH delete_objects AS (
@@ -3780,6 +3771,10 @@ BEGIN
   IF $2 <> 1 THEN
     -- delete relief_component
     PERFORM citydb.del_relief_components(deleted_ids, 2);
+  END IF;
+
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
   END IF;
 
   RETURN QUERY
@@ -3805,8 +3800,11 @@ CREATE OR REPLACE FUNCTION citydb.del_openings(int[], caller INTEGER DEFAULT 0) 
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
   address_ids int[] := '{}';
@@ -4027,6 +4025,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -4050,8 +4052,11 @@ CREATE OR REPLACE FUNCTION citydb.del_plant_covers(int[], caller INTEGER DEFAULT
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete citydb.plant_covers
@@ -4102,6 +4107,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -4125,8 +4134,11 @@ CREATE OR REPLACE FUNCTION citydb.del_raster_reliefs(int[], caller INTEGER DEFAU
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   grid_coverage_ids int[] := '{}';
 BEGIN
   -- delete citydb.raster_reliefs
@@ -4163,6 +4175,10 @@ BEGIN
     PERFORM citydb.del_relief_components(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -4186,32 +4202,42 @@ CREATE OR REPLACE FUNCTION citydb.del_relief_components(int[], caller INTEGER DE
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   IF $2 <> 2 THEN
-    FOREACH object_id IN ARRAY $1
+    FOR rec IN
+      SELECT
+        co.id, co.objectclass_id
+      FROM
+        citydb.cityobject co, unnest($1) a(a_id)
+      WHERE
+        co.id = a.a_id
     LOOP
-      EXECUTE format('SELECT objectclass_id FROM citydb.relief_component WHERE id = %L', object_id) INTO objectclass_id;
+      object_id := rec.id::integer;
+      objectclass_id := rec.objectclass_id::integer;
+      CASE
+        -- delete tin_relief
+        WHEN objectclass_id = 16 THEN
+          dummy_id := citydb.del_tin_reliefs(array_agg(object_id), 1);
+        -- delete masspoint_relief
+        WHEN objectclass_id = 17 THEN
+          dummy_id := citydb.del_masspoint_reliefs(array_agg(object_id), 1);
+        -- delete breakline_relief
+        WHEN objectclass_id = 18 THEN
+          dummy_id := citydb.del_breakline_reliefs(array_agg(object_id), 1);
+        -- delete raster_relief
+        WHEN objectclass_id = 19 THEN
+          dummy_id := citydb.del_raster_reliefs(array_agg(object_id), 1);
+        ELSE
+          dummy_id := NULL;
+      END CASE;
 
-      -- delete tin_relief
-      IF objectclass_id = 16 THEN
-        PERFORM citydb.del_tin_reliefs(array_agg(object_id), 1);
-      END IF;
-
-      -- delete masspoint_relief
-      IF objectclass_id = 17 THEN
-        PERFORM citydb.del_masspoint_reliefs(array_agg(object_id), 1);
-      END IF;
-
-      -- delete breakline_relief
-      IF objectclass_id = 18 THEN
-        PERFORM citydb.del_breakline_reliefs(array_agg(object_id), 1);
-      END IF;
-
-      -- delete raster_relief
-      IF objectclass_id = 19 THEN
-        PERFORM citydb.del_raster_reliefs(array_agg(object_id), 1);
+      IF dummy_id = object_id THEN
+        deleted_child_ids := array_append(deleted_child_ids, dummy_id);
       END IF;
     END LOOP;
   END IF;
@@ -4239,6 +4265,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -4262,8 +4292,11 @@ CREATE OR REPLACE FUNCTION citydb.del_relief_features(int[], caller INTEGER DEFA
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   relief_component_ids int[] := '{}';
 BEGIN
   -- delete references to relief_components
@@ -4319,6 +4352,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -4342,8 +4379,11 @@ CREATE OR REPLACE FUNCTION citydb.del_rooms(int[], caller INTEGER DEFAULT 0) RET
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   --delete building_furnitures
@@ -4409,6 +4449,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -4432,8 +4476,11 @@ CREATE OR REPLACE FUNCTION citydb.del_solitary_vegetat_objects(int[], caller INT
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -4634,6 +4681,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -4657,8 +4708,11 @@ CREATE OR REPLACE FUNCTION citydb.del_surface_datas(int[], caller INTEGER DEFAUL
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   tex_image_ids int[] := '{}';
 BEGIN
   -- delete citydb.surface_datas
@@ -4694,6 +4748,10 @@ BEGIN
     WHERE n1.tex_image_id IS NULL;
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -4717,8 +4775,11 @@ CREATE OR REPLACE FUNCTION citydb.del_surface_geometrys(int[], caller INTEGER DE
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   -- delete referenced parts
   PERFORM
@@ -4758,6 +4819,10 @@ BEGIN
   FROM
     delete_objects;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -4781,8 +4846,11 @@ CREATE OR REPLACE FUNCTION citydb.del_tex_images(int[], caller INTEGER DEFAULT 0
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
 BEGIN
   -- delete citydb.tex_images
   WITH delete_objects AS (
@@ -4801,6 +4869,10 @@ BEGIN
     deleted_ids
   FROM
     delete_objects;
+
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
 
   RETURN QUERY
     SELECT unnest(deleted_ids);
@@ -4825,8 +4897,11 @@ CREATE OR REPLACE FUNCTION citydb.del_thematic_surfaces(int[], caller INTEGER DE
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   opening_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -4894,6 +4969,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -4917,8 +4996,11 @@ CREATE OR REPLACE FUNCTION citydb.del_tin_reliefs(int[], caller INTEGER DEFAULT 
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete citydb.tin_reliefs
@@ -4955,6 +5037,10 @@ BEGIN
     PERFORM citydb.del_relief_components(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -4978,8 +5064,11 @@ CREATE OR REPLACE FUNCTION citydb.del_traffic_areas(int[], caller INTEGER DEFAUL
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete citydb.traffic_areas
@@ -5020,6 +5109,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -5043,8 +5136,11 @@ CREATE OR REPLACE FUNCTION citydb.del_transportation_complexs(int[], caller INTE
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   --delete traffic_areas
@@ -5096,6 +5192,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -5131,8 +5231,11 @@ CREATE OR REPLACE FUNCTION citydb.del_tunnel_furnitures(int[], caller INTEGER DE
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -5321,6 +5424,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -5344,8 +5451,11 @@ CREATE OR REPLACE FUNCTION citydb.del_tunnel_hollow_spaces(int[], caller INTEGER
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   --delete tunnel_furnitures
@@ -5411,6 +5521,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -5434,8 +5548,11 @@ CREATE OR REPLACE FUNCTION citydb.del_tunnel_installations(int[], caller INTEGER
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -5641,6 +5758,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -5664,8 +5785,11 @@ CREATE OR REPLACE FUNCTION citydb.del_tunnel_openings(int[], caller INTEGER DEFA
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   implicit_geometry_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -5858,6 +5982,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -5881,8 +6009,11 @@ CREATE OR REPLACE FUNCTION citydb.del_tunnel_thematic_surfaces(int[], caller INT
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   tunnel_opening_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -5950,6 +6081,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -5961,8 +6096,11 @@ CREATE OR REPLACE FUNCTION citydb.del_tunnels(int[], caller INTEGER DEFAULT 0) R
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete referenced parts
@@ -6060,6 +6198,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -6083,8 +6225,11 @@ CREATE OR REPLACE FUNCTION citydb.del_waterbodys(int[], caller INTEGER DEFAULT 0
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   waterboundary_surface_ids int[] := '{}';
   surface_geometry_ids int[] := '{}';
 BEGIN
@@ -6158,6 +6303,10 @@ BEGIN
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
   END IF;
 
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
+  END IF;
+
   RETURN QUERY
     SELECT unnest(deleted_ids);
 END;
@@ -6181,8 +6330,11 @@ CREATE OR REPLACE FUNCTION citydb.del_waterboundary_surfaces(int[], caller INTEG
 $body$
 DECLARE
   deleted_ids int[] := '{}';
+  dummy_id integer;
+  deleted_child_ids int[] := '{}';
   object_id integer;
   objectclass_id integer;
+  rec RECORD;
   surface_geometry_ids int[] := '{}';
 BEGIN
   -- delete citydb.waterboundary_surfaces
@@ -6221,6 +6373,10 @@ BEGIN
   IF $2 <> 1 THEN
     -- delete cityobject
     PERFORM citydb.del_cityobjects(deleted_ids, 2);
+  END IF;
+
+  IF array_length(deleted_child_ids, 1) > 0 THEN
+    deleted_ids := deleted_child_ids;
   END IF;
 
   RETURN QUERY

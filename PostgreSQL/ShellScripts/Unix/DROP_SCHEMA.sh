@@ -5,7 +5,7 @@
 # read database connection details 
 source CONNECTION_DETAILS.sh
 
-# add psql to PATH
+# add PGBIN to PATH
 export PATH="$PGBIN:$PATH"
 
 # cd to path of the shell script
@@ -42,8 +42,8 @@ cd ../../SQLScripts/UTIL/SCHEMAS
 
 # List the existing 3DCityDB schemas ------------------------------------------
 echo
-echo "Reading existing 3DCityDB schemas from the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "QUERY_SCHEMA.sql"
+echo "Reading 3DCityDB schemas from \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
+psql -d "$CITYDB" -f "LIST_SCHEMAS.sql"
 
 if [[ $? -ne 0 ]] ; then
   echo 'Failed to read 3DCityDB schemas from database.'
@@ -68,7 +68,7 @@ done;
 
 # Run DROP_SCHEMA.sql to remove the selected 3DCityDB schema ------------------
 echo
-echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
+echo "Connecting to \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
 psql -d "$CITYDB" -f "DROP_SCHEMA.sql" -v schema_name="$SCHEMA_NAME"
 
 echo

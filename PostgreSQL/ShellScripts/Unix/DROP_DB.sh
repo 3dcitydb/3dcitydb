@@ -5,8 +5,8 @@
 # read database connection details 
 source CONNECTION_DETAILS.sh
 
-# add psql to PATH
-export PATH=$PGBIN:$PATH
+# add PGBIN to PATH
+export PATH="$PGBIN:$PATH"
 
 # cd to path of the shell script
 cd "$( cd "$( dirname "$0" )" && pwd )" > /dev/null
@@ -40,7 +40,7 @@ cd ../../SQLScripts
 
 # Run DROP_DB.sql to drop the 3D City Database instance -----------------------
 echo
-echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
+echo "Connecting to \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
 psql -d "$CITYDB" -f "DROP_DB.sql"
 
 echo

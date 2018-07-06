@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-05-26 10:01:14)
+-- Automatically generated database script (Creation Date: 2018-06-15 15:38:16)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -259,10 +259,6 @@ AS
     END IF;
 
     RETURN deleted_ids;
-
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -322,9 +318,6 @@ AS
 
     dummy_str := citydb_idx.create_spatial_indexes();
 
-    EXCEPTION
-      WHEN others THEN
-        dbms_output.put_line('cleanup_schema: ' || SQLERRM);
   END;
   ------------------------------------------
 
@@ -342,7 +335,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -352,8 +345,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     -- delete addresss
     DELETE FROM
@@ -371,11 +366,12 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -393,7 +389,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -403,8 +399,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_data_ids0 ID_ARRAY := ID_ARRAY();
   BEGIN
     -- delete references to surface_datas
@@ -457,11 +455,12 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -479,7 +478,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -489,8 +488,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     -- delete breakline_reliefs
     DELETE FROM
@@ -515,11 +516,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -537,7 +539,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -556,7 +558,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -566,8 +568,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -789,11 +793,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -811,7 +816,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -821,8 +826,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     implicit_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -1020,11 +1027,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -1042,7 +1050,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -1052,8 +1060,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -1282,11 +1292,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -1304,7 +1315,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -1314,8 +1325,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     address_ids0 ID_ARRAY := ID_ARRAY();
     address_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -1558,11 +1571,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -1580,7 +1594,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -1590,8 +1604,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -1677,11 +1693,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -1699,7 +1716,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -1709,8 +1726,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     bridge_opening_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -1777,11 +1796,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -1790,8 +1810,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     address_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -1995,11 +2017,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -2017,7 +2040,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -2036,7 +2059,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -2046,8 +2069,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     implicit_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -2245,11 +2270,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -2267,7 +2293,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -2277,8 +2303,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -2507,11 +2535,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -2520,8 +2549,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     address_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -2544,7 +2575,7 @@ AS
       building t,
       TABLE(pids) a
     WHERE
-      t.building_root_id = a.COLUMN_VALUE
+      t.building_parent_id = a.COLUMN_VALUE
       AND t.id <> a.COLUMN_VALUE;
 
     IF object_ids IS NOT EMPTY THEN
@@ -2560,7 +2591,7 @@ AS
       building t,
       TABLE(pids) a
     WHERE
-      t.building_parent_id = a.COLUMN_VALUE
+      t.building_root_id = a.COLUMN_VALUE
       AND t.id <> a.COLUMN_VALUE;
 
     IF object_ids IS NOT EMPTY THEN
@@ -2718,11 +2749,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -2740,7 +2772,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -2750,8 +2782,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -2973,11 +3007,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -2995,7 +3030,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -3005,8 +3040,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     cityobject_ids0 ID_ARRAY := ID_ARRAY();
   BEGIN
     --delete appearances
@@ -3078,11 +3115,12 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -3100,7 +3138,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -3119,7 +3157,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -3129,8 +3167,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
   BEGIN
@@ -3192,11 +3232,12 @@ AS
       dummy_ids := del_surface_geometrys(surface_geometry_ids0);
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -3214,7 +3255,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -3224,8 +3265,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     cityobject_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -3301,11 +3344,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -3314,8 +3358,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     --delete appearances
     SELECT
@@ -3363,476 +3409,307 @@ AS
     END IF;
 
     IF caller <> 2 THEN
-      FOR i in 1..pids.count
+      OPEN cur FOR
+        SELECT
+          co.id, co.objectclass_id
+        FROM
+          cityobject co, TABLE(pids) a
+        WHERE
+          a.COLUMN_VALUE = co.id;
       LOOP
-        object_id := pids(i);
-        EXECUTE IMMEDIATE 'SELECT objectclass_id FROM cityobject WHERE id = :1' INTO objectclass_id USING object_id;
-
+        FETCH cur into object_id, objectclass_id;
+        EXIT WHEN cur%notfound;
+        CASE
           -- delete land_use
-          IF objectclass_id = 4 THEN
+          WHEN objectclass_id = 4 THEN
             dummy_ids := del_land_uses(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete generic_cityobject
-          IF objectclass_id = 5 THEN
+          WHEN objectclass_id = 5 THEN
             dummy_ids := del_generic_cityobjects(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete solitary_vegetat_object
-          IF objectclass_id = 7 THEN
+          WHEN objectclass_id = 7 THEN
             dummy_ids := del_solitary_vegetat_objects(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete plant_cover
-          IF objectclass_id = 8 THEN
+          WHEN objectclass_id = 8 THEN
             dummy_ids := del_plant_covers(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete waterbody
-          IF objectclass_id = 9 THEN
+          WHEN objectclass_id = 9 THEN
             dummy_ids := del_waterbodys(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete waterboundary_surface
-          IF objectclass_id = 10 THEN
+          WHEN objectclass_id = 10 THEN
             dummy_ids := del_waterboundary_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete waterboundary_surface
-          IF objectclass_id = 11 THEN
+          WHEN objectclass_id = 11 THEN
             dummy_ids := del_waterboundary_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete waterboundary_surface
-          IF objectclass_id = 12 THEN
+          WHEN objectclass_id = 12 THEN
             dummy_ids := del_waterboundary_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete waterboundary_surface
-          IF objectclass_id = 13 THEN
+          WHEN objectclass_id = 13 THEN
             dummy_ids := del_waterboundary_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete relief_feature
-          IF objectclass_id = 14 THEN
+          WHEN objectclass_id = 14 THEN
             dummy_ids := del_relief_features(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete relief_component
-          IF objectclass_id = 15 THEN
+          WHEN objectclass_id = 15 THEN
             dummy_ids := del_relief_components(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tin_relief
-          IF objectclass_id = 16 THEN
+          WHEN objectclass_id = 16 THEN
             dummy_ids := del_tin_reliefs(ID_ARRAY(object_id), 0);
-          END IF;
-
           -- delete masspoint_relief
-          IF objectclass_id = 17 THEN
+          WHEN objectclass_id = 17 THEN
             dummy_ids := del_masspoint_reliefs(ID_ARRAY(object_id), 0);
-          END IF;
-
           -- delete breakline_relief
-          IF objectclass_id = 18 THEN
+          WHEN objectclass_id = 18 THEN
             dummy_ids := del_breakline_reliefs(ID_ARRAY(object_id), 0);
-          END IF;
-
           -- delete city_furniture
-          IF objectclass_id = 21 THEN
+          WHEN objectclass_id = 21 THEN
             dummy_ids := del_city_furnitures(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete cityobjectgroup
-          IF objectclass_id = 23 THEN
+          WHEN objectclass_id = 23 THEN
             dummy_ids := del_cityobjectgroups(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete building
-          IF objectclass_id = 24 THEN
+          WHEN objectclass_id = 24 THEN
             dummy_ids := del_buildings(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete building
-          IF objectclass_id = 25 THEN
+          WHEN objectclass_id = 25 THEN
             dummy_ids := del_buildings(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete building
-          IF objectclass_id = 26 THEN
+          WHEN objectclass_id = 26 THEN
             dummy_ids := del_buildings(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete building_installation
-          IF objectclass_id = 27 THEN
+          WHEN objectclass_id = 27 THEN
             dummy_ids := del_building_installations(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete building_installation
-          IF objectclass_id = 28 THEN
+          WHEN objectclass_id = 28 THEN
             dummy_ids := del_building_installations(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete thematic_surface
-          IF objectclass_id = 29 THEN
+          WHEN objectclass_id = 29 THEN
             dummy_ids := del_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete thematic_surface
-          IF objectclass_id = 30 THEN
+          WHEN objectclass_id = 30 THEN
             dummy_ids := del_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete thematic_surface
-          IF objectclass_id = 31 THEN
+          WHEN objectclass_id = 31 THEN
             dummy_ids := del_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete thematic_surface
-          IF objectclass_id = 32 THEN
+          WHEN objectclass_id = 32 THEN
             dummy_ids := del_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete thematic_surface
-          IF objectclass_id = 33 THEN
+          WHEN objectclass_id = 33 THEN
             dummy_ids := del_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete thematic_surface
-          IF objectclass_id = 34 THEN
+          WHEN objectclass_id = 34 THEN
             dummy_ids := del_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete thematic_surface
-          IF objectclass_id = 35 THEN
+          WHEN objectclass_id = 35 THEN
             dummy_ids := del_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete thematic_surface
-          IF objectclass_id = 36 THEN
+          WHEN objectclass_id = 36 THEN
             dummy_ids := del_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete opening
-          IF objectclass_id = 37 THEN
+          WHEN objectclass_id = 37 THEN
             dummy_ids := del_openings(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete opening
-          IF objectclass_id = 38 THEN
+          WHEN objectclass_id = 38 THEN
             dummy_ids := del_openings(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete opening
-          IF objectclass_id = 39 THEN
+          WHEN objectclass_id = 39 THEN
             dummy_ids := del_openings(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete building_furniture
-          IF objectclass_id = 40 THEN
+          WHEN objectclass_id = 40 THEN
             dummy_ids := del_building_furnitures(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete room
-          IF objectclass_id = 41 THEN
+          WHEN objectclass_id = 41 THEN
             dummy_ids := del_rooms(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete transportation_complex
-          IF objectclass_id = 42 THEN
+          WHEN objectclass_id = 42 THEN
             dummy_ids := del_transportation_complexs(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete transportation_complex
-          IF objectclass_id = 43 THEN
+          WHEN objectclass_id = 43 THEN
             dummy_ids := del_transportation_complexs(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete transportation_complex
-          IF objectclass_id = 44 THEN
+          WHEN objectclass_id = 44 THEN
             dummy_ids := del_transportation_complexs(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete transportation_complex
-          IF objectclass_id = 45 THEN
+          WHEN objectclass_id = 45 THEN
             dummy_ids := del_transportation_complexs(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete transportation_complex
-          IF objectclass_id = 46 THEN
+          WHEN objectclass_id = 46 THEN
             dummy_ids := del_transportation_complexs(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete traffic_area
-          IF objectclass_id = 47 THEN
+          WHEN objectclass_id = 47 THEN
             dummy_ids := del_traffic_areas(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete traffic_area
-          IF objectclass_id = 48 THEN
+          WHEN objectclass_id = 48 THEN
             dummy_ids := del_traffic_areas(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete appearance
-          IF objectclass_id = 50 THEN
+          WHEN objectclass_id = 50 THEN
             dummy_ids := del_appearances(ID_ARRAY(object_id), 0);
-          END IF;
-
           -- delete surface_data
-          IF objectclass_id = 51 THEN
+          WHEN objectclass_id = 51 THEN
             dummy_ids := del_surface_datas(ID_ARRAY(object_id), 0);
-          END IF;
-
           -- delete surface_data
-          IF objectclass_id = 52 THEN
+          WHEN objectclass_id = 52 THEN
             dummy_ids := del_surface_datas(ID_ARRAY(object_id), 0);
-          END IF;
-
           -- delete surface_data
-          IF objectclass_id = 53 THEN
+          WHEN objectclass_id = 53 THEN
             dummy_ids := del_surface_datas(ID_ARRAY(object_id), 0);
-          END IF;
-
           -- delete surface_data
-          IF objectclass_id = 54 THEN
+          WHEN objectclass_id = 54 THEN
             dummy_ids := del_surface_datas(ID_ARRAY(object_id), 0);
-          END IF;
-
           -- delete surface_data
-          IF objectclass_id = 55 THEN
+          WHEN objectclass_id = 55 THEN
             dummy_ids := del_surface_datas(ID_ARRAY(object_id), 0);
-          END IF;
-
           -- delete citymodel
-          IF objectclass_id = 57 THEN
+          WHEN objectclass_id = 57 THEN
             dummy_ids := del_citymodels(ID_ARRAY(object_id), 0);
-          END IF;
-
           -- delete address
-          IF objectclass_id = 58 THEN
+          WHEN objectclass_id = 58 THEN
             dummy_ids := del_addresss(ID_ARRAY(object_id), 0);
-          END IF;
-
           -- delete implicit_geometry
-          IF objectclass_id = 59 THEN
+          WHEN objectclass_id = 59 THEN
             dummy_ids := del_implicit_geometrys(ID_ARRAY(object_id), 0);
-          END IF;
-
           -- delete thematic_surface
-          IF objectclass_id = 60 THEN
+          WHEN objectclass_id = 60 THEN
             dummy_ids := del_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete thematic_surface
-          IF objectclass_id = 61 THEN
+          WHEN objectclass_id = 61 THEN
             dummy_ids := del_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge
-          IF objectclass_id = 62 THEN
+          WHEN objectclass_id = 62 THEN
             dummy_ids := del_bridges(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge
-          IF objectclass_id = 63 THEN
+          WHEN objectclass_id = 63 THEN
             dummy_ids := del_bridges(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge
-          IF objectclass_id = 64 THEN
+          WHEN objectclass_id = 64 THEN
             dummy_ids := del_bridges(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_installation
-          IF objectclass_id = 65 THEN
+          WHEN objectclass_id = 65 THEN
             dummy_ids := del_bridge_installations(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_installation
-          IF objectclass_id = 66 THEN
+          WHEN objectclass_id = 66 THEN
             dummy_ids := del_bridge_installations(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_thematic_surface
-          IF objectclass_id = 67 THEN
+          WHEN objectclass_id = 67 THEN
             dummy_ids := del_bridge_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_thematic_surface
-          IF objectclass_id = 68 THEN
+          WHEN objectclass_id = 68 THEN
             dummy_ids := del_bridge_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_thematic_surface
-          IF objectclass_id = 69 THEN
+          WHEN objectclass_id = 69 THEN
             dummy_ids := del_bridge_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_thematic_surface
-          IF objectclass_id = 70 THEN
+          WHEN objectclass_id = 70 THEN
             dummy_ids := del_bridge_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_thematic_surface
-          IF objectclass_id = 71 THEN
+          WHEN objectclass_id = 71 THEN
             dummy_ids := del_bridge_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_thematic_surface
-          IF objectclass_id = 72 THEN
+          WHEN objectclass_id = 72 THEN
             dummy_ids := del_bridge_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_thematic_surface
-          IF objectclass_id = 73 THEN
+          WHEN objectclass_id = 73 THEN
             dummy_ids := del_bridge_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_thematic_surface
-          IF objectclass_id = 74 THEN
+          WHEN objectclass_id = 74 THEN
             dummy_ids := del_bridge_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_thematic_surface
-          IF objectclass_id = 75 THEN
+          WHEN objectclass_id = 75 THEN
             dummy_ids := del_bridge_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_thematic_surface
-          IF objectclass_id = 76 THEN
+          WHEN objectclass_id = 76 THEN
             dummy_ids := del_bridge_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_opening
-          IF objectclass_id = 77 THEN
+          WHEN objectclass_id = 77 THEN
             dummy_ids := del_bridge_openings(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_opening
-          IF objectclass_id = 78 THEN
+          WHEN objectclass_id = 78 THEN
             dummy_ids := del_bridge_openings(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_opening
-          IF objectclass_id = 79 THEN
+          WHEN objectclass_id = 79 THEN
             dummy_ids := del_bridge_openings(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_furniture
-          IF objectclass_id = 80 THEN
+          WHEN objectclass_id = 80 THEN
             dummy_ids := del_bridge_furnitures(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_room
-          IF objectclass_id = 81 THEN
+          WHEN objectclass_id = 81 THEN
             dummy_ids := del_bridge_rooms(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete bridge_constr_element
-          IF objectclass_id = 82 THEN
+          WHEN objectclass_id = 82 THEN
             dummy_ids := del_bridge_constr_elements(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel
-          IF objectclass_id = 83 THEN
+          WHEN objectclass_id = 83 THEN
             dummy_ids := del_tunnels(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel
-          IF objectclass_id = 84 THEN
+          WHEN objectclass_id = 84 THEN
             dummy_ids := del_tunnels(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel
-          IF objectclass_id = 85 THEN
+          WHEN objectclass_id = 85 THEN
             dummy_ids := del_tunnels(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_installation
-          IF objectclass_id = 86 THEN
+          WHEN objectclass_id = 86 THEN
             dummy_ids := del_tunnel_installations(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_installation
-          IF objectclass_id = 87 THEN
+          WHEN objectclass_id = 87 THEN
             dummy_ids := del_tunnel_installations(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_thematic_surface
-          IF objectclass_id = 88 THEN
+          WHEN objectclass_id = 88 THEN
             dummy_ids := del_tunnel_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_thematic_surface
-          IF objectclass_id = 89 THEN
+          WHEN objectclass_id = 89 THEN
             dummy_ids := del_tunnel_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_thematic_surface
-          IF objectclass_id = 90 THEN
+          WHEN objectclass_id = 90 THEN
             dummy_ids := del_tunnel_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_thematic_surface
-          IF objectclass_id = 91 THEN
+          WHEN objectclass_id = 91 THEN
             dummy_ids := del_tunnel_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_thematic_surface
-          IF objectclass_id = 92 THEN
+          WHEN objectclass_id = 92 THEN
             dummy_ids := del_tunnel_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_thematic_surface
-          IF objectclass_id = 93 THEN
+          WHEN objectclass_id = 93 THEN
             dummy_ids := del_tunnel_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_thematic_surface
-          IF objectclass_id = 94 THEN
+          WHEN objectclass_id = 94 THEN
             dummy_ids := del_tunnel_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_thematic_surface
-          IF objectclass_id = 95 THEN
+          WHEN objectclass_id = 95 THEN
             dummy_ids := del_tunnel_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_thematic_surface
-          IF objectclass_id = 96 THEN
+          WHEN objectclass_id = 96 THEN
             dummy_ids := del_tunnel_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_thematic_surface
-          IF objectclass_id = 97 THEN
+          WHEN objectclass_id = 97 THEN
             dummy_ids := del_tunnel_thematic_surfaces(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_opening
-          IF objectclass_id = 98 THEN
+          WHEN objectclass_id = 98 THEN
             dummy_ids := del_tunnel_openings(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_opening
-          IF objectclass_id = 99 THEN
+          WHEN objectclass_id = 99 THEN
             dummy_ids := del_tunnel_openings(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_opening
-          IF objectclass_id = 100 THEN
+          WHEN objectclass_id = 100 THEN
             dummy_ids := del_tunnel_openings(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_furniture
-          IF objectclass_id = 101 THEN
+          WHEN objectclass_id = 101 THEN
             dummy_ids := del_tunnel_furnitures(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete tunnel_hollow_space
-          IF objectclass_id = 102 THEN
+          WHEN objectclass_id = 102 THEN
             dummy_ids := del_tunnel_hollow_spaces(ID_ARRAY(object_id), 1);
+          ELSE
+            dummy_ids := NULL;
+        END CASE;
+
+        IF dummy_ids IS NOT EMPTY THEN
+          IF dummy_ids(1) = object_id THEN
+            deleted_child_ids := deleted_child_ids MULTISET UNION ALL dummy_ids;
           END IF;
+        END IF;
       END LOOP;
+      CLOSE cur;
     END IF;
   
     -- delete cityobjects
@@ -3851,11 +3728,12 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -3892,10 +3770,6 @@ AS
     END IF;
 
     RETURN deleted_ids;
-
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -3913,7 +3787,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -3923,8 +3797,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     -- delete external_references
     DELETE FROM
@@ -3942,11 +3818,12 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -3964,7 +3841,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -3974,8 +3851,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -4205,11 +4084,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -4227,7 +4107,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -4237,8 +4117,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
   BEGIN
@@ -4268,11 +4150,12 @@ AS
       dummy_ids := del_surface_geometrys(surface_geometry_ids0);
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -4290,7 +4173,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -4300,8 +4183,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -4354,11 +4239,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -4376,7 +4262,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -4386,8 +4272,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     -- delete masspoint_reliefs
     DELETE FROM
@@ -4412,11 +4300,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -4434,7 +4323,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -4444,8 +4333,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     address_ids0 ID_ARRAY := ID_ARRAY();
     address_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -4688,11 +4579,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -4710,7 +4602,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -4720,8 +4612,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -4786,11 +4680,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -4808,7 +4703,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -4818,30 +4713,43 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     IF caller <> 2 THEN
-      FOR i in 1..pids.count
+      OPEN cur FOR
+        SELECT
+          co.id, co.objectclass_id
+        FROM
+          cityobject co, TABLE(pids) a
+        WHERE
+          a.COLUMN_VALUE = co.id;
       LOOP
-        object_id := pids(i);
-        EXECUTE IMMEDIATE 'SELECT objectclass_id FROM relief_component WHERE id = :1' INTO objectclass_id USING object_id;
-
+        FETCH cur into object_id, objectclass_id;
+        EXIT WHEN cur%notfound;
+        CASE
           -- delete tin_relief
-          IF objectclass_id = 16 THEN
+          WHEN objectclass_id = 16 THEN
             dummy_ids := del_tin_reliefs(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete masspoint_relief
-          IF objectclass_id = 17 THEN
+          WHEN objectclass_id = 17 THEN
             dummy_ids := del_masspoint_reliefs(ID_ARRAY(object_id), 1);
-          END IF;
-
           -- delete breakline_relief
-          IF objectclass_id = 18 THEN
+          WHEN objectclass_id = 18 THEN
             dummy_ids := del_breakline_reliefs(ID_ARRAY(object_id), 1);
+          ELSE
+            dummy_ids := NULL;
+        END CASE;
+
+        IF dummy_ids IS NOT EMPTY THEN
+          IF dummy_ids(1) = object_id THEN
+            deleted_child_ids := deleted_child_ids MULTISET UNION ALL dummy_ids;
           END IF;
+        END IF;
       END LOOP;
+      CLOSE cur;
     END IF;
   
     -- delete relief_components
@@ -4867,11 +4775,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -4889,7 +4798,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -4899,8 +4808,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     relief_component_ids0 ID_ARRAY := ID_ARRAY();
   BEGIN
     -- delete references to relief_components
@@ -4960,11 +4871,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -4982,7 +4894,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -4992,8 +4904,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -5079,11 +4993,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -5101,7 +5016,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -5111,8 +5026,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -5334,11 +5251,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -5356,7 +5274,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -5366,8 +5284,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     tex_image_ids0 ID_ARRAY := ID_ARRAY();
     tex_image_ids1 ID_ARRAY := ID_ARRAY();
   BEGIN
@@ -5410,11 +5330,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -5432,7 +5353,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -5442,8 +5363,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     -- delete referenced parts
     SELECT
@@ -5493,11 +5416,12 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -5515,7 +5439,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -5525,8 +5449,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
   BEGIN
     -- delete tex_images
     DELETE FROM
@@ -5544,11 +5470,12 @@ AS
     BULK COLLECT INTO
       deleted_ids;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -5566,7 +5493,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -5576,8 +5503,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     opening_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -5644,11 +5573,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -5666,7 +5596,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -5676,8 +5606,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
   BEGIN
@@ -5714,11 +5646,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -5736,7 +5669,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -5746,8 +5679,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -5792,11 +5727,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -5814,7 +5750,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -5824,8 +5760,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -5889,11 +5827,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -5911,7 +5850,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -5930,7 +5869,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -5940,8 +5879,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     implicit_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -6139,11 +6080,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -6161,7 +6103,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -6171,8 +6113,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -6258,11 +6202,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -6280,7 +6225,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -6290,8 +6235,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -6520,11 +6467,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -6542,7 +6490,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -6552,8 +6500,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -6759,11 +6709,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -6781,7 +6732,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -6791,8 +6742,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     tunnel_opening_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -6859,11 +6812,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -6872,8 +6826,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -7015,11 +6971,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -7037,7 +6994,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -7047,8 +7004,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     waterboundary_surface_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -7127,11 +7086,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 
@@ -7149,7 +7109,7 @@ AS
     RETURN deleted_id;
 
     EXCEPTION
-      WHEN OTHERS THEN
+      WHEN NO_DATA_FOUND THEN
         RETURN deleted_id;
   END;
   ------------------------------------------
@@ -7159,8 +7119,10 @@ AS
     object_id number;
     objectclass_id number;
     object_ids ID_ARRAY := ID_ARRAY();
+    deleted_child_ids ID_ARRAY := ID_ARRAY();
     deleted_ids ID_ARRAY := ID_ARRAY();
     dummy_ids ID_ARRAY := ID_ARRAY();
+    cur sys_refcursor;
     surface_geometry_ids0 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids1 ID_ARRAY := ID_ARRAY();
     surface_geometry_ids2 ID_ARRAY := ID_ARRAY();
@@ -7205,11 +7167,12 @@ AS
       END IF;
     END IF;
 
+    IF deleted_child_ids IS NOT EMPTY THEN
+      deleted_ids := deleted_child_ids;
+    END IF;
+
     RETURN deleted_ids;
 
-    EXCEPTION
-      WHEN NO_DATA_FOUND THEN
-        RETURN deleted_ids;
   END;
   ------------------------------------------
 

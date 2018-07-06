@@ -5,7 +5,7 @@
 :: read database connection details  
 call CONNECTION_DETAILS.bat
 
-:: add sqlplus to PATH
+:: add SQLPLUSBIN to PATH
 set PATH=%SQLPLUSBIN%;%PATH%
 
 :: cd to path of the shell script
@@ -64,7 +64,8 @@ if "%res%"=="f" (
 
 :: Run DROP_DB.sql to drop the 3D City Database instance ----------------------
 echo.
-echo Connecting to the database "%USERNAME%@%HOST%:%PORT%/%SID%" ...
-sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @DROP_DB.sql "%DBVERSION%"
+echo Connecting to "%USERNAME%@%HOST%:%PORT%/%SID%" ...
+echo|set /p="Enter password: "
+sqlplus -S -L "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @DROP_DB.sql "%DBVERSION%"
 
 pause

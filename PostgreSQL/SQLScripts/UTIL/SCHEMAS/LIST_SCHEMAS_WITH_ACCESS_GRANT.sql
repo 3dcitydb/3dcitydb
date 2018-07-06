@@ -25,23 +25,16 @@
 -- limitations under the License.
 --
 
-\pset footer off
-SET client_min_messages TO WARNING;
-\set ON_ERROR_STOP ON
+\set USERNAME :username
+\set USERNAME_QUOTED '\'':username'\''
 
-\set RO_USERNAME :ro_username
-\set SCHEMA_NAME :schema_name
-
-\echo
-\echo 'Granting read-only priviliges on schema "':SCHEMA_NAME'" to user "':RO_USERNAME'" ...'
-
-GRANT CONNECT, TEMP ON DATABASE :"DBNAME" TO :"RO_USERNAME";
-GRANT USAGE ON SCHEMA :"SCHEMA_NAME" TO :"RO_USERNAME";
-GRANT SELECT ON ALL TABLES IN SCHEMA :"SCHEMA_NAME" TO :"RO_USERNAME";
-GRANT USAGE ON SCHEMA citydb_pkg TO :"RO_USERNAME";
-GRANT SELECT ON ALL TABLES IN SCHEMA citydb_pkg TO :"RO_USERNAME";
-GRANT USAGE ON SCHEMA public TO :"RO_USERNAME";
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO :"RO_USERNAME";
-
-\echo
-\echo 'Read-only priviliges successfully granted.'
+\echo 'List of 3DCityDB schemas with usage privilege for "':USERNAME'":'
+WITH schema_names AS (
+  SELECT n.nspname AS schema_name
+    FROM pg_catalog.pg_namespace n
+	JOIN pg_catalog.pg_class c on n.oid = c.relnamespace
+      WHERE c.relname = 'database_srs'
+	    AND c.relkind = 'r'
+) SELECT schema_name
+    FROM schema_names
+	  WHERE pg_catalog.has_schema_privilege(lower(:USERNAME_QUOTED), schema_name, 'USAGE');

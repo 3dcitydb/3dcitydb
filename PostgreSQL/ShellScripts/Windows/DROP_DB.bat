@@ -40,7 +40,7 @@ cd ..\..\SQLScripts
 
 REM Run DROP_DB.sql to drop the 3D City Database instance ---------------------
 echo.
-echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
+echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
 psql -d "%CITYDB%" -f "DROP_DB.sql"
 
 pause

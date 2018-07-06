@@ -223,20 +223,20 @@ AS
     END;
 
     IF transform <> 0 THEN
-      -- coordinates of existent geometries will be transformed
+      -- coordinates of existent geometries will be transformed inline
+      EXECUTE IMMEDIATE
+        'UPDATE ' || tab_name || ' SET ' || col_name || ' = sdo_cs.transform( ' || col_name || ', :1) WHERE ' || col_name || ' IS NOT NULL'
+        USING schema_srid;
+
+	  /*
+      -- alternative using SDO_CS.TRANSFORM_LAYER
       SDO_CS.TRANSFORM_LAYER(upper(tab_name), upper(col_name), 'CS_TRANSFORM_TABLE', schema_srid);
       EXECUTE IMMEDIATE 'CREATE INDEX sdo_rowid_idx ON cs_transform_table (sdo_rowid)';
       EXECUTE IMMEDIATE
         'UPDATE ' || tab_name || ' t SET ' || col_name || ' =
           (SELECT geometry FROM cs_transform_table cs WHERE cs.sdo_rowid = t.rowid)';
       EXECUTE IMMEDIATE 'DROP TABLE cs_transform_table';
-
-      /*
-      -- row-level alternative
-      EXECUTE IMMEDIATE
-        'UPDATE ' || tab_name || ' SET ' || col_name || ' = sdo_cs.transform( ' || col_name || ', :1) WHERE ' || col_name || ' IS NOT NULL'
-        USING schema_srid;
-      */
+	  */
     ELSE
       -- only srid parameter of geometries is updated
       EXECUTE IMMEDIATE

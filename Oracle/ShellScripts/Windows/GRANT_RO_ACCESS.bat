@@ -1,12 +1,12 @@
 @echo off
 :: Shell script to grant read-only access to a 3DCityDB schema
-:: on PostgreSQL/PostGIS
+:: on Oracle Spatial/Locator
 
 :: read database connection details  
 call CONNECTION_DETAILS.bat
 
-:: add PGBIN to PATH
-set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
+:: add SQLPLUSBIN to PATH
+set PATH=%SQLPLUSBIN%;%PATH%
 
 :: cd to path of the shell script
 cd /d %~dp0
@@ -27,7 +27,7 @@ echo 3DCityDB schema to an existing user. Please follow the instructions of the 
 echo Enter the required parameters when prompted and press ENTER to confirm.
 echo Just press ENTER to use the default values.
 echo.
-echo Note: This script requires superuser privileges.
+echo Note: This script requires SYSDBA privileges.
 echo.
 echo Documentation and help:
 echo    3DCityDB website:    https://www.3dcitydb.org
@@ -46,7 +46,7 @@ cd ..\..\SQLScripts\UTIL\RO_ACCESS
 :ro_username
 set var=
 echo.
-echo Please enter the username of the read-only user.
+echo Please enter the username of the read-only user who shall have access to "%USERNAME%".
 set /p var="(RO_USERNAME must already exist in database): "
 
 if /i not "%var%"=="" (
@@ -57,27 +57,10 @@ if /i not "%var%"=="" (
   goto ro_username
 )
 
-:: List the existing 3DCityDB schemas -----------------------------------------
-echo.
-echo Reading 3DCityDB schemas from "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-"%PGBIN%\psql" -d "%CITYDB%" -f "..\SCHEMAS\LIST_SCHEMAS.sql"
-
-if errorlevel 1 (
-  echo Failed to read 3DCityDB schemas from database.
-  pause
-  exit /b %errorlevel%
-)
-
-:: Prompt for schema name -----------------------------------------------------
-set var=
-set SCHEMA_NAME=citydb
-echo Please enter the name of the 3DCityDB schema "%RO_USERNAME%" shall have access to.
-set /p var="(default SCHEMA_NAME=%SCHEMA_NAME%): "
-if /i not "%var%"=="" set SCHEMA_NAME=%var%
-
 :: Run GRANT_RO_ACCESS.sql to grant read-only access on a specific schema -----
 echo.
-echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-"%PGBIN%\psql" -d "%CITYDB%" -f "GRANT_RO_ACCESS.sql" -v ro_username="%RO_USERNAME%" -v schema_name="%SCHEMA_NAME%"
+echo Connecting to "%SYSDBA_USERNAME%@%HOST%:%PORT%/%SID%" ...
+echo|set /p="Enter password: "
+sqlplus -S -L "%SYSDBA_USERNAME%@\"%HOST%:%PORT%/%SID%\"" AS SYSDBA @GRANT_RO_ACCESS.sql "%RO_USERNAME%" "%USERNAME%"
 
 pause

@@ -1,12 +1,12 @@
 @echo off
 :: Shell script to revoke read-only access from a 3DCityDB schema
-:: on PostgreSQL/PostGIS
+:: on Oracle Spatial/Locator
 
-:: read database connection details  
+:: read database connection details
 call CONNECTION_DETAILS.bat
 
-:: add PGBIN to PATH
-set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
+:: add SQLPLUSBIN to PATH
+set PATH=%SQLPLUSBIN%;%PATH%
 
 :: cd to path of the shell script
 cd /d %~dp0
@@ -27,7 +27,7 @@ echo this operation cannot be undone. Please follow the instructions of the scri
 echo Enter the required parameters when prompted and press ENTER to confirm.
 echo Just press ENTER to use the default values.
 echo.
-echo Note: This script requires superuser privileges.
+echo Note: This script requires SYSDBA privileges.
 echo.
 echo Documentation and help:
 echo    3DCityDB website:    https://www.3dcitydb.org
@@ -57,27 +57,10 @@ if /i not "%var%"=="" (
   goto ro_username
 )
 
-:: List the 3DCityDB schemas granted to RO_USERNAME ---------------------------
-echo.
-echo Reading 3DCityDB schemas granted to "%RO_USERNAME%" from "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-"%PGBIN%\psql" -d "%CITYDB%" -f "..\SCHEMAS\LIST_SCHEMAS_WITH_ACCESS_GRANT.sql" -v username="%RO_USERNAME%"
-
-if errorlevel 1 (
-  echo Failed to read 3DCityDB schemas from database.
-  pause
-  exit /b %errorlevel%
-)
-
-:: Prompt for schema name -----------------------------------------------------
-set var=
-set SCHEMA_NAME=citydb
-echo Please enter the name of the 3DCityDB schema that shall be revoked from "%RO_USERNAME%".
-set /p var="(default SCHEMA_NAME=%SCHEMA_NAME%): "
-if /i not "%var%"=="" set SCHEMA_NAME=%var%
-
 :: Run REVOKE_RO_ACCESS.sql to revoke read-only access on a specific schema ---
 echo.
-echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-"%PGBIN%\psql" -d "%CITYDB%" -f "REVOKE_RO_ACCESS.sql" -v ro_username="%RO_USERNAME%" -v schema_name="%SCHEMA_NAME%"
+echo Connecting to "%SYSDBA_USERNAME%@%HOST%:%PORT%/%SID%" ...
+echo|set /p="Enter password: "
+sqlplus -S -L "%SYSDBA_USERNAME%@\"%HOST%:%PORT%/%SID%\"" AS SYSDBA @REVOKE_RO_ACCESS.sql "%RO_USERNAME%" "%USERNAME%"
 
 pause
