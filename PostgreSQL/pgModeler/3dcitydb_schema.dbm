@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="15248,9646" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="16923,10161" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -961,9 +961,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="appearance_module"/>
 	<position x="21260" y="12080"/>
 	<column name="surface_geometry_id" not-null="true">
-		<type name="integer"/>
-	</column>
-	<column name="objectclass_id">
 		<type name="integer"/>
 	</column>
 	<column name="is_texture_parametrization">
@@ -5986,14 +5983,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<index name="texparam_objclass_fkx" table="citydb.textureparam"
-	 concurrent="false" unique="false" fast-update="false" buffering="false"
-	 index-type="btree" factor="90">
-		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
-			<column name="objectclass_id"/>
-		</idxelement>
-</index>
-
 <index name="tin_relief_objclass_fkx" table="citydb.tin_relief"
 	 concurrent="false" unique="false" fast-update="false" buffering="false"
 	 index-type="btree" factor="90">
@@ -6645,12 +6634,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <constraint name="texparam_surface_data_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.surface_data" table="citydb.textureparam">
 	<columns names="surface_data_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="texparam_objclass_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.objectclass" table="citydb.textureparam">
-	<columns names="objectclass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -10263,11 +10246,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_solitary_vegetat_object_objectclass" type="relfk"
 	 src-table="citydb.solitary_vegetat_object"
-	 dst-table="citydb.objectclass"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="rel_textureparam_objectclass" type="relfk"
-	 src-table="citydb.textureparam"
 	 dst-table="citydb.objectclass"
 	 src-required="false" dst-required="false"/>
 
