@@ -25,11 +25,6 @@
 -- limitations under the License.
 --
 
-/*************************************************
-* move index_table of citydb_pkg
-*
-**************************************************/
-ALTER TABLE citydb_pkg.index_table SET SCHEMA citydb;
 
 /*************************************************
 * create tables new in v4.0.0
