@@ -519,7 +519,6 @@ CREATE SEQUENCE surface_data_seq
 -- DROP TABLE IF EXISTS textureparam CASCADE;
 CREATE TABLE textureparam(
 	surface_geometry_id integer NOT NULL,
-	objectclass_id integer,
 	is_texture_parametrization numeric,
 	world_to_texture character varying(1000),
 	texture_coordinates geometry(POLYGON),
@@ -4881,15 +4880,6 @@ CREATE INDEX sol_veg_obj_objclass_fkx ON solitary_vegetat_object
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
--- object: texparam_objclass_fkx | type: INDEX --
--- DROP INDEX IF EXISTS texparam_objclass_fkx CASCADE;
-CREATE INDEX texparam_objclass_fkx ON textureparam
-	USING btree
-	(
-	  objectclass_id ASC NULLS LAST
-	)	WITH (FILLFACTOR = 90);
--- ddl-end --
-
 -- object: tin_relief_objclass_fkx | type: INDEX --
 -- DROP INDEX IF EXISTS tin_relief_objclass_fkx CASCADE;
 CREATE INDEX tin_relief_objclass_fkx ON tin_relief
@@ -5605,13 +5595,6 @@ ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE textureparam ADD CONSTRAINT texparam_surface_data_fk FOREIGN KEY (surface_data_id)
 REFERENCES surface_data (id) MATCH FULL
 ON DELETE CASCADE ON UPDATE CASCADE;
--- ddl-end --
-
--- object: texparam_objclass_fk | type: CONSTRAINT --
--- ALTER TABLE textureparam DROP CONSTRAINT IF EXISTS texparam_objclass_fk CASCADE;
-ALTER TABLE textureparam ADD CONSTRAINT texparam_objclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES objectclass (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: app_to_surf_data_fk | type: CONSTRAINT --
