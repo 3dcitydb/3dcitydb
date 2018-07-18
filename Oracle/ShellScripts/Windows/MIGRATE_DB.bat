@@ -107,7 +107,6 @@ goto dbversion
 
 :v3
 set TEXOP=no
-set V2USER=""
 
 :: Prompt for DBVERSION -------------------------------------------------------
 :dbversion

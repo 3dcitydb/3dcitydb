@@ -53,7 +53,7 @@ SELECT 'Create sequences that are new in v4 ...' as message from DUAL;
 --// create TABLES
 SELECT 'Create new tables of v4 and alter existing tables ...' as message from DUAL;
 @@TABLES.sql
-*/
+
 SELECT 'Dropping existing 3DCityDB PL/SQL packages' as message from DUAL;
 DROP TABLE INDEX_TABLE CASCADE CONSTRAINTS;
 DROP SEQUENCE INDEX_TABLE_SEQ;
