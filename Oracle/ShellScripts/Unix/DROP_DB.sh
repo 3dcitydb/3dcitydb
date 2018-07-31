@@ -23,9 +23,7 @@ echo
 echo '################################################################################'
 echo
 echo 'This script will drop the 3DCityDB instance including all data. Note that this'
-echo 'operation cannot be undone. Please follow the instructions of the script.'
-echo 'Enter the required parameters when prompted and press ENTER to confirm.'
-echo 'Just press ENTER to use the default values.'
+echo 'operation cannot be undone.'
 echo
 echo 'Documentation and help:'
 echo '   3DCityDB website:    https://www.3dcitydb.org'
