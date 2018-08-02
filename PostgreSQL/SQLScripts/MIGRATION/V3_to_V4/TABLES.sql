@@ -145,6 +145,12 @@ ALTER TABLE citydb.tunnel_hollow_space
 ALTER TABLE citydb.waterbody
   ADD COLUMN objectclass_id INTEGER;
 
+ALTER TABLE citydb.relief_feature
+  ADD COLUMN objectclass_id INTEGER;
+  
+ALTER TABLE citydb.cityobjectgroup
+  ADD COLUMN objectclass_id INTEGER;  
+
 /*************************************************
 * update tables with new objectclass_id column
 *
@@ -217,3 +223,9 @@ UPDATE citydb.tunnel_hollow_space
 
 UPDATE citydb.waterbody
   SET objectclass_id = 9;
+
+UPDATE citydb.relief_feature rf
+  SET objectclass_id = 14;
+  
+UPDATE citydb.cityobjectgroup
+  SET objectclass_id = 23;  

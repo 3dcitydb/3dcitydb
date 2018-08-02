@@ -150,6 +150,12 @@ ALTER TABLE TUNNEL_HOLLOW_SPACE
 ALTER TABLE WATERBODY
   ADD OBJECTCLASS_ID NUMBER;
 
+ALTER TABLE RELIEF_FEATURE
+  ADD OBJECTCLASS_ID NUMBER;
+  
+ALTER TABLE CITYOBJECTGROUP
+  ADD OBJECTCLASS_ID NUMBER;
+  
 /*************************************************
 * update tables with new objectclass_id column
 *
@@ -222,3 +228,9 @@ UPDATE tunnel_hollow_space
 
 UPDATE waterbody
   SET objectclass_id = 9;
+
+UPDATE citydb.relief_feature rf
+  SET objectclass_id = 14;
+  
+UPDATE cityobjectgroup
+  SET objectclass_id = 23;  
