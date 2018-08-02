@@ -698,48 +698,6 @@
       </properties>
     </column>
     <column>
-      <name>LOD3_IMPLICIT_REP_ID</name>
-      <dataTypeUsage>
-        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <typeName>NUMBER</typeName>
-        </dataTypeID>
-        <properties>
-          <entry>
-            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-            <value class="oracle.javatools.db.ReferenceID">
-              <parent class="oracle.javatools.db.ReferenceID">
-                <name>LOD3_IMPLICIT_REP_ID</name>
-                <parent class="oracle.javatools.db.ReferenceID">
-                  <name>SOLITARY_VEGETAT_OBJECT</name>
-                  <identifier class="java.math.BigDecimal">115855</identifier>
-                  <schemaName>YAO</schemaName>
-                  <type>TABLE</type>
-                </parent>
-                <type>COLUMN</type>
-              </parent>
-              <type>DataTypeUsage</type>
-            </value>
-          </entry>
-        </properties>
-      </dataTypeUsage>
-      <notNull>false</notNull>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>LOD3_IMPLICIT_REP_ID</name>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>SOLITARY_VEGETAT_OBJECT</name>
-              <identifier class="java.math.BigDecimal">115855</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <type>COLUMN</type>
-          </value>
-        </entry>
-      </properties>
-    </column>
-    <column>
       <name>LOD2_IMPLICIT_REP_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
@@ -770,6 +728,48 @@
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
           <value class="oracle.javatools.db.ReferenceID">
             <name>LOD2_IMPLICIT_REP_ID</name>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>SOLITARY_VEGETAT_OBJECT</name>
+              <identifier class="java.math.BigDecimal">115855</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <type>COLUMN</type>
+          </value>
+        </entry>
+      </properties>
+    </column>
+    <column>
+      <name>LOD3_IMPLICIT_REP_ID</name>
+      <dataTypeUsage>
+        <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
+          <typeName>NUMBER</typeName>
+        </dataTypeID>
+        <properties>
+          <entry>
+            <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+            <value class="oracle.javatools.db.ReferenceID">
+              <parent class="oracle.javatools.db.ReferenceID">
+                <name>LOD3_IMPLICIT_REP_ID</name>
+                <parent class="oracle.javatools.db.ReferenceID">
+                  <name>SOLITARY_VEGETAT_OBJECT</name>
+                  <identifier class="java.math.BigDecimal">115855</identifier>
+                  <schemaName>YAO</schemaName>
+                  <type>TABLE</type>
+                </parent>
+                <type>COLUMN</type>
+              </parent>
+              <type>DataTypeUsage</type>
+            </value>
+          </entry>
+        </properties>
+      </dataTypeUsage>
+      <notNull>false</notNull>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>LOD3_IMPLICIT_REP_ID</name>
             <parent class="oracle.javatools.db.ReferenceID">
               <name>SOLITARY_VEGETAT_OBJECT</name>
               <identifier class="java.math.BigDecimal">115855</identifier>
