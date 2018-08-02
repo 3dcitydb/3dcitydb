@@ -51,7 +51,7 @@
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>false</notNull>
+      <notNull>true</notNull>
     </column>
     <column>
       <name>CLASS</name>

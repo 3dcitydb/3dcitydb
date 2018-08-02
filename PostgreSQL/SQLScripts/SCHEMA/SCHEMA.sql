@@ -127,7 +127,7 @@ CREATE SEQUENCE surface_geometry_seq
 -- DROP TABLE IF EXISTS cityobjectgroup CASCADE;
 CREATE TABLE cityobjectgroup(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -199,7 +199,7 @@ CREATE SEQUENCE implicit_geometry_seq
 -- DROP TABLE IF EXISTS city_furniture CASCADE;
 CREATE TABLE city_furniture(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -252,7 +252,7 @@ CREATE SEQUENCE cityobject_genericatt_seq
 -- DROP TABLE IF EXISTS generic_cityobject CASCADE;
 CREATE TABLE generic_cityobject(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -322,7 +322,7 @@ CREATE TABLE address_to_building(
 -- DROP TABLE IF EXISTS building CASCADE;
 CREATE TABLE building(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	building_parent_id integer,
 	building_root_id integer,
 	class character varying(256),
@@ -370,7 +370,7 @@ CREATE TABLE building(
 -- DROP TABLE IF EXISTS building_furniture CASCADE;
 CREATE TABLE building_furniture(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -393,7 +393,7 @@ CREATE TABLE building_furniture(
 -- DROP TABLE IF EXISTS building_installation CASCADE;
 CREATE TABLE building_installation(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -427,7 +427,7 @@ CREATE TABLE building_installation(
 -- DROP TABLE IF EXISTS opening CASCADE;
 CREATE TABLE opening(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	address_id integer,
 	lod3_multi_surface_id integer,
 	lod4_multi_surface_id integer,
@@ -458,7 +458,7 @@ CREATE TABLE opening_to_them_surface(
 -- DROP TABLE IF EXISTS room CASCADE;
 CREATE TABLE room(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -478,7 +478,7 @@ CREATE TABLE room(
 -- DROP TABLE IF EXISTS thematic_surface CASCADE;
 CREATE TABLE thematic_surface(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	building_id integer,
 	room_id integer,
 	building_installation_id integer,
@@ -544,7 +544,7 @@ CREATE TABLE appear_to_surface_data(
 -- DROP TABLE IF EXISTS breakline_relief CASCADE;
 CREATE TABLE breakline_relief(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	ridge_or_valley_lines geometry(MULTILINESTRINGZ),
 	break_lines geometry(MULTILINESTRINGZ),
 	CONSTRAINT breakline_relief_pk PRIMARY KEY (id)
@@ -557,7 +557,7 @@ CREATE TABLE breakline_relief(
 -- DROP TABLE IF EXISTS masspoint_relief CASCADE;
 CREATE TABLE masspoint_relief(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	relief_points geometry(MULTIPOINTZ),
 	CONSTRAINT masspoint_relief_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
@@ -569,7 +569,7 @@ CREATE TABLE masspoint_relief(
 -- DROP TABLE IF EXISTS relief_component CASCADE;
 CREATE TABLE relief_component(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	lod numeric,
 	extent geometry(POLYGON),
 	CONSTRAINT relief_component_pk PRIMARY KEY (id)
@@ -594,7 +594,7 @@ CREATE TABLE relief_feat_to_rel_comp(
 -- DROP TABLE IF EXISTS relief_feature CASCADE;
 CREATE TABLE relief_feature(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	lod numeric,
 	CONSTRAINT relief_feature_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100),
@@ -607,7 +607,7 @@ CREATE TABLE relief_feature(
 -- DROP TABLE IF EXISTS tin_relief CASCADE;
 CREATE TABLE tin_relief(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	max_length double precision,
 	max_length_unit character varying(4000),
 	stop_lines geometry(MULTILINESTRINGZ),
@@ -624,7 +624,7 @@ CREATE TABLE tin_relief(
 -- DROP TABLE IF EXISTS transportation_complex CASCADE;
 CREATE TABLE transportation_complex(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -646,7 +646,7 @@ CREATE TABLE transportation_complex(
 -- DROP TABLE IF EXISTS traffic_area CASCADE;
 CREATE TABLE traffic_area(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -669,7 +669,7 @@ CREATE TABLE traffic_area(
 -- DROP TABLE IF EXISTS land_use CASCADE;
 CREATE TABLE land_use(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -691,7 +691,7 @@ CREATE TABLE land_use(
 -- DROP TABLE IF EXISTS plant_cover CASCADE;
 CREATE TABLE plant_cover(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -718,7 +718,7 @@ CREATE TABLE plant_cover(
 -- DROP TABLE IF EXISTS solitary_vegetat_object CASCADE;
 CREATE TABLE solitary_vegetat_object(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -763,7 +763,7 @@ CREATE TABLE solitary_vegetat_object(
 -- DROP TABLE IF EXISTS waterbody CASCADE;
 CREATE TABLE waterbody(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -799,7 +799,7 @@ CREATE TABLE waterbod_to_waterbnd_srf(
 -- DROP TABLE IF EXISTS waterboundary_surface CASCADE;
 CREATE TABLE waterboundary_surface(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	water_level character varying(256),
 	water_level_codespace character varying(4000),
 	lod2_surface_id integer,
@@ -815,7 +815,7 @@ CREATE TABLE waterboundary_surface(
 -- DROP TABLE IF EXISTS raster_relief CASCADE;
 CREATE TABLE raster_relief(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	raster_uri character varying(4000),
 	coverage_id integer,
 	CONSTRAINT raster_relief_pk PRIMARY KEY (id)
@@ -828,7 +828,7 @@ CREATE TABLE raster_relief(
 -- DROP TABLE IF EXISTS tunnel CASCADE;
 CREATE TABLE tunnel(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	tunnel_parent_id integer,
 	tunnel_root_id integer,
 	class character varying(256),
@@ -875,7 +875,7 @@ CREATE TABLE tunnel_open_to_them_srf(
 -- DROP TABLE IF EXISTS tunnel_hollow_space CASCADE;
 CREATE TABLE tunnel_hollow_space(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -895,7 +895,7 @@ CREATE TABLE tunnel_hollow_space(
 -- DROP TABLE IF EXISTS tunnel_thematic_surface CASCADE;
 CREATE TABLE tunnel_thematic_surface(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	tunnel_id integer,
 	tunnel_hollow_space_id integer,
 	tunnel_installation_id integer,
@@ -924,7 +924,7 @@ CREATE SEQUENCE tex_image_seq
 -- DROP TABLE IF EXISTS tunnel_opening CASCADE;
 CREATE TABLE tunnel_opening(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	lod3_multi_surface_id integer,
 	lod4_multi_surface_id integer,
 	lod3_implicit_rep_id integer,
@@ -943,7 +943,7 @@ CREATE TABLE tunnel_opening(
 -- DROP TABLE IF EXISTS tunnel_installation CASCADE;
 CREATE TABLE tunnel_installation(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -977,7 +977,7 @@ CREATE TABLE tunnel_installation(
 -- DROP TABLE IF EXISTS tunnel_furniture CASCADE;
 CREATE TABLE tunnel_furniture(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -1000,7 +1000,7 @@ CREATE TABLE tunnel_furniture(
 -- DROP TABLE IF EXISTS bridge CASCADE;
 CREATE TABLE bridge(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	bridge_parent_id integer,
 	bridge_root_id integer,
 	class character varying(256),
@@ -1037,7 +1037,7 @@ CREATE TABLE bridge(
 -- DROP TABLE IF EXISTS bridge_furniture CASCADE;
 CREATE TABLE bridge_furniture(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -1060,7 +1060,7 @@ CREATE TABLE bridge_furniture(
 -- DROP TABLE IF EXISTS bridge_installation CASCADE;
 CREATE TABLE bridge_installation(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -1094,7 +1094,7 @@ CREATE TABLE bridge_installation(
 -- DROP TABLE IF EXISTS bridge_opening CASCADE;
 CREATE TABLE bridge_opening(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	address_id integer,
 	lod3_multi_surface_id integer,
 	lod4_multi_surface_id integer,
@@ -1125,7 +1125,7 @@ CREATE TABLE bridge_open_to_them_srf(
 -- DROP TABLE IF EXISTS bridge_room CASCADE;
 CREATE TABLE bridge_room(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -1145,7 +1145,7 @@ CREATE TABLE bridge_room(
 -- DROP TABLE IF EXISTS bridge_thematic_surface CASCADE;
 CREATE TABLE bridge_thematic_surface(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	bridge_id integer,
 	bridge_room_id integer,
 	bridge_installation_id integer,
@@ -1163,7 +1163,7 @@ CREATE TABLE bridge_thematic_surface(
 -- DROP TABLE IF EXISTS bridge_constr_element CASCADE;
 CREATE TABLE bridge_constr_element(
 	id integer NOT NULL,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -1228,7 +1228,7 @@ CREATE SEQUENCE grid_coverage_seq
 -- DROP TABLE IF EXISTS cityobject CASCADE;
 CREATE TABLE cityobject(
 	id integer NOT NULL DEFAULT nextval('cityobject_seq'::regclass),
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	gmlid character varying(256),
 	gmlid_codespace varchar(1000),
 	name character varying(1000),
@@ -1337,7 +1337,7 @@ CREATE TABLE surface_data(
 	name_codespace character varying(4000),
 	description character varying(4000),
 	is_front numeric,
-	objectclass_id integer,
+	objectclass_id integer NOT NULL,
 	x3d_shininess double precision,
 	x3d_transparency double precision,
 	x3d_ambient_intensity double precision,

@@ -6,7 +6,6 @@
       <name>ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -16,17 +15,15 @@
       <name>OBJECTCLASS_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>false</notNull>
+      <notNull>true</notNull>
     </column>
     <column>
       <name>BRIDGE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -36,7 +33,6 @@
       <name>BRIDGE_ROOM_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -46,7 +42,6 @@
       <name>BRIDGE_INSTALLATION_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -56,7 +51,6 @@
       <name>BRIDGE_CONSTR_ELEMENT_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -66,7 +60,6 @@
       <name>LOD2_MULTI_SURFACE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -76,7 +69,6 @@
       <name>LOD3_MULTI_SURFACE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -86,7 +78,6 @@
       <name>LOD4_MULTI_SURFACE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -94,32 +85,6 @@
     </column>
   </columns>
   <constraints>
-    <constraint class="oracle.javatools.db.PKConstraint">
-      <name>BRIDGE_THEMATIC_SURFACE_PK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>BRIDGE_THEMATIC_SURFACE</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.NameBasedID">
-        <name>BRIDGE_THEMATIC_SURFACE_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>BRIDGE_THEMATIC_SURFACE</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>DEFAULTSCHEMA</schemaName>
-        <type>INDEX</type>
-      </indexID>
-    </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <name>BRD_THEM_SRF_BRD_CONST_FK</name>
       <columnIDs>
@@ -355,9 +320,35 @@
         <type>CONSTRAINT</type>
       </referenceID>
     </constraint>
+    <constraint class="oracle.javatools.db.PKConstraint">
+      <name>BRIDGE_THEMATIC_SURFACE_PK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>BRIDGE_THEMATIC_SURFACE</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <indexID class="oracle.javatools.db.NameBasedID">
+        <name>BRIDGE_THEMATIC_SURFACE_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>BRIDGE_THEMATIC_SURFACE</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
+        <type>INDEX</type>
+      </indexID>
+    </constraint>
   </constraints>
   <indexes>
-    <indexe>
+    <index>
       <name>BRD_THEM_SRF_BRD_CONST_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -369,8 +360,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRD_THEM_SRF_BRD_INST_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -382,8 +373,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRD_THEM_SRF_BRD_ROOM_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -395,8 +386,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRD_THEM_SRF_BRIDGE_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -408,8 +399,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRD_THEM_SRF_LOD2MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -421,8 +412,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRD_THEM_SRF_LOD3MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -434,8 +425,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRD_THEM_SRF_LOD4MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -447,8 +438,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRD_THEM_SRF_OBJCLASS_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -460,8 +451,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRIDGE_THEMATIC_SURFACE_PK</name>
       <columnExpressions>
         <columnExpression>
@@ -473,7 +464,7 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
-    </indexe>
+    </index>
   </indexes>
   <properties>
     <entry>

@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="16923,10161" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="16777,10160" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -184,7 +184,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="class">
@@ -299,7 +299,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="class">
@@ -411,7 +411,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="class">
@@ -556,7 +556,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="building_parent_id">
@@ -682,7 +682,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="class">
@@ -733,7 +733,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer" precision="0"/>
 	</column>
 	<column name="class">
@@ -817,7 +817,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
 	</column>
 	<column name="address_id">
@@ -874,7 +874,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="class">
@@ -916,7 +916,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
 	</column>
 	<column name="building_id">
@@ -1002,7 +1002,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="ridge_or_valley_lines">
@@ -1023,7 +1023,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="relief_points">
@@ -1041,7 +1041,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="lod">
@@ -1080,7 +1080,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="lod">
@@ -1101,7 +1101,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="max_length">
@@ -1134,7 +1134,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
 	</column>
 	<column name="class">
@@ -1182,7 +1182,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer" precision="0"/>
 	</column>
 	<column name="class">
@@ -1233,7 +1233,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="class">
@@ -1281,7 +1281,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="class">
@@ -1344,7 +1344,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="class">
@@ -1461,7 +1461,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="class">
@@ -1533,7 +1533,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
 	</column>
 	<column name="water_level">
@@ -1563,7 +1563,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="raster_uri">
@@ -1584,7 +1584,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="tunnel_parent_id">
@@ -1689,7 +1689,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="class">
@@ -1731,7 +1731,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
 	</column>
 	<column name="tunnel_id">
@@ -1771,7 +1771,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
 	</column>
 	<column name="lod3_multi_surface_id">
@@ -1810,7 +1810,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer" precision="0"/>
 	</column>
 	<column name="class">
@@ -1894,7 +1894,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="class">
@@ -1945,7 +1945,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="bridge_parent_id">
@@ -2038,7 +2038,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="class">
@@ -2089,7 +2089,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer" precision="0"/>
 	</column>
 	<column name="class">
@@ -2173,7 +2173,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
 	</column>
 	<column name="address_id">
@@ -2230,7 +2230,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="class">
@@ -2272,7 +2272,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
 	</column>
 	<column name="bridge_id">
@@ -2308,7 +2308,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="class">
@@ -2438,7 +2438,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true" default-value="nextval('citydb.cityobject_seq'::regclass)">
 		<type name="integer"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="gmlid">
@@ -2675,7 +2675,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="is_front">
 		<type name="numeric" precision="0"/>
 	</column>
-	<column name="objectclass_id">
+	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="x3d_shininess">
@@ -8121,9 +8121,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.building"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="20823" y="14421.3"/>
-	<position x="20823" y="14071"/>
-	<position x="20669.3" y="14071"/>
+		<position x="20824" y="14421.3"/>
+	<position x="20824" y="14071"/>
+	<position x="20670" y="14071"/>
 	</line>
 	<label ref-type="src-label">
 		<position x="0" y="0"/>
@@ -9076,9 +9076,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.tunnel"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="19112" y="15942.9"/>
-	<position x="19112" y="15671"/>
-	<position x="18968.7" y="15671"/>
+		<position x="19113" y="15942.9"/>
+	<position x="19113" y="15671"/>
+	<position x="18969.3" y="15671"/>
 	</line>
 	<label ref-type="name-label">
 		<position x="102.641" y="19.7661"/>
@@ -9467,9 +9467,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="citydb.bridge"
 	 src-required="false" dst-required="false">
 	<line>
-		<position x="21912" y="16028.5"/>
-	<position x="21912" y="15751"/>
-	<position x="21768.7" y="15751"/>
+		<position x="21913" y="16028.5"/>
+	<position x="21913" y="15751"/>
+	<position x="21769.3" y="15751"/>
 	</line>
 	<label ref-type="name-label">
 		<position x="-28.8014" y="-0.745261"/>

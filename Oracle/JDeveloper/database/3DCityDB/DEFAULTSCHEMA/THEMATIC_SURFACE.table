@@ -6,7 +6,6 @@
       <name>ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -49,11 +48,10 @@
       <name>OBJECTCLASS_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>false</notNull>
+      <notNull>true</notNull>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -74,7 +72,6 @@
       <name>BUILDING_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -117,7 +114,6 @@
       <name>ROOM_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -160,7 +156,6 @@
       <name>BUILDING_INSTALLATION_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -170,7 +165,6 @@
       <name>LOD2_MULTI_SURFACE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -213,7 +207,6 @@
       <name>LOD3_MULTI_SURFACE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -256,7 +249,6 @@
       <name>LOD4_MULTI_SURFACE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -666,7 +658,7 @@
     </constraint>
   </constraints>
   <indexes>
-    <indexe>
+    <index>
       <name>THEMATIC_SURFACE_PK</name>
       <columnExpressions>
         <columnExpression>
@@ -715,8 +707,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>THEM_SURFACE_BLDG_INST_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -728,8 +720,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>THEM_SURFACE_BUILDING_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -778,8 +770,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>THEM_SURFACE_LOD2MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -828,8 +820,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>THEM_SURFACE_LOD3MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -878,8 +870,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>THEM_SURFACE_LOD4MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -928,8 +920,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>THEM_SURFACE_OBJCLASS_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -941,8 +933,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>THEM_SURFACE_ROOM_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -991,7 +983,7 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
+    </index>
   </indexes>
   <properties>
     <entry>

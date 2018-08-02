@@ -51,7 +51,7 @@
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>false</notNull>
+      <notNull>true</notNull>
     </column>
     <column>
       <name>CLASS</name>
@@ -1224,51 +1224,6 @@
     </column>
   </columns>
   <constraints>
-    <constraint class="oracle.javatools.db.PKConstraint">
-      <name>GENERIC_CITYOBJECT_PK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>GENERIC_CITYOBJECT</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <indexID class="oracle.javatools.db.NameBasedID">
-        <name>GENERIC_CITYOBJECT_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>GENERIC_CITYOBJECT</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <schemaName>DEFAULTSCHEMA</schemaName>
-        <type>INDEX</type>
-      </indexID>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>GENERIC_CITYOBJECT_PK</name>
-            <childObjectNames>
-              <childObjectName>ID</childObjectName>
-            </childObjectNames>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>GENERIC_CITYOBJECT</name>
-              <identifier class="java.math.BigDecimal">115601</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <subType>PKConstraint</subType>
-            <type>CONSTRAINT</type>
-          </value>
-        </entry>
-      </properties>
-    </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
       <name>GEN_OBJECT_CITYOBJECT_FK</name>
       <columnIDs>
@@ -1675,51 +1630,6 @@
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
-      <name>GEN_OBJECT_LOD4IMPL_FK</name>
-      <columnIDs>
-        <columnID class="oracle.javatools.db.NameBasedID">
-          <name>LOD4_IMPLICIT_REP_ID</name>
-          <parent class="oracle.javatools.db.NameBasedID">
-            <name>GENERIC_CITYOBJECT</name>
-            <schemaName>DEFAULTSCHEMA</schemaName>
-            <type>TABLE</type>
-          </parent>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>COLUMN</type>
-        </columnID>
-      </columnIDs>
-      <enabled>true</enabled>
-      <onDeleteAction>NO_ACTION</onDeleteAction>
-      <properties>
-        <entry>
-          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
-          <value class="oracle.javatools.db.ReferenceID">
-            <name>GENERIC_CITYOBJECT_FK4</name>
-            <childObjectNames>
-              <childObjectName>LOD4_IMPLICIT_REP_ID</childObjectName>
-            </childObjectNames>
-            <parent class="oracle.javatools.db.ReferenceID">
-              <name>GENERIC_CITYOBJECT</name>
-              <identifier class="java.math.BigDecimal">115601</identifier>
-              <schemaName>YAO</schemaName>
-              <type>TABLE</type>
-            </parent>
-            <subType>FKConstraint</subType>
-            <type>CONSTRAINT</type>
-          </value>
-        </entry>
-      </properties>
-      <referenceID class="oracle.javatools.db.NameBasedID">
-        <name>IMPLICIT_GEOMETRY_PK</name>
-        <parent class="oracle.javatools.db.NameBasedID">
-          <name>IMPLICIT_GEOMETRY</name>
-          <schemaName>DEFAULTSCHEMA</schemaName>
-          <type>TABLE</type>
-        </parent>
-        <type>CONSTRAINT</type>
-      </referenceID>
-    </constraint>
-    <constraint class="oracle.javatools.db.FKConstraint">
       <name>GEN_OBJECT_LOD4BREP_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
@@ -1765,6 +1675,51 @@
       </referenceID>
     </constraint>
     <constraint class="oracle.javatools.db.FKConstraint">
+      <name>GEN_OBJECT_LOD4IMPL_FK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>LOD4_IMPLICIT_REP_ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>GENERIC_CITYOBJECT</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <onDeleteAction>NO_ACTION</onDeleteAction>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>GENERIC_CITYOBJECT_FK4</name>
+            <childObjectNames>
+              <childObjectName>LOD4_IMPLICIT_REP_ID</childObjectName>
+            </childObjectNames>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>GENERIC_CITYOBJECT</name>
+              <identifier class="java.math.BigDecimal">115601</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <subType>FKConstraint</subType>
+            <type>CONSTRAINT</type>
+          </value>
+        </entry>
+      </properties>
+      <referenceID class="oracle.javatools.db.NameBasedID">
+        <name>IMPLICIT_GEOMETRY_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>IMPLICIT_GEOMETRY</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <type>CONSTRAINT</type>
+      </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.FKConstraint">
       <name>GEN_OBJECT_OBJCLASS_FK</name>
       <columnIDs>
         <columnID class="oracle.javatools.db.NameBasedID">
@@ -1789,6 +1744,51 @@
         <schemaName>DEFAULTSCHEMA</schemaName>
         <type>CONSTRAINT</type>
       </referenceID>
+    </constraint>
+    <constraint class="oracle.javatools.db.PKConstraint">
+      <name>GENERIC_CITYOBJECT_PK</name>
+      <columnIDs>
+        <columnID class="oracle.javatools.db.NameBasedID">
+          <name>ID</name>
+          <parent class="oracle.javatools.db.NameBasedID">
+            <name>GENERIC_CITYOBJECT</name>
+            <schemaName>DEFAULTSCHEMA</schemaName>
+            <type>TABLE</type>
+          </parent>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>COLUMN</type>
+        </columnID>
+      </columnIDs>
+      <enabled>true</enabled>
+      <indexID class="oracle.javatools.db.NameBasedID">
+        <name>GENERIC_CITYOBJECT_PK</name>
+        <parent class="oracle.javatools.db.NameBasedID">
+          <name>GENERIC_CITYOBJECT</name>
+          <schemaName>DEFAULTSCHEMA</schemaName>
+          <type>TABLE</type>
+        </parent>
+        <schemaName>DEFAULTSCHEMA</schemaName>
+        <type>INDEX</type>
+      </indexID>
+      <properties>
+        <entry>
+          <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
+          <value class="oracle.javatools.db.ReferenceID">
+            <name>GENERIC_CITYOBJECT_PK</name>
+            <childObjectNames>
+              <childObjectName>ID</childObjectName>
+            </childObjectNames>
+            <parent class="oracle.javatools.db.ReferenceID">
+              <name>GENERIC_CITYOBJECT</name>
+              <identifier class="java.math.BigDecimal">115601</identifier>
+              <schemaName>YAO</schemaName>
+              <type>TABLE</type>
+            </parent>
+            <subType>PKConstraint</subType>
+            <type>CONSTRAINT</type>
+          </value>
+        </entry>
+      </properties>
     </constraint>
   </constraints>
   <indexes>

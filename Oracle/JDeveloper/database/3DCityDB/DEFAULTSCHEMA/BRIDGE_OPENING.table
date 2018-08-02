@@ -6,7 +6,6 @@
       <name>ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -16,17 +15,15 @@
       <name>OBJECTCLASS_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>false</notNull>
+      <notNull>true</notNull>
     </column>
     <column>
       <name>ADDRESS_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -36,7 +33,6 @@
       <name>LOD3_MULTI_SURFACE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -46,7 +42,6 @@
       <name>LOD4_MULTI_SURFACE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -56,7 +51,6 @@
       <name>LOD3_IMPLICIT_REP_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -66,7 +60,6 @@
       <name>LOD4_IMPLICIT_REP_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -104,7 +97,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -120,7 +112,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -338,7 +329,7 @@
     </constraint>
   </constraints>
   <indexes>
-    <indexe>
+    <index>
       <name>BRIDGE_OPENING_PK</name>
       <columnExpressions>
         <columnExpression>
@@ -350,8 +341,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRIDGE_OPEN_ADDRESS_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -363,8 +354,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRIDGE_OPEN_LOD3IMPL_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -376,8 +367,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRIDGE_OPEN_LOD3MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -389,8 +380,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRIDGE_OPEN_LOD3REFPT_SPX</name>
       <columnExpressions>
         <columnExpression>
@@ -407,8 +398,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRIDGE_OPEN_LOD4IMPL_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -420,8 +411,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRIDGE_OPEN_LOD4MSRF_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -433,8 +424,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRIDGE_OPEN_LOD4REFPT_SPX</name>
       <columnExpressions>
         <columnExpression>
@@ -451,8 +442,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>BRIDGE_OPEN_OBJCLASS_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -464,7 +455,7 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
+    </index>
   </indexes>
   <properties>
     <entry>

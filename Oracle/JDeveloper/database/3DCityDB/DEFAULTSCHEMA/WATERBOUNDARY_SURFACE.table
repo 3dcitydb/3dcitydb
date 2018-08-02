@@ -6,7 +6,6 @@
       <name>ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -49,11 +48,10 @@
       <name>OBJECTCLASS_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
       </dataTypeUsage>
-      <notNull>false</notNull>
+      <notNull>true</notNull>
       <properties>
         <entry>
           <key>OfflineDBConstants.IMPORT_SOURCE_ID</key>
@@ -80,7 +78,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
         <properties>
@@ -129,7 +126,6 @@
           </entry>
         </attributeValues>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.Oracle9i</providerClass>
           <typeName>VARCHAR2</typeName>
         </dataTypeID>
       </dataTypeUsage>
@@ -139,7 +135,6 @@
       <name>LOD2_SURFACE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -182,7 +177,6 @@
       <name>LOD3_SURFACE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -225,7 +219,6 @@
       <name>LOD4_SURFACE_ID</name>
       <dataTypeUsage>
         <dataTypeID class="oracle.javatools.db.datatypes.DataTypeID">
-          <providerClass>oracle.javatools.db.ora.OracleDatabaseImpl</providerClass>
           <typeName>NUMBER</typeName>
         </dataTypeID>
         <properties>
@@ -519,7 +512,7 @@
     </constraint>
   </constraints>
   <indexes>
-    <indexe>
+    <index>
       <name>WATERBND_SRF_LOD2SRF_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -568,8 +561,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>WATERBND_SRF_LOD3SRF_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -618,8 +611,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>WATERBND_SRF_LOD4SRF_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -668,8 +661,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>WATERBND_SRF_OBJCLASS_FKX</name>
       <columnExpressions>
         <columnExpression>
@@ -681,8 +674,8 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>false</systemGenerated>
-    </indexe>
-    <indexe>
+    </index>
+    <index>
       <name>WATERBOUNDARY_SURFACE_PK</name>
       <columnExpressions>
         <columnExpression>
@@ -731,7 +724,7 @@
         <name>DEFAULTSCHEMA</name>
       </schema>
       <systemGenerated>true</systemGenerated>
-    </indexe>
+    </index>
   </indexes>
   <properties>
     <entry>
