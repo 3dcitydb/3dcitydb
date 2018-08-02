@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="16777,10160" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="16086,9985" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB_v3.3" encoding="UTF8">
 	<role name="postgres"/>
@@ -7850,13 +7850,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="aggregation_info_fk1" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="CASCADE" ref-table="citydb.objectclass" table="citydb.aggregation_info">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.objectclass" table="citydb.aggregation_info">
 	<columns names="child_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="aggregation_info_fk2" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="CASCADE" ref-table="citydb.objectclass" table="citydb.aggregation_info">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.objectclass" table="citydb.aggregation_info">
 	<columns names="parent_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
