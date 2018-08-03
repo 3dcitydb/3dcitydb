@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-06-15 11:18:38)
+-- Automatically generated database script (Creation Date: 2018-08-03 15:55:29)
 -- box2envelope
 -- env_address
 -- env_appearance
@@ -1229,9 +1229,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       -- breakline_relief
       WHEN class_id = 18 THEN
         bbox := update_bounds(bbox, env_breakline_relief(co_id, set_envelope, 0));
-      -- raster_relief
-      WHEN class_id = 19 THEN
-        bbox := update_bounds(bbox, env_raster_relief(co_id, set_envelope, 0));
       -- city_furniture
       WHEN class_id = 21 THEN
         bbox := update_bounds(bbox, env_city_furniture(co_id, set_envelope, 1));
@@ -1873,9 +1870,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       -- breakline_relief
       WHEN class_id = 18 THEN
         bbox := update_bounds(bbox, env_breakline_relief(co_id, set_envelope, 1));
-      -- raster_relief
-      WHEN class_id = 19 THEN
-        bbox := update_bounds(bbox, env_raster_relief(co_id, set_envelope, 1));
       ELSE bbox := bbox;
       END CASE;
     END IF;
