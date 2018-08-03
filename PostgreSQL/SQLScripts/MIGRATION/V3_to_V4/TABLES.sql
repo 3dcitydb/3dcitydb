@@ -45,7 +45,7 @@ CREATE TABLE citydb.ade(
 
 CREATE TABLE citydb.schema(
     id INTEGER NOT NULL DEFAULT nextval('schema_seq'::regclass),
-    is_ade_root INTEGER NOT NULL,
+    is_ade_root NUMERIC NOT NULL,
     citygml_version VARCHAR(50) NOT NULL,
     xml_namespace_uri VARCHAR(4000) NOT NULL,
     xml_namespace_prefix VARCHAR(50) NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE citydb.aggregation_info(
     join_table_or_column_name VARCHAR(30) NOT NULL,
     min_occurs INTEGER,
     max_occurs INTEGER,
-    is_composite INTEGER
+    is_composite NUMERIC
 );
 
 /*************************************************

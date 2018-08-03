@@ -126,9 +126,6 @@ ALTER TABLE BREAKLINE_RELIEF
 ALTER TABLE MASSPOINT_RELIEF
   ADD OBJECTCLASS_ID NUMBER;
 
-ALTER TABLE RASTER_RELIEF
-  ADD OBJECTCLASS_ID NUMBER;
-
 ALTER TABLE TIN_RELIEF
   ADD OBJECTCLASS_ID NUMBER;
 
@@ -149,12 +146,12 @@ ALTER TABLE TUNNEL_HOLLOW_SPACE
 
 ALTER TABLE WATERBODY
   ADD OBJECTCLASS_ID NUMBER;
-
-ALTER TABLE RELIEF_FEATURE
-  ADD OBJECTCLASS_ID NUMBER;
   
 ALTER TABLE CITYOBJECTGROUP
   ADD OBJECTCLASS_ID NUMBER;
+  
+ALTER TABLE RELIEF_FEATURE
+  ADD OBJECTCLASS_ID NUMBER;  
   
 /*************************************************
 * update tables with new objectclass_id column
@@ -202,9 +199,6 @@ UPDATE breakline_relief
 UPDATE masspoint_relief
   SET objectclass_id = 17;
 
-UPDATE raster_relief
-  SET objectclass_id = 19;
-
 UPDATE tin_relief
   SET objectclass_id = 16;
 
@@ -229,8 +223,8 @@ UPDATE tunnel_hollow_space
 UPDATE waterbody
   SET objectclass_id = 9;
 
-UPDATE citydb.relief_feature rf
-  SET objectclass_id = 14;
-  
 UPDATE cityobjectgroup
   SET objectclass_id = 23;  
+  
+UPDATE relief_feature
+  SET objectclass_id = 14;  

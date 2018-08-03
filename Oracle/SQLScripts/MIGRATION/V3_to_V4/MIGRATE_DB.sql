@@ -52,7 +52,13 @@ SELECT 'Create sequences that are new in v4 ...' as message from DUAL;
 
 --// create TABLES
 SELECT 'Create new tables of v4 and alter existing tables ...' as message from DUAL;
-@@TABLES.sql
+column script new_value TABLES
+SELECT
+  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'TABLES_GEORASTER.sql'
+  ELSE 'TABLES.sql'
+  END AS script
+FROM dual;
+@@&TABLES
 
 SELECT 'Dropping existing 3DCityDB PL/SQL packages' as message from DUAL;
 DROP TABLE INDEX_TABLE CASCADE CONSTRAINTS;
@@ -123,11 +129,23 @@ SELECT 'Packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx'', ''cityd
 
 --// adding CONSTRAINTS in new schema
 SELECT 'Update primary keys, foreign keys and not null constraints ...' as message from DUAL;
-@@CONSTRAINTS.sql
+column script new_value CONSTRAINTS
+SELECT
+  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'CONSTRAINTS_GEORASTER.sql'
+  ELSE 'CONSTRAINTS.sql'
+  END AS script
+FROM dual;
+@@&CONSTRAINTS
 
 --// creating INDEXES in new schema
 SELECT 'Update indexes ...' as message from DUAL;
-@@INDEXES.sql
+column script new_value INDEXES
+SELECT
+  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'INDEXES_GEORASTER.sql'
+  ELSE 'INDEXES.sql'
+  END AS script
+FROM dual;
+@@&INDEXES
 
 SHOW ERRORS;
 COMMIT;

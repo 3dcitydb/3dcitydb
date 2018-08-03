@@ -25,47 +25,168 @@
 -- limitations under the License.
 --
 
-
-/*************************************************
-* remove indexes obsolete for v4.0.0
-*
-**************************************************/
-DO
-$$
-DECLARE
-  idx TEXT;
-BEGIN
-  FOR idx IN (
-    SELECT
-      c.relname::text
-    FROM
-      pg_class c,
-      pg_index i,
-      pg_namespace n
-    WHERE
-      c.oid = i.indexrelid
-      AND c.relnamespace = n.oid
-      AND c.relkind = 'i'
-      AND n.nspname = 'citydb'
-      AND (c.relname LIKE '%objclass_fkx'
-       OR c.relname LIKE '%objectclass_fkx'
-       OR c.relname LIKE '%\_to\_%')
-      AND c.relname <> 'cityobject_objectclass_fkx'
-      AND i.indkey[0] > 1
-  )
-  LOOP
-    EXECUTE format('DROP INDEX citydb.%I', idx);
-  END LOOP;
-END;
-$$
-LANGUAGE plpgsql;
-
 /*************************************************
 * create indexes new in v4.0.0
 *
 **************************************************/
-CREATE INDEX schema_referencing_fkx ON schema_referencing
-  USING btree (referencing_id ASC NULLS LAST) WITH (FILLFACTOR = 90);
+CREATE INDEX breakline_rel_objclass_fkx ON breakline_relief
+	USING btree
+	(
+	  objectclass_id
+	)	WITH (FILLFACTOR = 90);
 
-CREATE INDEX schema_to_objectclass_fkx ON schema_to_objectclass
-  USING btree (objectclass_id ASC NULLS LAST) WITH (FILLFACTOR = 90);
+CREATE INDEX bridge_objectclass_fkx ON bridge
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+
+CREATE INDEX bridge_constr_objclass_fkx ON bridge_constr_element
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+	
+CREATE INDEX bridge_furn_objclass_fkx ON bridge_furniture
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+
+CREATE INDEX bridge_room_objclass_fkx ON bridge_room
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+	
+CREATE INDEX building_objectclass_fkx ON building
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+	
+CREATE INDEX bldg_furn_objclass_fkx ON building_furniture
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);	
+	
+CREATE INDEX city_furn_objclass_fkx ON city_furniture
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);	
+
+CREATE INDEX group_objectclass_fkx ON cityobjectgroup
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+
+CREATE INDEX gen_object_objclass_fkx ON generic_cityobject
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+
+CREATE INDEX land_use_objclass_fkx ON land_use
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+
+CREATE INDEX masspoint_rel_objclass_fkx ON masspoint_relief
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+
+CREATE INDEX objectclass_baseclass_fkx ON objectclass
+	USING btree
+	(
+	  baseclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+
+CREATE INDEX plant_cover_objclass_fkx ON plant_cover
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+
+CREATE INDEX raster_relief_objclass_fkx ON raster_relief
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+
+CREATE INDEX relief_feat_objclass_fkx ON relief_feature
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+
+CREATE INDEX ROOM_OBJECTCLASS_FKX ON room
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);	
+	
+CREATE INDEX schema_referencing_fkx1 ON schema_referencing
+	USING btree
+	(
+	  referenced_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+	
+CREATE INDEX schema_referencing_fkx2 ON schema_referencing
+	USING btree
+	(
+	  referencing_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);	
+
+CREATE INDEX schema_to_objectclass_fkx1 ON schema_to_objectclass
+	USING btree
+	(
+	  schema_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);
+	
+CREATE INDEX schema_to_objectclass_fkx2 ON schema_to_objectclass
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);	
+	
+CREATE INDEX sol_veg_obj_objclass_fkx ON solitary_vegetat_object
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);	
+	
+CREATE INDEX tin_relief_objclass_fkx ON tin_relief
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);	
+	
+CREATE INDEX tunnel_objectclass_fkx ON tunnel
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);	
+	
+CREATE INDEX tunnel_furn_objclass_fkx ON tunnel_furniture
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);	
+	
+CREATE INDEX tun_hspace_objclass_fkx ON tunnel_hollow_space
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);	
+	
+CREATE INDEX waterbody_objclass_fkx ON waterbody
+	USING btree
+	(
+	  objectclass_id ASC NULLS LAST
+	)	WITH (FILLFACTOR = 90);	
