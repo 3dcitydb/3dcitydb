@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-08-03 15:55:29)
+-- Automatically generated database script (Creation Date: 2018-08-06 10:06:07)
 -- box2envelope
 -- env_address
 -- env_appearance
@@ -185,10 +185,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     FROM
       collect_geom;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -212,10 +208,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_surface_data(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -249,10 +241,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox
     FROM
       collect_geom;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -397,10 +385,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -476,10 +460,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     FROM
       collect_geom;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -515,10 +495,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox
     FROM
       collect_geom;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -604,10 +580,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -657,10 +629,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_address(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -726,10 +694,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -776,10 +740,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_bridge_opening(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -920,10 +880,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -959,10 +915,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox
     FROM
       collect_geom;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -1048,10 +1000,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -1127,10 +1075,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     FROM
       collect_geom;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -1144,10 +1088,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     nested_feat_cur sys_refcursor;
     nested_feat_id NUMBER;
   BEGIN
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -1527,10 +1467,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -1618,10 +1554,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     FROM
       collect_geom;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -1635,10 +1567,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     nested_feat_cur sys_refcursor;
     nested_feat_id NUMBER;
   BEGIN
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -1681,10 +1609,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     FROM
       collect_geom;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -1714,10 +1638,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox
     FROM
       collect_geom;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -1768,10 +1688,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_address(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -1824,10 +1740,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     FROM
       collect_geom;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -1874,10 +1786,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       END CASE;
     END IF;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -1906,10 +1814,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_relief_component(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -1975,10 +1879,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -2042,10 +1942,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     FROM
       collect_geom;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -2071,10 +1967,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     FROM
       collect_geom;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -2088,10 +1980,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     nested_feat_cur sys_refcursor;
     nested_feat_id NUMBER;
   BEGIN
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -2139,10 +2027,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -2172,10 +2056,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox
     FROM
       collect_geom;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -2221,10 +2101,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox
     FROM
       collect_geom;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -2288,10 +2164,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_traffic_area(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -2416,10 +2288,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -2455,10 +2323,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox
     FROM
       collect_geom;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -2523,10 +2387,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_tunnel_installation(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -2612,10 +2472,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -2654,10 +2510,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox
     FROM
       collect_geom;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -2705,10 +2557,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_tunnel_opening(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
@@ -2772,10 +2620,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
-
     RETURN bbox;
 
   END;
@@ -2811,10 +2655,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox
     FROM
       collect_geom;
-
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-    END IF;
 
     RETURN bbox;
 
