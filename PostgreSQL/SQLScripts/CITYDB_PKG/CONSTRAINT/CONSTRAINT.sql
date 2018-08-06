@@ -33,8 +33,8 @@
 *   set_enabled_geom_fkeys(enable BOOLEAN DEFAULT TRUE, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   set_enabled_schema_fkeys(enable BOOLEAN DEFAULT TRUE, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   set_fkey_delete_rule(fkey_name TEXT, table_name TEXT, column_name TEXT, ref_table TEXT, ref_column TEXT, 
-*     delete_param TEXT, deferrable_param TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
-*   set_schema_fkeys_delete_rule(on_delete_param TEXT DEFAULT 'CASCADE', schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
+*     on_delete_param CHAR DEFAULT 'a', schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
+*   set_schema_fkeys_delete_rule(on_delete_param CHAR DEFAULT 'a', schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 ******************************************************************/
 
 /******************************************************************
