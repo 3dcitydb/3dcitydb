@@ -92,7 +92,6 @@ AS
   FUNCTION versioning_db(schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   PROCEDURE db_info(schema_name VARCHAR2 := USER, schema_srid OUT INTEGER, schema_gml_srs_name OUT VARCHAR2, versioning OUT VARCHAR2);
   FUNCTION db_metadata(schema_name VARCHAR2 := USER) RETURN DB_INFO_TABLE;
-  FUNCTION get_short_name(table_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN VARCHAR2;
   FUNCTION split(list VARCHAR2, delim VARCHAR2 := ',') RETURN STRARRAY;
   FUNCTION min(a NUMBER, b NUMBER) RETURN NUMBER;
   FUNCTION get_seq_values(seq_name VARCHAR2, seq_count NUMBER) RETURN ID_ARRAY;
@@ -279,24 +278,6 @@ AS
     info_tmp.versioning := versioning_db(schema_name);
     info_ret(info_ret.count) := info_tmp;
     RETURN info_ret;
-  END;
-
-  /*****************************************************************
-  * get_short_name
-  *
-  * @param table_name name of table that needs to be shortened
-  * @param schema_name name of schema to query short name
-  *
-  * @RETURN INTEGER SET list of sequence values from given sequence
-  ******************************************************************/
-  FUNCTION get_short_name(
-    table_name VARCHAR2,
-    schema_name VARCHAR2 := USER
-    ) RETURN VARCHAR2
-  IS
-  BEGIN
-    -- TODO: query a table that stores the short version of a table (maybe objectclass?)
-    RETURN substr(lower(table_name), 1, 12);
   END;
 
   /*****************************************************************

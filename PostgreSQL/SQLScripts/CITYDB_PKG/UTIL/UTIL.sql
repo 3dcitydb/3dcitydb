@@ -51,7 +51,6 @@
 *     OUT versioning TEXT
 *     ) RETURNS RECORD
 *   get_seq_values(seq_name TEXT, seq_count INTEGER) RETURNS SETOF INTEGER
-*   get_short_name(table_name TEXT, schema_name TEXT) RETURNS TEXT
 *   min(a NUMERIC, b NUMERIC) RETURNS NUMERIC
 *   versioning_db(schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   versioning_table(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
@@ -181,25 +180,6 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql STABLE;
-
-
-/*****************************************************************
-* get_short_name
-*
-* @param table_name name of table that needs to be shortened
-* @param schema_name name of schema to query short name
-*
-* @RETURN INTEGER SET list of sequence values from given sequence
-******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_short_name(
-  table_name TEXT,
-  schema_name TEXT
-  ) RETURNS TEXT AS
-$$
--- TODO: query a table that stores the short version of a table (maybe objectclass?)
-SELECT substr($1, 1, 17);
-$$
-LANGUAGE sql STABLE STRICT;
 
 
 /******************************************************************
