@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-06-15 15:40:43)
+-- Automatically generated database script (Creation Date: 2018-08-06 10:15:53)
 -- cleanup_global_appearances
 -- cleanup_schema
 -- del_address
@@ -279,7 +279,7 @@ AS
     dummy_str := citydb_idx.drop_spatial_indexes();
 
     for uc in (
-      select constraint_name, table_name from user_constraints
+      select constraint_name, table_name from user_constraints where constraint_type = 'R'
     )
     LOOP
       execute immediate 'alter table '||uc.table_name||' disable constraint '||uc.constraint_name||'';
@@ -299,7 +299,7 @@ AS
     END loop;
 
     for uc in (
-      select constraint_name, table_name from user_constraints
+      select constraint_name, table_name from user_constraints where constraint_type = 'R'
     )
     LOOP
       execute immediate 'alter table '||uc.table_name||' enable constraint '||uc.constraint_name||'';

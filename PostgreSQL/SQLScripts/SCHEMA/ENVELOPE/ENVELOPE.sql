@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-06-14 16:57:14)
+-- Automatically generated database script (Creation Date: 2018-08-06 09:51:58)
 -- box2envelope
 -- env_address
 -- env_appearance
@@ -117,10 +117,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -140,10 +136,6 @@ BEGIN
     SELECT citydb.env_surface_data(c.id, set_envelope) AS geom FROM citydb.surface_data c, citydb.appear_to_surface_data p2c WHERE c.id = surface_data_id AND p2c.appearance_id = co_id
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -173,10 +165,6 @@ BEGIN
     SELECT break_lines AS geom FROM citydb.breakline_relief WHERE id = co_id  AND break_lines IS NOT NULL
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -271,10 +259,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -346,10 +330,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -381,10 +361,6 @@ BEGIN
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.bridge_furniture WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -455,10 +431,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -500,10 +472,6 @@ BEGIN
     SELECT citydb.env_address(c.id, set_envelope) AS geom FROM citydb.bridge_opening p, address c WHERE p.id = co_id AND p.address_id = c.id
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -547,10 +515,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -589,10 +553,6 @@ BEGIN
     SELECT citydb.env_bridge_opening(c.id, set_envelope) AS geom FROM citydb.bridge_opening c, citydb.bridge_open_to_them_srf p2c WHERE c.id = bridge_opening_id AND p2c.bridge_thematic_surface_id = co_id
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -690,10 +650,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -725,10 +681,6 @@ BEGIN
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.building_furniture WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -798,10 +750,6 @@ BEGIN
     SELECT citydb.env_thematic_surface(id, set_envelope) AS geom FROM citydb.thematic_surface WHERE building_installation_id = co_id
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -874,10 +822,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -891,10 +835,6 @@ DECLARE
   bbox GEOMETRY;
   dummy_bbox GEOMETRY;
 BEGIN
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -1222,7 +1162,7 @@ BEGIN
   END IF;
 
   IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    UPDATE citydb.cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
   RETURN bbox;
@@ -1260,10 +1200,6 @@ BEGIN
     SELECT citydb.env_cityobject(c.id, set_envelope) AS geom FROM citydb.cityobject c, citydb.group_to_cityobject p2c WHERE c.id = cityobject_id AND p2c.cityobjectgroup_id = co_id
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -1348,10 +1284,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -1365,10 +1297,6 @@ DECLARE
   bbox GEOMETRY;
   dummy_bbox GEOMETRY;
 BEGIN
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -1407,10 +1335,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -1436,10 +1360,6 @@ BEGIN
     SELECT relief_points AS geom FROM citydb.masspoint_relief WHERE id = co_id  AND relief_points IS NOT NULL
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -1482,10 +1402,6 @@ BEGIN
     SELECT citydb.env_address(c.id, set_envelope) AS geom FROM citydb.opening p, address c WHERE p.id = co_id AND p.address_id = c.id
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -1534,10 +1450,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -1555,10 +1467,6 @@ BEGIN
   IF caller <> 1 THEN
     dummy_bbox := citydb.env_relief_component(co_id, set_envelope, 2);
     bbox := citydb.update_bounds(bbox, dummy_bbox);
-  END IF;
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 
   RETURN bbox;
@@ -1607,10 +1515,6 @@ BEGIN
     bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -1636,10 +1540,6 @@ BEGIN
     SELECT citydb.env_relief_component(c.id, set_envelope) AS geom FROM citydb.relief_component c, citydb.relief_feat_to_rel_comp p2c WHERE c.id = relief_component_id AND p2c.relief_feature_id = co_id
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -1682,10 +1582,6 @@ BEGIN
     SELECT citydb.env_building_installation(id, set_envelope) AS geom FROM citydb.building_installation WHERE room_id = co_id
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -1746,10 +1642,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -1770,10 +1662,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -1787,10 +1675,6 @@ DECLARE
   bbox GEOMETRY;
   dummy_bbox GEOMETRY;
 BEGIN
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -1830,10 +1714,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -1859,10 +1739,6 @@ BEGIN
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.tin_relief t WHERE sg.root_id = t.surface_geometry_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -1904,10 +1780,6 @@ BEGIN
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.traffic_area t WHERE sg.root_id = t.lod4_multi_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -1956,10 +1828,6 @@ BEGIN
     SELECT citydb.env_traffic_area(id, set_envelope) AS geom FROM citydb.traffic_area WHERE transportation_complex_id = co_id
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -2048,10 +1916,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -2083,10 +1947,6 @@ BEGIN
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.tunnel_furniture WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -2129,10 +1989,6 @@ BEGIN
     SELECT citydb.env_tunnel_installation(id, set_envelope) AS geom FROM citydb.tunnel_installation WHERE tunnel_hollow_space_id = co_id
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -2203,10 +2059,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -2241,10 +2093,6 @@ BEGIN
     SELECT citydb.get_envelope_implicit_geometry(lod4_implicit_rep_id, lod4_implicit_ref_point, lod4_implicit_transformation) AS geom FROM citydb.tunnel_opening WHERE id = co_id AND lod4_implicit_rep_id IS NOT NULL
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -2284,10 +2132,6 @@ BEGIN
     SELECT citydb.env_tunnel_opening(c.id, set_envelope) AS geom FROM citydb.tunnel_opening c, citydb.tunnel_open_to_them_srf p2c WHERE c.id = tunnel_opening_id AND p2c.tunnel_thematic_surface_id = co_id
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -2343,10 +2187,6 @@ BEGIN
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
-
   RETURN bbox;
 END;
 $body$
@@ -2378,10 +2218,6 @@ BEGIN
     SELECT sg.geometry AS geom FROM citydb.surface_geometry sg, citydb.waterboundary_surface t WHERE sg.root_id = t.lod4_surface_id AND t.id = co_id AND sg.geometry IS NOT NULL
   ) g;
   bbox := citydb.update_bounds(bbox, dummy_bbox);
-
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
-    UPDATE cityobject SET envelope = bbox WHERE id = co_id;
-  END IF;
 
   RETURN bbox;
 END;
@@ -2506,3 +2342,4 @@ END;
 $body$
 LANGUAGE plpgsql STABLE;
 ------------------------------------------
+
