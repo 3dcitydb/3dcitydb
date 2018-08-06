@@ -48,7 +48,7 @@
 * UP in the srtext
 *
 * @param schema_srid the SRID of the coordinate system to be checked
-* @RETURN NUMERIC the boolean result encoded as NUMERIC: 0 = false, 1 = true                
+* @RETURN INTEGER the boolean result encoded as INTEGER: 0 = false, 1 = true                
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER AS
 $$
@@ -62,7 +62,7 @@ LANGUAGE sql STABLE STRICT;
 /******************************************************************
 * is_db_coord_ref_sys_3d
 *
-* @RETURN NUMERIC the boolean result encoded as NUMERIC: 0 = false, 1 = true                
+* @RETURN INTEGER the boolean result encoded as INTEGER: 0 = false, 1 = true                
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d(schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER AS
 $$
