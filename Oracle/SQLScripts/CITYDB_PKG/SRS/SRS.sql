@@ -30,7 +30,7 @@
 * 
 * utility methods for spatial reference system in the database
 ******************************************************************/
-CREATE OR REPLACE PACKAGE citydb_srs AUTHID CURRENT_USER
+CREATE OR REPLACE PACKAGE citydb_srs
 AS
   FUNCTION transform_or_null(geom MDSYS.SDO_GEOMETRY, srid NUMBER) RETURN MDSYS.SDO_GEOMETRY;
   FUNCTION is_coord_ref_sys_3d(schema_srid NUMBER) RETURN NUMBER;
