@@ -47,18 +47,6 @@ BEGIN
 	  AND owner = target_schema;
 	  
   IF owner_list.COUNT > 0 THEN
-    -- DROP SYNONYMS
-    -- packages
-    FOR rec IN (SELECT object_name FROM all_objects WHERE owner = target_schema AND upper(object_type) = 'PACKAGE' 
-                AND object_name IN ('CITYDB_UTIL','CITYDB_IDX','CITYDB_SRS','CITYDB_STAT','CITYDB_ENVELOPE')) LOOP
-      EXECUTE IMMEDIATE 'drop synonym '||ro_user||'."'||rec.object_name||'"';
-    END LOOP;
-
-    -- user types
-    FOR rec IN (SELECT type_name FROM all_types WHERE owner = target_schema) LOOP
-      EXECUTE IMMEDIATE 'drop synonym '||ro_user||'."'||rec.type_name||'"';
-    END LOOP;
-
     -- REVOKE ACCESS
     -- user types
     FOR rec IN (SELECT type_name FROM all_types WHERE owner = target_schema) LOOP
