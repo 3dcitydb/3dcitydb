@@ -33,54 +33,32 @@ SET VER OFF
 DEFINE RO_USERNAME=&1;
 DEFINE SCHEMA_NAME=&2;
 
-VARIABLE MESSAGE VARCHAR2(100);
-
 SELECT 'Granting read-only priviliges on schema "' || upper('&SCHEMA_NAME') || '" to user "' || upper('&RO_USERNAME') || '" ...' as message from DUAL;
 
 DECLARE
   target_schema VARCHAR2(30) := upper('&SCHEMA_NAME');
   ro_user VARCHAR2(30) := upper('&RO_USERNAME');
-  owner_list dbms_sql.varchar2_table;
 BEGIN
-  -- check whether ro_user already has a grant to a 3DCityDB schema
-  SELECT DISTINCT OWNER BULK COLLECT INTO owner_list 
-    FROM dba_tab_privs 
-	  WHERE grantee = ro_user
-	  AND table_name = 'DATABASE_SRS';
-		
-  IF owner_list.COUNT > 0 THEN
-	dbms_output.put_line('Error: "'||ro_user||'" is already granted access to the following schemas:');
-	FOR i IN 1..owner_list.COUNT LOOP
-	  dbms_output.put_line(owner_list(i));
-	END LOOP;
-	  
-	dbms_output.put_line(chr(10));
-	dbms_output.put_line('Revoke these grants first.');	
-    :MESSAGE := 'Failed to grant read-only priviliges.';
-  ELSE
-    -- GRANT ACCESS
-    -- user types
-    FOR rec IN (SELECT type_name FROM all_types WHERE owner = target_schema) LOOP
-      EXECUTE IMMEDIATE 'grant execute on '||target_schema||'."'||rec.type_name||'" to "'||ro_user||'"';
-    END LOOP;
+  -- GRANT ACCESS
+  -- user types
+  FOR rec IN (SELECT type_name FROM all_types WHERE owner = target_schema) LOOP
+    EXECUTE IMMEDIATE 'grant execute on '||target_schema||'."'||rec.type_name||'" to "'||ro_user||'"';
+  END LOOP;
   
-    -- packages
-    FOR rec IN (SELECT object_name FROM all_objects WHERE owner = target_schema AND upper(object_type) = 'PACKAGE' 
-                AND object_name IN ('CITYDB_UTIL','CITYDB_IDX','CITYDB_SRS','CITYDB_STAT','CITYDB_ENVELOPE')) LOOP
-      EXECUTE IMMEDIATE 'grant execute on '||target_schema||'."'||rec.object_name||'" to "'||ro_user||'"';
-    END LOOP;
+  -- packages
+  FOR rec IN (SELECT object_name FROM all_objects WHERE owner = target_schema AND upper(object_type) = 'PACKAGE' 
+              AND object_name IN ('CITYDB_UTIL','CITYDB_IDX','CITYDB_SRS','CITYDB_STAT','CITYDB_ENVELOPE')) LOOP
+    EXECUTE IMMEDIATE 'grant execute on '||target_schema||'."'||rec.object_name||'" to "'||ro_user||'"';
+  END LOOP;
 
-    -- tables
-    FOR rec IN (SELECT table_name FROM all_tables WHERE owner = target_schema) LOOP
-      EXECUTE IMMEDIATE 'grant select on '||target_schema||'."'||rec.table_name||'" to "'||ro_user||'"';
-    END LOOP;
-  
-    :MESSAGE := 'Read-only priviliges successfully granted.';
-  END IF;
+  -- tables
+  FOR rec IN (SELECT table_name FROM all_tables WHERE owner = target_schema) LOOP
+    EXECUTE IMMEDIATE 'grant select on '||target_schema||'."'||rec.table_name||'" to "'||ro_user||'"';
+  END LOOP;
 END;
 /
 
-print MESSAGE;
+SELECT 'Read-only priviliges successfully granted.' as message from DUAL;
 
 QUIT;
 /
