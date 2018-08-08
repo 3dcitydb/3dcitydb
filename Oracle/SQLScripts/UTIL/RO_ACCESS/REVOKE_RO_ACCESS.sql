@@ -51,29 +51,29 @@ BEGIN
     -- packages
     FOR rec IN (SELECT object_name FROM all_objects WHERE owner = target_schema AND upper(object_type) = 'PACKAGE' 
                 AND object_name IN ('CITYDB_UTIL','CITYDB_IDX','CITYDB_SRS','CITYDB_STAT','CITYDB_ENVELOPE')) LOOP
-      EXECUTE IMMEDIATE 'drop synonym '||ro_user||'.'||rec.object_name;
+      EXECUTE IMMEDIATE 'drop synonym '||ro_user||'."'||rec.object_name||'"';
     END LOOP;
 
     -- user types
     FOR rec IN (SELECT type_name FROM all_types WHERE owner = target_schema) LOOP
-      EXECUTE IMMEDIATE 'drop synonym '||ro_user||'.'||rec.type_name;
+      EXECUTE IMMEDIATE 'drop synonym '||ro_user||'."'||rec.type_name||'"';
     END LOOP;
 
     -- REVOKE ACCESS
     -- user types
     FOR rec IN (SELECT type_name FROM all_types WHERE owner = target_schema) LOOP
-      EXECUTE IMMEDIATE 'revoke execute on '||target_schema||'.'||rec.type_name||' from "'||ro_user||'"';
+      EXECUTE IMMEDIATE 'revoke execute on '||target_schema||'."'||rec.type_name||'" from "'||ro_user||'"';
     END LOOP;
 
     -- packages
     FOR rec IN (SELECT object_name FROM all_objects WHERE owner = target_schema AND upper(object_type) = 'PACKAGE' 
                 AND object_name IN ('CITYDB_UTIL','CITYDB_IDX','CITYDB_SRS','CITYDB_STAT','CITYDB_ENVELOPE')) LOOP
-      EXECUTE IMMEDIATE 'revoke execute on '||target_schema||'.'||rec.object_name||' from "'||ro_user||'"';
+      EXECUTE IMMEDIATE 'revoke execute on '||target_schema||'."'||rec.object_name||'" from "'||ro_user||'"';
     END LOOP;
 
     -- tables
     FOR rec IN (SELECT table_name FROM all_tables WHERE owner = target_schema) LOOP
-      EXECUTE IMMEDIATE 'revoke select on '||target_schema||'.'||rec.table_name||' from "'||ro_user||'"';
+      EXECUTE IMMEDIATE 'revoke select on '||target_schema||'."'||rec.table_name||'" from "'||ro_user||'"';
     END LOOP;  
   END IF;
 END;
