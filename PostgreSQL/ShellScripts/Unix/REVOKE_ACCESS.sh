@@ -1,5 +1,5 @@
 #!/bin/bash
-# Shell script to revoke read-only access from a 3DCityDB schema
+# Shell script to revoke access privileges from a 3DCityDB schema
 # on PostgreSQL/PostGIS
 
 # read database connection details
@@ -20,9 +20,9 @@ echo '                     |__/          '
 echo
 echo '3D City Database - The Open Source CityGML Database'
 echo
-echo '######################################################################################'
+echo '#######################################################################################'
 echo
-echo 'This script will revoke read-only access on a 3DCityDB schema from a user. Note that'
+echo 'This script will revoke access privileges on a 3DCityDB schema from a user. Note that'
 echo 'this operation cannot be undone. Please follow the instructions of the script.'
 echo 'Enter the required parameters when prompted and press ENTER to confirm.'
 echo 'Just press ENTER to use the default values.'
@@ -37,29 +37,29 @@ echo 'Having problems or need support?'
 echo '   Please file an issue here:'
 echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
-echo '######################################################################################'
+echo '#######################################################################################'
 
 # cd to path of the SQL scripts
-cd ../../SQLScripts/UTIL/RO_ACCESS
+cd ../../SQLScripts/UTIL/GRANT_ACCESS
 
-# Prompt for RO_USERNAME ------------------------------------------------------
+# Prompt for GRANTEE ----------------------------------------------------------
 while [ 1 ]; do
   echo
   echo 'Please enter the username of the read-only user.'
-  read -p "(RO_USERNAME must not be empty): " RO_USERNAME
+  read -p "(GRANTEE must not be empty): " GRANTEE
 
-  if [[ -z "$RO_USERNAME" ]]; then
+  if [[ -z "$GRANTEE" ]]; then
     echo
-    echo 'Illegal input! RO_USERNAME must not be empty.'
+    echo 'Illegal input! GRANTEE must not be empty.'
   else
     break;
   fi
 done
 
-# List the 3DCityDB schemas granted to RO_USERNAME ----------------------------
+# List the 3DCityDB schemas granted to GRANTEE --------------------------------
 echo
-echo "Reading 3DCityDB schemas granted to \"$RO_USERNAME\" from \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "../SCHEMAS/LIST_SCHEMAS_WITH_ACCESS_GRANT.sql" -v username="$RO_USERNAME"
+echo "Reading 3DCityDB schemas granted to \"$GRANTEE\" from \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
+psql -d "$CITYDB" -f "../SCHEMAS/LIST_SCHEMAS_WITH_ACCESS_GRANT.sql" -v username="$GRANTEE"
 
 if [[ $? -ne 0 ]] ; then
   echo 'Failed to read 3DCityDB schemas from database.'
@@ -68,16 +68,16 @@ if [[ $? -ne 0 ]] ; then
   exit 1
 fi
 
-# Prompt for schema name ------------------------------------------------------
+# Prompt for SCHEMA_NAME ------------------------------------------------------
 SCHEMA_NAME=citydb
-echo "Please enter the name of the 3DCityDB schema that shall be revoked from \"$RO_USERNAME\"."
+echo "Please enter the name of the 3DCityDB schema that shall be revoked from \"$GRANTEE\"."
 read -p "(default SCHEMA_NAME=$SCHEMA_NAME): " var
 SCHEMA_NAME=${var:-$SCHEMA_NAME}
 
-# Run REVOKE_RO_ACCESS.sql to revoke read-only access on a specific schema ----
+# Run REVOKE_ACCESS.sql to revoke read-only access on a specific schema -------
 echo
 echo "Connecting to \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "REVOKE_RO_ACCESS.sql" -v ro_username="$RO_USERNAME" -v schema_name="$SCHEMA_NAME"
+psql -d "$CITYDB" -f "REVOKE_ACCESS.sql" -v username="$GRANTEE" -v schema_name="$SCHEMA_NAME"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'

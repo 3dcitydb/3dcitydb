@@ -43,7 +43,7 @@ cd ..\..\SQLScripts\UTIL\SCHEMAS
 :: List the existing 3DCityDB schemas -----------------------------------------
 echo.
 echo Reading 3DCityDB schemas from "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-"%PGBIN%\psql" -d "%CITYDB%" -f "LIST_SCHEMAS.sql"
+psql -d "%CITYDB%" -f "LIST_SCHEMAS.sql"
 
 if errorlevel 1 (
   echo Failed to read 3DCityDB schemas from database.
@@ -85,7 +85,7 @@ echo Done.
 :: Run CREATE_SCHEMA.sql to create a new 3DCityDB schema ----------------------
 echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-"%PGBIN%\psql" -d "%CITYDB%" -f "CREATE_SCHEMA.sql" -v schema_name="%SCHEMA_NAME%" -v tmp_delete_file="%TMP_DELETE_FILE%" -v tmp_envelope_file="%TMP_ENVELOPE_FILE%" 
+psql -d "%CITYDB%" -f "CREATE_SCHEMA.sql" -v schema_name="%SCHEMA_NAME%" -v tmp_delete_file="%TMP_DELETE_FILE%" -v tmp_envelope_file="%TMP_ENVELOPE_FILE%" 
 
 :: Remove temporary SQL scripts -----------------------------------------------
 del %TMP_DELETE_FILE% >nul 2>&1

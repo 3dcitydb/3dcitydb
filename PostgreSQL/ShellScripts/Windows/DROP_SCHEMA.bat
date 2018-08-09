@@ -43,7 +43,7 @@ cd ..\..\SQLScripts\UTIL\SCHEMAS
 :: List the existing 3DCityDB schemas -----------------------------------------
 echo.
 echo Reading 3DCityDB schemas "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-"%PGBIN%\psql" -d "%CITYDB%" -f "LIST_SCHEMAS.sql"
+psql -d "%CITYDB%" -f "LIST_SCHEMAS.sql"
 
 if errorlevel 1 (
   echo Failed to read schemas from database.
@@ -69,6 +69,6 @@ if /i not "%var%"=="" (
 :: Run DROP_SCHEMA.sql to remove the selected 3DCityDB schema -----------------
 echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-"%PGBIN%\psql" -d "%CITYDB%" -f "DROP_SCHEMA.sql" -v schema_name="%SCHEMA_NAME%"
+psql -d "%CITYDB%" -f "DROP_SCHEMA.sql" -v schema_name="%SCHEMA_NAME%"
 
 pause
