@@ -51,10 +51,17 @@ BEGIN
   END LOOP;
   
   -- packages
-  FOR rec IN (SELECT object_name FROM all_objects WHERE owner = target_schema AND upper(object_type) = 'PACKAGE' 
+  FOR rec IN (SELECT object_name FROM all_objects WHERE owner = target_schema AND upper(object_type) = 'PACKAGE'
               AND object_name IN ('CITYDB_UTIL','CITYDB_IDX','CITYDB_SRS','CITYDB_STAT','CITYDB_ENVELOPE')) LOOP
     EXECUTE IMMEDIATE 'grant execute on '||target_schema||'."'||rec.object_name||'" to "'||user_name||'"';
   END LOOP;
+  
+  IF upper('&ACCESS_MODE') = 'RW' THEN
+    FOR rec IN (SELECT object_name FROM all_objects WHERE owner = target_schema AND upper(object_type) = 'PACKAGE'
+                AND object_name IN ('CITYDB_DELETE')) LOOP
+      EXECUTE IMMEDIATE 'grant execute on '||target_schema||'."'||rec.object_name||'" to "'||user_name||'"';
+    END LOOP;
+  END IF;
 
   -- tables
   FOR rec IN (SELECT table_name FROM all_tables WHERE owner = target_schema) LOOP
