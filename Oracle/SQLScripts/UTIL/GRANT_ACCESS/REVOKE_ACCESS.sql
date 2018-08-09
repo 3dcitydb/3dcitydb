@@ -30,35 +30,23 @@ SET FEEDBACK ON
 SET VER OFF
 
 -- parse arguments
-DEFINE RO_USERNAME=&1;
+DEFINE USERNAME=&1;
 DEFINE SCHEMA_NAME=&2;
 
-SELECT 'Granting read-only priviliges on schema "' || upper('&SCHEMA_NAME') || '" to user "' || upper('&RO_USERNAME') || '" ...' as message from DUAL;
+SELECT 'Revoking access priviliges on schema "' || upper('&SCHEMA_NAME') || '" from "' || upper('&USERNAME') || '" ...' as message from DUAL;
 
 DECLARE
   target_schema VARCHAR2(30) := upper('&SCHEMA_NAME');
-  ro_user VARCHAR2(30) := upper('&RO_USERNAME');
+  user_name VARCHAR2(30) := upper('&USERNAME');
 BEGIN
-  -- GRANT ACCESS
-  -- user types
-  FOR rec IN (SELECT type_name FROM all_types WHERE owner = target_schema) LOOP
-    EXECUTE IMMEDIATE 'grant execute on '||target_schema||'."'||rec.type_name||'" to "'||ro_user||'"';
-  END LOOP;
-  
-  -- packages
-  FOR rec IN (SELECT object_name FROM all_objects WHERE owner = target_schema AND upper(object_type) = 'PACKAGE' 
-              AND object_name IN ('CITYDB_UTIL','CITYDB_IDX','CITYDB_SRS','CITYDB_STAT','CITYDB_ENVELOPE')) LOOP
-    EXECUTE IMMEDIATE 'grant execute on '||target_schema||'."'||rec.object_name||'" to "'||ro_user||'"';
-  END LOOP;
-
-  -- tables
-  FOR rec IN (SELECT table_name FROM all_tables WHERE owner = target_schema) LOOP
-    EXECUTE IMMEDIATE 'grant select on '||target_schema||'."'||rec.table_name||'" to "'||ro_user||'"';
+  -- REVOKE ACCESS
+  FOR rec IN (SELECT table_name, privilege FROM dba_tab_privs WHERE grantee = user_name AND owner = target_schema) LOOP
+    EXECUTE IMMEDIATE 'revoke '||rec.privilege||' on '||target_schema||'."'||rec.table_name||'" from "'||user_name||'"';
   END LOOP;
 END;
 /
 
-SELECT 'Read-only priviliges successfully granted.' as message from DUAL;
+SELECT 'Access priviliges successfully revoked.' as message from DUAL;
 
 QUIT;
 /

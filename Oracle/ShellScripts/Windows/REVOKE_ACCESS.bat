@@ -1,5 +1,5 @@
 @echo off
-:: Shell script to revoke read-only access from a 3DCityDB schema
+:: Shell script to revoke access privileges from a 3DCityDB schema
 :: on Oracle Spatial/Locator
 
 :: read database connection details
@@ -20,9 +20,9 @@ echo                      ^|__/
 echo.
 echo 3D City Database - The Open Source CityGML Database
 echo.
-echo ######################################################################################
+echo #######################################################################################
 echo.
-echo This script will revoke read-only access on a 3DCityDB schema from a user. Note that
+echo This script will revoke access privileges on a 3DCityDB schema from a user. Note that
 echo this operation cannot be undone. Please follow the instructions of the script.
 echo Enter the required parameters when prompted and press ENTER to confirm.
 echo Just press ENTER to use the default values.
@@ -37,30 +37,30 @@ echo Having problems or need support?
 echo    Please file an issue here:
 echo    https://github.com/3dcitydb/3dcitydb/issues
 echo.
-echo ######################################################################################
+echo #######################################################################################
 
 :: cd to path of the SQL scripts
-cd ..\..\SQLScripts\UTIL\RO_ACCESS
+cd ..\..\SQLScripts\UTIL\GRANT_ACCESS
 
-:: Prompt for RO_USERNAME -----------------------------------------------------
-:ro_username
+:: Prompt for GRANTEE ---------------------------------------------------------
+:grantee
 set var=
 echo.
-echo Please enter the username of the read-only user.
-set /p var="(RO_USERNAME must not be empty): "
+echo Please enter the username of the grantee.
+set /p var="(GRANTEE must not be empty): "
 
 if /i not "%var%"=="" (
-  set RO_USERNAME=%var%
+  set GRANTEE=%var%
 ) else (
   echo.
-  echo Illegal input! RO_USERNAME must not be empty.
-  goto ro_username
+  echo Illegal input! GRANTEE must not be empty.
+  goto grantee
 )
 
-:: Run REVOKE_RO_ACCESS.sql to revoke read-only access on a specific schema ---
+:: Run REVOKE_ACCESS.sql to revoke access privileges on a specific schema -----
 echo.
 echo Connecting to "%SYSDBA_USERNAME%@%HOST%:%PORT%/%SID%" ...
 echo|set /p="Enter password: "
-sqlplus -S -L "%SYSDBA_USERNAME%@\"%HOST%:%PORT%/%SID%\"" AS SYSDBA @REVOKE_RO_ACCESS.sql "%RO_USERNAME%" "%USERNAME%"
+sqlplus -S -L "%SYSDBA_USERNAME%@\"%HOST%:%PORT%/%SID%\"" AS SYSDBA @REVOKE_ACCESS.sql "%GRANTEE%" "%USERNAME%"
 
 pause

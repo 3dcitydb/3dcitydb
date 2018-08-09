@@ -1,5 +1,5 @@
 @echo off
-:: Shell script to grant read-only access to a 3DCityDB schema
+:: Shell script to grant access privileges to a 3DCityDB schema
 :: on Oracle Spatial/Locator
 
 :: read database connection details  
@@ -22,7 +22,7 @@ echo 3D City Database - The Open Source CityGML Database
 echo.
 echo ####################################################################################
 echo.
-echo This script will guide you through the process of granting read-only access on a
+echo This script will guide you through the process of granting access privileges on a
 echo 3DCityDB schema to an existing user. Please follow the instructions of the script.
 echo Enter the required parameters when prompted and press ENTER to confirm.
 echo Just press ENTER to use the default values.
@@ -40,27 +40,49 @@ echo.
 echo ####################################################################################
 
 :: cd to path of the SQL scripts
-cd ..\..\SQLScripts\UTIL\RO_ACCESS
+cd ..\..\SQLScripts\UTIL\GRANT_ACCESS
 
-:: Prompt for RO_USERNAME -----------------------------------------------------
-:ro_username
+:: Prompt for GRANTEE ---------------------------------------------------------
+:grantee
 set var=
 echo.
-echo Please enter the username of the read-only user who shall have access to "%USERNAME%".
-set /p var="(RO_USERNAME must already exist in database): "
+echo Please enter the username of the grantee who shall have access to "%USERNAME%".
+set /p var="(GRANTEE must already exist in database): "
 
 if /i not "%var%"=="" (
-  set RO_USERNAME=%var%
+  set GRANTEE=%var%
 ) else (
   echo.
-  echo Illegal input! RO_USERNAME must not be empty.
-  goto ro_username
+  echo Illegal input! GRANTEE must not be empty.
+  goto grantee
 )
 
-:: Run GRANT_RO_ACCESS.sql to grant read-only access on a specific schema -----
+:: Prompt for ACCESS_MODE -----------------------------------------------------
+:access_mode
+set var=
+echo.
+echo What level of access should be granted to "%GRANTEE%" (read-only=RO/read-write=RW)?
+set /p var="(default ACCESS_MODE=RO): "
+
+if /i not "%var%"=="" (
+  set ACCESS_MODE=%var%
+) else (
+  set ACCESS_MODE=RO
+)
+
+set res=f
+if /i "%ACCESS_MODE%"=="ro" (set res=t)
+if /i "%ACCESS_MODE%"=="rw" (set res=t)
+if "%res%"=="f" (
+  echo.
+  echo Illegal input! Enter RO or RW.
+  goto access_mode
+)
+
+:: Run GRANT_ACCESS.sql to grant access privileges on a specific schema -------
 echo.
 echo Connecting to "%SYSDBA_USERNAME%@%HOST%:%PORT%/%SID%" ...
 echo|set /p="Enter password: "
-sqlplus -S -L "%SYSDBA_USERNAME%@\"%HOST%:%PORT%/%SID%\"" AS SYSDBA @GRANT_RO_ACCESS.sql "%RO_USERNAME%" "%USERNAME%"
+sqlplus -S -L "%SYSDBA_USERNAME%@\"%HOST%:%PORT%/%SID%\"" AS SYSDBA @GRANT_ACCESS.sql "%GRANTEE%" "%USERNAME%" "%ACCESS_MODE%"
 
 pause
