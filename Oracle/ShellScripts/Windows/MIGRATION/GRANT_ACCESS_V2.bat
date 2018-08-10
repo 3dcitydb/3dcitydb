@@ -3,7 +3,7 @@
 :: on Oracle Spatial/Locator
 
 :: read database connection details  
-call CONNECTION_DETAILS.bat
+call ..\CONNECTION_DETAILS.bat
 
 :: add sqlplus to PATH
 set PATH=%SQLPLUSBIN%;%PATH%
@@ -35,7 +35,7 @@ echo.
 echo ######################################################################################
 
 :: cd to path of the SQL script
-cd ..\..\SQLScripts\MIGRATION\V2_to_V4
+cd ..\..\..\SQLScripts\MIGRATION\V2_to_V4
 
 :: Prompt for V4USER ----------------------------------------------------------
 :username

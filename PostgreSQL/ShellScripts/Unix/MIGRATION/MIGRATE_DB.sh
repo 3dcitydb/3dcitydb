@@ -3,7 +3,7 @@
 # on PostgreSQL/PostGIS
 
 # read database connection details 
-source CONNECTION_DETAILS.sh
+source ../CONNECTION_DETAILS.sh
 
 # add psql to PATH
 export PATH="$PGBIN:$PATH"
@@ -56,12 +56,12 @@ done
 # Prompt for TEXOP ------------------------------------------------------------
 while [ 1 ]; do
   if [ $VERS% -le 2 ]; then
-    cd ../../SQLScripts/MIGRATION/V2_to_V4
+    cd ../../../SQLScripts/MIGRATION/V2_to_V4
     echo
     echo 'No texture URI is used for multiple texture files (yes/no):?'
     read -p "(default TEXOP=no): " TEXOP
   else
-    cd ../../SQLScripts/MIGRATION/V3_to_V4
+    cd ../../../SQLScripts/MIGRATION/V3_to_V4
   fi
   TEXOP=${TEXOP:-no}
   

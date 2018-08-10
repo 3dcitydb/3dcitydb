@@ -3,7 +3,7 @@
 # on Oracle Spatial/Locator
 
 # read database connection details 
-source CONNECTION_DETAILS.sh
+source ../CONNECTION_DETAILS.sh
 
 # add sqlplus to PATH
 export PATH="$SQLPLUSBIN:$PATH"
@@ -56,7 +56,7 @@ done
 # Prompt for V2USER and TEXOP -------------------------------------------------
 while [ 1 ]; do
   if [ $VERS% -le 2 ]; then
-    cd ../../SQLScripts/MIGRATION/V2_to_V4
+    cd ../../../SQLScripts/MIGRATION/V2_to_V4
 
     echo
     echo 'Enter the user name of 3DCityDB v2.1 instance.'
@@ -73,7 +73,7 @@ while [ 1 ]; do
     echo 'No texture URI is used for multiple texture files (yes/no)?'
     read -p "(default TEXOP=no): " TEXOP
   else
-    cd ../../SQLScripts/MIGRATION/V3_to_V4
+    cd ../../../SQLScripts/MIGRATION/V3_to_V4
   fi
   TEXOP=${TEXOP:-no}
   

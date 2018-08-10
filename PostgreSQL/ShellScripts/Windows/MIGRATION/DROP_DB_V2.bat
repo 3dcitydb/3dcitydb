@@ -3,7 +3,7 @@
 :: on PostgreSQL/PostGIS
 
 :: read database connection details  
-call CONNECTION_DETAILS.bat
+call ..\CONNECTION_DETAILS.bat
 
 :: add PGBIN to PATH
 set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
@@ -37,7 +37,7 @@ echo.
 echo ################################################################################
 
 :: cd to path of the SQL scripts
-cd ..\..\SQLScripts\MIGRATION\V2_to_V4
+cd ..\..\..\SQLScripts\MIGRATION\V2_to_V4
 
 REM Run DROP_DB_V2.sql to drop the 3D City Database v2 instance ---------------------
 echo.

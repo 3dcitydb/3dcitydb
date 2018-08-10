@@ -3,7 +3,7 @@
 # on Oracle Spatial/Locator
 
 # read database connection details 
-source CONNECTION_DETAILS.sh
+source ../CONNECTION_DETAILS.sh
 
 # add sqlplus to PATH
 export PATH="$SQLPLUSBIN:$PATH"
@@ -35,7 +35,7 @@ echo
 echo '######################################################################################'
 
 # cd to path of the SQL script
-cd ../../SQLScripts/MIGRATION/V2_to_V4
+cd ../../../SQLScripts/MIGRATION/V2_to_V4
 
 # Prompt for V4USER -----------------------------------------------------------
 while [ 1 ]; do

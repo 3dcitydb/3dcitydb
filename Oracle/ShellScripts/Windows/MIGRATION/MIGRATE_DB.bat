@@ -1,12 +1,12 @@
 @echo off
 :: Shell script to create an instance of the 3D City Database
-:: on PostgreSQL/PostGIS
+:: on Oracle Spatial/Locator
 
 :: read database connection details  
-call CONNECTION_DETAILS.bat
+call ..\CONNECTION_DETAILS.bat
 
-:: add PGBIN to PATH
-set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
+:: add sqlplus to PATH
+set PATH=%SQLPLUSBIN%;%PATH%
 
 :: cd to path of the shell script
 cd /d %~dp0
@@ -55,11 +55,11 @@ set "num="&for /f "delims=0123456789" %%i in ("%var%") do set num=%%i
 if defined num goto invalid_version
 if %VERS% LEQ 0 goto invalid_version
 if %VERS% LEQ 2 (
-  cd ..\..\SQLScripts\MIGRATION\V2_to_V4
-  goto texop2
+  cd ..\..\..\SQLScripts\MIGRATION\V2_to_V4
+  goto v2
 ) else (
-  cd ..\..\SQLScripts\MIGRATION\V3_to_V4
-  goto texop3
+  cd ..\..\..\SQLScripts\MIGRATION\V3_to_V4
+  goto v3
 )
 
 :invalid_version
@@ -67,11 +67,26 @@ echo.
 echo Illegal input! Enter a positive integer for the version.
 goto version
 
-:: Prompt for TEXOP -----------------------------------------------------------
-:texop2
+:v2
+:: Prompt for V2USER ----------------------------------------------------------
 set var=
 echo.
-echo No texture URI is used for multiple texture files (yes/no):?
+echo Enter the user name of 3DCityDB v2.1 instance.
+set /p var="(V2USER must already exist in database): "
+
+if /i not "%var%"=="" (
+  set V2USER=%var%
+) else (
+  echo.
+  echo Illegal input! V2USER must not be empty.
+  goto v2
+)
+
+:: Prompt for TEXOP -----------------------------------------------------------
+:texop
+set var=
+echo.
+echo No texture URI is used for multiple texture files (yes/no)?
 set /p var="(default TEXOP=no): "
 
 if /i not "%var%"=="" (
@@ -88,15 +103,36 @@ if "%res%"=="f" (
   echo Illegal input! Enter yes or no.
   goto texop
 )
-goto run
+goto dbversion
 
-:texop3
+:v3
 set TEXOP=no
 
-:: Run MIGRATE_DB.sql to create the 3D City Database instance -----------------
-:run
+:: Prompt for DBVERSION -------------------------------------------------------
+:dbversion
+set var=
 echo.
-echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "MIGRATE_DB.sql" -v texop="%TEXOP%"
+echo Which database license are you using (Spatial=S/Locator=L)?
+set /p var="(default DBVERSION=S): "
+
+if /i not "%var%"=="" (
+  set DBVERSION=%var%
+) else (
+  set DBVERSION=S
+)
+
+set res=f
+if /i "%DBVERSION%"=="s" (set res=t)
+if /i "%DBVERSION%"=="l" (set res=t)
+if "%res%"=="f" (
+  echo.
+  echo Illegal input! Enter S or L.
+  goto dbversion
+)
+
+:: Run MIGRATE_DB.sql to create the 3D City Database instance ----------------
+echo.
+echo Connecting to the database "%USERNAME%@%HOST%:%PORT%/%SID%" ...
+sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @MIGRATE_DB.sql "%TEXOP%" "%DBVERSION%" "%V2USER%"
 
 pause
