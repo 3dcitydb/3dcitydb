@@ -25,8 +25,8 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-08-06 10:10:48)
--- cleanup_global_appearances
+-- Automatically generated database script (Creation Date: 2018-08-13 13:59:46)
+-- cleanup_appearances
 -- cleanup_schema
 -- del_address
 -- del_addresss
@@ -121,7 +121,7 @@
 ------------------------------------------
 CREATE OR REPLACE PACKAGE citydb_delete
 AS
-  FUNCTION cleanup_global_appearances RETURN ID_ARRAY;
+  FUNCTION cleanup_appearances(only_global int := 1) RETURN ID_ARRAY;
   PROCEDURE cleanup_schema;
   FUNCTION del_address(pid NUMBER) RETURN NUMBER;
   FUNCTION del_addresss(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY;
@@ -218,7 +218,7 @@ END citydb_delete;
 ------------------------------------------
 CREATE OR REPLACE PACKAGE BODY citydb_delete
 AS 
-  FUNCTION cleanup_global_appearances RETURN ID_ARRAY
+  FUNCTION cleanup_appearances(only_global int := 1) RETURN ID_ARRAY
   IS
     deleted_ids ID_ARRAY := ID_ARRAY();
     surface_data_ids ID_ARRAY;
@@ -241,7 +241,8 @@ AS
       dummy_ids := del_surface_datas(surface_data_ids);
     END IF;
 
-    SELECT
+    IF only_global=1 THEN
+      SELECT
         a.id
       BULK COLLECT INTO
         appearance_ids
@@ -253,6 +254,19 @@ AS
       WHERE
         a.cityobject_id IS NULL
         AND asd.appearance_id IS NULL;
+    ELSE
+      SELECT
+        a.id
+      BULK COLLECT INTO
+        appearance_ids
+      FROM
+        appearance a
+      LEFT OUTER JOIN
+        appear_to_surface_data asd
+        ON a.id=asd.appearance_id
+      WHERE
+        asd.appearance_id IS NULL;
+    END IF;
 
     IF appearance_ids IS NOT EMPTY THEN
       deleted_ids := del_appearances(appearance_ids);

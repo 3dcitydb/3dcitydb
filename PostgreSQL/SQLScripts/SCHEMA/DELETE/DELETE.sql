@@ -25,8 +25,8 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-06-15 15:41:27)
--- cleanup_global_appearances
+-- Automatically generated database script (Creation Date: 2018-08-13 13:41:22)
+-- cleanup_appearances
 -- cleanup_schema
 -- del_address
 -- del_addresss
@@ -123,9 +123,8 @@
 -- del_waterboundary_surfaces
 
 ------------------------------------------
-CREATE OR REPLACE FUNCTION citydb.cleanup_global_appearances() RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.cleanup_appearances(only_global INTEGER DEFAULT 1) RETURNS SETOF int AS
 $body$
--- Function for cleaning up global appearance
 DECLARE
   deleted_id int;
   app_id int;
@@ -135,14 +134,25 @@ BEGIN
     LEFT OUTER JOIN citydb.textureparam t ON s.id = t.surface_data_id
     WHERE t.surface_data_id IS NULL;
 
-    FOR app_id IN
-      SELECT a.id FROM citydb.appearance a
-        LEFT OUTER JOIN appear_to_surface_data asd ON a.id=asd.appearance_id
-          WHERE a.cityobject_id IS NULL AND asd.appearance_id IS NULL
-    LOOP
-      DELETE FROM citydb.appearance WHERE id = app_id RETURNING id INTO deleted_id;
-      RETURN NEXT deleted_id;
-    END LOOP;
+    IF only_global=1 THEN
+      FOR app_id IN
+        SELECT a.id FROM citydb.appearance a
+          LEFT OUTER JOIN citydb.appear_to_surface_data asd ON a.id=asd.appearance_id
+            WHERE a.cityobject_id IS NULL AND asd.appearance_id IS NULL
+      LOOP
+        DELETE FROM citydb.appearance WHERE id = app_id RETURNING id INTO deleted_id;
+        RETURN NEXT deleted_id;
+      END LOOP;
+    ELSE
+      FOR app_id IN
+        SELECT a.id FROM citydb.appearance a
+          LEFT OUTER JOIN citydb.appear_to_surface_data asd ON a.id=asd.appearance_id
+            WHERE asd.appearance_id IS NULL
+      LOOP
+        DELETE FROM citydb.appearance WHERE id = app_id RETURNING id INTO deleted_id;
+        RETURN NEXT deleted_id;
+      END LOOP;
+    END IF;
 
   RETURN;
 END;
