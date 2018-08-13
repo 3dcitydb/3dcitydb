@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-08-13 16:50:38)
+-- Automatically generated database script (Creation Date: 2018-08-13 17:42:48)
 -- FUNCTION citydb.cleanup_appearances(only_global INTEGER DEFAULT 1) RETURNS SETOF int
 -- FUNCTION citydb.cleanup_schema() RETURNS SETOF void
 -- FUNCTION citydb.del_address(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
@@ -6254,7 +6254,11 @@ BEGIN
     PERFORM
       citydb.del_waterboundary_surface(array_agg(a.a_id))
     FROM
-      (SELECT DISTINCT unnest(waterboundary_surface_ids) AS a_id) a;
+      (SELECT DISTINCT unnest(waterboundary_surface_ids) AS a_id) a
+    LEFT JOIN
+      citydb.waterbod_to_waterbnd_srf n1
+      ON n1.waterboundary_surface_id  = a.a_id
+    WHERE n1.waterboundary_surface_id IS NULL;
   END IF;
 
   -- delete citydb.waterbodys

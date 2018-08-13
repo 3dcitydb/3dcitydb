@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-08-13 16:57:21)
+-- Automatically generated database script (Creation Date: 2018-08-13 17:46:45)
 -- FUNCTION cleanup_appearances(only_global int := 1) RETURN ID_ARRAY
 -- FUNCTION del_address(pid NUMBER) RETURN NUMBER
 -- FUNCTION del_address(pids ID_ARRAY, caller int := 0) RETURN ID_ARRAY
@@ -7131,7 +7131,20 @@ AS
 
     -- delete waterboundary_surface(s)
     IF waterboundary_surface_ids0 IS NOT EMPTY THEN
-      dummy_ids := del_waterboundary_surface(waterboundary_surface_ids0);
+      SELECT DISTINCT
+        a.COLUMN_VALUE
+      BULK COLLECT INTO
+        object_ids
+      FROM
+        TABLE(waterboundary_surface_ids0) a
+      LEFT JOIN
+        waterbod_to_waterbnd_srf n1
+        ON n1.waterboundary_surface_id  = a.COLUMN_VALUE
+      WHERE n1.waterboundary_surface_id IS NULL;
+
+      IF object_ids IS NOT EMPTY THEN
+        dummy_ids := del_waterboundary_surface(object_ids);
+      END IF;
     END IF;
 
     -- delete waterbodys

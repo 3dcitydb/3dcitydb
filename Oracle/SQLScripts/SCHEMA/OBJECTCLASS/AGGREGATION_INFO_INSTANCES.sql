@@ -290,7 +290,7 @@ VALUES (106,8,0,1,1,'lod4_multi_solid_id');
 
 --waterboundary_surface & waterbody
 INSERT INTO AGGREGATION_INFO ( CHILD_ID , PARENT_ID, MIN_OCCURS, MAX_OCCURS, IS_COMPOSITE, JOIN_TABLE_OR_COLUMN_NAME)
-VALUES (10,9,0,NULL,1,'waterbod_to_waterbnd_srf');
+VALUES (10,9,0,NULL,0,'waterbod_to_waterbnd_srf');
 
 --surface_geometry & waterbody
 INSERT INTO AGGREGATION_INFO ( CHILD_ID , PARENT_ID, MIN_OCCURS, MAX_OCCURS, IS_COMPOSITE, JOIN_TABLE_OR_COLUMN_NAME)
