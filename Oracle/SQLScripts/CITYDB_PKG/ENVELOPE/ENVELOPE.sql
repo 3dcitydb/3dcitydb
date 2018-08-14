@@ -25,52 +25,52 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-08-06 10:06:07)
--- box2envelope
--- env_address
--- env_appearance
--- env_breakline_relief
--- env_bridge
--- env_bridge_constr_element
--- env_bridge_furniture
--- env_bridge_installation
--- env_bridge_opening
--- env_bridge_room
--- env_bridge_thematic_surface
--- env_building
--- env_building_furniture
--- env_building_installation
--- env_city_furniture
--- env_citymodel
--- env_cityobject
--- env_cityobjectgroup
--- env_generic_cityobject
--- env_implicit_geometry
--- env_land_use
--- env_masspoint_relief
--- env_opening
--- env_plant_cover
--- env_relief_component
--- env_relief_feature
--- env_room
--- env_solitary_vegetat_object
--- env_surface_data
--- env_textureparam
--- env_thematic_surface
--- env_tin_relief
--- env_traffic_area
--- env_transportation_complex
--- env_tunnel
--- env_tunnel_furniture
--- env_tunnel_hollow_space
--- env_tunnel_installation
--- env_tunnel_opening
--- env_tunnel_thematic_surface
--- env_waterbody
--- env_waterboundary_surface
--- get_envelope_cityobjects
--- get_envelope_implicit_geometry
--- update_bounds
+-- Automatically generated database script (Creation Date: 2018-08-14 14:49:37)
+-- FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
+-- FUNCTION env_address(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_appearance(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_breakline_relief(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_bridge(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_bridge_constr_element(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_bridge_furniture(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_bridge_installation(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_bridge_opening(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_bridge_room(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_bridge_thematic_surface(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_building(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_building_furniture(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_building_installation(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_city_furniture(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_citymodel(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_cityobject(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_cityobjectgroup(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_generic_cityobject(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_implicit_geometry(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_land_use(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_masspoint_relief(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_opening(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_plant_cover(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_relief_component(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_relief_feature(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_room(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_solitary_vegetat_object(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_surface_data(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_textureparam(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_thematic_surface(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_tin_relief(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_traffic_area(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_transportation_complex(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_tunnel(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_tunnel_furniture(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_tunnel_hollow_space(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_tunnel_installation(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_tunnel_opening(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_tunnel_thematic_surface(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_waterbody(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION env_waterboundary_surface(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
+-- FUNCTION get_envelope_cityobjects(objclass_id NUMBER := 0, set_envelope int := 0, only_if_null int := 1) RETURN SDO_GEOMETRY
+-- FUNCTION get_envelope_implicit_geometry(implicit_rep_id NUMBER, ref_pt SDO_GEOMETRY, transform4x4 VARCHAR2) RETURN SDO_GEOMETRY
+-- FUNCTION update_bounds(old_box SDO_GEOMETRY, new_box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
 ------------------------------------------
 CREATE OR REPLACE PACKAGE citydb_envelope
@@ -1101,18 +1101,6 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     nested_feat_cur sys_refcursor;
     nested_feat_id NUMBER;
   BEGIN
-    -- bbox from inline and referencing spatial columns
-    WITH collect_geom AS (
-      -- boundedBy
-      SELECT envelope AS geom FROM cityobject WHERE id = co_id  AND envelope IS NOT NULL
-    )
-    SELECT
-      box2envelope(SDO_AGGR_MBR(geom))
-    INTO
-      bbox
-    FROM
-      collect_geom;
-
     -- bbox from aggregating objects
     OPEN nested_feat_cur FOR
       -- Appearance

@@ -25,53 +25,53 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-08-06 09:51:58)
--- box2envelope
--- env_address
--- env_appearance
--- env_breakline_relief
--- env_bridge
--- env_bridge_constr_element
--- env_bridge_furniture
--- env_bridge_installation
--- env_bridge_opening
--- env_bridge_room
--- env_bridge_thematic_surface
--- env_building
--- env_building_furniture
--- env_building_installation
--- env_city_furniture
--- env_citymodel
--- env_cityobject
--- env_cityobjectgroup
--- env_generic_cityobject
--- env_implicit_geometry
--- env_land_use
--- env_masspoint_relief
--- env_opening
--- env_plant_cover
--- env_raster_relief
--- env_relief_component
--- env_relief_feature
--- env_room
--- env_solitary_vegetat_object
--- env_surface_data
--- env_textureparam
--- env_thematic_surface
--- env_tin_relief
--- env_traffic_area
--- env_transportation_complex
--- env_tunnel
--- env_tunnel_furniture
--- env_tunnel_hollow_space
--- env_tunnel_installation
--- env_tunnel_opening
--- env_tunnel_thematic_surface
--- env_waterbody
--- env_waterboundary_surface
--- get_envelope_cityobjects
--- get_envelope_implicit_geometry
--- update_bounds
+-- Automatically generated database script (Creation Date: 2018-08-14 14:42:51)
+-- FUNCTION citydb.box2envelope(box BOX3D) RETURNS GEOMETRY
+-- FUNCTION citydb.env_address(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_appearance(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_breakline_relief(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_bridge(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_bridge_constr_element(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_bridge_furniture(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_bridge_installation(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_bridge_opening(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_bridge_room(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_bridge_thematic_surface(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_building(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_building_furniture(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_building_installation(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_city_furniture(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_citymodel(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_cityobject(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_cityobjectgroup(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_generic_cityobject(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_implicit_geometry(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_land_use(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_masspoint_relief(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_opening(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_plant_cover(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_raster_relief(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_relief_component(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_relief_feature(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_room(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_solitary_vegetat_object(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_surface_data(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_textureparam(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_thematic_surface(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_tin_relief(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_traffic_area(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_transportation_complex(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_tunnel(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_tunnel_furniture(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_tunnel_hollow_space(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_tunnel_installation(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_tunnel_opening(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_tunnel_thematic_surface(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_waterbody(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.env_waterboundary_surface(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
+-- FUNCTION citydb.get_envelope_cityobjects(objclass_id INTEGER DEFAULT 0, set_envelope INTEGER DEFAULT 0, only_if_null INTEGER DEFAULT 1) RETURNS GEOMETRY
+-- FUNCTION citydb.get_envelope_implicit_geometry(implicit_rep_id INTEGER, ref_pt GEOMETRY, transform4x4 VARCHAR) RETURNS GEOMETRY
+-- FUNCTION citydb.update_bounds(old_box GEOMETRY, new_box GEOMETRY) RETURNS GEOMETRY
 
 ------------------------------------------
 CREATE OR REPLACE FUNCTION citydb.box2envelope(box BOX3D) RETURNS GEOMETRY AS
@@ -848,13 +848,6 @@ DECLARE
   bbox GEOMETRY;
   dummy_bbox GEOMETRY;
 BEGIN
-  -- bbox from inline and referencing spatial columns
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
-    -- boundedBy
-    SELECT envelope AS geom FROM citydb.cityobject WHERE id = co_id  AND envelope IS NOT NULL
-  ) g;
-  bbox := citydb.update_bounds(bbox, dummy_bbox);
-
   -- bbox from aggregating objects
   SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO dummy_bbox FROM (
     -- Appearance
@@ -2342,4 +2335,3 @@ END;
 $body$
 LANGUAGE plpgsql STABLE;
 ------------------------------------------
-
