@@ -121,7 +121,7 @@ AS
   FUNCTION drop_spatial_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION create_normal_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
   FUNCTION drop_normal_indexes(schema_name VARCHAR2 := USER) RETURN STRARRAY;
-  FUNCTION get_index(idx_table_name VARCHAR2, idx_column_name VARCHAR2) RETURN INDEX_OBJ;
+  FUNCTION get_index(idx_table_name VARCHAR2, idx_column_name VARCHAR2, schema_name VARCHAR2 := USER) RETURN INDEX_OBJ;
 END citydb_idx;
 /
 
@@ -129,6 +129,7 @@ CREATE OR REPLACE PACKAGE BODY citydb_idx
 AS 
   NORMAL CONSTANT NUMBER(1) := 0;
   SPATIAL CONSTANT NUMBER(1) := 1;
+  TYPE INDEX_OBJ_ARRAY IS TABLE OF INDEX_OBJ;
 
   /*****************************************************************
   * index_status
@@ -376,19 +377,21 @@ AS
   IS
     idx_log STRARRAY;
     sql_error_code VARCHAR2(20);
+    idx_objs INDEX_OBJ_ARRAY;
   BEGIN
     idx_log := STRARRAY();
 
-    FOR rec IN
-      (SELECT * FROM index_table WHERE (obj).type = idx_type)
-    LOOP
-      sql_error_code := create_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name, schema_name) = 'ON', schema_name);
+    EXECUTE IMMEDIATE 'SELECT obj FROM '||schema_name||'.index_table WHERE (obj).type = :1'
+      BULK COLLECT INTO idx_objs USING idx_type;
+
+    FOR i IN idx_objs.FIRST .. idx_objs.LAST LOOP
+      sql_error_code := create_index(idx_objs(i), citydb_util.versioning_table(idx_objs(i).table_name, schema_name) = 'ON', schema_name);
       idx_log.extend;
-      idx_log(idx_log.count) := index_status(rec.obj, schema_name)
-        || ':' || rec.obj.index_name
+      idx_log(idx_log.count) := index_status(idx_objs(i), schema_name)
+        || ':' || idx_objs(i).index_name
         || ':' || upper(schema_name)
-        || ':' || rec.obj.table_name
-        || ':' || rec.obj.attribute_name
+        || ':' || idx_objs(i).table_name
+        || ':' || idx_objs(i).attribute_name
         || ':' || sql_error_code;
     END LOOP;
 
@@ -408,19 +411,21 @@ AS
   IS
     idx_log STRARRAY;
     sql_error_code VARCHAR2(20);
+    idx_objs INDEX_OBJ_ARRAY;
   BEGIN
     idx_log := STRARRAY();
 
-    FOR rec IN
-      (SELECT * FROM index_table WHERE (obj).type = idx_type)
-    LOOP
-      sql_error_code := drop_index(rec.obj, citydb_util.versioning_table(rec.obj.table_name, schema_name) = 'ON', schema_name);
+    EXECUTE IMMEDIATE 'SELECT obj FROM '||schema_name||'.index_table WHERE (obj).type = :1'
+      BULK COLLECT INTO idx_objs USING idx_type;
+
+    FOR i IN idx_objs.FIRST .. idx_objs.LAST LOOP
+      sql_error_code := drop_index(idx_objs(i), citydb_util.versioning_table(idx_objs(i).table_name, schema_name) = 'ON', schema_name);
       idx_log.extend;
-      idx_log(idx_log.count) := index_status(rec.obj, schema_name)
-        || ':' || rec.obj.index_name
+      idx_log(idx_log.count) := index_status(idx_objs(i), schema_name)
+        || ':' || idx_objs(i).index_name
         || ':' || upper(schema_name)
-        || ':' || rec.obj.table_name
-        || ':' || rec.obj.attribute_name
+        || ':' || idx_objs(i).table_name
+        || ':' || idx_objs(i).attribute_name
         || ':' || sql_error_code;
     END LOOP;
 
@@ -437,19 +442,21 @@ AS
   IS
     idx_log STRARRAY;
     status VARCHAR2(20);
+    idx_objs INDEX_OBJ_ARRAY;
   BEGIN
     idx_log := STRARRAY();
 
-    FOR rec IN
-      (SELECT * FROM index_table WHERE (obj).type = SPATIAL)
-    LOOP
-      status := index_status(rec.obj, schema_name);
+    EXECUTE IMMEDIATE 'SELECT obj FROM '||schema_name||'.index_table WHERE (obj).type = :1'
+      BULK COLLECT INTO idx_objs USING SPATIAL;
+
+    FOR i IN idx_objs.FIRST .. idx_objs.LAST LOOP
+      status := index_status(idx_objs(i), schema_name);
       idx_log.extend;
       idx_log(idx_log.count) := status
-        || ':' || rec.obj.index_name
+        || ':' || idx_objs(i).index_name
         || ':' || upper(schema_name)
-        || ':' || rec.obj.table_name
-        || ':' || rec.obj.attribute_name;
+        || ':' || idx_objs(i).table_name
+        || ':' || idx_objs(i).attribute_name;
     END LOOP;
 
     RETURN idx_log;
@@ -465,19 +472,21 @@ AS
   IS
     idx_log STRARRAY;
     status VARCHAR2(20);
+    idx_objs INDEX_OBJ_ARRAY;
   BEGIN
     idx_log := STRARRAY();
 
-    FOR rec IN
-      (SELECT * FROM index_table WHERE (obj).type = NORMAL)
-    LOOP
-      status := index_status(rec.obj, schema_name);
+    EXECUTE IMMEDIATE 'SELECT obj FROM '||schema_name||'.index_table WHERE (obj).type = :1'
+      BULK COLLECT INTO idx_objs USING NORMAL;
+
+    FOR i IN idx_objs.FIRST .. idx_objs.LAST LOOP
+      status := index_status(idx_objs(i), schema_name);
       idx_log.extend;
       idx_log(idx_log.count) := status
-        || ':' || rec.obj.index_name
+        || ':' || idx_objs(i).index_name
         || ':' || upper(schema_name)
-        || ':' || rec.obj.table_name
-        || ':' || rec.obj.attribute_name;
+        || ':' || idx_objs(i).table_name
+        || ':' || idx_objs(i).attribute_name;
     END LOOP;
 
     RETURN idx_log;
@@ -550,20 +559,16 @@ AS
   ******************************************************************/
   FUNCTION get_index(
     idx_table_name VARCHAR2, 
-    idx_column_name VARCHAR2
+    idx_column_name VARCHAR2,
+    schema_name VARCHAR2 := USER
     ) RETURN INDEX_OBJ
   IS
     idx INDEX_OBJ;
   BEGIN
-    SELECT
-      obj
-    INTO
-      idx
-    FROM
-      index_table
-    WHERE
-      (obj).table_name = upper(idx_table_name)
-      AND (obj).attribute_name = upper(idx_column_name);
+    EXECUTE IMMEDIATE
+      'SELECT obj FROM '|| schema_name || '.index_table
+         WHERE (obj).table_name = :1 AND (obj).attribute_name = :2'
+         INTO idx USING upper(idx_table_name), upper(idx_column_name);
 
     RETURN idx;
   END;
