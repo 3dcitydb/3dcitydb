@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-08-15 13:23:22)
+-- Automatically generated database script (Creation Date: 2018-08-15 16:36:05)
 -- FUNCTION cleanup_appearances(only_global int := 1) RETURN ID_ARRAY
 -- FUNCTION cleanup_table(tab_name varchar2) RETURN ID_ARRAY
 -- FUNCTION del_address(pid NUMBER) RETURN NUMBER
@@ -7217,9 +7217,11 @@ AS
   IS
     dummy_str strarray;
     seq_value number;
+    schema_name VARCHAR2(30);
   BEGIN
 
-    dummy_str := citydb_idx.drop_spatial_indexes();
+    schema_name := sys_context('userenv', 'current_schema');
+    dummy_str := citydb_idx.drop_spatial_indexes(schema_name);
 
     for uc in (
       select constraint_name, table_name from user_constraints where constraint_type = 'R'
@@ -7267,7 +7269,7 @@ AS
       execute immediate 'alter sequence ' || us.sequence_name || ' increment by 1';
     END LOOP;
 
-    dummy_str := citydb_idx.create_spatial_indexes();
+    dummy_str := citydb_idx.create_spatial_indexes(schema_name);
 
   END;
   ------------------------------------------
