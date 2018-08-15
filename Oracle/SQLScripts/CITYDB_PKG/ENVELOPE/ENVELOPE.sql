@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-08-14 14:49:37)
+-- Automatically generated database script (Creation Date: 2018-08-15 14:19:27)
 -- FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 -- FUNCTION env_address(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
 -- FUNCTION env_appearance(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
@@ -187,6 +187,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -210,6 +214,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     CLOSE nested_feat_cur;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -243,6 +251,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -387,6 +399,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -462,6 +478,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -497,6 +517,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -582,6 +606,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -631,6 +659,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     CLOSE nested_feat_cur;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -696,6 +728,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -742,6 +778,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     CLOSE nested_feat_cur;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -882,6 +922,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -917,6 +961,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -1002,6 +1050,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -1077,6 +1129,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -1089,6 +1145,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     nested_feat_id NUMBER;
   BEGIN
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -1413,6 +1473,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -1456,6 +1520,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     CLOSE nested_feat_cur;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -1544,6 +1612,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -1556,6 +1628,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     nested_feat_id NUMBER;
   BEGIN
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -1599,6 +1675,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -1628,6 +1708,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -1678,6 +1762,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     CLOSE nested_feat_cur;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -1730,6 +1818,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -1776,6 +1868,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -1804,6 +1900,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     CLOSE nested_feat_cur;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -1869,6 +1969,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -1932,6 +2036,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -1957,6 +2065,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -1969,6 +2081,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     nested_feat_id NUMBER;
   BEGIN
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -2017,6 +2133,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -2046,6 +2166,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -2091,6 +2215,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -2154,6 +2282,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     CLOSE nested_feat_cur;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -2278,6 +2410,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -2313,6 +2449,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -2377,6 +2517,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     CLOSE nested_feat_cur;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -2462,6 +2606,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -2500,6 +2648,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -2547,6 +2699,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     CLOSE nested_feat_cur;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
@@ -2610,6 +2766,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 
     RETURN bbox;
 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
+
   END;
   ------------------------------------------
 
@@ -2645,6 +2805,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     RETURN bbox;
+
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN bbox;
 
   END;
   ------------------------------------------
