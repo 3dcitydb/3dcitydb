@@ -25,9 +25,10 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-08-13 17:42:48)
+-- Automatically generated database script (Creation Date: 2018-08-15 13:32:43)
 -- FUNCTION citydb.cleanup_appearances(only_global INTEGER DEFAULT 1) RETURNS SETOF int
 -- FUNCTION citydb.cleanup_schema() RETURNS SETOF void
+-- FUNCTION citydb.cleanup_table(tab_name TEXT) RETURNS SETOF INTEGER
 -- FUNCTION citydb.del_address(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
 -- FUNCTION citydb.del_address(pid int) RETURNS integer
 -- FUNCTION citydb.del_appearance(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
@@ -188,6 +189,81 @@ BEGIN
   LOOP
     EXECUTE format('ALTER SEQUENCE citydb.%I RESTART', rec.sequence_name);	
   END LOOP;
+END;
+$body$
+LANGUAGE plpgsql;
+------------------------------------------
+
+CREATE OR REPLACE FUNCTION citydb.cleanup_table(tab_name TEXT) RETURNS SETOF INTEGER AS
+$body$
+DECLARE
+  rec RECORD;
+  rec_id INTEGER;
+  where_clause TEXT;
+  query_ddl TEXT;
+  counter INTEGER;
+  table_alias TEXT;
+  table_name_with_schemaprefix TEXT;
+  del_func_name TEXT;
+  schema_name TEXT;
+  deleted_id INTEGER;
+BEGIN
+  schema_name = 'citydb';
+  IF md5(schema_name) <> '373663016e8a76eedd0e1ac37f392d2a' THEN
+    table_name_with_schemaprefix = schema_name || '.' || tab_name;
+  ELSE
+    table_name_with_schemaprefix = tab_name;
+  END IF;
+
+  counter = 0;
+  del_func_name = 'del_' || tab_name;
+  query_ddl = 'SELECT id FROM ' || schema_name || '.' || tab_name || ' WHERE id IN ('
+    || 'SELECT a.id FROM ' || schema_name || '.' || tab_name || ' a';
+
+  FOR rec IN
+    SELECT
+      c.confrelid::regclass::text AS root_table_name,
+      c.conrelid::regclass::text AS fk_table_name,
+      a.attname::text AS fk_column_name
+    FROM
+      pg_constraint c
+    JOIN
+      pg_attribute a
+      ON a.attrelid = c.conrelid
+      AND a.attnum = ANY (c.conkey)
+    WHERE
+      upper(c.confrelid::regclass::text) = upper(table_name_with_schemaprefix)
+      AND c.conrelid <> c.confrelid
+      AND c.contype = 'f'
+    ORDER BY
+      fk_table_name,
+      fk_column_name
+  LOOP
+    counter = counter + 1;
+    table_alias = 'n' || counter;
+    IF counter = 1 THEN
+      where_clause = ' WHERE ' || table_alias || '.' || rec.fk_column_name || ' IS NULL';
+    ELSE
+      where_clause = where_clause || ' AND ' || table_alias || '.' || rec.fk_column_name || ' IS NULL';
+    END IF;
+
+    IF md5(schema_name) <> '373663016e8a76eedd0e1ac37f392d2a' THEN
+      query_ddl = query_ddl || ' LEFT JOIN ' || rec.fk_table_name || ' ' || table_alias || ' ON '
+        || table_alias || '.' || rec.fk_column_name || ' = a.id';
+    ELSE
+      query_ddl = query_ddl || ' LEFT JOIN ' || schema_name || '.' || rec.fk_table_name || ' ' || table_alias || ' ON '
+        || table_alias || '.' || rec.fk_column_name || ' = a.id';
+    END IF;
+  END LOOP;
+
+  query_ddl = query_ddl || where_clause || ')';
+
+  FOR rec_id IN EXECUTE query_ddl LOOP
+    EXECUTE 'SELECT ' || schema_name || '.' || del_func_name || '(' || rec_id || ')' INTO deleted_id;
+    RETURN NEXT deleted_id;
+  END LOOP;
+
+  RETURN;
 END;
 $body$
 LANGUAGE plpgsql;
