@@ -59,10 +59,6 @@ VALUES (50,3,0,NULL,1,'cityobject_id');
 INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, MIN_OCCURS, MAX_OCCURS, IS_COMPOSITE, JOIN_TABLE_OR_COLUMN_NAME)
 VALUES (51,50,0,NULL,0,'appear_to_surface_data');
 
---textureparam & surface_data
-INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, MIN_OCCURS, MAX_OCCURS, IS_COMPOSITE, JOIN_TABLE_OR_COLUMN_NAME)
-VALUES (56,51,0,NULL,0, 'surface_data_id');
-
 --tex_image & surface_data
 INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, MIN_OCCURS, MAX_OCCURS, IS_COMPOSITE, JOIN_TABLE_OR_COLUMN_NAME)
 VALUES (109,51,0,1,0,'tex_image_id');
