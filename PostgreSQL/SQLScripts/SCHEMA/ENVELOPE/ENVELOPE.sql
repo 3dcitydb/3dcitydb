@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-08-14 14:42:51)
+-- Automatically generated database script (Creation Date: 2018-08-22 15:04:37)
 -- FUNCTION citydb.box2envelope(box BOX3D) RETURNS GEOMETRY
 -- FUNCTION citydb.env_address(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
 -- FUNCTION citydb.env_appearance(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
@@ -1154,7 +1154,7 @@ BEGIN
     bbox := citydb.update_bounds(bbox, dummy_bbox);
   END IF;
 
-  IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+  IF set_envelope <> 0 THEN
     UPDATE citydb.cityobject SET envelope = bbox WHERE id = co_id;
   END IF;
 

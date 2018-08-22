@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-08-15 14:19:27)
+-- Automatically generated database script (Creation Date: 2018-08-22 15:04:00)
 -- FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 -- FUNCTION env_address(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
 -- FUNCTION env_appearance(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
@@ -1467,7 +1467,7 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       END CASE;
     END IF;
 
-    IF set_envelope <> 0 AND bbox IS NOT NULL THEN
+    IF set_envelope <> 0 THEN
       UPDATE cityobject SET envelope = bbox WHERE id = co_id;
     END IF;
 
