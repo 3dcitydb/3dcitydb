@@ -5,19 +5,19 @@
 
 The 3D City Database is a free 3D geo database to store, represent, and manage virtual 3D city models on top of a standard spatial relational database. The database model contains semantically rich, hierarchically structured, multi-scale urban objects facilitating complex GIS modeling and analysis tasks, far beyond visualization. In 2012, the 3D City Database received the Oracle Spatial Excellence Award for Education and Research.
 
-The schema of the 3D City Database is based on the [OGC City Geography Markup Language (CityGML)](http://www.opengeospatial.org/standards/citygml), an international standard for representing and exchanging virtual 3D city models issued by the [Open Geospatial Consortium (OGC)](http://www.opengeospatial.org/).
+The schema of the 3D City Database is based on the [OGC City Geography Markup Language (CityGML)](https://www.citygml.org/), an international [standard](http://www.opengeospatial.org/standards/citygml) for representing and exchanging virtual 3D city models issued by the [Open Geospatial Consortium (OGC)](http://www.opengeospatial.org/).
 
 The 3D City Database has been realized as Oracle Spatial/Locator and
 PostgreSQL/PostGIS database schema, supporting following key features:
 
  * Full support for CityGML versions 2.0.0 and 1.0.0
- * Complex thematic modelling
+ * Complex thematic modelling incl. support for Application Domain Extensions (ADE)
  * Five different Levels of Detail (LODs)
  * Appearance information (textures and materials)
  * Digital terrain models (DTMs)
  * Representation of generic and prototypical 3D objects
  * Free, also recursive aggregation of geo objects
- * Flexible 3D geometries
+ * Flexible 3D geometries (Solid, BRep)
 
 The 3D City Database comes as a collection of SQL scripts that allow for creating and dropping database instances.
 
@@ -38,10 +38,12 @@ The latest stable release of the 3D City Database is 3.3.1.
 
 Download the SQL scripts and documentation [here](https://github.com/3dcitydb/3dcitydb/releases/download/v3.3.1/3DCityDB-3.3.1.zip). Previous releases are available from the [releases section](https://github.com/3dcitydb/3dcitydb/releases).
 
+The next release is planned for september 2018 and will be a new major version (v4.0.0).
+
 System requirements
 -------------------
 * Oracle DBMS >= 10g R2 with Spatial or Locator option
-* PostgreSQL DBMS >= 9.1 with PostGIS extension >= 2.0
+* PostgreSQL DBMS >= 9.3 with PostGIS extension >= 2.0
 
 Documentation
 -------------
@@ -53,7 +55,7 @@ Contributing
 * To contribute code for fixing filed issues create a pull request with the issue id.
 * To propose a new feature create a GitHub issue and open a discussion.
 
-Cooperation partners and supporters  
+Cooperation partners and supporters
 -----------------------------------
 
 The 3D City Database has been developed by and with the support from the following cooperation partners:
