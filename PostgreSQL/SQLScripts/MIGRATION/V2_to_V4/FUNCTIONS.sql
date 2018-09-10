@@ -128,7 +128,7 @@ BEGIN
     CREATE TABLE citydb.tex_image(
       id, tex_image_uri, tex_image_data, tex_mime_type,	tex_mime_type_codespace)
     AS SELECT
-	  row_number() OVER () AS tid, tex_image_uri, tex_image, tex_mime_type,	NULL::varchar(4000)
+	  (row_number() OVER ())::int AS tid, tex_image_uri, tex_image, tex_mime_type,	NULL::varchar(4000)
     FROM public.surface_data
       WHERE tex_image_uri IS NOT NULL
       ORDER BY id;
@@ -146,14 +146,14 @@ BEGIN
     CREATE TABLE citydb.tex_image(
       id, tex_image_uri, tex_image_data, tex_mime_type,	tex_mime_type_codespace)
     AS SELECT
-      row_number() OVER () AS tid, sd_v2.tex_image_uri, sd_v2.tex_image, sd_v2.tex_mime_type, NULL::varchar(4000)
+      (row_number() OVER ())::int AS tid, sd_v2.tex_image_uri, sd_v2.tex_image, sd_v2.tex_mime_type, NULL::varchar(4000)
     FROM public.surface_data sd_v2,
       (SELECT min(id) AS sample_id FROM public.surface_data WHERE tex_image_uri IS NOT NULL GROUP BY tex_image_uri) sample
     WHERE sd_v2.id = sample.sample_id;
 
-    UPDATE citydb.surface_data sd_v3 SET tex_image_id = t.id
-      FROM citydb.tex_image t, surface_data sd_v2
-      WHERE sd_v3.id = sd_v2.id AND sd_v2.tex_image_uri = t.tex_image_uri;
+    UPDATE citydb.surface_data sd_v4 SET tex_image_id = t.id
+      FROM citydb.tex_image t, public.surface_data sd_v2
+      WHERE sd_v4.id = sd_v2.id AND sd_v2.tex_image_uri = t.tex_image_uri;
   END IF;
 END;
 $$

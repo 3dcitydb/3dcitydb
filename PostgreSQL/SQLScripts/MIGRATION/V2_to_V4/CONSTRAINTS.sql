@@ -601,7 +601,7 @@ ALTER TABLE citydb.cityobject_member
     ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT cityobject_member_fk1 FOREIGN KEY (citymodel_id)
     REFERENCES citydb.citymodel (id) MATCH FULL
-    ON DELETE CASCADE ON UPDATE CASCADE;
+    ON DELETE NO ACTION ON UPDATE CASCADE;
 
 ALTER TABLE citydb.cityobjectgroup
   ADD CONSTRAINT group_cityobject_fk FOREIGN KEY (id)
@@ -622,10 +622,10 @@ ALTER TABLE citydb.external_reference
 ALTER TABLE citydb.generalization
   ADD CONSTRAINT general_cityobject_fk FOREIGN KEY (cityobject_id)
     REFERENCES citydb.cityobject (id) MATCH FULL
-    ON DELETE CASCADE ON UPDATE CASCADE,
+    ON DELETE NO ACTION ON UPDATE CASCADE,
   ADD CONSTRAINT general_generalizes_to_fk FOREIGN KEY (generalizes_to_id)
     REFERENCES citydb.cityobject (id) MATCH FULL
-    ON DELETE CASCADE ON UPDATE CASCADE;
+    ON DELETE NO ACTION ON UPDATE CASCADE;
 
 ALTER TABLE citydb.generic_cityobject
   ADD CONSTRAINT gen_object_cityobject_fk FOREIGN KEY (id)
@@ -668,7 +668,7 @@ ALTER TABLE citydb.group_to_cityobject
     ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT group_to_cityobject_fk1 FOREIGN KEY (cityobjectgroup_id)
     REFERENCES citydb.cityobjectgroup (id) MATCH FULL
-    ON DELETE CASCADE ON UPDATE CASCADE;
+    ON DELETE NO ACTION ON UPDATE CASCADE;
 
 ALTER TABLE citydb.implicit_geometry
   ADD CONSTRAINT implicit_geom_brep_fk FOREIGN KEY (relative_brep_id)
@@ -703,7 +703,7 @@ ALTER TABLE citydb.masspoint_relief
 ALTER TABLE citydb.objectclass 
   ADD CONSTRAINT objectclass_superclass_fk FOREIGN KEY (superclass_id)
     REFERENCES citydb.objectclass (id) MATCH FULL
-    ON DELETE NO ACTION ON UPDATE CASCADE;
+    ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE citydb.opening
   ADD CONSTRAINT opening_cityobject_fk FOREIGN KEY (id)
@@ -1140,6 +1140,9 @@ ALTER TABLE citydb.waterboundary_surface
 *
 **************************************************/ 
 ALTER TABLE citydb.objectclass
+  ADD CONSTRAINT objectclass_baseclass_fk FOREIGN KEY (baseclass_id)
+    REFERENCES objectclass (id) MATCH FULL
+    ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT objectclass_ade_fk FOREIGN KEY (ade_id)
     REFERENCES citydb.ade (id) MATCH FULL
     ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1152,9 +1155,7 @@ ALTER TABLE citydb.schema
 ALTER TABLE citydb.schema_to_objectclass
   ADD CONSTRAINT schema_to_objectclass_fk1 FOREIGN KEY (schema_id)
     REFERENCES citydb.schema (id) MATCH FULL
-    ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE citydb.schema_to_objectclass
+    ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT schema_to_objectclass_fk2 FOREIGN KEY (objectclass_id)
     REFERENCES citydb.objectclass (id) MATCH FULL
     ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1162,9 +1163,7 @@ ALTER TABLE citydb.schema_to_objectclass
 ALTER TABLE citydb.schema_referencing
   ADD CONSTRAINT schema_referencing_fk1 FOREIGN KEY (referencing_id)
     REFERENCES citydb.schema (id) MATCH FULL
-    ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE citydb.schema_referencing
+    ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT schema_referencing_fk2 FOREIGN KEY (referenced_id)
     REFERENCES citydb.schema (id) MATCH FULL
     ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1172,15 +1171,13 @@ ALTER TABLE citydb.schema_referencing
 ALTER TABLE citydb.aggregation_info
   ADD CONSTRAINT aggregation_info_fk1 FOREIGN KEY (child_id)
     REFERENCES citydb.objectclass (id) MATCH FULL
-    ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE citydb.aggregation_info
+    ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT aggregation_info_fk2 FOREIGN KEY (parent_id)
     REFERENCES citydb.objectclass (id) MATCH FULL
     ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE citydb.bridge
-  ADD CONSTRAINT bridge_objclass_fk FOREIGN KEY (objectclass_id)
+  ADD CONSTRAINT bridge_objectclass_fk FOREIGN KEY (objectclass_id)
     REFERENCES citydb.objectclass (id) MATCH FULL
     ON DELETE NO ACTION ON UPDATE CASCADE;
 
@@ -1200,7 +1197,7 @@ ALTER TABLE citydb.bridge_room
     ON DELETE NO ACTION ON UPDATE CASCADE;
 
 ALTER TABLE citydb.building
-  ADD CONSTRAINT building_objclass_fk FOREIGN KEY (objectclass_id)
+  ADD CONSTRAINT building_objectclass_fk FOREIGN KEY (objectclass_id)
     REFERENCES citydb.objectclass (id) MATCH FULL
     ON DELETE NO ACTION ON UPDATE CASCADE;
 
@@ -1210,7 +1207,7 @@ ALTER TABLE citydb.building_furniture
     ON DELETE NO ACTION ON UPDATE CASCADE;
 
 ALTER TABLE citydb.room
-  ADD CONSTRAINT room_objclass_fk FOREIGN KEY (objectclass_id)
+  ADD CONSTRAINT room_objectclass_fk FOREIGN KEY (objectclass_id)
     REFERENCES citydb.objectclass (id) MATCH FULL
     ON DELETE NO ACTION ON UPDATE CASCADE;
 
@@ -1229,13 +1226,18 @@ ALTER TABLE citydb.land_use
     REFERENCES citydb.objectclass (id) MATCH FULL
     ON DELETE NO ACTION ON UPDATE CASCADE;
 
+ALTER TABLE relief_feature
+  ADD CONSTRAINT relief_feat_objclass_fk FOREIGN KEY (objectclass_id)
+    REFERENCES objectclass (id) MATCH FULL
+    ON DELETE NO ACTION ON UPDATE CASCADE;
+
 ALTER TABLE citydb.breakline_relief
-  ADD CONSTRAINT breakline_relief_objclass_fk FOREIGN KEY (objectclass_id)
+  ADD CONSTRAINT breakline_rel_objclass_fk FOREIGN KEY (objectclass_id)
     REFERENCES citydb.objectclass (id) MATCH FULL
     ON DELETE NO ACTION ON UPDATE CASCADE;
 
 ALTER TABLE citydb.masspoint_relief
-  ADD CONSTRAINT masspoint_relief_objclass_fk FOREIGN KEY (objectclass_id)
+  ADD CONSTRAINT masspoint_rel_objclass_fk FOREIGN KEY (objectclass_id)
     REFERENCES citydb.objectclass (id) MATCH FULL
     ON DELETE NO ACTION ON UPDATE CASCADE;
 
@@ -1260,7 +1262,7 @@ ALTER TABLE citydb.solitary_vegetat_object
     ON DELETE NO ACTION ON UPDATE CASCADE;
 
 ALTER TABLE citydb.tunnel
-  ADD CONSTRAINT tunnel_objclass_fk FOREIGN KEY (objectclass_id)
+  ADD CONSTRAINT tunnel_objectclass_fk FOREIGN KEY (objectclass_id)
     REFERENCES citydb.objectclass (id) MATCH FULL
     ON DELETE NO ACTION ON UPDATE CASCADE;
 
@@ -1279,16 +1281,17 @@ ALTER TABLE citydb.waterbody
     REFERENCES citydb.objectclass (id) MATCH FULL
     ON DELETE NO ACTION ON UPDATE CASCADE;
 
+ALTER TABLE cityobjectgroup
+  ADD CONSTRAINT group_objectclass_fk FOREIGN KEY (objectclass_id)
+    REFERENCES objectclass (id) MATCH FULL
+    ON DELETE NO ACTION ON UPDATE CASCADE;
+
 /*************************************************
 * create not null constraints
 *
 **************************************************/
 ALTER TABLE citydb.cityobject_genericattrib
-  ALTER COLUMN attrname SET NOT NULL,
-  ALTER COLUMN cityobject_id SET NOT NULL;
-
-ALTER TABLE citydb.external_reference
-  ALTER COLUMN cityobject_id SET NOT NULL;
+  ALTER COLUMN attrname SET NOT NULL;
 
 DO
 $$
