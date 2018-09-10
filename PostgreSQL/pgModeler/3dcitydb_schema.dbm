@@ -5967,7 +5967,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<index name="ROOM_OBJECTCLASS_FKX" table="citydb.room"
+<index name="room_objectclass_fkx" table="citydb.room"
 	 concurrent="false" unique="false" fast-update="false" buffering="false"
 	 index-type="btree" factor="90">
 		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
@@ -7597,7 +7597,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="BRIDGE_ROOM_OBJCLASS_FK" type="fk-constr" comparison-type="MATCH FULL"
+<constraint name="bridge_room_objclass_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.objectclass" table="citydb.bridge_room">
 	<columns names="objectclass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>

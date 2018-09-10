@@ -4862,9 +4862,9 @@ CREATE INDEX relief_feat_objclass_fkx ON relief_feature
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
--- object: "ROOM_OBJECTCLASS_FKX" | type: INDEX --
--- DROP INDEX IF EXISTS "ROOM_OBJECTCLASS_FKX" CASCADE;
-CREATE INDEX "ROOM_OBJECTCLASS_FKX" ON room
+-- object: room_objectclass_fkx | type: INDEX --
+-- DROP INDEX IF EXISTS room_objectclass_fkx CASCADE;
+CREATE INDEX room_objectclass_fkx ON room
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -6717,9 +6717,9 @@ REFERENCES surface_geometry (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 
--- object: "BRIDGE_ROOM_OBJCLASS_FK" | type: CONSTRAINT --
--- ALTER TABLE bridge_room DROP CONSTRAINT IF EXISTS "BRIDGE_ROOM_OBJCLASS_FK" CASCADE;
-ALTER TABLE bridge_room ADD CONSTRAINT "BRIDGE_ROOM_OBJCLASS_FK" FOREIGN KEY (objectclass_id)
+-- object: bridge_room_objclass_fk | type: CONSTRAINT --
+-- ALTER TABLE bridge_room DROP CONSTRAINT IF EXISTS bridge_room_objclass_fk CASCADE;
+ALTER TABLE bridge_room ADD CONSTRAINT bridge_room_objclass_fk FOREIGN KEY (objectclass_id)
 REFERENCES objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
