@@ -25,13 +25,13 @@
 -- limitations under the License.
 --
 
-CREATE OR REPLACE PACKAGE citydb_migrate_sptl
+CREATE OR REPLACE PACKAGE citydb_migrate_georaster
 AS
   PROCEDURE fillRasterReliefTable;
-END citydb_migrate_sptl;
+END citydb_migrate_georaster;
 /
 
-CREATE OR REPLACE PACKAGE BODY citydb_migrate_sptl
+CREATE OR REPLACE PACKAGE BODY citydb_migrate_georaster
 AS
   type ref_cursor is ref cursor;
  
@@ -61,5 +61,5 @@ AS
     dbms_output.put_line('Raster_Relief table copy is completed.');
   END;
 
-END citydb_migrate_sptl;
+END citydb_migrate_georaster;
 /

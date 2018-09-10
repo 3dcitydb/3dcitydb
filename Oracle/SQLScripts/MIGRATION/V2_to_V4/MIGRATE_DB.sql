@@ -30,7 +30,7 @@ SET FEEDBACK ON
 SET VER OFF
 
 BEGIN 
-	dbms_output.put_line('Oracle-Version: '||DBMS_DB_VERSION.VERSION||'.'||DBMS_DB_VERSION.RELEASE);
+  dbms_output.put_line('Oracle-Version: '||DBMS_DB_VERSION.VERSION||'.'||DBMS_DB_VERSION.RELEASE);
 END;
 /
 
@@ -41,7 +41,7 @@ DEFINE V2USER=&3;
 VARIABLE MGRPBATCHFILE VARCHAR2(50);
 
 BEGIN
-	dbms_output.put_line('Starting DB migration... ' || SYSTIMESTAMP);
+  dbms_output.put_line('Starting DB migration... ' || SYSTIMESTAMP);
 END;
 /
 
@@ -61,32 +61,32 @@ END;
 /
 
 DECLARE
-	schema_name VARCHAR2(30) := upper('&V2USER');
+  schema_name VARCHAR2(30) := upper('&V2USER');
 BEGIN
-	dbms_output.put_line('Creating Synonyms...');
+  dbms_output.put_line('Creating Synonyms...');
 
-	FOR R IN (SELECT owner, table_name FROM all_tables WHERE owner=schema_name) LOOP
-		EXECUTE IMMEDIATE 'CREATE SYNONYM '||R.table_name||'_v2 FOR "'||schema_name||'".'||R.table_name;
-		--dbms_output.put_line('CREATE SYNONYM '||R.table_name||'_v2 FOR "'||schema_name||'".'||R.table_name);
-	END LOOP;
+  FOR R IN (SELECT owner, table_name FROM all_tables WHERE owner=schema_name) LOOP
+    EXECUTE IMMEDIATE 'CREATE SYNONYM '||R.table_name||'_v2 FOR "'||schema_name||'".'||R.table_name;
+	--dbms_output.put_line('CREATE SYNONYM '||R.table_name||'_v2 FOR "'||schema_name||'".'||R.table_name);
+  END LOOP;
 
-	dbms_output.put_line('Synonyms created.');
+  dbms_output.put_line('Synonyms created.');
 END;
 /
 
 BEGIN
-	dbms_output.put_line('Installing the package with functions and procedures for migration...');	
+  dbms_output.put_line('Installing the package with functions and procedures for migration...');	
 END;
 /
 
 -- Drop the existing indexes (non-spatial indexes)
 BEGIN
-	dbms_output.put_line('Indexes are being dropped...');	
+  dbms_output.put_line('Indexes are being dropped...');	
 END;
 /
 @@DROP_INDEXES_V4.sql;
 BEGIN
-	dbms_output.put_line('Indexes are dropped.');	
+  dbms_output.put_line('Indexes are dropped.');	
 END;
 /
 
@@ -99,8 +99,8 @@ BEGIN
 END;
 /
 BEGIN
-  IF (upper('&DBVERSION')='S') THEN
-    :MGRPBATCHFILE := 'CITYDB_MIGRATE_Sptl';
+  IF :GEORASTER_SUPPORT <> 0 THEN
+    :MGRPBATCHFILE := 'CITYDB_MIGRATE_GEORASTER';
   END IF;
 END;
 /
@@ -112,12 +112,12 @@ select :MGRPBATCHFILE mc from dual;
 @@&MGRPBATCHFILE2
 
 BEGIN
-	dbms_output.put_line('Packages installed.');	
+  dbms_output.put_line('Packages installed.');	
 END;
 /
 
 BEGIN
-	dbms_output.put_line('Data are being transferred into the tables...');	
+  dbms_output.put_line('Data are being transferred into the tables...');	
 END;
 /
 EXECUTE CITYDB_MIGRATE.fillSurfaceGeometryTable();
@@ -150,8 +150,8 @@ EXECUTE CITYDB_MIGRATE.fillOpeningToThemSurfaceTable();
 EXECUTE CITYDB_MIGRATE.fillPlantCoverTable();
 EXECUTE CITYDB_MIGRATE.fillReliefComponentTable();
 BEGIN
-  IF (upper('&DBVERSION')='S') THEN
-    EXECUTE IMMEDIATE 'CALL CITYDB_MIGRATE_SPTL.fillRasterReliefTable()';  
+  IF :GEORASTER_SUPPORT <> 0 THEN
+    EXECUTE IMMEDIATE 'CALL CITYDB_MIGRATE_GEORASTER.fillRasterReliefTable()';  
   END IF;
 END;
 /
@@ -176,22 +176,22 @@ END;
 /
 
 BEGIN
-	dbms_output.put_line('Data transfer is completed.');	
+  dbms_output.put_line('Data transfer is completed.');	
 END;
 /
 
 BEGIN
-	dbms_output.put_line('Sequences are being updated...');	
+  dbms_output.put_line('Sequences are being updated...');	
 END;
 /
 EXECUTE CITYDB_MIGRATE.updateSequences(); 
 BEGIN
-	dbms_output.put_line('Sequence update is completed.');	
+  dbms_output.put_line('Sequence update is completed.');	
 END;
 /
 
 BEGIN
-	dbms_output.put_line('Indexes are being re-created...');	
+  dbms_output.put_line('Indexes are being re-created...');	
 END;
 /
 -- build indexes
@@ -206,33 +206,33 @@ FROM dual;
 @@../../SCHEMA/INDEXES/SPATIAL_INDEXES.sql
 
 BEGIN
-	dbms_output.put_line('Index re-creation is completed.');	
+  dbms_output.put_line('Index re-creation is completed.');	
 END;
 /
 
 BEGIN
-	dbms_output.put_line('Migration related Packages, Procedures and Functions are being removed');
+  dbms_output.put_line('Migration related Packages, Procedures and Functions are being removed');
 END;
 /
 BEGIN
-	EXECUTE IMMEDIATE 'DROP PACKAGE CITYDB_MIGRATE';
-  IF (upper('&DBVERSION')='S') THEN
-  	EXECUTE IMMEDIATE 'DROP PACKAGE CITYDB_MIGRATE_Sptl';
+  EXECUTE IMMEDIATE 'DROP PACKAGE CITYDB_MIGRATE';
+  IF :GEORASTER_SUPPORT <> 0 THEN
+    EXECUTE IMMEDIATE 'DROP PACKAGE CITYDB_MIGRATE_GEORASTER';
   END IF;
-	FOR R IN (SELECT synonym_name FROM user_synonyms) LOOP
-		EXECUTE IMMEDIATE 'DROP SYNONYM '||R.synonym_name;
-		-- dbms_output.put_line('drop synonym '||R.synonym_name);
-	END LOOP;
+  FOR R IN (SELECT synonym_name FROM user_synonyms) LOOP
+    EXECUTE IMMEDIATE 'DROP SYNONYM '||R.synonym_name;
+    -- dbms_output.put_line('drop synonym '||R.synonym_name);
+  END LOOP;
 END;
 /
 BEGIN
-	dbms_output.put_line('Removal of migration related Packages, Procedures and Functions is completed');
+  dbms_output.put_line('Removal of migration related Packages, Procedures and Functions is completed');
 END;
 /
 
 COMMIT;
 
 BEGIN
-	dbms_output.put_line('DB migration is completed.' || SYSTIMESTAMP);	
+  dbms_output.put_line('DB migration is completed.' || SYSTIMESTAMP);	
 END;
 /
