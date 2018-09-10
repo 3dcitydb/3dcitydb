@@ -1225,7 +1225,7 @@ AS
     dbms_output.put_line('Relief_Feature table is being copied...');
     EXECUTE IMMEDIATE 'DROP TABLE relief_feature CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE 'CREATE TABLE relief_feature
-			  AS SELECT ID, LOD FROM relief_feature_v2';
+			  AS SELECT ID, 14 AS OBJECTCLASS_ID, LOD FROM relief_feature_v2';
     EXECUTE IMMEDIATE 'ALTER TABLE relief_feature ADD CONSTRAINT RELIEF_FEATURE_PK PRIMARY KEY (ID) ENABLE';
     EXECUTE IMMEDIATE 'update cityobject c
 			set (c.name,c.name_codespace,c.description) =
