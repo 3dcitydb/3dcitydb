@@ -68,7 +68,8 @@ AS
   PROCEDURE fillWaterBodyTable;
   PROCEDURE fillWaterBoundarySurfaceTable;
   PROCEDURE fillWaterbodToWaterbndSrfTable;
-  PROCEDURE updateSurfaceGeoTableCityObj;
+  PROCEDURE updateSurfaceGeometryTable;
+  PROCEDURE updateCityObjectTable;
   PROCEDURE updateSolidGeometry;
   PROCEDURE updateSequences;
 END citydb_migrate;
@@ -151,10 +152,9 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Surface_Geometry table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE surface_geometry CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE '
-      CREATE TABLE surface_geometry
-      AS SELECT
+      INSERT /*+ APPEND */ INTO surface_geometry
+      SELECT
         id,
         gmlid,
         gmlid_codespace,
@@ -179,7 +179,6 @@ AS
         ) then s.geometry else null end as implicit_geometry,
         CAST(null AS NUMBER) as cityobject_id
       FROM surface_geometry_v2 s';
-      EXECUTE IMMEDIATE 'ALTER TABLE surface_geometry ADD CONSTRAINT SURFACE_GEOMETRY_PK PRIMARY KEY (ID) ENABLE';
       dbms_output.put_line('Surface_Geometry table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -187,10 +186,9 @@ AS
   IS
   BEGIN
     dbms_output.put_line('CityObject table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE cityobject CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE '
-    CREATE TABLE cityobject
-	AS SELECT
+    INSERT /*+ APPEND */ INTO cityobject
+	  SELECT
 		ID, CLASS_ID AS OBJECTCLASS_ID, GMLID, GMLID_CODESPACE,
 		CAST(null AS VARCHAR2(1000)) as NAME, CAST(null AS VARCHAR2(4000)) as NAME_CODESPACE,
 		CAST(null AS VARCHAR2(4000)) as DESCRIPTION, ENVELOPE, CAST(CREATION_DATE AS TIMESTAMP WITH TIME ZONE) AS CREATION_DATE,
@@ -198,7 +196,6 @@ AS
 		CAST(null AS VARCHAR2(256)) as RELATIVE_TO_WATER, CAST(LAST_MODIFICATION_DATE AS TIMESTAMP WITH TIME ZONE) AS LAST_MODIFICATION_DATE,
 		UPDATING_PERSON, REASON_FOR_UPDATE, LINEAGE, XML_SOURCE
 	   FROM cityobject_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE cityobject ADD CONSTRAINT CITYOBJECT_PK PRIMARY KEY (ID) ENABLE';
     dbms_output.put_line('CityObject table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -206,10 +203,9 @@ AS
   IS
   BEGIN
     dbms_output.put_line('CityModel table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE citymodel CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE '
-    CREATE TABLE citymodel
-      AS SELECT
+    INSERT /*+ APPEND */ INTO citymodel
+      SELECT
         ID, GMLID, GMLID_CODESPACE,
 	 REPLACE(NAME, '' --/\-- '', ''--/\--'') AS NAME,
 	 REPLACE(NAME_CODESPACE, '' --/\-- '', ''--/\--'') AS NAME_CODESPACE,
@@ -219,7 +215,6 @@ AS
 	 CAST(LAST_MODIFICATION_DATE AS TIMESTAMP WITH TIME ZONE) AS LAST_MODIFICATION_DATE,
 	 UPDATING_PERSON, REASON_FOR_UPDATE, LINEAGE
       FROM citymodel_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE citymodel ADD CONSTRAINT CITYMODEL_PK PRIMARY KEY (ID) ENABLE';
     dbms_output.put_line('CityModel table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -227,16 +222,13 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Address table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE address CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE '
-    CREATE TABLE address
-	AS SELECT ID, CAST(null AS VARCHAR2(256)) as GMLID,
+    INSERT /*+ APPEND */ INTO address
+	  SELECT ID, ''ID_''||ID as GMLID,
                  CAST(null AS VARCHAR2(1000)) as GMLID_CODESPACE,
                  STREET, HOUSE_NUMBER, PO_BOX, ZIP_CODE, CITY,
                  STATE, COUNTRY, MULTI_POINT, XAL_SOURCE
-       FROM address_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE address ADD CONSTRAINT ADDRESS_PK PRIMARY KEY (ID) ENABLE';
-    EXECUTE IMMEDIATE 'UPDATE ADDRESS SET GMLID = (''ID_''||ID)';
+      FROM address_v2';
     dbms_output.put_line('Address table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -244,11 +236,9 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Building table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE building CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE building
-	  AS
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO building
 	  SELECT
-	    ID, (select class_id from CITYOBJECT_V2 c where c.id = ID) AS OBJECTCLASS_ID,
+	    ID, (select class_id from CITYOBJECT_V2 c where c.id = b.ID) AS OBJECTCLASS_ID,
         BUILDING_PARENT_ID, BUILDING_ROOT_ID, replace(trim(CLASS),'' '',''--/\--'') as CLASS,
 	    CAST(null AS VARCHAR2(4000)) as CLASS_CODESPACE, replace(trim(FUNCTION),'' '',''--/\--'') as FUNCTION,
 	    CAST(null AS VARCHAR2(4000)) as FUNCTION_CODESPACE, replace(trim(USAGE),'' '',''--/\--'') AS USAGE,
@@ -301,50 +291,6 @@ AS
 	      (s2.ID = b.lod4_geometry_id and s2.is_solid = 1)
 	    ) then b.lod4_geometry_id else null end as LOD4_SOLID_ID
 	  FROM building_v2 b';
-    EXECUTE IMMEDIATE 'ALTER TABLE building ADD CONSTRAINT BUILDING_PK PRIMARY KEY (ID) ENABLE';
-    -- Check if the lod1-lod4 geometry ids are solid and/or multi surface
-    -- Update the cityobject_id entry in surface_geometry table
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (CITYOBJECT_ID) =
-			(select b.id from building_v2 b
-			 where b.LOD1_GEOMETRY_ID = s.id)
-			where exists
-			(select * from building_v2 b
-			 where b.LOD1_GEOMETRY_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (CITYOBJECT_ID) =
-			(select b.id from building_v2 b
-			 where b.LOD2_GEOMETRY_ID = s.id)
-			where exists
-			(select * from building_v2 b
-			 where b.LOD2_GEOMETRY_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (CITYOBJECT_ID) =
-			(select b.id from building_v2 b
-			 where b.LOD3_GEOMETRY_ID = s.id)
-			where exists
-			(select * from building_v2 b
-			 where b.LOD3_GEOMETRY_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (CITYOBJECT_ID) =
-			(select b.id from building_v2 b
-			 where b.LOD4_GEOMETRY_ID = s.id)
-			where exists
-			(select * from building_v2 b
-			 where b.LOD4_GEOMETRY_ID = s.id)';
-    -- Insert the name and the description of the building
-    -- into the cityobject table
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(b.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(b.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace,
-				b.description
-				from building_v2 b
-			 where b.id = c.id)
-			where exists
-			(select * from building_v2 b
-			 where b.id = c.id)';
     dbms_output.put_line('Building table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -352,23 +298,19 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Address_to_Building table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE address_to_building CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE '
-    CREATE TABLE address_to_building
-	AS SELECT * FROM address_to_building_v2';
+    INSERT /*+ APPEND */ INTO address_to_building
+	SELECT * FROM address_to_building_v2';
     dbms_output.put_line('Address_to_Building table copy is completed.' || SYSTIMESTAMP);
-    EXECUTE IMMEDIATE 'ALTER TABLE address_to_building ADD CONSTRAINT ADDRESS_TO_BUILDING_PK PRIMARY KEY (BUILDING_ID,ADDRESS_ID) ENABLE';
   END;
 
   PROCEDURE fillAppearanceTable
   IS
   BEGIN
     dbms_output.put_line('Appearance table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE appearance CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE '
-    CREATE TABLE appearance
-	AS SELECT * FROM appearance_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE appearance ADD CONSTRAINT APPEARANCE_PK PRIMARY KEY (ID) ENABLE';
+    INSERT /*+ APPEND */ INTO appearance
+	SELECT * FROM appearance_v2';
     dbms_output.put_line('Appearance table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -447,11 +389,9 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Appear_to_Surface_Data table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE appear_to_surface_data CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE '
-    CREATE TABLE appear_to_surface_data
-	AS SELECT * FROM appear_to_surface_data_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE appear_to_surface_data ADD CONSTRAINT APPEAR_TO_SURFACE_DATA_PK PRIMARY KEY (SURFACE_DATA_ID,APPEARANCE_ID) ENABLE';
+    INSERT /*+ APPEND */ INTO appear_to_surface_data
+	SELECT * FROM appear_to_surface_data_v2';
     dbms_output.put_line('Appear_to_Surface_Data table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -459,11 +399,9 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Breakline_Relief table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE breakline_relief CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE '
-    CREATE TABLE breakline_relief
-	AS SELECT ID, 18 AS OBJECTCLASS_ID, RIDGE_OR_VALLEY_LINES, BREAK_LINES FROM breakline_relief_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE breakline_relief ADD CONSTRAINT BREAKLINE_RELIEF_PK PRIMARY KEY (ID) ENABLE';
+    INSERT /*+ APPEND */ INTO breakline_relief
+	SELECT ID, 18 AS OBJECTCLASS_ID, RIDGE_OR_VALLEY_LINES, BREAK_LINES FROM breakline_relief_v2';
     dbms_output.put_line('Breakline_Relief table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -471,10 +409,8 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Room table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE room CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE '
-    CREATE TABLE room
-	AS
+    INSERT /*+ APPEND */ INTO room
 	SELECT ID, 41 AS OBJECTCLASS_ID,
           CAST(replace(trim(r.CLASS),'' '',''--/\--'') AS VARCHAR2(256)) AS CLASS,
 	      CAST(null AS VARCHAR2(4000)) as CLASS_CODESPACE,
@@ -494,24 +430,7 @@ AS
 		      (s.ID = r.lod4_geometry_id and s.is_solid = 1)
 		    ) then r.lod4_geometry_id else null end as LOD4_SOLID_ID
 	FROM room_v2 r';
-    EXECUTE IMMEDIATE 'ALTER TABLE room ADD CONSTRAINT ROOM_PK PRIMARY KEY (ID) ENABLE';
 
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select r.id from room_v2 r
-			 where r.LOD4_GEOMETRY_ID = s.id)
-			where exists
-			(select * from room_v2 r
-			 where r.LOD4_GEOMETRY_ID = s.id)';
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(r.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(r.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, r.description from room_v2 r
-			 where r.id = c.id)
-			where exists
-			(select * from room_v2 r
-			 where r.id = c.id)';
     dbms_output.put_line('Room table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -519,10 +438,8 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Building_Furniture table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE building_furniture CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE '
-    CREATE TABLE building_furniture
-	AS
+    INSERT /*+ APPEND */ INTO building_furniture
 	SELECT ID, 40 AS OBJECTCLASS_ID,
         CAST(replace(trim(CLASS),'' '',''--/\--'') AS VARCHAR2(256)) AS CLASS,
 		CAST(null AS VARCHAR2(4000)) as CLASS_CODESPACE,
@@ -535,27 +452,7 @@ AS
 		LOD4_IMPLICIT_REP_ID, LOD4_IMPLICIT_REF_POINT,
 		LOD4_IMPLICIT_TRANSFORMATION
 	FROM building_furniture_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE building_furniture ADD CONSTRAINT BUILDING_FURNITURE_PK PRIMARY KEY (ID) ENABLE';
 
-    -- Update the cityobject_id entry in surface_geometry table
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (CITYOBJECT_ID) =
-			(select b.id from building_furniture_v2 b
-			 where b.LOD4_GEOMETRY_ID = s.id)
-			where exists
-			(select * from building_furniture_v2 b
-			 where b.LOD4_GEOMETRY_ID = s.id)';
-    -- Insert the name and the description of the building furniture
-    -- into the cityobject table
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(b.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(b.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, b.description from building_furniture_v2 b
-			 where b.id = c.id)
-			where exists
-			(select * from building_furniture_v2 b
-			 where b.id = c.id)';
     dbms_output.put_line('Building_Furniture table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -563,10 +460,8 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Building_Installation table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE building_installation CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE '
-	CREATE TABLE building_installation
-	  AS
+	INSERT /*+ APPEND */ INTO building_installation
 	  SELECT ID, 
 	    CASE is_external
 	      WHEN 1 THEN (select id from OBJECTCLASS_v2 where classname = ''BuildingInstallation'')
@@ -594,45 +489,6 @@ AS
 	    CAST(null AS VARCHAR2(1000)) as LOD4_IMPLICIT_TRANSFORMATION
 	  FROM building_installation_v2';
 
-    EXECUTE IMMEDIATE 'ALTER TABLE building_installation MODIFY OBJECTCLASS_ID NUMBER NOT NULL';
-    EXECUTE IMMEDIATE 'ALTER TABLE building_installation ADD CONSTRAINT BUILDING_INSTALLATION_PK PRIMARY KEY (ID) ENABLE';
-
-    -- Update the cityobject_id entry in surface_geometry table
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (CITYOBJECT_ID) =
-			(select b.id from building_installation_v2 b
-			 where b.LOD2_GEOMETRY_ID = s.id)
-			where exists
-			(select * from building_installation_v2 b
-			 where b.LOD2_GEOMETRY_ID = s.id)';
-
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (CITYOBJECT_ID) =
-			(select b.id from building_installation_v2 b
-			 where b.LOD3_GEOMETRY_ID = s.id)
-			where exists
-			(select * from building_installation_v2 b
-			 where b.LOD3_GEOMETRY_ID = s.id)';
-
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (CITYOBJECT_ID) =
-			(select b.id from building_installation_v2 b
-			 where b.LOD4_GEOMETRY_ID = s.id)
-			where exists
-			(select * from building_installation_v2 b
-			 where b.LOD4_GEOMETRY_ID = s.id)';
-
-    -- Insert the name and the description of the building installation
-    -- into the cityobject table
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(b.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(b.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, b.description from building_installation_v2 b
-			 where b.id = c.id)
-			where exists
-			(select * from building_installation_v2 b
-			 where b.id = c.id)';
     dbms_output.put_line('Building_Installation table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -640,15 +496,12 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Implicit_Geometry table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE implicit_geometry CASCADE CONSTRAINTS';
     EXECUTE IMMEDIATE '
-    CREATE TABLE implicit_geometry
-	AS
+    INSERT /*+ APPEND */ INTO implicit_geometry
 	SELECT ID, MIME_TYPE, REFERENCE_TO_LIBRARY,
 		LIBRARY_OBJECT, RELATIVE_GEOMETRY_ID AS RELATIVE_BREP_ID,
 		CAST(null AS SDO_GEOMETRY) as RELATIVE_OTHER_GEOM
 	FROM implicit_geometry_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE implicit_geometry ADD CONSTRAINT IMPLICIT_GEOMETRY_PK PRIMARY KEY (ID) ENABLE';
     dbms_output.put_line('Implicit_Geometry table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -656,9 +509,7 @@ AS
   IS
   BEGIN
     dbms_output.put_line('City_Furniture table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE city_furniture CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE city_furniture
-			  AS
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO city_furniture
 			  SELECT ID, 21 AS OBJECTCLASS_ID,
 					CAST(replace(trim(CLASS),'' '',''--/\--'') AS VARCHAR2(256)) AS CLASS,
 					CAST(null AS VARCHAR2(4000)) as CLASS_CODESPACE,
@@ -680,45 +531,7 @@ AS
 					LOD1_IMPLICIT_TRANSFORMATION, LOD2_IMPLICIT_TRANSFORMATION,
 					LOD3_IMPLICIT_TRANSFORMATION, LOD4_IMPLICIT_TRANSFORMATION
 			  FROM city_furniture_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE city_furniture ADD CONSTRAINT CITY_FURNITURE_PK PRIMARY KEY (ID) ENABLE';
 
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select c.id from city_furniture_v2 c
-			 where c.LOD1_GEOMETRY_ID = s.id)
-			where exists
-			(select * from city_furniture_v2 c
-			 where c.LOD1_GEOMETRY_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select c.id from city_furniture_v2 c
-			 where c.LOD2_GEOMETRY_ID = s.id)
-			where exists
-			(select * from city_furniture_v2 c
-			 where c.LOD2_GEOMETRY_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select c.id from city_furniture_v2 c
-			 where c.LOD3_GEOMETRY_ID = s.id)
-			where exists
-			(select * from city_furniture_v2 c
-			 where c.LOD3_GEOMETRY_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select c.id from city_furniture_v2 c
-			 where c.LOD4_GEOMETRY_ID = s.id)
-			where exists
-			(select * from city_furniture_v2 c
-			 where c.LOD4_GEOMETRY_ID = s.id)';
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(cf.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(cf.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, cf.description from city_furniture_v2 cf
-			 where cf.id = c.id)
-			where exists
-			(select * from city_furniture_v2 cf
-			 where cf.id = c.id)';
     dbms_output.put_line('City_Furniture table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -726,9 +539,7 @@ AS
   IS
   BEGIN
     dbms_output.put_line('CityObject_GenericAttrib table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE cityobject_genericattrib CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE cityobject_genericattrib
-			  AS
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO cityobject_genericattrib
 			    SELECT ID, CAST(null AS NUMBER) as PARENT_GENATTRIB_ID,
 				    CAST(ID AS NUMBER) AS ROOT_GENATTRIB_ID, ATTRNAME, DATATYPE,
 				    STRVAL, INTVAL, REALVAL, URIVAL,
@@ -737,7 +548,6 @@ AS
 				    CAST(null AS VARCHAR2(4000)) as GENATTRIBSET_CODESPACE,
 				    BLOBVAL, GEOMVAL, SURFACE_GEOMETRY_ID, CITYOBJECT_ID
 			    FROM cityobject_genericattrib_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE cityobject_genericattrib ADD CONSTRAINT CITYOBJ_GENERICATTRIB_PK PRIMARY KEY (ID) ENABLE';
     dbms_output.put_line('CityObject_GenericAttrib table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -745,10 +555,8 @@ AS
   IS
   BEGIN
     dbms_output.put_line('CityObject_Member table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE cityobject_member CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE cityobject_member
-			  AS SELECT * FROM cityobject_member_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE cityobject_member ADD CONSTRAINT CITYOBJECT_MEMBER_PK PRIMARY KEY (CITYMODEL_ID,CITYOBJECT_ID) ENABLE';
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO cityobject_member
+			  SELECT * FROM cityobject_member_v2';
     dbms_output.put_line('CityObject_Member table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -756,9 +564,7 @@ AS
   IS
   BEGIN
     dbms_output.put_line('CityObjectGroup table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE cityobjectgroup CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE cityobjectgroup
-			  AS
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO cityobjectgroup
 			  SELECT ID, 23 AS OBJECTCLASS_ID,
                   CAST(replace(trim(CLASS),'' '',''--/\--'') AS VARCHAR2(256)) AS CLASS,
 				  CAST(null AS VARCHAR2(4000)) as CLASS_CODESPACE,
@@ -769,18 +575,6 @@ AS
 				  SURFACE_GEOMETRY_ID AS BREP_ID,
 				  GEOMETRY AS OTHER_GEOM, PARENT_CITYOBJECT_ID
 			  FROM cityobjectgroup_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE cityobjectgroup ADD CONSTRAINT CITYOBJECTGROUP_PK PRIMARY KEY (ID) ENABLE';
-    -- Insert the name and the description of the city furniture
-    -- into the cityobject table
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(co.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(co.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, co.description from cityobjectgroup_v2 co
-			 where co.id = c.id)
-			where exists
-			(select * from cityobjectgroup_v2 co
-			 where co.id = c.id)';
     dbms_output.put_line('CityObjectGroup table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -788,10 +582,8 @@ AS
   IS
   BEGIN
     dbms_output.put_line('External_Reference table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE external_reference CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE external_reference
-			  AS SELECT * FROM external_reference_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE external_reference ADD CONSTRAINT EXTERNAL_REFERENCE_PK PRIMARY KEY (ID) ENABLE';
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO external_reference
+			  SELECT * FROM external_reference_v2';
     dbms_output.put_line('External_Reference table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -799,10 +591,8 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Generalization table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE generalization CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE generalization
-			  AS SELECT * FROM generalization_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE generalization ADD CONSTRAINT GENERALIZATION_PK PRIMARY KEY (CITYOBJECT_ID,GENERALIZES_TO_ID) ENABLE';
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO generalization
+			  SELECT * FROM generalization_v2';
     dbms_output.put_line('Generalization table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -810,9 +600,7 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Generic_CityObject table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE generic_cityobject CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE generic_cityobject
-			  AS
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO generic_cityobject
 			  SELECT ID, 5 AS OBJECTCLASS_ID,
 				   CAST(replace(trim(CLASS),'' '',''--/\--'') AS VARCHAR2(256)) AS CLASS,
 				   CAST(null AS VARCHAR2(4000)) as CLASS_CODESPACE,
@@ -838,51 +626,6 @@ AS
 				   LOD2_IMPLICIT_TRANSFORMATION, LOD3_IMPLICIT_TRANSFORMATION,
 				   LOD4_IMPLICIT_TRANSFORMATION
 				 FROM generic_cityobject_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE generic_cityobject ADD CONSTRAINT GENERIC_CITYOBJECT_PK PRIMARY KEY (ID) ENABLE';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select g.id from generic_cityobject_v2 g
-			 where g.LOD0_GEOMETRY_ID = s.id)
-			where exists
-			(select * from generic_cityobject_v2 g
-			 where g.LOD0_GEOMETRY_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select g.id from generic_cityobject_v2 g
-			 where g.LOD1_GEOMETRY_ID = s.id)
-			where exists
-			(select * from generic_cityobject_v2 g
-			 where g.LOD1_GEOMETRY_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select g.id from generic_cityobject_v2 g
-			 where g.LOD2_GEOMETRY_ID = s.id)
-			where exists
-			(select * from generic_cityobject_v2 g
-			 where g.LOD2_GEOMETRY_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select g.id from generic_cityobject_v2 g
-			 where g.LOD3_GEOMETRY_ID = s.id)
-			where exists
-			(select * from generic_cityobject_v2 g
-			 where g.LOD3_GEOMETRY_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select g.id from generic_cityobject_v2 g
-			 where g.LOD4_GEOMETRY_ID = s.id)
-			where exists
-			(select * from generic_cityobject_v2 g
-			 where g.LOD4_GEOMETRY_ID = s.id)';
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(g.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(g.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, g.description from generic_cityobject_v2 g
-			 where g.id = c.id)
-			where exists
-			(select * from generic_cityobject_v2 g
-			 where g.id = c.id)';
     dbms_output.put_line('Generic_CityObject table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -890,10 +633,8 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Group_To_CityObject table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE group_to_cityobject CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE group_to_cityobject
-			  AS SELECT * FROM group_to_cityobject_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE group_to_cityobject ADD CONSTRAINT GROUP_TO_CITYOBJECT_PK PRIMARY KEY (CITYOBJECT_ID,CITYOBJECTGROUP_ID) ENABLE';
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO group_to_cityobject
+			  SELECT * FROM group_to_cityobject_v2';
     dbms_output.put_line('Group_To_CityObject table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -901,9 +642,7 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Land_Use table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE land_use CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE land_use
-			  AS
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO land_use
 			  SELECT ID, 4 AS OBJECTCLASS_ID,
 			   CAST(replace(trim(CLASS),'' '',''--/\--'') AS VARCHAR2(256)) AS CLASS,
 			   CAST(null AS VARCHAR2(4000)) as CLASS_CODESPACE,
@@ -914,54 +653,6 @@ AS
 			   LOD0_MULTI_SURFACE_ID, LOD1_MULTI_SURFACE_ID,
 			   LOD2_MULTI_SURFACE_ID, LOD3_MULTI_SURFACE_ID, LOD4_MULTI_SURFACE_ID
 			 FROM land_use_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE land_use ADD CONSTRAINT LAND_USE_PK PRIMARY KEY (ID) ENABLE';
-    -- Update the cityobject_id entry in surface_geometry table
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select l.id from land_use_v2 l
-			 where l.LOD0_MULTI_SURFACE_ID = s.id)
-			where exists
-			(select * from land_use_v2 l
-			 where l.LOD0_MULTI_SURFACE_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select l.id from land_use_v2 l
-			 where l.LOD1_MULTI_SURFACE_ID = s.id)
-			where exists
-			(select * from land_use_v2 l
-			 where l.LOD1_MULTI_SURFACE_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select l.id from land_use_v2 l
-			 where l.LOD2_MULTI_SURFACE_ID = s.id)
-			where exists
-			(select * from land_use_v2 l
-			 where l.LOD2_MULTI_SURFACE_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select l.id from land_use_v2 l
-			 where l.LOD3_MULTI_SURFACE_ID = s.id)
-			where exists
-			(select * from land_use_v2 l
-			 where l.LOD3_MULTI_SURFACE_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select l.id from land_use_v2 l
-			 where l.LOD4_MULTI_SURFACE_ID = s.id)
-			where exists
-			(select * from land_use_v2 l
-			 where l.LOD4_MULTI_SURFACE_ID = s.id)';
-    -- Insert the name and the description of the land use
-    -- into the cityobject table
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(l.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(l.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, l.description from land_use_v2 l
-			 where l.id = c.id)
-			where exists
-			(select * from land_use_v2 l
-			 where l.id = c.id)';
     dbms_output.put_line('Land_Use table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -969,10 +660,8 @@ AS
   IS
   BEGIN
     dbms_output.put_line('MassPoint_Relief table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE masspoint_relief CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE masspoint_relief
-			  AS SELECT ID, 17 AS OBJECTCLASS_ID, RELIEF_POINTS FROM masspoint_relief_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE masspoint_relief ADD CONSTRAINT MASSPOINT_RELIEF_PK PRIMARY KEY (ID) ENABLE';
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO masspoint_relief
+			  SELECT ID, 17 AS OBJECTCLASS_ID, RELIEF_POINTS FROM masspoint_relief_v2';
     dbms_output.put_line('MassPoint_Relief table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -980,9 +669,7 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Opening table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE opening CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE opening
-			  AS
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO opening
 			      SELECT o.ID,
 			      (select oc.id from OBJECTCLASS_v2 oc where oc.classname = o.type) AS OBJECTCLASS_ID,
 			      o.ADDRESS_ID, o.LOD3_MULTI_SURFACE_ID, o.LOD4_MULTI_SURFACE_ID,
@@ -993,33 +680,6 @@ AS
 			      CAST(null AS VARCHAR2(1000)) as LOD3_IMPLICIT_TRANSFORMATION,
 			      CAST(null AS VARCHAR2(1000)) as LOD4_IMPLICIT_TRANSFORMATION
 			      FROM opening_v2 o';
-    EXECUTE IMMEDIATE 'ALTER TABLE opening ADD CONSTRAINT OPENING_PK PRIMARY KEY (ID) ENABLE';
-    -- Update the cityobject_id entry in surface_geometry table
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select o.id from opening_v2 o
-			 where o.LOD3_MULTI_SURFACE_ID = s.id)
-			where exists
-			(select * from opening_v2 o
-			 where o.LOD3_MULTI_SURFACE_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select o.id from opening_v2 o
-			 where o.LOD4_MULTI_SURFACE_ID = s.id)
-			where exists
-			(select * from opening_v2 o
-			 where o.LOD4_MULTI_SURFACE_ID = s.id)';
-    -- Insert the name and the description of the opening
-    -- into the cityobject table
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(o.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(o.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, o.description from opening_v2 o
-			 where o.id = c.id)
-			where exists
-			(select * from opening_v2 o
-			 where o.id = c.id)';
     dbms_output.put_line('Opening table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -1027,49 +687,13 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Thematic_Surface table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE thematic_surface CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE thematic_surface
-			  AS
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO thematic_surface
 			  SELECT t.ID,
 			      (select oc.id from OBJECTCLASS_v2 oc where oc.classname = t.type) AS OBJECTCLASS_ID,
 			      BUILDING_ID, ROOM_ID,
 			      CAST(null AS NUMBER) as BUILDING_INSTALLATION_ID,
 			      LOD2_MULTI_SURFACE_ID, LOD3_MULTI_SURFACE_ID, LOD4_MULTI_SURFACE_ID
 			  FROM thematic_surface_v2 t';
-    EXECUTE IMMEDIATE 'ALTER TABLE thematic_surface ADD CONSTRAINT THEMATIC_SURFACE_PK PRIMARY KEY (ID) ENABLE';
-    -- Update the cityobject_id entry in surface_geometry table
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select t.id from thematic_surface_v2 t
-			 where t.LOD2_MULTI_SURFACE_ID = s.id)
-			where exists
-			(select * from thematic_surface_v2 t
-			 where t.LOD2_MULTI_SURFACE_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select t.id from thematic_surface_v2 t
-			 where t.LOD3_MULTI_SURFACE_ID = s.id)
-			where exists
-			(select * from thematic_surface_v2 t
-			 where t.LOD3_MULTI_SURFACE_ID = s.id)';
-    EXECUTE IMMEDIATE 'update surface_geometry s
-			set (s.CITYOBJECT_ID) =
-			(select t.id from thematic_surface_v2 t
-			 where t.LOD4_MULTI_SURFACE_ID = s.id)
-			where exists
-			(select * from thematic_surface_v2 t
-			 where t.LOD4_MULTI_SURFACE_ID = s.id)';
-    -- Insert the name and the description of the thematic surface
-    -- into the cityobject table
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(t.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(t.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, t.description from thematic_surface_v2 t
-			 where t.id = c.id)
-			where exists
-			(select * from thematic_surface_v2 t
-			 where t.id = c.id)';
     dbms_output.put_line('Thematic_Surface table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -1077,10 +701,8 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Opening_To_Them_Surface table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE opening_to_them_surface CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE opening_to_them_surface
-			  AS SELECT * FROM opening_to_them_surface_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE opening_to_them_surface ADD CONSTRAINT OPENING_TO_THEM_SURFACE_PK PRIMARY KEY (OPENING_ID,THEMATIC_SURFACE_ID) ENABLE';
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO opening_to_them_surface
+			  SELECT * FROM opening_to_them_surface_v2';
     dbms_output.put_line('Opening_To_Them_Surface table copy is completed.' || SYSTIMESTAMP);
   END;
 
@@ -1088,9 +710,7 @@ AS
   IS
   BEGIN
     dbms_output.put_line('Plant_Cover table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE plant_cover CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE plant_cover
-			  AS
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO plant_cover
 			  SELECT ID, 8 AS OBJECTCLASS_ID,
               CAST(null AS VARCHAR2(1000)) AS USAGE,
 			  CAST(null AS VARCHAR2(4000)) as USAGE_CODESPACE,
@@ -1140,8 +760,414 @@ AS
 			   (s.ID = p.lod4_geometry_id and s.is_solid = 1)
 			  ) then p.lod4_geometry_id else null end as LOD4_MULTI_SOLID_ID
 			  FROM plant_cover_v2 p';
-    EXECUTE IMMEDIATE 'ALTER TABLE plant_cover ADD CONSTRAINT PLANT_COVER_PK PRIMARY KEY (ID) ENABLE';
-    -- Check if the lod1-lod4 geometry ids are solid and/or multi surface
+    dbms_output.put_line('Plant_Cover table copy is completed.' || SYSTIMESTAMP);
+  END;
+
+  PROCEDURE fillReliefComponentTable
+  IS
+  BEGIN
+    dbms_output.put_line('Relief_Component table is being copied...');
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO relief_component
+			  SELECT ID,
+			    (select class_id from CITYOBJECT_V2 c where c.id = r.ID) AS OBJECTCLASS_ID,
+			    LOD, EXTENT
+			  FROM relief_component_v2 r';
+    dbms_output.put_line('Relief_Component table copy is completed.' || SYSTIMESTAMP);
+  END;
+
+  PROCEDURE fillReliefFeatToRelCompTable
+  IS
+  BEGIN
+    dbms_output.put_line('Relief_Feat_To_Rel_Comp table is being copied...');
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO relief_feat_to_rel_comp
+			  SELECT * FROM relief_feat_to_rel_comp_v2';
+    dbms_output.put_line('Relief_Feat_To_Rel_Comp table copy is completed.' || SYSTIMESTAMP);
+  END;
+
+  PROCEDURE fillReliefFeatureTable
+  IS
+  BEGIN
+    dbms_output.put_line('Relief_Feature table is being copied...');
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO relief_feature
+			  SELECT ID, 14 AS OBJECTCLASS_ID, LOD FROM relief_feature_v2';
+    dbms_output.put_line('Relief_Feature table copy is completed.' || SYSTIMESTAMP);
+  END;
+
+  PROCEDURE fillSolitaryVegetatObjectTable
+  IS
+  BEGIN
+    dbms_output.put_line('Solitary_Vegetat_Object table is being copied...');
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO solitary_vegetat_object
+				SELECT ID, 7 AS OBJECTCLASS_ID,
+                CAST(replace(trim(CLASS),'' '',''--/\--'') AS VARCHAR2(256)) AS CLASS,
+				CAST(null AS VARCHAR2(4000)) as CLASS_CODESPACE,
+				CAST(replace(trim(FUNCTION),'' '',''--/\--'') AS VARCHAR2(1000)) AS FUNCTION,
+				CAST(null AS VARCHAR2(4000)) as FUNCTION_CODESPACE,
+				CAST(null AS VARCHAR2(1000)) AS USAGE,
+				CAST(null AS VARCHAR2(4000)) as USAGE_CODESPACE,
+				CAST(replace(SPECIES,'' '',''--/\--'') AS VARCHAR2(1000)) AS SPECIES,
+				CAST(null AS VARCHAR2(4000)) as SPECIES_CODESPACE,
+				HEIGHT, CAST(null AS VARCHAR2(4000)) as HEIGHT_UNIT,
+				TRUNC_DIAMETER AS TRUNK_DIAMETER,
+				CAST(null AS VARCHAR2(4000)) as TRUNK_DIAMETER_UNIT,
+				CROWN_DIAMETER, CAST(null AS VARCHAR2(4000)) as CROWN_DIAMETER_UNIT,
+				LOD1_GEOMETRY_ID AS LOD1_BREP_ID, LOD2_GEOMETRY_ID AS LOD2_BREP_ID,
+				LOD3_GEOMETRY_ID AS LOD3_BREP_ID, LOD4_GEOMETRY_ID AS LOD4_BREP_ID,
+				CAST(null AS SDO_GEOMETRY) as LOD1_OTHER_GEOM,
+				CAST(null AS SDO_GEOMETRY) as LOD2_OTHER_GEOM,
+				CAST(null AS SDO_GEOMETRY) as LOD3_OTHER_GEOM,
+				CAST(null AS SDO_GEOMETRY) as LOD4_OTHER_GEOM,
+				LOD1_IMPLICIT_REP_ID, LOD2_IMPLICIT_REP_ID, LOD3_IMPLICIT_REP_ID,
+				LOD4_IMPLICIT_REP_ID, LOD1_IMPLICIT_REF_POINT, LOD2_IMPLICIT_REF_POINT,
+				LOD3_IMPLICIT_REF_POINT, LOD4_IMPLICIT_REF_POINT,
+				LOD1_IMPLICIT_TRANSFORMATION, LOD2_IMPLICIT_TRANSFORMATION,
+				LOD3_IMPLICIT_TRANSFORMATION, LOD4_IMPLICIT_TRANSFORMATION
+				FROM solitary_vegetat_object_v2';
+    dbms_output.put_line('Solitary_Vegetat_Object table copy is completed.' || SYSTIMESTAMP);
+  END;
+
+  PROCEDURE fillTextureParamTable
+  IS
+  BEGIN
+    dbms_output.put_line('TextureParam table is being copied...');
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO textureparam
+			  SELECT SURFACE_GEOMETRY_ID, IS_TEXTURE_PARAMETRIZATION, WORLD_TO_TEXTURE,
+			  citydb_migrate.convertVarcharToSDOGeom(TEXTURE_COORDINATES) AS TEXTURE_COORDINATES, SURFACE_DATA_ID
+			  FROM textureparam_v2';
+    dbms_output.put_line('TextureParam table copy is completed.' || SYSTIMESTAMP);
+  END;
+
+  PROCEDURE fillTinReliefTable
+  IS
+    CURSOR tin_relief_v2 IS select * from tin_relief_v2 order by id;
+  BEGIN
+    dbms_output.put_line('Tin Relief table is being copied...');
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO tin_relief
+				SELECT ID, 16 AS OBJECTCLASS_ID, MAX_LENGTH,
+				CAST(null AS VARCHAR2(4000)) as MAX_LENGTH_UNIT,
+				STOP_LINES, BREAK_LINES, CONTROL_POINTS, SURFACE_GEOMETRY_ID
+			  FROM tin_relief_v2';
+    dbms_output.put_line('Tin Relief table copy is completed.' || SYSTIMESTAMP);
+  END;
+
+  PROCEDURE fillTrafficAreaTable
+  IS
+    -- variables --
+    CURSOR traffic_area_v2 IS select * from traffic_area_v2 order by id;
+    classID NUMBER(10);
+  BEGIN
+    dbms_output.put_line('Traffic_Area table is being copied...');
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO traffic_area
+			  SELECT ID,
+			   CASE is_auxiliary
+			   WHEN 1 THEN (select id from OBJECTCLASS_v2 where classname = ''AuxiliaryTrafficArea'')
+			   ELSE (select id from OBJECTCLASS_v2 where classname = ''TrafficArea'')
+			   END AS OBJECTCLASS_ID,
+			   CAST(null AS VARCHAR2(256)) AS CLASS,
+			   CAST(null AS VARCHAR2(4000)) as CLASS_CODESPACE,
+			   CAST(replace(trim(FUNCTION),'' '',''--/\--'') AS VARCHAR2(1000)) AS FUNCTION,
+			   CAST(null AS VARCHAR2(4000)) as FUNCTION_CODESPACE,
+			   CAST(replace(trim(USAGE),'' '',''--/\--'') AS VARCHAR2(1000)) AS USAGE,
+			   CAST(null AS VARCHAR2(4000)) as USAGE_CODESPACE,
+			   SURFACE_MATERIAL,
+			   CAST(null AS VARCHAR2(4000)) as SURFACE_MATERIAL_CODESPACE,
+			   LOD2_MULTI_SURFACE_ID, LOD3_MULTI_SURFACE_ID,
+			   LOD4_MULTI_SURFACE_ID, TRANSPORTATION_COMPLEX_ID
+			  FROM traffic_area_v2';
+    dbms_output.put_line('Traffic_Area table copy is completed.' || SYSTIMESTAMP);
+  END;
+
+  PROCEDURE fillTransportationComplex
+  IS
+  BEGIN
+    dbms_output.put_line('Transportation_Complex table is being copied...');
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO transportation_complex
+			  SELECT ID,
+			   (select o.id from OBJECTCLASS_v2 o where o.classname = t.type) AS OBJECTCLASS_ID,
+			   CAST(null AS VARCHAR2(256)) AS CLASS,
+			   CAST(null AS VARCHAR2(4000)) as CLASS_CODESPACE,
+			   CAST(replace(trim(FUNCTION),'' '',''--/\--'') AS VARCHAR2(1000)) AS FUNCTION,
+			   CAST(null AS VARCHAR2(4000)) as FUNCTION_CODESPACE,
+			   CAST(replace(trim(USAGE),'' '',''--/\--'') AS VARCHAR2(1000)) AS USAGE,
+			   CAST(null AS VARCHAR2(4000)) as USAGE_CODESPACE,
+			   LOD0_NETWORK, LOD1_MULTI_SURFACE_ID, LOD2_MULTI_SURFACE_ID,
+			   LOD3_MULTI_SURFACE_ID, LOD4_MULTI_SURFACE_ID
+			  FROM transportation_complex_v2 t';
+    dbms_output.put_line('Transportation_Complex table copy is completed.' || SYSTIMESTAMP);
+  END;
+
+  PROCEDURE fillWaterBodyTable
+  IS
+  BEGIN
+    dbms_output.put_line('WaterBody table is being copied...');
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO waterbody
+			  SELECT ID, 9 AS OBJECTCLASS_ID,
+			   CAST(replace(trim(CLASS),'' '',''--/\--'') AS VARCHAR2(256)) AS CLASS,
+			   CAST(null AS VARCHAR2(4000)) as CLASS_CODESPACE,
+			   CAST(replace(trim(FUNCTION),'' '',''--/\--'') AS VARCHAR2(1000)) AS FUNCTION,
+			   CAST(null AS VARCHAR2(4000)) as FUNCTION_CODESPACE,
+			   CAST(replace(trim(USAGE),'' '',''--/\--'') AS VARCHAR2(1000)) AS USAGE,
+			   CAST(null AS VARCHAR2(4000)) as USAGE_CODESPACE,
+			   LOD0_MULTI_CURVE, LOD1_MULTI_CURVE, LOD0_MULTI_SURFACE_ID,
+			   LOD1_MULTI_SURFACE_ID, LOD1_SOLID_ID, LOD2_SOLID_ID,
+			   LOD3_SOLID_ID, LOD4_SOLID_ID
+			  FROM waterbody_v2 t';
+    dbms_output.put_line('WaterBody table copy is completed.' || SYSTIMESTAMP);
+  END;
+
+  PROCEDURE fillWaterBoundarySurfaceTable
+  IS
+    -- variables --
+    CURSOR waterboundary_surface_v2 IS select * from waterboundary_surface_v2 order by id;
+    classID NUMBER(10);
+  BEGIN
+    dbms_output.put_line('WaterBoundary_Surface table is being copied...');
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO waterboundary_surface
+			  SELECT ID,
+			   (select o.id from OBJECTCLASS_v2 o where o.classname = w.type) AS OBJECTCLASS_ID,
+			   WATER_LEVEL, CAST(null AS VARCHAR2(4000)) as WATER_LEVEL_CODESPACE,
+			   LOD2_SURFACE_ID, LOD3_SURFACE_ID, LOD4_SURFACE_ID
+			  FROM waterboundary_surface_v2 w';
+    dbms_output.put_line('WaterBoundary_Surface table copy is completed.' || SYSTIMESTAMP);
+  END;
+
+  PROCEDURE fillWaterbodToWaterbndSrfTable
+  IS
+  BEGIN
+    dbms_output.put_line('Waterbod_To_Waterbnd_Srf table is being copied...');
+    EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO waterbod_to_waterbnd_srf
+			  SELECT * FROM waterbod_to_waterbnd_srf_v2';
+    dbms_output.put_line('Waterbod_To_Waterbnd_Srf table copy is completed.' || SYSTIMESTAMP);
+  END;
+
+  PROCEDURE updateSurfaceGeometryTable
+  IS
+  BEGIN
+    dbms_output.put_line('Surface_Geometry table is being updated...');
+    -- BUILDING
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (CITYOBJECT_ID) =
+			(select b.id from building_v2 b
+			 where b.LOD1_GEOMETRY_ID = s.id)
+			where exists
+			(select * from building_v2 b
+			 where b.LOD1_GEOMETRY_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (CITYOBJECT_ID) =
+			(select b.id from building_v2 b
+			 where b.LOD2_GEOMETRY_ID = s.id)
+			where exists
+			(select * from building_v2 b
+			 where b.LOD2_GEOMETRY_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (CITYOBJECT_ID) =
+			(select b.id from building_v2 b
+			 where b.LOD3_GEOMETRY_ID = s.id)
+			where exists
+			(select * from building_v2 b
+			 where b.LOD3_GEOMETRY_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (CITYOBJECT_ID) =
+			(select b.id from building_v2 b
+			 where b.LOD4_GEOMETRY_ID = s.id)
+			where exists
+			(select * from building_v2 b
+			 where b.LOD4_GEOMETRY_ID = s.id)';
+    -- ROOM
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select r.id from room_v2 r
+			 where r.LOD4_GEOMETRY_ID = s.id)
+			where exists
+			(select * from room_v2 r
+			 where r.LOD4_GEOMETRY_ID = s.id)';
+    -- BUILDING FURNITURE
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (CITYOBJECT_ID) =
+			(select b.id from building_furniture_v2 b
+			 where b.LOD4_GEOMETRY_ID = s.id)
+			where exists
+			(select * from building_furniture_v2 b
+			 where b.LOD4_GEOMETRY_ID = s.id)';
+    -- BUILDING INSTALLATION
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (CITYOBJECT_ID) =
+			(select b.id from building_installation_v2 b
+			 where b.LOD2_GEOMETRY_ID = s.id)
+			where exists
+			(select * from building_installation_v2 b
+			 where b.LOD2_GEOMETRY_ID = s.id)';
+
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (CITYOBJECT_ID) =
+			(select b.id from building_installation_v2 b
+			 where b.LOD3_GEOMETRY_ID = s.id)
+			where exists
+			(select * from building_installation_v2 b
+			 where b.LOD3_GEOMETRY_ID = s.id)';
+
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (CITYOBJECT_ID) =
+			(select b.id from building_installation_v2 b
+			 where b.LOD4_GEOMETRY_ID = s.id)
+			where exists
+			(select * from building_installation_v2 b
+			 where b.LOD4_GEOMETRY_ID = s.id)';
+    -- CITY FURNITURE
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select c.id from city_furniture_v2 c
+			 where c.LOD1_GEOMETRY_ID = s.id)
+			where exists
+			(select * from city_furniture_v2 c
+			 where c.LOD1_GEOMETRY_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select c.id from city_furniture_v2 c
+			 where c.LOD2_GEOMETRY_ID = s.id)
+			where exists
+			(select * from city_furniture_v2 c
+			 where c.LOD2_GEOMETRY_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select c.id from city_furniture_v2 c
+			 where c.LOD3_GEOMETRY_ID = s.id)
+			where exists
+			(select * from city_furniture_v2 c
+			 where c.LOD3_GEOMETRY_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select c.id from city_furniture_v2 c
+			 where c.LOD4_GEOMETRY_ID = s.id)
+			where exists
+			(select * from city_furniture_v2 c
+			 where c.LOD4_GEOMETRY_ID = s.id)';
+    -- CITY OBJECT GENERIC ATTRIBUTE
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select g.cityobject_id from cityobject_genericattrib_v2 g
+			 where g.SURFACE_GEOMETRY_ID = s.id)
+			where exists
+			(select * from cityobject_genericattrib_v2 g
+			 where g.SURFACE_GEOMETRY_ID = s.id)';
+    -- CITY OBJECT GROUP
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select c.id from cityobjectgroup_v2 c
+			 where c.SURFACE_GEOMETRY_ID = s.id)
+			where exists
+			(select * from cityobjectgroup_v2 c
+			 where c.SURFACE_GEOMETRY_ID = s.id)';
+    -- GENERIC CITY OBJECT
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select g.id from generic_cityobject_v2 g
+			 where g.LOD0_GEOMETRY_ID = s.id)
+			where exists
+			(select * from generic_cityobject_v2 g
+			 where g.LOD0_GEOMETRY_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select g.id from generic_cityobject_v2 g
+			 where g.LOD1_GEOMETRY_ID = s.id)
+			where exists
+			(select * from generic_cityobject_v2 g
+			 where g.LOD1_GEOMETRY_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select g.id from generic_cityobject_v2 g
+			 where g.LOD2_GEOMETRY_ID = s.id)
+			where exists
+			(select * from generic_cityobject_v2 g
+			 where g.LOD2_GEOMETRY_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select g.id from generic_cityobject_v2 g
+			 where g.LOD3_GEOMETRY_ID = s.id)
+			where exists
+			(select * from generic_cityobject_v2 g
+			 where g.LOD3_GEOMETRY_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select g.id from generic_cityobject_v2 g
+			 where g.LOD4_GEOMETRY_ID = s.id)
+			where exists
+			(select * from generic_cityobject_v2 g
+			 where g.LOD4_GEOMETRY_ID = s.id)';
+    -- LAND USE
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select l.id from land_use_v2 l
+			 where l.LOD0_MULTI_SURFACE_ID = s.id)
+			where exists
+			(select * from land_use_v2 l
+			 where l.LOD0_MULTI_SURFACE_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select l.id from land_use_v2 l
+			 where l.LOD1_MULTI_SURFACE_ID = s.id)
+			where exists
+			(select * from land_use_v2 l
+			 where l.LOD1_MULTI_SURFACE_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select l.id from land_use_v2 l
+			 where l.LOD2_MULTI_SURFACE_ID = s.id)
+			where exists
+			(select * from land_use_v2 l
+			 where l.LOD2_MULTI_SURFACE_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select l.id from land_use_v2 l
+			 where l.LOD3_MULTI_SURFACE_ID = s.id)
+			where exists
+			(select * from land_use_v2 l
+			 where l.LOD3_MULTI_SURFACE_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select l.id from land_use_v2 l
+			 where l.LOD4_MULTI_SURFACE_ID = s.id)
+			where exists
+			(select * from land_use_v2 l
+			 where l.LOD4_MULTI_SURFACE_ID = s.id)';
+    -- OPENING
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select o.id from opening_v2 o
+			 where o.LOD3_MULTI_SURFACE_ID = s.id)
+			where exists
+			(select * from opening_v2 o
+			 where o.LOD3_MULTI_SURFACE_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select o.id from opening_v2 o
+			 where o.LOD4_MULTI_SURFACE_ID = s.id)
+			where exists
+			(select * from opening_v2 o
+			 where o.LOD4_MULTI_SURFACE_ID = s.id)';
+    -- THEMATIC SURFACE
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select t.id from thematic_surface_v2 t
+			 where t.LOD2_MULTI_SURFACE_ID = s.id)
+			where exists
+			(select * from thematic_surface_v2 t
+			 where t.LOD2_MULTI_SURFACE_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select t.id from thematic_surface_v2 t
+			 where t.LOD3_MULTI_SURFACE_ID = s.id)
+			where exists
+			(select * from thematic_surface_v2 t
+			 where t.LOD3_MULTI_SURFACE_ID = s.id)';
+    EXECUTE IMMEDIATE 'update surface_geometry s
+			set (s.CITYOBJECT_ID) =
+			(select t.id from thematic_surface_v2 t
+			 where t.LOD4_MULTI_SURFACE_ID = s.id)
+			where exists
+			(select * from thematic_surface_v2 t
+			 where t.LOD4_MULTI_SURFACE_ID = s.id)';
+    -- PLANT COVER
     EXECUTE IMMEDIATE 'update surface_geometry s
 			set (s.CITYOBJECT_ID) =
 			(select p.id from plant_cover_v2 p
@@ -1170,109 +1196,7 @@ AS
 			where exists
 			(select * from plant_cover_v2 p
 			 where p.lod4_geometry_id = s.id)';
-    -- Insert the name and the description of the plant cover
-    -- into the cityobject table
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(p.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(p.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, p.description from plant_cover_v2 p
-			 where p.id = c.id)
-			where exists
-			(select * from plant_cover_v2 p
-			 where p.id = c.id)';
-    dbms_output.put_line('Plant_Cover table copy is completed.' || SYSTIMESTAMP);
-  END;
-
-  PROCEDURE fillReliefComponentTable
-  IS
-  BEGIN
-    dbms_output.put_line('Relief_Component table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE relief_component CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE relief_component
-			  AS
-			  SELECT ID,
-			    (select c.OBJECTCLASS_ID from CITYOBJECT c where c.id = r.id) AS OBJECTCLASS_ID,
-			    LOD, EXTENT
-			  FROM relief_component_v2 r';
-    EXECUTE IMMEDIATE 'ALTER TABLE relief_component ADD CONSTRAINT RELIEF_COMPONENT_PK PRIMARY KEY (ID) ENABLE';
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(r.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(r.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, r.description from relief_component_v2 r
-			 where r.id = c.id)
-			where exists
-			(select * from relief_component_v2 r
-			 where r.id = c.id)';
-    dbms_output.put_line('Relief_Component table copy is completed.' || SYSTIMESTAMP);
-  END;
-
-  PROCEDURE fillReliefFeatToRelCompTable
-  IS
-  BEGIN
-    dbms_output.put_line('Relief_Feat_To_Rel_Comp table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE relief_feat_to_rel_comp CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE relief_feat_to_rel_comp
-			  AS SELECT * FROM relief_feat_to_rel_comp_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE relief_feat_to_rel_comp ADD CONSTRAINT RELIEF_FEAT_TO_REL_COMP_PK PRIMARY KEY (RELIEF_COMPONENT_ID,RELIEF_FEATURE_ID) ENABLE';
-    dbms_output.put_line('Relief_Feat_To_Rel_Comp table copy is completed.' || SYSTIMESTAMP);
-  END;
-
-  PROCEDURE fillReliefFeatureTable
-  IS
-  BEGIN
-    dbms_output.put_line('Relief_Feature table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE relief_feature CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE relief_feature
-			  AS SELECT ID, 14 AS OBJECTCLASS_ID, LOD FROM relief_feature_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE relief_feature ADD CONSTRAINT RELIEF_FEATURE_PK PRIMARY KEY (ID) ENABLE';
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(r.name, '' --/\-- '', ''--/\--'') AS,
-				REPLACE(r.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, r.description from relief_feature_v2 r
-			 where r.id = c.id)
-			where exists
-			(select * from relief_feature_v2 r
-			 where r.id = c.id)';
-    dbms_output.put_line('Relief_Feature table copy is completed.' || SYSTIMESTAMP);
-  END;
-
-  PROCEDURE fillSolitaryVegetatObjectTable
-  IS
-  BEGIN
-    dbms_output.put_line('Solitary_Vegetat_Object table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE solitary_vegetat_object CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE solitary_vegetat_object
-				AS
-				SELECT ID, 7 AS OBJECTCLASS_ID,
-                CAST(replace(trim(CLASS),'' '',''--/\--'') AS VARCHAR2(256)) AS CLASS,
-				CAST(null AS VARCHAR2(4000)) as CLASS_CODESPACE,
-				CAST(replace(trim(FUNCTION),'' '',''--/\--'') AS VARCHAR2(1000)) AS FUNCTION,
-				CAST(null AS VARCHAR2(4000)) as FUNCTION_CODESPACE,
-				CAST(null AS VARCHAR2(1000)) AS USAGE,
-				CAST(null AS VARCHAR2(4000)) as USAGE_CODESPACE,
-				CAST(replace(SPECIES,'' '',''--/\--'') AS VARCHAR2(1000)) AS SPECIES,
-				CAST(null AS VARCHAR2(4000)) as SPECIES_CODESPACE,
-				HEIGHT, CAST(null AS VARCHAR2(4000)) as HEIGHT_UNIT,
-				TRUNC_DIAMETER AS TRUNK_DIAMETER,
-				CAST(null AS VARCHAR2(4000)) as TRUNK_DIAMETER_UNIT,
-				CROWN_DIAMETER, CAST(null AS VARCHAR2(4000)) as CROWN_DIAMETER_UNIT,
-				LOD1_GEOMETRY_ID AS LOD1_BREP_ID, LOD2_GEOMETRY_ID AS LOD2_BREP_ID,
-				LOD3_GEOMETRY_ID AS LOD3_BREP_ID, LOD4_GEOMETRY_ID AS LOD4_BREP_ID,
-				CAST(null AS SDO_GEOMETRY) as LOD1_OTHER_GEOM,
-				CAST(null AS SDO_GEOMETRY) as LOD2_OTHER_GEOM,
-				CAST(null AS SDO_GEOMETRY) as LOD3_OTHER_GEOM,
-				CAST(null AS SDO_GEOMETRY) as LOD4_OTHER_GEOM,
-				LOD1_IMPLICIT_REP_ID, LOD2_IMPLICIT_REP_ID, LOD3_IMPLICIT_REP_ID,
-				LOD4_IMPLICIT_REP_ID, LOD1_IMPLICIT_REF_POINT, LOD2_IMPLICIT_REF_POINT,
-				LOD3_IMPLICIT_REF_POINT, LOD4_IMPLICIT_REF_POINT,
-				LOD1_IMPLICIT_TRANSFORMATION, LOD2_IMPLICIT_TRANSFORMATION,
-				LOD3_IMPLICIT_TRANSFORMATION, LOD4_IMPLICIT_TRANSFORMATION
-				FROM solitary_vegetat_object_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE solitary_vegetat_object ADD CONSTRAINT SOLITARY_VEG_OBJECT_PK PRIMARY KEY (ID) ENABLE';
-    -- Update the cityobject_id entry in surface_geometry table
+    -- SOLITARY VEGETATION OBJECT
     EXECUTE IMMEDIATE 'update surface_geometry s
 			set (s.CITYOBJECT_ID) =
 			(select sv.id from solitary_vegetat_object_v2 sv
@@ -1301,49 +1225,7 @@ AS
 			where exists
 			(select * from solitary_vegetat_object_v2 sv
 			 where sv.lod4_geometry_id = s.id)';
-    -- Insert the name and the description of the solitary vegetation object
-    -- into the cityobject table
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(sv.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(sv.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, sv.description from solitary_vegetat_object_v2 sv
-			 where sv.id = c.id)
-			where exists
-			(select * from solitary_vegetat_object_v2 sv
-			 where sv.id = c.id)';
-    dbms_output.put_line('Solitary_Vegetat_Object table copy is completed.' || SYSTIMESTAMP);
-  END;
-
-  PROCEDURE fillTextureParamTable
-  IS
-  BEGIN
-    dbms_output.put_line('TextureParam table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE textureparam CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE textureparam
-			  AS
-			  SELECT SURFACE_GEOMETRY_ID, SURFACE_DATA_ID,
-			  IS_TEXTURE_PARAMETRIZATION, WORLD_TO_TEXTURE,
-			  citydb_migrate.convertVarcharToSDOGeom(TEXTURE_COORDINATES) AS TEXTURE_COORDINATES
-			  FROM textureparam_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE textureparam ADD CONSTRAINT TEXTUREPARAM_PK PRIMARY KEY (SURFACE_GEOMETRY_ID,SURFACE_DATA_ID) ENABLE';
-    dbms_output.put_line('TextureParam table copy is completed.' || SYSTIMESTAMP);
-  END;
-
-  PROCEDURE fillTinReliefTable
-  IS
-    CURSOR tin_relief_v2 IS select * from tin_relief_v2 order by id;
-  BEGIN
-    dbms_output.put_line('Tin Relief table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE tin_relief CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE tin_relief
-			  AS
-				SELECT ID, 16 AS OBJECTCLASS_ID, MAX_LENGTH,
-				CAST(null AS VARCHAR2(4000)) as MAX_LENGTH_UNIT,
-				STOP_LINES, BREAK_LINES, CONTROL_POINTS, SURFACE_GEOMETRY_ID
-			  FROM tin_relief_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE tin_relief ADD CONSTRAINT TIN_RELIEF_PK PRIMARY KEY (ID) ENABLE';
-    -- Update the cityobject_id entry in surface_geometry table
+    -- TIN RELIEF
     EXECUTE IMMEDIATE 'update surface_geometry s
 			set (s.CITYOBJECT_ID) =
 			(select t.id from tin_relief t
@@ -1351,36 +1233,7 @@ AS
 			where exists
 			(select * from tin_relief t
 			 where t.SURFACE_GEOMETRY_ID = s.id)';
-    dbms_output.put_line('Tin Relief table copy is completed.' || SYSTIMESTAMP);
-  END;
-
-  PROCEDURE fillTrafficAreaTable
-  IS
-    -- variables --
-    CURSOR traffic_area_v2 IS select * from traffic_area_v2 order by id;
-    classID NUMBER(10);
-  BEGIN
-    dbms_output.put_line('Traffic_Area table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE traffic_area CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE traffic_area
-			  AS
-			  SELECT ID,
-			   CASE is_auxiliary
-			   WHEN 1 THEN (select id from OBJECTCLASS_v2 where classname = ''AuxiliaryTrafficArea'')
-			   ELSE (select id from OBJECTCLASS_v2 where classname = ''TrafficArea'')
-			   END AS OBJECTCLASS_ID,
-			   CAST(null AS VARCHAR2(256)) AS CLASS,
-			   CAST(null AS VARCHAR2(4000)) as CLASS_CODESPACE,
-			   CAST(replace(trim(FUNCTION),'' '',''--/\--'') AS VARCHAR2(1000)) AS FUNCTION,
-			   CAST(null AS VARCHAR2(4000)) as FUNCTION_CODESPACE,
-			   CAST(replace(trim(USAGE),'' '',''--/\--'') AS VARCHAR2(1000)) AS USAGE,
-			   CAST(null AS VARCHAR2(4000)) as USAGE_CODESPACE,
-			   SURFACE_MATERIAL,
-			   CAST(null AS VARCHAR2(4000)) as SURFACE_MATERIAL_CODESPACE,
-			   LOD2_MULTI_SURFACE_ID, LOD3_MULTI_SURFACE_ID,
-			   LOD4_MULTI_SURFACE_ID, TRANSPORTATION_COMPLEX_ID
-			  FROM traffic_area_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE traffic_area ADD CONSTRAINT TRAFFIC_AREA_PK PRIMARY KEY (ID) ENABLE';
+    -- TRAFFIC AREA
     EXECUTE IMMEDIATE 'update surface_geometry s
 			set (s.CITYOBJECT_ID) =
 			(select t.id from traffic_area_v2 t
@@ -1402,37 +1255,7 @@ AS
 			where exists
 			(select * from traffic_area_v2 t
 			 where t.LOD4_MULTI_SURFACE_ID = s.id)';
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(t.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(t.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, t.description from traffic_area_v2 t
-			 where t.id = c.id)
-			where exists
-			(select * from traffic_area_v2 t
-			 where t.id = c.id)';
-    dbms_output.put_line('Traffic_Area table copy is completed.' || SYSTIMESTAMP);
-  END;
-
-  PROCEDURE fillTransportationComplex
-  IS
-  BEGIN
-    dbms_output.put_line('Transportation_Complex table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE transportation_complex CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE transportation_complex
-			  AS
-			  SELECT ID,
-			   (select o.id from OBJECTCLASS_v2 o where o.classname = t.type) AS OBJECTCLASS_ID,
-			   CAST(null AS VARCHAR2(256)) AS CLASS,
-			   CAST(null AS VARCHAR2(4000)) as CLASS_CODESPACE,
-			   CAST(replace(trim(FUNCTION),'' '',''--/\--'') AS VARCHAR2(1000)) AS FUNCTION,
-			   CAST(null AS VARCHAR2(4000)) as FUNCTION_CODESPACE,
-			   CAST(replace(trim(USAGE),'' '',''--/\--'') AS VARCHAR2(1000)) AS USAGE,
-			   CAST(null AS VARCHAR2(4000)) as USAGE_CODESPACE,
-			   LOD0_NETWORK, LOD1_MULTI_SURFACE_ID, LOD2_MULTI_SURFACE_ID,
-			   LOD3_MULTI_SURFACE_ID, LOD4_MULTI_SURFACE_ID
-			  FROM transportation_complex_v2 t';
-    EXECUTE IMMEDIATE 'ALTER TABLE transportation_complex ADD CONSTRAINT TRANSPORTATION_COMPLEX_PK PRIMARY KEY (ID) ENABLE';
+    -- TRANSPORTATION COMPLEX
     EXECUTE IMMEDIATE 'update surface_geometry s
 			set (s.CITYOBJECT_ID) =
 			(select t.id from transportation_complex_v2 t
@@ -1461,38 +1284,7 @@ AS
 			where exists
 			(select * from transportation_complex_v2 t
 			 where t.LOD4_MULTI_SURFACE_ID = s.id)';
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(t.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(t.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, t.description from transportation_complex_v2 t
-			 where t.id = c.id)
-			where exists
-			(select * from transportation_complex_v2 t
-			 where t.id = c.id)';
-    dbms_output.put_line('Transportation_Complex table copy is completed.' || SYSTIMESTAMP);
-  END;
-
-  PROCEDURE fillWaterBodyTable
-  IS
-  BEGIN
-    dbms_output.put_line('WaterBody table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE waterbody CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE waterbody
-			  AS
-			  SELECT ID, 9 AS OBJECTCLASS_ID,
-			   CAST(replace(trim(CLASS),'' '',''--/\--'') AS VARCHAR2(256)) AS CLASS,
-			   CAST(null AS VARCHAR2(4000)) as CLASS_CODESPACE,
-			   CAST(replace(trim(FUNCTION),'' '',''--/\--'') AS VARCHAR2(1000)) AS FUNCTION,
-			   CAST(null AS VARCHAR2(4000)) as FUNCTION_CODESPACE,
-			   CAST(replace(trim(USAGE),'' '',''--/\--'') AS VARCHAR2(1000)) AS USAGE,
-			   CAST(null AS VARCHAR2(4000)) as USAGE_CODESPACE,
-			   LOD0_MULTI_CURVE, LOD1_MULTI_CURVE, LOD0_MULTI_SURFACE_ID,
-			   LOD1_MULTI_SURFACE_ID, LOD1_SOLID_ID, LOD2_SOLID_ID,
-			   LOD3_SOLID_ID, LOD4_SOLID_ID
-			  FROM waterbody_v2 t';
-    EXECUTE IMMEDIATE 'ALTER TABLE waterbody ADD CONSTRAINT WATERBODY_PK PRIMARY KEY (ID) ENABLE';
-    -- Update the cityobject_id entry in surface_geometry table
+    -- WATER BODY
     EXECUTE IMMEDIATE 'update surface_geometry s
 			set (s.CITYOBJECT_ID) =
 			(select w.id from waterbody_v2 w
@@ -1535,37 +1327,7 @@ AS
 			where exists
 			(select * from waterbody_v2 w
 			 where w.LOD4_SOLID_ID = s.id)';
-    -- Insert the name and the description of the waterbody
-    -- into the cityobject table
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(w.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(w.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, w.description from waterbody_v2 w
-			 where w.id = c.id)
-			where exists
-			(select * from waterbody_v2 w
-			 where w.id = c.id)';
-    dbms_output.put_line('WaterBody table copy is completed.' || SYSTIMESTAMP);
-  END;
-
-  PROCEDURE fillWaterBoundarySurfaceTable
-  IS
-    -- variables --
-    CURSOR waterboundary_surface_v2 IS select * from waterboundary_surface_v2 order by id;
-    classID NUMBER(10);
-  BEGIN
-    dbms_output.put_line('WaterBoundary_Surface table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE waterboundary_surface CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE waterboundary_surface
-			  AS
-			  SELECT ID,
-			   (select o.id from OBJECTCLASS_v2 o where o.classname = w.type) AS OBJECTCLASS_ID,
-			   WATER_LEVEL, CAST(null AS VARCHAR2(4000)) as WATER_LEVEL_CODESPACE,
-			   LOD2_SURFACE_ID, LOD3_SURFACE_ID, LOD4_SURFACE_ID
-			  FROM waterboundary_surface_v2 w';
-    EXECUTE IMMEDIATE 'ALTER TABLE waterboundary_surface ADD CONSTRAINT WATERBOUNDARY_SURFACE_PK PRIMARY KEY (ID) ENABLE';
-    -- Update the cityobject_id entry in surface_geometry table
+    -- WATER BOUNDARY SURFACE
     EXECUTE IMMEDIATE 'update surface_geometry s
 			set (s.CITYOBJECT_ID) =
 			(select w.id from waterboundary_surface_v2 w
@@ -1587,35 +1349,7 @@ AS
 			where exists
 			(select * from waterboundary_surface_v2 w
 			 where w.LOD4_SURFACE_ID = s.id)';
-    -- Insert the name and the description of the water boundary surface
-    -- into the cityobject table
-    EXECUTE IMMEDIATE 'update cityobject c
-			set (c.name,c.name_codespace,c.description) =
-			(select
-				REPLACE(w.name, '' --/\-- '', ''--/\--'') AS name,
-				REPLACE(w.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, w.description from waterboundary_surface_v2 w
-			 where w.id = c.id)
-			where exists
-			(select * from waterboundary_surface_v2 w
-			 where w.id = c.id)';
-    dbms_output.put_line('WaterBoundary_Surface table copy is completed.' || SYSTIMESTAMP);
-  END;
-
-  PROCEDURE fillWaterbodToWaterbndSrfTable
-  IS
-  BEGIN
-    dbms_output.put_line('Waterbod_To_Waterbnd_Srf table is being copied...');
-    EXECUTE IMMEDIATE 'DROP TABLE waterbod_to_waterbnd_srf CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'CREATE TABLE waterbod_to_waterbnd_srf
-			  AS SELECT * FROM waterbod_to_waterbnd_srf_v2';
-    EXECUTE IMMEDIATE 'ALTER TABLE waterbod_to_waterbnd_srf ADD CONSTRAINT WATERBOD_TO_WATERBND_PK PRIMARY KEY (WATERBOUNDARY_SURFACE_ID,WATERBODY_ID) ENABLE';
-    dbms_output.put_line('Waterbod_To_Waterbnd_Srf table copy is completed.' || SYSTIMESTAMP);
-  END;
-
-  PROCEDURE updateSurfaceGeoTableCityObj
-  IS
-  BEGIN
-    dbms_output.put_line('Surface_Geometry table is being updated...');
+    -- CITYOBJECT
     EXECUTE IMMEDIATE 'update surface_geometry s
 			set (s.CITYOBJECT_ID) =
 			(select sv.CITYOBJECT_ID from surface_geometry sv
@@ -1638,9 +1372,199 @@ AS
 			implicit_geometry i, surface_geometry sg2
 			where i.relative_brep_id = sg2.id
 			and sg2.is_xlink = 0)';
+
     dbms_output.put_line('Surface_Geometry table is updated.' || SYSTIMESTAMP);
   END;
 
+  PROCEDURE updateCityObjectTable
+  IS
+  BEGIN
+    dbms_output.put_line('Cityobject table is being updated...');
+    -- BUILDING
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(b.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(b.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace,
+				b.description
+				from building_v2 b
+			 where b.id = c.id)
+			where exists
+			(select * from building_v2 b
+			 where b.id = c.id)';
+    -- ROOM
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(r.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(r.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, r.description from room_v2 r
+			 where r.id = c.id)
+			where exists
+			(select * from room_v2 r
+			 where r.id = c.id)';
+    -- BUILDING FURNITURE
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(b.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(b.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, b.description from building_furniture_v2 b
+			 where b.id = c.id)
+			where exists
+			(select * from building_furniture_v2 b
+			 where b.id = c.id)';
+    -- BUILDING INSTALLATION
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(b.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(b.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, b.description from building_installation_v2 b
+			 where b.id = c.id)
+			where exists
+			(select * from building_installation_v2 b
+			 where b.id = c.id)';
+    -- CITY FURNITURE
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(cf.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(cf.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, cf.description from city_furniture_v2 cf
+			 where cf.id = c.id)
+			where exists
+			(select * from city_furniture_v2 cf
+			 where cf.id = c.id)';
+    -- CITY OBJECT GROUP
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(co.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(co.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, co.description from cityobjectgroup_v2 co
+			 where co.id = c.id)
+			where exists
+			(select * from cityobjectgroup_v2 co
+			 where co.id = c.id)';
+    -- GENERIC CITY OBJECT
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(g.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(g.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, g.description from generic_cityobject_v2 g
+			 where g.id = c.id)
+			where exists
+			(select * from generic_cityobject_v2 g
+			 where g.id = c.id)';
+    -- LAND USE
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(l.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(l.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, l.description from land_use_v2 l
+			 where l.id = c.id)
+			where exists
+			(select * from land_use_v2 l
+			 where l.id = c.id)';
+    -- OPENING
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(o.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(o.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, o.description from opening_v2 o
+			 where o.id = c.id)
+			where exists
+			(select * from opening_v2 o
+			 where o.id = c.id)';
+    -- THEMATIC SURFACE
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(t.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(t.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, t.description from thematic_surface_v2 t
+			 where t.id = c.id)
+			where exists
+			(select * from thematic_surface_v2 t
+			 where t.id = c.id)';
+    -- PLANT COVER
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(p.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(p.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, p.description from plant_cover_v2 p
+			 where p.id = c.id)
+			where exists
+			(select * from plant_cover_v2 p
+			 where p.id = c.id)';
+    -- RELIEF COMPONENT
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(r.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(r.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, r.description from relief_component_v2 r
+			 where r.id = c.id)
+			where exists
+			(select * from relief_component_v2 r
+			 where r.id = c.id)';
+    -- RELIEF FEATURE
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(r.name, '' --/\-- '', ''--/\--'') AS,
+				REPLACE(r.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, r.description from relief_feature_v2 r
+			 where r.id = c.id)
+			where exists
+			(select * from relief_feature_v2 r
+			 where r.id = c.id)';
+    -- SOLITARY VEGETATION OBJECT
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(sv.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(sv.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, sv.description from solitary_vegetat_object_v2 sv
+			 where sv.id = c.id)
+			where exists
+			(select * from solitary_vegetat_object_v2 sv
+			 where sv.id = c.id)';
+    -- TRAFFIC AREA
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(t.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(t.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, t.description from traffic_area_v2 t
+			 where t.id = c.id)
+			where exists
+			(select * from traffic_area_v2 t
+			 where t.id = c.id)';
+    -- TRANSPORTATION COMPLEX
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(t.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(t.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, t.description from transportation_complex_v2 t
+			 where t.id = c.id)
+			where exists
+			(select * from transportation_complex_v2 t
+			 where t.id = c.id)';
+    -- WATER BODY
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(w.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(w.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, w.description from waterbody_v2 w
+			 where w.id = c.id)
+			where exists
+			(select * from waterbody_v2 w
+			 where w.id = c.id)';
+    -- WATER BOUNDARY SURFACE
+    EXECUTE IMMEDIATE 'update cityobject c
+			set (c.name,c.name_codespace,c.description) =
+			(select
+				REPLACE(w.name, '' --/\-- '', ''--/\--'') AS name,
+				REPLACE(w.name_codespace, '' --/\-- '', ''--/\--'') AS name_codespace, w.description from waterboundary_surface_v2 w
+			 where w.id = c.id)
+			where exists
+			(select * from waterboundary_surface_v2 w
+			 where w.id = c.id)';
+    dbms_output.put_line('Cityobject table is updated.' || SYSTIMESTAMP);
+  END;
+    
   PROCEDURE updateSolidGeometry
   IS
     column_srid NUMBER;
@@ -1754,8 +1678,11 @@ AS
     CURSOR user_sequences_cursor IS
       select SUBSTR(sequence_name, 0,
       INSTR(sequence_name, '_SEQ')-1) as sequencename
-      from user_sequences order by sequence_name;
-    sequence_val NUMBER(10) := 0;
+      from user_sequences
+      where sequence_name like '%_SEQ'
+      order by sequence_name;
+    max_id NUMBER(10) := 0;
+    seq_value NUMBER(10) := 0;
     corrected_table_name VARCHAR2(100);
     query_str VARCHAR2(1000);
     table_exists NUMBER(1) := 0;
@@ -1774,13 +1701,16 @@ AS
         IF (column_exists != 0) THEN
           IF (table_exists = 1) THEN
             query_str := 'select max(id) from '|| user_sequences.sequencename;
-            EXECUTE IMMEDIATE query_str into sequence_val;
-            -- dbms_output.put_line(user_sequences.sequencename || ':' || sequence_val);
-            IF (sequence_val IS NOT NULL) THEN
-              -- dbms_output.put_line('DROP SEQUENCE ' || user_sequences.sequencename || '_SEQ');
-              -- dbms_output.put_line('CREATE SEQUENCE ' || user_sequences.sequencename || '_SEQ START WITH ' || (sequence_val + 1));
-              EXECUTE IMMEDIATE 'DROP SEQUENCE ' || user_sequences.sequencename || '_SEQ';
-              EXECUTE IMMEDIATE 'CREATE SEQUENCE ' || user_sequences.sequencename || '_SEQ START WITH ' || (sequence_val + 1);
+            EXECUTE IMMEDIATE query_str into max_id;
+            -- dbms_output.put_line(user_sequences.sequencename || ':' || max_id);
+            IF (max_id IS NOT NULL) THEN
+              EXECUTE IMMEDIATE 'select ' || user_sequences.sequencename || '_SEQ.nextval from dual' into seq_value;
+              IF (seq_value = 1) THEN
+                EXECUTE IMMEDIATE 'select ' || user_sequences.sequencename || '_SEQ.nextval from dual' into seq_value;
+              END IF;
+              EXECUTE IMMEDIATE 'alter sequence ' || user_sequences.sequencename || '_SEQ increment by ' || (seq_value-1)*-1;
+              EXECUTE IMMEDIATE 'alter sequence ' || user_sequences.sequencename || '_SEQ increment by ' || max_id;
+              EXECUTE IMMEDIATE 'alter sequence ' || user_sequences.sequencename || '_SEQ increment by 1';
             END IF;
           ELSE
              query_str := 'select table_name from user_tables where table_name
@@ -1791,18 +1721,22 @@ AS
 
              EXECUTE IMMEDIATE query_str into corrected_table_name;
              query_str := 'select max(id) from '|| corrected_table_name;
-             EXECUTE IMMEDIATE query_str into sequence_val;
-             -- dbms_output.put_line(user_sequences.sequencename || ':' || sequence_val);
-             IF (sequence_val IS NOT NULL) THEN
-              -- dbms_output.put_line('DROP SEQUENCE ' || user_sequences.sequencename || '_SEQ');
-              -- dbms_output.put_line('CREATE SEQUENCE ' || user_sequences.sequencename || '_SEQ START WITH ' || (sequence_val + 1));
-              EXECUTE IMMEDIATE 'DROP SEQUENCE ' || user_sequences.sequencename || '_SEQ';
-              EXECUTE IMMEDIATE 'CREATE SEQUENCE ' || user_sequences.sequencename || '_SEQ START WITH ' || (sequence_val + 1);
+             EXECUTE IMMEDIATE query_str into max_id;
+             -- dbms_output.put_line(user_sequences.sequencename || ':' || max_id);
+             IF (max_id IS NOT NULL) THEN
+              EXECUTE IMMEDIATE 'select ' || user_sequences.sequencename || '_SEQ.nextval from dual' into seq_value;
+              IF (seq_value = 1) THEN
+                EXECUTE IMMEDIATE 'select ' || user_sequences.sequencename || '_SEQ.nextval from dual' into seq_value;
+              END IF;
+              EXECUTE IMMEDIATE 'alter sequence ' || user_sequences.sequencename || '_SEQ increment by ' || (seq_value-1)*-1;
+              EXECUTE IMMEDIATE 'alter sequence ' || user_sequences.sequencename || '_SEQ increment by ' || max_id;
+              EXECUTE IMMEDIATE 'alter sequence ' || user_sequences.sequencename || '_SEQ increment by 1';
              END IF;
           END IF;
         END IF;
       END IF;
-      sequence_val := 0;
+      max_id := 0;
+      seq_value := 0;
       query_str := 0;
       table_exists := 0;
       corrected_table_name := '';

@@ -84,9 +84,30 @@ BEGIN
   dbms_output.put_line('Indexes are being dropped...');	
 END;
 /
-@@DROP_INDEXES_V4.sql;
+BEGIN
+  FOR ind IN
+    (SELECT index_name FROM user_indexes
+       WHERE uniqueness = 'NONUNIQUE')
+  LOOP
+    EXECUTE IMMEDIATE 'DROP INDEX '||ind.index_name;
+  END LOOP;
+END;
+/
 BEGIN
   dbms_output.put_line('Indexes are dropped.');	
+END;
+/
+
+
+-- Disable foreign key constraints
+BEGIN
+  dbms_output.put_line('Disabling foreign key constraints...');	
+END;
+/
+EXECUTE citydb_constraint.set_enabled_schema_fkeys(FALSE, USER);
+/
+BEGIN
+  dbms_output.put_line('Foreign key constraints disabled.');	
 END;
 /
 
@@ -165,7 +186,9 @@ EXECUTE CITYDB_MIGRATE.fillTrafficAreaTable();
 EXECUTE CITYDB_MIGRATE.fillWaterBodyTable();
 EXECUTE CITYDB_MIGRATE.fillWaterBoundarySurfaceTable();
 EXECUTE CITYDB_MIGRATE.fillWaterbodToWaterbndSrfTable();
-EXECUTE CITYDB_MIGRATE.updateSurfaceGeoTableCityObj();
+COMMIT;
+EXECUTE CITYDB_MIGRATE.updateSurfaceGeometryTable();
+EXECUTE CITYDB_MIGRATE.updateCityObjectTable();
 
 BEGIN
   -- Update SolidGeometry if oracle version greater than 10.x 
@@ -187,6 +210,18 @@ END;
 EXECUTE CITYDB_MIGRATE.updateSequences(); 
 BEGIN
   dbms_output.put_line('Sequence update is completed.');	
+END;
+/
+
+-- Enable foreign key constraints
+BEGIN
+  dbms_output.put_line('Enabling foreign key constraints...');	
+END;
+/
+EXECUTE citydb_constraint.set_enabled_schema_fkeys(TRUE, USER);
+/
+BEGIN
+  dbms_output.put_line('Foreign key constraints enabled.');	
 END;
 /
 
