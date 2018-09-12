@@ -60,20 +60,6 @@ BEGIN
 END;
 /
 
-DECLARE
-  schema_name VARCHAR2(30) := upper('&V2USER');
-BEGIN
-  dbms_output.put_line('Creating Synonyms...');
-
-  FOR R IN (SELECT owner, table_name FROM all_tables WHERE owner=schema_name) LOOP
-    EXECUTE IMMEDIATE 'CREATE SYNONYM '||R.table_name||'_v2 FOR "'||schema_name||'".'||R.table_name;
-	--dbms_output.put_line('CREATE SYNONYM '||R.table_name||'_v2 FOR "'||schema_name||'".'||R.table_name);
-  END LOOP;
-
-  dbms_output.put_line('Synonyms created.');
-END;
-/
-
 BEGIN
   dbms_output.put_line('Installing the package with functions and procedures for migration...');	
 END;
@@ -97,7 +83,6 @@ BEGIN
   dbms_output.put_line('Indexes are dropped.');	
 END;
 /
-
 
 -- Disable foreign key constraints
 BEGIN
@@ -141,54 +126,56 @@ BEGIN
   dbms_output.put_line('Data are being transferred into the tables...');	
 END;
 /
-EXECUTE CITYDB_MIGRATE.fillSurfaceGeometryTable();
-EXECUTE CITYDB_MIGRATE.fillCityObjectTable();
-EXECUTE CITYDB_MIGRATE.fillCityModelTable();
-EXECUTE CITYDB_MIGRATE.fillAddressTable();
-EXECUTE CITYDB_MIGRATE.fillBuildingTable();
-EXECUTE CITYDB_MIGRATE.fillAddressToBuildingTable();
-EXECUTE CITYDB_MIGRATE.fillAppearanceTable();
-EXECUTE CITYDB_MIGRATE.fillSurfaceDataTable('&TEXOP');
-EXECUTE CITYDB_MIGRATE.fillAppearToSurfaceDataTable();
-EXECUTE CITYDB_MIGRATE.fillBreaklineReliefTable();
-EXECUTE CITYDB_MIGRATE.fillRoomTable();
-EXECUTE CITYDB_MIGRATE.fillBuildingFurnitureTable();
-EXECUTE CITYDB_MIGRATE.fillBuildingInstallationTable();
-EXECUTE CITYDB_MIGRATE.fillImplicitGeometryTable();
-EXECUTE CITYDB_MIGRATE.fillCityFurnitureTable();
-EXECUTE CITYDB_MIGRATE.fillCityObjectGenAttrTable();
-EXECUTE CITYDB_MIGRATE.fillCityObjectMemberTable();
-EXECUTE CITYDB_MIGRATE.fillCityObjectGroupTable();
-EXECUTE CITYDB_MIGRATE.fillExternalReferenceTable();
-EXECUTE CITYDB_MIGRATE.fillGeneralizationTable();
-EXECUTE CITYDB_MIGRATE.fillGenericCityObjectTable();
-EXECUTE CITYDB_MIGRATE.fillGroupToCityObject();
-EXECUTE CITYDB_MIGRATE.fillLandUseTable();
-EXECUTE CITYDB_MIGRATE.fillMassPointReliefTable();
-EXECUTE CITYDB_MIGRATE.fillOpeningTable();
-EXECUTE CITYDB_MIGRATE.fillThematicSurfaceTable();
-EXECUTE CITYDB_MIGRATE.fillOpeningToThemSurfaceTable();
-EXECUTE CITYDB_MIGRATE.fillPlantCoverTable();
-EXECUTE CITYDB_MIGRATE.fillReliefComponentTable();
+EXECUTE CITYDB_MIGRATE.fillSurfaceGeometryTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillCityObjectTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillCityModelTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillAddressTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillBuildingTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillAddressToBuildingTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillAppearanceTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillSurfaceDataTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillTexImageTable('&TEXOP', upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillAppearToSurfaceDataTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillBreaklineReliefTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillRoomTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillBuildingFurnitureTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillBuildingInstallationTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillImplicitGeometryTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillCityFurnitureTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillCityObjectGenAttrTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillCityObjectMemberTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillCityObjectGroupTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillExternalReferenceTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillGeneralizationTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillGenericCityObjectTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillGroupToCityObject(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillLandUseTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillMassPointReliefTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillOpeningTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillThematicSurfaceTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillOpeningToThemSurfaceTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillPlantCoverTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillReliefComponentTable(upper('&V2USER'));
 BEGIN
   IF :GEORASTER_SUPPORT <> 0 THEN
-    EXECUTE IMMEDIATE 'CALL CITYDB_MIGRATE_GEORASTER.fillRasterReliefTable()';  
+    EXECUTE IMMEDIATE 'CALL CITYDB_MIGRATE_GEORASTER.fillRasterReliefTable(:1)' USING upper('&V2USER');  
   END IF;
 END;
 /
-EXECUTE CITYDB_MIGRATE.fillReliefFeatureTable();
-EXECUTE CITYDB_MIGRATE.fillReliefFeatToRelCompTable();
-EXECUTE CITYDB_MIGRATE.fillSolitaryVegetatObjectTable();
-EXECUTE CITYDB_MIGRATE.fillTextureParamTable();
-EXECUTE CITYDB_MIGRATE.fillTinReliefTable();
-EXECUTE CITYDB_MIGRATE.fillTransportationComplex();
-EXECUTE CITYDB_MIGRATE.fillTrafficAreaTable();
-EXECUTE CITYDB_MIGRATE.fillWaterBodyTable();
-EXECUTE CITYDB_MIGRATE.fillWaterBoundarySurfaceTable();
-EXECUTE CITYDB_MIGRATE.fillWaterbodToWaterbndSrfTable();
+EXECUTE CITYDB_MIGRATE.fillReliefFeatureTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillReliefFeatToRelCompTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillSolitaryVegetatObjectTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillTextureParamTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillTinReliefTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillTransportationComplex(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillTrafficAreaTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillWaterBodyTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillWaterBoundarySurfaceTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.fillWaterbodToWaterbndSrfTable(upper('&V2USER'));
 COMMIT;
-EXECUTE CITYDB_MIGRATE.updateSurfaceGeometryTable();
-EXECUTE CITYDB_MIGRATE.updateCityObjectTable();
+EXECUTE CITYDB_MIGRATE.updateSurfaceDataTable('&TEXOP', upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.updateSurfaceGeometryTable(upper('&V2USER'));
+EXECUTE CITYDB_MIGRATE.updateCityObjectTable(upper('&V2USER'));
 
 BEGIN
   -- Update SolidGeometry if oracle version greater than 10.x 
@@ -254,10 +241,6 @@ BEGIN
   IF :GEORASTER_SUPPORT <> 0 THEN
     EXECUTE IMMEDIATE 'DROP PACKAGE CITYDB_MIGRATE_GEORASTER';
   END IF;
-  FOR R IN (SELECT synonym_name FROM user_synonyms) LOOP
-    EXECUTE IMMEDIATE 'DROP SYNONYM '||R.synonym_name;
-    -- dbms_output.put_line('drop synonym '||R.synonym_name);
-  END LOOP;
 END;
 /
 BEGIN

@@ -27,37 +27,23 @@
 
 CREATE OR REPLACE PACKAGE citydb_migrate_georaster
 AS
-  PROCEDURE fillRasterReliefTable;
+  PROCEDURE fillRasterReliefTable(v2_schema_name VARCHAR2 := USER);
 END citydb_migrate_georaster;
 /
 
 CREATE OR REPLACE PACKAGE BODY citydb_migrate_georaster
 AS
-  type ref_cursor is ref cursor;
- 
-  PROCEDURE fillRasterReliefTable
+  PROCEDURE fillRasterReliefTable(v2_schema_name VARCHAR2 := USER)
   IS
-    -- variables --
-    CURSOR raster_relief_v2 IS select * from raster_relief_v2 order by id;
-    gridID NUMBER(10);
   BEGIN
     dbms_output.put_line('Raster_Relief table is being copied...');
-    FOR raster_relief IN raster_relief_v2 LOOP
-        -- Add the Raster Property into the Grid Coverage Table
-        IF (raster_relief.RASTERPROPERTY IS NOT NULL) THEN
-           gridID := GRID_COVERAGE_SEQ.NEXTVAL;
-           insert into grid_coverage
-           (ID,RASTERPROPERTY)
-           values
-           (gridID,raster_relief.RASTERPROPERTY) ;
-        END IF;
-
-        -- Is the raster relief id the same as raster component id?
-        insert into raster_relief
-        (ID, OBJECTCLASS_ID, COVERAGE_ID)
-        values
-        (raster_relief.ID, 19, gridID);
-    END LOOP;
+    -- fill grid_coverage table
+    EXECUTE IMMEDIATE 'INSERT INTO grid_coverage
+      SELECT id, rasterproperty FROM '||v2_schema_name||'.raster_relief ORDER BY id';
+    -- fill raster_relief table
+    EXECUTE IMMEDIATE 'INSERT INTO raster_relief
+      SELECT id, 19 AS objectclass_id, CAST(null AS VARCHAR2(1000)) AS uri, id AS coverage_id
+        FROM '||v2_schema_name||'.raster_relief ORDER BY id';
     dbms_output.put_line('Raster_Relief table copy is completed.');
   END;
 
