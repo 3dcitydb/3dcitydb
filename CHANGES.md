@@ -51,5 +51,9 @@ Change Log
 * Oracle: Do not delete spatial metadata when spatial index is not valid.
 * Oracle: Added schema_name parameter to `get_dim` function.
 
+##### Fixes
+* Fixed envelope calculation for ReliefFeature. [#36](https://github.com/3dcitydb/3dcitydb/issues/36)
+* Fixed `CREATE_DB` error due to disabled GeoRaster support under Oracle Spatial 12.1.0.2. [#10](https://github.com/3dcitydb/3dcitydb/issues/10)
+
 ##### Miscellaneous 
 * [3DCityDB Docker images](https://github.com/tum-gis/3dcitydb-docker-postgis) to support continuous integration workflows.
