@@ -35,7 +35,7 @@ Change Log
 ##### Additions
 * New metadata tables `ADE`, `SCHEMA`, `SCHEMA_REFERENCING` and `SCHEMA_TO_OBJECTCLASS` for registering CityGML ADEs.
 * New prefilled metadata table `AGGREGATION_INFO` that supports the automatic generation of `DELETE` and `ENVELOPE` scripts.
-* Added batch (Windows) and shell (UNIX, macOS) scripts for interactively setting up or dropping a 3DCityDB instance o both PostgreSQL and Oracle. The new shell scripts provide improved user dialogs. 
+* Added batch (Windows) and shell (UNIX, macOS) scripts for interactively setting up or dropping a 3DCityDB instance of both PostgreSQL and Oracle. The new shell scripts provide improved user dialogs. 
 * Function `objectclass_id_to_table_name` now has a counterpart: `table_name_to_objectclass_ids` returning an array of objectclass ids (`CITYDB_OBJCLASS` package in Oracle, part of a data schema in PostgreSQL).
 * New database procedures to enable/disable foreign key constraints to speed up bulk write operations (`CITYDB_CONSTRAINT` package in Oracle, part of the `citydb_pkg` schema in PostgreSQL).
 * New SQL script to create additional 3DCityDB data schemas in one database (PostgreSQL).
