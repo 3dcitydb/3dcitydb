@@ -17,8 +17,7 @@ Change Log
   - `schema_name` parameter has been removed from `DELETE` and `ENVELOPE` scripts.
   - Under PostgreSQL these scripts (as well as the `INDEX_TABLE`) are now part of a data schema (e.g. `citydb`).
 * Removed the `CITYDB_DELETE_BY_LINEAGE` package. The only function left is `del_cityobjects_by_lineage` which is now part of the `DELETE` package.
-* Changed delete rule of either one or both foreign keys in link tables to `ON DELETE CASCADE` to produce better delete scripts.
-* Removed foreign key index from column which comes first in the primary key index.
+* Changed delete rule of foreign keys in link tables to `ON DELETE CASCADE` to produce better delete scripts.
 * Moved `update_schema_constraints` and `update_table_constraint` procedures into new `CITYDB_CONSTRAINT` package and renamed them to `set_schema_fkey_delete_rule` and `set_fkey_delete_rule`.
   - Changed data type for `on_delete_param` to `CHAR` as only one letter is needed to set a new delete rule: 'a' for `ON DELETE NO ACTION`, 'n' for `ON DELETE SET NULL`, 'c' for `ON DELETE CASCADE` or (PostgreSQL-only) 'r' for `ON DELETE RESTRICT`.
 * Moved `objectclass_id_to_table_name` function to new `CITYDB_OBJCLASS` package.
