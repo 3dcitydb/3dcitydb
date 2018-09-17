@@ -55,4 +55,4 @@ Change Log
 * Fixed `CREATE_DB` error due to disabled GeoRaster support under Oracle Spatial 12.1.0.2. [#10](https://github.com/3dcitydb/3dcitydb/issues/10)
 
 ##### Miscellaneous 
-* [3DCityDB Docker images](https://github.com/tum-gis/3dcitydb-docker-postgis) to support continuous integration workflows.
+* [3DCityDB Docker images](https://github.com/tum-gis/3dcitydb-docker-postgis) are now available for a range of 3DCityDB versions to support continuous integration workflows.
