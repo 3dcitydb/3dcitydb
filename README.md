@@ -34,20 +34,18 @@ Note that releases of the software before version 3.3.0 continue to be licensed 
 
 Latest release
 --------------
-The latest stable release of the 3D City Database is 3.3.1.
+The latest stable release of the 3D City Database is 4.0.
 
-Download the SQL scripts and documentation [here](https://github.com/3dcitydb/3dcitydb/releases/download/v3.3.1/3DCityDB-3.3.1.zip). Previous releases are available from the [releases section](https://github.com/3dcitydb/3dcitydb/releases).
-
-The next release is planned for september 2018 and will be a new major version (v4.0.0).
+Download the SQL scripts and documentation [here](https://github.com/3dcitydb/3dcitydb/releases/download/v4.0.0/3DCityDB-4.0.0.zip). Previous releases are available from the [releases section](https://github.com/3dcitydb/3dcitydb/releases).
 
 System requirements
 -------------------
 * Oracle DBMS >= 10g R2 with Spatial or Locator option
 * PostgreSQL DBMS >= 9.3 with PostGIS extension >= 2.0
 
-Documentation and Literature
+Documentation and literature
 ----------------------------
-A complete and comprehensive documentation on the 3D City Database and its tools is available with the software and [online](http://www.3dcitydb.org/3dcitydb/documentation/).
+A complete and comprehensive documentation on the 3D City Database and its tools is available with the software and [online](https://www.3dcitydb.org/3dcitydb/documentation/).
 
 An Open Access paper on the 3DCityDB has been published in the International Journal on Open Geospatial Data, Software and Standards 3 (5), 2018: [Z. Yao, C. Nagel, F. Kunde, G. Hudra, P. Willkomm, A. Donaubauer, T. Adolphi, T. H. Kolbe: 3DCityDB - a 3D geodatabase solution for the management, analysis, and visualization of semantic 3D city models based on CityGML](https://doi.org/10.1186/s40965-018-0046-7). Please use this reference when citing the 3DCityDB project.
 
