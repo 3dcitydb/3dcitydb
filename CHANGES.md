@@ -13,7 +13,7 @@ Change Log
 * Added `OBJECTCLASS_ID` column to all feature tables to distinguish CityGML core features from features defined in a CityGML ADE. 
 * Added `NOT NULL` constraints on each OBJECTCLASS_ID column.
 * Augmented `OBJECTCLASS` table with more feature-specific columns and added new entries for missing core features.
-* Improved performance on stored procedures by reducing amount of dynamic SQL. 
+* Improved performance of stored procedures by reducing amount of dynamic SQL. 
   - `schema_name` parameter has been removed from `DELETE` and `ENVELOPE` scripts.
   - Under PostgreSQL these scripts (as well as the `INDEX_TABLE`) are now part of a data schema (e.g. `citydb`).
 * Removed the `CITYDB_DELETE_BY_LINEAGE` package. The only function left is `del_cityobjects_by_lineage` which is now part of the `DELETE` package.
