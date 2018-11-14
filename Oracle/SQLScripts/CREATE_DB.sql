@@ -114,17 +114,6 @@ SELECT 'Creating packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx''
 @@CITYDB_PKG/SRS/SRS.sql;
 @@CITYDB_PKG/STATISTICS/STAT.sql;
 
--- check for SDO_GEORASTER support
-VARIABLE GEORASTER_SUPPORT NUMBER;
-BEGIN
-  :GEORASTER_SUPPORT := 0;
-  IF (upper('&DBVERSION')='S') THEN
-    SELECT COUNT(*) INTO :GEORASTER_SUPPORT FROM ALL_SYNONYMS
-	WHERE SYNONYM_NAME='SDO_GEORASTER';
-  END IF;
-END;
-/
-
 -- create delete scripts
 column script new_value DELETE
 SELECT
