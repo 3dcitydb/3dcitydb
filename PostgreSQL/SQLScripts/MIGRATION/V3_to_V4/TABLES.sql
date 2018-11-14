@@ -149,7 +149,45 @@ ALTER TABLE citydb.relief_feature
   ADD COLUMN objectclass_id INTEGER;
   
 ALTER TABLE citydb.cityobjectgroup
-  ADD COLUMN objectclass_id INTEGER;  
+  ADD COLUMN objectclass_id INTEGER;
+
+/*************************************************
+* update tables that changed between 3.0 and 3.1
+*
+**************************************************/
+DO $$
+DECLARE
+  major INTEGER;
+  minor INTEGER;
+BEGIN
+  SELECT major_version, minor_version INTO major, minor FROM citydb_pkg.citydb_version();
+
+  IF major = 3 AND minor = 0 THEN
+    ALTER TABLE citydb.cityobject
+      ADD COLUMN gmlid_codespace VARCHAR(1000);
+
+    ALTER TABLE citydb.appearance
+      ADD COLUMN gmlid_codespace VARCHAR(1000);
+
+    ALTER TABLE citydb.surface_geometry
+      ADD COLUMN gmlid_codespace VARCHAR(1000);
+
+    ALTER TABLE citydb.surface_data
+      ADD COLUMN gmlid_codespace VARCHAR(1000);
+
+    ALTER TABLE citydb.citymodel
+      ADD COLUMN gmlid_codespace VARCHAR(1000);
+
+    ALTER TABLE citydb.address
+      ADD COLUMN gmlid VARCHAR(256),
+      ADD COLUMN gmlid_codespace VARCHAR(1000);
+  END IF;
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      NULL;
+END
+$$;
 
 /*************************************************
 * update tables with new objectclass_id column

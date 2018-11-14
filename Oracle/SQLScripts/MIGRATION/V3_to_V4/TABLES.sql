@@ -154,6 +154,43 @@ ALTER TABLE RELIEF_FEATURE
   ADD OBJECTCLASS_ID NUMBER;  
   
 /*************************************************
+* update tables that changed between 3.0 and 3.1
+*
+**************************************************/
+DECLARE
+  major NUMBER;
+  minor NUMBER;
+BEGIN
+  SELECT major_version, minor_version INTO major, minor FROM TABLE(citydb_util.citydb_version);
+
+  IF major = 3 AND minor = 0 THEN
+    EXECUTE IMMEDIATE 'ALTER TABLE CITYOBJECT
+      ADD GMLID_CODESPACE VARCHAR2(1000)';
+
+    EXECUTE IMMEDIATE 'ALTER TABLE APPEARANCE
+      ADD GMLID_CODESPACE VARCHAR2(1000)';
+
+    EXECUTE IMMEDIATE 'ALTER TABLE SURFACE_GEOMETRY
+      ADD GMLID_CODESPACE VARCHAR2(1000)';
+
+    EXECUTE IMMEDIATE 'ALTER TABLE SURFACE_DATA
+      ADD GMLID_CODESPACE VARCHAR2(1000)';
+
+    EXECUTE IMMEDIATE 'ALTER TABLE CITYMODEL
+      ADD GMLID_CODESPACE VARCHAR2(1000)';
+
+    EXECUTE IMMEDIATE 'ALTER TABLE ADDRESS
+      ADD (GMLID VARCHAR(256),
+           GMLID_CODESPACE VARCHAR2(1000))';
+  END IF;
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      NULL;
+END;
+/
+  
+/*************************************************
 * update tables with new objectclass_id column
 *
 **************************************************/
