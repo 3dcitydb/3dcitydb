@@ -1,6 +1,6 @@
 3D City Database - The Open Source CityGML Database
 
-Version 4.0.0
+Version 4.0.1
 
   This software is free software and is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,7 @@ You may obtain a copy of the License at
 2. Copyright
 ------------
 
-(C) 2013 - 2018
+(C) 2013 - 2019
 Chair of Geoinformatics
 Technical University of Munich, Germany
 https://www.gis.bgu.tum.de/
