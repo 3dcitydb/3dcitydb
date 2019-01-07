@@ -4,7 +4,7 @@ Change Log
 ### 4.0.1 - tbd
 
 ##### Fixes
-* Fixed a bug in the `V3_to_V4` migration script when updating a 3DCityDB v3.0.0 instance to v4.0. The previous version of the migration script missed to add the `GMLID_CODESPACE` column to some feature tables. _Note:_ There is no need to take any action if you have set up the 3DCityDB v4.0 using the `CREATE_DB` scripts of if you have updated from v3.1.0 or higher.
+* Fixed a bug in the `V3_to_V4` migration script when updating a 3DCityDB v3.0.0 instance to v4.0. The previous version of the migration script missed to add the `GMLID_CODESPACE` column to some feature tables. _Note:_ There is no need to take any action if you have set up the 3DCityDB v4.0 using the `CREATE_DB` scripts or if you have updated from v3.1.0 or higher.
 
 ### 4.0 - 2018-09-18
 
