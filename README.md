@@ -34,9 +34,9 @@ Note that releases of the software before version 3.3.0 continue to be licensed 
 
 Latest release
 --------------
-The latest stable release of the 3D City Database is 4.0.
+The latest stable release of the 3D City Database is 4.0.1.
 
-Download the SQL scripts and documentation [here](https://github.com/3dcitydb/3dcitydb/releases/download/v4.0.0/3DCityDB-4.0.0.zip). Previous releases are available from the [releases section](https://github.com/3dcitydb/3dcitydb/releases).
+Download the SQL scripts and documentation [here](https://github.com/3dcitydb/3dcitydb/releases/download/v4.0.1/3DCityDB-4.0.1.zip). Previous releases are available from the [releases section](https://github.com/3dcitydb/3dcitydb/releases).
 
 System requirements
 -------------------
