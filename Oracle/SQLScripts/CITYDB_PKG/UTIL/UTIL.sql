@@ -121,7 +121,7 @@ AS
     version_ret := DB_VERSION_TABLE();
     version_ret.extend;
 
-    version_tmp := DB_VERSION_OBJ('4.0.1', 4, 0, 1);
+    version_tmp := DB_VERSION_OBJ('4.0.2', 4, 0, 2);
 
     version_ret(version_ret.count) := version_tmp;
     RETURN version_ret;
