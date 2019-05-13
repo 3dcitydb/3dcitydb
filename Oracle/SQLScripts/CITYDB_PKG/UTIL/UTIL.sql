@@ -603,415 +603,420 @@ AS
     p_decimal_places in pls_integer default 2,
     p_compress_tags in pls_integer default 0,
     p_relative2mbr in pls_integer default 0
-    ) return clob deterministic
-
+  ) return clob deterministic
+  
     /* Note: Does not support curved geometries.
-    * If required, stroke geometry before calling function.
-    * If Compressed apply bbox to coordinates.....
-    * { "type": "Feature",
-    * "bbox": [-180.0, -90.0, 180.0, 90.0],
-    * "geometry": {
-    * "type": "Polygon",
-    * "coordinates": [[ [-180.0, 10.0], [20.0, 90.0], [180.0, -5.0], [-30.0, -90.0] ]]
-    * }
-    * ...
-    * }
+     *        If required, stroke geometry before calling function.
+     * If Compressed apply bbox to coordinates.....
+     * { "type": "Feature",
+     *   "bbox": [-180.0, -90.0, 180.0, 90.0],
+     *   "geometry": {
+     *   "type": "Polygon",
+     *   "coordinates": [[ [-180.0, 10.0], [20.0, 90.0], [180.0, -5.0], [-30.0, -90.0] ]]
+     *  }
+     *  ...
+     * }
     */
-     
-    as
-    v_relative boolean := case when p_relative2mbr<>0 then true else false end;
-     
-    v_result clob;
-    v_type varchar2(50);
-    v_compress_tags boolean := case when p_compress_tags<>0 then true else false end;
-    v_feature_key varchar2(100) := case when v_compress_tags then 'F' else '"Feature"' end;
-    v_bbox_tag varchar2(100) := case when v_compress_tags then 'b:' else '"bbox":' end;
-    v_coord_tag varchar2(100) := case when v_compress_tags then 'c:' else '"coordinates":' end;
-    v_geometry_tag varchar2(100) := case when v_compress_tags then 'g:' else '"Geometry":' end;
-    v_type_tag varchar2(100) := case when v_compress_tags then 't:' else '"type":' end;
-    v_temp_string varchar2(30000);
-     
-    v_precision pls_integer := nvl(p_decimal_places,2);
-    v_i pls_integer;
-    v_num_rings pls_integer;
-    v_num_elements pls_integer;
-    v_element_no pls_integer;
-    v_vertices mdsys.vertex_set_type;
-    v_element mdsys.sdo_geometry;
-    v_ring mdsys.sdo_geometry;
-    v_mbr mdsys.sdo_geometry;
-    v_geometry mdsys.sdo_geometry := p_geometry;
-     
-    Function hasRectangles( p_elem_info in mdsys.sdo_elem_info_array )
-    Return Pls_Integer
+  
+  as
+    v_relative      boolean := case when p_relative2mbr<>0  then true else false end;
+  
+    v_result        clob;
+    v_type          varchar2(50);
+    v_compress_tags boolean       := case when p_compress_tags<>0 then true else false end;
+    v_feature_key   varchar2(100) := case when v_compress_tags then 'F'  else '"Feature"'      end;
+    v_bbox_tag      varchar2(100) := case when v_compress_tags then 'b:' else '"bbox":'        end;
+    v_coord_tag     varchar2(100) := case when v_compress_tags then 'c:' else '"coordinates":' end;
+    v_geometry_tag  varchar2(100) := case when v_compress_tags then 'g:' else '"Geometry":'    end;
+    v_type_tag      varchar2(100) := case when v_compress_tags then 't:' else '"type":'        end;
+    v_temp_string   varchar2(30000);
+  
+    v_precision     pls_integer  := nvl(p_decimal_places,2);
+    v_i             pls_integer;
+    v_num_rings     pls_integer;
+    v_num_elements  pls_integer;
+    v_element_no    pls_integer;
+    v_vertices      mdsys.vertex_set_type;
+    v_element       mdsys.sdo_geometry;
+    v_ring          mdsys.sdo_geometry;
+    v_mbr           mdsys.sdo_geometry;
+    v_geometry      mdsys.sdo_geometry := p_geometry;
+  
+    Function hasRectangles( p_elem_info in mdsys.sdo_elem_info_array  )
+      Return Pls_Integer
     Is
-    v_rectangle_count number := 0;
-    v_etype pls_integer;
-    v_interpretation pls_integer;
-    v_elements pls_integer;
+       v_rectangle_count number := 0;
+       v_etype           pls_integer;
+       v_interpretation  pls_integer;
+       v_elements        pls_integer;
     Begin
-    If ( p_elem_info is null ) Then
-    return 0;
-    End If;
-    v_elements := ( ( p_elem_info.COUNT / 3 ) - 1 );
-    <<element_extraction>>
-    for v_i IN 0 .. v_elements LOOP
-    v_etype := p_elem_info(v_i * 3 + 2);
-    v_interpretation := p_elem_info(v_i * 3 + 3);
-    If ( v_etype in (1003,2003) AND v_interpretation = 3 ) Then
-    v_rectangle_count := v_rectangle_count + 1;
-    end If;
-    end loop element_extraction;
-    Return v_rectangle_Count;
+       If ( p_elem_info is null ) Then
+          return 0;
+       End If;
+       v_elements := ( ( p_elem_info.COUNT / 3 ) - 1 );
+       <<element_extraction>>
+       for v_i IN 0 .. v_elements LOOP
+         v_etype := p_elem_info(v_i * 3 + 2);
+         v_interpretation := p_elem_info(v_i * 3 + 3);
+         If  ( v_etype in (1003,2003) AND v_interpretation = 3  ) Then
+             v_rectangle_count := v_rectangle_count + 1;
+         end If;
+       end loop element_extraction;
+       Return v_rectangle_Count;
     End hasRectangles;
-     
+  
     Function hasCircularArcs(p_elem_info in mdsys.sdo_elem_info_array)
-    return boolean
-    Is
-    v_elements number;
-    Begin
-    v_elements := ( ( p_elem_info.COUNT / 3 ) - 1 );
-    <<element_extraction>>
-    for v_i IN 0 .. v_elements LOOP
-    if ( ( /* etype */ p_elem_info(v_i * 3 + 2) = 2 AND
-    /* interpretation*/ p_elem_info(v_i * 3 + 3) = 2 )
-    OR
-    ( /* etype */ p_elem_info(v_i * 3 + 2) in (1003,2003) AND
-    /* interpretation*/ p_elem_info(v_i * 3 + 3) IN (2,4) ) ) then
-    return true;
-    end If;
-    end loop element_extraction;
-    return false;
+       return boolean
+     Is
+       v_elements  number;
+     Begin
+       v_elements := ( ( p_elem_info.COUNT / 3 ) - 1 );
+       <<element_extraction>>
+       for v_i IN 0 .. v_elements LOOP
+          if ( ( /* etype */         p_elem_info(v_i * 3 + 2) = 2 AND
+                 /* interpretation*/ p_elem_info(v_i * 3 + 3) = 2 )
+               OR
+               ( /* etype */         p_elem_info(v_i * 3 + 2) in (1003,2003) AND
+                 /* interpretation*/ p_elem_info(v_i * 3 + 3) IN (2,4) ) ) then
+                 return true;
+          end If;
+       end loop element_extraction;
+       return false;
     End hasCircularArcs;
-     
-    Function GetNumRings( p_geometry in mdsys.sdo_geometry,
-    p_ring_type in integer default 0 /* 0 = ALL; 1 = OUTER; 2 = INNER */ )
-    Return Number
+  
+    Function GetNumRings( p_geometry  in mdsys.sdo_geometry,
+                          p_ring_type in integer default 0 /* 0 = ALL; 1 = OUTER; 2 = INNER */ )
+      Return Number
     Is
-    v_ring_count number := 0;
-    v_ring_type number := p_ring_type;
-    v_elements number;
-    v_etype pls_integer;
+       v_ring_count number := 0;
+       v_ring_type  number := p_ring_type;
+       v_elements   number;
+       v_etype      pls_integer;
     Begin
-    If ( p_geometry is null ) Then
-    return 0;
-    End If;
-    If ( p_geometry.sdo_elem_info is null ) Then
-    return 0;
-    End If;
-    If ( v_ring_type not in (0,1,2) ) Then
-    v_ring_type := 0;
-    End If;
-    v_elements := ( ( p_geometry.sdo_elem_info.COUNT / 3 ) - 1 );
-    <<element_extraction>>
-    for v_i IN 0 .. v_elements LOOP
-    v_etype := p_geometry.sdo_elem_info(v_i * 3 + 2);
-    If ( v_etype in (1003,1005,2003,2005) and 0 = v_ring_type )
-    OR ( v_etype in (1003,1005) and 1 = v_ring_type )
-    OR ( v_etype in (2003,2005) and 2 = v_ring_type ) Then
-    v_ring_count := v_ring_count + 1;
-    end If;
-    end loop element_extraction;
-    Return v_ring_count;
+       If ( p_geometry is null ) Then
+          return 0;
+       End If;
+       If ( p_geometry.sdo_elem_info is null ) Then
+          return 0;
+       End If;
+       If ( v_ring_type not in (0,1,2) ) Then
+          v_ring_type := 0;
+       End If;
+       v_elements := ( ( p_geometry.sdo_elem_info.COUNT / 3 ) - 1 );
+       <<element_extraction>>
+       for v_i IN 0 .. v_elements LOOP
+         v_etype := p_geometry.sdo_elem_info(v_i * 3 + 2);
+         If  ( v_etype in (1003,1005,2003,2005) and 0 = v_ring_type )
+          OR ( v_etype in (1003,1005)           and 1 = v_ring_type )
+          OR ( v_etype in (2003,2005)           and 2 = v_ring_type ) Then
+             v_ring_count := v_ring_count + 1;
+         end If;
+       end loop element_extraction;
+       Return v_ring_count;
     End GetNumRings;
-     
-    PROCEDURE ADD_Coordinate( p_ordinates in out nocopy mdsys.sdo_ordinate_array,
-    p_dim in number,
-    p_x_coord in number,
-    p_y_coord in number,
-    p_z_coord in number,
-    p_m_coord in number,
-    p_measured in boolean := false,
-    p_duplicates in boolean := false)
-    IS
-    Function Duplicate
-    Return Boolean
-    Is
+  
+    PROCEDURE ADD_Coordinate( p_ordinates  in out nocopy mdsys.sdo_ordinate_array,
+                              p_dim        in number,
+                              p_x_coord    in number,
+                              p_y_coord    in number,
+                              p_z_coord    in number,
+                              p_m_coord    in number,
+                              p_measured   in boolean := false,
+                              p_duplicates in boolean := false)
+      IS
+        Function Duplicate
+          Return Boolean
+        Is
+        Begin
+          Return case when p_ordinates is null or p_ordinates.count = 0
+                      then False
+                      Else case p_dim
+                                when 2
+                                then ( p_ordinates(p_ordinates.COUNT)   = p_y_coord
+                                       AND
+                                       p_ordinates(p_ordinates.COUNT-1) = p_x_coord )
+                                when 3
+                                then ( p_ordinates(p_ordinates.COUNT)   =  case when p_measured then p_m_coord else p_z_coord end
+                                       AND
+                                       p_ordinates(p_ordinates.COUNT-1) = p_y_coord
+                                       AND
+                                       p_ordinates(p_ordinates.COUNT-2) = p_x_coord )
+                                when 4
+                                then ( p_ordinates(p_ordinates.COUNT)   = p_m_coord
+                                       AND
+                                       p_ordinates(p_ordinates.COUNT-1) = p_z_coord
+                                       AND
+                                       p_ordinates(p_ordinates.COUNT-2) = p_y_coord
+                                       AND
+                                       p_ordinates(p_ordinates.COUNT-3) = p_x_coord )
+                            end
+                    End;
+        End Duplicate;
+  
     Begin
-    Return case when p_ordinates is null or p_ordinates.count = 0
-    then False
-    Else case p_dim
-    when 2
-    then ( p_ordinates(p_ordinates.COUNT) = p_y_coord
-    AND
-    p_ordinates(p_ordinates.COUNT-1) = p_x_coord )
-    when 3
-    then ( p_ordinates(p_ordinates.COUNT) = case when p_measured then p_m_coord else p_z_coord end
-    AND
-    p_ordinates(p_ordinates.COUNT-1) = p_y_coord
-    AND
-    p_ordinates(p_ordinates.COUNT-2) = p_x_coord )
-    when 4
-    then ( p_ordinates(p_ordinates.COUNT) = p_m_coord
-    AND
-    p_ordinates(p_ordinates.COUNT-1) = p_z_coord
-    AND
-    p_ordinates(p_ordinates.COUNT-2) = p_y_coord
-    AND
-    p_ordinates(p_ordinates.COUNT-3) = p_x_coord )
-    end
-    End;
-    End Duplicate;
-     
-    Begin
-    If ( p_ordinates is null ) Then
-    p_ordinates := new mdsys.sdo_ordinate_array(null);
-    p_ordinates.DELETE;
-    End If;
-    If ( p_duplicates or Not Duplicate() ) Then
-    IF ( p_dim >= 2 ) Then
-    p_ordinates.extend(2);
-    p_ordinates(p_ordinates.count-1) := p_x_coord;
-    p_ordinates(p_ordinates.count ) := p_y_coord;
-    END IF;
-    IF ( p_dim >= 3 ) Then
-    p_ordinates.extend(1);
-    p_ordinates(p_ordinates.count) := case when p_dim = 3 And p_measured
-    then p_m_coord
-    else p_z_coord
-    end;
-    END IF;
-    IF ( p_dim = 4 ) Then
-    p_ordinates.extend(1);
-    p_ordinates(p_ordinates.count) := p_m_coord;
-    END IF;
-    End If;
+      If ( p_ordinates is null ) Then
+         p_ordinates := new mdsys.sdo_ordinate_array(null);
+         p_ordinates.DELETE;
+      End If;
+      If ( p_duplicates or Not Duplicate() ) Then
+        IF ( p_dim >= 2 ) Then
+          p_ordinates.extend(2);
+          p_ordinates(p_ordinates.count-1) := p_x_coord;
+          p_ordinates(p_ordinates.count  ) := p_y_coord;
+        END IF;
+        IF ( p_dim >= 3 ) Then
+          p_ordinates.extend(1);
+          p_ordinates(p_ordinates.count)   := case when p_dim = 3 And p_measured
+                                                   then p_m_coord
+                                                   else p_z_coord
+                                              end;
+        END IF;
+        IF ( p_dim = 4 ) Then
+          p_ordinates.extend(1);
+          p_ordinates(p_ordinates.count)   := p_m_coord;
+        END IF;
+      End If;
     END ADD_Coordinate;
-     
+  
     Function Rectangle2Polygon(p_geometry in mdsys.sdo_geometry)
-    return mdsys.sdo_geometry
+      return mdsys.sdo_geometry
     As
-    v_dims pls_integer;
-    v_ordinates mdsys.sdo_ordinate_array := new mdsys.sdo_ordinate_array(null);
-    v_vertices mdsys.vertex_set_type;
-    v_etype pls_integer;
-    v_start_coord mdsys.vertex_type;
-    v_end_coord mdsys.vertex_type;
+      v_dims      pls_integer;
+      v_ordinates mdsys.sdo_ordinate_array := new mdsys.sdo_ordinate_array(null);
+      v_vertices  mdsys.vertex_set_type;
+      v_etype     pls_integer;
+      v_start_coord mdsys.vertex_type;
+      v_end_coord   mdsys.vertex_type;
     Begin
-    v_ordinates.DELETE;
-    v_dims := p_geometry.get_dims();
-    v_etype := p_geometry.sdo_elem_info(2);
-    v_vertices := sdo_util.getVertices(p_geometry);
-    v_start_coord := v_vertices(1);
-    v_end_coord := v_vertices(2);
-    -- First coordinate
-    ADD_Coordinate( v_ordinates, v_dims, v_start_coord.x, v_start_coord.y, v_start_coord.z, v_start_coord.w );
-    -- Second coordinate
-    If ( v_etype = 1003 ) Then
-    ADD_Coordinate(v_ordinates,v_dims,v_end_coord.x,v_start_coord.y,(v_start_coord.z + v_end_coord.z) /2, v_start_coord.w);
-    Else
-    ADD_Coordinate(v_ordinates,v_dims,v_start_coord.x,v_end_coord.y,(v_start_coord.z + v_end_coord.z) /2,
-    (v_end_coord.w - v_start_coord.w) * ((v_end_coord.x - v_start_coord.x) /
-    ((v_end_coord.x - v_start_coord.x) + (v_end_coord.y - v_start_coord.y)) ));
-    End If;
-    -- 3rd or middle coordinate
-    ADD_Coordinate(v_ordinates,v_dims,v_end_coord.x,v_end_coord.y,v_end_coord.z,v_end_coord.w);
-    -- 4th coordinate
-    If ( v_etype = 1003 ) Then
-    ADD_Coordinate(v_ordinates,v_dims,v_start_coord.x,v_end_coord.y,(v_start_coord.z + v_end_coord.z) /2,v_start_coord.w);
-    Else
-    Add_Coordinate(v_ordinates,v_dims,v_end_coord.x,v_start_coord.y,(v_start_coord.z + v_end_coord.z) /2,
-    (v_end_coord.w - v_start_coord.w) * ((v_end_coord.x - v_start_coord.x) /
-    ((v_end_coord.x - v_start_coord.x) + (v_end_coord.y - v_start_coord.y)) ));
-    End If;
-    -- Last coordinate
-    ADD_Coordinate(v_ordinates,v_dims,v_start_coord.x,v_start_coord.y,v_start_coord.z,v_start_coord.w);
-    return mdsys.sdo_geometry(p_geometry.sdo_gtype,p_geometry.sdo_srid,null,mdsys.sdo_elem_info_array(1,v_etype,1),v_ordinates);
+        v_ordinates.DELETE;
+        v_dims        := p_geometry.get_dims();
+        v_etype       := p_geometry.sdo_elem_info(2);
+        v_vertices    := sdo_util.getVertices(p_geometry);
+        v_start_coord := v_vertices(1);
+        v_end_coord   := v_vertices(2);
+        -- First coordinate
+        ADD_Coordinate( v_ordinates, v_dims, v_start_coord.x, v_start_coord.y, v_start_coord.z, v_start_coord.w );
+        -- Second coordinate
+        If ( v_etype = 1003 ) Then
+          ADD_Coordinate(v_ordinates,v_dims,v_end_coord.x,v_start_coord.y,(v_start_coord.z + v_end_coord.z) /2, v_start_coord.w);
+        Else
+          ADD_Coordinate(v_ordinates,v_dims,v_start_coord.x,v_end_coord.y,(v_start_coord.z + v_end_coord.z) /2,
+              (v_end_coord.w - v_start_coord.w) * ((v_end_coord.x - v_start_coord.x) /
+             ((v_end_coord.x - v_start_coord.x) + (v_end_coord.y - v_start_coord.y)) ));
+        End If;
+        -- 3rd or middle coordinate
+        ADD_Coordinate(v_ordinates,v_dims,v_end_coord.x,v_end_coord.y,v_end_coord.z,v_end_coord.w);
+        -- 4th coordinate
+        If ( v_etype = 1003 ) Then
+          ADD_Coordinate(v_ordinates,v_dims,v_start_coord.x,v_end_coord.y,(v_start_coord.z + v_end_coord.z) /2,v_start_coord.w);
+        Else
+          Add_Coordinate(v_ordinates,v_dims,v_end_coord.x,v_start_coord.y,(v_start_coord.z + v_end_coord.z) /2,
+              (v_end_coord.w - v_start_coord.w) * ((v_end_coord.x - v_start_coord.x) /
+             ((v_end_coord.x - v_start_coord.x) + (v_end_coord.y - v_start_coord.y)) ));
+        End If;
+        -- Last coordinate
+        ADD_Coordinate(v_ordinates,v_dims,v_start_coord.x,v_start_coord.y,v_start_coord.z,v_start_coord.w);
+        return mdsys.sdo_geometry(p_geometry.sdo_gtype,p_geometry.sdo_srid,null,mdsys.sdo_elem_info_array(1,v_etype,1),v_ordinates);
     End Rectangle2Polygon;
-     
-     
+  
+  
     Function formatNumber(pos in number)
-    return varchar2
+      return varchar2
     As
-    v_temp number;
-    v_result varchar2(100);
+      v_temp number;
+      v_result varchar2(100);
     Begin
-    v_temp := round(pos, v_precision);
-     
-    if ((v_temp >=0) and (v_temp < 1)) then
-    v_result := to_char(v_temp, '0.99');
-    else
-    v_result := to_char(v_temp);
-    end if;
-    return v_result;
+      v_temp := round(pos, v_precision);
+  
+      if ((v_temp >=0) and (v_temp < 1)) then
+        v_result := '0' || to_char(v_temp);
+      elsif ((v_temp < 0) and (v_temp > -1)) then
+        v_result := '-0' || to_char(abs(v_temp));
+      else
+        v_result := to_char(v_temp);
+      end if;
+      return v_result;
     End formatNumber;
-     
-    Function formatCoord(p_x in number,
-    p_y in number,
-    p_z in number,
-    p_relative in boolean)
-    return varchar2
+  
+    Function formatCoord(p_x        in number,
+                         p_y        in number,
+                         p_z        in number,
+                         p_relative in boolean)
+      return varchar2
     As
     Begin
-    return '[' ||
-    case when p_relative
-    then formatNumber(p_x - v_mbr.sdo_ordinates(1)) || ',' || formatNumber(p_y - v_mbr.sdo_ordinates(2))
-    else formatNumber(p_x) || ',' || formatNumber(p_y) || ',' || formatNumber(p_z)
-    end ||
-    ']';
+        return '[' ||
+               case when p_relative
+                    then formatNumber(p_x - v_mbr.sdo_ordinates(1)) || ',' || formatNumber(p_y - v_mbr.sdo_ordinates(2))
+                    else formatNumber(p_x) || ',' || formatNumber(p_y) || ',' || formatNumber(p_z)
+                end ||
+                ']';
     End formatCoord;
-     
-    begin
-    if ( p_geometry is null ) then
-    return null;
+  
+  begin
+     if ( p_geometry is null ) then
+        return null;
     end if;
-     
+  
     -- Currently, we do not support compound objects
-    -- 
+    --
     If ( p_geometry.get_gtype() not in (1,2,3,5,6,7) ) Then
-    RETURN NULL;
+      RETURN NULL;
     End If;
-     
+    
+    EXECUTE IMMEDIATE 'ALTER SESSION set NLS_TERRITORY=''AMERICA''';
+    EXECUTE IMMEDIATE 'ALTER SESSION set NLS_LANGUAGE=''AMERICAN''';
+  
     DBMS_LOB.createtemporary (lob_loc => v_result, cache => TRUE);
-     
+  
     v_type := case when v_compress_tags
-    then case p_geometry.get_gtype()
-    when 1 then 'P'
-    when 2 then 'LS'
-    when 3 then 'PG'
-    when 5 then 'MP'
-    when 6 then 'MLS'
-    when 7 then 'MPG'
-    end
-    else case p_geometry.get_gtype()
-    when 1 then '"Point"'
-    when 2 then '"LineString"'
-    when 3 then '"Polygon"'
-    when 5 then '"MultiPoint"'
-    when 6 then '"MultiLineString"'
-    when 7 then '"MultiPolygon"'
-    end
-    end;
-     
+                   then case p_geometry.get_gtype()
+                             when 1 then 'P'
+                             when 2 then 'LS'
+                             when 3 then 'PG'
+                             when 5 then 'MP'
+                             when 6 then 'MLS'
+                             when 7 then 'MPG'
+                         end
+                   else case p_geometry.get_gtype()
+                             when 1 then '"Point"'
+                             when 2 then '"LineString"'
+                             when 3 then '"Polygon"'
+                             when 5 then '"MultiPoint"'
+                             when 6 then '"MultiLineString"'
+                             when 7 then '"MultiPolygon"'
+                         end
+               end;
+  
     v_temp_string := '{';
-     
+  
     if ( p_geometry.get_gtype() = 1 ) then
-    v_temp_string := v_temp_string || v_type_tag || v_type || ',' || v_coord_tag;
-    if (p_geometry.SDO_POINT is not null ) then
-    v_temp_string := v_temp_string || formatCoord(p_geometry.SDO_POINT.X, p_geometry.SDO_POINT.Y, p_geometry.SDO_POINT.Z, false);
-    else
-    v_temp_string := v_temp_string || formatCoord(p_geometry.sdo_ordinates(1), p_geometry.sdo_ordinates(2), p_geometry.sdo_ordinates(3), false);
-    End If;
-    v_temp_string := v_temp_string || '}';
-     
-    DBMS_LOB.write(lob_loc => v_result,
-    amount => LENGTH (v_temp_string),
-    offset => 1,
-    buffer => v_temp_string );
-    return v_result;
+        v_temp_string := v_temp_string || v_type_tag || v_type || ',' || v_coord_tag;
+        if (p_geometry.SDO_POINT is not null ) then
+            v_temp_string := v_temp_string || formatCoord(p_geometry.SDO_POINT.X, p_geometry.SDO_POINT.Y, p_geometry.SDO_POINT.Z, false);
+        else
+            v_temp_string := v_temp_string || formatCoord(p_geometry.sdo_ordinates(1), p_geometry.sdo_ordinates(2), p_geometry.sdo_ordinates(3), false);
+        End If;
+        v_temp_string := v_temp_string || '}';
+  
+        DBMS_LOB.write(lob_loc => v_result,
+                       amount => LENGTH (v_temp_string),
+                       offset => 1,
+                       buffer => v_temp_string );
+        return v_result;
     end If;
-     
+  
     if ( v_relative ) then
-    v_mbr := SDO_GEOM.SDO_MBR(p_geometry);
-    if ( v_mbr is not null ) then
-    v_temp_string := v_temp_string ||
-    v_type_tag || v_feature_key || ',' ||
-    v_bbox_tag || '[' ||
-    v_mbr.sdo_ordinates(1) || ',' ||
-    v_mbr.sdo_ordinates(2) || ',' ||
-    v_mbr.sdo_ordinates(3) || ',' ||
-    v_mbr.sdo_ordinates(4) || ',' ||
-    '],' || v_geometry_tag || '{';
-    End If;
+       v_mbr := SDO_GEOM.SDO_MBR(p_geometry);
+       if ( v_mbr is not null ) then
+           v_temp_string := v_temp_string ||
+                            v_type_tag || v_feature_key || ',' ||
+                            v_bbox_tag || '[' ||
+                            v_mbr.sdo_ordinates(1) || ',' ||
+                            v_mbr.sdo_ordinates(2) || ',' ||
+                            v_mbr.sdo_ordinates(3) || ',' ||
+                            v_mbr.sdo_ordinates(4) || ',' ||
+                            '],' || v_geometry_tag || '{';
+       End If;
     End If;
     v_temp_string := v_temp_string || v_type_tag || v_type || ',' || v_coord_tag;
-     
+  
     -- Write header
     DBMS_LOB.write(lob_loc => v_result,
-    amount => LENGTH (v_temp_string),
-    offset => 1,
-    buffer => v_temp_string);
-     
+                   amount => LENGTH (v_temp_string),
+                   offset => 1,
+                   buffer => v_temp_string);
+  
     If ( hasCircularArcs(p_geometry.sdo_elem_info) ) then
-    return null;
+        return null;
     End If;
-     
+  
     v_num_elements := mdsys.sdo_util.GetNumElem(p_geometry);
     <<for_all_elements>>
     FOR v_element_no IN 1..v_num_elements LOOP
-    v_element := mdsys.sdo_util.Extract(p_geometry,v_element_no); -- Extract element with all sub-elements
-    If ( v_element.get_gtype() in (1,2,5) ) Then
-    if (v_element_no = 1) Then
-    v_temp_string := '[';
-    elsif ( v_element.get_gtype() = 2 ) Then
-    v_temp_string := '],[';
-    End If;
-    DBMS_LOB.write(lob_loc => v_result,
-    amount => LENGTH (v_temp_string),
-    offset => DBMS_LOB.GETLENGTH(v_result)+1,
-    buffer => v_temp_string );
-    v_vertices := mdsys.sdo_util.getVertices(v_element);
-    v_temp_string := formatCoord(v_vertices(1).x,v_vertices(1).y,v_vertices(1).z,v_relative);
-    DBMS_LOB.write(lob_loc => v_result,
-    amount => LENGTH (v_temp_string),
-    offset => DBMS_LOB.GETLENGTH(v_result)+1,
-    buffer => v_temp_string );
-    <<for_all_vertices>>
-    for j in 2..v_vertices.count loop
-    v_temp_string := ',' || formatCoord(v_vertices(j).x,v_vertices(j).y,v_vertices(j).z,v_relative);
-    DBMS_LOB.write(lob_loc => v_result,
-    amount => LENGTH (v_temp_string),
-    offset => DBMS_LOB.GETLENGTH(v_result)+1,
-    buffer => v_temp_string );
-    end loop for_all_vertices;
-    Else
-    if (v_element_no = 1) Then
-    v_temp_string := '[';
-    else
-    v_temp_string := '],[';
-    End If;
-    DBMS_LOB.write(lob_loc => v_result,
-    amount => LENGTH (v_temp_string),
-    offset => DBMS_LOB.GETLENGTH(v_result)+1,
-    buffer => v_temp_string );
-    v_num_rings := GetNumRings(v_element);
-    <<for_all_rings>>
-    FOR v_ring_no in 1..v_num_rings Loop
-    v_ring := MDSYS.SDO_UTIL.EXTRACT(p_geometry,v_element_no,v_ring_no); -- Extract ring from element .. must do it this way, can't correctly extract from v_element.
-    If (hasRectangles(v_ring.sdo_elem_info)>0) Then
-    v_ring := Rectangle2Polygon(v_ring);
-    End If;
-    if ( v_ring_no > 1 ) Then
-    v_temp_string := ',';
-    DBMS_LOB.write(lob_loc => v_result,
-    amount => LENGTH (v_temp_string),
-    offset => DBMS_LOB.GETLENGTH(v_result)+1,
-    buffer => v_temp_string );
-    End If;
-    v_vertices := mdsys.sdo_util.getVertices(v_ring);
-    v_temp_string := '[' || formatCoord(v_vertices(1).x,v_vertices(1).y,v_vertices(1).z,v_relative);
-    DBMS_LOB.write(lob_loc => v_result,
-    amount => LENGTH (v_temp_string),
-    offset => DBMS_LOB.GETLENGTH(v_result)+1,
-    buffer => v_temp_string );
-     
-    <<for_all_vertices>>
-    for j in 2..v_vertices.count loop
-    v_temp_string := ',' || formatCoord(v_vertices(j).x,v_vertices(j).y,v_vertices(j).z,v_relative);
-    DBMS_LOB.write(lob_loc => v_result,
-    amount => LENGTH (v_temp_string),
-    offset => DBMS_LOB.GETLENGTH(v_result)+1,
-    buffer => v_temp_string );
-    end loop for_all_vertices;
-    v_temp_string := ']'; -- Close Ring
-    DBMS_LOB.write(lob_loc => v_result,
-    amount => LENGTH (v_temp_string),
-    offset => DBMS_LOB.GETLENGTH(v_result)+1,
-    buffer => v_temp_string );
-    End Loop for_all_rings;
-    End If;
+       v_element := mdsys.sdo_util.Extract(p_geometry,v_element_no);   -- Extract element with all sub-elements
+       If ( v_element.get_gtype() in (1,2,5) ) Then
+          if (v_element_no = 1) Then
+             v_temp_string := '[';
+          elsif ( v_element.get_gtype() = 2 ) Then
+             v_temp_string := '],[';
+          End If;
+          DBMS_LOB.write(lob_loc => v_result,
+                         amount => LENGTH (v_temp_string),
+                         offset => DBMS_LOB.GETLENGTH(v_result)+1,
+                         buffer => v_temp_string );
+          v_vertices := mdsys.sdo_util.getVertices(v_element);
+          v_temp_string := formatCoord(v_vertices(1).x,v_vertices(1).y,v_vertices(1).z,v_relative);
+          DBMS_LOB.write(lob_loc => v_result,
+                         amount => LENGTH (v_temp_string),
+                         offset => DBMS_LOB.GETLENGTH(v_result)+1,
+                         buffer => v_temp_string );
+          <<for_all_vertices>>
+          for j in 2..v_vertices.count loop
+              v_temp_string := ',' || formatCoord(v_vertices(j).x,v_vertices(j).y,v_vertices(j).z,v_relative);
+              DBMS_LOB.write(lob_loc => v_result,
+                             amount => LENGTH (v_temp_string),
+                             offset => DBMS_LOB.GETLENGTH(v_result)+1,
+                             buffer => v_temp_string );
+          end loop for_all_vertices;
+       Else
+          if (v_element_no = 1) Then
+             v_temp_string := '[';
+          else
+             v_temp_string := '],[';
+          End If;
+          DBMS_LOB.write(lob_loc => v_result,
+                         amount => LENGTH (v_temp_string),
+                         offset => DBMS_LOB.GETLENGTH(v_result)+1,
+                         buffer => v_temp_string );
+          v_num_rings := GetNumRings(v_element);
+          <<for_all_rings>>
+          FOR v_ring_no in 1..v_num_rings Loop
+            v_ring := MDSYS.SDO_UTIL.EXTRACT(p_geometry,v_element_no,v_ring_no);  -- Extract ring from element .. must do it this way, can't correctly extract from v_element.
+            If (hasRectangles(v_ring.sdo_elem_info)>0) Then
+               v_ring := Rectangle2Polygon(v_ring);
+            End If;
+            if ( v_ring_no > 1 ) Then
+               v_temp_string := ',';
+               DBMS_LOB.write(lob_loc => v_result,
+                              amount => LENGTH (v_temp_string),
+                              offset => DBMS_LOB.GETLENGTH(v_result)+1,
+                              buffer => v_temp_string );
+            End If;
+            v_vertices := mdsys.sdo_util.getVertices(v_ring);
+            v_temp_string := '[' || formatCoord(v_vertices(1).x,v_vertices(1).y,v_vertices(1).z,v_relative);
+            DBMS_LOB.write(lob_loc => v_result,
+                           amount => LENGTH (v_temp_string),
+                           offset => DBMS_LOB.GETLENGTH(v_result)+1,
+                           buffer => v_temp_string );
+  
+            <<for_all_vertices>>
+            for j in 2..v_vertices.count loop
+                v_temp_string := ',' || formatCoord(v_vertices(j).x,v_vertices(j).y,v_vertices(j).z,v_relative);
+                DBMS_LOB.write(lob_loc => v_result,
+                               amount => LENGTH (v_temp_string),
+                               offset => DBMS_LOB.GETLENGTH(v_result)+1,
+                               buffer => v_temp_string );
+            end loop for_all_vertices;
+            v_temp_string := ']';  -- Close Ring
+            DBMS_LOB.write(lob_loc => v_result,
+                           amount => LENGTH (v_temp_string),
+                           offset => DBMS_LOB.GETLENGTH(v_result)+1,
+                           buffer => v_temp_string );
+          End Loop for_all_rings;
+       End If;
     END LOOP for_all_elements;
-     
+  
     -- Closing tag
     v_temp_string := ']}';
     if ( v_relative and p_geometry.get_gtype() <> 1 ) then
-    v_temp_string := v_temp_string || '}';
+        v_temp_string := v_temp_string || '}';
     end if;
-     
+  
     DBMS_LOB.write(lob_loc => v_result,
-    amount => LENGTH (v_temp_string),
-    offset => DBMS_LOB.GETLENGTH(v_result)+1,
-    buffer => v_temp_string );
+                   amount => LENGTH (v_temp_string),
+                   offset => DBMS_LOB.GETLENGTH(v_result)+1,
+                   buffer => v_temp_string );
     return v_result;
   End sdo2geojson3d;
   
