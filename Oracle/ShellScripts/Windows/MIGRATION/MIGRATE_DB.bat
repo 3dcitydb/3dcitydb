@@ -1,5 +1,5 @@
 @echo off
-:: Shell script to create an instance of the 3D City Database
+:: Shell script to migrate an instance of the 3D City Database
 :: on Oracle Spatial/Locator
 
 :: read database connection details  
@@ -133,6 +133,7 @@ if "%res%"=="f" (
 :: Run MIGRATE_DB.sql to create the 3D City Database instance ----------------
 echo.
 echo Connecting to the database "%USERNAME%@%HOST%:%PORT%/%SID%" ...
-sqlplus "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @MIGRATE_DB.sql "%TEXOP%" "%DBVERSION%" "%V2USER%"
+echo|set /p="Enter password: "
+sqlplus -S -L "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @MIGRATE_DB.sql "%TEXOP%" "%DBVERSION%" "%V2USER%"
 
 pause

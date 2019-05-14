@@ -35,7 +35,7 @@ DEFINE GMLSRSNAME=&2;
 DEFINE VERSIONING=&3;
 DEFINE DBVERSION=&4;
 
---check if the chosen SRID is provided by the MDSYS.CS_SRS table
+-- check if the chosen SRID is provided by the MDSYS.CS_SRS table
 VARIABLE SRID NUMBER;
 VARIABLE HINTFILE VARCHAR2(50);
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Shell script to create an instance of the 3D City Database
+# Shell script to migrate an instance of the 3D City Database
 # on PostgreSQL/PostGIS
 
 # read database connection details 
