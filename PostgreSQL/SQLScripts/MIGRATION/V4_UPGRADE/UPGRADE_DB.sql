@@ -57,10 +57,10 @@ SELECT CASE
 	   OR :NEW_MINOR > :minor ) THEN 'DO_UPGRADE.sql'
   WHEN :major < :NEW_MAJOR THEN 'DO_MIGRATE.sql'
   ELSE 'DO_NOTHING.sql' 
-  END AS script;
+  END AS do_action;
 \gset
 
-\i :script;
+\i :do_action;
 
 \echo
 \echo '3DCityDB upgrade complete!'

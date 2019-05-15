@@ -25,30 +25,24 @@
 -- limitations under the License.
 --
 
-\pset footer off
-SET client_min_messages TO WARNING;
-\set ON_ERROR_STOP ON
+/*****************************************************************
+* CONTENT
+*
+* TYPE:
+*   INDEX_OBJ
+******************************************************************/
 
---// upgrade CITYDB_PKG (additional schema with PL/pgSQL functions)
-\echo
-\echo 'Upgrading schema ''citydb_pkg'' ...'
-
-DO $$
-DECLARE _sql text;
-BEGIN
-   SELECT INTO _sql
-          string_agg(format('DROP FUNCTION %s;', oid::regprocedure), E'\n')
-   FROM   pg_proc
-   WHERE  pronamespace = 'citydb_pkg'::regnamespace;
-
-   IF _sql IS NOT NULL THEN
-      EXECUTE _sql;
-   END IF;
-END
-$$;
-
-\i ../../CITYDB_PKG/UTIL/UTIL.sql
-\i ../../CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql
-\i ../../CITYDB_PKG/INDEX/IDX.sql
-\i ../../CITYDB_PKG/SRS/SRS.sql
-\i ../../CITYDB_PKG/STATISTICS/STAT.sql
+/*****************************************************************
+* TYPE INDEX_OBJ
+* 
+* global type to store information relevant to indexes
+******************************************************************/
+DROP TYPE IF EXISTS citydb_pkg.INDEX_OBJ CASCADE;
+CREATE TYPE citydb_pkg.INDEX_OBJ AS (
+  index_name TEXT,
+  table_name TEXT,
+  attribute_name TEXT,
+  type NUMERIC(1),
+  srid INTEGER,
+  is_3d NUMERIC(1, 0)
+);

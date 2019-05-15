@@ -28,12 +28,6 @@
 /*****************************************************************
 * CONTENT
 *
-* TYPE:
-*   INDEX_OBJ
-*
-* TABLE:
-*   INDEX_TABLE
-*
 * FUNCTIONS:
 *   construct_spatial_3d(ind_name TEXT, tab_name TEXT, att_name TEXT, crs INTEGER DEFAULT 0) RETURNS citydb_pkg.INDEX_OBJ
 *   construct_spatial_2d(ind_name TEXT, tab_name TEXT, att_name TEXT, crs INTEGER DEFAULT 0) RETURNS citydb_pkg.INDEX_OBJ
@@ -52,21 +46,6 @@
 *   status_normal_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[]
 *   status_spatial_indexes(schema_name TEXT DEFAULT 'citydb') RETURNS text[]
 ******************************************************************/
-
-/*****************************************************************
-* TYPE INDEX_OBJ
-* 
-* global type to store information relevant to indexes
-******************************************************************/
-DROP TYPE IF EXISTS citydb_pkg.INDEX_OBJ CASCADE;
-CREATE TYPE citydb_pkg.INDEX_OBJ AS (
-  index_name TEXT,
-  table_name TEXT,
-  attribute_name TEXT,
-  type NUMERIC(1),
-  srid INTEGER,
-  is_3d NUMERIC(1, 0)
-); 
 
 /******************************************************************
 * constructors for INDEX_OBJ instances

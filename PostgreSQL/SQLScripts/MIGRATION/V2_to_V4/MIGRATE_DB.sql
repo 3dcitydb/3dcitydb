@@ -66,6 +66,7 @@ SET search_path TO citydb, public;
 DROP SCHEMA IF EXISTS citydb_pkg CASCADE;
 CREATE SCHEMA citydb_pkg;
 
+\i ../../CITYDB_PKG/TYPES/TYPES.sql
 \i ../../CITYDB_PKG/UTIL/UTIL.sql
 \i ../../CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql
 \i ../../CITYDB_PKG/INDEX/IDX.sql
