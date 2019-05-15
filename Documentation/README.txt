@@ -1,6 +1,6 @@
-3D City Database - The Open Source CityGML Database
+﻿3D City Database - The Open Source CityGML Database
 
-Version 4.0.1
+Version 4.0.2
 
   This software is free software and is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
