@@ -30,7 +30,7 @@
 * create tables new in v4.0.0
 *
 **************************************************/
-CREATE TABLE citydb.ade(
+CREATE TABLE ade(
     id INTEGER NOT NULL DEFAULT nextval('ade_seq'::regclass),
     adeid VARCHAR(256) NOT NULL,
     name VARCHAR(1000) NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE citydb.ade(
     creation_person VARCHAR(256)
 );
 
-CREATE TABLE citydb.schema(
+CREATE TABLE schema(
     id INTEGER NOT NULL DEFAULT nextval('schema_seq'::regclass),
     is_ade_root NUMERIC NOT NULL,
     citygml_version VARCHAR(50) NOT NULL,
@@ -55,17 +55,17 @@ CREATE TABLE citydb.schema(
     ade_id INTEGER
 );
 
-CREATE TABLE citydb.schema_referencing(
+CREATE TABLE schema_referencing(
     referencing_id INTEGER NOT NULL,
     referenced_id INTEGER NOT NULL
 );
 
-CREATE TABLE citydb.schema_to_objectclass(
+CREATE TABLE schema_to_objectclass(
     schema_id INTEGER NOT NULL,
     objectclass_id INTEGER NOT NULL
 );
 
-CREATE TABLE citydb.aggregation_info(
+CREATE TABLE aggregation_info(
     child_id INTEGER NOT NULL,
     parent_id INTEGER NOT NULL,
     join_table_or_column_name VARCHAR(30) NOT NULL,
@@ -78,77 +78,77 @@ CREATE TABLE citydb.aggregation_info(
 * alter tables that changed in v4.0.0
 *
 **************************************************/
-ALTER TABLE citydb.objectclass
+ALTER TABLE objectclass
   ADD COLUMN is_ade_class NUMERIC,
   ADD COLUMN is_toplevel NUMERIC,
   ADD COLUMN tablename VARCHAR(30),
   ADD COLUMN baseclass_id INTEGER,
   ADD COLUMN ade_id INTEGER;
 
-ALTER TABLE citydb.bridge
+ALTER TABLE bridge
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.bridge_constr_element
+ALTER TABLE bridge_constr_element
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.bridge_furniture
+ALTER TABLE bridge_furniture
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.bridge_room
+ALTER TABLE bridge_room
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.building
+ALTER TABLE building
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.building_furniture
+ALTER TABLE building_furniture
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.room
+ALTER TABLE room
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.city_furniture
+ALTER TABLE city_furniture
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.generic_cityobject
+ALTER TABLE generic_cityobject
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.land_use
+ALTER TABLE land_use
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.breakline_relief
+ALTER TABLE breakline_relief
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.masspoint_relief
+ALTER TABLE masspoint_relief
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.raster_relief
+ALTER TABLE raster_relief
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.tin_relief
+ALTER TABLE tin_relief
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.plant_cover
+ALTER TABLE plant_cover
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.solitary_vegetat_object
+ALTER TABLE solitary_vegetat_object
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.tunnel
+ALTER TABLE tunnel
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.tunnel_furniture
+ALTER TABLE tunnel_furniture
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.tunnel_hollow_space
+ALTER TABLE tunnel_hollow_space
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.waterbody
+ALTER TABLE waterbody
   ADD COLUMN objectclass_id INTEGER;
 
-ALTER TABLE citydb.relief_feature
+ALTER TABLE relief_feature
   ADD COLUMN objectclass_id INTEGER;
   
-ALTER TABLE citydb.cityobjectgroup
+ALTER TABLE cityobjectgroup
   ADD COLUMN objectclass_id INTEGER;
 
 /*************************************************
@@ -163,22 +163,22 @@ BEGIN
   SELECT major_version, minor_version INTO major, minor FROM citydb_pkg.citydb_version();
 
   IF major = 3 AND minor = 0 THEN
-    ALTER TABLE citydb.cityobject
+    ALTER TABLE cityobject
       ADD COLUMN gmlid_codespace VARCHAR(1000);
 
-    ALTER TABLE citydb.appearance
+    ALTER TABLE appearance
       ADD COLUMN gmlid_codespace VARCHAR(1000);
 
-    ALTER TABLE citydb.surface_geometry
+    ALTER TABLE surface_geometry
       ADD COLUMN gmlid_codespace VARCHAR(1000);
 
-    ALTER TABLE citydb.surface_data
+    ALTER TABLE surface_data
       ADD COLUMN gmlid_codespace VARCHAR(1000);
 
-    ALTER TABLE citydb.citymodel
+    ALTER TABLE citymodel
       ADD COLUMN gmlid_codespace VARCHAR(1000);
 
-    ALTER TABLE citydb.address
+    ALTER TABLE address
       ADD COLUMN gmlid VARCHAR(256),
       ADD COLUMN gmlid_codespace VARCHAR(1000);
   END IF;
@@ -193,77 +193,77 @@ $$;
 * update tables with new objectclass_id column
 *
 **************************************************/
-UPDATE citydb.bridge b
+UPDATE bridge b
   SET objectclass_id = (
     SELECT objectclass_id FROM cityobject co
       WHERE co.id = b.id
   );
 
-UPDATE citydb.bridge_constr_element
+UPDATE bridge_constr_element
   SET objectclass_id = 82;
 
-UPDATE citydb.bridge_furniture
+UPDATE bridge_furniture
   SET objectclass_id = 80;
 
-UPDATE citydb.bridge_room
+UPDATE bridge_room
   SET objectclass_id = 81;
 
-UPDATE citydb.building b
+UPDATE building b
   SET objectclass_id = (
     SELECT objectclass_id FROM cityobject co
       WHERE co.id = b.id
   );
 
-UPDATE citydb.building_furniture
+UPDATE building_furniture
   SET objectclass_id = 40;
 
-UPDATE citydb.room
+UPDATE room
   SET objectclass_id = 41;
 
-UPDATE citydb.city_furniture
+UPDATE city_furniture
   SET objectclass_id = 21;
 
-UPDATE citydb.generic_cityobject
+UPDATE generic_cityobject
   SET objectclass_id = 5;
 
-UPDATE citydb.land_use
+UPDATE land_use
   SET objectclass_id = 4;
 
-UPDATE citydb.breakline_relief
+UPDATE breakline_relief
   SET objectclass_id = 18;
 
-UPDATE citydb.masspoint_relief
+UPDATE masspoint_relief
   SET objectclass_id = 17;
 
-UPDATE citydb.raster_relief
+UPDATE raster_relief
   SET objectclass_id = 19;
 
-UPDATE citydb.tin_relief
+UPDATE tin_relief
   SET objectclass_id = 16;
 
-UPDATE citydb.plant_cover
+UPDATE plant_cover
   SET objectclass_id = 8;
 
-UPDATE citydb.solitary_vegetat_object
+UPDATE solitary_vegetat_object
   SET objectclass_id = 7;
 
-UPDATE citydb.tunnel t
+UPDATE tunnel t
   SET objectclass_id = (
     SELECT objectclass_id FROM cityobject co
       WHERE co.id = t.id
   );
 
-UPDATE citydb.tunnel_furniture
+UPDATE tunnel_furniture
   SET objectclass_id = 101;
 
-UPDATE citydb.tunnel_hollow_space
+UPDATE tunnel_hollow_space
   SET objectclass_id = 102;
 
-UPDATE citydb.waterbody
+UPDATE waterbody
   SET objectclass_id = 9;
 
-UPDATE citydb.relief_feature rf
+UPDATE relief_feature rf
   SET objectclass_id = 14;
   
-UPDATE citydb.cityobjectgroup
+UPDATE cityobjectgroup
   SET objectclass_id = 23;  

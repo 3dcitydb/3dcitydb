@@ -30,6 +30,11 @@
 \pset footer off
 SET client_min_messages TO WARNING;
 
+--// set search_path for this session
+SELECT current_setting('search_path') AS current_path;
+\gset
+SET search_path TO citydb, :current_path;
+
 --// create SEQUENCES
 \echo
 \echo 'Create sequences that are new in v4 ...'

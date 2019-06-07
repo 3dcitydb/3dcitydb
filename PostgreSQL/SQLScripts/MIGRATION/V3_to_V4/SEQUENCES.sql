@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
-CREATE SEQUENCE citydb.schema_seq
+CREATE SEQUENCE schema_seq
     INCREMENT BY 1
     MINVALUE 0
     MAXVALUE 2147483647
@@ -34,7 +34,7 @@ CREATE SEQUENCE citydb.schema_seq
     NO CYCLE
     OWNED BY NONE;
 
-CREATE SEQUENCE citydb.ade_seq
+CREATE SEQUENCE ade_seq
     INCREMENT BY 1
     MINVALUE 0
     MAXVALUE 2147483647
