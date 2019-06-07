@@ -24,6 +24,7 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
+\t on
 
 \echo 'List of existing 3DCityDB schemas:'
 SELECT n.nspname AS schema_name 
@@ -31,3 +32,5 @@ SELECT n.nspname AS schema_name
   JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
     WHERE c.relname = 'database_srs'
 	  AND c.relkind = 'r';
+
+\t off

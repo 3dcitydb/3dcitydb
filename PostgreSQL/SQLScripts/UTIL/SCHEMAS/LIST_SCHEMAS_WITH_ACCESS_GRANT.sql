@@ -27,6 +27,7 @@
 
 \set USERNAME :username
 \set USERNAME_QUOTED '\'':username'\''
+\t on
 
 \echo 'List of 3DCityDB schemas with usage privilege for "':USERNAME'":'
 WITH schema_names AS (
@@ -38,3 +39,5 @@ WITH schema_names AS (
 ) SELECT schema_name
     FROM schema_names
 	  WHERE pg_catalog.has_schema_privilege(lower(:USERNAME_QUOTED), schema_name, 'USAGE');
+	  
+\t off
