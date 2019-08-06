@@ -1,5 +1,13 @@
 Change Log
 ==========
+### 4.0.2 - 2019-08-06
+
+##### Fixes
+* Oracle: Fixed `sdo2geojson3d` function to correctly format coordinate values. 
+* PostgreSQL: Fixed a bug in the `V3_to_V4` migration script where the `citydb` prefix should not be used.
+
+##### Additions
+* Added upgrade scripts for upgrading or migrating to the latest 3dcitydb version.
 
 ### 4.0.1 - 2019-01-09
 
