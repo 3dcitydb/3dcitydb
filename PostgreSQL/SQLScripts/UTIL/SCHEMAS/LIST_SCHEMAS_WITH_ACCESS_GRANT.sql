@@ -38,6 +38,6 @@ WITH schema_names AS (
 	    AND c.relkind = 'r'
 ) SELECT schema_name
     FROM schema_names
-	  WHERE pg_catalog.has_schema_privilege(lower(:USERNAME_QUOTED), schema_name, 'USAGE');
+	  WHERE pg_catalog.has_schema_privilege(:USERNAME_QUOTED, schema_name, 'USAGE');
 	  
 \t off
