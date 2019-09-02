@@ -55,7 +55,7 @@ done
 
 # Prompt for TEXOP ------------------------------------------------------------
 while [ 1 ]; do
-  if [ $VERS% -le 2 ]; then
+  if [ $VERS -le 2 ]; then
     cd ../../../SQLScripts/MIGRATION/V2_to_V4
     echo
     echo 'No texture URI is used for multiple texture files (yes/no):?'
