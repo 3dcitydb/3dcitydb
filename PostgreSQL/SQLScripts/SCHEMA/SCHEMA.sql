@@ -50,8 +50,6 @@
 --CREATE EXTENSION postgis
 --      WITH SCHEMA public;
 -- ddl-end --
---COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial types and functions';
--- ddl-end --
 
 -- object: citymodel_seq | type: SEQUENCE --
 -- DROP SEQUENCE IF EXISTS citymodel_seq CASCADE;
@@ -811,19 +809,6 @@ CREATE TABLE waterboundary_surface(
 );
 -- ddl-end --
 
--- object: raster_relief | type: TABLE --
--- DROP TABLE IF EXISTS raster_relief CASCADE;
-CREATE TABLE raster_relief(
-	id integer NOT NULL,
-	objectclass_id integer NOT NULL,
-	raster_uri character varying(4000),
-	coverage_id integer,
-	CONSTRAINT raster_relief_pk PRIMARY KEY (id)
-	 WITH (FILLFACTOR = 100)
-
-);
--- ddl-end --
-
 -- object: tunnel | type: TABLE --
 -- DROP TABLE IF EXISTS tunnel CASCADE;
 CREATE TABLE tunnel(
@@ -1212,18 +1197,6 @@ CREATE TABLE address_to_bridge(
 );
 -- ddl-end --
 
--- object: grid_coverage_seq | type: SEQUENCE --
--- DROP SEQUENCE IF EXISTS grid_coverage_seq CASCADE;
-CREATE SEQUENCE grid_coverage_seq
-	INCREMENT BY 1
-	MINVALUE 0
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 1
-	NO CYCLE
-	OWNED BY NONE;
--- ddl-end --
-
 -- object: cityobject | type: TABLE --
 -- DROP TABLE IF EXISTS cityobject CASCADE;
 CREATE TABLE cityobject(
@@ -1428,17 +1401,6 @@ CREATE TABLE tex_image(
 	tex_mime_type character varying(256),
 	tex_mime_type_codespace character varying(4000),
 	CONSTRAINT tex_image_pk PRIMARY KEY (id)
-	 WITH (FILLFACTOR = 100)
-
-);
--- ddl-end --
-
--- object: grid_coverage | type: TABLE --
--- DROP TABLE IF EXISTS grid_coverage CASCADE;
-CREATE TABLE grid_coverage(
-	id integer NOT NULL DEFAULT nextval('grid_coverage_seq'::regclass),
-	rasterproperty raster,
-	CONSTRAINT grid_coverage_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
 );
@@ -3133,15 +3095,6 @@ CREATE INDEX waterbnd_srf_lod4srf_fkx ON waterboundary_surface
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
--- object: raster_relief_coverage_fkx | type: INDEX --
--- DROP INDEX IF EXISTS raster_relief_coverage_fkx CASCADE;
-CREATE INDEX raster_relief_coverage_fkx ON raster_relief
-	USING btree
-	(
-	  coverage_id ASC NULLS LAST
-	)	WITH (FILLFACTOR = 90);
--- ddl-end --
-
 -- object: tunnel_parent_fkx | type: INDEX --
 -- DROP INDEX IF EXISTS tunnel_parent_fkx CASCADE;
 CREATE INDEX tunnel_parent_fkx ON tunnel
@@ -4596,15 +4549,6 @@ CREATE INDEX ext_ref_cityobject_fkx ON external_reference
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
--- object: grid_coverage_raster_spx | type: INDEX --
--- DROP INDEX IF EXISTS grid_coverage_raster_spx CASCADE;
-CREATE INDEX grid_coverage_raster_spx ON grid_coverage
-	USING gist
-	(
-	  (ST_ConvexHull(rasterproperty))
-	);
--- ddl-end --
-
 -- object: cityobject_lineage_inx | type: INDEX --
 -- DROP INDEX IF EXISTS cityobject_lineage_inx CASCADE;
 CREATE INDEX cityobject_lineage_inx ON cityobject
@@ -4838,15 +4782,6 @@ CREATE INDEX masspoint_rel_objclass_fkx ON masspoint_relief
 -- object: plant_cover_objclass_fkx | type: INDEX --
 -- DROP INDEX IF EXISTS plant_cover_objclass_fkx CASCADE;
 CREATE INDEX plant_cover_objclass_fkx ON plant_cover
-	USING btree
-	(
-	  objectclass_id ASC NULLS LAST
-	)	WITH (FILLFACTOR = 90);
--- ddl-end --
-
--- object: raster_relief_objclass_fkx | type: INDEX --
--- DROP INDEX IF EXISTS raster_relief_objclass_fkx CASCADE;
-CREATE INDEX raster_relief_objclass_fkx ON raster_relief
 	USING btree
 	(
 	  objectclass_id ASC NULLS LAST
@@ -6077,27 +6012,6 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE waterboundary_surface DROP CONSTRAINT IF EXISTS waterbnd_srf_lod4srf_fk CASCADE;
 ALTER TABLE waterboundary_surface ADD CONSTRAINT waterbnd_srf_lod4srf_fk FOREIGN KEY (lod4_surface_id)
 REFERENCES surface_geometry (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
--- ddl-end --
-
--- object: raster_relief_comp_fk | type: CONSTRAINT --
--- ALTER TABLE raster_relief DROP CONSTRAINT IF EXISTS raster_relief_comp_fk CASCADE;
-ALTER TABLE raster_relief ADD CONSTRAINT raster_relief_comp_fk FOREIGN KEY (id)
-REFERENCES relief_component (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
--- ddl-end --
-
--- object: raster_relief_coverage_fk | type: CONSTRAINT --
--- ALTER TABLE raster_relief DROP CONSTRAINT IF EXISTS raster_relief_coverage_fk CASCADE;
-ALTER TABLE raster_relief ADD CONSTRAINT raster_relief_coverage_fk FOREIGN KEY (coverage_id)
-REFERENCES grid_coverage (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
--- ddl-end --
-
--- object: raster_relief_objclass_fk | type: CONSTRAINT --
--- ALTER TABLE raster_relief DROP CONSTRAINT IF EXISTS raster_relief_objclass_fk CASCADE;
-ALTER TABLE raster_relief ADD CONSTRAINT raster_relief_objclass_fk FOREIGN KEY (objectclass_id)
-REFERENCES objectclass (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ddl-end --
 

@@ -70,8 +70,6 @@
 -- FUNCTION citydb.del_external_reference(pid int) RETURNS integer
 -- FUNCTION citydb.del_generic_cityobject(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
 -- FUNCTION citydb.del_generic_cityobject(pid int) RETURNS integer
--- FUNCTION citydb.del_grid_coverage(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_grid_coverage(pid int) RETURNS integer
 -- FUNCTION citydb.del_implicit_geometry(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
 -- FUNCTION citydb.del_implicit_geometry(pid int) RETURNS integer
 -- FUNCTION citydb.del_land_use(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
@@ -82,8 +80,6 @@
 -- FUNCTION citydb.del_opening(pid int) RETURNS integer
 -- FUNCTION citydb.del_plant_cover(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
 -- FUNCTION citydb.del_plant_cover(pid int) RETURNS integer
--- FUNCTION citydb.del_raster_relief(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_raster_relief(pid int) RETURNS integer
 -- FUNCTION citydb.del_relief_component(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
 -- FUNCTION citydb.del_relief_component(pid int) RETURNS integer
 -- FUNCTION citydb.del_relief_feature(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
@@ -2827,9 +2823,6 @@ BEGIN
         -- delete breakline_relief
         WHEN objectclass_id = 18 THEN
           dummy_id := citydb.del_breakline_relief(array_agg(object_id), 0);
-        -- delete raster_relief
-        WHEN objectclass_id = 19 THEN
-          dummy_id := citydb.del_raster_relief(array_agg(object_id), 0);
         -- delete city_furniture
         WHEN objectclass_id = 21 THEN
           dummy_id := citydb.del_city_furniture(array_agg(object_id), 1);
@@ -3624,57 +3617,6 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_grid_coverage(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
-$body$
-DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
-  objectclass_id integer;
-  rec RECORD;
-BEGIN
-  -- delete citydb.grid_coverages
-  WITH delete_objects AS (
-    DELETE FROM
-      citydb.grid_coverage t
-    USING
-      unnest($1) a(a_id)
-    WHERE
-      t.id = a.a_id
-    RETURNING
-      id
-  )
-  SELECT
-    array_agg(id)
-  INTO
-    deleted_ids
-  FROM
-    delete_objects;
-
-  IF array_length(deleted_child_ids, 1) > 0 THEN
-    deleted_ids := deleted_child_ids;
-  END IF;
-
-  RETURN QUERY
-    SELECT unnest(deleted_ids);
-END;
-$body$
-LANGUAGE plpgsql STRICT;
-------------------------------------------
-
-CREATE OR REPLACE FUNCTION citydb.del_grid_coverage(pid int) RETURNS integer AS
-$body$
-DECLARE
-  deleted_id integer;
-BEGIN
-  deleted_id := citydb.del_grid_coverage(ARRAY[pid]);
-  RETURN deleted_id;
-END;
-$body$
-LANGUAGE plpgsql STRICT;
-------------------------------------------
-
 CREATE OR REPLACE FUNCTION citydb.del_implicit_geometry(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
 $body$
 DECLARE
@@ -4204,74 +4146,6 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_raster_relief(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
-$body$
-DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
-  objectclass_id integer;
-  rec RECORD;
-  grid_coverage_ids int[] := '{}';
-BEGIN
-  -- delete citydb.raster_reliefs
-  WITH delete_objects AS (
-    DELETE FROM
-      citydb.raster_relief t
-    USING
-      unnest($1) a(a_id)
-    WHERE
-      t.id = a.a_id
-    RETURNING
-      id,
-      coverage_id
-  )
-  SELECT
-    array_agg(id),
-    array_agg(coverage_id)
-  INTO
-    deleted_ids,
-    grid_coverage_ids
-  FROM
-    delete_objects;
-
-  -- delete citydb.grid_coverage(s)
-  IF -1 = ALL(grid_coverage_ids) IS NOT NULL THEN
-    PERFORM
-      citydb.del_grid_coverage(array_agg(a.a_id))
-    FROM
-      (SELECT DISTINCT unnest(grid_coverage_ids) AS a_id) a;
-  END IF;
-
-  IF $2 <> 1 THEN
-    -- delete relief_component
-    PERFORM citydb.del_relief_component(deleted_ids, 2);
-  END IF;
-
-  IF array_length(deleted_child_ids, 1) > 0 THEN
-    deleted_ids := deleted_child_ids;
-  END IF;
-
-  RETURN QUERY
-    SELECT unnest(deleted_ids);
-END;
-$body$
-LANGUAGE plpgsql STRICT;
-------------------------------------------
-
-CREATE OR REPLACE FUNCTION citydb.del_raster_relief(pid int) RETURNS integer AS
-$body$
-DECLARE
-  deleted_id integer;
-BEGIN
-  deleted_id := citydb.del_raster_relief(ARRAY[pid]);
-  RETURN deleted_id;
-END;
-$body$
-LANGUAGE plpgsql STRICT;
-------------------------------------------
-
 CREATE OR REPLACE FUNCTION citydb.del_relief_component(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
 $body$
 DECLARE
@@ -4303,9 +4177,6 @@ BEGIN
         -- delete breakline_relief
         WHEN objectclass_id = 18 THEN
           dummy_id := citydb.del_breakline_relief(array_agg(object_id), 1);
-        -- delete raster_relief
-        WHEN objectclass_id = 19 THEN
-          dummy_id := citydb.del_raster_relief(array_agg(object_id), 1);
         ELSE
           dummy_id := NULL;
       END CASE;

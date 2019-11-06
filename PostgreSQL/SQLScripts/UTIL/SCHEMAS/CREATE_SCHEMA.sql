@@ -1,23 +1,23 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
--- 
+--
 -- Copyright 2013 - 2019
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
--- 
+--
 -- The 3D City Database is jointly developed with the following
 -- cooperation partners:
--- 
+--
 -- virtualcitySYSTEMS GmbH, Berlin <http://www.virtualcitysystems.de/>
 -- M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
--- 
+--
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
 -- You may obtain a copy of the License at
--- 
+--
 --     http://www.apache.org/licenses/LICENSE-2.0
---     
+--
 -- Unless required by applicable law or agreed to in writing, software
 -- distributed under the License is distributed on an "AS IS" BASIS,
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,6 +32,7 @@ SET client_min_messages TO WARNING;
 \set SCHEMA_NAME :schema_name
 \set TMP_DELETE_FILE :tmp_delete_file
 \set TMP_ENVELOPE_FILE :tmp_envelope_file
+\set TMP_CREATE_DB_RASTER_FILE :tmp_create_db_raster_file
 
 \echo 'Creating 3DCityDB schema "':SCHEMA_NAME'" ...'
 
@@ -44,7 +45,10 @@ SELECT current_setting('search_path') AS current_path;
 SET search_path TO :"SCHEMA_NAME", :current_path;
 
 --// check if the PostGIS extension and the citydb_pkg package are available
-SELECT postgis_version();
+--// check if version is below 3 or if postgis_raster extension is available
+SELECT postgis_lib_version() AS postgis_version \gset
+SELECT EXISTS(SELECT 1 AS create_raster FROM pg_available_extensions WHERE name = 'postgis_raster') AS postgis3_raster \gset
+
 SELECT version as citydb_version from citydb_pkg.citydb_version();
 
 --// create TABLES, SEQUENCES, CONSTRAINTS, INDEXES
@@ -63,6 +67,15 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 \i ../../SCHEMA/OBJECTCLASS/OBJCLASS.sql
 \i :TMP_ENVELOPE_FILE
 \i :TMP_DELETE_FILE
+
+--// create additional schema for raster data only if raster type is installed
+SELECT CASE WHEN :'postgis_version' < '3' OR :'postgis3_raster' = 't'
+  THEN :'TMP_CREATE_DB_RASTER_FILE'
+  ELSE '../../SCHEMA/RASTER/DO_NOTHING.sql'
+  END AS create_raster;
+\gset
+
+\i :create_raster
 
 \echo
 \echo 'Created 3DCityDB schema "':SCHEMA_NAME'".'
