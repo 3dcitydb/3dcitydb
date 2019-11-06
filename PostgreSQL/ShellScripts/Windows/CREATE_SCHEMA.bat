@@ -63,8 +63,12 @@ echo|set /p="Preparing SQL scripts for setting up "%SCHEMA_NAME%" ... "
 set TOKEN=citydb
 set DELETE_FILE=..\..\SCHEMA\DELETE\DELETE.sql
 set TMP_DELETE_FILE=TMP_%SCHEMA_NAME%_DELETE.sql
+set DELETE_RASTER_FILE=..\..\SCHEMA\DELETE\DELETE_RASTER.sql
+set TMP_DELETE_RASTER_FILE=TMP_%SCHEMA_NAME%_DELETE_RASTER.sql
 set ENVELOPE_FILE=..\..\SCHEMA\ENVELOPE\ENVELOPE.sql
 set TMP_ENVELOPE_FILE=TMP_%SCHEMA_NAME%_ENVELOPE.sql
+set ENVELOPE_RASTER_FILE=..\..\SCHEMA\ENVELOPE\ENVELOPE_RASTER.sql
+set TMP_ENVELOPE_RASTER_FILE=TMP_%SCHEMA_NAME%_ENVELOPE_RASTER.sql
 
 (for /f "delims=" %%A in (%DELETE_FILE%) do (
   set line=%%A
@@ -73,6 +77,13 @@ set TMP_ENVELOPE_FILE=TMP_%SCHEMA_NAME%_ENVELOPE.sql
   endlocal
 )) > %TMP_DELETE_FILE%
 
+(for /f "delims=" %%A in (%DELETE_RASTER_FILE%) do (
+  set line=%%A
+  setlocal enabledelayedexpansion
+  echo !line:%TOKEN%=%SCHEMA_NAME%!
+  endlocal
+)) > %TMP_DELETE_RASTER_FILE%
+
 (for /f "delims=" %%A in (%ENVELOPE_FILE%) do (
   set line=%%A
   setlocal enabledelayedexpansion
@@ -80,15 +91,24 @@ set TMP_ENVELOPE_FILE=TMP_%SCHEMA_NAME%_ENVELOPE.sql
   endlocal
 )) > %TMP_ENVELOPE_FILE%
 
+(for /f "delims=" %%A in (%ENVELOPE_RASTER_FILE%) do (
+  set line=%%A
+  setlocal enabledelayedexpansion
+  echo !line:%TOKEN%=%SCHEMA_NAME%!
+  endlocal
+)) > %TMP_ENVELOPE_RASTER_FILE%
+
 echo Done.
 
 :: Run CREATE_SCHEMA.sql to create a new 3DCityDB schema ----------------------
 echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "CREATE_SCHEMA.sql" -v schema_name="%SCHEMA_NAME%" -v tmp_delete_file="%TMP_DELETE_FILE%" -v tmp_envelope_file="%TMP_ENVELOPE_FILE%" 
+psql -d "%CITYDB%" -f "CREATE_SCHEMA.sql" -v schema_name="%SCHEMA_NAME%" -v tmp_delete_file="%TMP_DELETE_FILE%" -v tmp_delete_raster_file="%TMP_DELETE_RASTER_FILE%" -v tmp_envelope_file="%TMP_ENVELOPE_FILE%" -v tmp_envelope_raster_file="%TMP_ENVELOPE_RASTER_FILE%" 
 
 :: Remove temporary SQL scripts -----------------------------------------------
-del %TMP_DELETE_FILE% >nul 2>&1
+del %TMP_DELETE_FILE%>nul 2>&1
+del %TMP_DELETE_RASTER_FILE% >nul 2>&1
 del %TMP_ENVELOPE_FILE% >nul 2>&1
+del %TMP_ENVELOPE_RASTER_FILE% >nul 2>&1
 
 pause

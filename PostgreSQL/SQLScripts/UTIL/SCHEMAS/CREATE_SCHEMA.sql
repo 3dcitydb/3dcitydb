@@ -31,7 +31,9 @@ SET client_min_messages TO WARNING;
 
 \set SCHEMA_NAME :schema_name
 \set TMP_DELETE_FILE :tmp_delete_file
+\set TMP_DELETE_RASTER_FILE :tmp_delete_raster_file
 \set TMP_ENVELOPE_FILE :tmp_envelope_file
+\set TMP_ENVELOPE_RASTER_FILE :tmp_envelope_raster_file
 
 \echo 'Creating 3DCityDB schema "':SCHEMA_NAME'" ...'
 
@@ -44,7 +46,8 @@ SELECT current_setting('search_path') AS current_path;
 SET search_path TO :"SCHEMA_NAME", :current_path;
 
 --// check if the PostGIS extension and the citydb_pkg package are available
-SELECT postgis_version();
+--// check if version is below 3 or if postgis_raster extension is available
+SELECT EXISTS(SELECT 1 AS create_raster FROM pg_available_extensions WHERE name = 'postgis_raster') OR postgis_lib_version() < '3' AS create_raster \gset
 SELECT version as citydb_version from citydb_pkg.citydb_version();
 
 --// create TABLES, SEQUENCES, CONSTRAINTS, INDEXES
@@ -63,6 +66,15 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 \i ../../SCHEMA/OBJECTCLASS/OBJCLASS.sql
 \i :TMP_ENVELOPE_FILE
 \i :TMP_DELETE_FILE
+
+--// create additional schema for raster data only if raster type is installed
+\if :create_raster
+  \echo
+  \echo 'Creating raster schema ...'
+  \i ../../SCHEMA/SCHEMA_RASTER.sql
+  \i :TMP_ENVELOPE_RASTER_FILE
+  \i :TMP_DELETE_RASTER_FILE
+\endif
 
 \echo
 \echo 'Created 3DCityDB schema "':SCHEMA_NAME'".'

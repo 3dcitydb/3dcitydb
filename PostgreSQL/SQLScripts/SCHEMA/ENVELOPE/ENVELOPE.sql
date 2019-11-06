@@ -50,7 +50,6 @@
 -- FUNCTION citydb.env_masspoint_relief(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
 -- FUNCTION citydb.env_opening(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
 -- FUNCTION citydb.env_plant_cover(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
--- FUNCTION citydb.env_raster_relief(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
 -- FUNCTION citydb.env_relief_component(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
 -- FUNCTION citydb.env_relief_feature(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
 -- FUNCTION citydb.env_room(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY
@@ -900,9 +899,6 @@ BEGIN
       -- breakline_relief
       WHEN class_id = 18 THEN
         dummy_bbox := citydb.env_breakline_relief(co_id, set_envelope, 0);
-      -- raster_relief
-      WHEN class_id = 19 THEN
-        dummy_bbox := citydb.env_raster_relief(co_id, set_envelope, 0);
       -- city_furniture
       WHEN class_id = 21 THEN
         dummy_bbox := citydb.env_city_furniture(co_id, set_envelope, 1);
@@ -1449,25 +1445,6 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.env_raster_relief(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY AS
-$body$
-DECLARE
-  class_id INTEGER DEFAULT 0;
-  bbox GEOMETRY;
-  dummy_bbox GEOMETRY;
-BEGIN
-  -- bbox from parent table
-  IF caller <> 1 THEN
-    dummy_bbox := citydb.env_relief_component(co_id, set_envelope, 2);
-    bbox := citydb.update_bounds(bbox, dummy_bbox);
-  END IF;
-
-  RETURN bbox;
-END;
-$body$
-LANGUAGE plpgsql STRICT;
-------------------------------------------
-
 CREATE OR REPLACE FUNCTION citydb.env_relief_component(co_id INTEGER, set_envelope INTEGER DEFAULT 0, caller INTEGER DEFAULT 0) RETURNS GEOMETRY AS
 $body$
 DECLARE
@@ -1500,9 +1477,6 @@ BEGIN
       -- breakline_relief
       WHEN class_id = 18 THEN
         dummy_bbox := citydb.env_breakline_relief(co_id, set_envelope, 1);
-      -- raster_relief
-      WHEN class_id = 19 THEN
-        dummy_bbox := citydb.env_raster_relief(co_id, set_envelope, 1);
       ELSE
     END CASE;
     bbox := citydb.update_bounds(bbox, dummy_bbox);

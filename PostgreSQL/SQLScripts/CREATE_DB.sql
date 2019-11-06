@@ -33,14 +33,14 @@ SET client_min_messages TO WARNING;
 \set GMLSRSNAME :gmlsrsname
 
 --// check if the PostGIS extension is available
-SELECT postgis_version();
+--// check if version is below 3 or if postgis_raster extension is available
+SELECT EXISTS(SELECT 1 AS create_raster FROM pg_available_extensions WHERE name = 'postgis_raster') OR postgis_lib_version() < '3' AS create_raster \gset
 
 --// create schema
 CREATE SCHEMA citydb;
 
 --// set search_path for this session
-SELECT current_setting('search_path') AS current_path;
-\gset
+SELECT current_setting('search_path') AS current_path \gset
 SET search_path TO citydb, :current_path;
 
 --// create TABLES, SEQUENCES, CONSTRAINTS, INDEXES
@@ -56,6 +56,15 @@ SET search_path TO citydb, :current_path;
 \i SCHEMA/OBJECTCLASS/OBJCLASS.sql
 \i SCHEMA/ENVELOPE/ENVELOPE.sql
 \i SCHEMA/DELETE/DELETE.sql
+
+--// create additional schema for raster data only if raster type is installed
+\if :create_raster
+  \echo
+  \echo 'Creating raster schema ...'
+  \i SCHEMA/SCHEMA_RASTER.sql
+  \i SCHEMA/ENVELOPE/ENVELOPE_RASTER.sql
+  \i SCHEMA/DELETE/DELETE_RASTER.sql
+\endif
 
 --// create CITYDB_PKG (additional schema with PL/pgSQL-Functions)
 \echo
