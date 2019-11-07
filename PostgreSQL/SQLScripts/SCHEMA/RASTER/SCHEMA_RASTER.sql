@@ -1,29 +1,42 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
--- 
+--
 -- Copyright 2013 - 2019
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
--- 
+--
 -- The 3D City Database is jointly developed with the following
 -- cooperation partners:
--- 
+--
 -- virtualcitySYSTEMS GmbH, Berlin <http://www.virtualcitysystems.de/>
 -- M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen <http://www.moss.de/>
--- 
+--
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
 -- You may obtain a copy of the License at
--- 
+--
 --     http://www.apache.org/licenses/LICENSE-2.0
---     
+--
 -- Unless required by applicable law or agreed to in writing, software
 -- distributed under the License is distributed on an "AS IS" BASIS,
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
+
+\pset footer off
+SET client_min_messages TO WARNING;
+\set ON_ERROR_STOP on
+
+\echo
+\echo 'Creating raster schema ...'
+
+--// check if version is below 3 or if postgis_raster extension is available
+SELECT EXISTS(SELECT 1 AS create_raster FROM pg_available_extensions WHERE name = 'postgis_raster') OR postgis_lib_version() < '3' AS create_raster \gset
+
+SELECT CASE WHEN NOT :create_raster
+  THEN pg_temp.err('PostGIS raster not installed!') END;
 
 -- object: grid_coverage_seq | type: SEQUENCE --
 -- DROP SEQUENCE IF EXISTS grid_coverage_seq CASCADE;
@@ -108,3 +121,6 @@ CREATE INDEX raster_relief_coverage_fkx ON raster_relief
     coverage_id ASC NULLS LAST
   ) WITH (FILLFACTOR = 90);
 -- ddl-end --
+
+\i ../ENVELOPE/ENVELOPE_RASTER.sql
+\i ../DELETE/DELETE_RASTER.sql
