@@ -80,7 +80,7 @@ set TMP_CREATE_DB_RASTER_FILE=TMP_%SCHEMA_NAME%_CREATE_DB_RASTER.sql
   endlocal
 )) > %TMP_DELETE_FILE%
 
-(for /f "delims=" %%A in (%DELETE_RASTER_FILE%) do (
+(for /f "delims=" %%A in (..\..\%DELETE_RASTER_FILE%) do (
   set line=%%A
   setlocal enabledelayedexpansion
   echo !line:%TOKEN%=%SCHEMA_NAME%!
@@ -94,7 +94,7 @@ set TMP_CREATE_DB_RASTER_FILE=TMP_%SCHEMA_NAME%_CREATE_DB_RASTER.sql
   endlocal
 )) > %TMP_ENVELOPE_FILE%
 
-(for /f "delims=" %%A in (%ENVELOPE_RASTER_FILE%) do (
+(for /f "delims=" %%A in (..\..\%ENVELOPE_RASTER_FILE%) do (
   set line=%%A
   setlocal enabledelayedexpansion
   echo !line:%TOKEN%=%SCHEMA_NAME%!
@@ -104,9 +104,10 @@ set TMP_CREATE_DB_RASTER_FILE=TMP_%SCHEMA_NAME%_CREATE_DB_RASTER.sql
 (for /f "delims=" %%A in (%CREATE_DB_RASTER_FILE%) do (
   set line=%%A
   setlocal enabledelayedexpansion
-  echo !line:%SCHEMA_RASTER_FILE%=..\..\%SCHEMA_RASTER_FILE%!
-  echo !line:..\..\%DELETE_RASTER_FILE%=%TMP_DELETE_RASTER_FILE%!
-  echo !line:..\..\%ENVELOPE_RASTER_FILE%=%TMP_ENVELOPE_RASTER_FILE%!
+  set line=!line:%SCHEMA_RASTER_FILE%=../../%SCHEMA_RASTER_FILE%!
+  set line=!line:%DELETE_RASTER_FILE%=%TMP_DELETE_RASTER_FILE%!
+  set line=!line:%ENVELOPE_RASTER_FILE%=%TMP_ENVELOPE_RASTER_FILE%!
+  echo !line!
   endlocal
 )) > %TMP_CREATE_DB_RASTER_FILE%
 
