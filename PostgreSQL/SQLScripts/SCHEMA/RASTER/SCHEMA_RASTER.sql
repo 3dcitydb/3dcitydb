@@ -108,3 +108,13 @@ CREATE INDEX raster_relief_coverage_fkx ON raster_relief
     coverage_id ASC NULLS LAST
   ) WITH (FILLFACTOR = 90);
 -- ddl-end --
+
+INSERT INTO objectclass ( ID , IS_ADE_CLASS, IS_TOPLEVEL, CLASSNAME , TABLENAME, SUPERCLASS_ID, BASECLASS_ID)
+VALUES (19,0,0,'RasterRelief','raster_relief',15,3);
+
+INSERT INTO objectclass ( ID , IS_ADE_CLASS, IS_TOPLEVEL, CLASSNAME , TABLENAME, SUPERCLASS_ID, BASECLASS_ID)
+VALUES (111,0,0,'GridCoverage','grid_coverage',0,0);
+
+--grid_coverage & raster_relief
+INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, MIN_OCCURS, MAX_OCCURS, IS_COMPOSITE, JOIN_TABLE_OR_COLUMN_NAME)
+VALUES (111,19,0,1,1,'coverage_id');
