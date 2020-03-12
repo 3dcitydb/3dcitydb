@@ -3070,3 +3070,30 @@ CREATE INDEX surface_data_objclass_fkx ON surface_data
 	(
 	  objectclass_id ASC NULLS LAST
 	);
+
+-- object: cityobj_creation_date_inx | type: INDEX --
+-- DROP INDEX IF EXISTS cityobj_creation_date_inx CASCADE;
+CREATE INDEX cityobj_creation_date_inx ON cityobject
+	USING btree
+	(
+	  creation_date
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: cityobj_term_date_inx | type: INDEX --
+-- DROP INDEX IF EXISTS cityobj_term_date_inx CASCADE;
+CREATE INDEX cityobj_term_date_inx ON cityobject
+	USING btree
+	(
+	  termination_date
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: cityobj_last_mod_date_inx | type: INDEX --
+-- DROP INDEX IF EXISTS cityobj_last_mod_date_inx CASCADE;
+CREATE INDEX cityobj_last_mod_date_inx ON cityobject
+	USING btree
+	(
+	  last_modification_date
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --

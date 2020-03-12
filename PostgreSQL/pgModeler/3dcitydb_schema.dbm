@@ -3,9 +3,9 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="16086,9985" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="14146,9984" last-zoom="0.8"
 	 default-owner="postgres">
-<database name="3DCityDB_v3.3" encoding="UTF8">
+<database name="3DCityDB" encoding="UTF8">
 	<role name="postgres"/>
 	<tablespace name="pg_default"/>
 </database>
@@ -6096,6 +6096,30 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<columns names="child_id,parent_id,join_table_or_column_name" ref-type="src-columns"/>
 	</constraint>
 </table>
+
+<index name="cityobj_creation_date_inx" table="citydb.cityobject"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="creation_date"/>
+		</idxelement>
+</index>
+
+<index name="cityobj_term_date_inx" table="citydb.cityobject"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="termination_date"/>
+		</idxelement>
+</index>
+
+<index name="cityobj_last_mod_date_inx" table="citydb.cityobject"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="last_modification_date"/>
+		</idxelement>
+</index>
 
 <constraint name="cityobject_member_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.cityobject" table="citydb.cityobject_member">
