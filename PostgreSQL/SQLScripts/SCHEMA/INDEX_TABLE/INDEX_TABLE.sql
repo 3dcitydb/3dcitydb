@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2019
+-- Copyright 2013 - 2020
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -44,6 +44,9 @@ INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_spatial_2d('surface_g
 INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_spatial_2d('surface_geom_solid_spx', 'surface_geometry', 'solid_geometry'));
 INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('cityobject_inx', 'cityobject', 'gmlid, gmlid_codespace'));
 INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('cityobject_lineage_inx', 'cityobject', 'lineage'));
+INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('cityobj_creation_date_inx', 'cityobject', 'creation_date'));
+INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('cityobj_term_date_inx', 'cityobject', 'termination_date'));
+INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('cityobj_last_mod_date_inx', 'cityobject', 'last_modification_date'));
 INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('surface_geom_inx', 'surface_geometry', 'gmlid, gmlid_codespace'));
 INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('appearance_inx', 'appearance', 'gmlid, gmlid_codespace'));
 INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('appearance_theme_inx', 'appearance', 'theme'));

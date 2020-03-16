@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2019
+-- Copyright 2013 - 2020
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -37,7 +37,7 @@ SET client_min_messages TO WARNING;
 
 \set NEW_MAJOR 4
 \set NEW_MINOR 0
-\set NEW_REVISION 2
+\set NEW_REVISION 3
 
 \echo
 \echo 'Upgrading 3DCityDB ...'

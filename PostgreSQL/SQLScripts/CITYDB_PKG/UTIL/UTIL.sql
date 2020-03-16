@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2019
+-- Copyright 2013 - 2020
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -74,10 +74,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.citydb_version(
   ) RETURNS RECORD AS 
 $$
 SELECT 
-  '4.0.2'::text AS version, 
+  '4.0.3'::text AS version,
   4 AS major_version, 
   0 AS minor_version, 
-  2 AS minor_revision;
+  3 AS minor_revision;
 $$
 LANGUAGE sql IMMUTABLE;
 
