@@ -30,22 +30,73 @@ License
 -------
 The 3D City Database is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0). See the `LICENSE` file for more details.
 
-Note that releases of the software before version 3.3.0 continue to be licensed under GNU LGPL 3.0. To request a previous release of the 3D City Database under Apache License 2.0 create a GitHub issue.
+Note that releases of the software before version 3.3.0 continue to be licensed under [GNU LGPL 3.0](https://www.gnu.org/licenses/lgpl-3.0.en.html). To request a previous release of the 3D City Database under Apache License 2.0 create a GitHub issue.
+
+Copyright
+---------
+(C) 2013 - 2020
+Chair of Geoinformatics
+Technical University of Munich, Germany
+https://www.gis.bgu.tum.de/
 
 Latest release
 --------------
-The latest stable release of the 3D City Database is 4.0.2.
-
-Download the SQL scripts and documentation [here](https://github.com/3dcitydb/3dcitydb/releases/download/v4.0.2/3DCityDB-4.0.2.zip). Previous releases are available from the [releases section](https://github.com/3dcitydb/3dcitydb/releases).
+The latest stable release of the 3D City Database is 4.0.2. It and its previous releases are available from the [releases section](https://github.com/3dcitydb/3dcitydb/releases).
 
 System requirements
 -------------------
 * Oracle DBMS >= 10g R2 with Spatial or Locator option
 * PostgreSQL DBMS >= 9.3 with PostGIS extension >= 2.0
 
+Database setup
+--------------
+To create a new database instance of the 3D City Database, simply execute
+the `CREATE_DB.bat` batch script under Windows respectively the `CREATE_DB.sh`
+shell script under UNIX/Linux/MacOS environments. These scripts are available
+for both Oracle and PostgreSQL and can be found in the subfolders "3dcitydb/
+oracle/ShellScripts" and "3dcitydb/postgresql/ShellScripts".
+
+The connection details for your database account have to be edited in the
+`CONNECTION_DETAILS` script prior to running the `CREATE_DB` scripts (or any
+other batch/shell script provided in these folders).
+
+The batch/shell script can be executed on double click. For some UNIX/Linux
+distributions, you will have to run the script from within a shell environment.
+Please open your favorite shell and first check whether execution rights are
+correctly set for the script.
+
+To make the script executable for the owner of the file, enter the following:
+
+    chmod u+x CREATE_DB.sh
+
+Afterwards, simply run the script by the following command:
+
+    ./CREATE_DB.sh
+
+The setup procedure requires the following mandatory user inputs:
+1) Spatial Reference System ID (SRID) to be used for all geometry objects,
+2) EPSG code of the height system (optional),
+3) String encoding of the SRS used for the gml:srsName attribute.
+
+For Oracle, two additional inputs are required:
+
+4) Decision whether the database instance should be versioning enabled,
+5) Whether the Oracle DBMS runs with Locator or Spatial license option.
+
+Afterwards, the script will start the setup procedure and invoke additional
+SQL scripts in the background. Please refer to the PDF documentation of the
+3D City Database for a comprehensive step-by-step guide.
+
+Database deletion
+-----------------
+To drop an existing database instance of the 3D City Database, simply execute
+the batch/shell script `DROP_DB` for your database (Oracle or PostgreSQL) and
+operating system. Make sure that you have entered the correct connection
+details in the script `CONNECTION_DETAILS` beforehand.
+
 Documentation and literature
 ----------------------------
-A complete and comprehensive documentation on the 3D City Database and its tools is available with the software and [online](https://www.3dcitydb.org/3dcitydb/documentation/).
+A complete and comprehensive documentation on the 3D City Database and its tools is available [online](https://3dcitydb-docs.readthedocs.io/en/latest/index.html).
 
 An Open Access paper on the 3DCityDB has been published in the International Journal on Open Geospatial Data, Software and Standards 3 (5), 2018: [Z. Yao, C. Nagel, F. Kunde, G. Hudra, P. Willkomm, A. Donaubauer, T. Adolphi, T. H. Kolbe: 3DCityDB - a 3D geodatabase solution for the management, analysis, and visualization of semantic 3D city models based on CityGML](https://doi.org/10.1186/s40965-018-0046-7). Please use this reference when citing the 3DCityDB project.
 
@@ -57,12 +108,59 @@ Contributing
 
 Cooperation partners and supporters
 -----------------------------------
-
 The 3D City Database has been developed by and with the support from the following cooperation partners:
 
 * [Chair of Geoinformatics, Technical University of Munich](https://www.gis.bgu.tum.de/)
 * [virtualcitySYSTEMS GmbH, Berlin](http://www.virtualcitysystems.de/)
 * [M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen](http://www.moss.de/)
+
+Active Developers
+-----------------
+* Claus Nagel <cnagel@virtualcitysystems.de>
+* Zhihang Yao <zyao@virtualcitysystems.de>
+* Felix Kunde <felix-kunde@gmx.de>
+* György Hudra <ghudra@moss.de>
+* Thomas H. Kolbe <thomas.kolbe@tum.de>
+
+Please refer to the 3D City Database documentation for the list of all contributors to previous versions.
+
+Contact
+-------
+* thomas.kolbe@tum.de
+* cnagel@virtualcitysystems.de
+* hschulz@moss.de
+
+Websites
+--------
+
+Official 3D City Database website: 
+* http://www.3dcitydb.org/
+
+Related websites:
+* https://github.com/3dcitydb/
+* http://www.gis.bgu.tum.de/
+* http://www.citygml.org/
+* http://www.citygmlwiki.org/
+* http://www.opengeospatial.org/standards/citygml
+
+Disclaimer
+----------
+
+THIS SOFTWARE IS PROVIDED BY THE CHAIR OF GEOINFORMATION FROM TU MUNICH
+(TUMGI) "AS IS" AND "WITH ALL FAULTS." 
+TUMGI MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY KIND CONCERNING THE 
+QUALITY, SAFETY OR SUITABILITY OF THE SOFTWARE, EITHER EXPRESSED OR 
+IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+
+TUMGI MAKES NO REPRESENTATIONS OR WARRANTIES AS TO THE TRUTH, ACCURACY OR 
+COMPLETENESS OF ANY STATEMENTS, INFORMATION OR MATERIALS CONCERNING THE 
+SOFTWARE THAT IS CONTAINED ON AND WITHIN ANY OF THE WEBSITES OWNED AND 
+OPERATED BY TUMGI.
+
+IN NO EVENT WILL TUMGI BE LIABLE FOR ANY INDIRECT, PUNITIVE, SPECIAL, 
+INCIDENTAL OR CONSEQUENTIAL DAMAGES HOWEVER THEY MAY ARISE AND EVEN IF 
+TUMGI HAVE BEEN PREVIOUSLY ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 
 More information
 ----------------
