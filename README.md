@@ -46,7 +46,7 @@ The latest stable release of the 3D City Database is 4.0.2. It and its previous 
 System requirements
 -------------------
 * Oracle DBMS >= 10g R2 with Spatial or Locator option
-* PostgreSQL DBMS >= 9.3 with PostGIS extension >= 2.0
+* PostgreSQL DBMS >= 9.6 with PostGIS extension >= 2.3
 
 Database setup
 --------------
@@ -114,22 +114,6 @@ The 3D City Database has been developed by and with the support from the followi
 * [virtualcitySYSTEMS GmbH, Berlin](http://www.virtualcitysystems.de/)
 * [M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen](http://www.moss.de/)
 
-Active Developers
------------------
-* Claus Nagel <cnagel@virtualcitysystems.de>
-* Zhihang Yao <zyao@virtualcitysystems.de>
-* Felix Kunde <felix-kunde@gmx.de>
-* György Hudra <ghudra@moss.de>
-* Thomas H. Kolbe <thomas.kolbe@tum.de>
-
-Please refer to the 3D City Database documentation for the list of all contributors to previous versions.
-
-Contact
--------
-* thomas.kolbe@tum.de
-* cnagel@virtualcitysystems.de
-* hschulz@moss.de
-
 Websites
 --------
 
@@ -142,25 +126,6 @@ Related websites:
 * http://www.citygml.org/
 * http://www.citygmlwiki.org/
 * http://www.opengeospatial.org/standards/citygml
-
-Disclaimer
-----------
-
-THIS SOFTWARE IS PROVIDED BY THE CHAIR OF GEOINFORMATION FROM TU MUNICH
-(TUMGI) "AS IS" AND "WITH ALL FAULTS." 
-TUMGI MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY KIND CONCERNING THE 
-QUALITY, SAFETY OR SUITABILITY OF THE SOFTWARE, EITHER EXPRESSED OR 
-IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OF 
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
-
-TUMGI MAKES NO REPRESENTATIONS OR WARRANTIES AS TO THE TRUTH, ACCURACY OR 
-COMPLETENESS OF ANY STATEMENTS, INFORMATION OR MATERIALS CONCERNING THE 
-SOFTWARE THAT IS CONTAINED ON AND WITHIN ANY OF THE WEBSITES OWNED AND 
-OPERATED BY TUMGI.
-
-IN NO EVENT WILL TUMGI BE LIABLE FOR ANY INDIRECT, PUNITIVE, SPECIAL, 
-INCIDENTAL OR CONSEQUENTIAL DAMAGES HOWEVER THEY MAY ARISE AND EVEN IF 
-TUMGI HAVE BEEN PREVIOUSLY ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 
 More information
 ----------------
