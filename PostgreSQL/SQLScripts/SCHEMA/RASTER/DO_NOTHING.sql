@@ -30,4 +30,4 @@ SET client_min_messages TO WARNING;
 \set ON_ERROR_STOP ON
 
 \echo
-\echo 'Raster schema not created. Install postgis_raster and run CREATE_DB_RASTER.sql'
+\echo 'Raster schema not created. Install postgis_raster and run CREATE_DB_RASTER.sql

@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2019
+-- Copyright 2013 - 2020
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -4902,6 +4902,33 @@ CREATE TABLE aggregation_info(
 );
 -- ddl-end --
 
+-- object: cityobj_creation_date_inx | type: INDEX --
+-- DROP INDEX IF EXISTS cityobj_creation_date_inx CASCADE;
+CREATE INDEX cityobj_creation_date_inx ON cityobject
+	USING btree
+	(
+	  creation_date
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: cityobj_term_date_inx | type: INDEX --
+-- DROP INDEX IF EXISTS cityobj_term_date_inx CASCADE;
+CREATE INDEX cityobj_term_date_inx ON cityobject
+	USING btree
+	(
+	  termination_date
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: cityobj_last_mod_date_inx | type: INDEX --
+-- DROP INDEX IF EXISTS cityobj_last_mod_date_inx CASCADE;
+CREATE INDEX cityobj_last_mod_date_inx ON cityobject
+	USING btree
+	(
+	  last_modification_date
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
 -- object: cityobject_member_fk | type: CONSTRAINT --
 -- ALTER TABLE cityobject_member DROP CONSTRAINT IF EXISTS cityobject_member_fk CASCADE;
 ALTER TABLE cityobject_member ADD CONSTRAINT cityobject_member_fk FOREIGN KEY (cityobject_id)
@@ -6938,3 +6965,4 @@ ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_fk2 FOREIGN KEY (pa
 REFERENCES objectclass (id) MATCH FULL
 ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
+

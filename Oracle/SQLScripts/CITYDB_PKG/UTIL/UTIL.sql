@@ -1,7 +1,7 @@
 -- 3D City Database - The Open Source CityGML Database
 -- http://www.3dcitydb.org/
 -- 
--- Copyright 2013 - 2019
+-- Copyright 2013 - 2020
 -- Chair of Geoinformatics
 -- Technical University of Munich, Germany
 -- https://www.gis.bgu.tum.de/
@@ -121,7 +121,7 @@ AS
     version_ret := DB_VERSION_TABLE();
     version_ret.extend;
 
-    version_tmp := DB_VERSION_OBJ('4.0.2', 4, 0, 2);
+    version_tmp := DB_VERSION_OBJ('4.0.3', 4, 0, 3);
 
     version_ret(version_ret.count) := version_tmp;
     RETURN version_ret;
