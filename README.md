@@ -41,7 +41,7 @@ https://www.gis.bgu.tum.de/
 
 Latest release
 --------------
-The latest stable release of the 3D City Database is 4.0.2. It and its previous releases are available from the [releases section](https://github.com/3dcitydb/3dcitydb/releases).
+The latest stable release of the 3D City Database is 4.0.3. It and its previous releases are available from the [releases section](https://3dcitydb-docs.readthedocs.io/en/release-v4.2.3/intro/index.html).
 
 System requirements
 -------------------
