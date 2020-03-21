@@ -1,9 +1,9 @@
 :: Provide your database details here -----------------------------------
-set SQLPLUSBIN=E:\app\zyao\product\11.2.0\dbhome_1\BIN
-set HOST=localhost
+set SQLPLUSBIN=path_to_sqlplus
+set HOST=your_host_address
 set PORT=1521
-set SID=orcl.intern.yao.de
-set USERNAME=TestADE
+set SID=your_SID_or_database_name
+set USERNAME=your_username
 ::-----------------------------------------------------------------------
 
 :: Provide optional database details here -------------------------------
