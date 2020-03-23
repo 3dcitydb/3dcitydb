@@ -1,19 +1,20 @@
 Change Log
 ==========
-### 4.0.3 - 2020-03-20
+### 4.0.3 - 2020-03-23
 
 ##### Fixes
 * PostgreSQL: fixed a bug in the SQL script `GRANT_ACCESS.sql` which fails when the database, user, or schema name contains an upper case letter.
 * PostgreSQL: fixed a bug in the SQL script `REVOKE_ACCESS.sql` which fails when the GRANTEE name contains an upper case letter.
 * Fixed a bug in the shell (UNIX, macOS) script `MIGRATE_DB.sh` which fails when migrating a 3DCityDB instance from v2 to v4. 
 * PostgreSQL: Fixed a bug in the SQL script `CONSTRAINT.sql`which causes an error when running the upgrade script on multiple 3DCityDB schemas. [#41](https://github.com/3dcitydb/3dcitydb/pull/41)
-* PostgreSQL: Added existence check of the `postgis_raster` extension which is required by the 3DCityDB when using PostGIS 3 or higher
+* PostgreSQL: Added existence check of the `postgis_raster` extension which is required by the 3DCityDB when using PostGIS 3 or higher.
 
 ##### Additions
 * Added indexes on the columns `CREATION_DATE`, `TERMINATION_DATE` and `LAST_MODIFICATION_DATE` in the CITYOBJECT table.
 
 ##### Miscellaneous 
-* The `Documentation` folder has been removed from this repository. Instead, the 3DCityDB documentation is now maintained in a separate Github Repository [here](https://github.com/3dcitydb/3dcitydb-docs) 
+* Removed the `Documentation` folder. Instead, the 3DCityDB documentation is now maintained in a separate Github Repository [here](https://github.com/3dcitydb/3dcitydb-docs).
+* Renamed the `Oracle` and `PostgreSQL` folders to lowercase. 
 
 ### 4.0.2 - 2019-08-06
 
