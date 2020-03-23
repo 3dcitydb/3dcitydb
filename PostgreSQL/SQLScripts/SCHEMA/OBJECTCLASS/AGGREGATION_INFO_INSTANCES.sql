@@ -184,10 +184,6 @@ VALUES (15,14,0,NULL,0,'relief_feat_to_rel_comp');
 INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, MIN_OCCURS, MAX_OCCURS, IS_COMPOSITE, JOIN_TABLE_OR_COLUMN_NAME)
 VALUES (106,16,0,1,1,'surface_geometry_id');
 
---grid_coverage & raster_relief
-INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, MIN_OCCURS, MAX_OCCURS, IS_COMPOSITE, JOIN_TABLE_OR_COLUMN_NAME)
-VALUES (111,19,0,1,1,'coverage_id');
-
 --traffic_area & transportation_complex
 INSERT INTO aggregation_info ( CHILD_ID , PARENT_ID, MIN_OCCURS, MAX_OCCURS, IS_COMPOSITE, JOIN_TABLE_OR_COLUMN_NAME)
 VALUES (47,42,0,NULL,1,'transportation_complex_id');
