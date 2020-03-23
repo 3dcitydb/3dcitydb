@@ -14,7 +14,7 @@ before_install:
 
 before_script:
     - psql -U postgres -d citydb_testdb -c "create extension postgis"
-    - cd PostgreSQL/SQLScripts
+    - cd postgresql/SQLScripts
 
 script:
     - psql -U postgres -d citydb_testdb -a -f CREATE_DB.sql -v srsno=3068 -v gmlsrsname=urn:ogc:def:crs,crs:EPSG::3068,crs:EPSG::5783
