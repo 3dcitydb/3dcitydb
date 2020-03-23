@@ -7,6 +7,7 @@ Change Log
 * PostgreSQL: fixed a bug in the SQL script `REVOKE_ACCESS.sql` which fails when the GRANTEE name contains an upper case letter.
 * Fixed a bug in the shell (UNIX, macOS) script `MIGRATE_DB.sh` which fails when migrating a 3DCityDB instance from v2 to v4. 
 * PostgreSQL: Fixed a bug in the SQL script `CONSTRAINT.sql`which causes an error when running the upgrade script on multiple 3DCityDB schemas. [#41](https://github.com/3dcitydb/3dcitydb/pull/41)
+* PostgreSQL: Added existence check of the `postgis_raster` extension which is required by the 3DCityDB when using PostGIS 3 or higher
 
 ##### Additions
 * Added indexes on the columns `CREATION_DATE`, `TERMINATION_DATE` and `LAST_MODIFICATION_DATE` in the CITYOBJECT table.
