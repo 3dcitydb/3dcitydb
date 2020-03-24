@@ -1,0 +1,26 @@
+plugins {
+    id 'distribution'
+}
+
+version '4.0.3'
+
+task createVersionTxt(type: Copy)  {
+    def tmp = File.createTempFile('tmp', '.txt')
+    tmp.write(project.version)
+    from tmp.getAbsolutePath()
+    into File.createTempDir();
+    rename(tmp.getName(), 'VERSION.txt')
+}
+
+distributions.main.contents {
+    from 'CHANGES.md'
+    from 'LICENSE'
+    from 'README.md'
+    from createVersionTxt
+    into('oracle') {
+        from 'oracle' exclude 'JDeveloper'
+    }
+    into('postgresql') {
+        from 'postgresql' exclude 'pgModeler'
+    }
+}

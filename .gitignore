@@ -1,0 +1,8 @@
+.gradle/
+gradle.properties
+build/
+
+# Intellij
+.idea/
+*.iml
+*.iws
