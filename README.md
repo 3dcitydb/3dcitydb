@@ -41,7 +41,7 @@ https://www.gis.bgu.tum.de/
 
 Latest release
 --------------
-The latest stable release of the 3D City Database is 4.0.3. It and its previous releases are available from the [releases section](https://3dcitydb-docs.readthedocs.io/en/release-v4.2.3/intro/index.html).
+The latest stable release of the 3D City Database is 4.0.3. It and its previous releases are available from the [releases section](https://3dcitydb-docs.readthedocs.io/en/release-v4.2.3/index.html).
 
 System requirements
 -------------------
@@ -96,7 +96,7 @@ details in the script `CONNECTION_DETAILS` beforehand.
 
 Documentation and literature
 ----------------------------
-A complete and comprehensive documentation on the 3D City Database and its tools is available [online](https://3dcitydb-docs.readthedocs.io/en/latest/index.html).
+A complete and comprehensive documentation on the 3D City Database and its tools is available [online](https://3dcitydb-docs.readthedocs.io/en/release-v4.2.3/intro/index.html).
 
 An Open Access paper on the 3DCityDB has been published in the International Journal on Open Geospatial Data, Software and Standards 3 (5), 2018: [Z. Yao, C. Nagel, F. Kunde, G. Hudra, P. Willkomm, A. Donaubauer, T. Adolphi, T. H. Kolbe: 3DCityDB - a 3D geodatabase solution for the management, analysis, and visualization of semantic 3D city models based on CityGML](https://doi.org/10.1186/s40965-018-0046-7). Please use this reference when citing the 3DCityDB project.
 
