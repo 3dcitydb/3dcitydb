@@ -1,6 +1,6 @@
 Change Log
 ==========
-### 4.0.3 - 2020-03-24
+### 4.0.3 - 2020-03-25
 
 ##### Fixes
 * PostgreSQL: fixed a bug in the SQL script `GRANT_ACCESS.sql` which fails when the database, user, or schema name contains an uppercase letter.
@@ -15,6 +15,7 @@ Change Log
 ##### Miscellaneous 
 * Removed the `Documentation` folder. Instead, the 3DCityDB documentation is now maintained in a separate Github repository [here](https://github.com/3dcitydb/3dcitydb-docs).
 * Renamed the `Oracle` and `PostgreSQL` folders to lowercase. 
+* Automated creation of release packages using Gradle as build system.
 
 ### 4.0.2 - 2019-08-06
 
