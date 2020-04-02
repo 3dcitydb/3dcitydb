@@ -50,19 +50,19 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 --// create TABLES, SEQUENCES, CONSTRAINTS, INDEXES
 \echo
 \echo 'Setting up database schema ...'
-\i ../../SCHEMA/SCHEMA.sql
+\ir ../../SCHEMA/SCHEMA.sql
 
 --// fill tables OBJECTCLASS
-\i ../../SCHEMA/OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
-\i ../../SCHEMA/OBJECTCLASS/AGGREGATION_INFO_INSTANCES.sql
+\ir ../../SCHEMA/OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
+\ir ../../SCHEMA/OBJECTCLASS/AGGREGATION_INFO_INSTANCES.sql
 
 --// create and fill INDEX_TABLE
-\i ../../SCHEMA/INDEX_TABLE/INDEX_TABLE.sql
+\ir ../../SCHEMA/INDEX_TABLE/INDEX_TABLE.sql
 
 --// create schema FUNCTIONS
-\i ../../SCHEMA/OBJECTCLASS/OBJCLASS.sql
-\i :TMP_ENVELOPE_FILE
-\i :TMP_DELETE_FILE
+\ir ../../SCHEMA/OBJECTCLASS/OBJCLASS.sql
+\ir :TMP_ENVELOPE_FILE
+\ir :TMP_DELETE_FILE
 
 \echo
 \echo 'Created 3DCityDB schema "':SCHEMA_NAME'".'

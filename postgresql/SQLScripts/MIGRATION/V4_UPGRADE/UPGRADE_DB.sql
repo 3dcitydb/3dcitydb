@@ -60,7 +60,7 @@ SELECT CASE
   END AS do_action;
 \gset
 
-\i :do_action;
+\ir :do_action;
 
 \echo
 \echo '3DCityDB upgrade complete!'

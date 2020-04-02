@@ -38,21 +38,21 @@ SET search_path TO citydb, :current_path;
 --// create SEQUENCES
 \echo
 \echo 'Create sequences that are new in v4 ...'
-\i SEQUENCES.sql
+\ir SEQUENCES.sql
 
 --// create TABLES
 \echo
 \echo 'Create new tables of v4 and alter existing tables ...'
-\i TABLES.sql
+\ir TABLES.sql
 
 --// update table OBJECTCLASS
-\i OBJECTCLASS_INSTANCES_V4.sql
-\i ../../SCHEMA/OBJECTCLASS/AGGREGATION_INFO_INSTANCES.sql
+\ir OBJECTCLASS_INSTANCES_V4.sql
+\ir ../../SCHEMA/OBJECTCLASS/AGGREGATION_INFO_INSTANCES.sql
 
 --// create schema FUNCTIONS
-\i ../../SCHEMA/OBJECTCLASS/OBJCLASS.sql
-\i ../../SCHEMA/ENVELOPE/ENVELOPE.sql
-\i ../../SCHEMA/DELETE/DELETE.sql
+\ir ../../SCHEMA/OBJECTCLASS/OBJCLASS.sql
+\ir ../../SCHEMA/ENVELOPE/ENVELOPE.sql
+\ir ../../SCHEMA/DELETE/DELETE.sql
 
 --// create CITYDB_PKG (additional schema with PL/pgSQL-Functions)
 \echo
@@ -60,25 +60,25 @@ SET search_path TO citydb, :current_path;
 DROP SCHEMA IF EXISTS citydb_pkg CASCADE;
 CREATE SCHEMA citydb_pkg;
 
-\i ../../CITYDB_PKG/TYPES/TYPES.sql
-\i ../../CITYDB_PKG/UTIL/UTIL.sql
-\i ../../CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql
-\i ../../CITYDB_PKG/INDEX/IDX.sql
-\i ../../CITYDB_PKG/SRS/SRS.sql
-\i ../../CITYDB_PKG/STATISTICS/STAT.sql
+\ir ../../CITYDB_PKG/TYPES/TYPES.sql
+\ir ../../CITYDB_PKG/UTIL/UTIL.sql
+\ir ../../CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql
+\ir ../../CITYDB_PKG/INDEX/IDX.sql
+\ir ../../CITYDB_PKG/SRS/SRS.sql
+\ir ../../CITYDB_PKG/STATISTICS/STAT.sql
 
 --// create and fill INDEX_TABLE
-\i ../../SCHEMA/INDEX_TABLE/INDEX_TABLE.sql
+\ir ../../SCHEMA/INDEX_TABLE/INDEX_TABLE.sql
 
 --// adding CONSTRAINTS in new schema
 \echo
 \echo 'Update primary keys, foreign keys and not null constraints ...'
-\i CONSTRAINTS.sql
+\ir CONSTRAINTS.sql
 
 --// creating INDEXES in new schema
 \echo
 \echo 'Update indexes ...'
-\i INDEXES.sql
+\ir INDEXES.sql
 
 \echo
 \echo '3DCityDB migration complete!'

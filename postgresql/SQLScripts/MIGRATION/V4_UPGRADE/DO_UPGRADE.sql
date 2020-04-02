@@ -47,11 +47,11 @@ BEGIN
 END
 $$;
 
-\i ../../CITYDB_PKG/UTIL/UTIL.sql
-\i ../../CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql
-\i ../../CITYDB_PKG/INDEX/IDX.sql
-\i ../../CITYDB_PKG/SRS/SRS.sql
-\i ../../CITYDB_PKG/STATISTICS/STAT.sql
+\ir ../../CITYDB_PKG/UTIL/UTIL.sql
+\ir ../../CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql
+\ir ../../CITYDB_PKG/INDEX/IDX.sql
+\ir ../../CITYDB_PKG/SRS/SRS.sql
+\ir ../../CITYDB_PKG/STATISTICS/STAT.sql
 
 -- create indexes new in version > 4.0.2
 SET tmp.old_major TO :major;
