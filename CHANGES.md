@@ -1,6 +1,6 @@
 Change Log
 ==========
-### 4.0.3 - 2020-03-25
+### 4.0.3 - 2020-04-06
 
 ##### Fixes
 * PostgreSQL: fixed a bug in the SQL script `GRANT_ACCESS.sql` which fails when the database, user, or schema name contains an uppercase letter.

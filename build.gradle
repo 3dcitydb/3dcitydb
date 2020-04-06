@@ -13,7 +13,6 @@ task createVersionTxt(type: Copy)  {
 }
 
 distributions.main.contents {
-    from 'CHANGES.md'
     from 'LICENSE'
     from 'README.md'
     from createVersionTxt
