@@ -84,11 +84,11 @@ AS
 
     SELECT CAST(COLLECT(tab.t) AS STRARRAY) INTO report FROM (
       SELECT CASE WHEN at.table_name LIKE '%\_LT' ESCAPE '\' THEN
-        (SELECT '#' || upper(table_name) ||
-           (CASE WHEN length(table_name) < 7 THEN '\t\t\t\t'
-                 WHEN length(table_name) > 6 AND length(table_name) < 15 THEN '\t\t\t'
-                 WHEN length(table_name) > 14 AND length(table_name) < 23 THEN '\t\t'
-                 WHEN length(table_name) > 22 THEN '\t' 
+        (SELECT '#' || upper(view_name) ||
+           (CASE WHEN length(view_name) < 7 THEN '\t\t\t\t'
+                 WHEN length(view_name) > 6 AND length(view_name) < 15 THEN '\t\t\t'
+                 WHEN length(view_name) > 14 AND length(view_name) < 23 THEN '\t\t'
+                 WHEN length(view_name) > 22 THEN '\t'
             END)
             || citydb_stat.table_content(view_name, owner_name) FROM all_views 
             WHERE owner = owner_name AND view_name = substr(at.table_name, 1, length(at.table_name)-3))
@@ -97,7 +97,7 @@ AS
            (CASE WHEN length(table_name) < 7 THEN '\t\t\t\t'
                  WHEN length(table_name) > 6 AND length(table_name) < 15 THEN '\t\t\t'
                  WHEN length(table_name) > 14 AND length(table_name) < 23 THEN '\t\t'
-                 WHEN length(table_name) > 22 THEN '\t' 
+                 WHEN length(table_name) > 22 THEN '\t'
             END)
             || citydb_stat.table_content(table_name, owner_name) FROM all_tables
             WHERE owner = owner_name AND table_name = at.table_name) 
