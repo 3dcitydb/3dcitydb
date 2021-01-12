@@ -73,7 +73,18 @@ BEGIN
 	
 	EXECUTE IMMEDIATE 'grant '||privilege_type||' on '||target_schema||'."'||rec.table_name||'" to "'||user_name||'"';
   END LOOP;
-  
+
+  -- views
+  FOR rec IN (SELECT view_name FROM all_views WHERE owner = target_schema) LOOP
+    IF upper('&ACCESS_MODE') = 'RW' THEN
+      privilege_type := 'all';
+    ELSE
+      privilege_type := 'select';
+    END IF;
+
+    EXECUTE IMMEDIATE 'grant '||privilege_type||' on '||target_schema||'."'||rec.view_name||'" to "'||user_name||'"';
+  END LOOP;
+    
   -- sequences
   IF upper('&ACCESS_MODE') = 'RW' THEN
     FOR rec IN (SELECT sequence_name FROM all_sequences WHERE sequence_owner = target_schema) LOOP
