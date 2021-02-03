@@ -40,7 +40,7 @@ if [ -z ${GMLSRSNAME+x} ]; then
     if [ ! -z ${HEIGHT_EPSG+x} ]; then
       # GMLSRSNAME is set, HEIGHT_EPSG is ignored
       echo
-      echo "WARNING: GMLSRSNAME is set. HEIGHT_EPSG will be ignored."
+      echo "!!! WARNING: GMLSRSNAME is set. HEIGHT_EPSG will be ignored."
     fi
 fi
 
@@ -54,14 +54,24 @@ echo "Create PostGIS raster extensions in database '$POSTGRES_DB' ...done!"
 
 # Add PostGIS SFCGAL extension ------------------------------------------------
 if [ ! -z ${POSTGIS_SFCGAL+x} ]; then
-  SFCGAL=true
+  # SFCGAL is currently not available in the post/postgis:alpine images.
+  # Test for Alpine Linux and warn if enabled and alpine image variant.
 
-  echo
-  echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' ..."
+  grep -iE "alpine" /etc/os-release > /dev/null
+  if [ "$?" = 0 ]; then
+    echo
+    echo "!!! WARNING: POSTGIS_SFCGAL was set, but SFCGAL is not available on Alpine Linux image variants."
+    echo "!!! Please use the Debian based image variants if you require SFCGAL support."
+    SFCGAL=true
+  else
+    echo
+    echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' ..."
 
-  "${psql[@]}" -d "$POSTGRES_DB" -c "CREATE EXTENSION IF NOT EXISTS postgis_sfcgal;"
+    "${psql[@]}" -d "$POSTGRES_DB" -c "CREATE EXTENSION IF NOT EXISTS postgis_sfcgal;"
 
-  echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' ...done!"
+    echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' ...done!"
+    SFCGAL=true
+  fi
 else
   SFCGAL=false
 fi
