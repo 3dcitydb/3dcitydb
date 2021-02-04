@@ -74,10 +74,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.citydb_version(
   ) RETURNS RECORD AS 
 $$
 SELECT 
-  '4.0.3'::text AS version,
+  '4.0.4'::text AS version,
   4 AS major_version, 
   0 AS minor_version, 
-  3 AS minor_revision;
+  4 AS minor_revision;
 $$
 LANGUAGE sql IMMUTABLE;
 
