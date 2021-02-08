@@ -4,8 +4,8 @@
 ###############################################################################
 
 # Base image
-ARG baseimage_tag='13-3.1'
-FROM postgis/postgis:${baseimage_tag}
+ARG BASEIMAGE_TAG='13-3.1'
+FROM postgis/postgis:${BASEIMAGE_TAG}
 
 # Copy SQL scripts
 WORKDIR /3dcitydb

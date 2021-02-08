@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        baseimage-version: ['13-3.1']   # base image tags for 'edge' image
+        baseimage-tag: ['13-3.1']   # base image tags for 'edge' image
         variant: ['', '-alpine']        # image variants: '' = debian
 
     steps:
@@ -36,7 +36,7 @@ jobs:
         push: true
         tags: 3dcitydb/3dcitydb-pg:edge${{ matrix.variant }}
         build-args: |
-          baseimage_tag=${{ matrix.baseimage-version }}${{ matrix.variant }}
+          BASEIMAGE_TAG=${{ matrix.baseimage-tag }}${{ matrix.variant }}
     -
       name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
