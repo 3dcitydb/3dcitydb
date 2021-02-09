@@ -1,4 +1,4 @@
-name: docker-build-push-edge
+name: docker-build-edge
 
 on:
   push:
