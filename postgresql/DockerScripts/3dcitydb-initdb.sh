@@ -36,12 +36,12 @@ if [ -z ${GMLSRSNAME+x} ]; then
       GMLSRSNAME="urn:ogc:def:crs:EPSG::$SRID"
     fi
   fi
-  else
-    if [ ! -z ${HEIGHT_EPSG+x} ]; then
-      # GMLSRSNAME is set, HEIGHT_EPSG is ignored
-      echo
-      echo "!!! WARNING: GMLSRSNAME is set. HEIGHT_EPSG will be ignored."
-    fi
+else
+  if [ ! -z ${HEIGHT_EPSG+x} ]; then
+    # GMLSRSNAME is set, HEIGHT_EPSG is ignored
+    echo
+    echo "!!! WARNING: GMLSRSNAME is set. HEIGHT_EPSG will be ignored."
+  fi
 fi
 
 # Add PostGIS raster extension ------------------------------------------------
