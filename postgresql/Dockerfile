@@ -10,12 +10,7 @@ FROM postgis/postgis:${BASEIMAGE_TAG}
 # Copy SQL scripts
 WORKDIR /3dcitydb
 COPY SQLScripts .
-COPY DockerScripts/3dcitydb-initdb /usr/local/bin/
-
-# Set permissions for scripts
-RUN set -ex && \
-  ln -vs /usr/local/bin/3dcitydb-initdb /docker-entrypoint-initdb.d/3dcitydb-initdb.sh && \
-  chmod -v u+x /usr/local/bin/3dcitydb-initdb
+COPY DockerScripts/3dcitydb-initdb.sh /docker-entrypoint-initdb.d/
 
 # set labels
 LABEL maintainer="Bruno Willenborg"
