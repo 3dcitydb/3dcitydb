@@ -4,7 +4,8 @@
 ###############################################################################
 
 # Base image
-FROM konnecteam/docker-oracle-12c:sequelize
+ARG BASEIMAGE_TAG='sequelize'
+FROM konnecteam/docker-oracle-12c:${BASEIMAGE_TAG}
 
 ENV IMPORT_FROM_VOLUME='true'
 
