@@ -1,4 +1,4 @@
-name: docker-build-edge
+name: docker-build-edge-psql
 
 on:
   push:
