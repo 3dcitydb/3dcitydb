@@ -1,0 +1,30 @@
+name: oracle-docker-build-edge
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    -
+      name: Checkout repo
+      uses: actions/checkout@v2
+    -
+      name: Build image
+      id: docker_build
+      uses: docker/build-push-action@v2.2.2
+      with:
+        context: ./oracle
+        push: false
+        tags: 3dcitydb/3dcitydb-oracle:edge
+        build-args: |
+          BASEIMAGE_TAG=sequelize
+    -
+      name: Image digest
+      run: echo ${{ steps.docker_build.outputs.digest }}
