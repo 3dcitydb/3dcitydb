@@ -45,12 +45,14 @@ else
 fi
 
 # Add PostGIS raster extension ------------------------------------------------
-echo
-echo "Create PostGIS raster extensions in database '$POSTGRES_DB' ..."
+if [ $POSTGIS_MAJOR -gt 2 ]; then
+  echo
+  echo "Create PostGIS raster extensions in database '$POSTGRES_DB' ..."
 
-"${psql[@]}" -d "$POSTGRES_DB" -c "CREATE EXTENSION IF NOT EXISTS postgis_raster;"
+  "${psql[@]}" -d "$POSTGRES_DB" -c "CREATE EXTENSION IF NOT EXISTS postgis_raster;"
 
-echo "Create PostGIS raster extensions in database '$POSTGRES_DB' ...done!"
+  echo "Create PostGIS raster extensions in database '$POSTGRES_DB' ...done!"
+fi
 
 # Add PostGIS SFCGAL extension ------------------------------------------------
 if [ ! -z ${POSTGIS_SFCGAL+x} ]; then
