@@ -2,7 +2,7 @@ name: psql-docker-build-push-release
 
 on:
   release:
-    types: [published, released, edited]
+    types: [released, edited]
 
 jobs:
   build:
@@ -26,6 +26,10 @@ jobs:
       name: Checkout repo
       uses: actions/checkout@v2
     -
+      name: Get release version without v
+      id: release_version
+      uses: battila7/get-version-action@v2.2.1
+    -
       name: Docker login
       id: docker_login
       uses: docker/login-action@v1.8.0
@@ -39,7 +43,7 @@ jobs:
       with:
         context: ./postgresql
         push: true
-        tags: 3dcitydb/3dcitydb-pg:${{ baseimage-tag }}${{ matrix.variant }}
+        tags: 3dcitydb/3dcitydb-pg:${{ matrix.baseimage-tag }}-${{ steps.release_version.outputs.version-without-v }}${{ matrix.variant }}
         build-args: |
           BASEIMAGE_TAG=${{ matrix.baseimage-tag }}${{ matrix.variant }}
     -
