@@ -45,7 +45,9 @@ else
 fi
 
 # Add PostGIS raster extension ------------------------------------------------
-if [ $POSTGIS_MAJOR -gt 2 ]; then
+# Get major verion from POSTGIS_VERSION, POSTGIS_MAJOR may return string
+postgis_major=$( echo $POSTGIS_VERSION | cut -f1 -d '.' )
+if [ $postgis_major -gt 2 ]; then
   echo
   echo "Create PostGIS raster extensions in database '$POSTGRES_DB' ..."
 
