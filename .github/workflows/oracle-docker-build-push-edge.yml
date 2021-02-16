@@ -15,12 +15,19 @@ jobs:
       name: Checkout repo
       uses: actions/checkout@v2
     -
+      name: Docker login
+      id: docker_login
+      uses: docker/login-action@v1.8.0
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    -
       name: Build image
       id: docker_build
       uses: docker/build-push-action@v2.2.2
       with:
         context: ./oracle
-        push: true
+        push: false
         tags: 3dcitydb/3dcitydb-oracle:edge
         build-args: |
           BASEIMAGE_TAG=sequelize
