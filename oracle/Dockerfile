@@ -4,15 +4,13 @@
 ###############################################################################
 
 # Base image
-ARG BASEIMAGE_TAG='sequelize'
-FROM konnecteam/docker-oracle-12c:${BASEIMAGE_TAG}
-
-ENV IMPORT_FROM_VOLUME='true'
+ARG BASEIMAGE_TAG='latest'
+FROM container-registry.oracle.com/database/enterprise:${BASEIMAGE_TAG}
 
 # Copy SQL scripts
 WORKDIR /3dcitydb
 COPY SQLScripts .
-COPY DockerScripts/3dcitydb-initdb.sh /docker-entrypoint-initdb.d/
+COPY DockerScripts/3dcitydb-initdb.sh /docker-entrypoint-initdb.d/setup/
 
 # set labels
 LABEL maintainer="Bruno Willenborg"

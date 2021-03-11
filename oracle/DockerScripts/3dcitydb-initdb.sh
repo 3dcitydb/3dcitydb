@@ -4,6 +4,20 @@
 # Print commands and their arguments as they are executed
 set -e;
 
+# ORACLE_PWD ------------------------------------------------------------------
+if [ -z ${ORACLE_PWD+x} ]; then
+  echo
+  echo "Password (ORACLE_PWD) must be set for Oracle Database users."
+  exit
+fi
+
+# ORACLE_PDB ------------------------------------------------------------------
+if [ -z ${ORACLE_PDB+x} ]; then
+  ORACLE_PDB="ORCLPDB1"
+else
+  ORACLE_PDB="$ORACLE_PDB"
+fi
+
 # SRID ------------------------------------------------------------------------
 regex_numeric='^[0-9]+$'
 if [ -z ${SRID+x} ]; then
@@ -62,27 +76,20 @@ else
   DBUSER="$DBUSER"
 fi
 
-# DBPASSWORD
-if [ -z ${DBPASSWORD+x} ]; then
-  DBPASSWORD="$DBUSER"
-else
-  DBPASSWORD="$DBPASSWORD"
-fi
-
 # Create user -----------------------------------------------------------------
 echo
 echo "Creating user $DBUSER ..."
-echo "CREATE USER $DBUSER identified by $DBPASSWORD;
+echo "CREATE USER $DBUSER identified by $ORACLE_PWD;
       GRANT CONNECT, RESOURCE to $DBUSER;
       GRANT CREATE TABLE to $DBUSER;
       GRANT CREATE SEQUENCE to $DBUSER;
-      GRANT UNLIMITED TABLESPACE to $DBUSER;" | sqlplus sys/oracle@localhost:1521/xe.oracle.docker as sysdba
+      GRANT UNLIMITED TABLESPACE to $DBUSER;" | sqlplus sys/"$ORACLE_PWD"@"$ORACLE_PDB" as sysdba
 echo "Creating user $DBUSER ... done!"
 echo
 
 # Setup 3DCityDB schema -------------------------------------------------------
 echo "Setting up 3DCityDB schema in $DBUSER ..."
-sqlplus -S -L "$DBUSER"/"$DBPASSWORD"@localhost:1521/xe.oracle.docker @CREATE_DB.sql "${SRID}" "${GMLSRSNAME}" "${VERSIONING}" "${DBVERSION}"
+sqlplus -S -L "$DBUSER"/"$ORACLE_PWD"@localhost:1521/"$ORACLE_PDB" @CREATE_DB.sql "${SRID}" "${GMLSRSNAME}" "${VERSIONING}" "${DBVERSION}"
 echo "Setting up 3DCityDB schema in $DBUSER ...done!"
 echo
 echo "# Setting up 3DCityDB ... done! ################################################"
@@ -94,7 +101,8 @@ cat <<EOF
 # 3DCityDB Docker Oracle ######################################################
 #
 # Oracle Version --------------------------------------------------------------
-#   12c Standard Edition Release 12.1.0.2.0 - 64bit Production
+#   Latest Oracle Database Enterprise Edition from Oracle Container Registry
+#   https://container-registry.oracle.com/
 #
 # 3DCityDB --------------------------------------------------------------------
 #   3DCityDB version  !!! TBD !!!
