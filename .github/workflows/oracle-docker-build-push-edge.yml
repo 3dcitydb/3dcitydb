@@ -15,6 +15,14 @@ jobs:
       name: Checkout repo
       uses: actions/checkout@v2
     -
+      name: Oracle login
+      id: oracle_login
+      uses: docker/login-action@v1.8.0
+      with:
+        registry: container-registry.oracle.com
+        username: ${{ secrets.ORACLE_USERNAME }}
+        password: ${{ secrets.ORACLE_PASSWORD }}
+    -
       name: Docker login
       id: docker_login
       uses: docker/login-action@v1.8.0
@@ -30,7 +38,7 @@ jobs:
         push: false
         tags: 3dcitydb/3dcitydb-oracle:edge
         build-args: |
-          BASEIMAGE_TAG=sequelize
+          BASEIMAGE_TAG=latest
     -
       name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
