@@ -30,7 +30,7 @@ jobs:
       with:
         context: ./oracle
         push: false
-        tags: 3dcitydb/3dcitydb-oracle:edge
+        tags: 3dcitydb/3dcitydb-ora:edge
         build-args: |
           BASEIMAGE_TAG=latest
     -
