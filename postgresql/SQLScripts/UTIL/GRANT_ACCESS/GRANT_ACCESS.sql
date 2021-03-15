@@ -53,7 +53,7 @@ BEGIN
   END IF;
 
   EXECUTE format('GRANT CONNECT, TEMP ON DATABASE %I TO %I', current_setting('tmp.dbname'), current_setting('tmp.username'));
-  EXECUTE format('GRANT USAGE ON SCHEMA %I TO %I', current_setting('tmp.schema_name'), current_setting('tmp.username'));
+  EXECUTE format('GRANT USAGE, CREATE ON SCHEMA %I TO %I', current_setting('tmp.schema_name'), current_setting('tmp.username'));
   EXECUTE format('GRANT '||priviliges_type||' ON ALL TABLES IN SCHEMA %I TO %I', current_setting('tmp.schema_name'), current_setting('tmp.username'));
   EXECUTE format('GRANT USAGE ON SCHEMA citydb_pkg TO %I', current_setting('tmp.username'));
   EXECUTE format('GRANT '||priviliges_type||' ON ALL TABLES IN SCHEMA citydb_pkg TO %I', current_setting('tmp.username'));
@@ -61,7 +61,7 @@ BEGIN
   EXECUTE format('GRANT '||priviliges_type||' ON ALL TABLES IN SCHEMA public TO %I', current_setting('tmp.username'));
   
   IF upper(current_setting('tmp.access_mode')) = 'RW' THEN
-    EXECUTE format('GRANT ALL PRIVILEGES ON ALL SEQUENCES  IN SCHEMA %I TO %I', current_setting('tmp.schema_name'), current_setting('tmp.username'));
+    EXECUTE format('GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA %I TO %I', current_setting('tmp.schema_name'), current_setting('tmp.username'));
   END IF;  
 END
 $$;
