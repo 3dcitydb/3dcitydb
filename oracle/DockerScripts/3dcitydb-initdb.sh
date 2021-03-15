@@ -36,7 +36,7 @@ fi
 # GMLSRSNAME  -----------------------------------------------------------------
 if [ -z ${GMLSRSNAME+x} ]; then
   # GMLSRSNAME unset, set default GMLSRSNAME using HEIGHT_EPSG if set
-  # HEIGT EPSG ----------------------------------------------------------------
+  # HEIGHT EPSG ---------------------------------------------------------------
   if [ -z ${HEIGHT_EPSG+x} ]; then
     # No HEIGHT_EPSG given
     GMLSRSNAME="urn:ogc:def:crs:EPSG::$SRID"
@@ -47,12 +47,12 @@ if [ -z ${GMLSRSNAME+x} ]; then
       GMLSRSNAME="urn:ogc:def:crs:EPSG::$SRID"
     fi
   fi
-  else
-    if [ ! -z ${HEIGHT_EPSG+x} ]; then
-      # GMLSRSNAME is set, HEIGHT_EPSG is ignored
-      echo
-      echo "!!! WARNING: GMLSRSNAME is set. HEIGHT_EPSG will be ignored."
-    fi
+else
+  if [ ! -z ${HEIGHT_EPSG+x} ]; then
+    # GMLSRSNAME is set, HEIGHT_EPSG is ignored
+    echo
+    echo "!!! WARNING: GMLSRSNAME is set. HEIGHT_EPSG will be ignored."
+  fi
 fi
 
 # VERSIONING ------------------------------------------------------------------

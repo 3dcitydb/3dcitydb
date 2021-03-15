@@ -25,7 +25,7 @@ fi
 # GMLSRSNAME  -----------------------------------------------------------------
 if [ -z ${GMLSRSNAME+x} ]; then
   # GMLSRSNAME unset, set default GMLSRSNAME using HEIGHT_EPSG if set
-  # HEIGT EPSG ----------------------------------------------------------------
+  # HEIGHT EPSG ---------------------------------------------------------------
   if [ -z ${HEIGHT_EPSG+x} ]; then
     # No HEIGHT_EPSG given
     GMLSRSNAME="urn:ogc:def:crs:EPSG::$SRID"
@@ -45,7 +45,7 @@ else
 fi
 
 # Add PostGIS raster extension ------------------------------------------------
-# Get major verion from POSTGIS_VERSION, POSTGIS_MAJOR may return string
+# Get major version from POSTGIS_VERSION, POSTGIS_MAJOR may return string
 postgis_major=$( echo $POSTGIS_VERSION | cut -f1 -d '.' )
 if [ $postgis_major -gt 2 ]; then
   echo
@@ -80,7 +80,7 @@ else
   SFCGAL=false
 fi
 
-# Setup 3DcityDB schema -------------------------------------------------------
+# Setup 3DCityDB schema -------------------------------------------------------
 echo
 echo "Setting up 3DCityDB database schema in database '$POSTGRES_DB' ..."
 
