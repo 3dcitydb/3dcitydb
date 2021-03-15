@@ -101,9 +101,7 @@ cat <<EOF
 # 3DCityDB ---------------------------------------------------------------------
 #   https://github.com/3dcitydb/3dcitydb
 #
-#   3DCityDB version  !!! TBD !!!
-#     version info    !!! TBD !!!
-
+#   3DCityDB version  $CITYDBVERSION
 #   DBNAME            $POSTGRES_DB
 #   SRID              $SRID
 #   SRSNAME           $GMLSRSNAME

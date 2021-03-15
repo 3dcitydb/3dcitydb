@@ -105,8 +105,7 @@ cat <<EOF
 #   https://container-registry.oracle.com/
 #
 # 3DCityDB --------------------------------------------------------------------
-#   3DCityDB version  !!! TBD !!!
-#     version info    !!! TBD !!!
+#   3DCityDB version  $CITYDBVERSION
 #   DBUSER            $DBUSER
 #   SRID              $SRID
 #   SRSNAME           $GMLSRSNAME
