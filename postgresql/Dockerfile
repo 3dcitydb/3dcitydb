@@ -7,7 +7,7 @@
 ARG BASEIMAGE_TAG='13-3.1'
 FROM postgis/postgis:${BASEIMAGE_TAG}
 
-# Setup 3DCityDB version
+# Set 3DCityDB version
 ARG citydb_version='4.1.0'
 ENV CITYDBVERSION=${citydb_version}
 
@@ -16,7 +16,7 @@ WORKDIR /3dcitydb
 COPY SQLScripts .
 COPY DockerScripts/3dcitydb-initdb.sh /docker-entrypoint-initdb.d/
 
-# set labels
+# Set labels
 LABEL maintainer="Bruno Willenborg"
 LABEL maintainer.email="b.willenborg(at)tum.de"
 LABEL maintainer.organization="Chair of Geoinformatics, Technical University of Munich (TUM)"
