@@ -66,7 +66,7 @@ if [ ! -z ${POSTGIS_SFCGAL+x} ]; then
     echo
     echo "!!! WARNING: POSTGIS_SFCGAL was set, but SFCGAL is not available on Alpine Linux image variants."
     echo "!!! Please use the Debian based image variants if you require SFCGAL support."
-    SFCGAL=true
+    SFCGAL=false
   else
     echo
     echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' ..."
