@@ -1,6 +1,7 @@
 .gradle/
 gradle.properties
 build/
+postgresql/build.sh
 
 # Intellij
 .idea/
