@@ -83,9 +83,15 @@ echo "CREATE USER $DBUSER identified by $ORACLE_PWD;
       GRANT CONNECT, RESOURCE to $DBUSER;
       GRANT CREATE TABLE to $DBUSER;
       GRANT CREATE SEQUENCE to $DBUSER;
+      GRANT CREATE TRIGGER to $DBUSER;
       GRANT UNLIMITED TABLESPACE to $DBUSER;" | sqlplus sys/"$ORACLE_PWD"@"$ORACLE_PDB" as sysdba
 echo "Creating user $DBUSER ... done!"
 echo
+
+# Enable GeoRaster at the Schema Level for Oracle Spatial (required since Oracle 19c)
+if [ "${DBVERSION}" = "s" ] || [ "${DBVERSION}" = "S" ]; then
+  echo "EXECUTE SDO_GEOR_ADMIN.ENABLEGEORASTER;" | sqlplus "$DBUSER"/"$ORACLE_PWD"@localhost:1521/"$ORACLE_PDB"
+fi
 
 # Setup 3DCityDB schema -------------------------------------------------------
 echo "Setting up 3DCityDB schema in $DBUSER ..."
