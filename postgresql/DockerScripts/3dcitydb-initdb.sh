@@ -61,8 +61,7 @@ if [ ! -z ${POSTGIS_SFCGAL+x} ]; then
   # SFCGAL is currently not available in the post/postgis:alpine images.
   # Test for Alpine Linux and warn if enabled and alpine image variant.
 
-  grep -iE "alpine" /etc/os-release > /dev/null
-  if [ "$?" = 0 ]; then
+  if grep -iq "alpine" /etc/os-release; then
     echo
     echo "!!! WARNING: POSTGIS_SFCGAL was set, but SFCGAL is not available on Alpine Linux image variants."
     echo "!!! Please use the Debian based image variants if you require SFCGAL support."
