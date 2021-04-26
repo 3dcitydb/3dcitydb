@@ -1,5 +1,17 @@
 Change Log
 ==========
+
+### 4.1.0
+
+##### Additions
+* Added support for running the 3D City Database in a Docker environment. This work is based on the previous 
+  developments from TUM GIS at https://github.com/tum-gis/3dcitydb-docker-postgis, which have been moved to the 3DCityDB
+  GitHub repository. Kudos to TUM GIS for this great contribution. [#54](https://github.com/3dcitydb/3dcitydb/pull/54)
+
+##### Fixes
+* PostgreSQL: Fixed a bug in `GRANT_ACCESS.sql`, which may cause the CityGML export to fail due to insufficient privileges
+  when using a read-only user. [importer-exporter #167](https://github.com/3dcitydb/importer-exporter/issues/167)
+
 ### 4.0.3 - 2020-04-06
 
 ##### Fixes
