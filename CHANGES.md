@@ -4,9 +4,14 @@ Change Log
 ### 4.1.0
 
 ##### Additions
-* Added support for running the 3D City Database in a Docker environment. This work is based on the previous 
+* Added support for running the 3D City Database in a Docker container. This work is based on the previous 
   developments from TUM GIS at https://github.com/tum-gis/3dcitydb-docker-postgis, which have been moved to the 3DCityDB
   GitHub repository. Kudos to TUM GIS for this great contribution. [#54](https://github.com/3dcitydb/3dcitydb/pull/54)
+* The `IS_XLINK` column of the `SURFACE_GEOMETRY` table can now take the values 0, 1, and 2 to be able to 
+  distinguish between geometry references across top-level features (`IS_XLINK` = 1) and references within the same
+  top-level feature (`IS_XLINK` = 2). This information helps to substantially increase the performance of CityGML
+  exports in case mainly local references are used (which is true for most real-world CityGML datasets). The
+  Importer/Exporter version 4.3.0 fully supports this change. [importer-exporter #159](https://github.com/3dcitydb/importer-exporter/pull/159)
 
 ##### Fixes
 * PostgreSQL: Fixed a bug in `GRANT_ACCESS.sql`, which may cause the CityGML export to fail due to insufficient privileges
