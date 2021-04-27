@@ -57,7 +57,7 @@ if [ $postgis_major -gt 2 ]; then
 fi
 
 # Add PostGIS SFCGAL extension ------------------------------------------------
-if [ ! -z ${POSTGIS_SFCGAL+x} ] && [ ! ${POSTGIS_SFCGAL} = false ]; then
+if [ ! -z ${POSTGIS_SFCGAL+x} ] && [ ${POSTGIS_SFCGAL} = true ] || [ "${POSTGIS_SFCGAL}" = "yes" ] ; then
   # SFCGAL is currently not available in the post/postgis:alpine images.
   # Test for Alpine Linux and warn if enabled and alpine image variant.
 
