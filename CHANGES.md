@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-### 4.1.0
+### 4.1.0 - 2021-04-28
 
 ##### Additions
 * Added support for running the 3D City Database in a Docker container. This work is based on the previous 
