@@ -17,7 +17,7 @@ Change Log
 * PostgreSQL: Fixed a bug in `GRANT_ACCESS.sql`, which may cause the CityGML export to fail due to insufficient privileges
   when using a read-only user. [importer-exporter #167](https://github.com/3dcitydb/importer-exporter/issues/167)
 * Oracle: Fixed a bug in `GRANT_ACCESS.sql`, where database views are not taken into account while granting users access.
-* Oracle: Fixed an issue, where the names of versioned tables are not correctly printed in database report.
+* Oracle: Fixed an issue, where the names of versioned tables are not correctly printed in database reports.
 
 ### 4.0.3 - 2020-04-06
 
