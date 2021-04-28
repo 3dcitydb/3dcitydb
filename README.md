@@ -61,7 +61,7 @@ System requirements
 
 Documentation and literature
 ----------------------------
-A complete and comprehensive documentation on the 3D City Database and its tools is available
+A complete and comprehensive user manual on the 3D City Database and its tools is available
 [online](https://3dcitydb-docs.readthedocs.io/en/release-v4.3.0/).
 
 An Open Access paper on the 3DCityDB has been published in the International Journal on Open Geospatial Data,
@@ -72,8 +72,8 @@ Database setup
 To create a new database instance of the 3D City Database, simply execute
 the `CREATE_DB.bat` batch script under Windows respectively the `CREATE_DB.sh`
 shell script under UNIX/Linux/MacOS environments. These scripts are available
-for both Oracle and PostgreSQL and can be found in the subfolders "3dcitydb/
-oracle/ShellScripts" and "3dcitydb/postgresql/ShellScripts".
+for both PostgreSQL and Oracle and can be found in the subfolders "3dcitydb/
+postgresql/ShellScripts" and "3dcitydb/oracle/ShellScripts".
 
 The connection details for your database account have to be edited in the
 `CONNECTION_DETAILS` script prior to running the `CREATE_DB` script (or any
@@ -103,8 +103,8 @@ For Oracle, two additional inputs are required:
 5) Whether the Oracle DBMS runs with Locator or Spatial license option.
 
 Afterwards, the script will start the setup procedure and invoke additional
-SQL scripts in the background. Please refer to the PDF documentation of the
-3D City Database for a comprehensive step-by-step guide.
+SQL scripts in the background. Please refer to the [user manual](https://3dcitydb-docs.readthedocs.io/en/release-v4.3.0/)
+of the 3D City Database for a comprehensive step-by-step guide.
 
 Database deletion
 -----------------
