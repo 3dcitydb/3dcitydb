@@ -43,3 +43,6 @@ jobs:
     -
       name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
+    -
+      name: Inspect image
+      run: docker inspect 3dcitydb/3dcitydb-pg:latest${{ matrix.variant }}
