@@ -13,6 +13,10 @@ jobs:
 
     steps:
     -
+      name: Parse short sha
+      uses: benjlevesque/short-sha@v1.1
+      id: short-sha
+    -
       name: Checkout repo
       uses: actions/checkout@v2
     -
@@ -33,6 +37,7 @@ jobs:
         tags: 3dcitydb/3dcitydb-ora:edge
         build-args: |
           BASEIMAGE_TAG=latest
+          CITYDB_VERSION=${{ steps.short-sha.outputs.sha }}
     -
       name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
