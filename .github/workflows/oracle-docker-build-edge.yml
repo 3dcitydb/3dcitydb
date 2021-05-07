@@ -43,4 +43,4 @@ jobs:
       run: echo ${{ steps.docker_build.outputs.digest }}
     -
       name: Inspect image
-      run: 3dcitydb/3dcitydb-ora:edge
+      run: docker inspect 3dcitydb/3dcitydb-ora:edge
