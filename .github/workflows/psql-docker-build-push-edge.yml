@@ -18,7 +18,7 @@ jobs:
     steps:
     -
       name: Parse short sha
-      uses: benjlevesque/short-sha@v1.1
+      uses: benjlevesque/short-sha@v1.2
       id: short-sha
     -
       name: Checkout repo
@@ -44,3 +44,6 @@ jobs:
     -
       name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
+    -
+      name: Inspect image
+      run: docker inspect 3dcitydb/3dcitydb-pg:edge${{ matrix.variant }}
