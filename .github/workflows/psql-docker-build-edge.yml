@@ -1,9 +1,6 @@
 name: psql-docker-build-edge
 
 on:
-  push:
-    branches:
-    - master
   pull_request:
 
 jobs:
@@ -18,6 +15,10 @@ jobs:
 
     steps:
     -
+      name: Parse short sha
+      uses: benjlevesque/short-sha@v1.2
+      id: short-sha
+    -
       name: Checkout repo
       uses: actions/checkout@v2
     -
@@ -30,6 +31,10 @@ jobs:
         tags: 3dcitydb/3dcitydb-pg:edge${{ matrix.variant }}
         build-args: |
           BASEIMAGE_TAG=${{ matrix.baseimage-tag }}${{ matrix.variant }}
+          CITYDB_VERSION=${{ steps.short-sha.outputs.sha }}
     -
       name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
+    -
+      name: Inspect image
+      run: docker inspect 3dcitydb/3dcitydb-pg:edge${{ matrix.variant }}

@@ -8,8 +8,8 @@ ARG BASEIMAGE_TAG='latest'
 FROM container-registry.oracle.com/database/enterprise:${BASEIMAGE_TAG}
 
 # Set 3DCityDB version
-ARG citydb_version='4.1.0'
-ENV CITYDBVERSION=${citydb_version}
+ARG CITYDB_VERSION='4.1.0'
+ENV CITYDBVERSION=${CITYDB_VERSION}
 
 # Copy SQL scripts
 WORKDIR /3dcitydb
