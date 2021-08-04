@@ -36,8 +36,8 @@ SET client_min_messages TO WARNING;
 \pset fieldsep '.'
 
 \set NEW_MAJOR 4
-\set NEW_MINOR 0
-\set NEW_REVISION 3
+\set NEW_MINOR 1
+\set NEW_REVISION 1
 
 \echo
 \echo 'Upgrading 3DCityDB ...'

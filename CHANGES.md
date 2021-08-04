@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 4.1.1 - 2021-xx-xx
+
+##### Fixes
+* Fixed a bug in the upgrade scripts which fail when upgrading a 3DCityDB instance with version 4.0.3.
+
 ### 4.1.0 - 2021-04-28
 
 ##### Additions
