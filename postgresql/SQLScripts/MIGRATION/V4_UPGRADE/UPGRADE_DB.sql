@@ -36,8 +36,8 @@ SET client_min_messages TO WARNING;
 \pset fieldsep '.'
 
 \set NEW_MAJOR 4
-\set NEW_MINOR 0
-\set NEW_REVISION 3
+\set NEW_MINOR 1
+\set NEW_REVISION 0
 
 \echo
 \echo 'Upgrading 3DCityDB ...'
@@ -45,18 +45,18 @@ SET client_min_messages TO WARNING;
 --// check current version
 \echo
 \echo 'Checking version of the 3DCityDB instance ...'
-SELECT major_version AS major, 
-       minor_version AS minor, 
+SELECT major_version AS major,
+       minor_version AS minor,
 	   minor_revision AS revision FROM citydb_pkg.citydb_version();
 \gset
 
 --// choose action depending on current version
-SELECT CASE 
+SELECT CASE
   WHEN :NEW_MAJOR = :major
-       AND ( (:NEW_MINOR = :minor AND :NEW_REVISION > :revision) 
+       AND ( (:NEW_MINOR = :minor AND :NEW_REVISION > :revision)
 	   OR :NEW_MINOR > :minor ) THEN 'DO_UPGRADE.sql'
   WHEN :major < :NEW_MAJOR THEN 'DO_MIGRATE.sql'
-  ELSE 'DO_NOTHING.sql' 
+  ELSE 'DO_NOTHING.sql'
   END AS do_action;
 \gset
 
