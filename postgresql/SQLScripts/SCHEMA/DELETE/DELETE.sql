@@ -25,110 +25,110 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-08-15 13:32:43)
--- FUNCTION citydb.cleanup_appearances(only_global INTEGER DEFAULT 1) RETURNS SETOF int
+-- Automatically generated database script (Creation Date: 2021-07-30 16:40:54)
+-- FUNCTION citydb.cleanup_appearances(only_global INTEGER DEFAULT 1) RETURNS SETOF BIGINT
 -- FUNCTION citydb.cleanup_schema() RETURNS SETOF void
--- FUNCTION citydb.cleanup_table(tab_name TEXT) RETURNS SETOF INTEGER
--- FUNCTION citydb.del_address(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_address(pid int) RETURNS integer
--- FUNCTION citydb.del_appearance(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_appearance(pid int) RETURNS integer
--- FUNCTION citydb.del_breakline_relief(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_breakline_relief(pid int) RETURNS integer
--- FUNCTION citydb.del_bridge(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_bridge(pid int) RETURNS integer
--- FUNCTION citydb.del_bridge_constr_element(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_bridge_constr_element(pid int) RETURNS integer
--- FUNCTION citydb.del_bridge_furniture(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_bridge_furniture(pid int) RETURNS integer
--- FUNCTION citydb.del_bridge_installation(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_bridge_installation(pid int) RETURNS integer
--- FUNCTION citydb.del_bridge_opening(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_bridge_opening(pid int) RETURNS integer
--- FUNCTION citydb.del_bridge_room(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_bridge_room(pid int) RETURNS integer
--- FUNCTION citydb.del_bridge_thematic_surface(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_bridge_thematic_surface(pid int) RETURNS integer
--- FUNCTION citydb.del_building(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_building(pid int) RETURNS integer
--- FUNCTION citydb.del_building_furniture(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_building_furniture(pid int) RETURNS integer
--- FUNCTION citydb.del_building_installation(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_building_installation(pid int) RETURNS integer
--- FUNCTION citydb.del_city_furniture(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_city_furniture(pid int) RETURNS integer
--- FUNCTION citydb.del_citymodel(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_citymodel(pid int) RETURNS integer
--- FUNCTION citydb.del_cityobject(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_cityobject(pid int) RETURNS integer
--- FUNCTION citydb.del_cityobject_genericattrib(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_cityobject_genericattrib(pid int) RETURNS integer
--- FUNCTION citydb.del_cityobjectgroup(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_cityobjectgroup(pid int) RETURNS integer
--- FUNCTION citydb.del_cityobjects_by_lineage(lineage_value TEXT, objectclass_id INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_external_reference(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_external_reference(pid int) RETURNS integer
--- FUNCTION citydb.del_generic_cityobject(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_generic_cityobject(pid int) RETURNS integer
--- FUNCTION citydb.del_grid_coverage(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_grid_coverage(pid int) RETURNS integer
--- FUNCTION citydb.del_implicit_geometry(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_implicit_geometry(pid int) RETURNS integer
--- FUNCTION citydb.del_land_use(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_land_use(pid int) RETURNS integer
--- FUNCTION citydb.del_masspoint_relief(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_masspoint_relief(pid int) RETURNS integer
--- FUNCTION citydb.del_opening(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_opening(pid int) RETURNS integer
--- FUNCTION citydb.del_plant_cover(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_plant_cover(pid int) RETURNS integer
--- FUNCTION citydb.del_raster_relief(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_raster_relief(pid int) RETURNS integer
--- FUNCTION citydb.del_relief_component(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_relief_component(pid int) RETURNS integer
--- FUNCTION citydb.del_relief_feature(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_relief_feature(pid int) RETURNS integer
--- FUNCTION citydb.del_room(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_room(pid int) RETURNS integer
--- FUNCTION citydb.del_solitary_vegetat_object(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_solitary_vegetat_object(pid int) RETURNS integer
--- FUNCTION citydb.del_surface_data(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_surface_data(pid int) RETURNS integer
--- FUNCTION citydb.del_surface_geometry(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_surface_geometry(pid int) RETURNS integer
--- FUNCTION citydb.del_tex_image(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_tex_image(pid int) RETURNS integer
--- FUNCTION citydb.del_thematic_surface(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_thematic_surface(pid int) RETURNS integer
--- FUNCTION citydb.del_tin_relief(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_tin_relief(pid int) RETURNS integer
--- FUNCTION citydb.del_traffic_area(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_traffic_area(pid int) RETURNS integer
--- FUNCTION citydb.del_transportation_complex(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_transportation_complex(pid int) RETURNS integer
--- FUNCTION citydb.del_tunnel(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_tunnel(pid int) RETURNS integer
--- FUNCTION citydb.del_tunnel_furniture(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_tunnel_furniture(pid int) RETURNS integer
--- FUNCTION citydb.del_tunnel_hollow_space(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_tunnel_hollow_space(pid int) RETURNS integer
--- FUNCTION citydb.del_tunnel_installation(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_tunnel_installation(pid int) RETURNS integer
--- FUNCTION citydb.del_tunnel_opening(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_tunnel_opening(pid int) RETURNS integer
--- FUNCTION citydb.del_tunnel_thematic_surface(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_tunnel_thematic_surface(pid int) RETURNS integer
--- FUNCTION citydb.del_waterbody(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_waterbody(pid int) RETURNS integer
--- FUNCTION citydb.del_waterboundary_surface(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int
--- FUNCTION citydb.del_waterboundary_surface(pid int) RETURNS integer
+-- FUNCTION citydb.cleanup_table(tab_name TEXT) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_address(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_address(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_appearance(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_appearance(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_breakline_relief(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_breakline_relief(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_bridge(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_bridge(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_bridge_constr_element(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_bridge_constr_element(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_bridge_furniture(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_bridge_furniture(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_bridge_installation(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_bridge_installation(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_bridge_opening(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_bridge_opening(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_bridge_room(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_bridge_room(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_bridge_thematic_surface(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_bridge_thematic_surface(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_building(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_building(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_building_furniture(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_building_furniture(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_building_installation(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_building_installation(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_city_furniture(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_city_furniture(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_citymodel(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_citymodel(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_cityobject(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_cityobject(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_cityobject_genericattrib(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_cityobject_genericattrib(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_cityobjectgroup(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_cityobjectgroup(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_cityobjects_by_lineage(lineage_value TEXT, objectclass_id INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_external_reference(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_external_reference(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_generic_cityobject(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_generic_cityobject(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_grid_coverage(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_grid_coverage(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_implicit_geometry(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_implicit_geometry(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_land_use(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_land_use(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_masspoint_relief(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_masspoint_relief(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_opening(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_opening(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_plant_cover(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_plant_cover(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_raster_relief(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_raster_relief(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_relief_component(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_relief_component(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_relief_feature(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_relief_feature(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_room(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_room(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_solitary_vegetat_object(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_solitary_vegetat_object(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_surface_data(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_surface_data(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_surface_geometry(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_surface_geometry(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_tex_image(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_tex_image(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_thematic_surface(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_thematic_surface(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_tin_relief(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_tin_relief(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_traffic_area(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_traffic_area(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_transportation_complex(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_transportation_complex(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_tunnel(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_tunnel(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_tunnel_furniture(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_tunnel_furniture(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_tunnel_hollow_space(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_tunnel_hollow_space(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_tunnel_installation(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_tunnel_installation(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_tunnel_opening(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_tunnel_opening(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_tunnel_thematic_surface(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_tunnel_thematic_surface(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_waterbody(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_waterbody(pid bigint) RETURNS BIGINT
+-- FUNCTION citydb.del_waterboundary_surface(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT
+-- FUNCTION citydb.del_waterboundary_surface(pid bigint) RETURNS BIGINT
 
 ------------------------------------------
-CREATE OR REPLACE FUNCTION citydb.cleanup_appearances(only_global INTEGER DEFAULT 1) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.cleanup_appearances(only_global INTEGER DEFAULT 1) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_id int;
-  app_id int;
+  deleted_id bigint;
+  app_id bigint;
 BEGIN
   PERFORM citydb.del_surface_data(array_agg(s.id))
     FROM citydb.surface_data s 
@@ -194,19 +194,19 @@ $body$
 LANGUAGE plpgsql;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.cleanup_table(tab_name TEXT) RETURNS SETOF INTEGER AS
+CREATE OR REPLACE FUNCTION citydb.cleanup_table(tab_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
   rec RECORD;
-  rec_id INTEGER;
+  rec_id BIGINT;
   where_clause TEXT;
   query_ddl TEXT;
-  counter INTEGER;
+  counter BIGINT;
   table_alias TEXT;
   table_name_with_schemaprefix TEXT;
   del_func_name TEXT;
   schema_name TEXT;
-  deleted_id INTEGER;
+  deleted_id BIGINT;
 BEGIN
   schema_name = 'citydb';
   IF md5(schema_name) <> '373663016e8a76eedd0e1ac37f392d2a' THEN
@@ -269,13 +269,13 @@ $body$
 LANGUAGE plpgsql;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_address(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_address(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
 BEGIN
@@ -308,10 +308,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_address(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_address(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_address(ARRAY[pid]);
   RETURN deleted_id;
@@ -320,16 +320,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_appearance(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_appearance(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  surface_data_ids int[] := '{}';
+  surface_data_ids bigint[] := '{}';
 BEGIN
   -- delete references to surface_datas
   WITH del_surface_data_refs AS (
@@ -390,10 +390,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_appearance(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_appearance(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_appearance(ARRAY[pid]);
   RETURN deleted_id;
@@ -402,13 +402,13 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_breakline_relief(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_breakline_relief(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
 BEGIN
@@ -446,10 +446,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_breakline_relief(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_breakline_relief(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_breakline_relief(ARRAY[pid]);
   RETURN deleted_id;
@@ -458,17 +458,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_bridge(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_bridge(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  address_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  address_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete referenced parts
   PERFORM
@@ -627,10 +627,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_bridge(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_bridge(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_bridge(ARRAY[pid]);
   RETURN deleted_id;
@@ -639,17 +639,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_bridge_constr_element(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_bridge_constr_element(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  implicit_geometry_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  implicit_geometry_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.bridge_constr_elements
   WITH delete_objects AS (
@@ -859,10 +859,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_bridge_constr_element(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_bridge_constr_element(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_bridge_constr_element(ARRAY[pid]);
   RETURN deleted_id;
@@ -871,17 +871,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_bridge_furniture(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_bridge_furniture(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  implicit_geometry_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  implicit_geometry_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.bridge_furnitures
   WITH delete_objects AS (
@@ -1079,10 +1079,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_bridge_furniture(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_bridge_furniture(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_bridge_furniture(ARRAY[pid]);
   RETURN deleted_id;
@@ -1091,17 +1091,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_bridge_installation(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_bridge_installation(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  implicit_geometry_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  implicit_geometry_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   --delete bridge_thematic_surfaces
   PERFORM
@@ -1316,10 +1316,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_bridge_installation(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_bridge_installation(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_bridge_installation(ARRAY[pid]);
   RETURN deleted_id;
@@ -1328,18 +1328,18 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_bridge_opening(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_bridge_opening(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  implicit_geometry_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
-  address_ids int[] := '{}';
+  implicit_geometry_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
+  address_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.bridge_openings
   WITH delete_objects AS (
@@ -1568,10 +1568,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_bridge_opening(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_bridge_opening(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_bridge_opening(ARRAY[pid]);
   RETURN deleted_id;
@@ -1580,16 +1580,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_bridge_room(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_bridge_room(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  surface_geometry_ids int[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   --delete bridge_furnitures
   PERFORM
@@ -1665,10 +1665,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_bridge_room(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_bridge_room(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_bridge_room(ARRAY[pid]);
   RETURN deleted_id;
@@ -1677,17 +1677,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_bridge_thematic_surface(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_bridge_thematic_surface(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  bridge_opening_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  bridge_opening_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete references to bridge_openings
   WITH del_bridge_opening_refs AS (
@@ -1764,10 +1764,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_bridge_thematic_surface(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_bridge_thematic_surface(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_bridge_thematic_surface(ARRAY[pid]);
   RETURN deleted_id;
@@ -1776,17 +1776,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_building(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_building(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  address_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  address_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete referenced parts
   PERFORM
@@ -1940,10 +1940,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_building(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_building(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_building(ARRAY[pid]);
   RETURN deleted_id;
@@ -1952,17 +1952,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_building_furniture(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_building_furniture(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  implicit_geometry_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  implicit_geometry_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.building_furnitures
   WITH delete_objects AS (
@@ -2160,10 +2160,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_building_furniture(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_building_furniture(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_building_furniture(ARRAY[pid]);
   RETURN deleted_id;
@@ -2172,17 +2172,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_building_installation(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_building_installation(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  implicit_geometry_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  implicit_geometry_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   --delete thematic_surfaces
   PERFORM
@@ -2397,10 +2397,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_building_installation(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_building_installation(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_building_installation(ARRAY[pid]);
   RETURN deleted_id;
@@ -2409,17 +2409,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_city_furniture(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_city_furniture(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  implicit_geometry_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  implicit_geometry_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.city_furnitures
   WITH delete_objects AS (
@@ -2629,10 +2629,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_city_furniture(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_city_furniture(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_city_furniture(ARRAY[pid]);
   RETURN deleted_id;
@@ -2641,16 +2641,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_citymodel(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_citymodel(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  cityobject_ids int[] := '{}';
+  cityobject_ids bigint[] := '{}';
 BEGIN
   --delete appearances
   PERFORM
@@ -2724,10 +2724,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_citymodel(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_citymodel(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_citymodel(ARRAY[pid]);
   RETURN deleted_id;
@@ -2736,13 +2736,13 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_cityobject(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_cityobject(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
 BEGIN
@@ -2782,7 +2782,7 @@ BEGIN
       WHERE
         co.id = a.a_id
     LOOP
-      object_id := rec.id::integer;
+      object_id := rec.id::bigint;
       objectclass_id := rec.objectclass_id::integer;
       CASE
         -- delete land_use
@@ -3106,10 +3106,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_cityobject(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_cityobject(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_cityobject(ARRAY[pid]);
   RETURN deleted_id;
@@ -3118,16 +3118,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_cityobject_genericattrib(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_cityobject_genericattrib(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  surface_geometry_ids int[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete referenced parts
   PERFORM
@@ -3189,10 +3189,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_cityobject_genericattrib(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_cityobject_genericattrib(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_cityobject_genericattrib(ARRAY[pid]);
   RETURN deleted_id;
@@ -3201,17 +3201,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_cityobjectgroup(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_cityobjectgroup(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  cityobject_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  cityobject_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete references to cityobjects
   WITH del_cityobject_refs AS (
@@ -3292,10 +3292,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_cityobjectgroup(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_cityobjectgroup(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_cityobjectgroup(ARRAY[pid]);
   RETURN deleted_id;
@@ -3304,11 +3304,11 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_cityobjects_by_lineage(lineage_value TEXT, objectclass_id INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_cityobjects_by_lineage(lineage_value TEXT, objectclass_id INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 -- Function for deleting cityobjects by lineage value
 DECLARE
-  deleted_ids int[] := '{}';
+  deleted_ids bigint[] := '{}';
 BEGIN
   IF $2 = 0 THEN
     SELECT array_agg(c.id) FROM
@@ -3337,13 +3337,13 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_external_reference(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_external_reference(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
 BEGIN
@@ -3376,10 +3376,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_external_reference(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_external_reference(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_external_reference(ARRAY[pid]);
   RETURN deleted_id;
@@ -3388,17 +3388,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_generic_cityobject(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_generic_cityobject(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  implicit_geometry_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  implicit_geometry_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.generic_cityobjects
   WITH delete_objects AS (
@@ -3612,10 +3612,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_generic_cityobject(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_generic_cityobject(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_generic_cityobject(ARRAY[pid]);
   RETURN deleted_id;
@@ -3624,13 +3624,13 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_grid_coverage(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_grid_coverage(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
 BEGIN
@@ -3663,10 +3663,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_grid_coverage(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_grid_coverage(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_grid_coverage(ARRAY[pid]);
   RETURN deleted_id;
@@ -3675,16 +3675,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_implicit_geometry(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_implicit_geometry(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  surface_geometry_ids int[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.implicit_geometrys
   WITH delete_objects AS (
@@ -3726,10 +3726,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_implicit_geometry(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_implicit_geometry(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_implicit_geometry(ARRAY[pid]);
   RETURN deleted_id;
@@ -3738,16 +3738,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_land_use(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_land_use(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  surface_geometry_ids int[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.land_uses
   WITH delete_objects AS (
@@ -3802,10 +3802,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_land_use(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_land_use(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_land_use(ARRAY[pid]);
   RETURN deleted_id;
@@ -3814,13 +3814,13 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_masspoint_relief(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_masspoint_relief(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
 BEGIN
@@ -3858,10 +3858,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_masspoint_relief(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_masspoint_relief(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_masspoint_relief(ARRAY[pid]);
   RETURN deleted_id;
@@ -3870,18 +3870,18 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_opening(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_opening(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  implicit_geometry_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
-  address_ids int[] := '{}';
+  implicit_geometry_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
+  address_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.openings
   WITH delete_objects AS (
@@ -4110,10 +4110,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_opening(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_opening(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_opening(ARRAY[pid]);
   RETURN deleted_id;
@@ -4122,16 +4122,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_plant_cover(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_plant_cover(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  surface_geometry_ids int[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.plant_covers
   WITH delete_objects AS (
@@ -4192,10 +4192,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_plant_cover(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_plant_cover(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_plant_cover(ARRAY[pid]);
   RETURN deleted_id;
@@ -4204,16 +4204,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_raster_relief(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_raster_relief(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  grid_coverage_ids int[] := '{}';
+  grid_coverage_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.raster_reliefs
   WITH delete_objects AS (
@@ -4260,10 +4260,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_raster_relief(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_raster_relief(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_raster_relief(ARRAY[pid]);
   RETURN deleted_id;
@@ -4272,13 +4272,13 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_relief_component(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_relief_component(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
 BEGIN
@@ -4291,7 +4291,7 @@ BEGIN
       WHERE
         co.id = a.a_id
     LOOP
-      object_id := rec.id::integer;
+      object_id := rec.id::bigint;
       objectclass_id := rec.objectclass_id::integer;
       CASE
         -- delete tin_relief
@@ -4350,10 +4350,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_relief_component(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_relief_component(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_relief_component(ARRAY[pid]);
   RETURN deleted_id;
@@ -4362,16 +4362,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_relief_feature(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_relief_feature(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  relief_component_ids int[] := '{}';
+  relief_component_ids bigint[] := '{}';
 BEGIN
   -- delete references to relief_components
   WITH del_relief_component_refs AS (
@@ -4437,10 +4437,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_relief_feature(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_relief_feature(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_relief_feature(ARRAY[pid]);
   RETURN deleted_id;
@@ -4449,16 +4449,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_room(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_room(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  surface_geometry_ids int[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   --delete building_furnitures
   PERFORM
@@ -4534,10 +4534,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_room(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_room(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_room(ARRAY[pid]);
   RETURN deleted_id;
@@ -4546,17 +4546,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_solitary_vegetat_object(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_solitary_vegetat_object(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  implicit_geometry_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  implicit_geometry_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.solitary_vegetat_objects
   WITH delete_objects AS (
@@ -4766,10 +4766,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_solitary_vegetat_object(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_solitary_vegetat_object(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_solitary_vegetat_object(ARRAY[pid]);
   RETURN deleted_id;
@@ -4778,16 +4778,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_surface_data(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_surface_data(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  tex_image_ids int[] := '{}';
+  tex_image_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.surface_datas
   WITH delete_objects AS (
@@ -4833,10 +4833,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_surface_data(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_surface_data(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_surface_data(ARRAY[pid]);
   RETURN deleted_id;
@@ -4845,13 +4845,13 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_surface_geometry(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_surface_geometry(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
 BEGIN
@@ -4904,10 +4904,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_surface_geometry(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_surface_geometry(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_surface_geometry(ARRAY[pid]);
   RETURN deleted_id;
@@ -4916,13 +4916,13 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tex_image(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_tex_image(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
 BEGIN
@@ -4955,10 +4955,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tex_image(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_tex_image(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_tex_image(ARRAY[pid]);
   RETURN deleted_id;
@@ -4967,17 +4967,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_thematic_surface(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_thematic_surface(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  opening_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  opening_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete references to openings
   WITH del_opening_refs AS (
@@ -5054,10 +5054,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_thematic_surface(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_thematic_surface(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_thematic_surface(ARRAY[pid]);
   RETURN deleted_id;
@@ -5066,16 +5066,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tin_relief(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_tin_relief(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  surface_geometry_ids int[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.tin_reliefs
   WITH delete_objects AS (
@@ -5122,10 +5122,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tin_relief(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_tin_relief(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_tin_relief(ARRAY[pid]);
   RETURN deleted_id;
@@ -5134,16 +5134,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_traffic_area(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_traffic_area(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  surface_geometry_ids int[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.traffic_areas
   WITH delete_objects AS (
@@ -5194,10 +5194,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_traffic_area(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_traffic_area(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_traffic_area(ARRAY[pid]);
   RETURN deleted_id;
@@ -5206,16 +5206,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_transportation_complex(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_transportation_complex(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  surface_geometry_ids int[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   --delete traffic_areas
   PERFORM
@@ -5277,10 +5277,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_transportation_complex(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_transportation_complex(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_transportation_complex(ARRAY[pid]);
   RETURN deleted_id;
@@ -5289,16 +5289,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tunnel(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_tunnel(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  surface_geometry_ids int[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete referenced parts
   PERFORM
@@ -5406,10 +5406,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tunnel(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_tunnel(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_tunnel(ARRAY[pid]);
   RETURN deleted_id;
@@ -5418,17 +5418,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tunnel_furniture(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_tunnel_furniture(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  implicit_geometry_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  implicit_geometry_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.tunnel_furnitures
   WITH delete_objects AS (
@@ -5626,10 +5626,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tunnel_furniture(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_tunnel_furniture(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_tunnel_furniture(ARRAY[pid]);
   RETURN deleted_id;
@@ -5638,16 +5638,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tunnel_hollow_space(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_tunnel_hollow_space(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  surface_geometry_ids int[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   --delete tunnel_furnitures
   PERFORM
@@ -5723,10 +5723,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tunnel_hollow_space(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_tunnel_hollow_space(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_tunnel_hollow_space(ARRAY[pid]);
   RETURN deleted_id;
@@ -5735,17 +5735,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tunnel_installation(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_tunnel_installation(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  implicit_geometry_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  implicit_geometry_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   --delete tunnel_thematic_surfaces
   PERFORM
@@ -5960,10 +5960,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tunnel_installation(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_tunnel_installation(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_tunnel_installation(ARRAY[pid]);
   RETURN deleted_id;
@@ -5972,17 +5972,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tunnel_opening(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_tunnel_opening(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  implicit_geometry_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  implicit_geometry_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.tunnel_openings
   WITH delete_objects AS (
@@ -6184,10 +6184,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tunnel_opening(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_tunnel_opening(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_tunnel_opening(ARRAY[pid]);
   RETURN deleted_id;
@@ -6196,17 +6196,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tunnel_thematic_surface(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_tunnel_thematic_surface(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  tunnel_opening_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  tunnel_opening_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete references to tunnel_openings
   WITH del_tunnel_opening_refs AS (
@@ -6283,10 +6283,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_tunnel_thematic_surface(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_tunnel_thematic_surface(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_tunnel_thematic_surface(ARRAY[pid]);
   RETURN deleted_id;
@@ -6295,17 +6295,17 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_waterbody(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_waterbody(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  waterboundary_surface_ids int[] := '{}';
-  surface_geometry_ids int[] := '{}';
+  waterboundary_surface_ids bigint[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete references to waterboundary_surfaces
   WITH del_waterboundary_surface_refs AS (
@@ -6392,10 +6392,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_waterbody(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_waterbody(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_waterbody(ARRAY[pid]);
   RETURN deleted_id;
@@ -6404,16 +6404,16 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_waterboundary_surface(int[], caller INTEGER DEFAULT 0) RETURNS SETOF int AS
+CREATE OR REPLACE FUNCTION citydb.del_waterboundary_surface(bigint[], caller INTEGER DEFAULT 0) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
-  deleted_ids int[] := '{}';
-  dummy_id integer;
-  deleted_child_ids int[] := '{}';
-  object_id integer;
+  deleted_ids bigint[] := '{}';
+  dummy_id bigint;
+  deleted_child_ids bigint[] := '{}';
+  object_id bigint;
   objectclass_id integer;
   rec RECORD;
-  surface_geometry_ids int[] := '{}';
+  surface_geometry_ids bigint[] := '{}';
 BEGIN
   -- delete citydb.waterboundary_surfaces
   WITH delete_objects AS (
@@ -6464,10 +6464,10 @@ $body$
 LANGUAGE plpgsql STRICT;
 ------------------------------------------
 
-CREATE OR REPLACE FUNCTION citydb.del_waterboundary_surface(pid int) RETURNS integer AS
+CREATE OR REPLACE FUNCTION citydb.del_waterboundary_surface(pid bigint) RETURNS BIGINT AS
 $body$
 DECLARE
-  deleted_id integer;
+  deleted_id bigint;
 BEGIN
   deleted_id := citydb.del_waterboundary_surface(ARRAY[pid]);
   RETURN deleted_id;

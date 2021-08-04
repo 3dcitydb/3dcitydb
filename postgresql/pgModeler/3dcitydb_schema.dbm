@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="14146,9984" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="16154,9391" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB" encoding="UTF8">
 	<role name="postgres"/>
@@ -121,14 +121,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <sequence name="citymodel_seq"
 	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
+	 min-value="0" max-value="9223372036854775807"
 	 cache="1" cycle="false">
 	<schema name="citydb"/>
 </sequence>
 
 <sequence name="cityobject_seq"
 	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
+	 min-value="0" max-value="9223372036854775807"
 	 cache="1" cycle="false">
 	<schema name="citydb"/>
 </sequence>
@@ -138,10 +138,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="core_module"/>
 	<position x="19760" y="11620"/>
 	<column name="citymodel_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="cityobject_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="cityobject_member_pk" type="pk-constr" factor="100" table="citydb.cityobject_member">
 		<columns names="citymodel_id,cityobject_id" ref-type="src-columns"/>
@@ -150,7 +150,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <sequence name="external_ref_seq"
 	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
+	 min-value="0" max-value="9223372036854775807"
 	 cache="1" cycle="false">
 	<schema name="citydb"/>
 </sequence>
@@ -160,10 +160,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="core_module"/>
 	<position x="19660" y="12100"/>
 	<column name="cityobject_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="generalizes_to_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="generalization_pk" type="pk-constr" factor="100" table="citydb.generalization">
 		<columns names="cityobject_id,generalizes_to_id" ref-type="src-columns"/>
@@ -172,7 +172,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <sequence name="surface_geometry_seq"
 	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
+	 min-value="0" max-value="9223372036854775807"
 	 cache="1" cycle="false">
 	<schema name="citydb"/>
 </sequence>
@@ -182,7 +182,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="city_object_group_module"/>
 	<position x="20440" y="11480"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -206,13 +206,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="other_geom">
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="parent_cityobject_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="cityobjectgroup_pk" type="pk-constr" factor="100" table="citydb.cityobjectgroup">
 		<columns names="id" ref-type="src-columns"/>
@@ -224,10 +224,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="city_object_group_module"/>
 	<position x="20440" y="11900"/>
 	<column name="cityobject_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="cityobjectgroup_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="role">
 		<type name="character varying" length="256"/>
@@ -287,7 +287,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <sequence name="implicit_geometry_seq"
 	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
+	 min-value="0" max-value="9223372036854775807"
 	 cache="1" cycle="false">
 	<schema name="citydb"/>
 </sequence>
@@ -297,7 +297,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="city_furniture_module"/>
 	<position x="17560" y="13880"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -333,16 +333,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="MULTILINESTRING" variation="1" srid="0"/>
 	</column>
 	<column name="lod1_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_other_geom">
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
@@ -357,16 +357,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod1_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_implicit_ref_point">
 		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
@@ -399,7 +399,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <sequence name="cityobject_genericatt_seq"
 	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
+	 min-value="0" max-value="9223372036854775807"
 	 cache="1" cycle="false">
 	<schema name="citydb"/>
 </sequence>
@@ -409,7 +409,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="generics_module"/>
 	<position x="18240" y="10880"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -448,19 +448,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="MULTILINESTRING" variation="1" srid="0"/>
 	</column>
 	<column name="lod0_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod0_other_geom">
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
@@ -478,19 +478,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod0_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod0_implicit_ref_point">
 		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
@@ -529,7 +529,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <sequence name="address_seq"
 	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
+	 min-value="0" max-value="9223372036854775807"
 	 cache="1" cycle="false">
 	<schema name="citydb"/>
 </sequence>
@@ -539,10 +539,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="buidling_module"/>
 	<position x="20480" y="16340"/>
 	<column name="building_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="address_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="address_to_building_pk" type="pk-constr" factor="100" table="citydb.address_to_building">
 		<columns names="building_id,address_id" ref-type="src-columns"/>
@@ -554,16 +554,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="buidling_module"/>
 	<position x="20380" y="14080"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="building_parent_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="building_root_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="class">
 		<type name="character varying" length="256"/>
@@ -641,34 +641,34 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="MULTILINESTRING" variation="1" srid="0"/>
 	</column>
 	<column name="lod0_footprint_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod0_roofprint_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="building_pk" type="pk-constr" factor="100" table="citydb.building">
 		<columns names="id" ref-type="src-columns"/>
@@ -680,7 +680,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="buidling_module"/>
 	<position x="19560" y="15420"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -704,16 +704,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="room_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_other_geom">
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_implicit_ref_point">
 		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
@@ -731,7 +731,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="buidling_module"/>
 	<position x="19580" y="14160"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer" precision="0"/>
@@ -755,19 +755,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="building_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="room_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_other_geom">
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
@@ -779,13 +779,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod2_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_implicit_ref_point">
 		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
@@ -815,25 +815,25 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="buidling_module"/>
 	<position x="20420" y="15860"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
 	</column>
 	<column name="address_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_implicit_ref_point">
 		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
@@ -857,10 +857,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="buidling_module"/>
 	<position x="20520" y="15660"/>
 	<column name="opening_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="thematic_surface_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="opening_to_them_surface_pk" type="pk-constr" factor="100" table="citydb.opening_to_them_surface">
 		<columns names="opening_id,thematic_surface_id" ref-type="src-columns"/>
@@ -872,7 +872,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="buidling_module"/>
 	<position x="19560" y="15000"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -896,13 +896,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="building_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="room_pk" type="pk-constr" factor="100" table="citydb.room">
 		<columns names="id" ref-type="src-columns"/>
@@ -914,28 +914,28 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="buidling_module"/>
 	<position x="20540" y="15280"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
 	</column>
 	<column name="building_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="room_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="building_installation_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="thematic_surface_pk" type="pk-constr" factor="100" table="citydb.thematic_surface">
 		<columns names="id" ref-type="src-columns"/>
@@ -944,14 +944,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <sequence name="appearance_seq"
 	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
+	 min-value="0" max-value="9223372036854775807"
 	 cache="1" cycle="false">
 	<schema name="citydb"/>
 </sequence>
 
 <sequence name="surface_data_seq"
 	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
+	 min-value="0" max-value="9223372036854775807"
 	 cache="1" cycle="false">
 	<schema name="citydb"/>
 </sequence>
@@ -961,7 +961,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="appearance_module"/>
 	<position x="21260" y="12080"/>
 	<column name="surface_geometry_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="is_texture_parametrization">
 		<type name="numeric" precision="0"/>
@@ -973,7 +973,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" length="4000" spatial-type="POLYGON" variation="0" srid="0"/>
 	</column>
 	<column name="surface_data_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="textureparam_pk" type="pk-constr" factor="100" table="citydb.textureparam">
 		<columns names="surface_geometry_id,surface_data_id" ref-type="src-columns"/>
@@ -985,10 +985,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="appearance_module"/>
 	<position x="21380" y="11360"/>
 	<column name="surface_data_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="appearance_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="appear_to_surface_data_pk" type="pk-constr" factor="100" table="citydb.appear_to_surface_data">
 		<columns names="surface_data_id,appearance_id" ref-type="src-columns"/>
@@ -1000,7 +1000,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="relief_module"/>
 	<position x="22540" y="12780"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -1021,7 +1021,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="relief_module"/>
 	<position x="22580" y="12640"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -1039,7 +1039,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="relief_module"/>
 	<position x="21860" y="12660"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -1063,10 +1063,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="relief_module"/>
 	<position x="21900" y="12480"/>
 	<column name="relief_component_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="relief_feature_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="relief_feat_to_rel_comp_pk" type="pk-constr" factor="100" table="citydb.relief_feat_to_rel_comp">
 		<columns names="relief_component_id,relief_feature_id" ref-type="src-columns"/>
@@ -1078,7 +1078,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="relief_module"/>
 	<position x="21980" y="12360"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -1099,7 +1099,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="relief_module"/>
 	<position x="22460" y="12200"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -1120,7 +1120,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="MULTIPOINT" variation="1" srid="0"/>
 	</column>
 	<column name="surface_geometry_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="tin_relief_pk" type="pk-constr" factor="100" table="citydb.tin_relief">
 		<columns names="id" ref-type="src-columns"/>
@@ -1132,7 +1132,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="transportation_module"/>
 	<position x="21960" y="13320"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
@@ -1159,16 +1159,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod1_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="transportation_complex_pk" type="pk-constr" factor="100" table="citydb.transportation_complex">
 		<columns names="id" ref-type="src-columns"/>
@@ -1180,7 +1180,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="transportation_module"/>
 	<position x="21900" y="12880"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer" precision="0"/>
@@ -1210,16 +1210,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="lod2_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="transportation_complex_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="traffic_area_pk" type="pk-constr" factor="100" table="citydb.traffic_area">
 		<columns names="id" ref-type="src-columns"/>
@@ -1231,7 +1231,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="land_use_module"/>
 	<position x="17040" y="12420"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -1255,19 +1255,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="lod0_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="land_use_pk" type="pk-constr" factor="100" table="citydb.land_use">
 		<columns names="id" ref-type="src-columns"/>
@@ -1279,7 +1279,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="vegetation_module"/>
 	<position x="17040" y="12800"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -1309,28 +1309,28 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="lod1_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_multi_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_multi_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_multi_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="plant_cover_pk" type="pk-constr" factor="100" table="citydb.plant_cover">
 		<columns names="id" ref-type="src-columns"/>
@@ -1342,7 +1342,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="vegetation_module"/>
 	<position x="17000" y="13340"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -1390,16 +1390,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="lod1_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_other_geom">
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
@@ -1414,16 +1414,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod1_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_implicit_ref_point">
 		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
@@ -1459,7 +1459,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="waterbody_module"/>
 	<position x="17360" y="11920"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -1489,22 +1489,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="MULTILINESTRING" variation="1" srid="0"/>
 	</column>
 	<column name="lod0_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="waterbody_pk" type="pk-constr" factor="100" table="citydb.waterbody">
 		<columns names="id" ref-type="src-columns"/>
@@ -1516,10 +1516,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="waterbody_module"/>
 	<position x="16920" y="11600"/>
 	<column name="waterboundary_surface_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="waterbody_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="waterbod_to_waterbnd_pk" type="pk-constr" factor="100" table="citydb.waterbod_to_waterbnd_srf">
 		<columns names="waterboundary_surface_id,waterbody_id" ref-type="src-columns"/>
@@ -1531,7 +1531,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="waterbody_module"/>
 	<position x="17620" y="11600"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
@@ -1543,13 +1543,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="lod2_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="waterboundary_surface_pk" type="pk-constr" factor="100" table="citydb.waterboundary_surface">
 		<columns names="id" ref-type="src-columns"/>
@@ -1561,7 +1561,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="relief_module"/>
 	<position x="22560" y="12480"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -1570,7 +1570,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="coverage_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="raster_relief_pk" type="pk-constr" factor="100" table="citydb.raster_relief">
 		<columns names="id" ref-type="src-columns"/>
@@ -1582,16 +1582,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="tunnel_module"/>
 	<position x="18700" y="15680"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="tunnel_parent_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="tunnel_root_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="class">
 		<type name="character varying" length="256"/>
@@ -1639,28 +1639,28 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="MULTILINESTRING" variation="1" srid="0"/>
 	</column>
 	<column name="lod1_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="tunnel_pk" type="pk-constr" factor="100" table="citydb.tunnel">
 		<columns names="id" ref-type="src-columns"/>
@@ -1672,10 +1672,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="tunnel_module"/>
 	<position x="17780" y="16300"/>
 	<column name="tunnel_opening_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="tunnel_thematic_surface_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="tunnel_open_to_them_srf_pk" type="pk-constr" factor="100" table="citydb.tunnel_open_to_them_srf">
 		<columns names="tunnel_opening_id,tunnel_thematic_surface_id" ref-type="src-columns"/>
@@ -1687,7 +1687,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="tunnel_module"/>
 	<position x="16960" y="15720"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -1711,13 +1711,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="tunnel_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="tunnel_hollow_space_pk" type="pk-constr" factor="100" table="citydb.tunnel_hollow_space">
 		<columns names="id" ref-type="src-columns"/>
@@ -1729,28 +1729,28 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="tunnel_module"/>
 	<position x="17740" y="15320"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
 	</column>
 	<column name="tunnel_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="tunnel_hollow_space_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="tunnel_installation_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="tunnel_thematic_surface_pk" type="pk-constr" factor="100" table="citydb.tunnel_thematic_surface">
 		<columns names="id" ref-type="src-columns"/>
@@ -1759,7 +1759,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <sequence name="tex_image_seq"
 	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
+	 min-value="0" max-value="9223372036854775807"
 	 cache="1" cycle="false">
 	<schema name="citydb"/>
 </sequence>
@@ -1769,22 +1769,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="tunnel_module"/>
 	<position x="17720" y="16540"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
 	</column>
 	<column name="lod3_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_implicit_ref_point">
 		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
@@ -1808,7 +1808,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="tunnel_module"/>
 	<position x="16920" y="14920"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer" precision="0"/>
@@ -1832,19 +1832,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="tunnel_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="tunnel_hollow_space_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_other_geom">
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
@@ -1856,13 +1856,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod2_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_implicit_ref_point">
 		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
@@ -1892,7 +1892,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="tunnel_module"/>
 	<position x="16940" y="16060"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -1916,16 +1916,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="tunnel_hollow_space_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_other_geom">
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_implicit_ref_point">
 		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
@@ -1943,16 +1943,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="bridge_module"/>
 	<position x="21500" y="15760"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
 	</column>
 	<column name="bridge_parent_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="bridge_root_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="class">
 		<type name="character varying" length="256"/>
@@ -2003,28 +2003,28 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="MULTILINESTRING" variation="1" srid="0"/>
 	</column>
 	<column name="lod1_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="bridge_pk" type="pk-constr" factor="100" table="citydb.bridge">
 		<columns names="id" ref-type="src-columns"/>
@@ -2036,7 +2036,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="bridge_module"/>
 	<position x="22860" y="15480"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -2060,16 +2060,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="bridge_room_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_other_geom">
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_implicit_ref_point">
 		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
@@ -2087,7 +2087,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="bridge_module"/>
 	<position x="22160" y="14160"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer" precision="0"/>
@@ -2111,19 +2111,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="bridge_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="bridge_room_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_other_geom">
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
@@ -2135,13 +2135,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod2_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_implicit_ref_point">
 		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
@@ -2171,25 +2171,25 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="bridge_module"/>
 	<position x="22160" y="16600"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
 	</column>
 	<column name="address_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_implicit_ref_point">
 		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
@@ -2213,10 +2213,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="bridge_module"/>
 	<position x="22180" y="15860"/>
 	<column name="bridge_opening_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="bridge_thematic_surface_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="bridge_open_to_them_srf_pk" type="pk-constr" factor="100" table="citydb.bridge_open_to_them_srf">
 		<columns names="bridge_opening_id,bridge_thematic_surface_id" ref-type="src-columns"/>
@@ -2228,7 +2228,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="bridge_module"/>
 	<position x="22900" y="14940"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -2252,13 +2252,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="bridge_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_solid_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="bridge_room_pk" type="pk-constr" factor="100" table="citydb.bridge_room">
 		<columns names="id" ref-type="src-columns"/>
@@ -2270,31 +2270,31 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="bridge_module"/>
 	<position x="22200" y="15140"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer" length="256"/>
 	</column>
 	<column name="bridge_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="bridge_room_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="bridge_installation_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="bridge_constr_element_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_multi_surface_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="bridge_thematic_surface_pk" type="pk-constr" factor="100" table="citydb.bridge_thematic_surface">
 		<columns names="id" ref-type="src-columns"/>
@@ -2306,7 +2306,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="bridge_module"/>
 	<position x="22900" y="13720"/>
 	<column name="id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -2330,7 +2330,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="bridge_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_terrain_intersection">
 		<type name="geometry" spatial-type="MULTILINESTRING" variation="1" srid="0"/>
@@ -2345,16 +2345,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="MULTILINESTRING" variation="1" srid="0"/>
 	</column>
 	<column name="lod1_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_other_geom">
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
@@ -2369,16 +2369,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="lod1_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod2_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod3_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod4_implicit_rep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="lod1_implicit_ref_point">
 		<type name="geometry" spatial-type="POINT" variation="1" srid="0"/>
@@ -2414,10 +2414,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="bridge_module"/>
 	<position x="20940" y="16400"/>
 	<column name="bridge_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="address_id" not-null="true">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="address_to_bridge_pk" type="pk-constr" factor="100" table="citydb.address_to_bridge">
 		<columns names="bridge_id,address_id" ref-type="src-columns"/>
@@ -2426,7 +2426,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <sequence name="grid_coverage_seq"
 	 start="1" increment="1"
-	 min-value="0" max-value="2147483647"
+	 min-value="0" max-value="9223372036854775807"
 	 cache="1" cycle="false">
 	<schema name="citydb"/>
 </sequence>
@@ -2436,7 +2436,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="core_module"/>
 	<position x="19600" y="13540"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.cityobject_seq'::regclass)">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="objectclass_id" not-null="true">
 		<type name="integer"/>
@@ -2496,7 +2496,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="appearance_module"/>
 	<position x="21320" y="11020"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.appearance_seq'::regclass)">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="gmlid">
 		<type name="character varying" length="256"/>
@@ -2517,10 +2517,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="256"/>
 	</column>
 	<column name="citymodel_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="cityobject_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="appearance_pk" type="pk-constr" factor="100" table="citydb.appearance">
 		<columns names="id" ref-type="src-columns"/>
@@ -2532,7 +2532,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="core_module"/>
 	<position x="19640" y="12320"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.implicit_geometry_seq'::regclass)">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="mime_type">
 		<type name="character varying" length="256"/>
@@ -2544,7 +2544,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="bytea"/>
 	</column>
 	<column name="relative_brep_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="relative_other_geom">
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
@@ -2559,7 +2559,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="global"/>
 	<position x="20460" y="12560"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.surface_geometry_seq'::regclass)">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="gmlid">
 		<type name="character varying" length="256"/>
@@ -2568,10 +2568,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="varchar" length="1000"/>
 	</column>
 	<column name="parent_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="root_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="is_solid">
 		<type name="numeric" precision="0"/>
@@ -2598,7 +2598,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="POLYGON" variation="1" srid="0"/>
 	</column>
 	<column name="cityobject_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="surface_geometry_pk" type="pk-constr" factor="100" table="citydb.surface_geometry">
 		<columns names="id" ref-type="src-columns"/>
@@ -2610,7 +2610,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="core_module"/>
 	<position x="20400" y="16640"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.address_seq'::regclass)">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="gmlid">
 		<type name="varchar" length="256"/>
@@ -2655,7 +2655,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="appearance_module"/>
 	<position x="21280" y="11520"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.surface_data_seq'::regclass)">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="gmlid">
 		<type name="character varying" length="256"/>
@@ -2700,7 +2700,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="numeric" precision="0"/>
 	</column>
 	<column name="tex_image_id">
-		<type name="integer" length="4000"/>
+		<type name="bigint" length="4000"/>
 	</column>
 	<column name="tex_texture_type">
 		<type name="character varying" length="256"/>
@@ -2730,7 +2730,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="core_module"/>
 	<position x="19660" y="11120"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.citymodel_seq'::regclass)">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="gmlid">
 		<type name="character varying" length="256"/>
@@ -2778,13 +2778,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="generics_module"/>
 	<position x="18940" y="11380"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.cityobject_genericatt_seq'::regclass)">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="parent_genattrib_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="root_genattrib_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="attrname" not-null="true">
 		<type name="character varying" length="256"/>
@@ -2820,10 +2820,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="geometry" spatial-type="GEOMETRY" variation="1" srid="0"/>
 	</column>
 	<column name="surface_geometry_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="cityobject_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="cityobj_genericattrib_pk" type="pk-constr" factor="100" table="citydb.cityobject_genericattrib">
 		<columns names="id" ref-type="src-columns"/>
@@ -2835,7 +2835,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="core_module"/>
 	<position x="19620" y="11840"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.external_ref_seq'::regclass)">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="infosys">
 		<type name="character varying" length="4000"/>
@@ -2847,7 +2847,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="4000"/>
 	</column>
 	<column name="cityobject_id">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<constraint name="external_reference_pk" type="pk-constr" factor="100" table="citydb.external_reference">
 		<columns names="id" ref-type="src-columns"/>
@@ -2859,7 +2859,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="appearance_module"/>
 	<position x="22040" y="11740"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.tex_image_seq'::regclass)">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="tex_image_uri">
 		<type name="character varying" length="4000"/>
@@ -2883,7 +2883,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<tag name="global"/>
 	<position x="22660" y="12000"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.grid_coverage_seq'::regclass)">
-		<type name="integer"/>
+		<type name="bigint"/>
 	</column>
 	<column name="rasterproperty">
 		<type name="raster"/>

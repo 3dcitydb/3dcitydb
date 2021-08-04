@@ -58,7 +58,7 @@
 CREATE SEQUENCE citymodel_seq
 	INCREMENT BY 1
 	MINVALUE 0
-	MAXVALUE 2147483647
+	MAXVALUE 9223372036854775807
 	START WITH 1
 	CACHE 1
 	NO CYCLE
@@ -70,7 +70,7 @@ CREATE SEQUENCE citymodel_seq
 CREATE SEQUENCE cityobject_seq
 	INCREMENT BY 1
 	MINVALUE 0
-	MAXVALUE 2147483647
+	MAXVALUE 9223372036854775807
 	START WITH 1
 	CACHE 1
 	NO CYCLE
@@ -80,8 +80,8 @@ CREATE SEQUENCE cityobject_seq
 -- object: cityobject_member | type: TABLE --
 -- DROP TABLE IF EXISTS cityobject_member CASCADE;
 CREATE TABLE cityobject_member(
-	citymodel_id integer NOT NULL,
-	cityobject_id integer NOT NULL,
+	citymodel_id bigint NOT NULL,
+	cityobject_id bigint NOT NULL,
 	CONSTRAINT cityobject_member_pk PRIMARY KEY (citymodel_id,cityobject_id)
 	 WITH (FILLFACTOR = 100)
 
@@ -93,7 +93,7 @@ CREATE TABLE cityobject_member(
 CREATE SEQUENCE external_ref_seq
 	INCREMENT BY 1
 	MINVALUE 0
-	MAXVALUE 2147483647
+	MAXVALUE 9223372036854775807
 	START WITH 1
 	CACHE 1
 	NO CYCLE
@@ -103,8 +103,8 @@ CREATE SEQUENCE external_ref_seq
 -- object: generalization | type: TABLE --
 -- DROP TABLE IF EXISTS generalization CASCADE;
 CREATE TABLE generalization(
-	cityobject_id integer NOT NULL,
-	generalizes_to_id integer NOT NULL,
+	cityobject_id bigint NOT NULL,
+	generalizes_to_id bigint NOT NULL,
 	CONSTRAINT generalization_pk PRIMARY KEY (cityobject_id,generalizes_to_id)
 	 WITH (FILLFACTOR = 100)
 
@@ -116,7 +116,7 @@ CREATE TABLE generalization(
 CREATE SEQUENCE surface_geometry_seq
 	INCREMENT BY 1
 	MINVALUE 0
-	MAXVALUE 2147483647
+	MAXVALUE 9223372036854775807
 	START WITH 1
 	CACHE 1
 	NO CYCLE
@@ -126,7 +126,7 @@ CREATE SEQUENCE surface_geometry_seq
 -- object: cityobjectgroup | type: TABLE --
 -- DROP TABLE IF EXISTS cityobjectgroup CASCADE;
 CREATE TABLE cityobjectgroup(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -134,9 +134,9 @@ CREATE TABLE cityobjectgroup(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	brep_id integer,
+	brep_id bigint,
 	other_geom geometry(GEOMETRYZ),
-	parent_cityobject_id integer,
+	parent_cityobject_id bigint,
 	CONSTRAINT cityobjectgroup_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -146,8 +146,8 @@ CREATE TABLE cityobjectgroup(
 -- object: group_to_cityobject | type: TABLE --
 -- DROP TABLE IF EXISTS group_to_cityobject CASCADE;
 CREATE TABLE group_to_cityobject(
-	cityobject_id integer NOT NULL,
-	cityobjectgroup_id integer NOT NULL,
+	cityobject_id bigint NOT NULL,
+	cityobjectgroup_id bigint NOT NULL,
 	role character varying(256),
 	CONSTRAINT group_to_cityobject_pk PRIMARY KEY (cityobject_id,cityobjectgroup_id)
 	 WITH (FILLFACTOR = 100)
@@ -188,7 +188,7 @@ CREATE TABLE objectclass(
 CREATE SEQUENCE implicit_geometry_seq
 	INCREMENT BY 1
 	MINVALUE 0
-	MAXVALUE 2147483647
+	MAXVALUE 9223372036854775807
 	START WITH 1
 	CACHE 1
 	NO CYCLE
@@ -198,7 +198,7 @@ CREATE SEQUENCE implicit_geometry_seq
 -- object: city_furniture | type: TABLE --
 -- DROP TABLE IF EXISTS city_furniture CASCADE;
 CREATE TABLE city_furniture(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -210,18 +210,18 @@ CREATE TABLE city_furniture(
 	lod2_terrain_intersection geometry(MULTILINESTRINGZ),
 	lod3_terrain_intersection geometry(MULTILINESTRINGZ),
 	lod4_terrain_intersection geometry(MULTILINESTRINGZ),
-	lod1_brep_id integer,
-	lod2_brep_id integer,
-	lod3_brep_id integer,
-	lod4_brep_id integer,
+	lod1_brep_id bigint,
+	lod2_brep_id bigint,
+	lod3_brep_id bigint,
+	lod4_brep_id bigint,
 	lod1_other_geom geometry(GEOMETRYZ),
 	lod2_other_geom geometry(GEOMETRYZ),
 	lod3_other_geom geometry(GEOMETRYZ),
 	lod4_other_geom geometry(GEOMETRYZ),
-	lod1_implicit_rep_id integer,
-	lod2_implicit_rep_id integer,
-	lod3_implicit_rep_id integer,
-	lod4_implicit_rep_id integer,
+	lod1_implicit_rep_id bigint,
+	lod2_implicit_rep_id bigint,
+	lod3_implicit_rep_id bigint,
+	lod4_implicit_rep_id bigint,
 	lod1_implicit_ref_point geometry(POINTZ),
 	lod2_implicit_ref_point geometry(POINTZ),
 	lod3_implicit_ref_point geometry(POINTZ),
@@ -241,7 +241,7 @@ CREATE TABLE city_furniture(
 CREATE SEQUENCE cityobject_genericatt_seq
 	INCREMENT BY 1
 	MINVALUE 0
-	MAXVALUE 2147483647
+	MAXVALUE 9223372036854775807
 	START WITH 1
 	CACHE 1
 	NO CYCLE
@@ -251,7 +251,7 @@ CREATE SEQUENCE cityobject_genericatt_seq
 -- object: generic_cityobject | type: TABLE --
 -- DROP TABLE IF EXISTS generic_cityobject CASCADE;
 CREATE TABLE generic_cityobject(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -264,21 +264,21 @@ CREATE TABLE generic_cityobject(
 	lod2_terrain_intersection geometry(MULTILINESTRINGZ),
 	lod3_terrain_intersection geometry(MULTILINESTRINGZ),
 	lod4_terrain_intersection geometry(MULTILINESTRINGZ),
-	lod0_brep_id integer,
-	lod1_brep_id integer,
-	lod2_brep_id integer,
-	lod3_brep_id integer,
-	lod4_brep_id integer,
+	lod0_brep_id bigint,
+	lod1_brep_id bigint,
+	lod2_brep_id bigint,
+	lod3_brep_id bigint,
+	lod4_brep_id bigint,
 	lod0_other_geom geometry(GEOMETRYZ),
 	lod1_other_geom geometry(GEOMETRYZ),
 	lod2_other_geom geometry(GEOMETRYZ),
 	lod3_other_geom geometry(GEOMETRYZ),
 	lod4_other_geom geometry(GEOMETRYZ),
-	lod0_implicit_rep_id integer,
-	lod1_implicit_rep_id integer,
-	lod2_implicit_rep_id integer,
-	lod3_implicit_rep_id integer,
-	lod4_implicit_rep_id integer,
+	lod0_implicit_rep_id bigint,
+	lod1_implicit_rep_id bigint,
+	lod2_implicit_rep_id bigint,
+	lod3_implicit_rep_id bigint,
+	lod4_implicit_rep_id bigint,
 	lod0_implicit_ref_point geometry(POINTZ),
 	lod1_implicit_ref_point geometry(POINTZ),
 	lod2_implicit_ref_point geometry(POINTZ),
@@ -300,7 +300,7 @@ CREATE TABLE generic_cityobject(
 CREATE SEQUENCE address_seq
 	INCREMENT BY 1
 	MINVALUE 0
-	MAXVALUE 2147483647
+	MAXVALUE 9223372036854775807
 	START WITH 1
 	CACHE 1
 	NO CYCLE
@@ -310,8 +310,8 @@ CREATE SEQUENCE address_seq
 -- object: address_to_building | type: TABLE --
 -- DROP TABLE IF EXISTS address_to_building CASCADE;
 CREATE TABLE address_to_building(
-	building_id integer NOT NULL,
-	address_id integer NOT NULL,
+	building_id bigint NOT NULL,
+	address_id bigint NOT NULL,
 	CONSTRAINT address_to_building_pk PRIMARY KEY (building_id,address_id)
 	 WITH (FILLFACTOR = 100)
 
@@ -321,10 +321,10 @@ CREATE TABLE address_to_building(
 -- object: building | type: TABLE --
 -- DROP TABLE IF EXISTS building CASCADE;
 CREATE TABLE building(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
-	building_parent_id integer,
-	building_root_id integer,
+	building_parent_id bigint,
+	building_root_id bigint,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -350,16 +350,16 @@ CREATE TABLE building(
 	lod2_multi_curve geometry(MULTILINESTRINGZ),
 	lod3_multi_curve geometry(MULTILINESTRINGZ),
 	lod4_multi_curve geometry(MULTILINESTRINGZ),
-	lod0_footprint_id integer,
-	lod0_roofprint_id integer,
-	lod1_multi_surface_id integer,
-	lod2_multi_surface_id integer,
-	lod3_multi_surface_id integer,
-	lod4_multi_surface_id integer,
-	lod1_solid_id integer,
-	lod2_solid_id integer,
-	lod3_solid_id integer,
-	lod4_solid_id integer,
+	lod0_footprint_id bigint,
+	lod0_roofprint_id bigint,
+	lod1_multi_surface_id bigint,
+	lod2_multi_surface_id bigint,
+	lod3_multi_surface_id bigint,
+	lod4_multi_surface_id bigint,
+	lod1_solid_id bigint,
+	lod2_solid_id bigint,
+	lod3_solid_id bigint,
+	lod4_solid_id bigint,
 	CONSTRAINT building_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -369,7 +369,7 @@ CREATE TABLE building(
 -- object: building_furniture | type: TABLE --
 -- DROP TABLE IF EXISTS building_furniture CASCADE;
 CREATE TABLE building_furniture(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -377,10 +377,10 @@ CREATE TABLE building_furniture(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	room_id integer,
-	lod4_brep_id integer,
+	room_id bigint,
+	lod4_brep_id bigint,
 	lod4_other_geom geometry(GEOMETRYZ),
-	lod4_implicit_rep_id integer,
+	lod4_implicit_rep_id bigint,
 	lod4_implicit_ref_point geometry(POINTZ),
 	lod4_implicit_transformation character varying(1000),
 	CONSTRAINT building_furniture_pk PRIMARY KEY (id)
@@ -392,7 +392,7 @@ CREATE TABLE building_furniture(
 -- object: building_installation | type: TABLE --
 -- DROP TABLE IF EXISTS building_installation CASCADE;
 CREATE TABLE building_installation(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -400,17 +400,17 @@ CREATE TABLE building_installation(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	building_id integer,
-	room_id integer,
-	lod2_brep_id integer,
-	lod3_brep_id integer,
-	lod4_brep_id integer,
+	building_id bigint,
+	room_id bigint,
+	lod2_brep_id bigint,
+	lod3_brep_id bigint,
+	lod4_brep_id bigint,
 	lod2_other_geom geometry(GEOMETRYZ),
 	lod3_other_geom geometry(GEOMETRYZ),
 	lod4_other_geom geometry(GEOMETRYZ),
-	lod2_implicit_rep_id integer,
-	lod3_implicit_rep_id integer,
-	lod4_implicit_rep_id integer,
+	lod2_implicit_rep_id bigint,
+	lod3_implicit_rep_id bigint,
+	lod4_implicit_rep_id bigint,
 	lod2_implicit_ref_point geometry(POINTZ),
 	lod3_implicit_ref_point geometry(POINTZ),
 	lod4_implicit_ref_point geometry(POINTZ),
@@ -426,13 +426,13 @@ CREATE TABLE building_installation(
 -- object: opening | type: TABLE --
 -- DROP TABLE IF EXISTS opening CASCADE;
 CREATE TABLE opening(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
-	address_id integer,
-	lod3_multi_surface_id integer,
-	lod4_multi_surface_id integer,
-	lod3_implicit_rep_id integer,
-	lod4_implicit_rep_id integer,
+	address_id bigint,
+	lod3_multi_surface_id bigint,
+	lod4_multi_surface_id bigint,
+	lod3_implicit_rep_id bigint,
+	lod4_implicit_rep_id bigint,
 	lod3_implicit_ref_point geometry(POINTZ),
 	lod4_implicit_ref_point geometry(POINTZ),
 	lod3_implicit_transformation character varying(1000),
@@ -446,8 +446,8 @@ CREATE TABLE opening(
 -- object: opening_to_them_surface | type: TABLE --
 -- DROP TABLE IF EXISTS opening_to_them_surface CASCADE;
 CREATE TABLE opening_to_them_surface(
-	opening_id integer NOT NULL,
-	thematic_surface_id integer NOT NULL,
+	opening_id bigint NOT NULL,
+	thematic_surface_id bigint NOT NULL,
 	CONSTRAINT opening_to_them_surface_pk PRIMARY KEY (opening_id,thematic_surface_id)
 	 WITH (FILLFACTOR = 100)
 
@@ -457,7 +457,7 @@ CREATE TABLE opening_to_them_surface(
 -- object: room | type: TABLE --
 -- DROP TABLE IF EXISTS room CASCADE;
 CREATE TABLE room(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -465,9 +465,9 @@ CREATE TABLE room(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	building_id integer,
-	lod4_multi_surface_id integer,
-	lod4_solid_id integer,
+	building_id bigint,
+	lod4_multi_surface_id bigint,
+	lod4_solid_id bigint,
 	CONSTRAINT room_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -477,14 +477,14 @@ CREATE TABLE room(
 -- object: thematic_surface | type: TABLE --
 -- DROP TABLE IF EXISTS thematic_surface CASCADE;
 CREATE TABLE thematic_surface(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
-	building_id integer,
-	room_id integer,
-	building_installation_id integer,
-	lod2_multi_surface_id integer,
-	lod3_multi_surface_id integer,
-	lod4_multi_surface_id integer,
+	building_id bigint,
+	room_id bigint,
+	building_installation_id bigint,
+	lod2_multi_surface_id bigint,
+	lod3_multi_surface_id bigint,
+	lod4_multi_surface_id bigint,
 	CONSTRAINT thematic_surface_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -496,7 +496,7 @@ CREATE TABLE thematic_surface(
 CREATE SEQUENCE appearance_seq
 	INCREMENT BY 1
 	MINVALUE 0
-	MAXVALUE 2147483647
+	MAXVALUE 9223372036854775807
 	START WITH 1
 	CACHE 1
 	NO CYCLE
@@ -508,7 +508,7 @@ CREATE SEQUENCE appearance_seq
 CREATE SEQUENCE surface_data_seq
 	INCREMENT BY 1
 	MINVALUE 0
-	MAXVALUE 2147483647
+	MAXVALUE 9223372036854775807
 	START WITH 1
 	CACHE 1
 	NO CYCLE
@@ -518,11 +518,11 @@ CREATE SEQUENCE surface_data_seq
 -- object: textureparam | type: TABLE --
 -- DROP TABLE IF EXISTS textureparam CASCADE;
 CREATE TABLE textureparam(
-	surface_geometry_id integer NOT NULL,
+	surface_geometry_id bigint NOT NULL,
 	is_texture_parametrization numeric,
 	world_to_texture character varying(1000),
 	texture_coordinates geometry(POLYGON),
-	surface_data_id integer NOT NULL,
+	surface_data_id bigint NOT NULL,
 	CONSTRAINT textureparam_pk PRIMARY KEY (surface_geometry_id,surface_data_id)
 	 WITH (FILLFACTOR = 100)
 
@@ -532,8 +532,8 @@ CREATE TABLE textureparam(
 -- object: appear_to_surface_data | type: TABLE --
 -- DROP TABLE IF EXISTS appear_to_surface_data CASCADE;
 CREATE TABLE appear_to_surface_data(
-	surface_data_id integer NOT NULL,
-	appearance_id integer NOT NULL,
+	surface_data_id bigint NOT NULL,
+	appearance_id bigint NOT NULL,
 	CONSTRAINT appear_to_surface_data_pk PRIMARY KEY (surface_data_id,appearance_id)
 	 WITH (FILLFACTOR = 100)
 
@@ -543,7 +543,7 @@ CREATE TABLE appear_to_surface_data(
 -- object: breakline_relief | type: TABLE --
 -- DROP TABLE IF EXISTS breakline_relief CASCADE;
 CREATE TABLE breakline_relief(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	ridge_or_valley_lines geometry(MULTILINESTRINGZ),
 	break_lines geometry(MULTILINESTRINGZ),
@@ -556,7 +556,7 @@ CREATE TABLE breakline_relief(
 -- object: masspoint_relief | type: TABLE --
 -- DROP TABLE IF EXISTS masspoint_relief CASCADE;
 CREATE TABLE masspoint_relief(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	relief_points geometry(MULTIPOINTZ),
 	CONSTRAINT masspoint_relief_pk PRIMARY KEY (id)
@@ -568,7 +568,7 @@ CREATE TABLE masspoint_relief(
 -- object: relief_component | type: TABLE --
 -- DROP TABLE IF EXISTS relief_component CASCADE;
 CREATE TABLE relief_component(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	lod numeric,
 	extent geometry(POLYGON),
@@ -582,8 +582,8 @@ CREATE TABLE relief_component(
 -- object: relief_feat_to_rel_comp | type: TABLE --
 -- DROP TABLE IF EXISTS relief_feat_to_rel_comp CASCADE;
 CREATE TABLE relief_feat_to_rel_comp(
-	relief_component_id integer NOT NULL,
-	relief_feature_id integer NOT NULL,
+	relief_component_id bigint NOT NULL,
+	relief_feature_id bigint NOT NULL,
 	CONSTRAINT relief_feat_to_rel_comp_pk PRIMARY KEY (relief_component_id,relief_feature_id)
 	 WITH (FILLFACTOR = 100)
 
@@ -593,7 +593,7 @@ CREATE TABLE relief_feat_to_rel_comp(
 -- object: relief_feature | type: TABLE --
 -- DROP TABLE IF EXISTS relief_feature CASCADE;
 CREATE TABLE relief_feature(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	lod numeric,
 	CONSTRAINT relief_feature_pk PRIMARY KEY (id)
@@ -606,14 +606,14 @@ CREATE TABLE relief_feature(
 -- object: tin_relief | type: TABLE --
 -- DROP TABLE IF EXISTS tin_relief CASCADE;
 CREATE TABLE tin_relief(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	max_length double precision,
 	max_length_unit character varying(4000),
 	stop_lines geometry(MULTILINESTRINGZ),
 	break_lines geometry(MULTILINESTRINGZ),
 	control_points geometry(MULTIPOINTZ),
-	surface_geometry_id integer,
+	surface_geometry_id bigint,
 	CONSTRAINT tin_relief_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -623,7 +623,7 @@ CREATE TABLE tin_relief(
 -- object: transportation_complex | type: TABLE --
 -- DROP TABLE IF EXISTS transportation_complex CASCADE;
 CREATE TABLE transportation_complex(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -632,10 +632,10 @@ CREATE TABLE transportation_complex(
 	usage character varying(1000),
 	usage_codespace character varying(4000),
 	lod0_network geometry(GEOMETRYZ),
-	lod1_multi_surface_id integer,
-	lod2_multi_surface_id integer,
-	lod3_multi_surface_id integer,
-	lod4_multi_surface_id integer,
+	lod1_multi_surface_id bigint,
+	lod2_multi_surface_id bigint,
+	lod3_multi_surface_id bigint,
+	lod4_multi_surface_id bigint,
 	CONSTRAINT transportation_complex_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -645,7 +645,7 @@ CREATE TABLE transportation_complex(
 -- object: traffic_area | type: TABLE --
 -- DROP TABLE IF EXISTS traffic_area CASCADE;
 CREATE TABLE traffic_area(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -655,10 +655,10 @@ CREATE TABLE traffic_area(
 	usage_codespace character varying(4000),
 	surface_material character varying(256),
 	surface_material_codespace character varying(4000),
-	lod2_multi_surface_id integer,
-	lod3_multi_surface_id integer,
-	lod4_multi_surface_id integer,
-	transportation_complex_id integer,
+	lod2_multi_surface_id bigint,
+	lod3_multi_surface_id bigint,
+	lod4_multi_surface_id bigint,
+	transportation_complex_id bigint,
 	CONSTRAINT traffic_area_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -668,7 +668,7 @@ CREATE TABLE traffic_area(
 -- object: land_use | type: TABLE --
 -- DROP TABLE IF EXISTS land_use CASCADE;
 CREATE TABLE land_use(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -676,11 +676,11 @@ CREATE TABLE land_use(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	lod0_multi_surface_id integer,
-	lod1_multi_surface_id integer,
-	lod2_multi_surface_id integer,
-	lod3_multi_surface_id integer,
-	lod4_multi_surface_id integer,
+	lod0_multi_surface_id bigint,
+	lod1_multi_surface_id bigint,
+	lod2_multi_surface_id bigint,
+	lod3_multi_surface_id bigint,
+	lod4_multi_surface_id bigint,
 	CONSTRAINT land_use_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -690,7 +690,7 @@ CREATE TABLE land_use(
 -- object: plant_cover | type: TABLE --
 -- DROP TABLE IF EXISTS plant_cover CASCADE;
 CREATE TABLE plant_cover(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -700,14 +700,14 @@ CREATE TABLE plant_cover(
 	usage_codespace character varying(4000),
 	average_height double precision,
 	average_height_unit character varying(4000),
-	lod1_multi_surface_id integer,
-	lod2_multi_surface_id integer,
-	lod3_multi_surface_id integer,
-	lod4_multi_surface_id integer,
-	lod1_multi_solid_id integer,
-	lod2_multi_solid_id integer,
-	lod3_multi_solid_id integer,
-	lod4_multi_solid_id integer,
+	lod1_multi_surface_id bigint,
+	lod2_multi_surface_id bigint,
+	lod3_multi_surface_id bigint,
+	lod4_multi_surface_id bigint,
+	lod1_multi_solid_id bigint,
+	lod2_multi_solid_id bigint,
+	lod3_multi_solid_id bigint,
+	lod4_multi_solid_id bigint,
 	CONSTRAINT plant_cover_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -717,7 +717,7 @@ CREATE TABLE plant_cover(
 -- object: solitary_vegetat_object | type: TABLE --
 -- DROP TABLE IF EXISTS solitary_vegetat_object CASCADE;
 CREATE TABLE solitary_vegetat_object(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -733,18 +733,18 @@ CREATE TABLE solitary_vegetat_object(
 	trunk_diameter_unit character varying(4000),
 	crown_diameter double precision,
 	crown_diameter_unit character varying(4000),
-	lod1_brep_id integer,
-	lod2_brep_id integer,
-	lod3_brep_id integer,
-	lod4_brep_id integer,
+	lod1_brep_id bigint,
+	lod2_brep_id bigint,
+	lod3_brep_id bigint,
+	lod4_brep_id bigint,
 	lod1_other_geom geometry(GEOMETRYZ),
 	lod2_other_geom geometry(GEOMETRYZ),
 	lod3_other_geom geometry(GEOMETRYZ),
 	lod4_other_geom geometry(GEOMETRYZ),
-	lod1_implicit_rep_id integer,
-	lod2_implicit_rep_id integer,
-	lod3_implicit_rep_id integer,
-	lod4_implicit_rep_id integer,
+	lod1_implicit_rep_id bigint,
+	lod2_implicit_rep_id bigint,
+	lod3_implicit_rep_id bigint,
+	lod4_implicit_rep_id bigint,
 	lod1_implicit_ref_point geometry(POINTZ),
 	lod2_implicit_ref_point geometry(POINTZ),
 	lod3_implicit_ref_point geometry(POINTZ),
@@ -762,7 +762,7 @@ CREATE TABLE solitary_vegetat_object(
 -- object: waterbody | type: TABLE --
 -- DROP TABLE IF EXISTS waterbody CASCADE;
 CREATE TABLE waterbody(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -772,12 +772,12 @@ CREATE TABLE waterbody(
 	usage_codespace character varying(4000),
 	lod0_multi_curve geometry(MULTILINESTRINGZ),
 	lod1_multi_curve geometry(MULTILINESTRINGZ),
-	lod0_multi_surface_id integer,
-	lod1_multi_surface_id integer,
-	lod1_solid_id integer,
-	lod2_solid_id integer,
-	lod3_solid_id integer,
-	lod4_solid_id integer,
+	lod0_multi_surface_id bigint,
+	lod1_multi_surface_id bigint,
+	lod1_solid_id bigint,
+	lod2_solid_id bigint,
+	lod3_solid_id bigint,
+	lod4_solid_id bigint,
 	CONSTRAINT waterbody_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -787,8 +787,8 @@ CREATE TABLE waterbody(
 -- object: waterbod_to_waterbnd_srf | type: TABLE --
 -- DROP TABLE IF EXISTS waterbod_to_waterbnd_srf CASCADE;
 CREATE TABLE waterbod_to_waterbnd_srf(
-	waterboundary_surface_id integer NOT NULL,
-	waterbody_id integer NOT NULL,
+	waterboundary_surface_id bigint NOT NULL,
+	waterbody_id bigint NOT NULL,
 	CONSTRAINT waterbod_to_waterbnd_pk PRIMARY KEY (waterboundary_surface_id,waterbody_id)
 	 WITH (FILLFACTOR = 100)
 
@@ -798,13 +798,13 @@ CREATE TABLE waterbod_to_waterbnd_srf(
 -- object: waterboundary_surface | type: TABLE --
 -- DROP TABLE IF EXISTS waterboundary_surface CASCADE;
 CREATE TABLE waterboundary_surface(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	water_level character varying(256),
 	water_level_codespace character varying(4000),
-	lod2_surface_id integer,
-	lod3_surface_id integer,
-	lod4_surface_id integer,
+	lod2_surface_id bigint,
+	lod3_surface_id bigint,
+	lod4_surface_id bigint,
 	CONSTRAINT waterboundary_surface_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -814,10 +814,10 @@ CREATE TABLE waterboundary_surface(
 -- object: raster_relief | type: TABLE --
 -- DROP TABLE IF EXISTS raster_relief CASCADE;
 CREATE TABLE raster_relief(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	raster_uri character varying(4000),
-	coverage_id integer,
+	coverage_id bigint,
 	CONSTRAINT raster_relief_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -827,10 +827,10 @@ CREATE TABLE raster_relief(
 -- object: tunnel | type: TABLE --
 -- DROP TABLE IF EXISTS tunnel CASCADE;
 CREATE TABLE tunnel(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
-	tunnel_parent_id integer,
-	tunnel_root_id integer,
+	tunnel_parent_id bigint,
+	tunnel_root_id bigint,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -846,14 +846,14 @@ CREATE TABLE tunnel(
 	lod2_multi_curve geometry(MULTILINESTRINGZ),
 	lod3_multi_curve geometry(MULTILINESTRINGZ),
 	lod4_multi_curve geometry(MULTILINESTRINGZ),
-	lod1_multi_surface_id integer,
-	lod2_multi_surface_id integer,
-	lod3_multi_surface_id integer,
-	lod4_multi_surface_id integer,
-	lod1_solid_id integer,
-	lod2_solid_id integer,
-	lod3_solid_id integer,
-	lod4_solid_id integer,
+	lod1_multi_surface_id bigint,
+	lod2_multi_surface_id bigint,
+	lod3_multi_surface_id bigint,
+	lod4_multi_surface_id bigint,
+	lod1_solid_id bigint,
+	lod2_solid_id bigint,
+	lod3_solid_id bigint,
+	lod4_solid_id bigint,
 	CONSTRAINT tunnel_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -863,8 +863,8 @@ CREATE TABLE tunnel(
 -- object: tunnel_open_to_them_srf | type: TABLE --
 -- DROP TABLE IF EXISTS tunnel_open_to_them_srf CASCADE;
 CREATE TABLE tunnel_open_to_them_srf(
-	tunnel_opening_id integer NOT NULL,
-	tunnel_thematic_surface_id integer NOT NULL,
+	tunnel_opening_id bigint NOT NULL,
+	tunnel_thematic_surface_id bigint NOT NULL,
 	CONSTRAINT tunnel_open_to_them_srf_pk PRIMARY KEY (tunnel_opening_id,tunnel_thematic_surface_id)
 	 WITH (FILLFACTOR = 100)
 
@@ -874,7 +874,7 @@ CREATE TABLE tunnel_open_to_them_srf(
 -- object: tunnel_hollow_space | type: TABLE --
 -- DROP TABLE IF EXISTS tunnel_hollow_space CASCADE;
 CREATE TABLE tunnel_hollow_space(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -882,9 +882,9 @@ CREATE TABLE tunnel_hollow_space(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	tunnel_id integer,
-	lod4_multi_surface_id integer,
-	lod4_solid_id integer,
+	tunnel_id bigint,
+	lod4_multi_surface_id bigint,
+	lod4_solid_id bigint,
 	CONSTRAINT tunnel_hollow_space_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -894,14 +894,14 @@ CREATE TABLE tunnel_hollow_space(
 -- object: tunnel_thematic_surface | type: TABLE --
 -- DROP TABLE IF EXISTS tunnel_thematic_surface CASCADE;
 CREATE TABLE tunnel_thematic_surface(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
-	tunnel_id integer,
-	tunnel_hollow_space_id integer,
-	tunnel_installation_id integer,
-	lod2_multi_surface_id integer,
-	lod3_multi_surface_id integer,
-	lod4_multi_surface_id integer,
+	tunnel_id bigint,
+	tunnel_hollow_space_id bigint,
+	tunnel_installation_id bigint,
+	lod2_multi_surface_id bigint,
+	lod3_multi_surface_id bigint,
+	lod4_multi_surface_id bigint,
 	CONSTRAINT tunnel_thematic_surface_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -913,7 +913,7 @@ CREATE TABLE tunnel_thematic_surface(
 CREATE SEQUENCE tex_image_seq
 	INCREMENT BY 1
 	MINVALUE 0
-	MAXVALUE 2147483647
+	MAXVALUE 9223372036854775807
 	START WITH 1
 	CACHE 1
 	NO CYCLE
@@ -923,12 +923,12 @@ CREATE SEQUENCE tex_image_seq
 -- object: tunnel_opening | type: TABLE --
 -- DROP TABLE IF EXISTS tunnel_opening CASCADE;
 CREATE TABLE tunnel_opening(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
-	lod3_multi_surface_id integer,
-	lod4_multi_surface_id integer,
-	lod3_implicit_rep_id integer,
-	lod4_implicit_rep_id integer,
+	lod3_multi_surface_id bigint,
+	lod4_multi_surface_id bigint,
+	lod3_implicit_rep_id bigint,
+	lod4_implicit_rep_id bigint,
 	lod3_implicit_ref_point geometry(POINTZ),
 	lod4_implicit_ref_point geometry(POINTZ),
 	lod3_implicit_transformation character varying(1000),
@@ -942,7 +942,7 @@ CREATE TABLE tunnel_opening(
 -- object: tunnel_installation | type: TABLE --
 -- DROP TABLE IF EXISTS tunnel_installation CASCADE;
 CREATE TABLE tunnel_installation(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -950,17 +950,17 @@ CREATE TABLE tunnel_installation(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	tunnel_id integer,
-	tunnel_hollow_space_id integer,
-	lod2_brep_id integer,
-	lod3_brep_id integer,
-	lod4_brep_id integer,
+	tunnel_id bigint,
+	tunnel_hollow_space_id bigint,
+	lod2_brep_id bigint,
+	lod3_brep_id bigint,
+	lod4_brep_id bigint,
 	lod2_other_geom geometry(GEOMETRYZ),
 	lod3_other_geom geometry(GEOMETRYZ),
 	lod4_other_geom geometry(GEOMETRYZ),
-	lod2_implicit_rep_id integer,
-	lod3_implicit_rep_id integer,
-	lod4_implicit_rep_id integer,
+	lod2_implicit_rep_id bigint,
+	lod3_implicit_rep_id bigint,
+	lod4_implicit_rep_id bigint,
 	lod2_implicit_ref_point geometry(POINTZ),
 	lod3_implicit_ref_point geometry(POINTZ),
 	lod4_implicit_ref_point geometry(POINTZ),
@@ -976,7 +976,7 @@ CREATE TABLE tunnel_installation(
 -- object: tunnel_furniture | type: TABLE --
 -- DROP TABLE IF EXISTS tunnel_furniture CASCADE;
 CREATE TABLE tunnel_furniture(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -984,10 +984,10 @@ CREATE TABLE tunnel_furniture(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	tunnel_hollow_space_id integer,
-	lod4_brep_id integer,
+	tunnel_hollow_space_id bigint,
+	lod4_brep_id bigint,
 	lod4_other_geom geometry(GEOMETRYZ),
-	lod4_implicit_rep_id integer,
+	lod4_implicit_rep_id bigint,
 	lod4_implicit_ref_point geometry(POINTZ),
 	lod4_implicit_transformation character varying(1000),
 	CONSTRAINT tunnel_furniture_pk PRIMARY KEY (id)
@@ -999,10 +999,10 @@ CREATE TABLE tunnel_furniture(
 -- object: bridge | type: TABLE --
 -- DROP TABLE IF EXISTS bridge CASCADE;
 CREATE TABLE bridge(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
-	bridge_parent_id integer,
-	bridge_root_id integer,
+	bridge_parent_id bigint,
+	bridge_root_id bigint,
 	class character varying(256),
 	class_codespace character varying(4000),
 	function character varying(1000),
@@ -1019,14 +1019,14 @@ CREATE TABLE bridge(
 	lod2_multi_curve geometry(MULTILINESTRINGZ),
 	lod3_multi_curve geometry(MULTILINESTRINGZ),
 	lod4_multi_curve geometry(MULTILINESTRINGZ),
-	lod1_multi_surface_id integer,
-	lod2_multi_surface_id integer,
-	lod3_multi_surface_id integer,
-	lod4_multi_surface_id integer,
-	lod1_solid_id integer,
-	lod2_solid_id integer,
-	lod3_solid_id integer,
-	lod4_solid_id integer,
+	lod1_multi_surface_id bigint,
+	lod2_multi_surface_id bigint,
+	lod3_multi_surface_id bigint,
+	lod4_multi_surface_id bigint,
+	lod1_solid_id bigint,
+	lod2_solid_id bigint,
+	lod3_solid_id bigint,
+	lod4_solid_id bigint,
 	CONSTRAINT bridge_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -1036,7 +1036,7 @@ CREATE TABLE bridge(
 -- object: bridge_furniture | type: TABLE --
 -- DROP TABLE IF EXISTS bridge_furniture CASCADE;
 CREATE TABLE bridge_furniture(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -1044,10 +1044,10 @@ CREATE TABLE bridge_furniture(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	bridge_room_id integer,
-	lod4_brep_id integer,
+	bridge_room_id bigint,
+	lod4_brep_id bigint,
 	lod4_other_geom geometry(GEOMETRYZ),
-	lod4_implicit_rep_id integer,
+	lod4_implicit_rep_id bigint,
 	lod4_implicit_ref_point geometry(POINTZ),
 	lod4_implicit_transformation character varying(1000),
 	CONSTRAINT bridge_furniture_pk PRIMARY KEY (id)
@@ -1059,7 +1059,7 @@ CREATE TABLE bridge_furniture(
 -- object: bridge_installation | type: TABLE --
 -- DROP TABLE IF EXISTS bridge_installation CASCADE;
 CREATE TABLE bridge_installation(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -1067,17 +1067,17 @@ CREATE TABLE bridge_installation(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	bridge_id integer,
-	bridge_room_id integer,
-	lod2_brep_id integer,
-	lod3_brep_id integer,
-	lod4_brep_id integer,
+	bridge_id bigint,
+	bridge_room_id bigint,
+	lod2_brep_id bigint,
+	lod3_brep_id bigint,
+	lod4_brep_id bigint,
 	lod2_other_geom geometry(GEOMETRYZ),
 	lod3_other_geom geometry(GEOMETRYZ),
 	lod4_other_geom geometry(GEOMETRYZ),
-	lod2_implicit_rep_id integer,
-	lod3_implicit_rep_id integer,
-	lod4_implicit_rep_id integer,
+	lod2_implicit_rep_id bigint,
+	lod3_implicit_rep_id bigint,
+	lod4_implicit_rep_id bigint,
 	lod2_implicit_ref_point geometry(POINTZ),
 	lod3_implicit_ref_point geometry(POINTZ),
 	lod4_implicit_ref_point geometry(POINTZ),
@@ -1093,13 +1093,13 @@ CREATE TABLE bridge_installation(
 -- object: bridge_opening | type: TABLE --
 -- DROP TABLE IF EXISTS bridge_opening CASCADE;
 CREATE TABLE bridge_opening(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
-	address_id integer,
-	lod3_multi_surface_id integer,
-	lod4_multi_surface_id integer,
-	lod3_implicit_rep_id integer,
-	lod4_implicit_rep_id integer,
+	address_id bigint,
+	lod3_multi_surface_id bigint,
+	lod4_multi_surface_id bigint,
+	lod3_implicit_rep_id bigint,
+	lod4_implicit_rep_id bigint,
 	lod3_implicit_ref_point geometry(POINTZ),
 	lod4_implicit_ref_point geometry(POINTZ),
 	lod3_implicit_transformation character varying(1000),
@@ -1113,8 +1113,8 @@ CREATE TABLE bridge_opening(
 -- object: bridge_open_to_them_srf | type: TABLE --
 -- DROP TABLE IF EXISTS bridge_open_to_them_srf CASCADE;
 CREATE TABLE bridge_open_to_them_srf(
-	bridge_opening_id integer NOT NULL,
-	bridge_thematic_surface_id integer NOT NULL,
+	bridge_opening_id bigint NOT NULL,
+	bridge_thematic_surface_id bigint NOT NULL,
 	CONSTRAINT bridge_open_to_them_srf_pk PRIMARY KEY (bridge_opening_id,bridge_thematic_surface_id)
 	 WITH (FILLFACTOR = 100)
 
@@ -1124,7 +1124,7 @@ CREATE TABLE bridge_open_to_them_srf(
 -- object: bridge_room | type: TABLE --
 -- DROP TABLE IF EXISTS bridge_room CASCADE;
 CREATE TABLE bridge_room(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -1132,9 +1132,9 @@ CREATE TABLE bridge_room(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	bridge_id integer,
-	lod4_multi_surface_id integer,
-	lod4_solid_id integer,
+	bridge_id bigint,
+	lod4_multi_surface_id bigint,
+	lod4_solid_id bigint,
 	CONSTRAINT bridge_room_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -1144,15 +1144,15 @@ CREATE TABLE bridge_room(
 -- object: bridge_thematic_surface | type: TABLE --
 -- DROP TABLE IF EXISTS bridge_thematic_surface CASCADE;
 CREATE TABLE bridge_thematic_surface(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
-	bridge_id integer,
-	bridge_room_id integer,
-	bridge_installation_id integer,
-	bridge_constr_element_id integer,
-	lod2_multi_surface_id integer,
-	lod3_multi_surface_id integer,
-	lod4_multi_surface_id integer,
+	bridge_id bigint,
+	bridge_room_id bigint,
+	bridge_installation_id bigint,
+	bridge_constr_element_id bigint,
+	lod2_multi_surface_id bigint,
+	lod3_multi_surface_id bigint,
+	lod4_multi_surface_id bigint,
 	CONSTRAINT bridge_thematic_surface_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -1162,7 +1162,7 @@ CREATE TABLE bridge_thematic_surface(
 -- object: bridge_constr_element | type: TABLE --
 -- DROP TABLE IF EXISTS bridge_constr_element CASCADE;
 CREATE TABLE bridge_constr_element(
-	id integer NOT NULL,
+	id bigint NOT NULL,
 	objectclass_id integer NOT NULL,
 	class character varying(256),
 	class_codespace character varying(4000),
@@ -1170,23 +1170,23 @@ CREATE TABLE bridge_constr_element(
 	function_codespace character varying(4000),
 	usage character varying(1000),
 	usage_codespace character varying(4000),
-	bridge_id integer,
+	bridge_id bigint,
 	lod1_terrain_intersection geometry(MULTILINESTRINGZ),
 	lod2_terrain_intersection geometry(MULTILINESTRINGZ),
 	lod3_terrain_intersection geometry(MULTILINESTRINGZ),
 	lod4_terrain_intersection geometry(MULTILINESTRINGZ),
-	lod1_brep_id integer,
-	lod2_brep_id integer,
-	lod3_brep_id integer,
-	lod4_brep_id integer,
+	lod1_brep_id bigint,
+	lod2_brep_id bigint,
+	lod3_brep_id bigint,
+	lod4_brep_id bigint,
 	lod1_other_geom geometry(GEOMETRYZ),
 	lod2_other_geom geometry(GEOMETRYZ),
 	lod3_other_geom geometry(GEOMETRYZ),
 	lod4_other_geom geometry(GEOMETRYZ),
-	lod1_implicit_rep_id integer,
-	lod2_implicit_rep_id integer,
-	lod3_implicit_rep_id integer,
-	lod4_implicit_rep_id integer,
+	lod1_implicit_rep_id bigint,
+	lod2_implicit_rep_id bigint,
+	lod3_implicit_rep_id bigint,
+	lod4_implicit_rep_id bigint,
 	lod1_implicit_ref_point geometry(POINTZ),
 	lod2_implicit_ref_point geometry(POINTZ),
 	lod3_implicit_ref_point geometry(POINTZ),
@@ -1204,8 +1204,8 @@ CREATE TABLE bridge_constr_element(
 -- object: address_to_bridge | type: TABLE --
 -- DROP TABLE IF EXISTS address_to_bridge CASCADE;
 CREATE TABLE address_to_bridge(
-	bridge_id integer NOT NULL,
-	address_id integer NOT NULL,
+	bridge_id bigint NOT NULL,
+	address_id bigint NOT NULL,
 	CONSTRAINT address_to_bridge_pk PRIMARY KEY (bridge_id,address_id)
 	 WITH (FILLFACTOR = 100)
 
@@ -1217,7 +1217,7 @@ CREATE TABLE address_to_bridge(
 CREATE SEQUENCE grid_coverage_seq
 	INCREMENT BY 1
 	MINVALUE 0
-	MAXVALUE 2147483647
+	MAXVALUE 9223372036854775807
 	START WITH 1
 	CACHE 1
 	NO CYCLE
@@ -1227,7 +1227,7 @@ CREATE SEQUENCE grid_coverage_seq
 -- object: cityobject | type: TABLE --
 -- DROP TABLE IF EXISTS cityobject CASCADE;
 CREATE TABLE cityobject(
-	id integer NOT NULL DEFAULT nextval('cityobject_seq'::regclass),
+	id bigint NOT NULL DEFAULT nextval('cityobject_seq'::regclass),
 	objectclass_id integer NOT NULL,
 	gmlid character varying(256),
 	gmlid_codespace varchar(1000),
@@ -1253,15 +1253,15 @@ CREATE TABLE cityobject(
 -- object: appearance | type: TABLE --
 -- DROP TABLE IF EXISTS appearance CASCADE;
 CREATE TABLE appearance(
-	id integer NOT NULL DEFAULT nextval('appearance_seq'::regclass),
+	id bigint NOT NULL DEFAULT nextval('appearance_seq'::regclass),
 	gmlid character varying(256),
 	gmlid_codespace varchar(1000),
 	name character varying(1000),
 	name_codespace character varying(4000),
 	description character varying(4000),
 	theme character varying(256),
-	citymodel_id integer,
-	cityobject_id integer,
+	citymodel_id bigint,
+	cityobject_id bigint,
 	CONSTRAINT appearance_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -1271,11 +1271,11 @@ CREATE TABLE appearance(
 -- object: implicit_geometry | type: TABLE --
 -- DROP TABLE IF EXISTS implicit_geometry CASCADE;
 CREATE TABLE implicit_geometry(
-	id integer NOT NULL DEFAULT nextval('implicit_geometry_seq'::regclass),
+	id bigint NOT NULL DEFAULT nextval('implicit_geometry_seq'::regclass),
 	mime_type character varying(256),
 	reference_to_library character varying(4000),
 	library_object bytea,
-	relative_brep_id integer,
+	relative_brep_id bigint,
 	relative_other_geom geometry(GEOMETRYZ),
 	CONSTRAINT implicit_geometry_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
@@ -1286,11 +1286,11 @@ CREATE TABLE implicit_geometry(
 -- object: surface_geometry | type: TABLE --
 -- DROP TABLE IF EXISTS surface_geometry CASCADE;
 CREATE TABLE surface_geometry(
-	id integer NOT NULL DEFAULT nextval('surface_geometry_seq'::regclass),
+	id bigint NOT NULL DEFAULT nextval('surface_geometry_seq'::regclass),
 	gmlid character varying(256),
 	gmlid_codespace varchar(1000),
-	parent_id integer,
-	root_id integer,
+	parent_id bigint,
+	root_id bigint,
 	is_solid numeric,
 	is_composite numeric,
 	is_triangulated numeric,
@@ -1299,7 +1299,7 @@ CREATE TABLE surface_geometry(
 	solid_geometry geometry(POLYHEDRALSURFACEZ),
 	geometry geometry(POLYGONZ),
 	implicit_geometry geometry(POLYGONZ),
-	cityobject_id integer,
+	cityobject_id bigint,
 	CONSTRAINT surface_geometry_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -1309,7 +1309,7 @@ CREATE TABLE surface_geometry(
 -- object: address | type: TABLE --
 -- DROP TABLE IF EXISTS address CASCADE;
 CREATE TABLE address(
-	id integer NOT NULL DEFAULT nextval('address_seq'::regclass),
+	id bigint NOT NULL DEFAULT nextval('address_seq'::regclass),
 	gmlid varchar(256),
 	gmlid_codespace varchar(1000),
 	street character varying(1000),
@@ -1330,7 +1330,7 @@ CREATE TABLE address(
 -- object: surface_data | type: TABLE --
 -- DROP TABLE IF EXISTS surface_data CASCADE;
 CREATE TABLE surface_data(
-	id integer NOT NULL DEFAULT nextval('surface_data_seq'::regclass),
+	id bigint NOT NULL DEFAULT nextval('surface_data_seq'::regclass),
 	gmlid character varying(256),
 	gmlid_codespace varchar(1000),
 	name character varying(1000),
@@ -1345,7 +1345,7 @@ CREATE TABLE surface_data(
 	x3d_diffuse_color character varying(256),
 	x3d_emissive_color character varying(256),
 	x3d_is_smooth numeric,
-	tex_image_id integer,
+	tex_image_id bigint,
 	tex_texture_type character varying(256),
 	tex_wrap_mode character varying(256),
 	tex_border_color character varying(256),
@@ -1361,7 +1361,7 @@ CREATE TABLE surface_data(
 -- object: citymodel | type: TABLE --
 -- DROP TABLE IF EXISTS citymodel CASCADE;
 CREATE TABLE citymodel(
-	id integer NOT NULL DEFAULT nextval('citymodel_seq'::regclass),
+	id bigint NOT NULL DEFAULT nextval('citymodel_seq'::regclass),
 	gmlid character varying(256),
 	gmlid_codespace varchar(1000),
 	name character varying(1000),
@@ -1383,9 +1383,9 @@ CREATE TABLE citymodel(
 -- object: cityobject_genericattrib | type: TABLE --
 -- DROP TABLE IF EXISTS cityobject_genericattrib CASCADE;
 CREATE TABLE cityobject_genericattrib(
-	id integer NOT NULL DEFAULT nextval('cityobject_genericatt_seq'::regclass),
-	parent_genattrib_id integer,
-	root_genattrib_id integer,
+	id bigint NOT NULL DEFAULT nextval('cityobject_genericatt_seq'::regclass),
+	parent_genattrib_id bigint,
+	root_genattrib_id bigint,
 	attrname character varying(256) NOT NULL,
 	datatype integer,
 	strval character varying(4000),
@@ -1397,8 +1397,8 @@ CREATE TABLE cityobject_genericattrib(
 	genattribset_codespace character varying(4000),
 	blobval bytea,
 	geomval geometry(GEOMETRYZ),
-	surface_geometry_id integer,
-	cityobject_id integer,
+	surface_geometry_id bigint,
+	cityobject_id bigint,
 	CONSTRAINT cityobj_genericattrib_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -1408,11 +1408,11 @@ CREATE TABLE cityobject_genericattrib(
 -- object: external_reference | type: TABLE --
 -- DROP TABLE IF EXISTS external_reference CASCADE;
 CREATE TABLE external_reference(
-	id integer NOT NULL DEFAULT nextval('external_ref_seq'::regclass),
+	id bigint NOT NULL DEFAULT nextval('external_ref_seq'::regclass),
 	infosys character varying(4000),
 	name character varying(4000),
 	uri character varying(4000),
-	cityobject_id integer,
+	cityobject_id bigint,
 	CONSTRAINT external_reference_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
 
@@ -1422,7 +1422,7 @@ CREATE TABLE external_reference(
 -- object: tex_image | type: TABLE --
 -- DROP TABLE IF EXISTS tex_image CASCADE;
 CREATE TABLE tex_image(
-	id integer NOT NULL DEFAULT nextval('tex_image_seq'::regclass),
+	id bigint NOT NULL DEFAULT nextval('tex_image_seq'::regclass),
 	tex_image_uri character varying(4000),
 	tex_image_data bytea,
 	tex_mime_type character varying(256),
@@ -1436,7 +1436,7 @@ CREATE TABLE tex_image(
 -- object: grid_coverage | type: TABLE --
 -- DROP TABLE IF EXISTS grid_coverage CASCADE;
 CREATE TABLE grid_coverage(
-	id integer NOT NULL DEFAULT nextval('grid_coverage_seq'::regclass),
+	id bigint NOT NULL DEFAULT nextval('grid_coverage_seq'::regclass),
 	rasterproperty raster,
 	CONSTRAINT grid_coverage_pk PRIMARY KEY (id)
 	 WITH (FILLFACTOR = 100)
@@ -7051,4 +7051,6 @@ ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_fk2 FOREIGN KEY (pa
 REFERENCES objectclass (id) MATCH FULL
 ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
+
+
 

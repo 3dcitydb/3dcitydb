@@ -50,7 +50,7 @@
 *     OUT wktext TEXT,  
 *     OUT versioning TEXT
 *     ) RETURNS RECORD
-*   get_seq_values(seq_name TEXT, seq_count INTEGER) RETURNS SETOF INTEGER
+*   get_seq_values(seq_name TEXT, seq_count BIGINT) RETURNS SETOF BIGINT
 *   min(a NUMERIC, b NUMERIC) RETURNS NUMERIC
 *   versioning_db(schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   versioning_table(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
@@ -207,14 +207,14 @@ LANGUAGE sql IMMUTABLE;
 * @param count number of values to be queried from the sequence
 * @param schema_name name of schema of target sequence
 *
-* @RETURN INTEGER SET list of sequence values from given sequence
+* @RETURN BIGINT SET list of sequence values from given sequence
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_seq_values(
   seq_name TEXT,
-  seq_count INTEGER
-  ) RETURNS SETOF INTEGER AS 
+  seq_count BIGINT
+  ) RETURNS SETOF BIGINT AS
 $$
-SELECT nextval($1)::int FROM generate_series(1, $2);
+SELECT nextval($1)::bigint FROM generate_series(1, $2);
 $$
 LANGUAGE sql STRICT;
 
