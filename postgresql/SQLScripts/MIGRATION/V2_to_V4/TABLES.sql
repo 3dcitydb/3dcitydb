@@ -72,10 +72,10 @@ CREATE TABLE citydb.building (
     lod3_solid_id,
     lod4_solid_id)
   AS SELECT
-    b.id,
+      b.id::bigint,
     co.class_id,
-    building_parent_id,
-    building_root_id,
+    building_parent_id::bigint,
+    building_root_id::bigint,
     replace(trim(class), ' ', '--/\--')::varchar(256),
     NULL::varchar(4000),
     replace(trim(function), ' ', '--/\--')::varchar(1000),
@@ -101,32 +101,32 @@ CREATE TABLE citydb.building (
     lod2_multi_curve::geometry(MULTILINESTRINGZ,:srid),
     lod3_multi_curve::geometry(MULTILINESTRINGZ,:srid),
     lod4_multi_curve::geometry(MULTILINESTRINGZ,:srid),
-    NULL::integer,
-    NULL::integer,
+    NULL::bigint,
+    NULL::bigint,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod1_geometry_id AND is_solid = 0)
-        THEN lod1_geometry_id ELSE NULL::integer END,
+        THEN lod1_geometry_id ELSE NULL::bigint END,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod2_geometry_id AND is_solid = 0)
-        THEN lod2_geometry_id ELSE NULL::integer END,
+        THEN lod2_geometry_id ELSE NULL::bigint END,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod3_geometry_id AND is_solid = 0)
-        THEN lod3_geometry_id ELSE NULL::integer END,
+        THEN lod3_geometry_id ELSE NULL::bigint END,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod4_geometry_id AND is_solid = 0)
-        THEN lod4_geometry_id ELSE NULL::integer END,
+        THEN lod4_geometry_id ELSE NULL::bigint END,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod1_geometry_id AND is_solid = 1)
-        THEN lod1_geometry_id ELSE NULL::integer END,
+        THEN lod1_geometry_id ELSE NULL::bigint END,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod2_geometry_id AND is_solid = 1)
-        THEN lod2_geometry_id ELSE NULL::integer END,
+        THEN lod2_geometry_id ELSE NULL::bigint END,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod3_geometry_id AND is_solid = 1)
-        THEN lod3_geometry_id ELSE NULL::integer END,
+        THEN lod3_geometry_id ELSE NULL::bigint END,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod4_geometry_id AND is_solid = 1)
-        THEN lod4_geometry_id ELSE NULL::integer END
+        THEN lod4_geometry_id ELSE NULL::bigint END
     FROM public.building b
     JOIN public.cityobject co ON co.id = b.id;
 
@@ -158,7 +158,7 @@ CREATE TABLE citydb.building_installation (
     lod3_implicit_transformation,
     lod4_implicit_transformation)
   AS SELECT
-    id,
+    id::bigint,
     CASE WHEN is_external = 1 THEN 27::integer ELSE 28::integer END,
     replace(trim(class), ' ', '--/\--')::varchar(256),
     NULL::varchar(4000),
@@ -166,17 +166,17 @@ CREATE TABLE citydb.building_installation (
     NULL::varchar(4000),
     replace(trim(usage), ' ', '--/\--')::varchar(1000),
     NULL::varchar(4000),
-    building_id,
-    room_id,
-    lod2_geometry_id,
-    lod3_geometry_id,
-    lod4_geometry_id,
+    building_id::bigint,
+    room_id::bigint,
+    lod2_geometry_id::bigint,
+    lod3_geometry_id::bigint,
+    lod4_geometry_id::bigint,
     NULL::geometry(GEOMETRYZ,:srid),
     NULL::geometry(GEOMETRYZ,:srid),
     NULL::geometry(GEOMETRYZ,:srid),
-    NULL::integer,
-    NULL::integer,
-    NULL::integer,
+    NULL::bigint,
+    NULL::bigint,
+    NULL::bigint,
     NULL::geometry(POINTZ,:srid),
     NULL::geometry(POINTZ,:srid),
     NULL::geometry(POINTZ,:srid),
@@ -196,7 +196,7 @@ CREATE TABLE citydb.thematic_surface (
     lod3_multi_surface_id,
     lod4_multi_surface_id)
   AS SELECT
-    id,
+    id::bigint,
     CASE
     WHEN type = 'CeilingSurface' THEN 30::integer
     WHEN type = 'InteriorWallSurface' THEN 31::integer
@@ -206,12 +206,12 @@ CREATE TABLE citydb.thematic_surface (
     WHEN type = 'GroundSurface' THEN 35::integer
     WHEN type = 'ClosureSurface' THEN 36::integer
     END,
-    building_id,
-    room_id,
-    NULL::integer,
-    lod2_multi_surface_id,
-    lod3_multi_surface_id,
-    lod4_multi_surface_id
+    building_id::bigint,
+    room_id::bigint,
+    NULL::bigint,
+    lod2_multi_surface_id::bigint,
+    lod3_multi_surface_id::bigint,
+    lod4_multi_surface_id::bigint
     FROM public.thematic_surface;
 
 DROP TABLE IF EXISTS citydb.opening CASCADE;
@@ -228,13 +228,13 @@ CREATE TABLE citydb.opening(
     lod3_implicit_transformation,
     lod4_implicit_transformation)
   AS SELECT
-    id,
+    id::bigint,
     CASE WHEN type = 'Window' THEN 38::integer ELSE 39::integer END,
-    address_id,
-    lod3_multi_surface_id,
-    lod4_multi_surface_id,
-    NULL::integer,
-    NULL::integer,
+    address_id::bigint,
+    lod3_multi_surface_id::bigint,
+    lod4_multi_surface_id::bigint,
+    NULL::bigint,
+    NULL::bigint,
     NULL::geometry(POINTZ,:srid),
     NULL::geometry(POINTZ,:srid),
     NULL::varchar(1000),
@@ -243,7 +243,7 @@ CREATE TABLE citydb.opening(
 
 DROP TABLE IF EXISTS citydb.opening_to_them_surface CASCADE;
 CREATE TABLE citydb.opening_to_them_surface AS
-  SELECT opening_id, thematic_surface_id
+  SELECT opening_id::bigint, thematic_surface_id::bigint
     FROM public.opening_to_them_surface;
 
 DROP TABLE IF EXISTS citydb.room CASCADE;
@@ -260,7 +260,7 @@ CREATE TABLE citydb.room (
     lod4_multi_surface_id,
     lod4_solid_id)
   AS SELECT
-    r.id,
+    r.id::bigint,
     co.class_id,
     replace(trim(class), ' ', '--/\--')::varchar(256),
     NULL::varchar(4000),
@@ -268,13 +268,13 @@ CREATE TABLE citydb.room (
     NULL::varchar(4000),
     replace(trim(usage), ' ', '--/\--')::varchar(1000),
     NULL::varchar(4000),
-    building_id,
+    building_id::bigint,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod4_geometry_id AND is_solid = 0)
-        THEN lod4_geometry_id ELSE NULL::integer END,
+        THEN lod4_geometry_id ELSE NULL::bigint END,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod4_geometry_id AND is_solid = 1)
-        THEN lod4_geometry_id ELSE NULL::integer END
+        THEN lod4_geometry_id ELSE NULL::bigint END
     FROM public.room r
     JOIN public.cityobject co ON co.id = r.id;
 
@@ -295,7 +295,7 @@ CREATE TABLE citydb.building_furniture (
     lod4_implicit_ref_point,
     lod4_implicit_transformation)
   AS SELECT
-    b.id,
+    b.id::bigint,
     co.class_id,
     replace(trim(class), ' ', '--/\--')::varchar(256),
     NULL::varchar(4000),
@@ -303,10 +303,10 @@ CREATE TABLE citydb.building_furniture (
     NULL::varchar(4000),
     replace(trim(usage), ' ', '--/\--')::varchar(1000),
     NULL::varchar(4000),
-    room_id,
-    lod4_geometry_id,
+    room_id::bigint,
+    lod4_geometry_id::bigint,
     NULL::geometry(GEOMETRYZ,:srid),
-    lod4_implicit_rep_id,
+    lod4_implicit_rep_id::bigint,
     lod4_implicit_ref_point,
     lod4_implicit_transformation
     FROM public.building_furniture b
@@ -314,7 +314,7 @@ CREATE TABLE citydb.building_furniture (
 
 DROP TABLE IF EXISTS citydb.address_to_building CASCADE;
 CREATE TABLE citydb.address_to_building AS
-  SELECT building_id, address_id
+  SELECT building_id::bigint, address_id::bigint
     FROM public.address_to_building;
 
 
@@ -354,7 +354,7 @@ CREATE TABLE citydb.city_furniture (
     lod3_implicit_transformation,
     lod4_implicit_transformation)
   AS SELECT
-    c.id,
+    c.id::bigint,
     co.class_id,
     replace(trim(class), ' ', '--/\--')::varchar(256),
     NULL::varchar(4000),
@@ -366,18 +366,18 @@ CREATE TABLE citydb.city_furniture (
     lod2_terrain_intersection::geometry(MULTILINESTRINGZ,:srid),
     lod3_terrain_intersection::geometry(MULTILINESTRINGZ,:srid),
     lod4_terrain_intersection::geometry(MULTILINESTRINGZ,:srid),
-    lod1_geometry_id,
-    lod2_geometry_id,
-    lod3_geometry_id,
-    lod1_geometry_id,
+    lod1_geometry_id::bigint,
+    lod2_geometry_id::bigint,
+    lod3_geometry_id::bigint,
+    lod1_geometry_id::bigint,
     NULL::geometry(GEOMETRYZ,:srid),
     NULL::geometry(GEOMETRYZ,:srid),
     NULL::geometry(GEOMETRYZ,:srid),
     NULL::geometry(GEOMETRYZ,:srid),
-    lod1_implicit_rep_id,
-    lod2_implicit_rep_id,
-    lod3_implicit_rep_id,
-    lod4_implicit_rep_id,
+    lod1_implicit_rep_id::bigint,
+    lod2_implicit_rep_id::bigint,
+    lod3_implicit_rep_id::bigint,
+    lod4_implicit_rep_id::bigint,
     lod1_implicit_ref_point,
     lod2_implicit_ref_point,
     lod3_implicit_ref_point,
@@ -407,7 +407,7 @@ CREATE TABLE citydb.transportation_complex (
     lod3_multi_surface_id,
     lod4_multi_surface_id)
   AS SELECT
-    id,
+    id::bigint,
     CASE
     WHEN type = 'Track' THEN 43::integer
     WHEN type = 'Railway' THEN 44::integer
@@ -421,10 +421,10 @@ CREATE TABLE citydb.transportation_complex (
     replace(trim(usage), ' ', '--/\--')::varchar(1000),
     NULL::varchar(4000),
     lod0_network,
-    lod1_multi_surface_id,
-    lod2_multi_surface_id,
-    lod3_multi_surface_id,
-    lod4_multi_surface_id
+    lod1_multi_surface_id::bigint,
+    lod2_multi_surface_id::bigint,
+    lod3_multi_surface_id::bigint,
+    lod4_multi_surface_id::bigint
     FROM public.transportation_complex;
 
 DROP TABLE IF EXISTS citydb.traffic_area CASCADE;
@@ -444,7 +444,7 @@ CREATE TABLE citydb.traffic_area (
     lod4_multi_surface_id ,
     transportation_complex_id)
   AS SELECT
-    id,
+    id::bigint,
     CASE WHEN is_auxiliary = 1 THEN 48::integer ELSE 47::integer END,
     NULL::varchar(256),
     NULL::varchar(4000),
@@ -454,10 +454,10 @@ CREATE TABLE citydb.traffic_area (
     NULL::varchar(4000),
     surface_material,
     NULL::varchar(4000),
-    lod2_multi_surface_id,
-    lod3_multi_surface_id,
-    lod4_multi_surface_id,
-    transportation_complex_id
+    lod2_multi_surface_id::bigint,
+    lod3_multi_surface_id::bigint,
+    lod4_multi_surface_id::bigint,
+    transportation_complex_id::bigint
     FROM public.traffic_area;
 
 
@@ -483,7 +483,7 @@ CREATE TABLE citydb.plant_cover (
     lod3_multi_solid_id,
     lod4_multi_solid_id)
   AS SELECT
-    p.id,
+    p.id::bigint,
     co.class_id,
     replace(trim(class), ' ', '--/\--')::varchar(256),
     NULL::varchar(4000),
@@ -495,28 +495,28 @@ CREATE TABLE citydb.plant_cover (
     NULL::varchar(4000),
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod1_geometry_id AND is_solid = 0)
-        THEN lod1_geometry_id ELSE NULL::integer END,
+        THEN lod1_geometry_id ELSE NULL::bigint END,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod2_geometry_id AND is_solid = 0)
-        THEN lod2_geometry_id ELSE NULL::integer END,
+        THEN lod2_geometry_id ELSE NULL::bigint END,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod3_geometry_id AND is_solid = 0)
-        THEN lod3_geometry_id ELSE NULL::integer END,
+        THEN lod3_geometry_id ELSE NULL::bigint END,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod4_geometry_id AND is_solid = 0)
-        THEN lod4_geometry_id ELSE NULL::integer END,
+        THEN lod4_geometry_id ELSE NULL::bigint END,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod1_geometry_id AND is_solid = 1)
-        THEN lod1_geometry_id ELSE NULL::integer END,
+        THEN lod1_geometry_id ELSE NULL::bigint END,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod2_geometry_id AND is_solid = 1)
-        THEN lod2_geometry_id ELSE NULL::integer END,
+        THEN lod2_geometry_id ELSE NULL::bigint END,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod3_geometry_id AND is_solid = 1)
-        THEN lod3_geometry_id ELSE NULL::integer END,
+        THEN lod3_geometry_id ELSE NULL::bigint END,
     CASE WHEN EXISTS
         (SELECT 1 FROM public.surface_geometry sg WHERE sg.id = lod4_geometry_id AND is_solid = 1)
-        THEN lod4_geometry_id ELSE NULL::integer END
+        THEN lod4_geometry_id ELSE NULL::bigint END
     FROM public.plant_cover p
     JOIN public.cityobject co ON co.id = p.id;
 
@@ -559,7 +559,7 @@ CREATE TABLE citydb.solitary_vegetat_object (
     lod3_implicit_transformation,
     lod4_implicit_transformation)
   AS SELECT
-    s.id,
+    s.id::bigint,
     co.class_id,
     replace(trim(class), ' ', '--/\--')::varchar(256),
     NULL::varchar(4000),
@@ -575,18 +575,18 @@ CREATE TABLE citydb.solitary_vegetat_object (
     NULL::varchar(4000),
     crown_diameter,
     NULL::varchar(4000),
-    lod1_geometry_id,
-    lod2_geometry_id,
-    lod3_geometry_id,
-    lod4_geometry_id,
+    lod1_geometry_id::bigint,
+    lod2_geometry_id::bigint,
+    lod3_geometry_id::bigint,
+    lod4_geometry_id::bigint,
     NULL::geometry(GEOMETRYZ,:srid),
     NULL::geometry(GEOMETRYZ,:srid),
     NULL::geometry(GEOMETRYZ,:srid),
     NULL::geometry(GEOMETRYZ,:srid),
-    lod1_implicit_rep_id,
-    lod2_implicit_rep_id,
-    lod3_implicit_rep_id,
-    lod4_implicit_rep_id,
+    lod1_implicit_rep_id::bigint,
+    lod2_implicit_rep_id::bigint,
+    lod3_implicit_rep_id::bigint,
+    lod4_implicit_rep_id::bigint,
     lod1_implicit_ref_point,
     lod2_implicit_ref_point,
     lod3_implicit_ref_point,
@@ -619,7 +619,7 @@ CREATE TABLE citydb.waterbody (
     lod3_solid_id,
     lod4_solid_id)
   AS SELECT
-    w.id,
+    w.id::bigint,
     co.class_id,
     replace(trim(class), ' ', '--/\--')::varchar(256),
     NULL::varchar(4000),
@@ -629,12 +629,12 @@ CREATE TABLE citydb.waterbody (
     NULL::varchar(4000),
     lod0_multi_curve::geometry(MULTILINESTRINGZ,:srid),
     lod1_multi_curve::geometry(MULTILINESTRINGZ,:srid),
-    lod0_multi_surface_id,
-    lod1_multi_surface_id,
-    lod1_solid_id,
-    lod2_solid_id,
-    lod3_solid_id,
-    lod4_solid_id
+    lod0_multi_surface_id::bigint,
+    lod1_multi_surface_id::bigint,
+    lod1_solid_id::bigint,
+    lod2_solid_id::bigint,
+    lod3_solid_id::bigint,
+    lod4_solid_id::bigint
     FROM public.waterbody w
     JOIN public.cityobject co ON co.id = w.id;
 
@@ -648,7 +648,7 @@ CREATE TABLE citydb.waterboundary_surface (
     lod3_surface_id,
     lod4_surface_id)
   AS SELECT
-    id,
+    id::bigint,
     CASE
     WHEN type = 'WaterSurface' THEN 11::integer
     WHEN type = 'WaterGroundSurface' THEN 12::integer
@@ -656,14 +656,14 @@ CREATE TABLE citydb.waterboundary_surface (
     END,
     water_level,
     NULL::varchar(4000),
-    lod2_surface_id,
-    lod3_surface_id,
-    lod4_surface_id
+    lod2_surface_id::bigint,
+    lod3_surface_id::bigint,
+    lod4_surface_id::bigint
   FROM public.waterboundary_surface;
 
 DROP TABLE IF EXISTS citydb.waterbod_to_waterbnd_srf CASCADE;
 CREATE TABLE citydb.waterbod_to_waterbnd_srf AS
-  SELECT waterboundary_surface_id, waterbody_id
+  SELECT waterboundary_surface_id::bigint, waterbody_id::bigint
     FROM public.waterbod_to_waterbnd_srf;
 
 
@@ -684,7 +684,7 @@ CREATE TABLE citydb.land_use (
     lod3_multi_surface_id,
     lod4_multi_surface_id)
   AS SELECT
-    l.id,
+    l.id::bigint,
     co.class_id,
     replace(trim(class), ' ', '--/\--')::varchar(256),
     NULL::varchar(4000),
@@ -692,11 +692,11 @@ CREATE TABLE citydb.land_use (
     NULL::varchar(4000),
     replace(trim(usage), ' ', '--/\--')::varchar(1000),
     NULL::varchar(4000),
-    lod0_multi_surface_id,
-    lod1_multi_surface_id,
-    lod2_multi_surface_id,
-    lod3_multi_surface_id,
-    lod4_multi_surface_id
+    lod0_multi_surface_id::bigint,
+    lod1_multi_surface_id::bigint,
+    lod2_multi_surface_id::bigint,
+    lod3_multi_surface_id::bigint,
+    lod4_multi_surface_id::bigint
     FROM public.land_use l
     JOIN public.cityobject co ON co.id = l.id;
 
@@ -705,7 +705,7 @@ CREATE TABLE citydb.land_use (
 DROP TABLE IF EXISTS citydb.relief_feature CASCADE;
 CREATE TABLE citydb.relief_feature AS
   SELECT
-    rf.id,
+    rf.id::bigint,
     co.class_id AS objectclass_id,
     lod
     FROM public.relief_feature rf
@@ -718,7 +718,7 @@ CREATE TABLE citydb.relief_component(
     lod,
     extent)
   AS SELECT
-    id,
+    id::bigint,
     CASE
     WHEN EXISTS (SELECT 1 FROM public.tin_relief tr WHERE tr.id = id) THEN 16::integer
     WHEN EXISTS (SELECT 1 FROM public.masspoint_relief mpr WHERE mpr.id = id) THEN 17::integer
@@ -731,7 +731,7 @@ CREATE TABLE citydb.relief_component(
 
 DROP TABLE IF EXISTS citydb.relief_feat_to_rel_comp CASCADE;
 CREATE TABLE citydb.relief_feat_to_rel_comp AS
-  SELECT relief_component_id, relief_feature_id
+  SELECT relief_component_id::bigint, relief_feature_id::bigint
     FROM public.relief_feat_to_rel_comp;
 
 DROP TABLE IF EXISTS citydb.tin_relief CASCADE;
@@ -745,14 +745,14 @@ CREATE TABLE citydb.tin_relief (
     control_points,
     surface_geometry_id)
   AS SELECT
-    t.id,
+    t.id::bigint,
     co.class_id,
     max_length,
     NULL::varchar(4000),
     stop_lines::geometry(MULTILINESTRINGZ,:srid),
     break_lines::geometry(MULTILINESTRINGZ,:srid),
     control_points,
-    surface_geometry_id
+    surface_geometry_id::bigint
     FROM public.tin_relief t
     JOIN public.cityobject co ON co.id = t.id;
 
@@ -762,7 +762,7 @@ CREATE TABLE citydb.masspoint_relief (
     objectclass_id,
     relief_points)
   AS SELECT
-    m.id, 
+    m.id::bigint,
     co.class_id,
     relief_points
     FROM public.masspoint_relief m
@@ -775,7 +775,7 @@ CREATE TABLE citydb.breakline_relief (
     ridge_or_valley_lines,
     break_lines)
   AS SELECT
-    b.id,
+    b.id::bigint,
     co.class_id,
     ridge_or_valley_lines::geometry(MULTILINESTRINGZ,:srid),
     break_lines::geometry(MULTILINESTRINGZ,:srid)
@@ -785,10 +785,10 @@ CREATE TABLE citydb.breakline_relief (
 -- no mapping for raster_relief table
 DROP TABLE IF EXISTS citydb.raster_relief CASCADE;
 CREATE TABLE citydb.raster_relief(
-    id INTEGER NOT NULL,
+    id bigint NOT NULL,
     objectclass_id INTEGER NOT NULL,
     raster_uri VARCHAR(4000),
-    coverage_id INTEGER
+    coverage_id BIGINT
 );
 
 
@@ -807,7 +807,7 @@ CREATE TABLE citydb.cityobjectgroup (
     other_geom,
     parent_cityobject_id)
   AS SELECT
-    c.id,
+    c.id::bigint,
     co.class_id,
     replace(trim(class), ' ', '--/\--')::varchar(256),
     NULL::varchar(4000),
@@ -815,15 +815,15 @@ CREATE TABLE citydb.cityobjectgroup (
     NULL::varchar(4000),
     replace(trim(usage), ' ', '--/\--')::varchar(1000),
     NULL::varchar(4000),
-    surface_geometry_id,
+    surface_geometry_id::bigint,
     geometry::geometry(GEOMETRYZ,:srid),
-    parent_cityobject_id
+    parent_cityobject_id::bigint
     FROM public.cityobjectgroup c
     JOIN public.cityobject co ON co.id = c.id;
 
 DROP TABLE IF EXISTS citydb.group_to_cityobject CASCADE;
 CREATE TABLE citydb.group_to_cityobject AS
-  SELECT cityobject_id, cityobjectgroup_id, role
+  SELECT cityobject_id::bigint, cityobjectgroup_id::bigint, role
     FROM public.group_to_cityobject;
 
 
@@ -869,7 +869,7 @@ CREATE TABLE citydb.generic_cityobject (
     lod3_implicit_transformation,
     lod4_implicit_transformation)
   AS SELECT
-    g.id,
+    g.id::bigint,
     co.class_id,
     replace(trim(class), ' ', '--/\--')::varchar(256),
     NULL::varchar(4000),
@@ -882,21 +882,21 @@ CREATE TABLE citydb.generic_cityobject (
     lod2_terrain_intersection::geometry(MULTILINESTRINGZ,:srid),
     lod3_terrain_intersection::geometry(MULTILINESTRINGZ,:srid),
     lod4_terrain_intersection::geometry(MULTILINESTRINGZ,:srid),
-    lod0_geometry_id,
-    lod1_geometry_id,
-    lod2_geometry_id,
-    lod3_geometry_id,
-    lod4_geometry_id,
+    lod0_geometry_id::bigint,
+    lod1_geometry_id::bigint,
+    lod2_geometry_id::bigint,
+    lod3_geometry_id::bigint,
+    lod4_geometry_id::bigint,
     NULL::geometry(GEOMETRYZ,:srid),
     NULL::geometry(GEOMETRYZ,:srid),
     NULL::geometry(GEOMETRYZ,:srid),
     NULL::geometry(GEOMETRYZ,:srid),
     NULL::geometry(GEOMETRYZ,:srid),
-    lod0_implicit_rep_id,
-    lod1_implicit_rep_id,
-    lod2_implicit_rep_id,
-    lod3_implicit_rep_id,
-    lod4_implicit_rep_id,
+    lod0_implicit_rep_id::bigint,
+    lod1_implicit_rep_id::bigint,
+    lod2_implicit_rep_id::bigint,
+    lod3_implicit_rep_id::bigint,
+    lod4_implicit_rep_id::bigint,
     lod0_implicit_ref_point,
     lod1_implicit_ref_point,
     lod2_implicit_ref_point,
@@ -929,9 +929,9 @@ CREATE TABLE citydb.cityobject_genericattrib (
     surface_geometry_id,
     cityobject_id)
   AS SELECT
-    id,
-    NULL::integer,
-    id,
+    id::bigint,
+    NULL::bigint,
+    id::bigint,
     attrname,
     datatype::integer,
     strval,
@@ -943,15 +943,15 @@ CREATE TABLE citydb.cityobject_genericattrib (
     NULL::varchar(4000),
     blobval,
     geomval,
-    surface_geometry_id,
-    cityobject_id
+    surface_geometry_id::bigint,
+    cityobject_id::bigint
     FROM public.cityobject_genericattrib;
 
 
 -- APPEARANCE module
 DROP TABLE IF EXISTS citydb.appearance CASCADE;
 CREATE TABLE citydb.appearance AS
-  SELECT id, gmlid, gmlid_codespace, name, name_codespace, description, theme, citymodel_id, cityobject_id
+  SELECT id::bigint, gmlid, gmlid_codespace, name, name_codespace, description, theme, citymodel_id::bigint, cityobject_id::bigint
     FROM public.appearance;
 
 DROP TABLE IF EXISTS citydb.surface_data CASCADE;
@@ -979,7 +979,7 @@ CREATE TABLE citydb.surface_data (
     gt_orientation,
     gt_reference_point)
   AS SELECT
-    id,
+    id::bigint,
     gmlid,
     gmlid_codespace,
     name,
@@ -998,7 +998,7 @@ CREATE TABLE citydb.surface_data (
     x3d_diffuse_color,
     x3d_emissive_color,
     x3d_is_smooth,
-    NULL::integer,
+    NULL::bigint,
     tex_texture_type,
     tex_wrap_mode,
     tex_border_color,
@@ -1009,7 +1009,7 @@ CREATE TABLE citydb.surface_data (
 
 DROP TABLE IF EXISTS citydb.appear_to_surface_data CASCADE;
 CREATE TABLE citydb.appear_to_surface_data AS
-  SELECT surface_data_id, appearance_id
+  SELECT surface_data_id::bigint, appearance_id::bigint
     FROM public.appear_to_surface_data;
 
 DROP TABLE IF EXISTS citydb.textureparam CASCADE;
@@ -1020,11 +1020,11 @@ CREATE TABLE citydb.textureparam (
     texture_coordinates,
     surface_data_id)
   AS SELECT
-    surface_geometry_id,
+    surface_geometry_id::bigint,
     is_texture_parametrization,
     world_to_texture,
     geodb_pkg.texCoordsToGeom(texture_coordinates)::geometry(POLYGON),
-    surface_data_id
+    surface_data_id::bigint
     FROM public.textureparam;
 
 -- new additional table for textures
@@ -1047,7 +1047,7 @@ CREATE TABLE citydb.citymodel (
     reason_for_update,
     lineage)
   AS SELECT
-    id,
+    id::bigint,
     gmlid,
     gmlid_codespace,
     name,
@@ -1082,7 +1082,7 @@ CREATE TABLE citydb.cityobject (
     lineage,
     xml_source)
   AS SELECT
-    co.id,
+    co.id::bigint,
     co.class_id,
     co.gmlid,
     co.gmlid_codespace,
@@ -1104,12 +1104,12 @@ CREATE TABLE citydb.cityobject (
 
 DROP TABLE IF EXISTS citydb.cityobject_member CASCADE;
 CREATE TABLE citydb.cityobject_member AS
-  SELECT citymodel_id, cityobject_id
+  SELECT citymodel_id::bigint, cityobject_id::bigint
     FROM public.cityobject_member;
 
 DROP TABLE IF EXISTS citydb.generalization CASCADE;
 CREATE TABLE citydb.generalization AS
-  SELECT cityobject_id, generalizes_to_id
+  SELECT cityobject_id::bigint, generalizes_to_id::bigint
     FROM public.generalization;
 
 DROP TABLE IF EXISTS citydb.surface_geometry CASCADE;
@@ -1129,11 +1129,11 @@ CREATE TABLE citydb.surface_geometry (
     implicit_geometry,
     cityobject_id)
   AS SELECT
-    id,
+    id::bigint,
     gmlid,
     gmlid_codespace,
-    parent_id,
-    root_id,
+    parent_id::bigint,
+    root_id::bigint,
     is_solid,
     is_composite,
     is_triangulated,
@@ -1142,7 +1142,7 @@ CREATE TABLE citydb.surface_geometry (
     geometry,
     NULL::geometry(POLYHEDRALSURFACEZ,:srid),
     NULL::geometry(POLYGONZ),
-    NULL::integer
+    NULL::bigint
     FROM public.surface_geometry;
 
 -- constructing 3D geometry
@@ -1164,17 +1164,17 @@ CREATE TABLE citydb.implicit_geometry (
     relative_brep_id,
     relative_other_geom)
   AS SELECT
-    id,
+    id::bigint,
     mime_type,
     reference_to_library,
     library_object bytea,
-    relative_geometry_id,
+    relative_geometry_id::bigint,
     NULL::geometry(GEOMETRYZ)
     FROM public.implicit_geometry;
 
 DROP TABLE IF EXISTS citydb.external_reference CASCADE;
 CREATE TABLE citydb.external_reference AS
-  SELECT id, infosys, name, uri, cityobject_id
+  SELECT id::bigint, infosys, name, uri, cityobject_id::bigint
     FROM public.external_reference;
 
 DROP TABLE IF EXISTS citydb.address CASCADE;
@@ -1192,7 +1192,7 @@ CREATE TABLE citydb.address (
     multi_point,
     xal_source)
   AS SELECT
-    id,
+    id::bigint,
     ('ID_'||id)::varchar(256),
     NULL::varchar(1000),
     street,
@@ -1474,10 +1474,10 @@ UPDATE citydb.surface_geometry sg SET geometry = NULL, implicit_geometry = ST_Se
 -- BRIDGE module
 DROP TABLE IF EXISTS citydb.bridge CASCADE;
 CREATE TABLE citydb.bridge(
-    id INTEGER NOT NULL,
+    id BIGINT NOT NULL,
     objectclass_id INTEGER NOT NULL,
-    bridge_parent_id INTEGER,
-    bridge_root_id INTEGER,
+    bridge_parent_id BIGINT,
+    bridge_root_id BIGINT,
     class VARCHAR(256),
     class_codespace VARCHAR(4000),
     function VARCHAR(1000),
@@ -1494,19 +1494,19 @@ CREATE TABLE citydb.bridge(
     lod2_multi_curve geometry(MULTILINESTRINGZ,:srid),
     lod3_multi_curve geometry(MULTILINESTRINGZ,:srid),
     lod4_multi_curve geometry(MULTILINESTRINGZ,:srid),
-    lod1_multi_surface_id INTEGER,
-    lod2_multi_surface_id INTEGER,
-    lod3_multi_surface_id INTEGER,
-    lod4_multi_surface_id INTEGER,
-    lod1_solid_id INTEGER,
-    lod2_solid_id INTEGER,
-    lod3_solid_id INTEGER,
-    lod4_solid_id INTEGER
+    lod1_multi_surface_id BIGINT,
+    lod2_multi_surface_id BIGINT,
+    lod3_multi_surface_id BIGINT,
+    lod4_multi_surface_id BIGINT,
+    lod1_solid_id BIGINT,
+    lod2_solid_id BIGINT,
+    lod3_solid_id BIGINT,
+    lod4_solid_id BIGINT
 );
 
 DROP TABLE IF EXISTS citydb.bridge_constr_element CASCADE;
 CREATE TABLE citydb.bridge_constr_element(
-    id INTEGER NOT NULL,
+    id BIGINT NOT NULL,
     objectclass_id INTEGER NOT NULL,
     class VARCHAR(256),
     class_codespace VARCHAR(4000),
@@ -1514,23 +1514,23 @@ CREATE TABLE citydb.bridge_constr_element(
     function_codespace VARCHAR(4000),
     usage VARCHAR(1000),
     usage_codespace VARCHAR(4000),
-    bridge_id INTEGER,
+    bridge_id BIGINT,
     lod1_terrain_intersection geometry(MULTILINESTRINGZ,:srid),
     lod2_terrain_intersection geometry(MULTILINESTRINGZ,:srid),
     lod3_terrain_intersection geometry(MULTILINESTRINGZ,:srid),
     lod4_terrain_intersection geometry(MULTILINESTRINGZ,:srid),
-    lod1_brep_id INTEGER,
-    lod2_brep_id INTEGER,
-    lod3_brep_id INTEGER,
-    lod4_brep_id INTEGER,
+    lod1_brep_id BIGINT,
+    lod2_brep_id BIGINT,
+    lod3_brep_id BIGINT,
+    lod4_brep_id BIGINT,
     lod1_other_geom geometry(GEOMETRYZ,:srid),
     lod2_other_geom geometry(GEOMETRYZ,:srid),
     lod3_other_geom geometry(GEOMETRYZ,:srid),
     lod4_other_geom geometry(GEOMETRYZ,:srid),
-    lod1_implicit_rep_id INTEGER,
-    lod2_implicit_rep_id INTEGER,
-    lod3_implicit_rep_id INTEGER,
-    lod4_implicit_rep_id INTEGER,
+    lod1_implicit_rep_id BIGINT,
+    lod2_implicit_rep_id BIGINT,
+    lod3_implicit_rep_id BIGINT,
+    lod4_implicit_rep_id BIGINT,
     lod1_implicit_ref_point geometry(POINTZ,:srid),
     lod2_implicit_ref_point geometry(POINTZ,:srid),
     lod3_implicit_ref_point geometry(POINTZ,:srid),
@@ -1543,7 +1543,7 @@ CREATE TABLE citydb.bridge_constr_element(
 
 DROP TABLE IF EXISTS citydb.bridge_installation CASCADE;
 CREATE TABLE citydb.bridge_installation(
-    id INTEGER NOT NULL,
+    id BIGINT NOT NULL,
     objectclass_id INTEGER NOT NULL,
     class VARCHAR(256),
     class_codespace VARCHAR(4000),
@@ -1551,17 +1551,17 @@ CREATE TABLE citydb.bridge_installation(
     function_codespace VARCHAR(4000),
     usage VARCHAR(1000),
     usage_codespace VARCHAR(4000),
-    bridge_id INTEGER,
-    bridge_room_id INTEGER,
-    lod2_brep_id INTEGER,
-    lod3_brep_id INTEGER,
-    lod4_brep_id INTEGER,
+    bridge_id BIGINT,
+    bridge_room_id BIGINT,
+    lod2_brep_id BIGINT,
+    lod3_brep_id BIGINT,
+    lod4_brep_id BIGINT,
     lod2_other_geom geometry(GEOMETRYZ,:srid),
     lod3_other_geom geometry(GEOMETRYZ,:srid),
     lod4_other_geom geometry(GEOMETRYZ,:srid),
-    lod2_implicit_rep_id INTEGER,
-    lod3_implicit_rep_id INTEGER,
-    lod4_implicit_rep_id INTEGER,
+    lod2_implicit_rep_id BIGINT,
+    lod3_implicit_rep_id BIGINT,
+    lod4_implicit_rep_id BIGINT,
     lod2_implicit_ref_point geometry(POINTZ,:srid),
     lod3_implicit_ref_point geometry(POINTZ,:srid),
     lod4_implicit_ref_point geometry(POINTZ,:srid),
@@ -1572,26 +1572,26 @@ CREATE TABLE citydb.bridge_installation(
 
 DROP TABLE IF EXISTS citydb.bridge_thematic_surface CASCADE;
 CREATE TABLE citydb.bridge_thematic_surface(
-    id INTEGER NOT NULL,
+    id BIGINT NOT NULL,
     objectclass_id INTEGER NOT NULL,
-    bridge_id INTEGER,
-    bridge_room_id INTEGER,
-    bridge_installation_id INTEGER,
-    bridge_constr_element_id INTEGER,
-    lod2_multi_surface_id INTEGER,
-    lod3_multi_surface_id INTEGER,
-    lod4_multi_surface_id INTEGER
+    bridge_id BIGINT,
+    bridge_room_id BIGINT,
+    bridge_installation_id BIGINT,
+    bridge_constr_element_id BIGINT,
+    lod2_multi_surface_id BIGINT,
+    lod3_multi_surface_id BIGINT,
+    lod4_multi_surface_id BIGINT
 );
 
 DROP TABLE IF EXISTS citydb.bridge_opening CASCADE;
 CREATE TABLE citydb.bridge_opening(
-    id INTEGER NOT NULL,
+    id BIGINT NOT NULL,
     objectclass_id INTEGER NOT NULL,
-    address_id INTEGER,
-    lod3_multi_surface_id INTEGER,
-    lod4_multi_surface_id INTEGER,
-    lod3_implicit_rep_id INTEGER,
-    lod4_implicit_rep_id INTEGER,
+    address_id BIGINT,
+    lod3_multi_surface_id BIGINT,
+    lod4_multi_surface_id BIGINT,
+    lod3_implicit_rep_id BIGINT,
+    lod4_implicit_rep_id BIGINT,
     lod3_implicit_ref_point geometry(POINTZ,:srid),
     lod4_implicit_ref_point geometry(POINTZ,:srid),
     lod3_implicit_transformation VARCHAR(1000),
@@ -1600,13 +1600,13 @@ CREATE TABLE citydb.bridge_opening(
 
 DROP TABLE IF EXISTS citydb.bridge_open_to_them_srf CASCADE;
 CREATE TABLE citydb.bridge_open_to_them_srf(
-    bridge_opening_id INTEGER NOT NULL,
-    bridge_thematic_surface_id INTEGER NOT NULL
+    bridge_opening_id BIGINT NOT NULL,
+    bridge_thematic_surface_id BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS citydb.bridge_room CASCADE;
 CREATE TABLE citydb.bridge_room(
-    id INTEGER NOT NULL,
+    id BIGINT NOT NULL,
     objectclass_id INTEGER NOT NULL,
     class VARCHAR(256),
     class_codespace VARCHAR(4000),
@@ -1614,14 +1614,14 @@ CREATE TABLE citydb.bridge_room(
     function_codespace VARCHAR(4000),
     usage VARCHAR(1000),
     usage_codespace VARCHAR(4000),
-    bridge_id INTEGER,
-    lod4_multi_surface_id INTEGER,
-    lod4_solid_id INTEGER
+    bridge_id BIGINT,
+    lod4_multi_surface_id BIGINT,
+    lod4_solid_id BIGINT
 );
 
 DROP TABLE IF EXISTS citydb.bridge_furniture CASCADE;
 CREATE TABLE citydb.bridge_furniture(
-    id INTEGER NOT NULL,
+    id BIGINT NOT NULL,
     objectclass_id INTEGER NOT NULL,
     class VARCHAR(256),
     class_codespace VARCHAR(4000),
@@ -1629,28 +1629,28 @@ CREATE TABLE citydb.bridge_furniture(
     function_codespace VARCHAR(4000),
     usage VARCHAR(1000),
     usage_codespace VARCHAR(4000),
-    bridge_room_id INTEGER,
-    lod4_brep_id INTEGER,
+    bridge_room_id BIGINT,
+    lod4_brep_id BIGINT,
     lod4_other_geom geometry(GEOMETRYZ,:srid),
-    lod4_implicit_rep_id INTEGER,
+    lod4_implicit_rep_id BIGINT,
     lod4_implicit_ref_point geometry(POINTZ,:srid),
     lod4_implicit_transformation VARCHAR(1000)
 );
 
 DROP TABLE IF EXISTS citydb.address_to_bridge CASCADE;
 CREATE TABLE citydb.address_to_bridge(
-    bridge_id INTEGER NOT NULL,
-    address_id INTEGER NOT NULL
+    bridge_id BIGINT NOT NULL,
+    address_id BIGINT NOT NULL
 );
 
 
 -- TUNNEL module
 DROP TABLE IF EXISTS citydb.tunnel CASCADE;
 CREATE TABLE citydb.tunnel(
-    id INTEGER NOT NULL,
+    id BIGINT NOT NULL,
     objectclass_id INTEGER NOT NULL,
-    tunnel_parent_id INTEGER,
-    tunnel_root_id INTEGER,
+    tunnel_parent_id BIGINT,
+    tunnel_root_id BIGINT,
     class VARCHAR(256),
     class_codespace VARCHAR(4000),
     function VARCHAR(1000),
@@ -1666,19 +1666,19 @@ CREATE TABLE citydb.tunnel(
     lod2_multi_curve geometry(MULTILINESTRINGZ,:srid),
     lod3_multi_curve geometry(MULTILINESTRINGZ,:srid),
     lod4_multi_curve geometry(MULTILINESTRINGZ,:srid),
-    lod1_multi_surface_id INTEGER,
-    lod2_multi_surface_id INTEGER,
-    lod3_multi_surface_id INTEGER,
-    lod4_multi_surface_id INTEGER,
-    lod1_solid_id INTEGER,
-    lod2_solid_id INTEGER,
-    lod3_solid_id INTEGER,
-    lod4_solid_id INTEGER
+    lod1_multi_surface_id BIGINT,
+    lod2_multi_surface_id BIGINT,
+    lod3_multi_surface_id BIGINT,
+    lod4_multi_surface_id BIGINT,
+    lod1_solid_id BIGINT,
+    lod2_solid_id BIGINT,
+    lod3_solid_id BIGINT,
+    lod4_solid_id BIGINT
 );
 
 DROP TABLE IF EXISTS citydb.tunnel_installation CASCADE;
 CREATE TABLE citydb.tunnel_installation(
-    id INTEGER NOT NULL,
+    id BIGINT NOT NULL,
     objectclass_id INTEGER NOT NULL,
     class VARCHAR(256),
     class_codespace VARCHAR(4000),
@@ -1686,17 +1686,17 @@ CREATE TABLE citydb.tunnel_installation(
     function_codespace VARCHAR(4000),
     usage VARCHAR(1000),
     usage_codespace VARCHAR(4000),
-    tunnel_id INTEGER,
-    tunnel_hollow_space_id INTEGER,
-    lod2_brep_id INTEGER,
-    lod3_brep_id INTEGER,
-    lod4_brep_id INTEGER,
+    tunnel_id BIGINT,
+    tunnel_hollow_space_id BIGINT,
+    lod2_brep_id BIGINT,
+    lod3_brep_id BIGINT,
+    lod4_brep_id BIGINT,
     lod2_other_geom geometry(GEOMETRYZ,:srid),
     lod3_other_geom geometry(GEOMETRYZ,:srid),
     lod4_other_geom geometry(GEOMETRYZ,:srid),
-    lod2_implicit_rep_id INTEGER,
-    lod3_implicit_rep_id INTEGER,
-    lod4_implicit_rep_id INTEGER,
+    lod2_implicit_rep_id BIGINT,
+    lod3_implicit_rep_id BIGINT,
+    lod4_implicit_rep_id BIGINT,
     lod2_implicit_ref_point geometry(POINTZ,:srid),
     lod3_implicit_ref_point geometry(POINTZ,:srid),
     lod4_implicit_ref_point geometry(POINTZ,:srid),
@@ -1707,24 +1707,24 @@ CREATE TABLE citydb.tunnel_installation(
 
 DROP TABLE IF EXISTS citydb.tunnel_thematic_surface CASCADE;
 CREATE TABLE citydb.tunnel_thematic_surface(
-    id INTEGER NOT NULL,
+    id BIGINT NOT NULL,
     objectclass_id INTEGER NOT NULL,
-    tunnel_id INTEGER,
-    tunnel_hollow_space_id INTEGER,
-    tunnel_installation_id INTEGER,
-    lod2_multi_surface_id INTEGER,
-    lod3_multi_surface_id INTEGER,
-    lod4_multi_surface_id INTEGER
+    tunnel_id BIGINT,
+    tunnel_hollow_space_id BIGINT,
+    tunnel_installation_id BIGINT,
+    lod2_multi_surface_id BIGINT,
+    lod3_multi_surface_id BIGINT,
+    lod4_multi_surface_id BIGINT
 );
 
 DROP TABLE IF EXISTS citydb.tunnel_opening CASCADE;
 CREATE TABLE citydb.tunnel_opening(
-    id INTEGER NOT NULL,
+    id BIGINT NOT NULL,
     objectclass_id INTEGER NOT NULL,
-    lod3_multi_surface_id INTEGER,
-    lod4_multi_surface_id INTEGER,
-    lod3_implicit_rep_id INTEGER,
-    lod4_implicit_rep_id INTEGER,
+    lod3_multi_surface_id BIGINT,
+    lod4_multi_surface_id BIGINT,
+    lod3_implicit_rep_id BIGINT,
+    lod4_implicit_rep_id BIGINT,
     lod3_implicit_ref_point geometry(POINTZ,:srid),
     lod4_implicit_ref_point geometry(POINTZ,:srid),
     lod3_implicit_transformation VARCHAR(1000),
@@ -1733,13 +1733,13 @@ CREATE TABLE citydb.tunnel_opening(
 
 DROP TABLE IF EXISTS citydb.tunnel_open_to_them_srf CASCADE;
 CREATE TABLE citydb.tunnel_open_to_them_srf(
-    tunnel_opening_id INTEGER NOT NULL,
-    tunnel_thematic_surface_id INTEGER NOT NULL
+    tunnel_opening_id BIGINT NOT NULL,
+    tunnel_thematic_surface_id BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS citydb.tunnel_hollow_space CASCADE;
 CREATE TABLE citydb.tunnel_hollow_space(
-    id INTEGER NOT NULL,
+    id BIGINT NOT NULL,
     objectclass_id INTEGER NOT NULL,
     class VARCHAR(256),
     class_codespace VARCHAR(4000),
@@ -1747,14 +1747,14 @@ CREATE TABLE citydb.tunnel_hollow_space(
     function_codespace VARCHAR(4000),
     usage VARCHAR(1000),
     usage_codespace VARCHAR(4000),
-    tunnel_id INTEGER,
-    lod4_multi_surface_id INTEGER,
-    lod4_solid_id INTEGER
+    tunnel_id BIGINT,
+    lod4_multi_surface_id BIGINT,
+    lod4_solid_id BIGINT
 );
 
 DROP TABLE IF EXISTS citydb.tunnel_furniture CASCADE;
 CREATE TABLE citydb.tunnel_furniture(
-    id INTEGER NOT NULL,
+    id BIGINT NOT NULL,
     objectclass_id INTEGER NOT NULL,
     class VARCHAR(256),
     class_codespace VARCHAR(4000),
@@ -1762,10 +1762,10 @@ CREATE TABLE citydb.tunnel_furniture(
     function_codespace VARCHAR(4000),
     usage VARCHAR(1000),
     usage_codespace VARCHAR(4000),
-    tunnel_hollow_space_id INTEGER,
-    lod4_brep_id INTEGER,
+    tunnel_hollow_space_id BIGINT,
+    lod4_brep_id BIGINT,
     lod4_other_geom geometry(GEOMETRYZ,:srid),
-    lod4_implicit_rep_id INTEGER,
+    lod4_implicit_rep_id BIGINT,
     lod4_implicit_ref_point geometry(POINTZ,:srid),
     lod4_implicit_transformation VARCHAR(1000)
 );
@@ -1773,7 +1773,7 @@ CREATE TABLE citydb.tunnel_furniture(
 -- global table for raster data
 DROP TABLE IF EXISTS citydb.grid_coverage CASCADE;
 CREATE TABLE citydb.grid_coverage(
-    id INTEGER NOT NULL DEFAULT nextval('citydb.grid_coverage_seq'::regclass),
+    id BIGINT NOT NULL DEFAULT nextval('citydb.grid_coverage_seq'::regclass),
     rasterproperty RASTER
 );
 
