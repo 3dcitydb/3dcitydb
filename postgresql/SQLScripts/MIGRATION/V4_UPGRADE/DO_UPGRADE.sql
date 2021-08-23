@@ -61,7 +61,9 @@ SET tmp.old_revision TO :revision;
 
 DO $$
 DECLARE
-  _sql text;
+  meta_tables text[] := '{"objectclass", "ade", "schema", "schema_to_objectclass", "schema_referencing", "aggregation_info", "database_srs", "index_table"}';
+  meta_sequences text[] := '{"schema_seq", "ade_seq", "index_table_id_seq"}';
+  rec record;
   schema_name text;
   old_major integer := current_setting('tmp.old_major')::integer;
   old_minor integer := current_setting('tmp.old_minor')::integer;
@@ -88,308 +90,82 @@ BEGIN
                      JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
                      WHERE c.relname = 'database_srs' AND c.relkind = 'r'
     LOOP
-      SELECT INTO _sql
-             string_agg(format('DROP FUNCTION %s;', oid::regprocedure), E'\n')
-      FROM   pg_proc
-      WHERE  pronamespace = schema_name::regnamespace;
+      -- update sequences
+      FOR rec IN
+          SELECT
+            sequence_name
+          FROM
+            information_schema.sequences
+          WHERE
+            sequence_schema = schema_name AND NOT (sequence_name = ANY(meta_sequences))
+          LOOP
+        EXECUTE 'alter sequence ' || schema_name || '.' || rec.sequence_name || ' maxvalue 9223372036854775807';
+      END LOOP;
 
-      IF _sql IS NOT NULL THEN
-         EXECUTE _sql;
-      END IF;
+      -- update non-ID columns
+      FOR rec IN
+          SELECT
+            p.nspname,
+            c.confrelid::regclass::text AS pk_table,
+            c.conrelid::regclass::text AS fk_table,
+            a.attname::text AS fk_column
+          FROM
+            pg_constraint c
+          JOIN
+            pg_attribute a ON a.attrelid = c.conrelid AND a.attnum = ANY (c.conkey)
+          JOIN
+            pg_namespace p ON c.connamespace = p.oid
+          WHERE
+            c.contype = 'f' AND a.attname::text <> 'id' AND p.nspname = schema_name
+              AND NOT (substring(c.confrelid::regclass::text, position('.' in c.confrelid::regclass::text) + 1) = ANY(meta_tables))
+          LOOP
+        EXECUTE 'alter table ' || rec.fk_table || ' alter column ' || rec.fk_column || ' type bigint';
+      END LOOP;
 
-      EXECUTE 'alter sequence ' || schema_name || '.citymodel_seq maxvalue 9223372036854775807';
-      EXECUTE 'alter sequence ' || schema_name || '.cityobject_seq maxvalue 9223372036854775807';
-      EXECUTE 'alter sequence ' || schema_name || '.external_ref_seq maxvalue 9223372036854775807';
-      EXECUTE 'alter sequence ' || schema_name || '.surface_geometry_seq maxvalue 9223372036854775807';
-      EXECUTE 'alter sequence ' || schema_name || '.implicit_geometry_seq maxvalue 9223372036854775807';
-      EXECUTE 'alter sequence ' || schema_name || '.cityobject_genericatt_seq maxvalue 9223372036854775807';
-      EXECUTE 'alter sequence ' || schema_name || '.address_seq maxvalue 9223372036854775807';
-      EXECUTE 'alter sequence ' || schema_name || '.appearance_seq maxvalue 9223372036854775807';
-      EXECUTE 'alter sequence ' || schema_name || '.surface_data_seq maxvalue 9223372036854775807';
-      EXECUTE 'alter sequence ' || schema_name || '.tex_image_seq maxvalue 9223372036854775807';
-      EXECUTE 'alter sequence ' || schema_name || '.grid_coverage_seq maxvalue 9223372036854775807';
+      -- update ID columns
+      FOR rec IN
+          SELECT
+            table_name
+          FROM
+            information_schema.tables at
+          WHERE
+            table_schema = schema_name AND
+            NOT (table_name = ANY(meta_tables)) AND
+            EXISTS (
+              SELECT
+                table_name
+              FROM
+                information_schema.columns c
+              WHERE
+                c.table_name = at.table_name AND c.column_name = 'id' AND c.table_schema = schema_name
+            )
+          LOOP
+        EXECUTE 'alter table ' || schema_name || '.' || rec.table_name || ' alter column id type bigint';
+      END LOOP;
 
-      EXECUTE 'alter table ' || schema_name || '.cityobject_member alter column citymodel_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.cityobject_member alter column citymodel_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.generalization alter column cityobject_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.generalization alter column generalizes_to_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.cityobjectgroup alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.cityobjectgroup alter column brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.cityobjectgroup alter column parent_cityobject_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.group_to_cityobject alter column cityobject_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.group_to_cityobject alter column cityobjectgroup_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.city_furniture alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.city_furniture alter column lod1_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.city_furniture alter column lod2_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.city_furniture alter column lod3_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.city_furniture alter column lod4_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.city_furniture alter column lod1_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.city_furniture alter column lod2_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.city_furniture alter column lod3_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.city_furniture alter column lod4_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.generic_cityobject alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.generic_cityobject alter column lod0_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.generic_cityobject alter column lod1_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.generic_cityobject alter column lod2_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.generic_cityobject alter column lod3_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.generic_cityobject alter column lod4_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.generic_cityobject alter column lod0_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.generic_cityobject alter column lod1_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.generic_cityobject alter column lod2_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.generic_cityobject alter column lod3_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.generic_cityobject alter column lod4_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.address_to_building alter column building_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.address_to_building alter column address_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building alter column building_parent_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building alter column building_root_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building alter column lod0_footprint_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building alter column lod0_roofprint_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building alter column lod1_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building alter column lod2_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building alter column lod3_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building alter column lod1_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building alter column lod2_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building alter column lod3_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building alter column lod4_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building_furniture alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building_furniture alter column room_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building_furniture alter column lod4_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building_furniture alter column lod4_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building_installation alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building_installation alter column building_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building_installation alter column room_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building_installation alter column lod2_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building_installation alter column lod3_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building_installation alter column lod4_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building_installation alter column lod2_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building_installation alter column lod3_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.building_installation alter column lod4_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.opening alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.opening alter column address_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.opening alter column lod3_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.opening alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.opening alter column lod3_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.opening alter column lod4_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.opening_to_them_surface alter column opening_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.opening_to_them_surface alter column thematic_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.room alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.room alter column building_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.room alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.room alter column lod4_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.thematic_surface alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.thematic_surface alter column building_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.thematic_surface alter column room_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.thematic_surface alter column building_installation_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.thematic_surface alter column lod2_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.thematic_surface alter column lod3_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.thematic_surface alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.textureparam alter column surface_geometry_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.textureparam alter column surface_data_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.appear_to_surface_data alter column surface_data_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.appear_to_surface_data alter column appearance_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.breakline_relief alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.masspoint_relief alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.relief_component alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.relief_feat_to_rel_comp alter column relief_component_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.relief_feat_to_rel_comp alter column relief_feature_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.relief_feature alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tin_relief alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tin_relief alter column surface_geometry_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.transportation_complex alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.transportation_complex alter column lod1_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.transportation_complex alter column lod2_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.transportation_complex alter column lod3_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.transportation_complex alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.traffic_area alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.traffic_area alter column lod2_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.traffic_area alter column lod3_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.traffic_area alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.traffic_area alter column transportation_complex_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.land_use alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.land_use alter column lod0_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.land_use alter column lod1_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.land_use alter column lod2_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.land_use alter column lod3_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.land_use alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.plant_cover alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.plant_cover alter column lod1_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.plant_cover alter column lod2_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.plant_cover alter column lod3_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.plant_cover alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.plant_cover alter column lod1_multi_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.plant_cover alter column lod2_multi_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.plant_cover alter column lod3_multi_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.plant_cover alter column lod4_multi_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.solitary_vegetat_object alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.solitary_vegetat_object alter column lod1_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.solitary_vegetat_object alter column lod2_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.solitary_vegetat_object alter column lod3_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.solitary_vegetat_object alter column lod4_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.solitary_vegetat_object alter column lod1_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.solitary_vegetat_object alter column lod2_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.solitary_vegetat_object alter column lod3_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.solitary_vegetat_object alter column lod4_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.waterbody alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.waterbody alter column lod0_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.waterbody alter column lod1_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.waterbody alter column lod1_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.waterbody alter column lod2_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.waterbody alter column lod3_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.waterbody alter column lod4_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.waterbod_to_waterbnd_srf alter column waterboundary_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.waterbod_to_waterbnd_srf alter column waterbody_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.waterboundary_surface alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.waterboundary_surface alter column lod2_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.waterboundary_surface alter column lod3_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.waterboundary_surface alter column lod4_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.raster_relief alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.raster_relief alter column coverage_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel alter column tunnel_parent_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel alter column tunnel_root_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel alter column lod1_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel alter column lod2_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel alter column lod3_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel alter column lod1_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel alter column lod2_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel alter column lod3_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel alter column lod4_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_open_to_them_srf alter column tunnel_opening_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_open_to_them_srf alter column tunnel_thematic_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_hollow_space alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_hollow_space alter column tunnel_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_hollow_space alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_hollow_space alter column lod4_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_thematic_surface alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_thematic_surface alter column tunnel_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_thematic_surface alter column tunnel_hollow_space_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_thematic_surface alter column tunnel_installation_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_thematic_surface alter column lod2_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_thematic_surface alter column lod3_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_thematic_surface alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_opening alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_opening alter column lod3_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_opening alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_opening alter column lod3_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_opening alter column lod4_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_installation alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_installation alter column tunnel_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_installation alter column tunnel_hollow_space_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_installation alter column lod2_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_installation alter column lod3_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_installation alter column lod4_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_installation alter column lod2_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_installation alter column lod3_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_installation alter column lod4_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_furniture alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_furniture alter column tunnel_hollow_space_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_furniture alter column lod4_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tunnel_furniture alter column lod4_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge alter column bridge_parent_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge alter column bridge_root_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge alter column lod1_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge alter column lod2_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge alter column lod3_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge alter column lod1_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge alter column lod2_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge alter column lod3_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge alter column lod4_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_furniture alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_furniture alter column bridge_room_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_furniture alter column lod4_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_furniture alter column lod4_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_installation alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_installation alter column bridge_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_installation alter column bridge_room_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_installation alter column lod2_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_installation alter column lod3_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_installation alter column lod4_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_installation alter column lod2_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_installation alter column lod3_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_installation alter column lod4_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_opening alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_opening alter column address_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_opening alter column lod3_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_opening alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_opening alter column lod3_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_opening alter column lod4_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_open_to_them_srf alter column bridge_opening_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_open_to_them_srf alter column bridge_thematic_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_room alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_room alter column bridge_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_room alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_room alter column lod4_solid_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_thematic_surface alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_thematic_surface alter column bridge_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_thematic_surface alter column bridge_room_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_thematic_surface alter column bridge_installation_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_thematic_surface alter column bridge_constr_element_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_thematic_surface alter column lod2_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_thematic_surface alter column lod3_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_thematic_surface alter column lod4_multi_surface_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_constr_element alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_constr_element alter column bridge_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_constr_element alter column lod1_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_constr_element alter column lod2_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_constr_element alter column lod3_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_constr_element alter column lod4_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_constr_element alter column lod1_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_constr_element alter column lod2_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_constr_element alter column lod3_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.bridge_constr_element alter column lod4_implicit_rep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.address_to_bridge alter column bridge_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.address_to_bridge alter column address_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.cityobject alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.appearance alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.appearance alter column citymodel_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.appearance alter column cityobject_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.implicit_geometry alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.implicit_geometry alter column relative_brep_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.surface_geometry alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.surface_geometry alter column parent_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.surface_geometry alter column root_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.surface_geometry alter column cityobject_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.address alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.surface_data alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.surface_data alter column tex_image_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.citymodel alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.cityobject_genericattrib alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.cityobject_genericattrib alter column parent_genattrib_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.cityobject_genericattrib alter column root_genattrib_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.cityobject_genericattrib alter column surface_geometry_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.cityobject_genericattrib alter column cityobject_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.external_reference alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.external_reference alter column cityobject_id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.tex_image alter column id type bigint';
-      EXECUTE 'alter table ' || schema_name || '.grid_coverage alter column id type bigint';
+      -- update delete and envelope functions
+      FOR rec IN
+          SELECT
+            oid::regprocedure as function_name,
+            pg_get_functiondef(oid) as function_definition
+          FROM
+            pg_proc
+          WHERE
+            pronamespace = schema_name::regnamespace
+            AND (position('del_' in oid::regprocedure::text) = 1
+              OR position('env_' in oid::regprocedure::text) = 1
+              OR position('box2envelope(box3d)' in oid::regprocedure::text) = 1
+              OR position('cleanup_appearances(integer)' in oid::regprocedure::text) = 1
+              OR position('cleanup_schema()' in oid::regprocedure::text) = 1
+              OR position('cleanup_table(text)' in oid::regprocedure::text) = 1
+              OR position('get_envelope_cityobjects(integer,integer,integer)' in oid::regprocedure::text) = 1
+              OR position('get_envelope_implicit_geometry(integer,geometry,character varying)' in oid::regprocedure::text) = 1
+              OR position('update_bounds(geometry,geometry)' in oid::regprocedure::text) = 1)
+            LOOP
+        EXECUTE 'drop function ' || rec.function_name;
+        EXECUTE regexp_replace(rec.function_definition, '(?<!caller |class_id::|class_id |only_if_null |db_srid |only_global |set_envelope )(integer)|(?<=\s)(int)(?!\w)', 'bigint', 'gi');
+      END LOOP;
     END LOOP;
   END IF;
-END
-$$;
-
--- recreate delete and envelope functions for every database schema
-\ir ../../SCHEMA/DELETE/DELETE.sql
-\ir ../../SCHEMA/ENVELOPE/ENVELOPE.sql
-
-DO $$
-DECLARE
-  schema_name text;
-  _sql text;
-  func_definition text;
-BEGIN
-  FOR schema_name in SELECT nspname AS schema_name FROM pg_catalog.pg_class c
-                JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-                WHERE c.relname = 'database_srs' AND c.relkind = 'r' AND nspname <> 'citydb'
-  LOOP
-	FOR func_definition in SELECT REPLACE(pg_get_functiondef(oid),'citydb.', concat(schema_name, '.')) as func_definition FROM pg_proc where pronamespace = 'citydb'::regnamespace
-	LOOP
-	  EXECUTE func_definition;
-	END LOOP;
-  END LOOP;
 END
 $$;
