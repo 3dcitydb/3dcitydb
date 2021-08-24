@@ -29,19 +29,20 @@
 
 SET client_min_messages TO NOTICE;
 
+SET tmp.old_major to :major;
+SET tmp.old_minor to :minor;
+
 DO $$
 DECLARE
   meta_tables text[] := '{"objectclass", "ade", "schema", "schema_to_objectclass", "schema_referencing", "aggregation_info", "database_srs", "index_table"}';
   meta_sequences text[] := '{"schema_seq", "ade_seq", "index_table_id_seq"}';
   rec record;
   schema_name text;
-  major integer;
-  minor integer;
+  old_major integer := current_setting('tmp.old_major')::integer;
+  old_minor integer := current_setting('tmp.old_minor')::integer;
 BEGIN
-  SELECT major_version, minor_version INTO major, minor FROM citydb_pkg.citydb_version();
-
   -- do bigint update for version <= 4.1.0
-  IF major = 3 OR (major = 4 AND minor <= 1) THEN
+  IF old_major = 3 OR (old_major = 4 AND old_minor <= 1) THEN
     FOR schema_name in SELECT nspname AS schema_name FROM pg_catalog.pg_class c
                      JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
                      WHERE c.relname = 'database_srs' AND c.relkind = 'r'
@@ -101,7 +102,7 @@ BEGIN
       END LOOP;
 
       -- update delete and envelope functions
-      IF major = 4 THEN
+      IF old_major = 4 THEN
         FOR rec IN
             SELECT
               oid::regprocedure as function_name,

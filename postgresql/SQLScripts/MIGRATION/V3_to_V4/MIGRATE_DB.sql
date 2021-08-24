@@ -26,14 +26,30 @@
 --
 
 -- This script is called from MIGRATE_DB.bat
+\set QUIET 1
 \set ON_ERROR_STOP ON
-\pset footer off
 SET client_min_messages TO WARNING;
 
+\pset footer off
+\pset tuples_only on
+\pset format unaligned
+\pset fieldsep '.'
+\set QUIET 0
+
 --// set search_path for this session
+\echo
+\echo 'Setting search path ...'
 SELECT current_setting('search_path') AS current_path;
 \gset
 SET search_path TO citydb, :current_path;
+
+--// get current version
+\echo
+\echo 'Getting version of the 3DCityDB instance ...'
+SELECT major_version AS major,
+       minor_version AS minor,
+       minor_revision AS revision FROM citydb_pkg.citydb_version();
+\gset
 
 --// create SEQUENCES
 \echo
