@@ -1,3 +1,5 @@
+-- noinspection SqlDialectInspectionForFile
+
 -- 3D City Database - The Open Source CityGML Database
 -- https://www.3dcitydb.org/
 --
@@ -26,7 +28,7 @@
 --
 
 \pset footer off
-SET client_min_messages TO WARNING;
+SET client_min_messages TO NOTICE;
 \set ON_ERROR_STOP ON
 
 --// upgrade CITYDB_PKG (additional schema with PL/pgSQL functions)
@@ -53,7 +55,6 @@ $$;
 \ir ../../CITYDB_PKG/SRS/SRS.sql
 \ir ../../CITYDB_PKG/STATISTICS/STAT.sql
 
--- create indexes new in version > 4.0.2
 SET tmp.old_major TO :major;
 SET tmp.old_minor TO :minor;
 SET tmp.old_revision TO :revision;
@@ -65,11 +66,13 @@ DECLARE
   old_minor integer := current_setting('tmp.old_minor')::integer;
   old_revision integer := current_setting('tmp.old_revision')::integer;
 BEGIN
+  -- create indexes new in version > 4.0.2
   IF old_major = 4 AND old_minor = 0 AND old_revision <=2 THEN
     FOR schema_name in SELECT nspname AS schema_name FROM pg_catalog.pg_class c
                      JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
                      WHERE c.relname = 'database_srs' AND c.relkind = 'r'
     LOOP
+      RAISE NOTICE 'Creating additional indexes in schema ''%''...', schema_name;
       EXECUTE format('CREATE INDEX cityobj_creation_date_inx ON %I.cityobject USING btree (creation_date) WITH (FILLFACTOR = 90)', schema_name);
       EXECUTE format('CREATE INDEX cityobj_term_date_inx ON %I.cityobject USING btree (termination_date) WITH (FILLFACTOR = 90)', schema_name);
       EXECUTE format('CREATE INDEX cityobj_last_mod_date_inx ON %I.cityobject USING btree (last_modification_date) WITH (FILLFACTOR = 90)', schema_name);
@@ -80,3 +83,8 @@ BEGIN
   END IF;
 END
 $$;
+
+--// do bigint update
+\echo
+\echo 'Do bigint update ...'
+\ir ../UTIL/BIGINT.sql

@@ -80,5 +80,10 @@ CREATE SCHEMA citydb_pkg;
 \echo 'Update indexes ...'
 \ir INDEXES.sql
 
+--// do bigint update
+\echo
+\echo 'Do bigint update ...'
+\ir ../UTIL/BIGINT.sql
+
 \echo
 \echo '3DCityDB migration complete!'

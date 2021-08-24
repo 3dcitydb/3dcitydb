@@ -29,7 +29,7 @@
 * CONTENT
 *
 * FUNCTIONS:
-*   table_content(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS INTEGER
+*   table_content(table_name TEXT, schema_name TEXT DEFAULT 'citydb') RETURNS BIGINT
 *   table_contents(schema_name TEXT DEFAULT 'citydb') RETURNS TEXT[]
 ******************************************************************/
 
@@ -38,14 +38,14 @@
 *
 * @param schema_name name of schema
 * @param table_name name of table
-* @RETURN INTEGER number of entries in table
+* @RETURN BIGINT number of entries in table
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.table_content(
   table_name TEXT,
   schema_name TEXT DEFAULT 'citydb'
-  ) RETURNS INTEGER AS $$
+  ) RETURNS BIGINT AS $$
 DECLARE
-  cnt INTEGER;  
+  cnt BIGINT;  
 BEGIN
   EXECUTE format('SELECT count(*) FROM %I.%I', $2, $1) INTO cnt;
   RETURN cnt;
