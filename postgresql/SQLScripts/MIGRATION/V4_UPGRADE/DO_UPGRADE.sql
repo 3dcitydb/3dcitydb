@@ -152,15 +152,15 @@ BEGIN
             pg_proc
           WHERE
             pronamespace = schema_name::regnamespace
-            AND (position('del_' in oid::regprocedure::text) = 1
-              OR position('env_' in oid::regprocedure::text) = 1
-              OR position('box2envelope(box3d)' in oid::regprocedure::text) = 1
-              OR position('cleanup_appearances(integer)' in oid::regprocedure::text) = 1
-              OR position('cleanup_schema()' in oid::regprocedure::text) = 1
-              OR position('cleanup_table(text)' in oid::regprocedure::text) = 1
-              OR position('get_envelope_cityobjects(integer,integer,integer)' in oid::regprocedure::text) = 1
-              OR position('get_envelope_implicit_geometry(integer,geometry,character varying)' in oid::regprocedure::text) = 1
-              OR position('update_bounds(geometry,geometry)' in oid::regprocedure::text) = 1)
+            AND (position('del_' in oid::regprocedure::text) = 1 + position('.' in oid::regprocedure::text)
+              OR position('env_' in oid::regprocedure::text) = 1 + position('.' in oid::regprocedure::text)
+              OR position('box2envelope(box3d)' in oid::regprocedure::text) = 1 + position('.' in oid::regprocedure::text)
+              OR position('cleanup_appearances(integer)' in oid::regprocedure::text) = 1 + position('.' in oid::regprocedure::text)
+              OR position('cleanup_schema()' in oid::regprocedure::text) = 1 + position('.' in oid::regprocedure::text)
+              OR position('cleanup_table(text)' in oid::regprocedure::text) = 1 + position('.' in oid::regprocedure::text)
+              OR position('get_envelope_cityobjects(integer,integer,integer)' in oid::regprocedure::text) = 1 + position('.' in oid::regprocedure::text)
+              OR position('get_envelope_implicit_geometry(integer,geometry,character varying)' in oid::regprocedure::text) = 1 + position('.' in oid::regprocedure::text)
+              OR position('update_bounds(geometry,geometry)' in oid::regprocedure::text) = 1 + position('.' in oid::regprocedure::text))
             LOOP
         EXECUTE 'drop function ' || rec.function_name;
         EXECUTE regexp_replace(rec.function_definition, '(?<!caller |class_id::|class_id |only_if_null |db_srid |only_global |set_envelope )(integer)|(?<=\s)(int)(?!\w)', 'bigint', 'gi');
