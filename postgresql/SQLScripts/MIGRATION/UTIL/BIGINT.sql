@@ -41,8 +41,8 @@ DECLARE
   old_major integer := current_setting('tmp.old_major')::integer;
   old_minor integer := current_setting('tmp.old_minor')::integer;
 BEGIN
-  -- do bigint update for version <= 4.1.0
-  IF old_major = 3 OR (old_major = 4 AND old_minor <= 1) THEN
+  -- do bigint update for version 3 or version < 4.2
+  IF old_major = 3 OR (old_major = 4 AND old_minor < 2) THEN
     FOR schema_name in SELECT nspname AS schema_name FROM pg_catalog.pg_class c
                      JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
                      WHERE c.relname = 'database_srs' AND c.relkind = 'r'
