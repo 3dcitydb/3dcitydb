@@ -495,8 +495,10 @@ BEGIN
 		FROM
 		  %I.index_table 
 		WHERE
-		  (obj).table_name = lower(''%I'')
-		  AND (obj).attribute_name = lower(''%I'')', $3, $1, $2) INTO index_name, table_name, attribute_name, type, srid, is_3d;
+		  (obj).table_name = lower($1)
+		  AND (obj).attribute_name = lower($2)', $3)
+      INTO index_name, table_name, attribute_name, type, srid, is_3d
+      USING idx_table_name, idx_column_name;
 
   IF index_name IS NOT NULL THEN
     RETURN (index_name, table_name, attribute_name, type, srid, is_3d)::citydb_pkg.INDEX_OBJ;
