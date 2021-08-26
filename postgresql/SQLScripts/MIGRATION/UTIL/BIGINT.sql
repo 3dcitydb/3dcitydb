@@ -47,7 +47,7 @@ BEGIN
                      JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
                      WHERE c.relname = 'database_srs' AND c.relkind = 'r'
     LOOP
-      RAISE NOTICE 'Changing schema ''%'' to use bigint as data type for ID columns...', schema_name;
+      RAISE NOTICE 'Changing schema ''%'' to use bigint as data type for ID columns ...', schema_name;
       -- update sequences
       FOR rec IN
           SELECT

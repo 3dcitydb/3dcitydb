@@ -72,7 +72,7 @@ BEGIN
                      JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
                      WHERE c.relname = 'database_srs' AND c.relkind = 'r'
     LOOP
-      RAISE NOTICE 'Creating additional indexes in schema ''%''...', schema_name;
+      RAISE NOTICE 'Creating additional indexes in schema ''%'' ...', schema_name;
       EXECUTE format('CREATE INDEX cityobj_creation_date_inx ON %I.cityobject USING btree (creation_date) WITH (FILLFACTOR = 90)', schema_name);
       EXECUTE format('CREATE INDEX cityobj_term_date_inx ON %I.cityobject USING btree (termination_date) WITH (FILLFACTOR = 90)', schema_name);
       EXECUTE format('CREATE INDEX cityobj_last_mod_date_inx ON %I.cityobject USING btree (last_modification_date) WITH (FILLFACTOR = 90)', schema_name);
