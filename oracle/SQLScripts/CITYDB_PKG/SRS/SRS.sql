@@ -272,49 +272,37 @@ AS
     transform NUMBER := 0
   )
   IS
-    current_srid NUMBER;
-    update_string VARCHAR2(100) := 'UPDATE database_srs SET gml_srs_name = :1';
   BEGIN
-    -- check if user selected valid srid
+    -- check if user selected srid is valid
     -- will raise an exception if not
     IF citydb_srs.check_srid(schema_srid) <> 'SRID ok' THEN
-      dbms_output.put_line('Your chosen SRID was not found in the MDSYS.CS_SRS table! Chosen SRID was ' || schema_srid);
+      dbms_output.put_line('The chosen SRID ' || schema_srid || ' was not found in the MDSYS.CS_SRS table.');
       RETURN;
     END IF;
 
-    -- get current srid for given schema
-    SELECT
-      srid
-    INTO
-      current_srid
-    FROM
-      database_srs;
-
     -- update entry in DATABASE_SRS table first
-    IF current_srid = schema_srid THEN
-      EXECUTE IMMEDIATE update_string USING schema_gml_srs_name;
-    ELSE
-      EXECUTE IMMEDIATE update_string || ', srid = :2' USING schema_gml_srs_name, schema_srid;
+    EXECUTE IMMEDIATE 'UPDATE database_srs SET srid = :1, gml_srs_name = :2' USING schema_srid, schema_gml_srs_name;
 
-      -- change srid of spatial columns in given schema with current srid
-      FOR rec IN (
-        SELECT
-          table_name AS t,
-          column_name AS c,
-          citydb_srs.get_dim(column_name, table_name, USER) AS dim
-        FROM
-          user_sdo_geom_metadata
-        WHERE
-          srid = current_srid
-        ORDER BY
-          table_name,
-          column_name
-        ) 
-      LOOP
-        change_column_srid(rec.t, rec.c, rec.dim, schema_srid, transform);
-      END LOOP;
-      dbms_output.put_line('Schema SRID sucessfully changed to ' || schema_srid);
-    END IF;
+    -- change srid of spatial columns in given schema
+    FOR rec IN (
+      SELECT
+        table_name AS t,
+        column_name AS c,
+        citydb_srs.get_dim(column_name, table_name, USER) AS dim
+      FROM
+        user_sdo_geom_metadata
+      WHERE
+        column_name <> 'IMPLICIT_GEOMETRY'
+        AND column_name <> 'RELATIVE_OTHER_GEOM'
+        AND column_name <> 'TEXTURE_COORDINATES'
+      ORDER BY
+        table_name,
+        column_name
+      )
+    LOOP
+      change_column_srid(rec.t, rec.c, rec.dim, schema_srid, transform);
+    END LOOP;
+    dbms_output.put_line('Schema SRID successfully changed to ' || schema_srid);
   END;
 
 END citydb_srs;
