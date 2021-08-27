@@ -281,7 +281,8 @@ AS
     END IF;
 
     -- update entry in DATABASE_SRS table first
-    EXECUTE IMMEDIATE 'UPDATE database_srs SET srid = :1, gml_srs_name = :2' USING schema_srid, schema_gml_srs_name;
+    EXECUTE IMMEDIATE 'TRUNCATE TABLE database_srs';
+    EXECUTE IMMEDIATE 'INSERT INTO database_srs (srid, gml_srs_name) VALUES (:1, :2)' USING schema_srid, schema_gml_srs_name;
 
     -- change srid of spatial columns in given schema
     FOR rec IN (

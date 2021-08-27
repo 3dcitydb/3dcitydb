@@ -342,7 +342,7 @@ AS
         set_column_sdo_metadata(rec.c, 3, schema_srid, rec.t, schema_name);
       END IF;
     END LOOP;
-    dbms_output.put_line('Spatial metadata sucessfully set for ' || schema_name);
+    dbms_output.put_line('Spatial metadata successfully set for ' || schema_name);
   END;
 
 END citydb_constraint;

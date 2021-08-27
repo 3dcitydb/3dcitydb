@@ -228,7 +228,8 @@ BEGIN
   PERFORM citydb_pkg.check_srid($1);
 
   -- update entry in database_srs table first
-  EXECUTE format('UPDATE %I.database_srs SET srid = %L, gml_srs_name = %L', $4, $1, $2);
+  EXECUTE format('TRUNCATE TABLE %I.database_srs', $4);
+  EXECUTE format('INSERT INTO %I.database_srs (srid, gml_srs_name) VALUES (%L, %L)', $4, $1, $2);
 
   -- change srid of spatial columns in given schema
   PERFORM citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $3, type, f_table_schema)
