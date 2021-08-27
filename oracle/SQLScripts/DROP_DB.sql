@@ -53,6 +53,9 @@ BEGIN
         NULL;
     END;
   END LOOP;
+
+  -- remove spatial metadata
+  EXECUTE IMMEDIATE 'DELETE FROM user_sdo_geom_metadata';
 END;
 /
 
