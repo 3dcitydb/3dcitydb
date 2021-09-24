@@ -32,14 +32,14 @@ jobs:
     -
       name: Docker login
       id: docker_login
-      uses: docker/login-action@v1
+      uses: docker/login-action@v1.8.0
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
     -
       name: Build and push image
       id: docker_build
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v2.2.2
       with:
         context: ./postgresql
         push: true
