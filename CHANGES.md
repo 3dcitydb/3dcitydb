@@ -9,7 +9,7 @@ Change Log
   surface geometries that can be stored in the database. Foreign key columns as well as affected database
   functions have been updated correspondingly. [#66](https://github.com/3dcitydb/3dcitydb/pull/66)
   * The upgrade and migration scripts take care to correctly update existing 3DCityDB instances. This also
-    includes ADE schemas that have been registered with the 3DCityDB instance.
+    includes ADE schemas that have been registered with a 3DCityDB instance.
   * This change *does not affect* 3DCityDB instances running on Oracle.
 
 ##### Fixes
