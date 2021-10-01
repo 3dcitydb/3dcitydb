@@ -1,6 +1,24 @@
 Change Log
 ==========
 
+### 4.2.0 - tbd
+
+##### Changes
+* PostgreSQL: Changed all primary key columns to use 64-bit `bigint` as data type instead of 32-bit `integer`.
+  This change increases the maximum value of primary keys and, thus, the number of city objects and
+  surface geometries that can be stored in the database. Foreign key columns as well as affected database
+  functions have been updated correspondingly. [#66](https://github.com/3dcitydb/3dcitydb/pull/66)
+  * The upgrade and migration scripts take care to correctly update existing 3DCityDB instances. This also
+    includes ADE schemas that have been registered with the 3DCityDB instance.
+  * This change *does not affect* 3DCityDB instances running on Oracle.
+
+##### Fixes
+* PostgreSQL: Fixed `change_schema_srid` function to avoid inconsistencies in the database schema when the new SRID
+  matches the old one. [#67](https://github.com/3dcitydb/3dcitydb/issues/67), [#68](https://github.com/3dcitydb/3dcitydb/pull/68)
+* PostgreSQL: Fixed `get_index` function.
+* Oracle: Fixed `DROP_DB` script to also remove spatial metadata.
+* Fixed upgrade scripts for PostgreSQL and Oracle. [#61](https://github.com/3dcitydb/3dcitydb/pull/61)
+
 ### 4.1.0 - 2021-04-28
 
 ##### Additions
