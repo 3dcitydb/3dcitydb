@@ -113,6 +113,16 @@ the shell script `DROP_DB` for your database (PostgreSQL or Oracle) and
 operating system. Make sure that you have entered the correct connection
 details in the script `CONNECTION_DETAILS` beforehand.
 
+Using with Docker
+-----------------
+
+The 3D City Database is also available as Docker image. You can either build an image for PostgreSQL or Oracle
+yourself using one of the provided Docker files or use a pre-built PostgreSQL image from Docker Hub at
+https://hub.docker.com/r/3dcitydb/3dcitydb-pg.
+
+A comprehensive documentation on how to use the 3D City Database with Docker can be found in the
+[online user manual](https://3dcitydb-docs.readthedocs.io/en/release-v4.3.0/).
+
 Contributing
 ------------
 * To file bugs found in the software create a GitHub issue.
