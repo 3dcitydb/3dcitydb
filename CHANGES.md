@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-### 4.2.0 - tbd
+### 4.2.0 - 2021-10-08
 
 ##### Changes
 * PostgreSQL: Changed all primary key columns to use 64-bit `bigint` as data type instead of 32-bit `integer`.

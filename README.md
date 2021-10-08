@@ -49,7 +49,7 @@ To request a previous release of the 3D City Database under Apache License 2.0 c
 
 Latest release
 --------------
-The latest stable release of the 3D City Database is 4.1.0.
+The latest stable release of the 3D City Database is 4.2.0.
 
 You can download the latest release as well as previous releases from the
 [releases section](https://github.com/3dcitydb/3dcitydb/releases).
@@ -62,7 +62,7 @@ System requirements
 Documentation and literature
 ----------------------------
 A complete and comprehensive user manual on the 3D City Database and its tools is available
-[online](https://3dcitydb-docs.readthedocs.io/en/release-v4.3.0/).
+[online](https://3dcitydb-docs.readthedocs.io/en/version-2021.1/).
 
 An Open Access paper on the 3DCityDB has been published in the International Journal on Open Geospatial Data,
 Software and Standards 3 (5), 2018: [Z. Yao, C. Nagel, F. Kunde, G. Hudra, P. Willkomm, A. Donaubauer, T. Adolphi, T. H. Kolbe: 3DCityDB - a 3D geodatabase solution for the management, analysis, and visualization of semantic 3D city models based on CityGML](https://doi.org/10.1186/s40965-018-0046-7). Please use this reference when citing the 3DCityDB project.
@@ -103,7 +103,7 @@ For Oracle, two additional inputs are required:
 5) Whether the Oracle DBMS runs with Locator or Spatial license option.
 
 Afterwards, the script will start the setup procedure and invoke additional
-SQL scripts in the background. Please refer to the [user manual](https://3dcitydb-docs.readthedocs.io/en/release-v4.3.0/)
+SQL scripts in the background. Please refer to the [user manual](https://3dcitydb-docs.readthedocs.io/en/version-2021.1/)
 of the 3D City Database for a comprehensive step-by-step guide.
 
 Database deletion
@@ -121,7 +121,7 @@ yourself using one of the provided Docker files or use a pre-built PostgreSQL im
 https://hub.docker.com/r/3dcitydb/3dcitydb-pg.
 
 A comprehensive documentation on how to use the 3D City Database with Docker can be found in the
-[online user manual](https://3dcitydb-docs.readthedocs.io/en/release-v4.3.0/).
+[online user manual](https://3dcitydb-docs.readthedocs.io/en/version-2021.1/).
 
 Contributing
 ------------
