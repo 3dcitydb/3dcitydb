@@ -1272,6 +1272,8 @@ CREATE TABLE appearance(
 -- DROP TABLE IF EXISTS implicit_geometry CASCADE;
 CREATE TABLE implicit_geometry(
 	id bigint NOT NULL DEFAULT nextval('implicit_geometry_seq'::regclass),
+	gmlid character varying(256),
+	gmlid_codespace varchar(1000),
 	mime_type character varying(256),
 	reference_to_library character varying(4000),
 	library_object bytea,
@@ -4994,6 +4996,16 @@ CREATE INDEX cityobj_last_mod_date_inx ON cityobject
 	)	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
+-- object: implicit_geom_inx | type: INDEX --
+-- DROP INDEX IF EXISTS implicit_geom_inx CASCADE;
+CREATE INDEX implicit_geom_inx ON implicit_geometry
+	USING btree
+	(
+	  gmlid ASC NULLS LAST,
+	  gmlid_codespace
+	)	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
 -- object: cityobject_member_fk | type: CONSTRAINT --
 -- ALTER TABLE cityobject_member DROP CONSTRAINT IF EXISTS cityobject_member_fk CASCADE;
 ALTER TABLE cityobject_member ADD CONSTRAINT cityobject_member_fk FOREIGN KEY (cityobject_id)
@@ -7051,6 +7063,7 @@ ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_fk2 FOREIGN KEY (pa
 REFERENCES objectclass (id) MATCH FULL
 ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
+
 
 
 
