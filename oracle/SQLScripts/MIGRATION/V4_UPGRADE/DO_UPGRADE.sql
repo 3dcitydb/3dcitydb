@@ -75,16 +75,22 @@ SELECT 'Creating packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx''
 @@../../CITYDB_PKG/STATISTICS/STAT.sql;
 @@../../SCHEMA/OBJECTCLASS/OBJCLASS.sql
 
--- create indexes new in version > 4.0.2
 DECLARE
   old_major NUMBER := :major;
   old_minor NUMBER := :minor;
   old_revision NUMBER := :revision;
 BEGIN
-  IF old_major = 4 AND old_minor = 0 AND old_revision <=2 THEN
+  -- create indexes new in version > 4.0.2
+  IF old_major = 4 AND old_minor = 0 AND old_revision <= 2 THEN
     EXECUTE IMMEDIATE 'CREATE INDEX CITYOBJ_CREATION_DATE_INX ON CITYOBJECT (CREATION_DATE)';
     EXECUTE IMMEDIATE 'CREATE INDEX CITYOBJ_LAST_MOD_DATE_INX ON CITYOBJECT (LAST_MODIFICATION_DATE)';
     EXECUTE IMMEDIATE 'CREATE INDEX CITYOBJ_TERM_DATE_INX ON CITYOBJECT (TERMINATION_DATE)';
+  END IF;
+
+  -- create columns new in version > 4.2
+  IF old_major = 4 AND old_minor <= 2 THEN
+    EXECUTE IMMEDIATE 'ALTER TABLE IMPLICIT_GEOMETRY ADD (GMLID VARCHAR2(256), GMLID_CODESPACE VARCHAR2(1000))';
+    EXECUTE IMMEDIATE 'CREATE INDEX IMPLICIT_GEOM_INX ON IMPLICIT_GEOMETRY (GMLID, GMLID_CODESPACE)';
   END IF;
 END;
 /

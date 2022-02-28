@@ -66,21 +66,27 @@ DECLARE
   old_minor integer := current_setting('tmp.old_minor')::integer;
   old_revision integer := current_setting('tmp.old_revision')::integer;
 BEGIN
-  -- create indexes new in version > 4.0.2
-  IF old_major = 4 AND old_minor = 0 AND old_revision <=2 THEN
     FOR schema_name in SELECT nspname AS schema_name FROM pg_catalog.pg_class c
                      JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
                      WHERE c.relname = 'database_srs' AND c.relkind = 'r'
     LOOP
-      RAISE NOTICE 'Creating additional indexes in schema ''%'' ...', schema_name;
-      EXECUTE format('CREATE INDEX cityobj_creation_date_inx ON %I.cityobject USING btree (creation_date) WITH (FILLFACTOR = 90)', schema_name);
-      EXECUTE format('CREATE INDEX cityobj_term_date_inx ON %I.cityobject USING btree (termination_date) WITH (FILLFACTOR = 90)', schema_name);
-      EXECUTE format('CREATE INDEX cityobj_last_mod_date_inx ON %I.cityobject USING btree (last_modification_date) WITH (FILLFACTOR = 90)', schema_name);
-      EXECUTE format('INSERT INTO %I.index_table (obj) VALUES (citydb_pkg.construct_normal(''cityobj_creation_date_inx'', ''cityobject'', ''creation_date''))', schema_name);
-      EXECUTE format('INSERT INTO %I.index_table (obj) VALUES (citydb_pkg.construct_normal(''cityobj_term_date_inx'', ''cityobject'', ''termination_date''))', schema_name);
-      EXECUTE format('INSERT INTO %I.index_table (obj) VALUES (citydb_pkg.construct_normal(''cityobj_last_mod_date_inx'', ''cityobject'', ''last_modification_date''))', schema_name);
+      -- create indexes new in version > 4.0.2
+      IF old_major = 4 AND old_minor = 0 AND old_revision <= 2 THEN
+        RAISE NOTICE 'Creating additional indexes in schema ''%'' ...', schema_name;
+        EXECUTE format('CREATE INDEX cityobj_creation_date_inx ON %I.cityobject USING btree (creation_date) WITH (FILLFACTOR = 90)', schema_name);
+        EXECUTE format('CREATE INDEX cityobj_term_date_inx ON %I.cityobject USING btree (termination_date) WITH (FILLFACTOR = 90)', schema_name);
+        EXECUTE format('CREATE INDEX cityobj_last_mod_date_inx ON %I.cityobject USING btree (last_modification_date) WITH (FILLFACTOR = 90)', schema_name);
+        EXECUTE format('INSERT INTO %I.index_table (obj) VALUES (citydb_pkg.construct_normal(''cityobj_creation_date_inx'', ''cityobject'', ''creation_date''))', schema_name);
+        EXECUTE format('INSERT INTO %I.index_table (obj) VALUES (citydb_pkg.construct_normal(''cityobj_term_date_inx'', ''cityobject'', ''termination_date''))', schema_name);
+        EXECUTE format('INSERT INTO %I.index_table (obj) VALUES (citydb_pkg.construct_normal(''cityobj_last_mod_date_inx'', ''cityobject'', ''last_modification_date''))', schema_name);
+      END IF;
+
+      -- create columns and index new in version > 4.2
+      IF old_major = 4 AND old_minor <= 2 THEN
+        EXECUTE format('ALTER TABLE %I.implicit_geometry ADD COLUMN gmlid character varying(256), ADD COLUMN gmlid_codespace varchar(1000)', schema_name);
+        EXECUTE format('CREATE INDEX implicit_geom_inx ON %I.implicit_geometry USING btree (gmlid ASC NULLS LAST, gmlid_codespace) WITH (FILLFACTOR = 90)', schema_name);
+      END IF;
     END LOOP;
-  END IF;
 END
 $$;
 

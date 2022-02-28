@@ -151,7 +151,13 @@ ALTER TABLE CITYOBJECTGROUP
   ADD OBJECTCLASS_ID NUMBER;
   
 ALTER TABLE RELIEF_FEATURE
-  ADD OBJECTCLASS_ID NUMBER;  
+  ADD OBJECTCLASS_ID NUMBER;
+
+/*************************************************
+* alter tables that changed in v4.3
+*
+**************************************************/
+ALTER TABLE IMPLICIT_GEOMETRY ADD (GMLID VARCHAR2(256), GMLID_CODESPACE VARCHAR2(1000));
   
 /*************************************************
 * update tables that changed between 3.0 and 3.1

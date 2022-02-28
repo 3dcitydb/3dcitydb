@@ -151,6 +151,14 @@ ALTER TABLE cityobjectgroup
   ADD COLUMN objectclass_id INTEGER;
 
 /*************************************************
+* alter tables that changed in v4.3
+*
+**************************************************/
+ALTER TABLE implicit_geometry
+  ADD COLUMN gmlid character varying(256),
+  ADD COLUMN gmlid_codespace varchar(1000);
+
+/*************************************************
 * update tables that changed between 3.0 and 3.1
 *
 **************************************************/
