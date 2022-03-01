@@ -84,6 +84,7 @@ BEGIN
       -- create columns and index new in version > 4.2
       IF old_major = 4 AND old_minor <= 2 THEN
         EXECUTE format('ALTER TABLE %I.implicit_geometry ADD COLUMN gmlid character varying(256), ADD COLUMN gmlid_codespace varchar(1000)', schema_name);
+        EXECUTE format('UPDATE %I.implicit_geometry SET gmlid = sg.gmlid, gmlid_codespace = sg.gmlid_codespace FROM %I.surface_geometry sg WHERE relative_brep_id = sg.id;', schema_name, schema_name);
         EXECUTE format('CREATE INDEX implicit_geom_inx ON %I.implicit_geometry USING btree (gmlid ASC NULLS LAST, gmlid_codespace) WITH (FILLFACTOR = 90)', schema_name);
       END IF;
     END LOOP;

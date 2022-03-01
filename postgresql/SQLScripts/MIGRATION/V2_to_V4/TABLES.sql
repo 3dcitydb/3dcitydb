@@ -1176,6 +1176,11 @@ CREATE TABLE citydb.implicit_geometry (
     NULL::geometry(GEOMETRYZ)
     FROM public.implicit_geometry;
 
+UPDATE citydb.implicit_geometry
+  SET gmlid = sg.gmlid, gmlid_codespace = sg.gmlid_codespace
+    FROM citydb.surface_geometry sg
+      WHERE relative_brep_id = sg.id;
+
 DROP TABLE IF EXISTS citydb.external_reference CASCADE;
 CREATE TABLE citydb.external_reference AS
   SELECT id::bigint, infosys, name, uri, cityobject_id::bigint

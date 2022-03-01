@@ -158,6 +158,11 @@ ALTER TABLE implicit_geometry
   ADD COLUMN gmlid character varying(256),
   ADD COLUMN gmlid_codespace varchar(1000);
 
+UPDATE implicit_geometry
+  SET gmlid = sg.gmlid, gmlid_codespace = sg.gmlid_codespace
+    FROM surface_geometry sg
+      WHERE relative_brep_id = sg.id;
+
 /*************************************************
 * update tables that changed between 3.0 and 3.1
 *
