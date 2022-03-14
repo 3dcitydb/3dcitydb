@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="16154,9391" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="15013,9390" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB" encoding="UTF8">
 	<role name="postgres"/>
@@ -2533,6 +2533,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<position x="19640" y="12320"/>
 	<column name="id" not-null="true" default-value="nextval('citydb.implicit_geometry_seq'::regclass)">
 		<type name="bigint"/>
+	</column>
+	<column name="gmlid">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="gmlid_codespace">
+		<type name="varchar" length="1000"/>
 	</column>
 	<column name="mime_type">
 		<type name="character varying" length="256"/>
@@ -6118,6 +6124,17 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 index-type="btree" factor="90">
 		<idxelement use-sorting="false">
 			<column name="last_modification_date"/>
+		</idxelement>
+</index>
+
+<index name="implicit_geom_inx" table="citydb.implicit_geometry"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="gmlid"/>
+		</idxelement>
+		<idxelement use-sorting="false">
+			<column name="gmlid_codespace"/>
 		</idxelement>
 </index>
 

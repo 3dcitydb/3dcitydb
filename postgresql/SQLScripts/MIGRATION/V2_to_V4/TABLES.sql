@@ -1158,6 +1158,8 @@ UPDATE citydb.surface_geometry SET solid_geometry = gs.solid_geom
 DROP TABLE IF EXISTS citydb.implicit_geometry CASCADE;
 CREATE TABLE citydb.implicit_geometry (
     id,
+    gmlid,
+    gmlid_codespace,
     mime_type,
     reference_to_library,
     library_object,
@@ -1165,12 +1167,19 @@ CREATE TABLE citydb.implicit_geometry (
     relative_other_geom)
   AS SELECT
     id::bigint,
+    NULL::character varying(256),
+    NULL::varchar(1000),
     mime_type,
     reference_to_library,
     library_object bytea,
     relative_geometry_id::bigint,
     NULL::geometry(GEOMETRYZ)
     FROM public.implicit_geometry;
+
+UPDATE citydb.implicit_geometry
+  SET gmlid = sg.gmlid, gmlid_codespace = sg.gmlid_codespace
+    FROM citydb.surface_geometry sg
+      WHERE relative_brep_id = sg.id;
 
 DROP TABLE IF EXISTS citydb.external_reference CASCADE;
 CREATE TABLE citydb.external_reference AS

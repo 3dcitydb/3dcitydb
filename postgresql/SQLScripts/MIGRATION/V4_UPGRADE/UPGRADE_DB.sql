@@ -36,7 +36,7 @@ SET client_min_messages TO WARNING;
 \pset fieldsep '.'
 
 \set NEW_MAJOR 4
-\set NEW_MINOR 2
+\set NEW_MINOR 3
 \set NEW_REVISION 0
 
 \echo

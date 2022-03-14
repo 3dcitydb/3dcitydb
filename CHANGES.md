@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+### 4.3.0 - tba
+
+##### Changes
+* Added two new columns `GMLID` and `GMLID_CODESPACE` to the `IMPLICIT_GEOMETRY` table.
+
+
 ### 4.2.0 - 2021-10-08
 
 ##### Changes

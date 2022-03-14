@@ -208,3 +208,10 @@ CREATE INDEX cityobj_last_mod_date_inx ON cityobject
 	(
 	  last_modification_date
 	)	WITH (FILLFACTOR = 90);
+
+CREATE INDEX implicit_geom_inx ON implicit_geometry
+  USING btree
+  (
+    gmlid ASC NULLS LAST,
+    gmlid_codespace
+  )	WITH (FILLFACTOR = 90);

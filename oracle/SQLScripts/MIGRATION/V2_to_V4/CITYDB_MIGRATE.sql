@@ -476,10 +476,15 @@ AS
     dbms_output.put_line('Implicit_Geometry table is being copied...');
     EXECUTE IMMEDIATE '
     INSERT /*+ APPEND */ INTO implicit_geometry
-	SELECT ID, MIME_TYPE, REFERENCE_TO_LIBRARY,
+	SELECT ID, CAST(null AS VARCHAR2(256)) as GMLID, CAST(null AS VARCHAR2(1000)) as GMLID_CODESPACE, MIME_TYPE, REFERENCE_TO_LIBRARY,
 		LIBRARY_OBJECT, RELATIVE_GEOMETRY_ID AS RELATIVE_BREP_ID,
 		CAST(null AS SDO_GEOMETRY) as RELATIVE_OTHER_GEOM
 	FROM '||v2_schema_name||'.implicit_geometry';
+
+    EXECUTE IMMEDIATE 'UPDATE IMPLICIT_GEOMETRY ig SET (GMLID, GMLID_CODESPACE) = (
+        SELECT GMLID, GMLID_CODESPACE FROM '||v2_schema_name||'.SURFACE_GEOMETRY sg
+            WHERE ig.RELATIVE_BREP_ID = sg.ID)';
+
     dbms_output.put_line('Implicit_Geometry table copy is completed.' || SYSTIMESTAMP);
   END;
 
