@@ -7,6 +7,9 @@ Change Log
 * The `VACUUM_SPATIAL_COLUMNS.sql` has been simplified and now also works for ADE tables. [#77](https://github.com/3dcitydb/3dcitydb/pull/77)
 * Added two new columns `GMLID` and `GMLID_CODESPACE` to the `IMPLICIT_GEOMETRY` table. [#79](https://github.com/3dcitydb/3dcitydb/pull/79)
 
+##### Fixes
+* PostgreSQL: Fixed DB Upgrade from an earlier version (< 4.2) in case the citydb schema contains a user-defined view. [#82](https://github.com/3dcitydb/3dcitydb/issues/82)
+
 ### 4.2.0 - 2021-10-08
 
 ##### Changes

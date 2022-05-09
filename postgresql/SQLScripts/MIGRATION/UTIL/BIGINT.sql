@@ -88,6 +88,7 @@ BEGIN
             information_schema.tables at
           WHERE
             table_schema = schema_name AND
+            table_type <> 'VIEW' AND
             NOT (table_name = ANY(meta_tables)) AND
             EXISTS (
               SELECT
