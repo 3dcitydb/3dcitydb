@@ -95,3 +95,8 @@ $$;
 \echo
 \echo 'Do bigint update ...'
 \ir ../UTIL/BIGINT.sql
+
+--// do VACUUM
+\echo
+\echo 'Do VACUUM ...'
+\ir ../UTIL/VACUUM.sql
