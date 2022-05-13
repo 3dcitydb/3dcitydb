@@ -86,6 +86,11 @@ CREATE SCHEMA citydb_pkg;
 \echo 'Update indexes ...'
 \ir INDEXES.sql
 
+--// do VACUUM
+\echo
+\echo 'Do VACUUM ...'
+\ir ../UTIL/VACUUM.sql
+
 --// removing v2.x schema (if the user wants to)
 --\echo
 --\echo 'Removing database elements of 3DCityDB v2.x schema ...'
