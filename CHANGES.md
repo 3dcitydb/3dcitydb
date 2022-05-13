@@ -4,7 +4,7 @@ Change Log
 ### 4.3.0 - tba
 
 ##### Changes
-* PostgreSQL: Run `VACUUM ANALYZE` after DB migration or upgrade.
+* PostgreSQL: Run `VACUUM ANALYZE` after DB migration or upgrade. [#87](https://github.com/3dcitydb/3dcitydb/pull/87)
 * PostgreSQL: The `VACUUM_SPATIAL_COLUMNS.sql` has been simplified and now also works for ADE tables. [#77](https://github.com/3dcitydb/3dcitydb/pull/77)
 * Added two new columns `GMLID` and `GMLID_CODESPACE` to the `IMPLICIT_GEOMETRY` table. [#79](https://github.com/3dcitydb/3dcitydb/pull/79)
 
