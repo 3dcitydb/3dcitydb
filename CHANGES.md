@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-### 4.3.0 - tba
+### 4.3.0 - 2022-05-23
 
 ##### Changes
 * PostgreSQL: Run `VACUUM ANALYZE` after DB migration or upgrade. [#87](https://github.com/3dcitydb/3dcitydb/pull/87)
