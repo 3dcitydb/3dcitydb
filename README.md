@@ -49,7 +49,7 @@ To request a previous release of the 3D City Database under Apache License 2.0 c
 
 Latest release
 --------------
-The latest stable release of the 3D City Database is 4.2.0.
+The latest stable release of the 3D City Database is 4.3.0.
 
 You can download the latest release as well as previous releases from the
 [releases section](https://github.com/3dcitydb/3dcitydb/releases).
