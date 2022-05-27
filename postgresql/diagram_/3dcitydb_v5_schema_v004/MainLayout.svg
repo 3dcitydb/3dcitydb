@@ -1,0 +1,1180 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'   width='3104' height='1998' viewBox='0 0 3104 1998' >
+  <script type='text/ecmascript'>
+  <![CDATA[
+  function hghl(el) { for ( var i in el ){ var elem = document.getElementById(el[i]); if ( elem != null ) elem.setAttribute('class','highlight');  }  }
+  function uhghl(el) { for ( var i in el ){ var elem = document.getElementById(el[i]); if ( elem != null ) elem.setAttribute('class','unhighlight'); }  } 
+  ]]>
+  </script> 
+
+<style type='text/css'>
+  text                { fill:#000000; font-family: System, 'Trebuchet MS', Dialog; font-size:14.083333015441895px; }
+  a text:hover        { fill:#0d196f; text-shadow: 0px 0px 6px #d0ce00; font-size:13px; font-weight: bold;}
+  text.highlight      { fill:#0d196f; text-shadow: 0px 0px 4px #eac533; font-size:13px; font-weight: bold;}
+  text.white          { fill:#ffffff; }
+  text.colType        { fill:#b3b3b3; }
+  text.relName        { fill:#9c9a9a; }
+  text.legendTitle    { fill:#d65c68; font-weight:bold; }
+  text.legendSubTitle { fill:#717171; font-size:11px; }
+  path                { stroke:#928c7e; stroke-width:1.25; fill:none; }
+  path.virtual        { stroke:#a364b5; }
+  path.logo           { fill:#fbeac0;fill-opacity:1;stroke-width:0.3;stroke:#222222; }
+  path.dotted         { stroke-dasharray:4,2; }
+  path.unhighlight    { stroke-width:10; opacity:0; }
+  path.highlight      { stroke-width:3; stroke:#0054c5; opacity:0.8; }
+  path.line           { stroke-width:10; stroke-linecap:round; stroke-linejoin:round; }
+  rect.entity         { fill:#ffffff; stroke:#777; stroke-width:0;shape-rendering:crispEdges; filter:url(#shadow); }
+  line.delim          { stroke-width:1px; shape-rendering:crispEdges; }
+  line.topLine        { stroke-width:3px; shape-rendering:crispEdges; }
+  text.callout        { fill:#000000; font-family: System, 'Trebuchet MS', Dialog; font-size:14.625px; }
+  rect.callout        { fill:url(#calloutGradient); filter:url(#shadow); }
+  rect.shape          { stroke:#bebdbd; stroke-width:0.5; }
+  text.grp            { fill:#b1b1b1; }
+  rect.grp            { stroke:#a1a1a1; stroke-width:3; opacity:0.20; }
+  path.bgPattern      { fill:none;stroke-width:0.6;stroke:#e5e9ee; }
+  path.eval           { fill:#ececec;fill-opacity:1;stroke-width:0.6;stroke:#dddddd; }
+  rect.palpable       { fill:#fffbe5; }
+</style>
+<defs>
+  <pattern id="layoutBgA" width="60" height="34.64" patternUnits="userSpaceOnUse">
+    <rect x="0" y="0"  width="60" height="34.64" fill="#f5f5f5" />
+    <!--<path class='bgPattern' d='M 0 17.32 L 10 0 L 30 0 L 40 17.326 L 30 34.64 L 10 34.64 Z' />
+    <path class='bgPattern' d='M 40 17.32 L 60 17.32 Z' /> -->
+  </pattern>
+  <pattern id='layoutBgEval'  width='300' height='300' x='0' y='0' patternUnits="userSpaceOnUse">
+    <path class='eval' d='m 62.011835,91.267143 c 3.536475,3.175214 2.262669,8.705999 -1.637711,11.015197 -3.594697,5.8423 -6.34682,-2.892623 -9.715478,-4.653898 -5.609222,-2.838926 2.050802,-6.680123 4.77004,-8.319046 2.334696,-0.724067 4.935143,0.312302 6.583149,1.957747 z m -2.720492,2.538595 c -2.698397,-3.517732 -9.282815,1.269287 -3.69635,3.568637 2.765331,5.605665 7.052809,-0.56184 3.69635,-3.568637 z' />
+    <path class='eval' d='m 72.25864,84.624638 c 4.108046,3.143003 -0.737059,6.895259 -1.994918,8.323564 -3.586718,5.561143 -6.495079,-4.197379 -10.07759,-5.582178 -4.443422,-1.088878 1.349298,-7.249213 2.503526,-2.503449 2.464639,4.517161 2.304019,-3.70697 6.291113,-1.995914 1.280083,0.137865 2.410691,0.864819 3.277869,1.757977 z m -2.646109,2.323242 c -4.797162,-3.078383 -2.810517,6.305507 0.515161,1.990646 0.296432,-0.688582 0.01209,-1.493412 -0.515161,-1.990646 z' />
+    <path class='eval' d='m 78.230641,79.436735 c 4.142121,3.027466 -2.020102,10.435276 -3.450543,5.477315 3.306312,-5.248112 -9.186019,-2.220094 -5.805994,-8.77679 -0.544141,-3.93011 6.797826,-2.102227 3.386015,0.245477 -0.181085,2.915838 4.637371,1.019311 5.870522,3.053982 z' />
+    <path class='eval' d='m 82.744502,72.597397 c -4.901605,1.926521 1.146497,6.285555 2.559694,2.225783 6.21817,3.539297 -6.640186,8.416664 -7.590325,1.997457 -2.24365,-2.914883 4.026676,-10.148618 5.030631,-4.22324 z' />
+    <path class='eval' d='m 90.727458,64.259158 c 1.583987,1.690029 3.321317,3.2696 4.81267,5.026353 -2.535706,6.849794 -6.445583,-5.918773 -8.388458,-0.167017 0.782768,2.03426 5.877405,3.752079 2.670979,5.711199 -3.315119,1.519161 -5.782422,-5.157931 -8.858893,-6.780537 -4.229842,-1.139816 1.510134,-7.074128 2.586227,-2.385939 3.141198,5.495193 1.840537,-5.598295 7.177489,-1.404062 z' />
+    <path class='eval' d='m 99.622027,58.374253 c 1.493293,1.9548 -6.281936,7.024659 -0.885258,4.740447 0.386238,-4.434477 6.131941,-1.133173 2.175851,1.618005 -4.421491,6.12739 -13.666659,-3.151506 -7.058299,-7.136537 1.785129,-1.119329 4.348209,-0.743179 5.767706,0.778085 z m -2.900824,1.89746 c -3.608188,-2.208543 -2.280489,5.00803 -0.12563,0.329531 z' />
+    <path class='eval' d='m 115.18023,50.570441 c -1.61703,5.201678 -4.6204,-0.364502 -7.01598,-1.749619 -4.40977,2.122562 4.89641,4.913939 1.89606,7.018157 -2.48061,3.877635 -4.11404,-4.060614 -7.01192,-2.6391 -1.76318,3.107252 7.28394,6.252304 0.87346,7.876177 -1.74515,-2.956649 -9.055498,-5.610518 -3.950378,-8.66062 1.696478,1.897023 1.770418,-5.43503 5.347308,-3.072411 -0.44014,-5.474701 6.11995,-4.950882 7.7846,-0.815355 0.69076,0.682329 1.39587,1.351469 2.07685,2.042771 z' />
+    <path class='eval' d='m 120.54891,39.417125 c 2.50681,1.334124 4.80466,4.941837 0.75044,5.297362 -0.46414,1.89865 -5.25369,5.602652 -8.01742,1.815475 -3.87345,-2.809139 -0.0676,-7.603869 2.3036,-8.133924 1.6795,-3.853018 3.16703,-1.199465 4.96338,1.021087 z m -2.2464,2.175828 c -4.8049,-2.992167 -3.08987,6.380358 0.42374,2.036159 0.33052,-0.677508 0.12099,-1.525836 -0.42374,-2.036159 z' />
+    <path class='eval' d='m 128.50836,24.06821 c -5.10403,3.035506 3.20535,6.383175 5.05938,9.450276 -0.91853,2.95886 -4.06493,3.650723 -5.34691,0.265618 -2.25715,-2.089033 -4.65672,-6.948595 -7.07024,-2.584686 -4.71758,-3.764394 3.81217,-5.812054 5.12382,-9.226328 0.75738,0.677487 1.38637,1.498638 2.23389,2.095175 z' />
+    <path class='eval' d='m 137.14366,22.299812 c -3.09615,2.259885 0.71537,4.412454 1.99042,6.435866 -3.08975,5.080354 -5.91384,-2.98648 -8.92144,-4.094939 1.44369,-3.219573 3.3497,-1.335928 4.27156,-4.41058 0.97822,-0.894325 1.75044,1.871047 2.65946,2.069653 z' />
+    <path class='eval' d='m 136.85093,14.890174 c 2.31562,5.283511 -7.17975,1.771993 -1.29675,-0.475107 l 0.7108,0.08973 z m 4.867,5.317354 c 2.56912,1.439678 4.26517,4.725219 0.30678,5.233637 -1.56592,-3.098864 -9.51683,-5.749448 -3.64502,-8.633714 1.17746,0.325095 2.15375,2.591149 3.33824,3.400077 z' />
+    <path class='eval' d='m 149.95578,11.976423 c 2.50679,1.334142 4.80455,4.94192 0.75041,5.297394 -0.4641,1.898604 -5.25368,5.602645 -8.0174,1.81545 -3.87347,-2.80918 -0.0676,-7.603844 2.30366,-8.133968 1.67949,-3.8530525 3.16695,-1.1993573 4.96333,1.021124 z m -2.24641,2.175828 c -4.80489,-2.992177 -3.08986,6.380343 0.42374,2.036167 0.33055,-0.677518 0.121,-1.52585 -0.42374,-2.036167 z' />
+    <path class='eval' d='m 153.26135,7.538431 c 2.60497,1.5799548 6.03999,5.944272 1.08117,6.050232 -2.53319,-3.231828 -7.20316,-6.4304525 -8.84748,-9.4582682 1.89121,-2.8664883 3.78452,-2.247699 5.38514,0.8929426 0.78017,0.8503859 1.57195,1.6911437 2.38118,2.5150667 z' />
+  </pattern>
+  <!-- https://norbat.de/svg-pattern-3d-webmuster/ -->
+  <linearGradient id='groupUnderTitleLine' x1='0%' y1='0%' x2='100%' y2='0%' >
+    <stop offset='0%' stop-color='#a1a1a1' stop-opacity='0.5'/>
+    <stop offset='100%' stop-color='#a1a1a1' stop-opacity='0' />
+  </linearGradient>
+  <radialGradient id='calloutGradient' cx='25%' cy='20%' r='80%' fx='10%' fy='10%'>
+    <stop offset='0%' stop-color='#ffffff' />
+    <stop offset='100%' stop-color='#f8f6d1' />
+  </radialGradient>
+  <filter id="shadow" width="120%" height="120%">
+    <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#333" flood-opacity="0.4" />
+  </filter>
+  <!--
+  <filter id='shadow2' width='120%' height='120%'>
+    <feOffset result='offOut' in='SourceGraphic' dx='0' dy='0' />
+    <feColorMatrix result='matrixOut' in='offOut'
+                   values='0.5 0 0 0 0 0 0.5 0 0 0 0 0 0.5 0 0 0 0 0 0.5 0' />
+    <feGaussianBlur result='blurOut' in='matrixOut' stdDeviation='3' />
+    <feBlend in='SourceGraphic' in2='blurOut' />
+  </filter>
+  -->
+  <filter id='fkShadow' height='130%'>
+    <feGaussianBlur in='SourceAlpha' stdDeviation='1.5'/> <!-- stdDeviation is how much to blur -->
+    <feOffset dx='1.2' dy='1.2' result='offsetblur'/> <!-- how much to offset -->
+    <feMerge>
+      <feMergeNode/> <!-- this contains the offset blurred image -->
+      <feMergeNode in='SourceGraphic'/> <!-- this contains the element that the filter is applied to -->
+    </feMerge>
+  </filter>
+  <radialGradient id='legendGradient' cx='5%' cy='5%' r='100%' >
+    <stop offset='0%' stop-color='#fdfeff' stop-opacity='1'/>
+    <stop offset='100%' stop-color='#e1eafa' stop-opacity='1' />
+  </radialGradient>
+  <symbol id='calloutArrowDown' >
+    <path d='M 0,0 L 8,12 L 16,0 z' style='fill:#f8f6d1;stroke:none; filter: url(#shadow);' />
+    <path d='M 0,0 L 8,12 L 16,0' style='stroke:#bebdbd; stroke-width:0.5;' />
+  </symbol>
+  <symbol id='calloutArrowUp' >
+    <path d='M 0,16 L 8,4 L 16,16 z' style='fill:#ffffff; stroke:none; filter: url(#shadow);' />
+    <path d='M 0,16 L 8,4 L 16,16' style='stroke:#bebdbd; stroke-width:0.5;' />
+  </symbol>
+  <symbol id='pk' width="13" height="13">
+    <g transform='scale(0.99)'>
+      <path style='fill:#f0d938;stroke:#906b25;stroke-width:0.6;stroke-linecap:round;stroke-linejoin:round;'
+            d='M 9.3678877,3.5695485 C 9.1030218,3.2729386 9.0796382,2.7628519 9.3396185,2.4517097 9.5449651,2.1956495 9.9040386,2.0980533 10.199638,2.2169415 10.533525,2.3415459 10.775153,2.706942 10.750675,3.0842709 10.737029,3.3980003 10.541153,3.699122 10.258248,3.8066067 9.966649,3.9250429 9.6169668,3.8418805 9.4008073,3.6062324 9.3894892,3.5943518 9.3785264,3.582104 9.3678886,3.5695487 z M 11.226617,6.9916004 C 11.888137,6.3548946 12.293488,5.4172188 12.311087,4.442353 12.378144,2.7379364 11.248678,1.0541269 9.7322318,0.44767357 8.3887112,-0.1280313 6.7865012,0.26822889 5.8918395,1.4007929 5.080823,2.3839145 4.9336815,3.8452096 5.3635544,5.101615 L 4.3670905,5.315913 C 4.0664984,5.3682645 4.0967703,5.6316724 4.2574957,5.8208829 L 4.9124,6.5655244 4.1543436,7.2512357 3.2136002,7.2163506 3.1674775,8.5586827 2.0406832,8.5086512 1.5965306,8.9299953 1.5471661,10.179833 0.75616674,10.195223 0.2112857,10.758575 0.15354288,11.735988 0.07199052,12.765553 c 0.36440953,0.238225 0.79006967,0.195492 1.44938278,-0.02675 L 6.3033562,8.1282037 6.8217102,8.6765688 C 6.9985465,8.8799427 7.3003699,8.7497574 7.358381,8.5016252 L 7.4938877,7.5084164 c 0.8537488,0.3985387 1.8303125,0.4711541 2.6851793,0.1427713 0.393927,-0.1407258 0.746858,-0.3701772 1.04755,-0.6595873 z'/>
+      <path d='M 6.8014948,6.3102123 0.15369063,13.024481 0.21560535,12.141962 6.0062342,6.2683782 z'
+            style='fill:#ffe5a5;fill-opacity:1;stroke:#906b25;stroke-width:0.06912433;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:3.00300009'/>
+    </g>
+  </symbol>
+  <symbol id='idx1' width="13" height="13">
+    <g transform='scale(0.99)'>
+      <rect width='4' height='4' x='7' y='1' style='fill:#ffff3f;stroke:#b48333;stroke-width:0.6;' ry='0.83'/>
+      <rect width='4' height='4' x='1' y='7' style='fill:#ffff3f;stroke:#b48333;stroke-width:0.6;' ry='0.832'/>
+      <rect width='4' height='4' x='7' y='7' style='fill:#ffff3f;stroke:#b48333;stroke-width:0.6;' ry='0.832'/>
+    </g>
+  </symbol>
+  <symbol id='idx2' width="13" height="13">
+    <g transform='scale(0.99)'>
+      <rect width='4' height='3' x='6' y='1' style='fill:#7fc8e9;stroke:#2f6f8c;stroke-width:0.6;' ry='0.83'/>
+      <rect width='7' height='3' x='3' y='6' style='fill:#7fc8e9;stroke:#2f6f8c;stroke-width:0.6;' ry='0.832'/>
+    </g>
+  </symbol>
+  <symbol id='unq' width="13" height="13">
+    <g transform='scale(0.99)'>
+      <rect style='fill:none;stroke:#7e4d31;stroke-width:0.71934468;stroke-linecap:round;stroke-linejoin:round;'
+            width='2.29' height='8.43' x='7.48' y='-0.76' ry='1.14' transform='matrix(0.701,0.713,-0.727,0.685,0,0)' />
+      <path style='fill:white;stroke:#858585;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;'
+            d='m 26.04,8.64 a 4.13,4.13 0 1 1 -8.26,0 4.13,4.13 0 1 1 8.26,0 z'
+            transform='matrix(1.025,0,0,0.987,-14.690,-3.862)' />
+      <text x='5.8' y='7.4' style='font-size:7px;fill:#8a8a8a;'>U</text>
+    </g>
+  </symbol>
+  <symbol id='idx' width="13" height="13">
+    <g transform='scale(0.99)'>
+      <rect style='fill:none;stroke:#7e4d31;stroke-width:0.71934468;stroke-linecap:round;stroke-linejoin:round;'
+            width='2.29' height='8.43' x='7.48' y='-0.76' ry='1.14' transform='matrix(0.701,0.713,-0.727,0.685,0,0)' />
+      <path style='fill:white;stroke:#858585;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;'
+            d='m 26.04,8.64 a 4.13,4.13 0 1 1 -8.26,0 4.13,4.13 0 1 1 8.26,0 z'
+            transform='matrix(1.025,0,0,0.987,-14.690,-3.862)' />
+    </g>
+  </symbol>
+  <symbol id='fk' width="13" height="13">
+    <g transform='scale(0.87)'>
+      <path style='fill:#6a88cd;stroke:#5a72a8;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+            d='M 12.48,0.33 7.07,0.89 9.067,2.974 0.329,11.731 1.073,12.597 9.811,3.841 11.77,5.78 z' />
+    </g>
+  </symbol>
+  <symbol id='ref' width="13" height="13">
+    <g transform='scale(0.87)'>
+      <path style='fill:#f0d938;stroke:#906b25;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+            d='M 0.10,12.70 5.31,12.15 3.40,10.06 11.82,1.32 11.11,0.45 2.68,9.19 0.80,7.24 z'/>
+    </g>
+  </symbol>
+  <symbol id='flag0' width="13" height="13">
+    <g transform='scale(0.92)'>
+      <path style='fill:#b7d0f6;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+            d='M 0.12,12.67 0.16,7.22 C 2.59,7.22 4.13,8.78 9.22,4.22 5.68,4.98 2.53,4.50 0.09,1.80 z'/>
+    </g>
+  </symbol>
+  <symbol id='flag1' width="13" height="13">
+    <g transform='scale(0.92)'>
+      <path style='fill:#f4a393;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+            d='M 0.12,12.67 0.16,7.22 C 2.59,7.22 4.13,8.78 9.22,4.22 5.68,4.98 2.53,4.50 0.09,1.80 z'/>
+    </g>
+  </symbol>
+  <symbol id='flag2' width="13" height="13">
+    <g transform='scale(0.92)'>
+      <path style='fill:#77ec8b;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+            d='M 0.12,12.67 0.16,7.22 C 2.59,7.22 4.13,8.78 9.22,4.22 5.68,4.98 2.53,4.50 0.09,1.80 z'/>
+    </g>
+  </symbol>
+  <symbol id='nn' width="3" height="3">
+    <path style='stroke:#9b3e50;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+          d='M 0,0 3,3 M 0,3 3,0 z'/>
+  </symbol>
+  <symbol id='virtual' width="13" height="13">
+    <circle cx='6' cy='6.5' r='5.5' fill='#a3dda3' stroke='#4c6a4c' stroke-width='0.5'/>
+    <path style='stroke:#ffffff;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+          d='M 3,4 6,10 9,4'/>
+  </symbol>
+  <symbol id='view' width="13" height="13">
+    <g transform='scale(0.99)'>
+      <line x1='12' y1='6' x2='19' y2='0' stroke='black' stroke-width='0.5' />
+      <line x1='0' y1='6' x2='7' y2='0' stroke='black' stroke-width='0.5' />
+      <circle cx='3' cy='6' r='3' fill='#f9ebbc' stroke='black' stroke-width='0.5'/>
+      <circle cx='10' cy='6' r='3' fill='#f9ebbc' stroke='black' stroke-width='0.5'/>
+    </g>
+  </symbol>
+
+</defs>
+
+<defs>  <marker id='src0u' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 0.00,4.00 L 16.00,4.00 z' />
+    <circle cx='12.00' cy='4.00' r='2.67' style='fill:white;stroke:#5e554d;' />
+    <path d='M 4.00,0.00 L 4.00, 8.00 z' />
+  </marker>
+  <marker id='src0' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 0.00,4.00 L 16.00,4.00 z' />
+    <circle cx='12.00' cy='4.00' r='2.67' style='fill:white;stroke:#5e554d;' />
+    <path d='M 0.00,0.00 L 8.00,4.00 L 0.00,8.00' />
+  </marker>
+  <marker id='src1u' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 0.00,4.00 L 16.00,4.00 z' />
+    <path d='M 8.00,0.00 L 8.00, 8.00 z' />
+    <path d='M 4.00,0.00 L 4.00, 8.00 z' />
+  </marker>
+  <marker id='src1' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 0.00,4.00 L 16.00,4.00 z' />
+    <path d='M 8.00,0.00 L 8.00, 8.00 z' />
+    <path d='M 0.00,0.00 L 8.00,4.00 L 0.00,8.00' />
+  </marker>
+  <marker id='dest0u' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 8.000,4.000 L 16.000,4.000 L 8.000,0.000 L 16.000,4.000 L 8.000,8.000' />
+  </marker>
+  <marker id='dest0' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 0.00,4.00 L 16.00,4.00 z' />
+    <circle cx='4.00' cy='4.00' r='2.67' style='fill:white;stroke:#5e554d;' />
+    <path d='M 16.00,0.00 L 8.00,4.00 L 16.00,8.00' />
+  </marker>
+  <marker id='dest1u' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 8.000,4.000 L 16.000,4.000 L 8.000,0.000 L 16.000,4.000 L 8.000,8.000' />
+  </marker>
+  <marker id='dest1' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 0.00,4.00 L 16.00,4.00 z' />
+    <path d='M 16.00,0.00 L 8.00,4.00 L 16.00,8.00' />
+  </marker>
+  <marker id='arrow' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 8.000,4.000 L 16.000,4.000 L 8.000,0.000 L 16.000,4.000 L 8.000,8.000' />
+  </marker>
+  <marker id='line_arrow' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 8.000,4.000 L 16.000,4.000 L 8.000,0.000 L 16.000,4.000 L 8.000,8.000' />
+  </marker>
+  <marker id='line_straight' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 0.00,4.00 L 16.00,4.00 z' />
+  </marker>
+  <linearGradient id='grp_ECF0F7' x1='0%' y1='0%' x2='100%' y2='0%' >
+     <stop offset='0%' stop-color='#C9DAFA' /> 
+     <stop offset='100%' stop-color='#C9DAFA00' /> 
+  </linearGradient>
+  <linearGradient id='grp_EEF7EC' x1='0%' y1='0%' x2='100%' y2='0%' >
+     <stop offset='0%' stop-color='#D1FAC9' /> 
+     <stop offset='100%' stop-color='#D1FAC900' /> 
+  </linearGradient>
+  <linearGradient id='grp_ECECF7' x1='0%' y1='0%' x2='100%' y2='0%' >
+     <stop offset='0%' stop-color='#C9C9FA' /> 
+     <stop offset='100%' stop-color='#C9C9FA00' /> 
+  </linearGradient>
+  <linearGradient id='grp_F7F2EC' x1='0%' y1='0%' x2='100%' y2='0%' >
+     <stop offset='0%' stop-color='#FAE3C9' /> 
+     <stop offset='100%' stop-color='#FAE3C900' /> 
+  </linearGradient>
+  <linearGradient id='tbg_BEBEF4' x1='0%' y1='0%' x2='0%' y2='100%' >
+     <stop offset='0%' stop-color='#F3F3FF' /> 
+     <stop offset='40%' stop-color='#DDDDFF' /> 
+     <stop offset='100%' stop-color='#C0C0EC' /> 
+  </linearGradient>
+  <linearGradient id='tbg_F4DDBE' x1='0%' y1='0%' x2='0%' y2='100%' >
+     <stop offset='0%' stop-color='#FFF9F3' /> 
+     <stop offset='40%' stop-color='#FFF0DD' /> 
+     <stop offset='100%' stop-color='#ECD9C0' /> 
+  </linearGradient>
+  <linearGradient id='tbg_BED3F4' x1='0%' y1='0%' x2='0%' y2='100%' >
+     <stop offset='0%' stop-color='#F3F7FF' /> 
+     <stop offset='40%' stop-color='#DDEAFF' /> 
+     <stop offset='100%' stop-color='#C0D1EC' /> 
+  </linearGradient>
+  <linearGradient id='tbg_C7F4BE' x1='0%' y1='0%' x2='0%' y2='100%' >
+     <stop offset='0%' stop-color='#F5FFF3' /> 
+     <stop offset='40%' stop-color='#E2FFDD' /> 
+     <stop offset='100%' stop-color='#C7ECC0' /> 
+  </linearGradient>
+</defs>
+
+<!-- == Shape Colors == -->
+<!-- == Desktop == -->
+<rect x='1' y='1' width='3102' height='1996' rx='8' ry='8' style='fill:url(#layoutBgA); stroke:#aaa; stroke-width:1px;' />
+
+<!-- == Legend == -->
+<g transform='translate(10,10)'>
+  <rect x='10' y='10' width='420' height='70' rx='6' ry='6' style='fill:url(#legendGradient);filter:url(#shadow);'/> 
+  <text x='20' y='25' class='legendTitle' >3dcitydb_v5_schema_v004</text> 
+  <text x='20' y='53' class='legendSubTitle'><tspan>Read the schema comments as mouse-over tooltips.</tspan></text> 
+  <text x='20' y='67' class='legendSubTitle'><tspan>Zoom using CTRL + mouse wheel, pan by dragging with the right-mouse button.</tspan></text> 
+</g>
+
+<g transform='translate(0,110)'>
+<!-- == Group 'database_srs' == -->
+<rect class='grp' style='fill:url(#grp_ECF0F7);stroke:#818181' x='1904' y='845' width='576' height='322' />
+<text x='1916' y='861' class='grp'>database_srs</text>
+<rect style='fill:url(#groupUnderTitleLine); stroke-width:2;' x='1916' y='865' width='552' height='2' />
+
+<!-- == Group 'surface_geometry' == -->
+<rect class='grp' style='fill:url(#grp_EEF7EC);stroke:#818181' x='464' y='1277' width='2160' height='546' />
+<text x='476' y='1293' class='grp'>surface_geometry</text>
+<rect style='fill:url(#groupUnderTitleLine); stroke-width:2;' x='476' y='1297' width='2136' height='2' />
+
+<!-- == Group 'objectclass' == -->
+<rect class='grp' style='fill:url(#grp_ECECF7);stroke:#818181' x='1440' y='93' width='1632' height='594' />
+<text x='1452' y='109' class='grp'>objectclass</text>
+<rect style='fill:url(#groupUnderTitleLine); stroke-width:2;' x='1452' y='113' width='1608' height='2' />
+
+<!-- == Group 'property' == -->
+<rect class='grp' style='fill:url(#grp_F7F2EC);stroke:#818181' x='32' y='45' width='1408' height='1074' />
+<text x='44' y='61' class='grp'>property</text>
+<rect style='fill:url(#groupUnderTitleLine); stroke-width:2;' x='44' y='65' width='1384' height='2' />
+
+<!-- == Fk 'aggregation_info_aggregation_info_fk1' == -->
+<path id='aggregation_info_aggregation_info_fk1'  onmouseover="hghl(['aggregation_info_aggregation_info_fk1','citydb.aggregation_info.child_id','citydb.objectclass.id'])" onmouseout="uhghl(['aggregation_info_aggregation_info_fk1','citydb.aggregation_info.child_id','citydb.objectclass.id'])" transform='translate(8,0)' class='unhighlight' d='M 1776,304L 1912,304Q 1920,304 1920,296L 1920,168Q 1920,160 1928,160L 1936,160' >
+	<title>Fk aggregation_info_fk1
+aggregation_info ref objectclass ( child_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)' marker-end='url(#dest1u)'    d='M 1776,304L 1912,304Q 1920,304 1920,296L 1920,168Q 1920,160 1928,160L 1936,160' ><title>Fk aggregation_info_fk1
+aggregation_info ref objectclass ( child_id -&gt; id )</title></path>
+<text x='1786' y='299' transform='rotate(0 1786,299)' class='relName'>aggregation_info_fk1</text>
+<!-- == Fk 'aggregation_info_aggregation_info_fk2' == -->
+<path id='aggregation_info_aggregation_info_fk2'  onmouseover="hghl(['aggregation_info_aggregation_info_fk2','citydb.aggregation_info.parent_id','citydb.objectclass.id'])" onmouseout="uhghl(['aggregation_info_aggregation_info_fk2','citydb.aggregation_info.parent_id','citydb.objectclass.id'])" transform='translate(8,0)' class='unhighlight' d='M 1776,320L 1784,320Q 1792,320 1792,312L 1792,312Q 1792,304 1800,304L 1808,304' >
+	<title>Fk aggregation_info_fk2
+aggregation_info ref objectclass ( parent_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)'     d='M 1776,320L 1784,320Q 1792,320 1792,312L 1792,312Q 1792,304 1800,304L 1808,304' ><title>Fk aggregation_info_fk2
+aggregation_info ref objectclass ( parent_id -&gt; id )</title></path>
+<text x='1786' y='315' transform='rotate(0 1786,315)' class='relName'>aggregation_info_fk2</text>
+<!-- == Fk 'appear_to_surface_data_app_to_surf_data_fk1' == -->
+<path id='appear_to_surface_data_app_to_surf_data_fk1'  onmouseover="hghl(['appear_to_surface_data_app_to_surf_data_fk1','citydb.appear_to_surface_data.appearance_id','citydb.appearance.id'])" onmouseout="uhghl(['appear_to_surface_data_app_to_surf_data_fk1','citydb.appear_to_surface_data.appearance_id','citydb.appearance.id'])" transform='translate(8,0)' class='unhighlight' d='M 784,1072L 600,1072Q 592,1072 592,1064L 592,744Q 592,736 584,736L 576,736' >
+	<title>Fk app_to_surf_data_fk1
+appear_to_surface_data ref appearance ( appearance_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)' marker-end='url(#dest1u)'    d='M 784,1072L 600,1072Q 592,1072 592,1064L 592,744Q 592,736 584,736L 576,736' ><title>Fk app_to_surf_data_fk1
+appear_to_surface_data ref appearance ( appearance_id -&gt; id )</title></path>
+<text x='645' y='1067' transform='rotate(0 645,1067)' class='relName'>app_to_surf_data_fk1</text>
+<!-- == Fk 'appear_to_surface_data_app_to_surf_data_fk' == -->
+<path id='appear_to_surface_data_app_to_surf_data_fk'  onmouseover="hghl(['appear_to_surface_data_app_to_surf_data_fk','citydb.appear_to_surface_data.surface_data_id','citydb.surface_data.id'])" onmouseout="uhghl(['appear_to_surface_data_app_to_surf_data_fk','citydb.appear_to_surface_data.surface_data_id','citydb.surface_data.id'])" transform='translate(8,0)' class='unhighlight' d='M 992,1056L 1736,1056Q 1744,1056 1744,1064L 1744,1368Q 1744,1376 1752,1376L 1760,1376' >
+	<title>Fk app_to_surf_data_fk
+appear_to_surface_data ref surface_data ( surface_data_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)' marker-end='url(#dest1u)'    d='M 992,1056L 1736,1056Q 1744,1056 1744,1064L 1744,1368Q 1744,1376 1752,1376L 1760,1376' ><title>Fk app_to_surf_data_fk
+appear_to_surface_data ref surface_data ( surface_data_id -&gt; id )</title></path>
+<text x='1002' y='1051' transform='rotate(0 1002,1051)' class='relName'>app_to_surf_data_fk</text>
+<!-- == Fk 'appearance_appearance_citymodel_fk' == -->
+<path id='appearance_appearance_citymodel_fk'  onmouseover="hghl(['appearance_appearance_citymodel_fk','citydb.appearance.citymodel_id','citydb.citymodel.id'])" onmouseout="uhghl(['appearance_appearance_citymodel_fk','citydb.appearance.citymodel_id','citydb.citymodel.id'])" transform='translate(8,0)' class='unhighlight' d='M 576,848L 744,848Q 752,848 752,840L 752,744Q 752,736 760,736L 768,736' >
+	<title>Fk appearance_citymodel_fk
+appearance ref citymodel ( citymodel_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)' marker-end='url(#dest1u)'  class='dotted '  d='M 576,848L 744,848Q 752,848 752,840L 752,744Q 752,736 760,736L 768,736' ><title>Fk appearance_citymodel_fk
+appearance ref citymodel ( citymodel_id -&gt; id )</title></path>
+<text x='586' y='843' transform='rotate(0 586,843)' class='relName'>appearance_citymodel_fk</text>
+<!-- == Fk 'cityobject_member_cityobject_member_fk1' == -->
+<path id='cityobject_member_cityobject_member_fk1'  onmouseover="hghl(['cityobject_member_cityobject_member_fk1','citydb.cityobject_member.citymodel_id','citydb.citymodel.id'])" onmouseout="uhghl(['cityobject_member_cityobject_member_fk1','citydb.cityobject_member.citymodel_id','citydb.citymodel.id'])" transform='translate(8,0)' class='unhighlight' d='M 1200,832L 1096,832Q 1088,832 1088,824L 1088,744Q 1088,736 1080,736L 1072,736' >
+	<title>Fk cityobject_member_fk1
+cityobject_member ref citymodel ( citymodel_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)' marker-end='url(#dest1u)'    d='M 1200,832L 1096,832Q 1088,832 1088,824L 1088,744Q 1088,736 1080,736L 1072,736' ><title>Fk cityobject_member_fk1
+cityobject_member ref citymodel ( citymodel_id -&gt; id )</title></path>
+<text x='1046' y='827' transform='rotate(0 1046,827)' class='relName'>cityobject_member_fk1</text>
+<!-- == Fk 'codelist_entry_fk_codelist_entry_codelist' == -->
+<path id='codelist_entry_fk_codelist_entry_codelist'  onmouseover="hghl(['codelist_entry_fk_codelist_entry_codelist','citydb.codelist_entry.codelist_id','citydb.codelist.id'])" onmouseout="uhghl(['codelist_entry_fk_codelist_entry_codelist','citydb.codelist_entry.codelist_id','citydb.codelist.id'])" transform='translate(8,0)' class='unhighlight' d='M 224,1024L 24,1024Q 16,1024 16,1016L 16,824Q 16,816 24,816L 32,816' >
+	<title>Fk fk_codelist_entry_codelist
+codelist_entry ref codelist ( codelist_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)' marker-end='url(#dest1u)'    d='M 224,1024L 24,1024Q 16,1024 16,1016L 16,824Q 16,816 24,816L 32,816' ><title>Fk fk_codelist_entry_codelist
+codelist_entry ref codelist ( codelist_id -&gt; id )</title></path>
+<text x='54' y='1019' transform='rotate(0 54,1019)' class='relName'>fk_codelist_entry_codelist</text>
+<!-- == Fk 'feature_feature_objectclass_fk' == -->
+<path id='feature_feature_objectclass_fk'  onmouseover="hghl(['feature_feature_objectclass_fk','citydb.feature.objectclass_id','citydb.objectclass.id'])" onmouseout="uhghl(['feature_feature_objectclass_fk','citydb.feature.objectclass_id','citydb.objectclass.id'])" transform='translate(8,0)' class='unhighlight' d='M 896,128L 1912,128Q 1920,128 1920,136L 1920,152Q 1920,160 1928,160L 1936,160' >
+	<title>Fk feature_objectclass_fk
+feature ref objectclass ( objectclass_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)'     d='M 896,128L 1912,128Q 1920,128 1920,136L 1920,152Q 1920,160 1928,160L 1936,160' ><title>Fk feature_objectclass_fk
+feature ref objectclass ( objectclass_id -&gt; id )</title></path>
+<text x='906' y='123' transform='rotate(0 906,123)' class='relName'>feature_objectclass_fk</text>
+<!-- == Fk 'feature_relation_feature_relation_to_feature_fk' == -->
+<path id='feature_relation_feature_relation_to_feature_fk'  onmouseover="hghl(['feature_relation_feature_relation_to_feature_fk','citydb.feature_relation.to_feature','citydb.feature.id'])" onmouseout="uhghl(['feature_relation_feature_relation_to_feature_fk','citydb.feature_relation.to_feature','citydb.feature.id'])" transform='translate(8,0)' class='unhighlight' d='M 1120,384L 920,384Q 912,384 912,376L 912,120Q 912,112 904,112L 896,112' >
+	<title>Fk feature_relation_to_feature_fk
+feature_relation ref feature ( to_feature -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)' marker-end='url(#dest1u)'    d='M 1120,384L 920,384Q 912,384 912,376L 912,120Q 912,112 904,112L 896,112' ><title>Fk feature_relation_to_feature_fk
+feature_relation ref feature ( to_feature -&gt; id )</title></path>
+<text x='919' y='379' transform='rotate(0 919,379)' class='relName'>feature_relation_to_feature_fk</text>
+<!-- == Fk 'feature_relation_feature_to_feature_relation_fk' == -->
+<path id='feature_relation_feature_to_feature_relation_fk'  onmouseover="hghl(['feature_relation_feature_to_feature_relation_fk','citydb.feature_relation.from_feature','citydb.feature.id'])" onmouseout="uhghl(['feature_relation_feature_to_feature_relation_fk','citydb.feature_relation.from_feature','citydb.feature.id'])" transform='translate(8,0)' class='unhighlight' d='M 1120,368L 1112,368Q 1104,368 1104,376L 1104,376Q 1104,384 1096,384L 1088,384' >
+	<title>Fk feature_to_feature_relation_fk
+feature_relation ref feature ( from_feature -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)'     d='M 1120,368L 1112,368Q 1104,368 1104,376L 1104,376Q 1104,384 1096,384L 1088,384' ><title>Fk feature_to_feature_relation_fk
+feature_relation ref feature ( from_feature -&gt; id )</title></path>
+<text x='919' y='363' transform='rotate(0 919,363)' class='relName'>feature_to_feature_relation_fk</text>
+<!-- == Fk 'implicit_geometry_implicit_geom_brep_fk' == -->
+<path id='implicit_geometry_implicit_geom_brep_fk'  onmouseover="hghl(['implicit_geometry_implicit_geom_brep_fk','citydb.implicit_geometry.relative_brep_id','citydb.surface_geometry.id'])" onmouseout="uhghl(['implicit_geometry_implicit_geom_brep_fk','citydb.implicit_geometry.relative_brep_id','citydb.surface_geometry.id'])" transform='translate(8,0)' class='unhighlight' d='M 768,1520L 1208,1520Q 1216,1520 1216,1512L 1216,1368Q 1216,1360 1224,1360L 1232,1360' >
+	<title>Fk implicit_geom_brep_fk
+implicit_geometry ref surface_geometry ( relative_brep_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)' marker-end='url(#dest1u)'  class='dotted '  d='M 768,1520L 1208,1520Q 1216,1520 1216,1512L 1216,1368Q 1216,1360 1224,1360L 1232,1360' ><title>Fk implicit_geom_brep_fk
+implicit_geometry ref surface_geometry ( relative_brep_id -&gt; id )</title></path>
+<text x='778' y='1515' transform='rotate(0 778,1515)' class='relName'>implicit_geom_brep_fk</text>
+<!-- == Fk 'objectclass_objectclass_ade_fk' == -->
+<path id='objectclass_objectclass_ade_fk'  onmouseover="hghl(['objectclass_objectclass_ade_fk','citydb.objectclass.ade_id','citydb.ade.id'])" onmouseout="uhghl(['objectclass_objectclass_ade_fk','citydb.objectclass.ade_id','citydb.ade.id'])" transform='translate(8,0)' class='unhighlight' d='M 2160,176L 2184,176Q 2192,176 2192,184L 2192,376Q 2192,384 2184,384L 2176,384' >
+	<title>Fk objectclass_ade_fk
+objectclass ref ade ( ade_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)'   class='dotted '  d='M 2160,176L 2184,176Q 2192,176 2192,184L 2192,376Q 2192,384 2184,384L 2176,384' ><title>Fk objectclass_ade_fk
+objectclass ref ade ( ade_id -&gt; id )</title></path>
+<text x='2170' y='171' transform='rotate(0 2170,171)' class='relName'>objectclass_ade_fk</text>
+<!-- == Fk 'objectclass_objectclass_baseclass_fk' == -->
+<path id='objectclass_objectclass_baseclass_fk'  onmouseover="hghl(['objectclass_objectclass_baseclass_fk','citydb.objectclass.baseclass_id','citydb.objectclass.id'])" onmouseout="uhghl(['objectclass_objectclass_baseclass_fk','citydb.objectclass.baseclass_id','citydb.objectclass.id'])" transform='translate(8,0)' class='unhighlight' d='M 1936,192L 1928,192Q 1920,192 1920,184L 1920,176' >
+	<title>Fk objectclass_baseclass_fk
+objectclass ref objectclass ( baseclass_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)'   class='dotted '  d='M 1936,192L 1928,192Q 1920,192 1920,184L 1920,176' ><title>Fk objectclass_baseclass_fk
+objectclass ref objectclass ( baseclass_id -&gt; id )</title></path>
+<text x='1772' y='187' transform='rotate(0 1772,187)' class='relName'>objectclass_baseclass_fk</text>
+<!-- == Fk 'objectclass_objectclass_superclass_fk' == -->
+<path id='objectclass_objectclass_superclass_fk'  onmouseover="hghl(['objectclass_objectclass_superclass_fk','citydb.objectclass.superclass_id','citydb.objectclass.id'])" onmouseout="uhghl(['objectclass_objectclass_superclass_fk','citydb.objectclass.superclass_id','citydb.objectclass.id'])" transform='translate(8,0)' class='unhighlight' d='M 1936,256L 1928,256Q 1920,256 1920,248L 1920,240' >
+	<title>Fk objectclass_superclass_fk
+objectclass ref objectclass ( superclass_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)'   class='dotted '  d='M 1936,256L 1928,256Q 1920,256 1920,248L 1920,240' ><title>Fk objectclass_superclass_fk
+objectclass ref objectclass ( superclass_id -&gt; id )</title></path>
+<text x='1766' y='251' transform='rotate(0 1766,251)' class='relName'>objectclass_superclass_fk</text>
+<!-- == Fk 'property_property_appearance_fk' == -->
+<path id='property_property_appearance_fk'  onmouseover="hghl(['property_property_appearance_fk','citydb.property.val_appearance','citydb.appearance.id'])" onmouseout="uhghl(['property_property_appearance_fk','citydb.property.val_appearance','citydb.appearance.id'])" transform='translate(8,0)' class='unhighlight' d='M 384,448L 584,448Q 592,448 592,456L 592,728Q 592,736 584,736L 576,736' >
+	<title>Fk property_appearance_fk
+property ref appearance ( val_appearance -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)'   class='dotted '  d='M 384,448L 584,448Q 592,448 592,456L 592,728Q 592,736 584,736L 576,736' ><title>Fk property_appearance_fk
+property ref appearance ( val_appearance -&gt; id )</title></path>
+<text x='394' y='443' transform='rotate(0 394,443)' class='relName'>property_appearance_fk</text>
+<!-- == Fk 'property_property_codelist_fk' == -->
+<path id='property_property_codelist_fk'  onmouseover="hghl(['property_property_codelist_fk','citydb.property.val_codelist','citydb.codelist.id'])" onmouseout="uhghl(['property_property_codelist_fk','citydb.property.val_codelist','citydb.codelist.id'])" transform='translate(8,0)' class='unhighlight' d='M 32,528L 24,528Q 16,528 16,536L 16,808Q 16,816 24,816L 32,816' >
+	<title>Fk property_codelist_fk
+property ref codelist ( val_codelist -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)'   class='dotted '  d='M 32,528L 24,528Q 16,528 16,536L 16,808Q 16,816 24,816L 32,816' ><title>Fk property_codelist_fk
+property ref codelist ( val_codelist -&gt; id )</title></path>
+<text x='-100' y='523' transform='rotate(0 -100,523)' class='relName'>property_codelist_fk</text>
+<!-- == Fk 'property_property_feature_fk' == -->
+<path id='property_property_feature_fk'  onmouseover="hghl(['property_property_feature_fk','citydb.property.feature_id','citydb.feature.id'])" onmouseout="uhghl(['property_property_feature_fk','citydb.property.feature_id','citydb.feature.id'])" transform='translate(8,0)' class='unhighlight' d='M 384,128L 536,128Q 544,128 544,120L 544,120Q 544,112 552,112L 560,112' >
+	<title>Fk property_feature_fk
+property ref feature ( feature_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)' marker-end='url(#dest1u)'  class='dotted '  d='M 384,128L 536,128Q 544,128 544,120L 544,120Q 544,112 552,112L 560,112' ><title>Fk property_feature_fk
+property ref feature ( feature_id -&gt; id )</title></path>
+<text x='394' y='123' transform='rotate(0 394,123)' class='relName'>property_feature_fk</text>
+<!-- == Fk 'property_property_val_feature_fk' == -->
+<path id='property_property_val_feature_fk'  onmouseover="hghl(['property_property_val_feature_fk','citydb.property.val_feature','citydb.feature.id'])" onmouseout="uhghl(['property_property_val_feature_fk','citydb.property.val_feature','citydb.feature.id'])" transform='translate(8,0)' class='unhighlight' d='M 384,480L 392,480Q 400,480 400,472L 400,136Q 400,128 408,128L 416,128' >
+	<title>Fk property_val_feature_fk
+property ref feature ( val_feature -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)'   class='dotted '  d='M 384,480L 392,480Q 400,480 400,472L 400,136Q 400,128 408,128L 416,128' ><title>Fk property_val_feature_fk
+property ref feature ( val_feature -&gt; id )</title></path>
+<text x='394' y='475' transform='rotate(0 394,475)' class='relName'>property_val_feature_fk</text>
+<!-- == Fk 'property_property_implicitgeom_id_fk' == -->
+<path id='property_property_implicitgeom_id_fk'  onmouseover="hghl(['property_property_implicitgeom_id_fk','citydb.property.val_implicitgeom_id','citydb.implicit_geometry.id'])" onmouseout="uhghl(['property_property_implicitgeom_id_fk','citydb.property.val_implicitgeom_id','citydb.implicit_geometry.id'])" transform='translate(8,0)' class='unhighlight' d='M 32,384L 8,384Q 0,384 0,392L 0,1448Q 0,1456 8,1456L 464,1456' >
+	<title>Fk property_implicitgeom_id_fk
+property ref implicit_geometry ( val_implicitgeom_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)' marker-end='url(#dest1u)'  class='dotted '  d='M 32,384L 8,384Q 0,384 0,392L 0,1448Q 0,1456 8,1456L 464,1456' ><title>Fk property_implicitgeom_id_fk
+property ref implicit_geometry ( val_implicitgeom_id -&gt; id )</title></path>
+<text x='-157' y='379' transform='rotate(0 -157,379)' class='relName'>property_implicitgeom_id_fk</text>
+<!-- == Fk 'property_property_parent_id_fk' == -->
+<path id='property_property_parent_id_fk'  onmouseover="hghl(['property_property_parent_id_fk','citydb.property.parent_id','citydb.property.id'])" onmouseout="uhghl(['property_property_parent_id_fk','citydb.property.parent_id','citydb.property.id'])" transform='translate(8,0)' class='unhighlight' d='M 32,160L 24,160Q 16,160 16,152L 16,120Q 16,112 24,112L 32,112' >
+	<title>Fk property_parent_id_fk
+property ref property ( parent_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)' marker-end='url(#dest1u)'  class='dotted '  d='M 32,160L 24,160Q 16,160 16,152L 16,120Q 16,112 24,112L 32,112' ><title>Fk property_parent_id_fk
+property ref property ( parent_id -&gt; id )</title></path>
+<text x='-112' y='155' transform='rotate(0 -112,155)' class='relName'>property_parent_id_fk</text>
+<!-- == Fk 'property_property_root_id_fk' == -->
+<path id='property_property_root_id_fk'  onmouseover="hghl(['property_property_root_id_fk','citydb.property.root_id','citydb.property.id'])" onmouseout="uhghl(['property_property_root_id_fk','citydb.property.root_id','citydb.property.id'])" transform='translate(8,0)' class='unhighlight' d='M 32,176L 24,176Q 16,176 16,168L 16,144' >
+	<title>Fk property_root_id_fk
+property ref property ( root_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)'   class='dotted '  d='M 32,176L 24,176Q 16,176 16,168L 16,144' ><title>Fk property_root_id_fk
+property ref property ( root_id -&gt; id )</title></path>
+<text x='-94' y='171' transform='rotate(0 -94,171)' class='relName'>property_root_id_fk</text>
+<!-- == Fk 'property_property_surface_geometry_fk' == -->
+<path id='property_property_surface_geometry_fk'  onmouseover="hghl(['property_property_surface_geometry_fk','citydb.property.val_surface_geometry','citydb.surface_geometry.id'])" onmouseout="uhghl(['property_property_surface_geometry_fk','citydb.property.val_surface_geometry','citydb.surface_geometry.id'])" transform='translate(8,0)' class='unhighlight' d='M 384,368L 536,368Q 544,368 544,376L 544,664Q 544,672 552,672L 1096,672Q 1104,672 1104,680L 1104,1512Q 1104,1520 1112,1520L 1120,1520' >
+	<title>Fk property_surface_geometry_fk
+property ref surface_geometry ( val_surface_geometry -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)'   class='dotted '  d='M 384,368L 536,368Q 544,368 544,376L 544,664Q 544,672 552,672L 1096,672Q 1104,672 1104,680L 1104,1512Q 1104,1520 1112,1520L 1120,1520' ><title>Fk property_surface_geometry_fk
+property ref surface_geometry ( val_surface_geometry -&gt; id )</title></path>
+<text x='394' y='363' transform='rotate(0 394,363)' class='relName'>property_surface_geometry_fk</text>
+<!-- == Fk 'schema_schema_ade_fk' == -->
+<path id='schema_schema_ade_fk'  onmouseover="hghl(['schema_schema_ade_fk','citydb.schema.ade_id','citydb.ade.id'])" onmouseout="uhghl(['schema_schema_ade_fk','citydb.schema.ade_id','citydb.ade.id'])" transform='translate(8,0)' class='unhighlight' d='M 2336,384L 2168,384Q 2160,384 2160,392L 2160,488Q 2160,496 2152,496L 2144,496' >
+	<title>Fk schema_ade_fk
+schema ref ade ( ade_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)' marker-end='url(#dest1u)'  class='dotted '  d='M 2336,384L 2168,384Q 2160,384 2160,392L 2160,488Q 2160,496 2152,496L 2144,496' ><title>Fk schema_ade_fk
+schema ref ade ( ade_id -&gt; id )</title></path>
+<text x='2238' y='379' transform='rotate(0 2238,379)' class='relName'>schema_ade_fk</text>
+<!-- == Fk 'schema_referencing_schema_referencing_fk1' == -->
+<path id='schema_referencing_schema_referencing_fk1'  onmouseover="hghl(['schema_referencing_schema_referencing_fk1','citydb.schema_referencing.referencing_id','citydb.schema.id'])" onmouseout="uhghl(['schema_referencing_schema_referencing_fk1','citydb.schema_referencing.referencing_id','citydb.schema.id'])" transform='translate(8,0)' class='unhighlight' d='M 2848,224L 2680,224Q 2672,224 2672,232L 2672,248Q 2672,256 2664,256L 2656,256' >
+	<title>Fk schema_referencing_fk1
+schema_referencing ref schema ( referencing_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)' marker-end='url(#dest1u)'    d='M 2848,224L 2680,224Q 2672,224 2672,232L 2672,248Q 2672,256 2664,256L 2656,256' ><title>Fk schema_referencing_fk1
+schema_referencing ref schema ( referencing_id -&gt; id )</title></path>
+<text x='2686' y='219' transform='rotate(0 2686,219)' class='relName'>schema_referencing_fk1</text>
+<!-- == Fk 'schema_referencing_schema_referencing_fk2' == -->
+<path id='schema_referencing_schema_referencing_fk2'  onmouseover="hghl(['schema_referencing_schema_referencing_fk2','citydb.schema_referencing.referenced_id','citydb.schema.id'])" onmouseout="uhghl(['schema_referencing_schema_referencing_fk2','citydb.schema_referencing.referenced_id','citydb.schema.id'])" transform='translate(8,0)' class='unhighlight' d='M 2848,240L 2840,240Q 2832,240 2832,232L 2832,232Q 2832,224 2824,224L 2816,224' >
+	<title>Fk schema_referencing_fk2
+schema_referencing ref schema ( referenced_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)'     d='M 2848,240L 2840,240Q 2832,240 2832,232L 2832,232Q 2832,224 2824,224L 2816,224' ><title>Fk schema_referencing_fk2
+schema_referencing ref schema ( referenced_id -&gt; id )</title></path>
+<text x='2686' y='235' transform='rotate(0 2686,235)' class='relName'>schema_referencing_fk2</text>
+<!-- == Fk 'schema_to_objectclass_schema_to_objectclass_fk2' == -->
+<path id='schema_to_objectclass_schema_to_objectclass_fk2'  onmouseover="hghl(['schema_to_objectclass_schema_to_objectclass_fk2','citydb.schema_to_objectclass.objectclass_id','citydb.objectclass.id'])" onmouseout="uhghl(['schema_to_objectclass_schema_to_objectclass_fk2','citydb.schema_to_objectclass.objectclass_id','citydb.objectclass.id'])" transform='translate(8,0)' class='unhighlight' d='M 2576,576L 2184,576Q 2176,576 2176,568L 2176,168Q 2176,160 2168,160L 2160,160' >
+	<title>Fk schema_to_objectclass_fk2
+schema_to_objectclass ref objectclass ( objectclass_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)' marker-end='url(#dest1u)'    d='M 2576,576L 2184,576Q 2176,576 2176,568L 2176,168Q 2176,160 2168,160L 2160,160' ><title>Fk schema_to_objectclass_fk2
+schema_to_objectclass ref objectclass ( objectclass_id -&gt; id )</title></path>
+<text x='2396' y='571' transform='rotate(0 2396,571)' class='relName'>schema_to_objectclass_fk2</text>
+<!-- == Fk 'schema_to_objectclass_schema_to_objectclass_fk1' == -->
+<path id='schema_to_objectclass_schema_to_objectclass_fk1'  onmouseover="hghl(['schema_to_objectclass_schema_to_objectclass_fk1','citydb.schema_to_objectclass.schema_id','citydb.schema.id'])" onmouseout="uhghl(['schema_to_objectclass_schema_to_objectclass_fk1','citydb.schema_to_objectclass.schema_id','citydb.schema.id'])" transform='translate(8,0)' class='unhighlight' d='M 2784,560L 2792,560Q 2800,560 2800,552L 2800,232Q 2800,224 2792,224L 2784,224' >
+	<title>Fk schema_to_objectclass_fk1
+schema_to_objectclass ref schema ( schema_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)'     d='M 2784,560L 2792,560Q 2800,560 2800,552L 2800,232Q 2800,224 2792,224L 2784,224' ><title>Fk schema_to_objectclass_fk1
+schema_to_objectclass ref schema ( schema_id -&gt; id )</title></path>
+<text x='2794' y='555' transform='rotate(0 2794,555)' class='relName'>schema_to_objectclass_fk1</text>
+<!-- == Fk 'surface_data_surface_data_objclass_fk' == -->
+<path id='surface_data_surface_data_objclass_fk'  onmouseover="hghl(['surface_data_surface_data_objclass_fk','citydb.surface_data.objectclass_id','citydb.objectclass.id'])" onmouseout="uhghl(['surface_data_surface_data_objclass_fk','citydb.surface_data.objectclass_id','citydb.objectclass.id'])" transform='translate(8,0)' class='unhighlight' d='M 1760,1488L 1736,1488Q 1728,1488 1728,1480L 1728,440Q 1728,432 1736,432L 2168,432Q 2176,432 2176,424L 2176,416' >
+	<title>Fk surface_data_objclass_fk
+surface_data ref objectclass ( objectclass_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)'     d='M 1760,1488L 1736,1488Q 1728,1488 1728,1480L 1728,440Q 1728,432 1736,432L 2168,432Q 2176,432 2176,424L 2176,416' ><title>Fk surface_data_objclass_fk
+surface_data ref objectclass ( objectclass_id -&gt; id )</title></path>
+<text x='1596' y='1483' transform='rotate(0 1596,1483)' class='relName'>surface_data_objclass_fk</text>
+<!-- == Fk 'surface_data_surface_data_tex_image_fk' == -->
+<path id='surface_data_surface_data_tex_image_fk'  onmouseover="hghl(['surface_data_surface_data_tex_image_fk','citydb.surface_data.tex_image_id','citydb.tex_image.id'])" onmouseout="uhghl(['surface_data_surface_data_tex_image_fk','citydb.surface_data.tex_image_id','citydb.tex_image.id'])" transform='translate(8,0)' class='unhighlight' d='M 2096,1616L 2232,1616Q 2240,1616 2240,1608L 2240,1352Q 2240,1344 2248,1344L 2256,1344' >
+	<title>Fk surface_data_tex_image_fk
+surface_data ref tex_image ( tex_image_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)' marker-end='url(#dest1u)'  class='dotted '  d='M 2096,1616L 2232,1616Q 2240,1616 2240,1608L 2240,1352Q 2240,1344 2248,1344L 2256,1344' ><title>Fk surface_data_tex_image_fk
+surface_data ref tex_image ( tex_image_id -&gt; id )</title></path>
+<text x='2106' y='1611' transform='rotate(0 2106,1611)' class='relName'>surface_data_tex_image_fk</text>
+<!-- == Fk 'surface_geometry_surface_geom_parent_fk' == -->
+<path id='surface_geometry_surface_geom_parent_fk'  onmouseover="hghl(['surface_geometry_surface_geom_parent_fk','citydb.surface_geometry.parent_id','citydb.surface_geometry.id'])" onmouseout="uhghl(['surface_geometry_surface_geom_parent_fk','citydb.surface_geometry.parent_id','citydb.surface_geometry.id'])" transform='translate(8,0)' class='unhighlight' d='M 1232,1408L 1224,1408Q 1216,1408 1216,1400L 1216,1392' >
+	<title>Fk surface_geom_parent_fk
+surface_geometry ref surface_geometry ( parent_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)'   class='dotted '  d='M 1232,1408L 1224,1408Q 1216,1408 1216,1400L 1216,1392' ><title>Fk surface_geom_parent_fk
+surface_geometry ref surface_geometry ( parent_id -&gt; id )</title></path>
+<text x='1070' y='1403' transform='rotate(0 1070,1403)' class='relName'>surface_geom_parent_fk</text>
+<!-- == Fk 'surface_geometry_surface_geom_root_fk' == -->
+<path id='surface_geometry_surface_geom_root_fk'  onmouseover="hghl(['surface_geometry_surface_geom_root_fk','citydb.surface_geometry.root_id','citydb.surface_geometry.id'])" onmouseout="uhghl(['surface_geometry_surface_geom_root_fk','citydb.surface_geometry.root_id','citydb.surface_geometry.id'])" transform='translate(8,0)' class='unhighlight' d='M 1232,1424L 1224,1424Q 1216,1424 1216,1416L 1216,1408' >
+	<title>Fk surface_geom_root_fk
+surface_geometry ref surface_geometry ( root_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src0)'   class='dotted '  d='M 1232,1424L 1224,1424Q 1216,1424 1216,1416L 1216,1408' ><title>Fk surface_geom_root_fk
+surface_geometry ref surface_geometry ( root_id -&gt; id )</title></path>
+<text x='1088' y='1419' transform='rotate(0 1088,1419)' class='relName'>surface_geom_root_fk</text>
+<!-- == Fk 'textureparam_texparam_surface_data_fk' == -->
+<path id='textureparam_texparam_surface_data_fk'  onmouseover="hghl(['textureparam_texparam_surface_data_fk','citydb.textureparam.surface_data_id','citydb.surface_data.id'])" onmouseout="uhghl(['textureparam_texparam_surface_data_fk','citydb.textureparam.surface_data_id','citydb.surface_data.id'])" transform='translate(8,0)' class='unhighlight' d='M 1280,1776L 1736,1776Q 1744,1776 1744,1768L 1744,1384Q 1744,1376 1752,1376L 1760,1376' >
+	<title>Fk texparam_surface_data_fk
+textureparam ref surface_data ( surface_data_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)'     d='M 1280,1776L 1736,1776Q 1744,1776 1744,1768L 1744,1384Q 1744,1376 1752,1376L 1760,1376' ><title>Fk texparam_surface_data_fk
+textureparam ref surface_data ( surface_data_id -&gt; id )</title></path>
+<text x='1290' y='1771' transform='rotate(0 1290,1771)' class='relName'>texparam_surface_data_fk</text>
+<!-- == Fk 'textureparam_texparam_geom_fk' == -->
+<path id='textureparam_texparam_geom_fk'  onmouseover="hghl(['textureparam_texparam_geom_fk','citydb.textureparam.surface_geometry_id','citydb.surface_geometry.id'])" onmouseout="uhghl(['textureparam_texparam_geom_fk','citydb.textureparam.surface_geometry_id','citydb.surface_geometry.id'])" transform='translate(8,0)' class='unhighlight' d='M 1280,1712L 1528,1712Q 1536,1712 1536,1704L 1536,1368Q 1536,1360 1528,1360L 1520,1360' >
+	<title>Fk texparam_geom_fk
+textureparam ref surface_geometry ( surface_geometry_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#src1)' marker-end='url(#dest1u)'    d='M 1280,1712L 1528,1712Q 1536,1712 1536,1704L 1536,1368Q 1536,1360 1528,1360L 1520,1360' ><title>Fk texparam_geom_fk
+textureparam ref surface_geometry ( surface_geometry_id -&gt; id )</title></path>
+<text x='1290' y='1707' transform='rotate(0 1290,1707)' class='relName'>texparam_geom_fk</text>
+<!-- == Table 'ade' == -->
+<rect id='depict_citydb.ade' class='entity' style='stroke:#7676B9' x='1888' y='456' width='256' height='208' />
+<rect class='entity' x='1888' y='456' width='256' height='28' style='stroke:#7676B9; fill:#E6E6F3'/>
+<line class='topLine' style='stroke:#020299;' stroke-linecap='round' x1='1888' y1='456' x2='2144' y2='456'/>
+<a xlink:href='#citydb.ade'><text x='1999' y='475' >ade</text><title>Table citydb.ade</title></a>
+  <use id='nn' x='1890' y='493' xlink:href='#nn'/><use id='pk' x='1890' y='492' xlink:href='#pk'><title>Pk ade_pk ( id ) </title></use><a xlink:href='#citydb.ade_id'><text id='citydb.ade.id' x='1907' y='503' onmouseover="hghl(['objectclass_objectclass_ade_fk','citydb.objectclass.ade_id','schema_schema_ade_fk','citydb.schema.ade_id'])" onmouseout="uhghl(['objectclass_objectclass_ade_fk','citydb.objectclass.ade_id','schema_schema_ade_fk','citydb.schema.ade_id'])">id</text><title>id
+* integer default nextval(&apos;ade_seq&apos;::regclass)</title></a>
+<text x='2128' y='504' text-anchor='end' style='fill:#8B8BA6'>integer</text><a xlink:href='#citydb.ade.id'><use id='ref' x='2132' y='492' xlink:href='#ref'/><title>Referred by objectclass ( ade_id -&gt; id ) 
+Referred by schema ( ade_id -&gt; id ) </title></a>
+  <use id='nn' x='1890' y='509' xlink:href='#nn'/><a xlink:href='#citydb.ade_adeid'><text id='citydb.ade.adeid' x='1907' y='519'>adeid</text><title>adeid
+* varchar(256)</title></a>
+<text x='2128' y='520' text-anchor='end' style='fill:#8B8BA6'>varchar(256)</text>  <use id='nn' x='1890' y='525' xlink:href='#nn'/><a xlink:href='#citydb.ade_name'><text id='citydb.ade.name' x='1907' y='535'>name</text><title>name
+* varchar(1000)</title></a>
+<text x='2128' y='536' text-anchor='end' style='fill:#8B8BA6'>varchar(1000)</text>  <a xlink:href='#citydb.ade_description'><text id='citydb.ade.description' x='1907' y='551'>description</text><title>description
+varchar(4000)</title></a>
+<text x='2128' y='552' text-anchor='end' style='fill:#8B8BA6'>varchar(4000)</text>  <a xlink:href='#citydb.ade_version'><text id='citydb.ade.version' x='1907' y='567'>version</text><title>version
+varchar(50)</title></a>
+<text x='2128' y='568' text-anchor='end' style='fill:#8B8BA6'>varchar(50)</text>  <use id='nn' x='1890' y='573' xlink:href='#nn'/><a xlink:href='#citydb.ade_db_prefix'><text id='citydb.ade.db_prefix' x='1907' y='583'>db_prefix</text><title>db_prefix
+* varchar(10)</title></a>
+<text x='2128' y='584' text-anchor='end' style='fill:#8B8BA6'>varchar(10)</text>  <a xlink:href='#citydb.ade_xml_schemamapping_file'><text id='citydb.ade.xml_schemamapping_file' x='1907' y='599'>xml_schemamapping_file</text><title>xml_schemamapping_file
+text</title></a>
+<text x='2128' y='600' text-anchor='end' style='fill:#8B8BA6'>text</text>  <a xlink:href='#citydb.ade_drop_db_script'><text id='citydb.ade.drop_db_script' x='1907' y='615'>drop_db_script</text><title>drop_db_script
+text</title></a>
+<text x='2128' y='616' text-anchor='end' style='fill:#8B8BA6'>text</text>  <a xlink:href='#citydb.ade_creation_date'><text id='citydb.ade.creation_date' x='1907' y='631'>creation_date</text><title>creation_date
+timestamptz</title></a>
+<text x='2128' y='632' text-anchor='end' style='fill:#8B8BA6'>timestamptz</text>  <a xlink:href='#citydb.ade_creation_person'><text id='citydb.ade.creation_person' x='1907' y='647'>creation_person</text><title>creation_person
+varchar(256)</title></a>
+<text x='2128' y='648' text-anchor='end' style='fill:#8B8BA6'>varchar(256)</text>
+<!-- == Table 'aggregation_info' == -->
+<rect id='depict_citydb.aggregation_info' class='entity' style='stroke:#7676B9' x='1456' y='264' width='320' height='144' />
+<rect class='entity' x='1456' y='264' width='320' height='28' style='stroke:#7676B9; fill:#E6E6F3'/>
+<line class='topLine' style='stroke:#020299;' stroke-linecap='round' x1='1456' y1='264' x2='1776' y2='264'/>
+<a xlink:href='#citydb.aggregation_info'><text x='1553' y='283' >aggregation_info</text><title>Table citydb.aggregation_info</title></a>
+  <use id='nn' x='1458' y='301' xlink:href='#nn'/><use id='pk' x='1458' y='300' xlink:href='#pk'><title>Pk aggregation_info_pk ( child_id, parent_id, join_table_or_column_name ) </title></use><a xlink:href='#citydb.aggregation_info_child_id'><text id='citydb.aggregation_info.child_id' x='1475' y='311' onmouseover="hghl(['aggregation_info_aggregation_info_fk1','citydb.objectclass.id'])" onmouseout="uhghl(['aggregation_info_aggregation_info_fk1','citydb.objectclass.id'])">child_id</text><title>child_id
+* integer</title></a>
+<text x='1760' y='312' text-anchor='end' style='fill:#8B8BA6'>integer</text><a xlink:href='#citydb.aggregation_info.child_id'><use id='fk' x='1764' y='300' xlink:href='#fk'/><title>References objectclass ( child_id -&gt; id ) </title></a>
+  <use id='nn' x='1458' y='317' xlink:href='#nn'/><use id='pk' x='1458' y='316' xlink:href='#pk'><title>Pk aggregation_info_pk ( child_id, parent_id, join_table_or_column_name ) </title></use><a xlink:href='#citydb.aggregation_info_parent_id'><text id='citydb.aggregation_info.parent_id' x='1475' y='327' onmouseover="hghl(['aggregation_info_aggregation_info_fk2','citydb.objectclass.id'])" onmouseout="uhghl(['aggregation_info_aggregation_info_fk2','citydb.objectclass.id'])">parent_id</text><title>parent_id
+* integer</title></a>
+<text x='1760' y='328' text-anchor='end' style='fill:#8B8BA6'>integer</text><a xlink:href='#citydb.aggregation_info.parent_id'><use id='fk' x='1764' y='316' xlink:href='#fk'/><title>References objectclass ( parent_id -&gt; id ) </title></a>
+  <use id='nn' x='1458' y='333' xlink:href='#nn'/><use id='pk' x='1458' y='332' xlink:href='#pk'><title>Pk aggregation_info_pk ( child_id, parent_id, join_table_or_column_name ) </title></use><a xlink:href='#citydb.aggregation_info_join_table_or_column_name'><text id='citydb.aggregation_info.join_table_or_column_name' x='1475' y='343'>join_table_or_column_name</text><title>join_table_or_column_name
+* varchar(30)</title></a>
+<text x='1760' y='344' text-anchor='end' style='fill:#8B8BA6'>varchar(30)</text>  <a xlink:href='#citydb.aggregation_info_min_occurs'><text id='citydb.aggregation_info.min_occurs' x='1475' y='359'>min_occurs</text><title>min_occurs
+integer</title></a>
+<text x='1760' y='360' text-anchor='end' style='fill:#8B8BA6'>integer</text>  <a xlink:href='#citydb.aggregation_info_max_occurs'><text id='citydb.aggregation_info.max_occurs' x='1475' y='375'>max_occurs</text><title>max_occurs
+integer</title></a>
+<text x='1760' y='376' text-anchor='end' style='fill:#8B8BA6'>integer</text>  <a xlink:href='#citydb.aggregation_info_is_composite'><text id='citydb.aggregation_info.is_composite' x='1475' y='391'>is_composite</text><title>is_composite
+numeric</title></a>
+<text x='1760' y='392' text-anchor='end' style='fill:#8B8BA6'>numeric</text>
+<!-- == Table 'appear_to_surface_data' == -->
+<rect id='depict_citydb.appear_to_surface_data' class='entity' style='stroke:#B99C76' x='800' y='1016' width='192' height='80' />
+<rect class='entity' x='800' y='1016' width='192' height='28' style='stroke:#B99C76; fill:#F3EDE6'/>
+<line class='topLine' style='stroke:#995802;' stroke-linecap='round' x1='800' y1='1016' x2='992' y2='1016'/>
+<a xlink:href='#citydb.appear_to_surface_data'><text x='808' y='1035' >appear_to_surface_data</text><title>Table citydb.appear_to_surface_data</title></a>
+  <use id='nn' x='802' y='1053' xlink:href='#nn'/><use id='pk' x='802' y='1052' xlink:href='#pk'><title>Pk appear_to_surface_data_pk ( surface_data_id, appearance_id ) app_to_surf_data_fkx ( surface_data_id ) </title></use><a xlink:href='#citydb.appear_to_surface_data_surface_data_id'><text id='citydb.appear_to_surface_data.surface_data_id' x='819' y='1063' onmouseover="hghl(['appear_to_surface_data_app_to_surf_data_fk','citydb.surface_data.id'])" onmouseout="uhghl(['appear_to_surface_data_app_to_surf_data_fk','citydb.surface_data.id'])">surface_data_id</text><title>surface_data_id
+* bigint</title></a>
+<text x='976' y='1064' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.appear_to_surface_data.surface_data_id'><use id='fk' x='980' y='1052' xlink:href='#fk'/><title>References surface_data ( surface_data_id -&gt; id ) </title></a>
+  <use id='nn' x='802' y='1069' xlink:href='#nn'/><use id='pk' x='802' y='1068' xlink:href='#pk'><title>Pk appear_to_surface_data_pk ( surface_data_id, appearance_id ) app_to_surf_data_fkx1 ( appearance_id ) </title></use><a xlink:href='#citydb.appear_to_surface_data_appearance_id'><text id='citydb.appear_to_surface_data.appearance_id' x='819' y='1079' onmouseover="hghl(['appear_to_surface_data_app_to_surf_data_fk1','citydb.appearance.id'])" onmouseout="uhghl(['appear_to_surface_data_app_to_surf_data_fk1','citydb.appearance.id'])">appearance_id</text><title>appearance_id
+* bigint</title></a>
+<text x='976' y='1080' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.appear_to_surface_data.appearance_id'><use id='fk' x='980' y='1068' xlink:href='#fk'/><title>References appearance ( appearance_id -&gt; id ) </title></a>
+
+<!-- == Table 'appearance' == -->
+<rect id='depict_citydb.appearance' class='entity' style='stroke:#B99C76' x='304' y='696' width='272' height='192' />
+<rect class='entity' x='304' y='696' width='272' height='28' style='stroke:#B99C76; fill:#F3EDE6'/>
+<line class='topLine' style='stroke:#995802;' stroke-linecap='round' x1='304' y1='696' x2='576' y2='696'/>
+<a xlink:href='#citydb.appearance'><text x='394' y='715' >appearance</text><title>Table citydb.appearance</title></a>
+  <use id='nn' x='306' y='733' xlink:href='#nn'/><use id='pk' x='306' y='732' xlink:href='#pk'><title>Pk appearance_pk ( id ) </title></use><a xlink:href='#citydb.appearance_id'><text id='citydb.appearance.id' x='323' y='743' onmouseover="hghl(['appear_to_surface_data_app_to_surf_data_fk1','citydb.appear_to_surface_data.appearance_id','property_property_appearance_fk','citydb.property.val_appearance'])" onmouseout="uhghl(['appear_to_surface_data_app_to_surf_data_fk1','citydb.appear_to_surface_data.appearance_id','property_property_appearance_fk','citydb.property.val_appearance'])">id</text><title>id
+* bigint default nextval(&apos;appearance_seq&apos;::regclass)</title></a>
+<text x='560' y='744' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.appearance.id'><use id='ref' x='564' y='732' xlink:href='#ref'/><title>Referred by appear_to_surface_data ( appearance_id -&gt; id ) 
+Referred by property ( val_appearance -&gt; id ) </title></a>
+  <use id='idx' x='306' y='748' xlink:href='#idx'><title>appearance_inx ( gmlid, gmlid_codespace ) </title></use><a xlink:href='#citydb.appearance_gmlid'><text id='citydb.appearance.gmlid' x='323' y='759'>gmlid</text><title>gmlid
+varchar(256)</title></a>
+<text x='560' y='760' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <use id='idx' x='306' y='764' xlink:href='#idx'><title>appearance_inx ( gmlid, gmlid_codespace ) </title></use><a xlink:href='#citydb.appearance_gmlid_codespace'><text id='citydb.appearance.gmlid_codespace' x='323' y='775'>gmlid_codespace</text><title>gmlid_codespace
+varchar(1000)</title></a>
+<text x='560' y='776' text-anchor='end' style='fill:#A69A8B'>varchar(1000)</text>  <a xlink:href='#citydb.appearance_name'><text id='citydb.appearance.name' x='323' y='791'>name</text><title>name
+varchar(1000)</title></a>
+<text x='560' y='792' text-anchor='end' style='fill:#A69A8B'>varchar(1000)</text>  <a xlink:href='#citydb.appearance_name_codespace'><text id='citydb.appearance.name_codespace' x='323' y='807'>name_codespace</text><title>name_codespace
+varchar(4000)</title></a>
+<text x='560' y='808' text-anchor='end' style='fill:#A69A8B'>varchar(4000)</text>  <a xlink:href='#citydb.appearance_description'><text id='citydb.appearance.description' x='323' y='823'>description</text><title>description
+varchar(4000)</title></a>
+<text x='560' y='824' text-anchor='end' style='fill:#A69A8B'>varchar(4000)</text>  <use id='idx' x='306' y='828' xlink:href='#idx'><title>appearance_theme_inx ( theme ) </title></use><a xlink:href='#citydb.appearance_theme'><text id='citydb.appearance.theme' x='323' y='839'>theme</text><title>theme
+varchar(256)</title></a>
+<text x='560' y='840' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <use id='idx' x='306' y='844' xlink:href='#idx'><title>appearance_citymodel_fkx ( citymodel_id ) </title></use><a xlink:href='#citydb.appearance_citymodel_id'><text id='citydb.appearance.citymodel_id' x='323' y='855' onmouseover="hghl(['appearance_appearance_citymodel_fk','citydb.citymodel.id'])" onmouseout="uhghl(['appearance_appearance_citymodel_fk','citydb.citymodel.id'])">citymodel_id</text><title>citymodel_id
+bigint</title></a>
+<text x='560' y='856' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.appearance.citymodel_id'><use id='fk' x='564' y='844' xlink:href='#fk'/><title>References citymodel ( citymodel_id -&gt; id ) </title></a>
+  <use id='idx' x='306' y='860' xlink:href='#idx'><title>appearance_cityobject_fkx ( cityobject_id ) </title></use><a xlink:href='#citydb.appearance_cityobject_id'><text id='citydb.appearance.cityobject_id' x='323' y='871'>cityobject_id</text><title>cityobject_id
+bigint</title></a>
+<text x='560' y='872' text-anchor='end' style='fill:#A69A8B'>bigint</text>
+<!-- == Table 'citymodel' == -->
+<rect id='depict_citydb.citymodel' class='entity' style='stroke:#B99C76' x='784' y='696' width='288' height='256' />
+<rect class='entity' x='784' y='696' width='288' height='28' style='stroke:#B99C76; fill:#F3EDE6'/>
+<line class='topLine' style='stroke:#995802;' stroke-linecap='round' x1='784' y1='696' x2='1072' y2='696'/>
+<a xlink:href='#citydb.citymodel'><text x='889' y='715' >citymodel</text><title>Table citydb.citymodel</title></a>
+  <use id='nn' x='786' y='733' xlink:href='#nn'/><use id='pk' x='786' y='732' xlink:href='#pk'><title>Pk citymodel_pk ( id ) </title></use><a xlink:href='#citydb.citymodel_id'><text id='citydb.citymodel.id' x='803' y='743' onmouseover="hghl(['appearance_appearance_citymodel_fk','citydb.appearance.citymodel_id','cityobject_member_cityobject_member_fk1','citydb.cityobject_member.citymodel_id'])" onmouseout="uhghl(['appearance_appearance_citymodel_fk','citydb.appearance.citymodel_id','cityobject_member_cityobject_member_fk1','citydb.cityobject_member.citymodel_id'])">id</text><title>id
+* bigint default nextval(&apos;citymodel_seq&apos;::regclass)</title></a>
+<text x='1056' y='744' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.citymodel.id'><use id='ref' x='1060' y='732' xlink:href='#ref'/><title>Referred by appearance ( citymodel_id -&gt; id ) 
+Referred by cityobject_member ( citymodel_id -&gt; id ) </title></a>
+  <use id='idx' x='786' y='748' xlink:href='#idx'><title>citymodel_inx ( gmlid, gmlid_codespace ) </title></use><a xlink:href='#citydb.citymodel_gmlid'><text id='citydb.citymodel.gmlid' x='803' y='759'>gmlid</text><title>gmlid
+varchar(256)</title></a>
+<text x='1056' y='760' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <use id='idx' x='786' y='764' xlink:href='#idx'><title>citymodel_inx ( gmlid, gmlid_codespace ) </title></use><a xlink:href='#citydb.citymodel_gmlid_codespace'><text id='citydb.citymodel.gmlid_codespace' x='803' y='775'>gmlid_codespace</text><title>gmlid_codespace
+varchar(1000)</title></a>
+<text x='1056' y='776' text-anchor='end' style='fill:#A69A8B'>varchar(1000)</text>  <a xlink:href='#citydb.citymodel_name'><text id='citydb.citymodel.name' x='803' y='791'>name</text><title>name
+varchar(1000)</title></a>
+<text x='1056' y='792' text-anchor='end' style='fill:#A69A8B'>varchar(1000)</text>  <a xlink:href='#citydb.citymodel_name_codespace'><text id='citydb.citymodel.name_codespace' x='803' y='807'>name_codespace</text><title>name_codespace
+varchar(4000)</title></a>
+<text x='1056' y='808' text-anchor='end' style='fill:#A69A8B'>varchar(4000)</text>  <a xlink:href='#citydb.citymodel_description'><text id='citydb.citymodel.description' x='803' y='823'>description</text><title>description
+varchar(4000)</title></a>
+<text x='1056' y='824' text-anchor='end' style='fill:#A69A8B'>varchar(4000)</text>  <use id='idx' x='786' y='828' xlink:href='#idx'><title>citymodel_envelope_spx ( envelope ) </title></use><a xlink:href='#citydb.citymodel_envelope'><text id='citydb.citymodel.envelope' x='803' y='839'>envelope</text><title>envelope
+geometry</title></a>
+<text x='1056' y='840' text-anchor='end' style='fill:#A69A8B'>geometry</text>  <a xlink:href='#citydb.citymodel_creation_date'><text id='citydb.citymodel.creation_date' x='803' y='855'>creation_date</text><title>creation_date
+timestamptz</title></a>
+<text x='1056' y='856' text-anchor='end' style='fill:#A69A8B'>timestamptz</text>  <a xlink:href='#citydb.citymodel_termination_date'><text id='citydb.citymodel.termination_date' x='803' y='871'>termination_date</text><title>termination_date
+timestamptz</title></a>
+<text x='1056' y='872' text-anchor='end' style='fill:#A69A8B'>timestamptz</text>  <a xlink:href='#citydb.citymodel_last_modification_date'><text id='citydb.citymodel.last_modification_date' x='803' y='887'>last_modification_date</text><title>last_modification_date
+timestamptz</title></a>
+<text x='1056' y='888' text-anchor='end' style='fill:#A69A8B'>timestamptz</text>  <a xlink:href='#citydb.citymodel_updating_person'><text id='citydb.citymodel.updating_person' x='803' y='903'>updating_person</text><title>updating_person
+varchar(256)</title></a>
+<text x='1056' y='904' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <a xlink:href='#citydb.citymodel_reason_for_update'><text id='citydb.citymodel.reason_for_update' x='803' y='919'>reason_for_update</text><title>reason_for_update
+varchar(4000)</title></a>
+<text x='1056' y='920' text-anchor='end' style='fill:#A69A8B'>varchar(4000)</text>  <a xlink:href='#citydb.citymodel_lineage'><text id='citydb.citymodel.lineage' x='803' y='935'>lineage</text><title>lineage
+varchar(256)</title></a>
+<text x='1056' y='936' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>
+<!-- == Table 'cityobject_member' == -->
+<rect id='depict_citydb.cityobject_member' class='entity' style='stroke:#B99C76' x='1216' y='792' width='176' height='80' />
+<rect class='entity' x='1216' y='792' width='176' height='28' style='stroke:#B99C76; fill:#F3EDE6'/>
+<line class='topLine' style='stroke:#995802;' stroke-linecap='round' x1='1216' y1='792' x2='1392' y2='792'/>
+<a xlink:href='#citydb.cityobject_member'><text x='1232' y='811' >cityobject_member</text><title>Table citydb.cityobject_member</title></a>
+  <use id='nn' x='1218' y='829' xlink:href='#nn'/><use id='pk' x='1218' y='828' xlink:href='#pk'><title>Pk cityobject_member_pk ( citymodel_id, cityobject_id ) cityobject_member_fkx1 ( citymodel_id ) </title></use><a xlink:href='#citydb.cityobject_member_citymodel_id'><text id='citydb.cityobject_member.citymodel_id' x='1235' y='839' onmouseover="hghl(['cityobject_member_cityobject_member_fk1','citydb.citymodel.id'])" onmouseout="uhghl(['cityobject_member_cityobject_member_fk1','citydb.citymodel.id'])">citymodel_id</text><title>citymodel_id
+* bigint</title></a>
+<text x='1376' y='840' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.cityobject_member.citymodel_id'><use id='fk' x='1380' y='828' xlink:href='#fk'/><title>References citymodel ( citymodel_id -&gt; id ) </title></a>
+  <use id='nn' x='1218' y='845' xlink:href='#nn'/><use id='pk' x='1218' y='844' xlink:href='#pk'><title>Pk cityobject_member_pk ( citymodel_id, cityobject_id ) cityobject_member_fkx ( cityobject_id ) </title></use><a xlink:href='#citydb.cityobject_member_cityobject_id'><text id='citydb.cityobject_member.cityobject_id' x='1235' y='855'>cityobject_id</text><title>cityobject_id
+* bigint</title></a>
+<text x='1376' y='856' text-anchor='end' style='fill:#A69A8B'>bigint</text>
+<!-- == Table 'codelist' == -->
+<rect id='depict_citydb.codelist' class='entity' style='stroke:#B99C76' x='48' y='776' width='224' height='112' />
+<rect class='entity' x='48' y='776' width='224' height='28' style='stroke:#B99C76; fill:#F3EDE6'/>
+<line class='topLine' style='stroke:#995802;' stroke-linecap='round' x1='48' y1='776' x2='272' y2='776'/>
+<a xlink:href='#citydb.codelist'><text x='129' y='795' >codelist</text><title>Table citydb.codelist
+added at 3DCityDB Version 5.0 for CityGML 3.0</title></a>
+  <use id='nn' x='50' y='813' xlink:href='#nn'/><use id='pk' x='50' y='812' xlink:href='#pk'><title>Pk codelist_pkey ( id ) </title></use><a xlink:href='#citydb.codelist_id'><text id='citydb.codelist.id' x='67' y='823' onmouseover="hghl(['codelist_entry_fk_codelist_entry_codelist','citydb.codelist_entry.codelist_id','property_property_codelist_fk','citydb.property.val_codelist'])" onmouseout="uhghl(['codelist_entry_fk_codelist_entry_codelist','citydb.codelist_entry.codelist_id','property_property_codelist_fk','citydb.property.val_codelist'])">id</text><title>id
+* bigint default nextval(&apos;codelist_id_seq&apos;::regclass)</title></a>
+<text x='256' y='824' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.codelist.id'><use id='ref' x='260' y='812' xlink:href='#ref'/><title>Referred by codelist_entry ( codelist_id -&gt; id ) 
+Referred by property ( val_codelist -&gt; id ) </title></a>
+  <use id='unq' x='50' y='828' xlink:href='#unq'><title>Unq codelist_codelist_type_unique ( codelist_type ) codelist_codelist_type_btr ( codelist_type ) </title></use><a xlink:href='#citydb.codelist_codelist_type'><text id='citydb.codelist.codelist_type' x='67' y='839'>codelist_type</text><title>codelist_type
+varchar(256)</title></a>
+<text x='256' y='840' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <a xlink:href='#citydb.codelist_url'><text id='citydb.codelist.url' x='67' y='855'>url</text><title>url
+varchar(4000)</title></a>
+<text x='256' y='856' text-anchor='end' style='fill:#A69A8B'>varchar(4000)</text>  <a xlink:href='#citydb.codelist_mimetype'><text id='citydb.codelist.mimetype' x='67' y='871'>mimetype</text><title>mimetype
+varchar(256)</title></a>
+<text x='256' y='872' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>
+<!-- == Table 'codelist_entry' == -->
+<rect id='depict_citydb.codelist_entry' class='entity' style='stroke:#B99C76' x='240' y='968' width='208' height='112' />
+<rect class='entity' x='240' y='968' width='208' height='28' style='stroke:#B99C76; fill:#F3EDE6'/>
+<line class='topLine' style='stroke:#995802;' stroke-linecap='round' x1='240' y1='968' x2='448' y2='968'/>
+<a xlink:href='#citydb.codelist_entry'><text x='291' y='987' >codelist_entry</text><title>Table citydb.codelist_entry
+added at 3DCityDB Version 5.0 for CityGML 3.0</title></a>
+  <use id='nn' x='242' y='1005' xlink:href='#nn'/><use id='pk' x='242' y='1004' xlink:href='#pk'><title>Pk codelist_entry_pkey ( id ) </title></use><a xlink:href='#citydb.codelist_entry_id'><text id='citydb.codelist_entry.id' x='259' y='1015'>id</text><title>id
+* bigint default nextval(&apos;codelist_entry_id_seq&apos;::regclass)</title></a>
+<text x='432' y='1016' text-anchor='end' style='fill:#A69A8B'>bigint</text>  <use id='nn' x='242' y='1021' xlink:href='#nn'/><use id='unq' x='242' y='1020' xlink:href='#unq'><title>Unq unique_codelist_entry_codelist_id_code ( codelist_id, code ) codelist_entry_codelist_id_idx ( codelist_id ) </title></use><a xlink:href='#citydb.codelist_entry_codelist_id'><text id='citydb.codelist_entry.codelist_id' x='259' y='1031' onmouseover="hghl(['codelist_entry_fk_codelist_entry_codelist','citydb.codelist.id'])" onmouseout="uhghl(['codelist_entry_fk_codelist_entry_codelist','citydb.codelist.id'])">codelist_id</text><title>codelist_id
+* integer</title></a>
+<text x='432' y='1032' text-anchor='end' style='fill:#A69A8B'>integer</text><a xlink:href='#citydb.codelist_entry.codelist_id'><use id='fk' x='436' y='1020' xlink:href='#fk'/><title>References codelist ( codelist_id -&gt; id ) </title></a>
+  <use id='unq' x='242' y='1036' xlink:href='#unq'><title>Unq unique_codelist_entry_codelist_id_code ( codelist_id, code ) </title></use><a xlink:href='#citydb.codelist_entry_code'><text id='citydb.codelist_entry.code' x='259' y='1047'>code</text><title>code
+varchar(256)</title></a>
+<text x='432' y='1048' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <a xlink:href='#citydb.codelist_entry_definition'><text id='citydb.codelist_entry.definition' x='259' y='1063'>definition</text><title>definition
+varchar(256)</title></a>
+<text x='432' y='1064' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>
+<!-- == Table 'database_srs' == -->
+<rect id='depict_citydb.database_srs' class='entity' style='stroke:#7690B9' x='1920' y='872' width='256' height='80' />
+<rect class='entity' x='1920' y='872' width='256' height='28' style='stroke:#7690B9; fill:#E6EBF3'/>
+<line class='topLine' style='stroke:#023C99;' stroke-linecap='round' x1='1920' y1='872' x2='2176' y2='872'/>
+<a xlink:href='#citydb.database_srs'><text x='1998' y='891' >database_srs</text><title>Table citydb.database_srs</title></a>
+  <use id='nn' x='1922' y='909' xlink:href='#nn'/><use id='pk' x='1922' y='908' xlink:href='#pk'><title>Pk database_srs_pk ( srid ) </title></use><a xlink:href='#citydb.database_srs_srid'><text id='citydb.database_srs.srid' x='1939' y='919'>srid</text><title>srid
+* integer</title></a>
+<text x='2160' y='920' text-anchor='end' style='fill:#8B95A6'>integer</text>  <a xlink:href='#citydb.database_srs_gml_srs_name'><text id='citydb.database_srs.gml_srs_name' x='1939' y='935'>gml_srs_name</text><title>gml_srs_name
+varchar(1000)</title></a>
+<text x='2160' y='936' text-anchor='end' style='fill:#8B95A6'>varchar(1000)</text>
+<!-- == Table 'feature' == -->
+<rect id='depict_citydb.feature' class='entity' style='stroke:#B99C76' x='576' y='72' width='320' height='336' />
+<rect class='entity' x='576' y='72' width='320' height='28' style='stroke:#B99C76; fill:#F3EDE6'/>
+<line class='topLine' style='stroke:#995802;' stroke-linecap='round' x1='576' y1='72' x2='896' y2='72'/>
+<a xlink:href='#citydb.feature'><text x='706' y='91' >feature</text><title>Table citydb.feature
+added at 3DCityDB Version 5.0 for CityGML 3.0</title></a>
+  <use id='nn' x='578' y='109' xlink:href='#nn'/><use id='pk' x='578' y='108' xlink:href='#pk'><title>Pk feature_pkey ( id ) </title></use><a xlink:href='#citydb.feature_id'><text id='citydb.feature.id' x='595' y='119' onmouseover="hghl(['feature_relation_feature_relation_to_feature_fk','citydb.feature_relation.to_feature','feature_relation_feature_to_feature_relation_fk','citydb.feature_relation.from_feature','property_property_feature_fk','citydb.property.feature_id','property_property_val_feature_fk','citydb.property.val_feature'])" onmouseout="uhghl(['feature_relation_feature_relation_to_feature_fk','citydb.feature_relation.to_feature','feature_relation_feature_to_feature_relation_fk','citydb.feature_relation.from_feature','property_property_feature_fk','citydb.property.feature_id','property_property_val_feature_fk','citydb.property.val_feature'])">id</text><title>id
+* bigint default nextval(&apos;feature_id_seq&apos;::regclass)
+Primary key / surrogate</title></a>
+<text x='880' y='120' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.feature.id'><use id='ref' x='884' y='108' xlink:href='#ref'/><title>Referred by feature_relation ( to_feature -&gt; id ) 
+Referred by feature_relation ( from_feature -&gt; id ) 
+Referred by property ( feature_id -&gt; id ) 
+Referred by property ( val_feature -&gt; id ) </title></a>
+  <use id='nn' x='578' y='125' xlink:href='#nn'/><use id='idx' x='578' y='124' xlink:href='#idx'><title>feature_objectclass_id_idx ( objectclass_id ) </title></use><a xlink:href='#citydb.feature_objectclass_id'><text id='citydb.feature.objectclass_id' x='595' y='135' onmouseover="hghl(['feature_feature_objectclass_fk','citydb.objectclass.id'])" onmouseout="uhghl(['feature_feature_objectclass_fk','citydb.objectclass.id'])">objectclass_id</text><title>objectclass_id
+* integer
+Foreign key to OBJECTCLASS(id) - CityGML feature type</title></a>
+<text x='880' y='136' text-anchor='end' style='fill:#A69A8B'>integer</text><a xlink:href='#citydb.feature.objectclass_id'><use id='fk' x='884' y='124' xlink:href='#fk'/><title>References objectclass ( objectclass_id -&gt; id ) </title></a>
+  <use id='idx' x='578' y='140' xlink:href='#idx'><title>feature_is_toplevel_btr ( is_toplevel ) </title></use><a xlink:href='#citydb.feature_is_toplevel'><text id='citydb.feature.is_toplevel' x='595' y='151'>is_toplevel</text><title>is_toplevel
+boolean
+true, if this feature is a toplevel feature</title></a>
+<text x='880' y='152' text-anchor='end' style='fill:#A69A8B'>boolean</text>  <a xlink:href='#citydb.feature_space_or_boundary_type'><text id='citydb.feature.space_or_boundary_type' x='595' y='167'>space_or_boundary_type</text><title>space_or_boundary_type
+varchar(256)
+name of the most specific CityGML abstract space or space boundary class (e.g. AbstractOccupiedSpace)</title></a>
+<text x='880' y='168' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <use id='unq' x='578' y='172' xlink:href='#unq'><title>Unq feature_gmlid_unique ( gmlid ) feature_gmlid_btr ( gmlid ) </title></use><a xlink:href='#citydb.feature_gmlid'><text id='citydb.feature.gmlid' x='595' y='183'>gmlid</text><title>gmlid
+varchar(256)</title></a>
+<text x='880' y='184' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <a xlink:href='#citydb.feature_gmlid_namespace'><text id='citydb.feature.gmlid_namespace' x='595' y='199'>gmlid_namespace</text><title>gmlid_namespace
+varchar(256)</title></a>
+<text x='880' y='200' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <use id='idx' x='578' y='204' xlink:href='#idx'><title>feature_identifier ( identifier ) </title></use><a xlink:href='#citydb.feature_identifier'><text id='citydb.feature.identifier' x='595' y='215'>identifier</text><title>identifier
+varchar(256)</title></a>
+<text x='880' y='216' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <a xlink:href='#citydb.feature_identifier_namespace'><text id='citydb.feature.identifier_namespace' x='595' y='231'>identifier_namespace</text><title>identifier_namespace
+varchar(256)</title></a>
+<text x='880' y='232' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <use id='idx' x='578' y='236' xlink:href='#idx'><title>feature_envelope_gist ( envelope ) </title></use><a xlink:href='#citydb.feature_envelope'><text id='citydb.feature.envelope' x='595' y='247'>envelope</text><title>envelope
+geometry
+Bounding volume of the feature (if it has a geometry)</title></a>
+<text x='880' y='248' text-anchor='end' style='fill:#A69A8B'>geometry</text>  <a xlink:href='#citydb.feature_last_modification_date'><text id='citydb.feature.last_modification_date' x='595' y='263'>last_modification_date</text><title>last_modification_date
+timestamptz
+Adopted from 3DCityDB Version 4</title></a>
+<text x='880' y='264' text-anchor='end' style='fill:#A69A8B'>timestamptz</text>  <a xlink:href='#citydb.feature_updating_person'><text id='citydb.feature.updating_person' x='595' y='279'>updating_person</text><title>updating_person
+varchar(256)
+Adopted from 3DCityDB Version 4</title></a>
+<text x='880' y='280' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <a xlink:href='#citydb.feature_reason_for_update'><text id='citydb.feature.reason_for_update' x='595' y='295'>reason_for_update</text><title>reason_for_update
+varchar(4000)
+Adopted from 3DCityDB Version 4</title></a>
+<text x='880' y='296' text-anchor='end' style='fill:#A69A8B'>varchar(4000)</text>  <a xlink:href='#citydb.feature_lineage'><text id='citydb.feature.lineage' x='595' y='311'>lineage</text><title>lineage
+varchar(256)
+Adopted from 3DCityDB Version 4</title></a>
+<text x='880' y='312' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <a xlink:href='#citydb.feature_xml_source'><text id='citydb.feature.xml_source' x='595' y='327'>xml_source</text><title>xml_source
+text
+Adopted from 3DCityDB Version 4 - has this been used in the past?</title></a>
+<text x='880' y='328' text-anchor='end' style='fill:#A69A8B'>text</text>  <a xlink:href='#citydb.feature_creation_date'><text id='citydb.feature.creation_date' x='595' y='343'>creation_date</text><title>creation_date
+timestamptz</title></a>
+<text x='880' y='344' text-anchor='end' style='fill:#A69A8B'>timestamptz</text>  <a xlink:href='#citydb.feature_termination_date'><text id='citydb.feature.termination_date' x='595' y='359'>termination_date</text><title>termination_date
+timestamptz</title></a>
+<text x='880' y='360' text-anchor='end' style='fill:#A69A8B'>timestamptz</text>  <a xlink:href='#citydb.feature_valid_from'><text id='citydb.feature.valid_from' x='595' y='375'>valid_from</text><title>valid_from
+timestamptz</title></a>
+<text x='880' y='376' text-anchor='end' style='fill:#A69A8B'>timestamptz</text>  <a xlink:href='#citydb.feature_valid_to'><text id='citydb.feature.valid_to' x='595' y='391'>valid_to</text><title>valid_to
+timestamptz</title></a>
+<text x='880' y='392' text-anchor='end' style='fill:#A69A8B'>timestamptz</text>
+<!-- == Table 'feature_relation' == -->
+<rect id='depict_citydb.feature_relation' class='entity' style='stroke:#B99C76' x='1136' y='312' width='288' height='160' />
+<rect class='entity' x='1136' y='312' width='288' height='28' style='stroke:#B99C76; fill:#F3EDE6'/>
+<line class='topLine' style='stroke:#995802;' stroke-linecap='round' x1='1136' y1='312' x2='1424' y2='312'/>
+<a xlink:href='#citydb.feature_relation'><text x='1220' y='331' >feature_relation</text><title>Table citydb.feature_relation
+added at 3DCityDB Version 5.0 for CityGML 3.0</title></a>
+  <use id='nn' x='1138' y='349' xlink:href='#nn'/><use id='pk' x='1138' y='348' xlink:href='#pk'><title>Pk feature_relation_pkey ( id ) </title></use><a xlink:href='#citydb.feature_relation_id'><text id='citydb.feature_relation.id' x='1155' y='359'>id</text><title>id
+* bigint default nextval(&apos;feature_relation_id_seq&apos;::regclass)</title></a>
+<text x='1408' y='360' text-anchor='end' style='fill:#A69A8B'>bigint</text>  <use id='nn' x='1138' y='365' xlink:href='#nn'/><use id='unq' x='1138' y='364' xlink:href='#unq'><title>Unq feature_relation_from_to_namespace_name_unique ( from_feature, to_feature, namespace, name ) feature_relation_from_feature_idx ( from_feature ) </title></use><a xlink:href='#citydb.feature_relation_from_feature'><text id='citydb.feature_relation.from_feature' x='1155' y='375' onmouseover="hghl(['feature_relation_feature_to_feature_relation_fk','citydb.feature.id'])" onmouseout="uhghl(['feature_relation_feature_to_feature_relation_fk','citydb.feature.id'])">from_feature</text><title>from_feature
+* bigint</title></a>
+<text x='1408' y='376' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.feature_relation.from_feature'><use id='fk' x='1412' y='364' xlink:href='#fk'/><title>References feature ( from_feature -&gt; id ) </title></a>
+  <use id='nn' x='1138' y='381' xlink:href='#nn'/><use id='unq' x='1138' y='380' xlink:href='#unq'><title>Unq feature_relation_from_to_namespace_name_unique ( from_feature, to_feature, namespace, name ) feature_relation_to_feature_idx ( to_feature ) </title></use><a xlink:href='#citydb.feature_relation_to_feature'><text id='citydb.feature_relation.to_feature' x='1155' y='391' onmouseover="hghl(['feature_relation_feature_relation_to_feature_fk','citydb.feature.id'])" onmouseout="uhghl(['feature_relation_feature_relation_to_feature_fk','citydb.feature.id'])">to_feature</text><title>to_feature
+* bigint</title></a>
+<text x='1408' y='392' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.feature_relation.to_feature'><use id='fk' x='1412' y='380' xlink:href='#fk'/><title>References feature ( to_feature -&gt; id ) </title></a>
+  <use id='unq' x='1138' y='396' xlink:href='#unq'><title>Unq feature_relation_from_to_namespace_name_unique ( from_feature, to_feature, namespace, name ) feature_relation_namespace_btr ( namespace ) </title></use><a xlink:href='#citydb.feature_relation_namespace'><text id='citydb.feature_relation.namespace' x='1155' y='407'>namespace</text><title>namespace
+varchar(256)</title></a>
+<text x='1408' y='408' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <use id='unq' x='1138' y='412' xlink:href='#unq'><title>Unq feature_relation_from_to_namespace_name_unique ( from_feature, to_feature, namespace, name ) feature_relation_name_btr ( name ) </title></use><a xlink:href='#citydb.feature_relation_name'><text id='citydb.feature_relation.name' x='1155' y='423'>name</text><title>name
+varchar(256)</title></a>
+<text x='1408' y='424' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <use id='idx' x='1138' y='428' xlink:href='#idx'><title>feature_relation_relationtype_btr ( relationtype ) </title></use><a xlink:href='#citydb.feature_relation_relationtype'><text id='citydb.feature_relation.relationtype' x='1155' y='439'>relationtype</text><title>relationtype
+varchar(256)</title></a>
+<text x='1408' y='440' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <a xlink:href='#citydb.feature_relation_relationtype_codelist'><text id='citydb.feature_relation.relationtype_codelist' x='1155' y='455'>relationtype_codelist</text><title>relationtype_codelist
+varchar(256)</title></a>
+<text x='1408' y='456' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>
+<!-- == Table 'grid_coverage' == -->
+<rect id='depict_citydb.grid_coverage' class='entity' style='stroke:#7690B9' x='2272' y='872' width='192' height='80' />
+<rect class='entity' x='2272' y='872' width='192' height='28' style='stroke:#7690B9; fill:#E6EBF3'/>
+<line class='topLine' style='stroke:#023C99;' stroke-linecap='round' x1='2272' y1='872' x2='2464' y2='872'/>
+<a xlink:href='#citydb.grid_coverage'><text x='2314' y='891' >grid_coverage</text><title>Table citydb.grid_coverage</title></a>
+  <use id='nn' x='2274' y='909' xlink:href='#nn'/><use id='pk' x='2274' y='908' xlink:href='#pk'><title>Pk grid_coverage_pk ( id ) </title></use><a xlink:href='#citydb.grid_coverage_id'><text id='citydb.grid_coverage.id' x='2291' y='919'>id</text><title>id
+* bigint default nextval(&apos;grid_coverage_seq&apos;::regclass)</title></a>
+<text x='2448' y='920' text-anchor='end' style='fill:#8B95A6'>bigint</text>  <a xlink:href='#citydb.grid_coverage_rasterproperty'><text id='citydb.grid_coverage.rasterproperty' x='2291' y='935'>rasterproperty</text><title>rasterproperty
+raster</title></a>
+<text x='2448' y='936' text-anchor='end' style='fill:#8B95A6'>raster</text><text x='2288' y='948'>--more--</text>
+
+<!-- == Table 'implicit_geometry' == -->
+<rect id='depict_citydb.implicit_geometry' class='entity' style='stroke:#81B976' x='480' y='1416' width='288' height='144' />
+<rect class='entity' x='480' y='1416' width='288' height='28' style='stroke:#81B976; fill:#E8F3E6'/>
+<line class='topLine' style='stroke:#1B9902;' stroke-linecap='round' x1='480' y1='1416' x2='768' y2='1416'/>
+<a xlink:href='#citydb.implicit_geometry'><text x='557' y='1435' >implicit_geometry</text><title>Table citydb.implicit_geometry</title></a>
+  <use id='nn' x='482' y='1453' xlink:href='#nn'/><use id='pk' x='482' y='1452' xlink:href='#pk'><title>Pk implicit_geometry_pk ( id ) </title></use><a xlink:href='#citydb.implicit_geometry_id'><text id='citydb.implicit_geometry.id' x='499' y='1463' onmouseover="hghl(['property_property_implicitgeom_id_fk','citydb.property.val_implicitgeom_id'])" onmouseout="uhghl(['property_property_implicitgeom_id_fk','citydb.property.val_implicitgeom_id'])">id</text><title>id
+* bigint default nextval(&apos;implicit_geometry_seq&apos;::regclass)</title></a>
+<text x='752' y='1464' text-anchor='end' style='fill:#8FA68B'>bigint</text><a xlink:href='#citydb.implicit_geometry.id'><use id='ref' x='756' y='1452' xlink:href='#ref'/><title>Referred by property ( val_implicitgeom_id -&gt; id ) </title></a>
+  <a xlink:href='#citydb.implicit_geometry_mime_type'><text id='citydb.implicit_geometry.mime_type' x='499' y='1479'>mime_type</text><title>mime_type
+varchar(256)</title></a>
+<text x='752' y='1480' text-anchor='end' style='fill:#8FA68B'>varchar(256)</text>  <use id='idx' x='482' y='1484' xlink:href='#idx'><title>implicit_geom_ref2lib_inx ( reference_to_library ) </title></use><a xlink:href='#citydb.implicit_geometry_reference_to_library'><text id='citydb.implicit_geometry.reference_to_library' x='499' y='1495'>reference_to_library</text><title>reference_to_library
+varchar(4000)</title></a>
+<text x='752' y='1496' text-anchor='end' style='fill:#8FA68B'>varchar(4000)</text>  <a xlink:href='#citydb.implicit_geometry_library_object'><text id='citydb.implicit_geometry.library_object' x='499' y='1511'>library_object</text><title>library_object
+bytea</title></a>
+<text x='752' y='1512' text-anchor='end' style='fill:#8FA68B'>bytea</text>  <use id='idx' x='482' y='1516' xlink:href='#idx'><title>implicit_geom_brep_fkx ( relative_brep_id ) </title></use><a xlink:href='#citydb.implicit_geometry_relative_brep_id'><text id='citydb.implicit_geometry.relative_brep_id' x='499' y='1527' onmouseover="hghl(['implicit_geometry_implicit_geom_brep_fk','citydb.surface_geometry.id'])" onmouseout="uhghl(['implicit_geometry_implicit_geom_brep_fk','citydb.surface_geometry.id'])">relative_brep_id</text><title>relative_brep_id
+bigint</title></a>
+<text x='752' y='1528' text-anchor='end' style='fill:#8FA68B'>bigint</text><a xlink:href='#citydb.implicit_geometry.relative_brep_id'><use id='fk' x='756' y='1516' xlink:href='#fk'/><title>References surface_geometry ( relative_brep_id -&gt; id ) </title></a>
+  <a xlink:href='#citydb.implicit_geometry_relative_other_geom'><text id='citydb.implicit_geometry.relative_other_geom' x='499' y='1543'>relative_other_geom</text><title>relative_other_geom
+geometry</title></a>
+<text x='752' y='1544' text-anchor='end' style='fill:#8FA68B'>geometry</text>
+<!-- == Table 'index_table' == -->
+<rect id='depict_citydb.index_table' class='entity' style='stroke:#7690B9' x='2176' y='1064' width='128' height='80' />
+<rect class='entity' x='2176' y='1064' width='128' height='28' style='stroke:#7690B9; fill:#E6EBF3'/>
+<line class='topLine' style='stroke:#023C99;' stroke-linecap='round' x1='2176' y1='1064' x2='2304' y2='1064'/>
+<a xlink:href='#citydb.index_table'><text x='2195' y='1083' >index_table</text><title>Table citydb.index_table</title></a>
+  <use id='nn' x='2178' y='1101' xlink:href='#nn'/><use id='pk' x='2178' y='1100' xlink:href='#pk'><title>Pk index_table_pkey ( id ) </title></use><a xlink:href='#citydb.index_table_id'><text id='citydb.index_table.id' x='2195' y='1111'>id</text><title>id
+* integer default nextval(&apos;index_table_id_seq&apos;::regclass)</title></a>
+<text x='2288' y='1112' text-anchor='end' style='fill:#8B95A6'>integer</text>  <a xlink:href='#citydb.index_table_obj'><text id='citydb.index_table.obj' x='2195' y='1127'>obj</text><title>obj
+index_obj</title></a>
+<text x='2288' y='1128' text-anchor='end' style='fill:#8B95A6'>index_obj</text>
+<!-- == Table 'objectclass' == -->
+<rect id='depict_citydb.objectclass' class='entity' style='stroke:#7676B9' x='1952' y='120' width='208' height='176' />
+<rect class='entity' x='1952' y='120' width='208' height='28' style='stroke:#7676B9; fill:#E6E6F3'/>
+<line class='topLine' style='stroke:#020299;' stroke-linecap='round' x1='1952' y1='120' x2='2160' y2='120'/>
+<a xlink:href='#citydb.objectclass'><text x='2013' y='139' >objectclass</text><title>Table citydb.objectclass</title></a>
+  <use id='nn' x='1954' y='157' xlink:href='#nn'/><use id='pk' x='1954' y='156' xlink:href='#pk'><title>Pk objectclass_pk ( id ) </title></use><a xlink:href='#citydb.objectclass_id'><text id='citydb.objectclass.id' x='1971' y='167' onmouseover="hghl(['aggregation_info_aggregation_info_fk1','citydb.aggregation_info.child_id','aggregation_info_aggregation_info_fk2','citydb.aggregation_info.parent_id','feature_feature_objectclass_fk','citydb.feature.objectclass_id','objectclass_objectclass_baseclass_fk','citydb.objectclass.baseclass_id','objectclass_objectclass_superclass_fk','citydb.objectclass.superclass_id','schema_to_objectclass_schema_to_objectclass_fk2','citydb.schema_to_objectclass.objectclass_id','surface_data_surface_data_objclass_fk','citydb.surface_data.objectclass_id'])" onmouseout="uhghl(['aggregation_info_aggregation_info_fk1','citydb.aggregation_info.child_id','aggregation_info_aggregation_info_fk2','citydb.aggregation_info.parent_id','feature_feature_objectclass_fk','citydb.feature.objectclass_id','objectclass_objectclass_baseclass_fk','citydb.objectclass.baseclass_id','objectclass_objectclass_superclass_fk','citydb.objectclass.superclass_id','schema_to_objectclass_schema_to_objectclass_fk2','citydb.schema_to_objectclass.objectclass_id','surface_data_surface_data_objclass_fk','citydb.surface_data.objectclass_id'])">id</text><title>id
+* integer</title></a>
+<text x='2144' y='168' text-anchor='end' style='fill:#8B8BA6'>integer</text><a xlink:href='#citydb.objectclass.id'><use id='ref' x='2148' y='156' xlink:href='#ref'/><title>Referred by aggregation_info ( child_id -&gt; id ) 
+Referred by aggregation_info ( parent_id -&gt; id ) 
+Referred by feature ( objectclass_id -&gt; id ) 
+Referred by objectclass ( baseclass_id -&gt; id ) 
+Referred by objectclass ( superclass_id -&gt; id ) 
+Referred by schema_to_objectclass ( objectclass_id -&gt; id ) 
+Referred by surface_data ( objectclass_id -&gt; id ) </title></a>
+  <a xlink:href='#citydb.objectclass_ade_id'><text id='citydb.objectclass.ade_id' x='1971' y='183' onmouseover="hghl(['objectclass_objectclass_ade_fk','citydb.ade.id'])" onmouseout="uhghl(['objectclass_objectclass_ade_fk','citydb.ade.id'])">ade_id</text><title>ade_id
+integer</title></a>
+<text x='2144' y='184' text-anchor='end' style='fill:#8B8BA6'>integer</text><a xlink:href='#citydb.objectclass.ade_id'><use id='fk' x='2148' y='172' xlink:href='#fk'/><title>References ade ( ade_id -&gt; id ) </title></a>
+  <use id='idx' x='1954' y='188' xlink:href='#idx'><title>objectclass_baseclass_fkx ( baseclass_id ) </title></use><a xlink:href='#citydb.objectclass_baseclass_id'><text id='citydb.objectclass.baseclass_id' x='1971' y='199' onmouseover="hghl(['objectclass_objectclass_baseclass_fk','citydb.objectclass.id'])" onmouseout="uhghl(['objectclass_objectclass_baseclass_fk','citydb.objectclass.id'])">baseclass_id</text><title>baseclass_id
+integer</title></a>
+<text x='2144' y='200' text-anchor='end' style='fill:#8B8BA6'>integer</text><a xlink:href='#citydb.objectclass.baseclass_id'><use id='fk' x='2148' y='188' xlink:href='#fk'/><title>References objectclass ( baseclass_id -&gt; id ) </title></a>
+  <a xlink:href='#citydb.objectclass_classname'><text id='citydb.objectclass.classname' x='1971' y='215'>classname</text><title>classname
+varchar(256)</title></a>
+<text x='2144' y='216' text-anchor='end' style='fill:#8B8BA6'>varchar(256)</text>  <a xlink:href='#citydb.objectclass_is_ade_class'><text id='citydb.objectclass.is_ade_class' x='1971' y='231'>is_ade_class</text><title>is_ade_class
+numeric</title></a>
+<text x='2144' y='232' text-anchor='end' style='fill:#8B8BA6'>numeric</text>  <a xlink:href='#citydb.objectclass_is_toplevel'><text id='citydb.objectclass.is_toplevel' x='1971' y='247'>is_toplevel</text><title>is_toplevel
+numeric</title></a>
+<text x='2144' y='248' text-anchor='end' style='fill:#8B8BA6'>numeric</text>  <use id='idx' x='1954' y='252' xlink:href='#idx'><title>objectclass_superclass_fkx ( superclass_id ) </title></use><a xlink:href='#citydb.objectclass_superclass_id'><text id='citydb.objectclass.superclass_id' x='1971' y='263' onmouseover="hghl(['objectclass_objectclass_superclass_fk','citydb.objectclass.id'])" onmouseout="uhghl(['objectclass_objectclass_superclass_fk','citydb.objectclass.id'])">superclass_id</text><title>superclass_id
+integer</title></a>
+<text x='2144' y='264' text-anchor='end' style='fill:#8B8BA6'>integer</text><a xlink:href='#citydb.objectclass.superclass_id'><use id='fk' x='2148' y='252' xlink:href='#fk'/><title>References objectclass ( superclass_id -&gt; id ) </title></a>
+  <a xlink:href='#citydb.objectclass_tablename'><text id='citydb.objectclass.tablename' x='1971' y='279'>tablename</text><title>tablename
+varchar(30)</title></a>
+<text x='2144' y='280' text-anchor='end' style='fill:#8B8BA6'>varchar(30)</text>
+<!-- == Table 'property' == -->
+<rect id='depict_citydb.property' class='entity' style='stroke:#B99C76' x='48' y='72' width='336' height='528' />
+<rect class='entity' x='48' y='72' width='336' height='28' style='stroke:#B99C76; fill:#F3EDE6'/>
+<line class='topLine' style='stroke:#995802;' stroke-linecap='round' x1='48' y1='72' x2='384' y2='72'/>
+<a xlink:href='#citydb.property'><text x='182' y='91' >property</text><title>Table citydb.property
+added at 3DCityDB Version 5.0 for CityGML 3.0</title></a>
+  <use id='nn' x='50' y='109' xlink:href='#nn'/><use id='pk' x='50' y='108' xlink:href='#pk'><title>Pk property_pkey ( id ) </title></use><a xlink:href='#citydb.property_id'><text id='citydb.property.id' x='67' y='119' onmouseover="hghl(['property_property_parent_id_fk','citydb.property.parent_id','property_property_root_id_fk','citydb.property.root_id'])" onmouseout="uhghl(['property_property_parent_id_fk','citydb.property.parent_id','property_property_root_id_fk','citydb.property.root_id'])">id</text><title>id
+* bigint default nextval(&apos;property_id_seq&apos;::regclass)
+Primary key / surrogate</title></a>
+<text x='368' y='120' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.property.id'><use id='ref' x='372' y='108' xlink:href='#ref'/><title>Referred by property ( parent_id -&gt; id ) 
+Referred by property ( root_id -&gt; id ) </title></a>
+  <use id='unq' x='50' y='124' xlink:href='#unq'><title>Unq property_unique_feature_id_namespace_name_index ( feature_id, namespace, name, index_number ) property_feature_id_idx ( feature_id ) </title></use><a xlink:href='#citydb.property_feature_id'><text id='citydb.property.feature_id' x='67' y='135' onmouseover="hghl(['property_property_feature_fk','citydb.feature.id'])" onmouseout="uhghl(['property_property_feature_fk','citydb.feature.id'])">feature_id</text><title>feature_id
+bigint
+Foreign key to FEATURE(id) - if the property belongs to a feature_relation, then this attribute is NULL</title></a>
+<text x='368' y='136' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.property.feature_id'><use id='fk' x='372' y='124' xlink:href='#fk'/><title>References feature ( feature_id -&gt; id ) </title></a>
+  <use id='idx' x='50' y='140' xlink:href='#idx'><title>property_relation_id_idx ( relation_id ) </title></use><a xlink:href='#citydb.property_relation_id'><text id='citydb.property.relation_id' x='67' y='151'>relation_id</text><title>relation_id
+bigint</title></a>
+<text x='368' y='152' text-anchor='end' style='fill:#A69A8B'>bigint</text>  <use id='idx' x='50' y='156' xlink:href='#idx'><title>property_parent_id_idx ( parent_id ) </title></use><a xlink:href='#citydb.property_parent_id'><text id='citydb.property.parent_id' x='67' y='167' onmouseover="hghl(['property_property_parent_id_fk','citydb.property.id'])" onmouseout="uhghl(['property_property_parent_id_fk','citydb.property.id'])">parent_id</text><title>parent_id
+bigint
+Foreign key to PROPERTY(id). If this property belongs to a named set of properties (as supported for generic attributes), this attribute links to the parent group</title></a>
+<text x='368' y='168' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.property.parent_id'><use id='fk' x='372' y='156' xlink:href='#fk'/><title>References property ( parent_id -&gt; id ) </title></a>
+  <use id='idx' x='50' y='172' xlink:href='#idx'><title>property_root_id_idx ( root_id ) </title></use><a xlink:href='#citydb.property_root_id'><text id='citydb.property.root_id' x='67' y='183' onmouseover="hghl(['property_property_root_id_fk','citydb.property.id'])" onmouseout="uhghl(['property_property_root_id_fk','citydb.property.id'])">root_id</text><title>root_id
+bigint
+Foreign key to PROPERTY(id). Points to the id of the root property entry (only relevant when using nested properties as supported by generic attributes)</title></a>
+<text x='368' y='184' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.property.root_id'><use id='fk' x='372' y='172' xlink:href='#fk'/><title>References property ( root_id -&gt; id ) </title></a>
+  <use id='unq' x='50' y='188' xlink:href='#unq'><title>Unq property_unique_feature_id_namespace_name_index ( feature_id, namespace, name, index_number ) property_namespace_btr ( namespace ) property_namespace_name_btr ( namespace, name ) </title></use><a xlink:href='#citydb.property_namespace'><text id='citydb.property.namespace' x='67' y='199'>namespace</text><title>namespace
+varchar(256)
+CityGML 3.0 namespace in which this property is defined</title></a>
+<text x='368' y='200' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <use id='unq' x='50' y='204' xlink:href='#unq'><title>Unq property_unique_feature_id_namespace_name_index ( feature_id, namespace, name, index_number ) property_name_btr ( name ) property_namespace_name_btr ( namespace, name ) </title></use><a xlink:href='#citydb.property_name'><text id='citydb.property.name' x='67' y='215'>name</text><title>name
+varchar(256)
+Property name (or should we put qualified names here? E.g. core:relativeToWater or core:lod2Solid)</title></a>
+<text x='368' y='216' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <use id='unq' x='50' y='220' xlink:href='#unq'><title>Unq property_unique_feature_id_namespace_name_index ( feature_id, namespace, name, index_number ) </title></use><a xlink:href='#citydb.property_index_number'><text id='citydb.property.index_number' x='67' y='231'>index_number</text><title>index_number
+integer
+Index number (if multiple properties with the same name are stored and the order should be preserved)</title></a>
+<text x='368' y='232' text-anchor='end' style='fill:#A69A8B'>integer</text>  <a xlink:href='#citydb.property_datatype'><text id='citydb.property.datatype' x='67' y='247'>datatype</text><title>datatype
+varchar
+the datatype should be given as a qualified datatype name from the CityGML schema (e.g. gml:GenericName, gml:DateTime)</title></a>
+<text x='368' y='248' text-anchor='end' style='fill:#A69A8B'>varchar</text>  <use id='idx' x='50' y='252' xlink:href='#idx'><title>property_data_valtype_btr ( data_valtype ) </title></use><a xlink:href='#citydb.property_data_valtype'><text id='citydb.property.data_valtype' x='67' y='263'>data_valtype</text><title>data_valtype
+integer
+tells in which attribute(s) the value is actually stored (0=val_int, 1=val_double, 2=val_string, 3=val_date, etc.)</title></a>
+<text x='368' y='264' text-anchor='end' style='fill:#A69A8B'>integer</text>  <a xlink:href='#citydb.property_val_int'><text id='citydb.property.val_int' x='67' y='279'>val_int</text><title>val_int
+bigint</title></a>
+<text x='368' y='280' text-anchor='end' style='fill:#A69A8B'>bigint</text>  <a xlink:href='#citydb.property_val_double'><text id='citydb.property.val_double' x='67' y='295'>val_double</text><title>val_double
+numeric</title></a>
+<text x='368' y='296' text-anchor='end' style='fill:#A69A8B'>numeric</text>  <use id='idx' x='50' y='300' xlink:href='#idx'><title>property_val_string_btr ( val_string ) </title></use><a xlink:href='#citydb.property_val_string'><text id='citydb.property.val_string' x='67' y='311'>val_string</text><title>val_string
+varchar(256)</title></a>
+<text x='368' y='312' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <a xlink:href='#citydb.property_val_date'><text id='citydb.property.val_date' x='67' y='327'>val_date</text><title>val_date
+timestamptz</title></a>
+<text x='368' y='328' text-anchor='end' style='fill:#A69A8B'>timestamptz</text>  <use id='idx' x='50' y='332' xlink:href='#idx'><title>property_val_uri_btr ( val_uri ) </title></use><a xlink:href='#citydb.property_val_uri'><text id='citydb.property.val_uri' x='67' y='343'>val_uri</text><title>val_uri
+varchar(4000)</title></a>
+<text x='368' y='344' text-anchor='end' style='fill:#A69A8B'>varchar(4000)</text>  <a xlink:href='#citydb.property_val_geometry'><text id='citydb.property.val_geometry' x='67' y='359'>val_geometry</text><title>val_geometry
+geometry</title></a>
+<text x='368' y='360' text-anchor='end' style='fill:#A69A8B'>geometry</text>  <a xlink:href='#citydb.property_val_surface_geometry'><text id='citydb.property.val_surface_geometry' x='67' y='375' onmouseover="hghl(['property_property_surface_geometry_fk','citydb.surface_geometry.id'])" onmouseout="uhghl(['property_property_surface_geometry_fk','citydb.surface_geometry.id'])">val_surface_geometry</text><title>val_surface_geometry
+bigint
+Foreign key to SURFACE_GEOMETRY(id)</title></a>
+<text x='368' y='376' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.property.val_surface_geometry'><use id='fk' x='372' y='364' xlink:href='#fk'/><title>References surface_geometry ( val_surface_geometry -&gt; id ) </title></a>
+  <a xlink:href='#citydb.property_val_implicitgeom_id'><text id='citydb.property.val_implicitgeom_id' x='67' y='391' onmouseover="hghl(['property_property_implicitgeom_id_fk','citydb.implicit_geometry.id'])" onmouseout="uhghl(['property_property_implicitgeom_id_fk','citydb.implicit_geometry.id'])">val_implicitgeom_id</text><title>val_implicitgeom_id
+bigint
+Foreign key to IMPLICIT_GEOMETRY(id)</title></a>
+<text x='368' y='392' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.property.val_implicitgeom_id'><use id='fk' x='372' y='380' xlink:href='#fk'/><title>References implicit_geometry ( val_implicitgeom_id -&gt; id ) </title></a>
+  <a xlink:href='#citydb.property_val_implicitgeom_refpoint'><text id='citydb.property.val_implicitgeom_refpoint' x='67' y='407'>val_implicitgeom_refpoint</text><title>val_implicitgeom_refpoint
+geometry
+base point in 3D world coordinates for the instantiation of the implicit geometry</title></a>
+<text x='368' y='408' text-anchor='end' style='fill:#A69A8B'>geometry</text>  <a xlink:href='#citydb.property_val_implicitgeom_transform'><text id='citydb.property.val_implicitgeom_transform' x='67' y='423'>val_implicitgeom_transform</text><title>val_implicitgeom_transform
+varchar(1000)
+4x4 transformation matrix encoded as a string of space separated double values (as strings) in row major sequence</title></a>
+<text x='368' y='424' text-anchor='end' style='fill:#A69A8B'>varchar(1000)</text>  <a xlink:href='#citydb.property_val_grid_coverage'><text id='citydb.property.val_grid_coverage' x='67' y='439'>val_grid_coverage</text><title>val_grid_coverage
+bigint
+Foreign key to GRID_COVERAGE(id)</title></a>
+<text x='368' y='440' text-anchor='end' style='fill:#A69A8B'>bigint</text>  <a xlink:href='#citydb.property_val_appearance'><text id='citydb.property.val_appearance' x='67' y='455' onmouseover="hghl(['property_property_appearance_fk','citydb.appearance.id'])" onmouseout="uhghl(['property_property_appearance_fk','citydb.appearance.id'])">val_appearance</text><title>val_appearance
+bigint
+Foreign key to APPEARANCE(id)</title></a>
+<text x='368' y='456' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.property.val_appearance'><use id='fk' x='372' y='444' xlink:href='#fk'/><title>References appearance ( val_appearance -&gt; id ) </title></a>
+  <a xlink:href='#citydb.property_val_dynamizer'><text id='citydb.property.val_dynamizer' x='67' y='471'>val_dynamizer</text><title>val_dynamizer
+bigint
+Foreign key to APPEARANCE(id)</title></a>
+<text x='368' y='472' text-anchor='end' style='fill:#A69A8B'>bigint</text>  <use id='idx' x='50' y='476' xlink:href='#idx'><title>property_val_feature_btr ( val_feature ) </title></use><a xlink:href='#citydb.property_val_feature'><text id='citydb.property.val_feature' x='67' y='487' onmouseover="hghl(['property_property_val_feature_fk','citydb.feature.id'])" onmouseout="uhghl(['property_property_val_feature_fk','citydb.feature.id'])">val_feature</text><title>val_feature
+bigint
+Foreign key to FEATURE(id)</title></a>
+<text x='368' y='488' text-anchor='end' style='fill:#A69A8B'>bigint</text><a xlink:href='#citydb.property.val_feature'><use id='fk' x='372' y='476' xlink:href='#fk'/><title>References feature ( val_feature -&gt; id ) </title></a>
+  <a xlink:href='#citydb.property_val_feature_is_xlink'><text id='citydb.property.val_feature_is_xlink' x='67' y='503'>val_feature_is_xlink</text><title>val_feature_is_xlink
+integer
+0=related feature was represented inline, 1=related feature was referenced using an XLink</title></a>
+<text x='368' y='504' text-anchor='end' style='fill:#A69A8B'>integer</text>  <a xlink:href='#citydb.property_val_code'><text id='citydb.property.val_code' x='67' y='519'>val_code</text><title>val_code
+varchar(256)
+if a code from a codelist should be stored, we could also put the code in the val_string attribute and omit this attribute</title></a>
+<text x='368' y='520' text-anchor='end' style='fill:#A69A8B'>varchar(256)</text>  <a xlink:href='#citydb.property_val_codelist'><text id='citydb.property.val_codelist' x='67' y='535' onmouseover="hghl(['property_property_codelist_fk','citydb.codelist.id'])" onmouseout="uhghl(['property_property_codelist_fk','citydb.codelist.id'])">val_codelist</text><title>val_codelist
+integer
+Foreign key to CODELIST(code) (or alternatively - if we do not store codelists also in the 3DCityDB - then a URL to the codelist)</title></a>
+<text x='368' y='536' text-anchor='end' style='fill:#A69A8B'>integer</text><a xlink:href='#citydb.property.val_codelist'><use id='fk' x='372' y='524' xlink:href='#fk'/><title>References codelist ( val_codelist -&gt; id ) </title></a>
+  <use id='idx' x='50' y='540' xlink:href='#idx'><title>property_val_uom_btr ( val_uom ) </title></use><a xlink:href='#citydb.property_val_uom'><text id='citydb.property.val_uom' x='67' y='551'>val_uom</text><title>val_uom
+varchar
+unit of measure (for all subtypes of gml:Measure); the value is stored in val_double</title></a>
+<text x='368' y='552' text-anchor='end' style='fill:#A69A8B'>varchar</text>  <a xlink:href='#citydb.property_val_complex'><text id='citydb.property.val_complex' x='67' y='567'>val_complex</text><title>val_complex
+json
+stores all data of complex datatypes as a JSON string (e.g. con:Height)</title></a>
+<text x='368' y='568' text-anchor='end' style='fill:#A69A8B'>json</text>  <a xlink:href='#citydb.property_val_xml'><text id='citydb.property.val_xml' x='67' y='583'>val_xml</text><title>val_xml
+xml
+stores XML data</title></a>
+<text x='368' y='584' text-anchor='end' style='fill:#A69A8B'>xml</text><text x='64' y='596'>--more--</text>
+
+<!-- == Table 'schema' == -->
+<rect id='depict_citydb.schema' class='entity' style='stroke:#7676B9' x='2352' y='216' width='304' height='192' />
+<rect class='entity' x='2352' y='216' width='304' height='28' style='stroke:#7676B9; fill:#E6E6F3'/>
+<line class='topLine' style='stroke:#020299;' stroke-linecap='round' x1='2352' y1='216' x2='2656' y2='216'/>
+<a xlink:href='#citydb.schema'><text x='2472' y='235' >schema</text><title>Table citydb.schema</title></a>
+  <use id='nn' x='2354' y='253' xlink:href='#nn'/><use id='pk' x='2354' y='252' xlink:href='#pk'><title>Pk schema_pk ( id ) </title></use><a xlink:href='#citydb.schema_id'><text id='citydb.schema.id' x='2371' y='263' onmouseover="hghl(['schema_referencing_schema_referencing_fk1','citydb.schema_referencing.referencing_id','schema_referencing_schema_referencing_fk2','citydb.schema_referencing.referenced_id','schema_to_objectclass_schema_to_objectclass_fk1','citydb.schema_to_objectclass.schema_id'])" onmouseout="uhghl(['schema_referencing_schema_referencing_fk1','citydb.schema_referencing.referencing_id','schema_referencing_schema_referencing_fk2','citydb.schema_referencing.referenced_id','schema_to_objectclass_schema_to_objectclass_fk1','citydb.schema_to_objectclass.schema_id'])">id</text><title>id
+* integer default nextval(&apos;schema_seq&apos;::regclass)</title></a>
+<text x='2640' y='264' text-anchor='end' style='fill:#8B8BA6'>integer</text><a xlink:href='#citydb.schema.id'><use id='ref' x='2644' y='252' xlink:href='#ref'/><title>Referred by schema_referencing ( referencing_id -&gt; id ) 
+Referred by schema_referencing ( referenced_id -&gt; id ) 
+Referred by schema_to_objectclass ( schema_id -&gt; id ) </title></a>
+  <use id='nn' x='2354' y='269' xlink:href='#nn'/><a xlink:href='#citydb.schema_is_ade_root'><text id='citydb.schema.is_ade_root' x='2371' y='279'>is_ade_root</text><title>is_ade_root
+* numeric</title></a>
+<text x='2640' y='280' text-anchor='end' style='fill:#8B8BA6'>numeric</text>  <use id='nn' x='2354' y='285' xlink:href='#nn'/><a xlink:href='#citydb.schema_citygml_version'><text id='citydb.schema.citygml_version' x='2371' y='295'>citygml_version</text><title>citygml_version
+* varchar(50)</title></a>
+<text x='2640' y='296' text-anchor='end' style='fill:#8B8BA6'>varchar(50)</text>  <use id='nn' x='2354' y='301' xlink:href='#nn'/><a xlink:href='#citydb.schema_xml_namespace_uri'><text id='citydb.schema.xml_namespace_uri' x='2371' y='311'>xml_namespace_uri</text><title>xml_namespace_uri
+* varchar(4000)</title></a>
+<text x='2640' y='312' text-anchor='end' style='fill:#8B8BA6'>varchar(4000)</text>  <use id='nn' x='2354' y='317' xlink:href='#nn'/><a xlink:href='#citydb.schema_xml_namespace_prefix'><text id='citydb.schema.xml_namespace_prefix' x='2371' y='327'>xml_namespace_prefix</text><title>xml_namespace_prefix
+* varchar(50)</title></a>
+<text x='2640' y='328' text-anchor='end' style='fill:#8B8BA6'>varchar(50)</text>  <a xlink:href='#citydb.schema_xml_schema_location'><text id='citydb.schema.xml_schema_location' x='2371' y='343'>xml_schema_location</text><title>xml_schema_location
+varchar(4000)</title></a>
+<text x='2640' y='344' text-anchor='end' style='fill:#8B8BA6'>varchar(4000)</text>  <a xlink:href='#citydb.schema_xml_schemafile'><text id='citydb.schema.xml_schemafile' x='2371' y='359'>xml_schemafile</text><title>xml_schemafile
+bytea</title></a>
+<text x='2640' y='360' text-anchor='end' style='fill:#8B8BA6'>bytea</text>  <a xlink:href='#citydb.schema_xml_schemafile_type'><text id='citydb.schema.xml_schemafile_type' x='2371' y='375'>xml_schemafile_type</text><title>xml_schemafile_type
+varchar(256)</title></a>
+<text x='2640' y='376' text-anchor='end' style='fill:#8B8BA6'>varchar(256)</text>  <a xlink:href='#citydb.schema_ade_id'><text id='citydb.schema.ade_id' x='2371' y='391' onmouseover="hghl(['schema_schema_ade_fk','citydb.ade.id'])" onmouseout="uhghl(['schema_schema_ade_fk','citydb.ade.id'])">ade_id</text><title>ade_id
+integer</title></a>
+<text x='2640' y='392' text-anchor='end' style='fill:#8B8BA6'>integer</text><a xlink:href='#citydb.schema.ade_id'><use id='fk' x='2644' y='380' xlink:href='#fk'/><title>References ade ( ade_id -&gt; id ) </title></a>
+
+<!-- == Table 'schema_referencing' == -->
+<rect id='depict_citydb.schema_referencing' class='entity' style='stroke:#7676B9' x='2864' y='184' width='192' height='80' />
+<rect class='entity' x='2864' y='184' width='192' height='28' style='stroke:#7676B9; fill:#E6E6F3'/>
+<line class='topLine' style='stroke:#020299;' stroke-linecap='round' x1='2864' y1='184' x2='3056' y2='184'/>
+<a xlink:href='#citydb.schema_referencing'><text x='2884' y='203' >schema_referencing</text><title>Table citydb.schema_referencing</title></a>
+  <use id='nn' x='2866' y='221' xlink:href='#nn'/><use id='pk' x='2866' y='220' xlink:href='#pk'><title>Pk schema_referencing_pk ( referenced_id, referencing_id ) schema_referencing_fkx2 ( referencing_id ) </title></use><a xlink:href='#citydb.schema_referencing_referencing_id'><text id='citydb.schema_referencing.referencing_id' x='2883' y='231' onmouseover="hghl(['schema_referencing_schema_referencing_fk1','citydb.schema.id'])" onmouseout="uhghl(['schema_referencing_schema_referencing_fk1','citydb.schema.id'])">referencing_id</text><title>referencing_id
+* integer</title></a>
+<text x='3040' y='232' text-anchor='end' style='fill:#8B8BA6'>integer</text><a xlink:href='#citydb.schema_referencing.referencing_id'><use id='fk' x='3044' y='220' xlink:href='#fk'/><title>References schema ( referencing_id -&gt; id ) </title></a>
+  <use id='nn' x='2866' y='237' xlink:href='#nn'/><use id='pk' x='2866' y='236' xlink:href='#pk'><title>Pk schema_referencing_pk ( referenced_id, referencing_id ) schema_referencing_fkx1 ( referenced_id ) </title></use><a xlink:href='#citydb.schema_referencing_referenced_id'><text id='citydb.schema_referencing.referenced_id' x='2883' y='247' onmouseover="hghl(['schema_referencing_schema_referencing_fk2','citydb.schema.id'])" onmouseout="uhghl(['schema_referencing_schema_referencing_fk2','citydb.schema.id'])">referenced_id</text><title>referenced_id
+* integer</title></a>
+<text x='3040' y='248' text-anchor='end' style='fill:#8B8BA6'>integer</text><a xlink:href='#citydb.schema_referencing.referenced_id'><use id='fk' x='3044' y='236' xlink:href='#fk'/><title>References schema ( referenced_id -&gt; id ) </title></a>
+
+<!-- == Table 'schema_to_objectclass' == -->
+<rect id='depict_citydb.schema_to_objectclass' class='entity' style='stroke:#7676B9' x='2592' y='520' width='192' height='80' />
+<rect class='entity' x='2592' y='520' width='192' height='28' style='stroke:#7676B9; fill:#E6E6F3'/>
+<line class='topLine' style='stroke:#020299;' stroke-linecap='round' x1='2592' y1='520' x2='2784' y2='520'/>
+<a xlink:href='#citydb.schema_to_objectclass'><text x='2603' y='539' >schema_to_objectclass</text><title>Table citydb.schema_to_objectclass</title></a>
+  <use id='nn' x='2594' y='557' xlink:href='#nn'/><use id='pk' x='2594' y='556' xlink:href='#pk'><title>Pk schema_to_objectclass_pk ( schema_id, objectclass_id ) schema_to_objectclass_fkx1 ( schema_id ) </title></use><a xlink:href='#citydb.schema_to_objectclass_schema_id'><text id='citydb.schema_to_objectclass.schema_id' x='2611' y='567' onmouseover="hghl(['schema_to_objectclass_schema_to_objectclass_fk1','citydb.schema.id'])" onmouseout="uhghl(['schema_to_objectclass_schema_to_objectclass_fk1','citydb.schema.id'])">schema_id</text><title>schema_id
+* integer</title></a>
+<text x='2768' y='568' text-anchor='end' style='fill:#8B8BA6'>integer</text><a xlink:href='#citydb.schema_to_objectclass.schema_id'><use id='fk' x='2772' y='556' xlink:href='#fk'/><title>References schema ( schema_id -&gt; id ) </title></a>
+  <use id='nn' x='2594' y='573' xlink:href='#nn'/><use id='pk' x='2594' y='572' xlink:href='#pk'><title>Pk schema_to_objectclass_pk ( schema_id, objectclass_id ) schema_to_objectclass_fkx2 ( objectclass_id ) </title></use><a xlink:href='#citydb.schema_to_objectclass_objectclass_id'><text id='citydb.schema_to_objectclass.objectclass_id' x='2611' y='583' onmouseover="hghl(['schema_to_objectclass_schema_to_objectclass_fk2','citydb.objectclass.id'])" onmouseout="uhghl(['schema_to_objectclass_schema_to_objectclass_fk2','citydb.objectclass.id'])">objectclass_id</text><title>objectclass_id
+* integer</title></a>
+<text x='2768' y='584' text-anchor='end' style='fill:#8B8BA6'>integer</text><a xlink:href='#citydb.schema_to_objectclass.objectclass_id'><use id='fk' x='2772' y='572' xlink:href='#fk'/><title>References objectclass ( objectclass_id -&gt; id ) </title></a>
+
+<!-- == Table 'surface_data' == -->
+<rect id='depict_citydb.surface_data' class='entity' style='stroke:#81B976' x='1776' y='1336' width='320' height='400' />
+<rect class='entity' x='1776' y='1336' width='320' height='28' style='stroke:#81B976; fill:#E8F3E6'/>
+<line class='topLine' style='stroke:#1B9902;' stroke-linecap='round' x1='1776' y1='1336' x2='2096' y2='1336'/>
+<a xlink:href='#citydb.surface_data'><text x='1887' y='1355' >surface_data</text><title>Table citydb.surface_data</title></a>
+  <use id='nn' x='1778' y='1373' xlink:href='#nn'/><use id='pk' x='1778' y='1372' xlink:href='#pk'><title>Pk surface_data_pk ( id ) </title></use><a xlink:href='#citydb.surface_data_id'><text id='citydb.surface_data.id' x='1795' y='1383' onmouseover="hghl(['appear_to_surface_data_app_to_surf_data_fk','citydb.appear_to_surface_data.surface_data_id','textureparam_texparam_surface_data_fk','citydb.textureparam.surface_data_id'])" onmouseout="uhghl(['appear_to_surface_data_app_to_surf_data_fk','citydb.appear_to_surface_data.surface_data_id','textureparam_texparam_surface_data_fk','citydb.textureparam.surface_data_id'])">id</text><title>id
+* bigint default nextval(&apos;surface_data_seq&apos;::regclass)</title></a>
+<text x='2080' y='1384' text-anchor='end' style='fill:#8FA68B'>bigint</text><a xlink:href='#citydb.surface_data.id'><use id='ref' x='2084' y='1372' xlink:href='#ref'/><title>Referred by appear_to_surface_data ( surface_data_id -&gt; id ) 
+Referred by textureparam ( surface_data_id -&gt; id ) </title></a>
+  <use id='idx' x='1778' y='1388' xlink:href='#idx'><title>surface_data_inx ( gmlid, gmlid_codespace ) </title></use><a xlink:href='#citydb.surface_data_gmlid'><text id='citydb.surface_data.gmlid' x='1795' y='1399'>gmlid</text><title>gmlid
+varchar(256)</title></a>
+<text x='2080' y='1400' text-anchor='end' style='fill:#8FA68B'>varchar(256)</text>  <use id='idx' x='1778' y='1404' xlink:href='#idx'><title>surface_data_inx ( gmlid, gmlid_codespace ) </title></use><a xlink:href='#citydb.surface_data_gmlid_codespace'><text id='citydb.surface_data.gmlid_codespace' x='1795' y='1415'>gmlid_codespace</text><title>gmlid_codespace
+varchar(1000)</title></a>
+<text x='2080' y='1416' text-anchor='end' style='fill:#8FA68B'>varchar(1000)</text>  <a xlink:href='#citydb.surface_data_name'><text id='citydb.surface_data.name' x='1795' y='1431'>name</text><title>name
+varchar(1000)</title></a>
+<text x='2080' y='1432' text-anchor='end' style='fill:#8FA68B'>varchar(1000)</text>  <a xlink:href='#citydb.surface_data_name_codespace'><text id='citydb.surface_data.name_codespace' x='1795' y='1447'>name_codespace</text><title>name_codespace
+varchar(4000)</title></a>
+<text x='2080' y='1448' text-anchor='end' style='fill:#8FA68B'>varchar(4000)</text>  <a xlink:href='#citydb.surface_data_description'><text id='citydb.surface_data.description' x='1795' y='1463'>description</text><title>description
+varchar(4000)</title></a>
+<text x='2080' y='1464' text-anchor='end' style='fill:#8FA68B'>varchar(4000)</text>  <a xlink:href='#citydb.surface_data_is_front'><text id='citydb.surface_data.is_front' x='1795' y='1479'>is_front</text><title>is_front
+numeric</title></a>
+<text x='2080' y='1480' text-anchor='end' style='fill:#8FA68B'>numeric</text>  <use id='nn' x='1778' y='1485' xlink:href='#nn'/><use id='idx' x='1778' y='1484' xlink:href='#idx'><title>surface_data_objclass_fkx ( objectclass_id ) </title></use><a xlink:href='#citydb.surface_data_objectclass_id'><text id='citydb.surface_data.objectclass_id' x='1795' y='1495' onmouseover="hghl(['surface_data_surface_data_objclass_fk','citydb.objectclass.id'])" onmouseout="uhghl(['surface_data_surface_data_objclass_fk','citydb.objectclass.id'])">objectclass_id</text><title>objectclass_id
+* integer</title></a>
+<text x='2080' y='1496' text-anchor='end' style='fill:#8FA68B'>integer</text><a xlink:href='#citydb.surface_data.objectclass_id'><use id='fk' x='2084' y='1484' xlink:href='#fk'/><title>References objectclass ( objectclass_id -&gt; id ) </title></a>
+  <a xlink:href='#citydb.surface_data_x3d_shininess'><text id='citydb.surface_data.x3d_shininess' x='1795' y='1511'>x3d_shininess</text><title>x3d_shininess
+double precision</title></a>
+<text x='2080' y='1512' text-anchor='end' style='fill:#8FA68B'>double precision</text>  <a xlink:href='#citydb.surface_data_x3d_transparency'><text id='citydb.surface_data.x3d_transparency' x='1795' y='1527'>x3d_transparency</text><title>x3d_transparency
+double precision</title></a>
+<text x='2080' y='1528' text-anchor='end' style='fill:#8FA68B'>double precision</text>  <a xlink:href='#citydb.surface_data_x3d_ambient_intensity'><text id='citydb.surface_data.x3d_ambient_intensity' x='1795' y='1543'>x3d_ambient_intensity</text><title>x3d_ambient_intensity
+double precision</title></a>
+<text x='2080' y='1544' text-anchor='end' style='fill:#8FA68B'>double precision</text>  <a xlink:href='#citydb.surface_data_x3d_specular_color'><text id='citydb.surface_data.x3d_specular_color' x='1795' y='1559'>x3d_specular_color</text><title>x3d_specular_color
+varchar(256)</title></a>
+<text x='2080' y='1560' text-anchor='end' style='fill:#8FA68B'>varchar(256)</text>  <a xlink:href='#citydb.surface_data_x3d_diffuse_color'><text id='citydb.surface_data.x3d_diffuse_color' x='1795' y='1575'>x3d_diffuse_color</text><title>x3d_diffuse_color
+varchar(256)</title></a>
+<text x='2080' y='1576' text-anchor='end' style='fill:#8FA68B'>varchar(256)</text>  <a xlink:href='#citydb.surface_data_x3d_emissive_color'><text id='citydb.surface_data.x3d_emissive_color' x='1795' y='1591'>x3d_emissive_color</text><title>x3d_emissive_color
+varchar(256)</title></a>
+<text x='2080' y='1592' text-anchor='end' style='fill:#8FA68B'>varchar(256)</text>  <a xlink:href='#citydb.surface_data_x3d_is_smooth'><text id='citydb.surface_data.x3d_is_smooth' x='1795' y='1607'>x3d_is_smooth</text><title>x3d_is_smooth
+numeric</title></a>
+<text x='2080' y='1608' text-anchor='end' style='fill:#8FA68B'>numeric</text>  <use id='idx' x='1778' y='1612' xlink:href='#idx'><title>surface_data_tex_image_fkx ( tex_image_id ) </title></use><a xlink:href='#citydb.surface_data_tex_image_id'><text id='citydb.surface_data.tex_image_id' x='1795' y='1623' onmouseover="hghl(['surface_data_surface_data_tex_image_fk','citydb.tex_image.id'])" onmouseout="uhghl(['surface_data_surface_data_tex_image_fk','citydb.tex_image.id'])">tex_image_id</text><title>tex_image_id
+bigint</title></a>
+<text x='2080' y='1624' text-anchor='end' style='fill:#8FA68B'>bigint</text><a xlink:href='#citydb.surface_data.tex_image_id'><use id='fk' x='2084' y='1612' xlink:href='#fk'/><title>References tex_image ( tex_image_id -&gt; id ) </title></a>
+  <a xlink:href='#citydb.surface_data_tex_texture_type'><text id='citydb.surface_data.tex_texture_type' x='1795' y='1639'>tex_texture_type</text><title>tex_texture_type
+varchar(256)</title></a>
+<text x='2080' y='1640' text-anchor='end' style='fill:#8FA68B'>varchar(256)</text>  <a xlink:href='#citydb.surface_data_tex_wrap_mode'><text id='citydb.surface_data.tex_wrap_mode' x='1795' y='1655'>tex_wrap_mode</text><title>tex_wrap_mode
+varchar(256)</title></a>
+<text x='2080' y='1656' text-anchor='end' style='fill:#8FA68B'>varchar(256)</text>  <a xlink:href='#citydb.surface_data_tex_border_color'><text id='citydb.surface_data.tex_border_color' x='1795' y='1671'>tex_border_color</text><title>tex_border_color
+varchar(256)</title></a>
+<text x='2080' y='1672' text-anchor='end' style='fill:#8FA68B'>varchar(256)</text>  <a xlink:href='#citydb.surface_data_gt_prefer_worldfile'><text id='citydb.surface_data.gt_prefer_worldfile' x='1795' y='1687'>gt_prefer_worldfile</text><title>gt_prefer_worldfile
+numeric</title></a>
+<text x='2080' y='1688' text-anchor='end' style='fill:#8FA68B'>numeric</text>  <a xlink:href='#citydb.surface_data_gt_orientation'><text id='citydb.surface_data.gt_orientation' x='1795' y='1703'>gt_orientation</text><title>gt_orientation
+varchar(256)</title></a>
+<text x='2080' y='1704' text-anchor='end' style='fill:#8FA68B'>varchar(256)</text>  <use id='idx' x='1778' y='1708' xlink:href='#idx'><title>surface_data_spx ( gt_reference_point ) </title></use><a xlink:href='#citydb.surface_data_gt_reference_point'><text id='citydb.surface_data.gt_reference_point' x='1795' y='1719'>gt_reference_point</text><title>gt_reference_point
+geometry</title></a>
+<text x='2080' y='1720' text-anchor='end' style='fill:#8FA68B'>geometry</text>
+<!-- == Table 'surface_geometry' == -->
+<rect id='depict_citydb.surface_geometry' class='entity' style='stroke:#81B976' x='1248' y='1320' width='272' height='272' />
+<rect class='entity' x='1248' y='1320' width='272' height='28' style='stroke:#81B976; fill:#E8F3E6'/>
+<line class='topLine' style='stroke:#1B9902;' stroke-linecap='round' x1='1248' y1='1320' x2='1520' y2='1320'/>
+<a xlink:href='#citydb.surface_geometry'><text x='1316' y='1339' >surface_geometry</text><title>Table citydb.surface_geometry</title></a>
+  <use id='nn' x='1250' y='1357' xlink:href='#nn'/><use id='pk' x='1250' y='1356' xlink:href='#pk'><title>Pk surface_geometry_pk ( id ) </title></use><a xlink:href='#citydb.surface_geometry_id'><text id='citydb.surface_geometry.id' x='1267' y='1367' onmouseover="hghl(['implicit_geometry_implicit_geom_brep_fk','citydb.implicit_geometry.relative_brep_id','property_property_surface_geometry_fk','citydb.property.val_surface_geometry','surface_geometry_surface_geom_parent_fk','citydb.surface_geometry.parent_id','surface_geometry_surface_geom_root_fk','citydb.surface_geometry.root_id','textureparam_texparam_geom_fk','citydb.textureparam.surface_geometry_id'])" onmouseout="uhghl(['implicit_geometry_implicit_geom_brep_fk','citydb.implicit_geometry.relative_brep_id','property_property_surface_geometry_fk','citydb.property.val_surface_geometry','surface_geometry_surface_geom_parent_fk','citydb.surface_geometry.parent_id','surface_geometry_surface_geom_root_fk','citydb.surface_geometry.root_id','textureparam_texparam_geom_fk','citydb.textureparam.surface_geometry_id'])">id</text><title>id
+* bigint default nextval(&apos;surface_geometry_seq&apos;::regclass)</title></a>
+<text x='1504' y='1368' text-anchor='end' style='fill:#8FA68B'>bigint</text><a xlink:href='#citydb.surface_geometry.id'><use id='ref' x='1508' y='1356' xlink:href='#ref'/><title>Referred by implicit_geometry ( relative_brep_id -&gt; id ) 
+Referred by property ( val_surface_geometry -&gt; id ) 
+Referred by surface_geometry ( parent_id -&gt; id ) 
+Referred by surface_geometry ( root_id -&gt; id ) 
+Referred by textureparam ( surface_geometry_id -&gt; id ) </title></a>
+  <use id='idx' x='1250' y='1372' xlink:href='#idx'><title>surface_geom_inx ( gmlid, gmlid_codespace ) </title></use><a xlink:href='#citydb.surface_geometry_gmlid'><text id='citydb.surface_geometry.gmlid' x='1267' y='1383'>gmlid</text><title>gmlid
+varchar(256)</title></a>
+<text x='1504' y='1384' text-anchor='end' style='fill:#8FA68B'>varchar(256)</text>  <use id='idx' x='1250' y='1388' xlink:href='#idx'><title>surface_geom_inx ( gmlid, gmlid_codespace ) </title></use><a xlink:href='#citydb.surface_geometry_gmlid_codespace'><text id='citydb.surface_geometry.gmlid_codespace' x='1267' y='1399'>gmlid_codespace</text><title>gmlid_codespace
+varchar(1000)</title></a>
+<text x='1504' y='1400' text-anchor='end' style='fill:#8FA68B'>varchar(1000)</text>  <use id='idx' x='1250' y='1404' xlink:href='#idx'><title>surface_geom_parent_fkx ( parent_id ) </title></use><a xlink:href='#citydb.surface_geometry_parent_id'><text id='citydb.surface_geometry.parent_id' x='1267' y='1415' onmouseover="hghl(['surface_geometry_surface_geom_parent_fk','citydb.surface_geometry.id'])" onmouseout="uhghl(['surface_geometry_surface_geom_parent_fk','citydb.surface_geometry.id'])">parent_id</text><title>parent_id
+bigint</title></a>
+<text x='1504' y='1416' text-anchor='end' style='fill:#8FA68B'>bigint</text><a xlink:href='#citydb.surface_geometry.parent_id'><use id='fk' x='1508' y='1404' xlink:href='#fk'/><title>References surface_geometry ( parent_id -&gt; id ) </title></a>
+  <use id='idx' x='1250' y='1420' xlink:href='#idx'><title>surface_geom_root_fkx ( root_id ) </title></use><a xlink:href='#citydb.surface_geometry_root_id'><text id='citydb.surface_geometry.root_id' x='1267' y='1431' onmouseover="hghl(['surface_geometry_surface_geom_root_fk','citydb.surface_geometry.id'])" onmouseout="uhghl(['surface_geometry_surface_geom_root_fk','citydb.surface_geometry.id'])">root_id</text><title>root_id
+bigint</title></a>
+<text x='1504' y='1432' text-anchor='end' style='fill:#8FA68B'>bigint</text><a xlink:href='#citydb.surface_geometry.root_id'><use id='fk' x='1508' y='1420' xlink:href='#fk'/><title>References surface_geometry ( root_id -&gt; id ) </title></a>
+  <a xlink:href='#citydb.surface_geometry_is_solid'><text id='citydb.surface_geometry.is_solid' x='1267' y='1447'>is_solid</text><title>is_solid
+numeric</title></a>
+<text x='1504' y='1448' text-anchor='end' style='fill:#8FA68B'>numeric</text>  <a xlink:href='#citydb.surface_geometry_is_composite'><text id='citydb.surface_geometry.is_composite' x='1267' y='1463'>is_composite</text><title>is_composite
+numeric</title></a>
+<text x='1504' y='1464' text-anchor='end' style='fill:#8FA68B'>numeric</text>  <a xlink:href='#citydb.surface_geometry_is_triangulated'><text id='citydb.surface_geometry.is_triangulated' x='1267' y='1479'>is_triangulated</text><title>is_triangulated
+numeric</title></a>
+<text x='1504' y='1480' text-anchor='end' style='fill:#8FA68B'>numeric</text>  <a xlink:href='#citydb.surface_geometry_is_xlink'><text id='citydb.surface_geometry.is_xlink' x='1267' y='1495'>is_xlink</text><title>is_xlink
+numeric</title></a>
+<text x='1504' y='1496' text-anchor='end' style='fill:#8FA68B'>numeric</text>  <a xlink:href='#citydb.surface_geometry_is_reverse'><text id='citydb.surface_geometry.is_reverse' x='1267' y='1511'>is_reverse</text><title>is_reverse
+numeric</title></a>
+<text x='1504' y='1512' text-anchor='end' style='fill:#8FA68B'>numeric</text>  <use id='idx' x='1250' y='1516' xlink:href='#idx'><title>surface_geom_solid_spx ( solid_geometry ) </title></use><a xlink:href='#citydb.surface_geometry_solid_geometry'><text id='citydb.surface_geometry.solid_geometry' x='1267' y='1527'>solid_geometry</text><title>solid_geometry
+geometry</title></a>
+<text x='1504' y='1528' text-anchor='end' style='fill:#8FA68B'>geometry</text>  <use id='idx' x='1250' y='1532' xlink:href='#idx'><title>surface_geom_spx ( geometry ) </title></use><a xlink:href='#citydb.surface_geometry_geometry'><text id='citydb.surface_geometry.geometry' x='1267' y='1543'>geometry</text><title>geometry
+geometry</title></a>
+<text x='1504' y='1544' text-anchor='end' style='fill:#8FA68B'>geometry</text>  <a xlink:href='#citydb.surface_geometry_implicit_geometry'><text id='citydb.surface_geometry.implicit_geometry' x='1267' y='1559'>implicit_geometry</text><title>implicit_geometry
+geometry</title></a>
+<text x='1504' y='1560' text-anchor='end' style='fill:#8FA68B'>geometry</text>  <use id='idx' x='1250' y='1564' xlink:href='#idx'><title>surface_geom_cityobj_fkx ( cityobject_id ) </title></use><a xlink:href='#citydb.surface_geometry_cityobject_id'><text id='citydb.surface_geometry.cityobject_id' x='1267' y='1575'>cityobject_id</text><title>cityobject_id
+bigint</title></a>
+<text x='1504' y='1576' text-anchor='end' style='fill:#8FA68B'>bigint</text>
+<!-- == Table 'tex_image' == -->
+<rect id='depict_citydb.tex_image' class='entity' style='stroke:#81B976' x='2272' y='1304' width='336' height='128' />
+<rect class='entity' x='2272' y='1304' width='336' height='28' style='stroke:#81B976; fill:#E8F3E6'/>
+<line class='topLine' style='stroke:#1B9902;' stroke-linecap='round' x1='2272' y1='1304' x2='2608' y2='1304'/>
+<a xlink:href='#citydb.tex_image'><text x='2399' y='1323' >tex_image</text><title>Table citydb.tex_image</title></a>
+  <use id='nn' x='2274' y='1341' xlink:href='#nn'/><use id='pk' x='2274' y='1340' xlink:href='#pk'><title>Pk tex_image_pk ( id ) </title></use><a xlink:href='#citydb.tex_image_id'><text id='citydb.tex_image.id' x='2291' y='1351' onmouseover="hghl(['surface_data_surface_data_tex_image_fk','citydb.surface_data.tex_image_id'])" onmouseout="uhghl(['surface_data_surface_data_tex_image_fk','citydb.surface_data.tex_image_id'])">id</text><title>id
+* bigint default nextval(&apos;tex_image_seq&apos;::regclass)</title></a>
+<text x='2592' y='1352' text-anchor='end' style='fill:#8FA68B'>bigint</text><a xlink:href='#citydb.tex_image.id'><use id='ref' x='2596' y='1340' xlink:href='#ref'/><title>Referred by surface_data ( tex_image_id -&gt; id ) </title></a>
+  <a xlink:href='#citydb.tex_image_tex_image_uri'><text id='citydb.tex_image.tex_image_uri' x='2291' y='1367'>tex_image_uri</text><title>tex_image_uri
+varchar(4000)</title></a>
+<text x='2592' y='1368' text-anchor='end' style='fill:#8FA68B'>varchar(4000)</text>  <a xlink:href='#citydb.tex_image_tex_image_data'><text id='citydb.tex_image.tex_image_data' x='2291' y='1383'>tex_image_data</text><title>tex_image_data
+bytea</title></a>
+<text x='2592' y='1384' text-anchor='end' style='fill:#8FA68B'>bytea</text>  <a xlink:href='#citydb.tex_image_tex_mime_type'><text id='citydb.tex_image.tex_mime_type' x='2291' y='1399'>tex_mime_type</text><title>tex_mime_type
+varchar(256)</title></a>
+<text x='2592' y='1400' text-anchor='end' style='fill:#8FA68B'>varchar(256)</text>  <a xlink:href='#citydb.tex_image_tex_mime_type_codespace'><text id='citydb.tex_image.tex_mime_type_codespace' x='2291' y='1415'>tex_mime_type_codespace</text><title>tex_mime_type_codespace
+varchar(4000)</title></a>
+<text x='2592' y='1416' text-anchor='end' style='fill:#8FA68B'>varchar(4000)</text>
+<!-- == Table 'textureparam' == -->
+<rect id='depict_citydb.textureparam' class='entity' style='stroke:#81B976' x='992' y='1672' width='288' height='128' />
+<rect class='entity' x='992' y='1672' width='288' height='28' style='stroke:#81B976; fill:#E8F3E6'/>
+<line class='topLine' style='stroke:#1B9902;' stroke-linecap='round' x1='992' y1='1672' x2='1280' y2='1672'/>
+<a xlink:href='#citydb.textureparam'><text x='1083' y='1691' >textureparam</text><title>Table citydb.textureparam</title></a>
+  <use id='nn' x='994' y='1709' xlink:href='#nn'/><use id='pk' x='994' y='1708' xlink:href='#pk'><title>Pk textureparam_pk ( surface_geometry_id, surface_data_id ) texparam_geom_fkx ( surface_geometry_id ) </title></use><a xlink:href='#citydb.textureparam_surface_geometry_id'><text id='citydb.textureparam.surface_geometry_id' x='1011' y='1719' onmouseover="hghl(['textureparam_texparam_geom_fk','citydb.surface_geometry.id'])" onmouseout="uhghl(['textureparam_texparam_geom_fk','citydb.surface_geometry.id'])">surface_geometry_id</text><title>surface_geometry_id
+* bigint</title></a>
+<text x='1264' y='1720' text-anchor='end' style='fill:#8FA68B'>bigint</text><a xlink:href='#citydb.textureparam.surface_geometry_id'><use id='fk' x='1268' y='1708' xlink:href='#fk'/><title>References surface_geometry ( surface_geometry_id -&gt; id ) </title></a>
+  <a xlink:href='#citydb.textureparam_is_texture_parametrization'><text id='citydb.textureparam.is_texture_parametrization' x='1011' y='1735'>is_texture_parametrization</text><title>is_texture_parametrization
+numeric</title></a>
+<text x='1264' y='1736' text-anchor='end' style='fill:#8FA68B'>numeric</text>  <a xlink:href='#citydb.textureparam_world_to_texture'><text id='citydb.textureparam.world_to_texture' x='1011' y='1751'>world_to_texture</text><title>world_to_texture
+varchar(1000)</title></a>
+<text x='1264' y='1752' text-anchor='end' style='fill:#8FA68B'>varchar(1000)</text>  <a xlink:href='#citydb.textureparam_texture_coordinates'><text id='citydb.textureparam.texture_coordinates' x='1011' y='1767'>texture_coordinates</text><title>texture_coordinates
+geometry</title></a>
+<text x='1264' y='1768' text-anchor='end' style='fill:#8FA68B'>geometry</text>  <use id='nn' x='994' y='1773' xlink:href='#nn'/><use id='pk' x='994' y='1772' xlink:href='#pk'><title>Pk textureparam_pk ( surface_geometry_id, surface_data_id ) texparam_surface_data_fkx ( surface_data_id ) </title></use><a xlink:href='#citydb.textureparam_surface_data_id'><text id='citydb.textureparam.surface_data_id' x='1011' y='1783' onmouseover="hghl(['textureparam_texparam_surface_data_fk','citydb.surface_data.id'])" onmouseout="uhghl(['textureparam_texparam_surface_data_fk','citydb.surface_data.id'])">surface_data_id</text><title>surface_data_id
+* bigint</title></a>
+<text x='1264' y='1784' text-anchor='end' style='fill:#8FA68B'>bigint</text><a xlink:href='#citydb.textureparam.surface_data_id'><use id='fk' x='1268' y='1772' xlink:href='#fk'/><title>References surface_data ( surface_data_id -&gt; id ) </title></a>
+
+</g></svg>
