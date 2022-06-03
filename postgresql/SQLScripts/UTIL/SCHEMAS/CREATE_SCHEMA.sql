@@ -60,7 +60,6 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 \ir ../../SCHEMA/INDEX_TABLE/INDEX_TABLE.sql
 
 --// create schema FUNCTIONS
-\ir ../../SCHEMA/OBJECTCLASS/OBJCLASS.sql
 \ir :TMP_ENVELOPE_FILE
 \ir :TMP_DELETE_FILE
 

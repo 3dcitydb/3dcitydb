@@ -178,7 +178,7 @@ JOIN
   ON t.tgconstraint = c.oid
 WHERE
   c.contype = 'f'
-  AND c.confrelid = (lower($2) || '.surface_geometry')::regclass::oid
+  AND c.confrelid = (lower($2) || '.geometry_data')::regclass::oid
   AND c.confdeltype <> 'c'
 $$
 LANGUAGE sql STRICT;

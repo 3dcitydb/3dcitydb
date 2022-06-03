@@ -235,9 +235,7 @@ BEGIN
   PERFORM citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $3, type, f_table_schema)
     FROM geometry_columns
     WHERE f_table_schema = lower($4)
-      AND f_geometry_column <> 'implicit_geometry'
-      AND f_geometry_column <> 'relative_other_geom'
-      AND f_geometry_column <> 'texture_coordinates';
+      AND f_geometry_column <> 'implicit_geometry';
 END;
 $$
 LANGUAGE plpgsql STRICT;

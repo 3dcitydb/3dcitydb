@@ -39,9 +39,13 @@ CREATE TABLE INDEX_TABLE (
 * Populate INDEX_TABLE with INDEX_OBJ instances
 * 
 ******************************************************************/
-INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_spatial_2d('surface_geom_spx', 'surface_geometry', 'geometry'));
-INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_spatial_2d('surface_geom_solid_spx', 'surface_geometry', 'solid_geometry'));
-INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('surface_geom_inx', 'surface_geometry', 'gmlid, gmlid_codespace'));
-INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('appearance_inx', 'appearance', 'gmlid, gmlid_codespace'));
+INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_spatial_2d('feature_envelope_spx', 'feature', 'envelope'));
+INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_spatial_2d('geometry_data_spx', 'geometry_data', 'geometry'));
+INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('geometry_data_objectid_inx', 'geometry_data', 'objectid'));
+INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('feature_objectid_inx', 'feature', 'objectid'));
+INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('feature_identifier_inx', 'feature', 'identifier, identifier_codespace'));
+INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('appearance_objectid_inx', 'appearance', 'objectid'));
+INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('appearance_identifier_inx', 'appearance', 'identifier, identifier_codespace'));
 INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('appearance_theme_inx', 'appearance', 'theme'));
-INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('surface_data_inx', 'surface_data', 'gmlid, gmlid_codespace'));
+INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('surface_data_objectid_inx', 'surface_data', 'objectid'));
+INSERT INTO index_table (obj) VALUES (citydb_pkg.construct_normal('surface_data_identifier_inx', 'surface_data', 'identifier, identifier_codespace'));
