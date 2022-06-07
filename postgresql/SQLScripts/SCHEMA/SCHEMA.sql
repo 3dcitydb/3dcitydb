@@ -76,12 +76,6 @@ CREATE  TABLE database_srs (
   CONSTRAINT database_srs_pk PRIMARY KEY ( srid )
 );
 
-CREATE  TABLE grid_coverage (
-  id                   bigint DEFAULT nextval('grid_coverage_seq'::regclass) NOT NULL  ,
-  rasterproperty       raster    ,
-  CONSTRAINT grid_coverage_pk PRIMARY KEY ( id )
-);
-
 CREATE  TABLE objectclass (
   id                   integer  NOT NULL  ,
   ade_id               integer    ,
@@ -249,7 +243,6 @@ CREATE  TABLE property (
   val_implicitgeom     bigint    ,
   val_implicitgeom_refpoint geometry(GEOMETRYZ)    ,
   val_implicitgeom_transform text    ,
-  val_grid_coverage    bigint    ,
   val_appearance       bigint    ,
   val_dynamizer        bigint    ,
   val_feature          bigint    ,
@@ -278,8 +271,6 @@ CREATE INDEX address_objectid_inx ON address  ( objectid );
 CREATE INDEX codelist_codelist_type_inx ON codelist  ( codelist_type );
 
 CREATE INDEX codelist_entry_codelist_idx ON codelist_entry  ( codelist_id );
-
-CREATE INDEX grid_coverage_raster_spx ON grid_coverage USING GiST ( st_convexhull(rasterproperty) );
 
 CREATE INDEX objectclass_superclass_fkx ON objectclass  ( superclass_id );
 
@@ -375,8 +366,6 @@ CREATE INDEX property_val_geometry_fkx ON property  ( val_geometry );
 
 CREATE INDEX property_val_implicitgeom_fkx ON property  ( val_implicitgeom );
 
-CREATE INDEX property_val_grid_coverage_fkx ON property  ( val_grid_coverage );
-
 CREATE INDEX property_val_appearance_fkx ON property  ( val_appearance );
 
 CREATE INDEX property_val_dynamizer_fkx ON property  ( val_dynamizer );
@@ -436,8 +425,6 @@ ALTER TABLE property ADD CONSTRAINT property_parent_fk FOREIGN KEY ( parent_id )
 ALTER TABLE property ADD CONSTRAINT property_root_fk FOREIGN KEY ( root_id ) REFERENCES property( id ) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE property ADD CONSTRAINT property_val_geometry_fk FOREIGN KEY ( val_geometry ) REFERENCES geometry_data( id )  ON UPDATE CASCADE;
-
-ALTER TABLE property ADD CONSTRAINT property_val_grid_coverage_fk FOREIGN KEY ( val_grid_coverage ) REFERENCES grid_coverage( id )  ON UPDATE CASCADE;
 
 ALTER TABLE property ADD CONSTRAINT property_val_address_fk FOREIGN KEY ( val_address ) REFERENCES address( id )  ON UPDATE CASCADE;
 
