@@ -75,6 +75,7 @@ CREATE  TABLE objectclass (
   superclass_id        integer    ,
   classname            text    ,
   is_toplevel          numeric    ,
+  space_or_boundary_type text    ,
   CONSTRAINT objectclass_pk PRIMARY KEY ( id )
 );
 
@@ -150,8 +151,6 @@ CREATE  TABLE citymodel (
 CREATE  TABLE feature (
   id                   bigint DEFAULT nextval('feature_seq'::regclass) NOT NULL  ,
   objectclass_id       integer  NOT NULL  ,
-  is_toplevel          numeric    ,
-  space_or_boundary_type text    ,
   objectid             text    ,
   identifier           text    ,
   identifier_codespace text    ,
@@ -198,7 +197,6 @@ CREATE  TABLE property (
   namespace            text    ,
   name                 text    ,
   index_number         integer    ,
-  datatype             text    ,
   data_valtype         integer    ,
   val_int              bigint    ,
   val_double           double precision    ,
@@ -268,8 +266,6 @@ CREATE INDEX appearance_citymodel_id ON appearance  ( citymodel_id );
 CREATE INDEX appearance_identifier_inx ON appearance  ( identifier, identifier_codespace );
 
 CREATE INDEX feature_objectclass_fkx ON feature  ( objectclass_id  );
-
-CREATE INDEX feature_is_toplevel_inx ON feature  ( is_toplevel  );
 
 CREATE INDEX feature_objectid_inx ON feature  ( objectid  );
 
