@@ -132,7 +132,7 @@ $$
 BEGIN
   EXECUTE format(
     'SELECT 
-       srid, gml_srs_name, citydb_pkg.versioning_db($1)
+       srid, srs_name, citydb_pkg.versioning_db($1)
      FROM
        %I.database_srs', schema_name)
     USING schema_name
@@ -165,7 +165,7 @@ BEGIN
   EXECUTE format(
     'SELECT 
        d.srid,
-       d.gml_srs_name,
+       d.srs_name,
        split_part(s.srtext, ''"'', 2),
        split_part(s.srtext, ''['', 1),
        s.srtext,

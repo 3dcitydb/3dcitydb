@@ -211,7 +211,7 @@ LANGUAGE plpgsql STRICT;
 *
 * @param schema_srid       the SRID of the coordinate system to be 
 *                          further used in the database
-* @param db_gml_srs_name   the GML_SRS_NAME of the coordinate system 
+* @param db_gml_srs_name   the SRS_NAME of the coordinate system
 *                          to be further used in the database
 * @param transform         1 if existing data shall be transformed, 0 if not
 * @param schema name       name of schema
@@ -229,7 +229,7 @@ BEGIN
 
   -- update entry in database_srs table first
   EXECUTE format('TRUNCATE TABLE %I.database_srs', $4);
-  EXECUTE format('INSERT INTO %I.database_srs (srid, gml_srs_name) VALUES (%L, %L)', $4, $1, $2);
+  EXECUTE format('INSERT INTO %I.database_srs (srid, srs_name) VALUES (%L, %L)', $4, $1, $2);
 
   -- change srid of spatial columns in given schema
   PERFORM citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $3, type, f_table_schema)

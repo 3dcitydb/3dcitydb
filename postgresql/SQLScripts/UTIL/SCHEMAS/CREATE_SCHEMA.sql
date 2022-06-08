@@ -68,5 +68,5 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 
 \echo 'Setting spatial reference system for schema "':SCHEMA_NAME'" (will be the same as for schema "citydb") ...'
 \set SCHEMA_NAME_QUOTED '\'':SCHEMA_NAME'\''
-SELECT citydb_pkg.change_schema_srid(database_srs.srid, database_srs.gml_srs_name, 0, :SCHEMA_NAME_QUOTED) FROM citydb.database_srs LIMIT 1;
+SELECT citydb_pkg.change_schema_srid(database_srs.srid, database_srs.srs_name, 0, :SCHEMA_NAME_QUOTED) FROM citydb.database_srs LIMIT 1;
 \echo 'Done'
