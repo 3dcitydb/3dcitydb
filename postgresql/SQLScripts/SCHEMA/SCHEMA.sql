@@ -12,15 +12,11 @@ CREATE SEQUENCE codelist_seq INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775
 
 CREATE SEQUENCE feature_seq INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1 NO CYCLE OWNED BY NONE;
 
-CREATE SEQUENCE geometry_seq INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1 NO CYCLE OWNED BY NONE;
-
-CREATE SEQUENCE grid_coverage_seq INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1 NO CYCLE OWNED BY NONE;
+CREATE SEQUENCE geometry_data_seq INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1 NO CYCLE OWNED BY NONE;
 
 CREATE SEQUENCE implicit_geometry_seq INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1 NO CYCLE OWNED BY NONE;
 
 CREATE SEQUENCE property_seq INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1 NO CYCLE OWNED BY NONE;
-
-CREATE SEQUENCE schema_seq INCREMENT BY 1 MINVALUE 0 MAXVALUE 2147483647 START WITH 1 CACHE 1 NO CYCLE OWNED BY NONE;
 
 CREATE SEQUENCE surface_data_seq INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1 NO CYCLE OWNED BY NONE;
 
@@ -47,11 +43,6 @@ CREATE  TABLE ade (
   name                 text  NOT NULL  ,
   description          text    ,
   "version"            text    ,
-  db_prefix            text  NOT NULL  ,
-  xml_schemamapping_file text    ,
-  drop_db_script       text    ,
-  creation_date        timestamptz    ,
-  creation_person      text    ,
   CONSTRAINT ade_pk PRIMARY KEY ( id )
 );
 
@@ -81,36 +72,10 @@ CREATE  TABLE objectclass (
   id                   integer  NOT NULL  ,
   ade_id               integer    ,
   baseclass_id         integer    ,
-  classname            text    ,
-  is_ade_class         numeric    ,
-  is_toplevel          numeric    ,
   superclass_id        integer    ,
+  classname            text    ,
+  is_toplevel          numeric    ,
   CONSTRAINT objectclass_pk PRIMARY KEY ( id )
-);
-
-CREATE  TABLE "schema" (
-  id                   integer DEFAULT nextval('schema_seq'::regclass) NOT NULL  ,
-  is_ade_root          numeric  NOT NULL  ,
-  citygml_version      text  NOT NULL  ,
-  xml_namespace_uri    text  NOT NULL  ,
-  xml_namespace_prefix text  NOT NULL  ,
-  xml_schema_location  text    ,
-  xml_schemafile       bytea    ,
-  xml_schemafile_mime_type text    ,
-  ade_id               integer    ,
-  CONSTRAINT schema_pk PRIMARY KEY ( id )
-);
-
-CREATE  TABLE schema_referencing (
-  referencing_id       integer  NOT NULL  ,
-  referenced_id        integer  NOT NULL  ,
-  CONSTRAINT schema_referencing_pk PRIMARY KEY ( referenced_id, referencing_id )
-);
-
-CREATE  TABLE schema_to_objectclass (
-  schema_id            integer  NOT NULL  ,
-  objectclass_id       integer  NOT NULL  ,
-  CONSTRAINT schema_to_objectclass_pk PRIMARY KEY ( schema_id, objectclass_id )
 );
 
 CREATE  TABLE tex_image (
@@ -125,6 +90,7 @@ CREATE  TABLE tex_image (
 CREATE  TABLE aggregation_info (
   child_id             integer  NOT NULL  ,
   parent_id            integer  NOT NULL  ,
+  property_name        text    ,
   min_occurs           integer    ,
   max_occurs           integer    ,
   is_composite         numeric    ,
@@ -258,11 +224,11 @@ CREATE  TABLE property (
 
 CREATE  TABLE surface_data_mapping (
   surface_data_id      bigint  NOT NULL  ,
-  geometry_id          bigint  NOT NULL  ,
+  geometry_data_id     bigint  NOT NULL  ,
   texture_mapping      json    ,
   material_mapping     json    ,
   world_to_texture_mapping json    ,
-  CONSTRAINT surface_data_mapping_pk PRIMARY KEY ( geometry_id, surface_data_id )
+  CONSTRAINT surface_data_mapping_pk PRIMARY KEY ( geometry_data_id, surface_data_id )
 );
 
 CREATE INDEX address_multi_point_spx ON address USING GiST ( multi_point );
@@ -276,14 +242,6 @@ CREATE INDEX codelist_entry_codelist_idx ON codelist_entry  ( codelist_id );
 CREATE INDEX objectclass_superclass_fkx ON objectclass  ( superclass_id );
 
 CREATE INDEX objectclass_baseclass_fkx ON objectclass  ( baseclass_id );
-
-CREATE INDEX schema_referencing_fkx1 ON schema_referencing  ( referenced_id );
-
-CREATE INDEX schema_referencing_fkx2 ON schema_referencing  ( referencing_id );
-
-CREATE INDEX schema_to_objectclass_fkx1 ON schema_to_objectclass  ( schema_id );
-
-CREATE INDEX schema_to_objectclass_fkx2 ON schema_to_objectclass  ( objectclass_id );
 
 CREATE INDEX surface_data_objectid_inx ON surface_data  ( objectid );
 
@@ -377,7 +335,7 @@ CREATE INDEX property_val_address_fkx ON property  ( val_address );
 
 CREATE INDEX property_val_implicitgeom_spx ON property USING GiST ( val_implicitgeom_refpoint );
 
-CREATE INDEX surface_data_mapping_fkx1 ON surface_data_mapping  ( geometry_id );
+CREATE INDEX surface_data_mapping_fkx1 ON surface_data_mapping  ( geometry_data_id );
 
 CREATE INDEX surface_data_mapping_fkx2 ON surface_data_mapping  ( surface_data_id );
 
@@ -429,20 +387,10 @@ ALTER TABLE property ADD CONSTRAINT property_val_geometry_fk FOREIGN KEY ( val_g
 
 ALTER TABLE property ADD CONSTRAINT property_val_address_fk FOREIGN KEY ( val_address ) REFERENCES address( id )  ON UPDATE CASCADE;
 
-ALTER TABLE "schema" ADD CONSTRAINT schema_ade_fk FOREIGN KEY ( ade_id ) REFERENCES ade( id ) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE schema_referencing ADD CONSTRAINT schema_referencing_fk1 FOREIGN KEY ( referencing_id ) REFERENCES "schema"( id ) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE schema_referencing ADD CONSTRAINT schema_referencing_fk2 FOREIGN KEY ( referenced_id ) REFERENCES "schema"( id ) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE schema_to_objectclass ADD CONSTRAINT schema_to_objectclass_fk2 FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id ) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE schema_to_objectclass ADD CONSTRAINT schema_to_objectclass_fk1 FOREIGN KEY ( schema_id ) REFERENCES "schema"( id ) ON DELETE CASCADE ON UPDATE CASCADE;
-
 ALTER TABLE surface_data ADD CONSTRAINT surface_data_objclass_fk FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id )  ON UPDATE CASCADE;
 
 ALTER TABLE surface_data ADD CONSTRAINT surface_data_tex_image_fk FOREIGN KEY ( tex_image_id ) REFERENCES tex_image( id )  ON UPDATE CASCADE;
 
-ALTER TABLE surface_data_mapping ADD CONSTRAINT surface_data_mapping_fk1 FOREIGN KEY ( geometry_id ) REFERENCES geometry_data( id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE surface_data_mapping ADD CONSTRAINT surface_data_mapping_fk1 FOREIGN KEY ( geometry_data_id ) REFERENCES geometry_data( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE surface_data_mapping ADD CONSTRAINT surface_data_mapping_fk2 FOREIGN KEY ( surface_data_id ) REFERENCES surface_data( id ) ON DELETE CASCADE ON UPDATE CASCADE;
