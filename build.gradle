@@ -2,7 +2,7 @@ plugins {
     id 'distribution'
 }
 
-version '5.0.0'
+version '5.0.0-alpha.1'
 
 task createVersionTxt(type: Copy)  {
     def tmp = File.createTempFile('tmp', '.txt')
@@ -20,6 +20,6 @@ distributions.main.contents {
         from 'oracle' exclude 'JDeveloper'
     }
     into('postgresql') {
-        from 'postgresql' exclude 'pgModeler'
+        from 'postgresql' exclude 'DbSchema'
     }
 }
