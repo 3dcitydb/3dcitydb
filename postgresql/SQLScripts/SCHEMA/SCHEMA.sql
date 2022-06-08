@@ -36,6 +36,7 @@ CREATE  TABLE address (
   city                 text    ,
   "state"              text    ,
   country              text    ,
+  free_text            json    ,
   multi_point          geometry(GEOMETRYZ)    ,
   CONSTRAINT address_pk PRIMARY KEY ( id )
 );
@@ -72,7 +73,7 @@ CREATE  TABLE codelist_entry (
 
 CREATE  TABLE database_srs (
   srid                 integer  NOT NULL  ,
-  gml_srs_name         text    ,
+  srs_name             text    ,
   CONSTRAINT database_srs_pk PRIMARY KEY ( srid )
 );
 
@@ -208,7 +209,7 @@ CREATE  TABLE geometry_data (
   geometry             geometry(GEOMETRYZ)    ,
   implicit_geometry    geometry(GEOMETRYZ)    ,
   properties           json    ,
-  cityobject_id        bigint    ,
+  feature_id           bigint    ,
   CONSTRAINT geometry_data_pk PRIMARY KEY ( id )
 );
 
@@ -322,7 +323,7 @@ CREATE INDEX feature_citymodel_fkx ON feature  ( citymodel_id  );
 
 CREATE INDEX geometry_data_objectid_inx ON geometry_data  ( objectid );
 
-CREATE INDEX geometry_data_cityobject_fkx ON geometry_data  ( cityobject_id );
+CREATE INDEX geometry_data_feature_fkx ON geometry_data  ( feature_id );
 
 CREATE INDEX geometry_data_spx ON geometry_data  ( geometry );
 
@@ -400,7 +401,7 @@ ALTER TABLE feature ADD CONSTRAINT feature_objectclass_fk FOREIGN KEY ( objectcl
 
 ALTER TABLE feature ADD CONSTRAINT feature_citymodel_fk FOREIGN KEY ( citymodel_id ) REFERENCES citymodel( id )  ON UPDATE CASCADE;
 
-ALTER TABLE geometry_data ADD CONSTRAINT geometry_data_feature_fk FOREIGN KEY ( cityobject_id ) REFERENCES feature( id )  ON UPDATE CASCADE;
+ALTER TABLE geometry_data ADD CONSTRAINT geometry_data_feature_fk FOREIGN KEY ( feature_id ) REFERENCES feature( id )  ON UPDATE CASCADE;
 
 ALTER TABLE implicit_geometry ADD CONSTRAINT implicit_geometry_fk FOREIGN KEY ( relative_geometry_id ) REFERENCES geometry_data( id )  ON UPDATE CASCADE;
 
