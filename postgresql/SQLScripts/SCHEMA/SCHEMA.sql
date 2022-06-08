@@ -191,6 +191,7 @@ CREATE  TABLE implicit_geometry (
 CREATE  TABLE property (
   id                   bigint DEFAULT nextval('property_seq'::regclass) NOT NULL  ,
   feature_id           bigint    ,
+  root_feature_id      bigint    ,
   parent_id            bigint    ,
   root_id              bigint    ,
   lod                  text    ,
@@ -202,6 +203,7 @@ CREATE  TABLE property (
   val_double           double precision    ,
   val_string           text    ,
   val_date             timestamptz    ,
+  val_date_offset      integer    ,
   val_uri              text    ,
   val_address          bigint    ,
   val_geometry         bigint    ,
@@ -331,6 +333,8 @@ CREATE INDEX property_val_address_fkx ON property  ( val_address );
 
 CREATE INDEX property_val_implicitgeom_spx ON property USING GiST ( val_implicitgeom_refpoint );
 
+CREATE INDEX property_root_feature_fkx ON property  ( root_feature_id );
+
 CREATE INDEX surface_data_mapping_fkx1 ON surface_data_mapping  ( geometry_data_id );
 
 CREATE INDEX surface_data_mapping_fkx2 ON surface_data_mapping  ( surface_data_id );
@@ -358,3 +362,37 @@ ALTER TABLE feature ADD CONSTRAINT feature_citymodel_fk FOREIGN KEY ( citymodel_
 ALTER TABLE geometry_data ADD CONSTRAINT geometry_data_feature_fk FOREIGN KEY ( feature_id ) REFERENCES feature( id )  ON UPDATE CASCADE;
 
 ALTER TABLE implicit_geometry ADD CONSTRAINT implicit_geometry_fk FOREIGN KEY ( relative_geometry_id ) REFERENCES geometry_data( id )  ON UPDATE CASCADE;
+
+ALTER TABLE objectclass ADD CONSTRAINT objectclass_ade_fk FOREIGN KEY ( ade_id ) REFERENCES ade( id ) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE objectclass ADD CONSTRAINT objectclass_baseclass_fk FOREIGN KEY ( baseclass_id ) REFERENCES objectclass( id ) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE objectclass ADD CONSTRAINT objectclass_superclass_fk FOREIGN KEY ( superclass_id ) REFERENCES objectclass( id ) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_appearance_fk FOREIGN KEY ( val_appearance ) REFERENCES appearance( id )  ON UPDATE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_codelist_fk FOREIGN KEY ( val_codelist ) REFERENCES codelist( id )  ON UPDATE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_feature_fk FOREIGN KEY ( feature_id ) REFERENCES feature( id )  ON UPDATE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_val_feature_fk FOREIGN KEY ( val_feature ) REFERENCES feature( id )  ON UPDATE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_val_implicitgeom_fk FOREIGN KEY ( val_implicitgeom ) REFERENCES implicit_geometry( id )  ON UPDATE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_parent_fk FOREIGN KEY ( parent_id ) REFERENCES property( id )  ON UPDATE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_root_fk FOREIGN KEY ( root_id ) REFERENCES property( id ) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
+
+ALTER TABLE property ADD CONSTRAINT property_val_geometry_fk FOREIGN KEY ( val_geometry ) REFERENCES geometry_data( id )  ON UPDATE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_val_address_fk FOREIGN KEY ( val_address ) REFERENCES address( id )  ON UPDATE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_root_feature_fk FOREIGN KEY ( root_feature_id ) REFERENCES feature( id );
+
+ALTER TABLE surface_data ADD CONSTRAINT surface_data_objclass_fk FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id )  ON UPDATE CASCADE;
+
+ALTER TABLE surface_data ADD CONSTRAINT surface_data_tex_image_fk FOREIGN KEY ( tex_image_id ) REFERENCES tex_image( id )  ON UPDATE CASCADE;
+
+ALTER TABLE surface_data_mapping ADD CONSTRAINT surface_data_mapping_fk1 FOREIGN KEY ( geometry_data_id ) REFERENCES geometry_data( id ) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE surface_data_mapping ADD CONSTRAINT surface_data_mapping_fk2 FOREIGN KEY ( surface_data_id ) REFERENCES surface_data( id ) ON DELETE CASCADE ON UPDATE CASCADE;
