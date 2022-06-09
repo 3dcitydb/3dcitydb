@@ -191,7 +191,6 @@ CREATE  TABLE implicit_geometry (
 CREATE  TABLE property (
   id                   bigint DEFAULT nextval('property_seq'::regclass) NOT NULL  ,
   feature_id           bigint    ,
-  root_feature_id      bigint    ,
   parent_id            bigint    ,
   root_id              bigint    ,
   lod                  text    ,
@@ -333,8 +332,6 @@ CREATE INDEX property_val_address_fkx ON property  ( val_address );
 
 CREATE INDEX property_val_implicitgeom_spx ON property USING GiST ( val_implicitgeom_refpoint );
 
-CREATE INDEX property_root_feature_fkx ON property  ( root_feature_id );
-
 CREATE INDEX surface_data_mapping_fkx1 ON surface_data_mapping  ( geometry_data_id );
 
 CREATE INDEX surface_data_mapping_fkx2 ON surface_data_mapping  ( surface_data_id );
@@ -386,8 +383,6 @@ ALTER TABLE property ADD CONSTRAINT property_root_fk FOREIGN KEY ( root_id ) REF
 ALTER TABLE property ADD CONSTRAINT property_val_geometry_fk FOREIGN KEY ( val_geometry ) REFERENCES geometry_data( id )  ON UPDATE CASCADE;
 
 ALTER TABLE property ADD CONSTRAINT property_val_address_fk FOREIGN KEY ( val_address ) REFERENCES address( id )  ON UPDATE CASCADE;
-
-ALTER TABLE property ADD CONSTRAINT property_root_feature_fk FOREIGN KEY ( root_feature_id ) REFERENCES feature( id );
 
 ALTER TABLE surface_data ADD CONSTRAINT surface_data_objclass_fk FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id )  ON UPDATE CASCADE;
 
