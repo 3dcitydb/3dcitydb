@@ -75,7 +75,6 @@ CREATE  TABLE objectclass (
   superclass_id        integer    ,
   classname            text    ,
   is_toplevel          numeric    ,
-  space_or_boundary_type text    ,
   CONSTRAINT objectclass_pk PRIMARY KEY ( id )
 );
 
@@ -94,8 +93,7 @@ CREATE  TABLE aggregation_info (
   property_name        text    ,
   min_occurs           integer    ,
   max_occurs           integer    ,
-  is_composite         numeric    ,
-  CONSTRAINT aggregation_info_pk PRIMARY KEY ( child_id, parent_id )
+  is_composite         numeric
 );
 
 CREATE  TABLE surface_data (
@@ -167,6 +165,13 @@ CREATE  TABLE feature (
   CONSTRAINT feature_pk PRIMARY KEY ( id )
 );
 
+CREATE  TABLE feature_hierarchy (
+  child_id             bigint  NOT NULL  ,
+  parent_id            bigint  NOT NULL  ,
+  root_id              bigint    ,
+  CONSTRAINT feature_hierarchy_pk PRIMARY KEY ( child_id, parent_id )
+);
+
 CREATE  TABLE geometry_data (
   id                   bigint DEFAULT nextval('geometry_data_seq'::regclass) NOT NULL  ,
   "type"               integer    ,
@@ -212,7 +217,7 @@ CREATE  TABLE property (
   val_appearance       bigint    ,
   val_dynamizer        bigint    ,
   val_feature          bigint    ,
-  val_feature_is_xlink integer    ,
+  val_is_reference     integer    ,
   val_code             text    ,
   val_codelist         bigint    ,
   val_uom              text    ,
@@ -241,6 +246,10 @@ CREATE INDEX codelist_entry_codelist_idx ON codelist_entry  ( codelist_id );
 CREATE INDEX objectclass_superclass_fkx ON objectclass  ( superclass_id );
 
 CREATE INDEX objectclass_baseclass_fkx ON objectclass  ( baseclass_id );
+
+CREATE INDEX aggregation_info_child_fkx ON aggregation_info  ( child_id );
+
+CREATE INDEX aggregation_info_parent_fkx ON aggregation_info  ( parent_id );
 
 CREATE INDEX surface_data_objectid_inx ON surface_data  ( objectid );
 
@@ -275,6 +284,12 @@ CREATE INDEX feature_envelope_spx ON feature USING GiST ( envelope );
 CREATE INDEX feature_identifier_inx ON feature  ( identifier , identifier_codespace );
 
 CREATE INDEX feature_citymodel_fkx ON feature  ( citymodel_id  );
+
+CREATE INDEX feature_hierarchy_root_fkx ON feature_hierarchy  ( root_id );
+
+CREATE INDEX feature_hierarchy_child_fkx ON feature_hierarchy  ( child_id );
+
+CREATE INDEX feature_hierarchy_parent_fkx ON feature_hierarchy  ( parent_id );
 
 CREATE INDEX geometry_data_objectid_inx ON geometry_data  ( objectid );
 
@@ -336,9 +351,9 @@ CREATE INDEX surface_data_mapping_fkx1 ON surface_data_mapping  ( geometry_data_
 
 CREATE INDEX surface_data_mapping_fkx2 ON surface_data_mapping  ( surface_data_id );
 
-ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_fk1 FOREIGN KEY ( child_id ) REFERENCES objectclass( id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_child_fk FOREIGN KEY ( child_id ) REFERENCES objectclass( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_fk2 FOREIGN KEY ( parent_id ) REFERENCES objectclass( id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_parent_fk FOREIGN KEY ( parent_id ) REFERENCES objectclass( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE appear_to_surface_data ADD CONSTRAINT appear_to_surface_data_fk1 FOREIGN KEY ( surface_data_id ) REFERENCES surface_data( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -355,6 +370,12 @@ ALTER TABLE codelist_entry ADD CONSTRAINT codelist_entry_codelist_fk FOREIGN KEY
 ALTER TABLE feature ADD CONSTRAINT feature_objectclass_fk FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id )  ON UPDATE CASCADE;
 
 ALTER TABLE feature ADD CONSTRAINT feature_citymodel_fk FOREIGN KEY ( citymodel_id ) REFERENCES citymodel( id )  ON UPDATE CASCADE;
+
+ALTER TABLE feature_hierarchy ADD CONSTRAINT feature_hierarchy_child_fk FOREIGN KEY ( child_id ) REFERENCES feature( id );
+
+ALTER TABLE feature_hierarchy ADD CONSTRAINT feature_hierarchy_parent_fk FOREIGN KEY ( parent_id ) REFERENCES feature( id );
+
+ALTER TABLE feature_hierarchy ADD CONSTRAINT feature_hierarchy_root_fk FOREIGN KEY ( root_id ) REFERENCES feature( id );
 
 ALTER TABLE geometry_data ADD CONSTRAINT geometry_data_feature_fk FOREIGN KEY ( feature_id ) REFERENCES feature( id )  ON UPDATE CASCADE;
 
