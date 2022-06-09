@@ -582,7 +582,7 @@
 		<entity schema="citydb" name="surface_data" color="F4BEC7" x="1744" y="896" />
 		<entity schema="citydb" name="surface_data_mapping" color="F4BEC7" x="1168" y="1392" />
 		<entity schema="citydb" name="tex_image" color="F4BEC7" x="1680" y="1392" />
-		<group name="BRep-Geometry" color="EEF7EC" >
+		<group name="Geometry" color="EEF7EC" >
 			<entity schema="citydb" name="implicit_geometry" />
 			<entity schema="citydb" name="geometry_data" />
 		</group>
