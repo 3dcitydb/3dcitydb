@@ -87,65 +87,6 @@ CREATE  TABLE tex_image (
   CONSTRAINT tex_image_pk PRIMARY KEY ( id )
 );
 
-CREATE  TABLE aggregation_info (
-  child_id             integer  NOT NULL  ,
-  parent_id            integer  NOT NULL  ,
-  property_name        text    ,
-  min_occurs           integer    ,
-  max_occurs           integer    ,
-  is_composite         numeric
-);
-
-CREATE  TABLE surface_data (
-  id                   bigint DEFAULT nextval('surface_data_seq'::regclass) NOT NULL  ,
-  objectid             text    ,
-  identifier           text    ,
-  identifier_codespace text    ,
-  is_front             numeric    ,
-  objectclass_id       integer  NOT NULL  ,
-  x3d_shininess        double precision    ,
-  x3d_transparency     double precision    ,
-  x3d_ambient_intensity double precision    ,
-  x3d_specular_color   text    ,
-  x3d_diffuse_color    text    ,
-  x3d_emissive_color   text    ,
-  x3d_is_smooth        numeric    ,
-  tex_image_id         bigint    ,
-  tex_texture_type     text    ,
-  tex_wrap_mode        text    ,
-  tex_border_color     text    ,
-  gt_prefer_worldfile  numeric    ,
-  gt_orientation       text    ,
-  gt_reference_point   geometry(POINT)    ,
-  CONSTRAINT surface_data_pk PRIMARY KEY ( id )
-);
-
-CREATE  TABLE appear_to_surface_data (
-  surface_data_id      bigint  NOT NULL  ,
-  appearance_id        bigint  NOT NULL  ,
-  CONSTRAINT appear_to_surface_data_pk PRIMARY KEY ( surface_data_id, appearance_id )
-);
-
-CREATE  TABLE appearance (
-  id                   bigint DEFAULT nextval('appearance_seq'::regclass) NOT NULL  ,
-  objectid             text    ,
-  identifier           text    ,
-  identifier_codespace text    ,
-  theme                text    ,
-  creation_date        timestamptz    ,
-  termination_date     timestamptz    ,
-  valid_from           timestamptz    ,
-  valid_to             timestamptz    ,
-  cityobject_id        bigint    ,
-  citymodel_id         bigint    ,
-  CONSTRAINT appearance_pk PRIMARY KEY ( id )
-);
-
-CREATE  TABLE citymodel (
-  id                   bigint DEFAULT nextval('citymodel_seq'::regclass) NOT NULL  ,
-  CONSTRAINT citymodel_pk PRIMARY KEY ( id )
-);
-
 CREATE  TABLE feature (
   id                   bigint DEFAULT nextval('feature_seq'::regclass) NOT NULL  ,
   objectclass_id       integer  NOT NULL  ,
@@ -193,6 +134,54 @@ CREATE  TABLE implicit_geometry (
   CONSTRAINT implicit_geometry_pk PRIMARY KEY ( id )
 );
 
+CREATE  TABLE surface_data (
+  id                   bigint DEFAULT nextval('surface_data_seq'::regclass) NOT NULL  ,
+  objectid             text    ,
+  identifier           text    ,
+  identifier_codespace text    ,
+  is_front             numeric    ,
+  objectclass_id       integer  NOT NULL  ,
+  x3d_shininess        double precision    ,
+  x3d_transparency     double precision    ,
+  x3d_ambient_intensity double precision    ,
+  x3d_specular_color   text    ,
+  x3d_diffuse_color    text    ,
+  x3d_emissive_color   text    ,
+  x3d_is_smooth        numeric    ,
+  tex_image_id         bigint    ,
+  tex_texture_type     text    ,
+  tex_wrap_mode        text    ,
+  tex_border_color     text    ,
+  gt_prefer_worldfile  numeric    ,
+  gt_orientation       text    ,
+  gt_reference_point   geometry(POINT)    ,
+  CONSTRAINT surface_data_pk PRIMARY KEY ( id )
+);
+
+CREATE  TABLE surface_data_mapping (
+  surface_data_id      bigint  NOT NULL  ,
+  geometry_data_id     bigint  NOT NULL  ,
+  texture_mapping      json    ,
+  material_mapping     json    ,
+  world_to_texture_mapping json    ,
+  CONSTRAINT surface_data_mapping_pk PRIMARY KEY ( geometry_data_id, surface_data_id )
+);
+
+CREATE  TABLE appearance (
+  id                   bigint DEFAULT nextval('appearance_seq'::regclass) NOT NULL  ,
+  objectid             text    ,
+  identifier           text    ,
+  identifier_codespace text    ,
+  theme                text    ,
+  creation_date        timestamptz    ,
+  termination_date     timestamptz    ,
+  valid_from           timestamptz    ,
+  valid_to             timestamptz    ,
+  is_global            integer    ,
+  feature_id           bigint    ,
+  CONSTRAINT appearance_pk PRIMARY KEY ( id )
+);
+
 CREATE  TABLE property (
   id                   bigint DEFAULT nextval('property_seq'::regclass) NOT NULL  ,
   feature_id           bigint    ,
@@ -226,13 +215,10 @@ CREATE  TABLE property (
   CONSTRAINT property_pk PRIMARY KEY ( id )
 );
 
-CREATE  TABLE surface_data_mapping (
+CREATE  TABLE appear_to_surface_data (
   surface_data_id      bigint  NOT NULL  ,
-  geometry_data_id     bigint  NOT NULL  ,
-  texture_mapping      json    ,
-  material_mapping     json    ,
-  world_to_texture_mapping json    ,
-  CONSTRAINT surface_data_mapping_pk PRIMARY KEY ( geometry_data_id, surface_data_id )
+  appearance_id        bigint  NOT NULL  ,
+  CONSTRAINT appear_to_surface_data_pk PRIMARY KEY ( surface_data_id, appearance_id )
 );
 
 CREATE INDEX address_multi_point_spx ON address USING GiST ( multi_point );
@@ -246,34 +232,6 @@ CREATE INDEX codelist_entry_codelist_idx ON codelist_entry  ( codelist_id );
 CREATE INDEX objectclass_superclass_fkx ON objectclass  ( superclass_id );
 
 CREATE INDEX objectclass_baseclass_fkx ON objectclass  ( baseclass_id );
-
-CREATE INDEX aggregation_info_child_fkx ON aggregation_info  ( child_id );
-
-CREATE INDEX aggregation_info_parent_fkx ON aggregation_info  ( parent_id );
-
-CREATE INDEX surface_data_objectid_inx ON surface_data  ( objectid );
-
-CREATE INDEX surface_data_tex_image_fkx ON surface_data  ( tex_image_id );
-
-CREATE INDEX surface_data_objclass_fkx ON surface_data  ( objectclass_id );
-
-CREATE INDEX surface_data_spx ON surface_data  ( gt_reference_point );
-
-CREATE INDEX surface_data_identifier_inx ON surface_data  ( identifier, identifier_codespace );
-
-CREATE INDEX appear_to_surface_data_fkx1 ON appear_to_surface_data  ( surface_data_id );
-
-CREATE INDEX appear_to_surface_data_fkx2 ON appear_to_surface_data  ( appearance_id );
-
-CREATE INDEX appearance_objectid_inx ON appearance  ( objectid );
-
-CREATE INDEX appearance_theme_inx ON appearance  ( theme );
-
-CREATE INDEX appearance_cityobject_fkx ON appearance  ( cityobject_id );
-
-CREATE INDEX appearance_citymodel_id ON appearance  ( citymodel_id );
-
-CREATE INDEX appearance_identifier_inx ON appearance  ( identifier, identifier_codespace );
 
 CREATE INDEX feature_objectclass_fkx ON feature  ( objectclass_id  );
 
@@ -302,6 +260,28 @@ CREATE INDEX implicit_geom_ref2lib_inx ON implicit_geometry  ( reference_to_libr
 CREATE INDEX implicit_geometry_fkx ON implicit_geometry  ( relative_geometry_id );
 
 CREATE INDEX implicit_geometry_inx ON implicit_geometry  ( objectid );
+
+CREATE INDEX surface_data_objectid_inx ON surface_data  ( objectid );
+
+CREATE INDEX surface_data_tex_image_fkx ON surface_data  ( tex_image_id );
+
+CREATE INDEX surface_data_objclass_fkx ON surface_data  ( objectclass_id );
+
+CREATE INDEX surface_data_spx ON surface_data  ( gt_reference_point );
+
+CREATE INDEX surface_data_identifier_inx ON surface_data  ( identifier, identifier_codespace );
+
+CREATE INDEX surface_data_mapping_fkx1 ON surface_data_mapping  ( geometry_data_id );
+
+CREATE INDEX surface_data_mapping_fkx2 ON surface_data_mapping  ( surface_data_id );
+
+CREATE INDEX appearance_objectid_inx ON appearance  ( objectid );
+
+CREATE INDEX appearance_theme_inx ON appearance  ( theme );
+
+CREATE INDEX appearance_feature_fkx ON appearance  ( feature_id );
+
+CREATE INDEX appearance_identifier_inx ON appearance  ( identifier, identifier_codespace );
 
 CREATE INDEX property_feature_fkx ON property  ( feature_id );
 
@@ -347,29 +327,19 @@ CREATE INDEX property_val_address_fkx ON property  ( val_address );
 
 CREATE INDEX property_val_implicitgeom_spx ON property USING GiST ( val_implicitgeom_refpoint );
 
-CREATE INDEX surface_data_mapping_fkx1 ON surface_data_mapping  ( geometry_data_id );
+CREATE INDEX appear_to_surface_data_fkx1 ON appear_to_surface_data  ( surface_data_id );
 
-CREATE INDEX surface_data_mapping_fkx2 ON surface_data_mapping  ( surface_data_id );
-
-ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_child_fk FOREIGN KEY ( child_id ) REFERENCES objectclass( id ) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_parent_fk FOREIGN KEY ( parent_id ) REFERENCES objectclass( id ) ON DELETE CASCADE ON UPDATE CASCADE;
+CREATE INDEX appear_to_surface_data_fkx2 ON appear_to_surface_data  ( appearance_id );
 
 ALTER TABLE appear_to_surface_data ADD CONSTRAINT appear_to_surface_data_fk1 FOREIGN KEY ( surface_data_id ) REFERENCES surface_data( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE appear_to_surface_data ADD CONSTRAINT appear_to_surface_data_fk2 FOREIGN KEY ( appearance_id ) REFERENCES appearance( id )  ON UPDATE CASCADE;
 
-ALTER TABLE appearance ADD CONSTRAINT appearance_cityobject_fk FOREIGN KEY ( cityobject_id ) REFERENCES feature( id )  ON UPDATE CASCADE;
-
-ALTER TABLE appearance ADD CONSTRAINT appearance_citymodel_fk FOREIGN KEY ( citymodel_id ) REFERENCES citymodel( id )  ON UPDATE CASCADE;
-
-ALTER TABLE citymodel ADD CONSTRAINT citymodel_feature_fk FOREIGN KEY ( id ) REFERENCES feature( id )  ON UPDATE CASCADE;
+ALTER TABLE appearance ADD CONSTRAINT appearance_feature_fk FOREIGN KEY ( feature_id ) REFERENCES feature( id )  ON UPDATE CASCADE;
 
 ALTER TABLE codelist_entry ADD CONSTRAINT codelist_entry_codelist_fk FOREIGN KEY ( codelist_id ) REFERENCES codelist( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE feature ADD CONSTRAINT feature_objectclass_fk FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id )  ON UPDATE CASCADE;
-
-ALTER TABLE feature ADD CONSTRAINT feature_citymodel_fk FOREIGN KEY ( citymodel_id ) REFERENCES citymodel( id )  ON UPDATE CASCADE;
 
 ALTER TABLE feature_hierarchy ADD CONSTRAINT feature_hierarchy_child_fk FOREIGN KEY ( child_id ) REFERENCES feature( id );
 
