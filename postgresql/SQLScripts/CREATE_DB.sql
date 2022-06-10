@@ -63,7 +63,6 @@ SET search_path TO citydb, :current_path;
 
 --// fill tables OBJECTCLASS
 \ir SCHEMA/OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
-\ir SCHEMA/OBJECTCLASS/AGGREGATION_INFO_INSTANCES.sql
 
 --// create schema FUNCTIONS
 \ir SCHEMA/ENVELOPE/ENVELOPE.sql
