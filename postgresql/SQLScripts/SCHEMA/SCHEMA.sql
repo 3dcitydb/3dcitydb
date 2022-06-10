@@ -68,11 +68,11 @@ CREATE  TABLE database_srs (
 
 CREATE  TABLE objectclass (
   id                   integer  NOT NULL  ,
-  ade_id               integer    ,
-  baseclass_id         integer    ,
   superclass_id        integer    ,
+  baseclass_id         integer    ,
   classname            text    ,
   is_toplevel          numeric    ,
+  ade_id               integer    ,
   CONSTRAINT objectclass_pk PRIMARY KEY ( id )
 );
 
