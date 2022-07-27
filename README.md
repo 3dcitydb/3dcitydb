@@ -58,6 +58,7 @@ System requirements
 -------------------
 * PostgreSQL DBMS >= 9.6 with PostGIS extension >= 2.3
 * Oracle DBMS >= 10g R2 with Spatial or Locator option
+* PolarDB for PostgresSQL >= 1.1.22 with Ganos extension >= 4.6
 
 Documentation and literature
 ----------------------------
