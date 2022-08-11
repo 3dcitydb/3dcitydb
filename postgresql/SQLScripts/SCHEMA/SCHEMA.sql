@@ -251,7 +251,7 @@ CREATE INDEX geometry_data_objectid_inx ON geometry_data  ( objectid );
 
 CREATE INDEX geometry_data_feature_fkx ON geometry_data  ( feature_id );
 
-CREATE INDEX geometry_data_spx ON geometry_data  ( geometry );
+CREATE INDEX geometry_data_spx ON geometry_data USING GiST ( geometry );
 
 CREATE INDEX implicit_geom_ref2lib_inx ON implicit_geometry  ( reference_to_library );
 
