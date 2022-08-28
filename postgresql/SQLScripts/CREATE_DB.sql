@@ -39,10 +39,10 @@ SELECT EXISTS(SELECT 1 AS create_raster from pg_type where typname= 'raster') AS
 --// break if the raster data type is not available
 SELECT CASE WHEN :'raster_type_exists' = 't'
   THEN 'UTIL/HINTS/DO_NOTHING.sql'
-  ELSE 'UTIL/HINTS/HINT_ON_MISSING_RASTER_EXTENSION.sql'
-  END AS do_action_for_raster_extension_check;
+  ELSE 'UTIL/HINTS/HINT_ON_MISSING_RASTER_TYPE.sql'
+  END AS do_action_for_raster_tye_check;
 \gset
-\ir :do_action_for_raster_extension_check
+\ir :do_action_for_raster_type_check
 
 --// create schema
 CREATE SCHEMA citydb;
