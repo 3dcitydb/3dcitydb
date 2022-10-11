@@ -70,19 +70,18 @@ CREATE  TABLE database_srs (
 
 CREATE  TABLE namespace (
   id                   integer  NOT NULL  ,
-  "prefix"             text    ,
+  "alias"              text    ,
   namespace            text    ,
-  CONSTRAINT namespace_pk PRIMARY KEY ( id ),
-  CONSTRAINT namespace_prefix_unq UNIQUE ( "prefix" )
+  CONSTRAINT namespace_pk PRIMARY KEY ( id )
 );
 
 CREATE  TABLE objectclass (
   id                   integer  NOT NULL  ,
   superclass_id        integer    ,
   classname            text    ,
-  namespace            text    ,
   is_toplevel          numeric    ,
   ade_id               integer    ,
+  namespace_id         integer    ,
   CONSTRAINT objectclass_pk PRIMARY KEY ( id )
 );
 
@@ -101,7 +100,7 @@ CREATE  TABLE aggregation_info (
   child_id             integer  NOT NULL  ,
   parent_id            integer  NOT NULL  ,
   property_name        text  NOT NULL  ,
-  property_namespace   text    ,
+  property_namespace_id integer    ,
   min_occurs           integer    ,
   max_occurs           integer    ,
   is_composite         numeric
@@ -242,7 +241,7 @@ CREATE  TABLE property (
   parent_id            bigint    ,
   root_id              bigint    ,
   lod                  text    ,
-  namespace            text    ,
+  namespace_alias      text    ,
   name                 text    ,
   index_number         integer    ,
   data_valtype         integer    ,
@@ -271,17 +270,13 @@ CREATE INDEX property_feature_fkx ON property  ( feature_id );
 
 CREATE INDEX property_parent_fkx ON property  ( parent_id );
 
-CREATE INDEX property_namespace_inx ON property  ( namespace );
-
-CREATE INDEX property_name_inx ON property  ( name );
-
 CREATE INDEX property_root_fkx ON property  ( root_id );
 
 CREATE INDEX property_data_valtype_inx ON property  ( data_valtype );
 
 CREATE INDEX property_val_feature_fkx ON property  ( val_feature_id );
 
-CREATE INDEX property_namespace_name_inx ON property  ( namespace, name );
+CREATE INDEX property_namespace_name_inx ON property  ( namespace_alias, name );
 
 CREATE INDEX property_val_string_inx ON property  ( val_string );
 
@@ -323,6 +318,8 @@ ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_child_fk FOREIGN KE
 
 ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_parent_fk FOREIGN KEY ( parent_id ) REFERENCES objectclass( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_namespace_fk FOREIGN KEY ( property_namespace_id ) REFERENCES namespace( id );
+
 ALTER TABLE appear_to_surface_data ADD CONSTRAINT appear_to_surface_data_fk1 FOREIGN KEY ( surface_data_id ) REFERENCES surface_data( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE appear_to_surface_data ADD CONSTRAINT appear_to_surface_data_fk2 FOREIGN KEY ( appearance_id ) REFERENCES appearance( id )  ON UPDATE CASCADE;
@@ -341,7 +338,7 @@ ALTER TABLE objectclass ADD CONSTRAINT objectclass_ade_fk FOREIGN KEY ( ade_id )
 
 ALTER TABLE objectclass ADD CONSTRAINT objectclass_superclass_fk FOREIGN KEY ( superclass_id ) REFERENCES objectclass( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE objectclass ADD CONSTRAINT objectclass_namespace_fk FOREIGN KEY ( namespace ) REFERENCES namespace( "prefix" );
+ALTER TABLE objectclass ADD CONSTRAINT objectclass_namespace_fk FOREIGN KEY ( namespace_id ) REFERENCES namespace( id );
 
 ALTER TABLE property ADD CONSTRAINT property_appearance_fk FOREIGN KEY ( val_appearance_id ) REFERENCES appearance( id )  ON UPDATE CASCADE;
 
@@ -360,8 +357,6 @@ ALTER TABLE property ADD CONSTRAINT property_root_fk FOREIGN KEY ( root_id ) REF
 ALTER TABLE property ADD CONSTRAINT property_val_geometry_fk FOREIGN KEY ( val_geometry_id ) REFERENCES geometry_data( id )  ON UPDATE CASCADE;
 
 ALTER TABLE property ADD CONSTRAINT property_val_address_fk FOREIGN KEY ( val_address_id ) REFERENCES address( id )  ON UPDATE CASCADE;
-
-ALTER TABLE property ADD CONSTRAINT property_namespace_fk FOREIGN KEY ( namespace ) REFERENCES namespace( "prefix" );
 
 ALTER TABLE surface_data ADD CONSTRAINT surface_data_objclass_fk FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id )  ON UPDATE CASCADE;
 
