@@ -52,8 +52,9 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 \echo 'Setting up database schema ...'
 \ir ../../SCHEMA/SCHEMA.sql
 
---// fill tables OBJECTCLASS
-\ir ../../SCHEMA/OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
+--// fill metadata tables
+\ir ../../SCHEMA/METADATA/NAMESPACE_INSTANCES.sql
+\ir ../../SCHEMA/METADATA/OBJECTCLASS_INSTANCES.sql
 
 --// create and fill INDEX_TABLE
 \ir ../../SCHEMA/INDEX_TABLE/INDEX_TABLE.sql

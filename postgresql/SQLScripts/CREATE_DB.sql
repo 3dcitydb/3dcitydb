@@ -61,8 +61,9 @@ SET search_path TO citydb, :current_path;
 \echo 'Setting up database schema of 3DCityDB instance ...'
 \ir SCHEMA/SCHEMA.sql
 
---// fill tables OBJECTCLASS
-\ir SCHEMA/OBJECTCLASS/OBJECTCLASS_INSTANCES.sql
+--// fill metadata tables
+\ir SCHEMA/METADATA/NAMESPACE_INSTANCES.sql
+\ir SCHEMA/METADATA/OBJECTCLASS_INSTANCES.sql
 
 --// create schema FUNCTIONS
 \ir SCHEMA/ENVELOPE/ENVELOPE.sql
