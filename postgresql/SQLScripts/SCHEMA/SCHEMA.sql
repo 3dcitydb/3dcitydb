@@ -72,6 +72,7 @@ CREATE  TABLE namespace (
   id                   integer  NOT NULL  ,
   "alias"              text    ,
   namespace            text    ,
+  ade_id               integer    ,
   CONSTRAINT namespace_pk PRIMARY KEY ( id )
 );
 
@@ -241,7 +242,7 @@ CREATE  TABLE property (
   parent_id            bigint    ,
   root_id              bigint    ,
   lod                  text    ,
-  namespace_alias      text    ,
+  namespace_id         integer    ,
   name                 text    ,
   index_number         integer    ,
   data_valtype         integer    ,
@@ -276,7 +277,7 @@ CREATE INDEX property_data_valtype_inx ON property  ( data_valtype );
 
 CREATE INDEX property_val_feature_fkx ON property  ( val_feature_id );
 
-CREATE INDEX property_namespace_name_inx ON property  ( namespace_alias, name );
+CREATE INDEX property_namespace_name_inx ON property  ( namespace_id, name );
 
 CREATE INDEX property_val_string_inx ON property  ( val_string );
 
@@ -303,6 +304,8 @@ CREATE INDEX property_val_codelist_fkx ON property  ( val_codelist_id );
 CREATE INDEX property_val_address_fkx ON property  ( val_address_id );
 
 CREATE INDEX property_val_implicitgeom_spx ON property USING GiST ( val_implicitgeom_refpoint );
+
+CREATE INDEX property_namespace_fkx ON property  ( namespace_id );
 
 CREATE  TABLE appear_to_surface_data (
   surface_data_id      bigint  NOT NULL  ,
@@ -334,6 +337,8 @@ ALTER TABLE geometry_data ADD CONSTRAINT geometry_data_feature_fk FOREIGN KEY ( 
 
 ALTER TABLE implicit_geometry ADD CONSTRAINT implicit_geometry_fk FOREIGN KEY ( relative_geometry_id ) REFERENCES geometry_data( id )  ON UPDATE CASCADE;
 
+ALTER TABLE namespace ADD CONSTRAINT fk_namespace_ade FOREIGN KEY ( ade_id ) REFERENCES ade( id );
+
 ALTER TABLE objectclass ADD CONSTRAINT objectclass_ade_fk FOREIGN KEY ( ade_id ) REFERENCES ade( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE objectclass ADD CONSTRAINT objectclass_superclass_fk FOREIGN KEY ( superclass_id ) REFERENCES objectclass( id ) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -357,6 +362,8 @@ ALTER TABLE property ADD CONSTRAINT property_root_fk FOREIGN KEY ( root_id ) REF
 ALTER TABLE property ADD CONSTRAINT property_val_geometry_fk FOREIGN KEY ( val_geometry_id ) REFERENCES geometry_data( id )  ON UPDATE CASCADE;
 
 ALTER TABLE property ADD CONSTRAINT property_val_address_fk FOREIGN KEY ( val_address_id ) REFERENCES address( id )  ON UPDATE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_namespace_fk FOREIGN KEY ( namespace_id ) REFERENCES namespace( id );
 
 ALTER TABLE surface_data ADD CONSTRAINT surface_data_objclass_fk FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id )  ON UPDATE CASCADE;
 
