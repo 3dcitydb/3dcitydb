@@ -64,6 +64,7 @@ SET search_path TO citydb, :current_path;
 --// fill metadata tables
 \ir SCHEMA/METADATA/NAMESPACE_INSTANCES.sql
 \ir SCHEMA/METADATA/OBJECTCLASS_INSTANCES.sql
+\ir SCHEMA/METADATA/AGGREGATION_INFO_INSTANCES.sql
 
 --// create schema FUNCTIONS
 \ir SCHEMA/ENVELOPE/ENVELOPE.sql
