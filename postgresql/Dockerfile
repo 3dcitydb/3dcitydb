@@ -4,7 +4,7 @@
 ###############################################################################
 
 # Base image
-ARG BASEIMAGE_TAG='14-3.2'
+ARG BASEIMAGE_TAG='14-3.3'
 FROM postgis/postgis:${BASEIMAGE_TAG}
 
 # Set 3DCityDB version
