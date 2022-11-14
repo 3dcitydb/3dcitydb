@@ -22,7 +22,7 @@ jobs:
     -
       name: Oracle login
       id: oracle_login
-      uses: docker/login-action@v1.8.0
+      uses: docker/login-action@v2
       with:
         registry: container-registry.oracle.com
         username: ${{ secrets.ORACLE_USERNAME }}
@@ -30,7 +30,7 @@ jobs:
     -
       name: Build image
       id: docker_build
-      uses: docker/build-push-action@v2.2.2
+      uses: docker/build-push-action@v3
       with:
         context: ./oracle
         push: false
