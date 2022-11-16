@@ -1,6 +1,6 @@
 @echo off
 :: Shell script to revoke access privileges from a 3DCityDB schema
-:: on Oracle Spatial/Locator
+:: on Oracle
 
 :: read database connection details
 call CONNECTION_DETAILS.bat

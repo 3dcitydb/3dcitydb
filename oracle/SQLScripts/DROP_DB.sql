@@ -29,11 +29,8 @@ SET SERVEROUTPUT ON
 SET FEEDBACK ON
 SET VER OFF
 
--- parge arguments
-DEFINE DBVERSION=&1;
-
 -- disable versioning (if it was enabled before)
-@@UTIL/VERSIONING/DISABLE_VERSIONING.sql &DBVERSION
+@@UTIL/VERSIONING/DISABLE_VERSIONING.sql
 
 SELECT 'Dropping 3DCityDB tables and user objects' as message from DUAL;
 BEGIN

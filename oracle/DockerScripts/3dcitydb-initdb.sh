@@ -62,13 +62,6 @@ else
   VERSIONING="$VERSIONING"
 fi
 
-# DBVERSION -------------------------------------------------------------------
-if [ -z ${DBVERSION+x} ]; then
-  DBVERSION="s"
-else
-  DBVERSION="$DBVERSION"
-fi
-
 # DBUSER
 if [ -z ${DBUSER+x} ]; then
   DBUSER="citydb"
@@ -88,14 +81,12 @@ echo "CREATE USER $DBUSER identified by $ORACLE_PWD;
 echo "Creating user $DBUSER ... done!"
 echo
 
-# Enable GeoRaster at the Schema Level for Oracle Spatial (required since Oracle 19c)
-if [ "${DBVERSION}" = "s" ] || [ "${DBVERSION}" = "S" ]; then
-  echo "EXECUTE SDO_GEOR_ADMIN.ENABLEGEORASTER;" | sqlplus "$DBUSER"/"$ORACLE_PWD"@localhost:1521/"$ORACLE_PDB"
-fi
+# Enable GeoRaster (required since Oracle 19c)
+echo "EXECUTE SDO_GEOR_ADMIN.ENABLEGEORASTER;" | sqlplus "$DBUSER"/"$ORACLE_PWD"@localhost:1521/"$ORACLE_PDB"
 
 # Setup 3DCityDB schema -------------------------------------------------------
 echo "Setting up 3DCityDB schema in $DBUSER ..."
-sqlplus -S -L "$DBUSER"/"$ORACLE_PWD"@localhost:1521/"$ORACLE_PDB" @CREATE_DB.sql "${SRID}" "${GMLSRSNAME}" "${VERSIONING}" "${DBVERSION}"
+sqlplus -S -L "$DBUSER"/"$ORACLE_PWD"@localhost:1521/"$ORACLE_PDB" @CREATE_DB.sql "${SRID}" "${GMLSRSNAME}" "${VERSIONING}"
 echo "Setting up 3DCityDB schema in $DBUSER ...done!"
 echo
 echo "# Setting up 3DCityDB ... done! ################################################"
