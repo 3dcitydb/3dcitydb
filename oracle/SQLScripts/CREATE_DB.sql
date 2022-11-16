@@ -56,52 +56,21 @@ column script new_value HINTFILE2 print
 SELECT :HINTFILE script FROM dual;
 @@&HINTFILE2
 
--- check for SDO_GEORASTER support
-VARIABLE GEORASTER_SUPPORT NUMBER;
-BEGIN
-  :GEORASTER_SUPPORT := 0;
-    SELECT COUNT(*) INTO :GEORASTER_SUPPORT FROM ALL_SYNONYMS
-  WHERE SYNONYM_NAME='SDO_GEORASTER';
-
-  IF :GEORASTER_SUPPORT = 0 THEN
-	dbms_output.put_line('NOTE: The data type SDO_GEORASTER is not available for this database. Raster relief tables will not be created.');
-  END IF;
-END;
-/
+-- enable GeoRaster support
+exec SDO_GEOR_ADMIN.enableGeoRaster;
 
 -- create tables
-column script new_value TABLES
-SELECT
-  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'SCHEMA/TABLES/TABLES_GEORASTER.sql'
-  ELSE 'SCHEMA/TABLES/TABLES.sql'
-  END AS script
-FROM dual;
-
-@@&TABLES
+@@SCHEMA/TABLES/TABLES_GEORASTER.sql
 
 -- populate database SRS
 INSERT INTO DATABASE_SRS(SRID,GML_SRS_NAME) VALUES (&SRSNO,'&GMLSRSNAME');
 COMMIT;
 
 -- create sequences
-column script new_value SEQUENCES
-SELECT
-  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'SCHEMA/SEQUENCES/SEQUENCES_GEORASTER.sql'
-  ELSE 'SCHEMA/SEQUENCES/SEQUENCES.sql'
-  END AS script
-FROM dual;
-
-@@&SEQUENCES
+@@SCHEMA/SEQUENCES/SEQUENCES_GEORASTER.sql
 
 -- activate constraints
-column script new_value CONSTRAINTS
-SELECT
-  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'SCHEMA/CONSTRAINTS/CONSTRAINTS_GEORASTER.sql'
-  ELSE 'SCHEMA/CONSTRAINTS/CONSTRAINTS.sql'
-  END AS script
-FROM dual;
-
-@@&CONSTRAINTS
+@@SCHEMA/CONSTRAINTS/CONSTRAINTS_GEORASTER.sql
 
 -- citydb packages
 SELECT 'Creating packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', ''citydb_delete'', and corresponding types' as message from DUAL;
@@ -112,24 +81,10 @@ SELECT 'Creating packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx''
 @@CITYDB_PKG/STATISTICS/STAT.sql;
 
 -- create delete scripts
-column script new_value DELETE
-SELECT
-  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'CITYDB_PKG/DELETE/DELETE_GEORASTER.sql'
-  ELSE 'CITYDB_PKG/DELETE/DELETE.sql'
-  END AS script
-FROM dual;
-
-@@&DELETE
+@@CITYDB_PKG/DELETE/DELETE_GEORASTER.sql
 
 -- create envelope scripts
-column script new_value ENVELOPE
-SELECT
-  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'CITYDB_PKG/ENVELOPE/ENVELOPE_GEORASTER.sql'
-  ELSE 'CITYDB_PKG/ENVELOPE/ENVELOPE.sql'
-  END AS script
-FROM dual;
-
-@@&ENVELOPE
+@@CITYDB_PKG/ENVELOPE/ENVELOPE_GEORASTER.sql
 
 SELECT 'Packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', and ''citydb_delete'' created' as message from DUAL;
 
@@ -143,14 +98,7 @@ exec citydb_constraint.set_schema_sdo_metadata(USER);
 COMMIT;
 
 -- build indexes
-column script new_value SIMPLE_INDEXES
-SELECT
-  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN 'SCHEMA/INDEXES/SIMPLE_INDEXES_GEORASTER.sql'
-  ELSE 'SCHEMA/INDEXES/SIMPLE_INDEXES.sql'
-  END AS script
-FROM dual;
-
-@@&SIMPLE_INDEXES
+@@SCHEMA/INDEXES/SIMPLE_INDEXES_GEORASTER.sql
 @@SCHEMA/INDEXES/SPATIAL_INDEXES.sql
 
 -- activate versioning if requested
