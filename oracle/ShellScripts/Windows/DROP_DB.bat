@@ -1,6 +1,6 @@
 @echo off
 :: Shell script to drop an instance of the 3D City Database
-:: on Oracle Spatial/Locator
+:: on Oracle
 
 :: read database connection details  
 call CONNECTION_DETAILS.bat
@@ -38,32 +38,10 @@ echo ###########################################################################
 :: cd to path of the SQL scripts
 cd ..\..\SQLScripts
 
-:: Prompt for DBVERSION -------------------------------------------------------
-:dbversion
-set var=
-echo.
-echo Which database license are you using (Spatial=S/Locator=L)?
-set /p var="(default DBVERSION=S): "
-
-if /i not "%var%"=="" (
-  set DBVERSION=%var%
-) else (
-  set DBVERSION=S
-)
-
-set res=f
-if /i "%DBVERSION%"=="s" (set res=t)
-if /i "%DBVERSION%"=="l" (set res=t)
-if "%res%"=="f" (
-  echo.
-  echo Illegal input! Enter S or L.
-  goto dbversion
-)
-
 :: Run DROP_DB.sql to drop the 3D City Database instance ----------------------
 echo.
 echo Connecting to "%USERNAME%@%HOST%:%PORT%/%SID%" ...
 echo|set /p="Enter password: "
-sqlplus -S -L "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @DROP_DB.sql "%DBVERSION%"
+sqlplus -S -L "%USERNAME%@\"%HOST%:%PORT%/%SID%\"" @DROP_DB.sql
 
 pause

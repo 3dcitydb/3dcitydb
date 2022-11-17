@@ -1,6 +1,6 @@
 @echo off
 :: Shell script to grant access privileges to a 3DCityDB schema
-:: on Oracle Spatial/Locator
+:: on Oracle
 
 :: read database connection details  
 call CONNECTION_DETAILS.bat

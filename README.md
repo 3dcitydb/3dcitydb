@@ -12,7 +12,7 @@ The schema of the 3D City Database is based on the [OGC City Geography Markup La
 an international [standard](http://www.opengeospatial.org/standards/citygml) for representing and exchanging
 virtual 3D city models issued by the [Open Geospatial Consortium (OGC)](http://www.opengeospatial.org/).
 
-The 3D City Database has been realized as PostgreSQL/PostGIS and Oracle Spatial/Locator database schema,
+The 3D City Database has been realized as PostgreSQL/PostGIS and Oracle database schema,
 supporting following key features:
 
  * Full support for CityGML versions 2.0 and 1.0
@@ -57,7 +57,7 @@ You can download the latest release as well as previous releases from the
 System requirements
 -------------------
 * PostgreSQL DBMS >= 9.6 with PostGIS extension >= 2.3
-* Oracle DBMS >= 10g R2 with Spatial or Locator option
+* Oracle DBMS >= 19c
 * PolarDB for PostgresSQL 1.1 with Ganos extension >= 4.6
 
 Documentation and literature
@@ -101,7 +101,6 @@ The setup procedure requires the following mandatory user inputs:
 For Oracle, two additional inputs are required:
 
 4) Decision whether the database instance should be versioning enabled,
-5) Whether the Oracle DBMS runs with Locator or Spatial license option.
 
 Afterwards, the script will start the setup procedure and invoke additional
 SQL scripts in the background. Please refer to the [user manual](https://3dcitydb-docs.readthedocs.io/en/version-2021.1/)

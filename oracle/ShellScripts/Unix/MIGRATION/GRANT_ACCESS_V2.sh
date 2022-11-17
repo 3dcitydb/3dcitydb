@@ -1,6 +1,6 @@
 #!/bin/bash
 # Shell script to grant select on an v2 instance to v4 user
-# on Oracle Spatial/Locator
+# on Oracle
 
 # read database connection details 
 source ../CONNECTION_DETAILS.sh

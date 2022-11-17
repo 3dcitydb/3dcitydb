@@ -1,6 +1,6 @@
 #!/bin/bash
 # Shell script to migrate an instance of the 3D City Database
-# on Oracle Spatial/Locator
+# on Oracle
 
 # read database connection details 
 source ../CONNECTION_DETAILS.sh
@@ -85,29 +85,11 @@ while [ 1 ]; do
   fi
 done
 
-# Prompt for DBVERSION --------------------------------------------------------
-while [ 1 ]; do
-  echo
-  echo 'Which database license are you using (Spatial=S/Locator=L)?'
-  read -p "(default DBVERSION=S): " DBVERSION
-  DBVERSION=${DBVERSION:-S}
-
-  # to upper case
-  DBVERSION=$(echo "$DBVERSION" | awk '{print toupper($0)}')
-
-  if [ "$DBVERSION" = "S" ] || [ "$DBVERSION" = "L" ] ; then
-    break;
-  else
-    echo
-    echo "Illegal input! Enter S or L."
-  fi
-done
-
 # Run MIGRATE_DB.sql to create the 3D City Database instance ------------------
 echo
 echo "Connecting to the database \"$USERNAME@$HOST:$PORT/$SID\" ..."
 echo -n "Enter password: "
-sqlplus -S -L "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @MIGRATE_DB.sql "${TEXOP}" "${DBVERSION}" "${V2USER}"
+sqlplus -S -L "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @MIGRATE_DB.sql "${TEXOP}" "${V2USER}"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'

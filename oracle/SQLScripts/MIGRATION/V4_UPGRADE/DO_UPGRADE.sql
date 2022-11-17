@@ -30,17 +30,15 @@ SET SERVEROUTPUT ON
 SET FEEDBACK ON
 SET VER OFF
 
--- check for SDO_GEORASTER support
-VARIABLE GEORASTER_SUPPORT NUMBER;
+-- check for relief support
+VARIABLE RELIEF_SUPPORT NUMBER;
 BEGIN
-  :GEORASTER_SUPPORT := 0;
-  IF (upper('&DBVERSION')='S') THEN
-    SELECT COUNT(*) INTO :GEORASTER_SUPPORT FROM ALL_SYNONYMS
-	WHERE SYNONYM_NAME='SDO_GEORASTER';
-  END IF;
+  :RELIEF_SUPPORT := 0;
+    SELECT COUNT(*) INTO :RELIEF_SUPPORT FROM USER_TABLES
+  WHERE TABLE_NAME='RELIEF';
 
-  IF :GEORASTER_SUPPORT = 0 THEN
-	dbms_output.put_line('NOTE: The data type SDO_GEORASTER is not available for this database. Raster relief tables will not be created.');
+  IF :RELIEF_SUPPORT = 0 THEN
+	dbms_output.put_line('NOTE: The relief tables are not available for this database and will therefore not be upgraded.');
   END IF;
 END;
 /
@@ -99,7 +97,7 @@ END;
 -- create delete scripts
 column script new_value DELETE
 SELECT
-  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN '../../CITYDB_PKG/DELETE/DELETE_GEORASTER.sql'
+  CASE WHEN :RELIEF_SUPPORT <> 0 THEN '../../CITYDB_PKG/DELETE/DELETE_GEORASTER.sql'
   ELSE '../../CITYDB_PKG/DELETE/DELETE.sql'
   END AS script
 FROM dual;
@@ -109,7 +107,7 @@ FROM dual;
 -- create envelope scripts
 column script new_value ENVELOPE
 SELECT
-  CASE WHEN :GEORASTER_SUPPORT <> 0 THEN '../../CITYDB_PKG/ENVELOPE/ENVELOPE_GEORASTER.sql'
+  CASE WHEN :RELIEF_SUPPORT <> 0 THEN '../../CITYDB_PKG/ENVELOPE/ENVELOPE_GEORASTER.sql'
   ELSE '../../CITYDB_PKG/ENVELOPE/ENVELOPE.sql'
   END AS script
 FROM dual;

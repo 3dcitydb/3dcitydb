@@ -1,6 +1,6 @@
 #!/bin/bash
 # Shell script to drop an instance of the 3D City Database
-# on Oracle Spatial/Locator
+# on Oracle
 
 # read database connection details
 source CONNECTION_DETAILS.sh
@@ -38,29 +38,11 @@ echo '##########################################################################
 # cd to path of the SQL scripts
 cd ../../SQLScripts
 
-# Prompt for DBVERSION --------------------------------------------------------
-while [ 1 ]; do
-  echo
-  echo 'Which database license are you using (Spatial=S/Locator=L)?'
-  read -p "(default DBVERSION=S): " DBVERSION
-  DBVERSION=${DBVERSION:-S}
-
- # to upper case
-  DBVERSION=$(echo "$DBVERSION" | awk '{print toupper($0)}')
-
-  if [ "$DBVERSION" = "S" ] || [ "$DBVERSION" = "L" ] ; then
-    break;
-  else
-    echo
-    echo "Illegal input! Enter S or L."
-  fi
-done
-
 # Run DROP_DB.sql to drop the 3D City Database instance -----------------------
 echo
 echo "Connecting to \"$USERNAME@$HOST:$PORT/$SID\" ..."
 echo -n "Enter password: "
-sqlplus -S -L "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @DROP_DB.sql "${DBVERSION}"
+sqlplus -S -L "${USERNAME}@\"${HOST}:${PORT}/${SID}\"" @DROP_DB.sql
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'
