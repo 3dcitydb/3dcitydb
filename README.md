@@ -104,9 +104,9 @@ The setup procedure requires the following mandatory user inputs:
 2) EPSG code of the height system (optional),
 3) String encoding of the SRS used for the gml:srsName attribute in CityGML exports.
 
-For Oracle, two additional inputs are required:
+For Oracle, one additional input is required:
 
-4) Decision whether the database instance should be versioning enabled,
+4) Decision whether the database instance should be versioning enabled.
 
 Afterwards, the script will start the setup procedure and invoke additional
 SQL scripts in the background. Please refer to the [user manual](https://3dcitydb-docs.readthedocs.io/en/version-2021.1/)
