@@ -1,5 +1,17 @@
 Change Log
 ==========
+### 4.4.0 - tba
+
+##### Additions
+* Added support for PolarDB/Ganos database. [#134](https://github.com/3dcitydb/3dcitydb/pull/134)
+* Added PostgreSQL 15 and PostGIS 3.3 support for Docker images. [#152](https://github.com/3dcitydb/3dcitydb/pull/152)
+
+##### Changes
+* Updated system requirements for Oracle (>= 19c), PostgreSQL(>= 11), and PostGIS(>= 2.5). [#154](https://github.com/3dcitydb/3dcitydb/pull/154), [#155](https://github.com/3dcitydb/3dcitydb/pull/155)
+* Changed the default PORT value (e.g. `1521`) in the `CONNECTION_DETAILS` files to a token text (e.g. `your_db_port(e.g. 1521)`).
+
+##### Fixes
+* Fixed missing `ON DELETE CASCADE` referential action for the foreign keys in the table `GENERALIZATION`, which causes errors when calling the `del_cityobject` function.
 
 ### 4.3.0 - 2022-05-23
 
