@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.2" last-position="15013,9390" last-zoom="0.8"
+<dbmodel pgmodeler-ver="0.8.2" last-position="15341,8553" last-zoom="0.8"
 	 default-owner="postgres">
 <database name="3DCityDB" encoding="UTF8">
 	<role name="postgres"/>
@@ -6151,13 +6151,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="general_cityobject_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.cityobject" table="citydb.generalization">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.cityobject" table="citydb.generalization">
 	<columns names="cityobject_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="general_generalizes_to_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="NO ACTION" ref-table="citydb.cityobject" table="citydb.generalization">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="citydb.cityobject" table="citydb.generalization">
 	<columns names="generalizes_to_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>

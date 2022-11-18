@@ -5024,14 +5024,14 @@ ON DELETE NO ACTION ON UPDATE CASCADE;
 -- ALTER TABLE generalization DROP CONSTRAINT IF EXISTS general_cityobject_fk CASCADE;
 ALTER TABLE generalization ADD CONSTRAINT general_cityobject_fk FOREIGN KEY (cityobject_id)
 REFERENCES cityobject (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: general_generalizes_to_fk | type: CONSTRAINT --
 -- ALTER TABLE generalization DROP CONSTRAINT IF EXISTS general_generalizes_to_fk CASCADE;
 ALTER TABLE generalization ADD CONSTRAINT general_generalizes_to_fk FOREIGN KEY (generalizes_to_id)
 REFERENCES cityobject (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: group_cityobject_fk | type: CONSTRAINT --
