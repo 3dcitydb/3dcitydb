@@ -4,7 +4,7 @@
 ###############################################################################
 
 # Base image
-ARG BASEIMAGE_TAG='latest'
+ARG BASEIMAGE_TAG='19.3.0.0'
 FROM container-registry.oracle.com/database/enterprise:${BASEIMAGE_TAG}
 
 # Set 3DCityDB version
