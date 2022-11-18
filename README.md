@@ -56,9 +56,15 @@ You can download the latest release as well as previous releases from the
 
 System requirements
 -------------------
-* PostgreSQL DBMS >= 9.6 with PostGIS extension >= 2.3
-* Oracle DBMS >= 19c
-* PolarDB for PostgresSQL 1.1 with Ganos extension >= 4.6
+Setting up an instance of the 3D City Database requires an existing installation of a PostgreSQL, Oracle,
+or PolarDB database. The following database versions are supported.
+
+* PostgreSQL >= 11 with PostGIS >= 2.5
+* Oracle >= 19c
+* PolarDB for PostgresSQL >= 1.1 with Ganos >= 4.6
+
+It is recommended that you always install the latest patches, minor releases, and security updates for your
+database system. Database versions that have reached end-of-life are no longer supported by the 3D City Database.
 
 Documentation and literature
 ----------------------------
