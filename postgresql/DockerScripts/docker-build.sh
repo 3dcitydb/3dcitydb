@@ -7,7 +7,7 @@ repo="3dcitydb/3dcitydb-pg"
 push=false
 
 # CityDB version
-citydb_version="4.3.0"
+citydb_version="4.4.0"
 
 # Docker PostGIS versions
 arr=(
