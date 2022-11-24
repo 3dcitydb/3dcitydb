@@ -259,8 +259,7 @@ CREATE  TABLE property (
   val_appearance_id    bigint    ,
   val_feature_id       bigint    ,
   val_is_reference     integer    ,
-  val_code             text    ,
-  val_codelist_id      bigint    ,
+  val_codespace        text    ,
   val_uom              text    ,
   val_content          text    ,
   val_content_mime_type text    ,
@@ -298,8 +297,6 @@ CREATE INDEX property_val_geometry_fkx ON property  ( val_geometry_id );
 CREATE INDEX property_val_implicitgeom_fkx ON property  ( val_implicitgeom_id );
 
 CREATE INDEX property_val_appearance_fkx ON property  ( val_appearance_id );
-
-CREATE INDEX property_val_codelist_fkx ON property  ( val_codelist_id );
 
 CREATE INDEX property_val_address_fkx ON property  ( val_address_id );
 
@@ -346,8 +343,6 @@ ALTER TABLE objectclass ADD CONSTRAINT objectclass_superclass_fk FOREIGN KEY ( s
 ALTER TABLE objectclass ADD CONSTRAINT objectclass_namespace_fk FOREIGN KEY ( namespace_id ) REFERENCES namespace( id );
 
 ALTER TABLE property ADD CONSTRAINT property_appearance_fk FOREIGN KEY ( val_appearance_id ) REFERENCES appearance( id )  ON UPDATE CASCADE;
-
-ALTER TABLE property ADD CONSTRAINT property_codelist_fk FOREIGN KEY ( val_codelist_id ) REFERENCES codelist( id )  ON UPDATE CASCADE;
 
 ALTER TABLE property ADD CONSTRAINT property_feature_fk FOREIGN KEY ( feature_id ) REFERENCES feature( id )  ON UPDATE CASCADE;
 
