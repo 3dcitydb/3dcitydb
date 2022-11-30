@@ -251,7 +251,6 @@ CREATE  TABLE property (
   val_string           text    ,
   val_timestamp        timestamptz    ,
   val_uri              text    ,
-  val_address_id       bigint    ,
   val_geometry_id      bigint    ,
   val_implicitgeom_id  bigint    ,
   val_implicitgeom_refpoint geometry(GEOMETRYZ)    ,
@@ -297,8 +296,6 @@ CREATE INDEX property_val_geometry_fkx ON property  ( val_geometry_id );
 CREATE INDEX property_val_implicitgeom_fkx ON property  ( val_implicitgeom_id );
 
 CREATE INDEX property_val_appearance_fkx ON property  ( val_appearance_id );
-
-CREATE INDEX property_val_address_fkx ON property  ( val_address_id );
 
 CREATE INDEX property_val_implicitgeom_spx ON property USING GiST ( val_implicitgeom_refpoint );
 
@@ -357,8 +354,6 @@ ALTER TABLE property ADD CONSTRAINT property_parent_fk FOREIGN KEY ( parent_id )
 ALTER TABLE property ADD CONSTRAINT property_root_fk FOREIGN KEY ( root_id ) REFERENCES property( id ) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE property ADD CONSTRAINT property_val_geometry_fk FOREIGN KEY ( val_geometry_id ) REFERENCES geometry_data( id )  ON UPDATE CASCADE;
-
-ALTER TABLE property ADD CONSTRAINT property_val_address_fk FOREIGN KEY ( val_address_id ) REFERENCES address( id )  ON UPDATE CASCADE;
 
 ALTER TABLE property ADD CONSTRAINT property_namespace_fk FOREIGN KEY ( namespace_id ) REFERENCES namespace( id );
 
