@@ -11,6 +11,9 @@ SELECT table_name FROM information_schema.tables where table_schema = 'citydb'
         AND table_name <> 'objectclass'
         AND table_name <> 'index_table'
         AND table_name <> 'ade'
+        AND table_name <> 'namespace'
+        AND table_name <> 'aggregation_info'
+        AND table_name <> 'codelist_entry'
         AND table_name NOT LIKE 'tmp_%'
   LOOP
     EXECUTE format('TRUNCATE TABLE citydb.%I CASCADE', rec.table_name);
