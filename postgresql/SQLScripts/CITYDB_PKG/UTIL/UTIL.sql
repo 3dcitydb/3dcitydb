@@ -240,3 +240,43 @@ END;
 $$
 LANGUAGE plpgsql STRICT;
 
+/*****************************************************************
+* get_child_objectclass_ids
+*
+* @param class_id identifier for object class
+*
+* @return QUERY the IDs of all transitive subclasses of the given object class
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.get_child_objectclass_ids(
+  class_id INTEGER,
+  schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER AS
+$$
+BEGIN
+  RETURN QUERY EXECUTE format('
+    WITH RECURSIVE class_hierarchy AS (
+      SELECT
+        id,
+        superclass_id,
+        classname,
+        is_toplevel,
+        ade_id,
+        namespace_id
+      FROM
+        %I.objectclass
+      WHERE
+        id = %L
+      UNION ALL
+      SELECT
+        o.*
+      FROM
+        %I.objectclass o
+          INNER JOIN class_hierarchy h ON h.id = o.superclass_id
+    )
+    SELECT
+      id
+    FROM
+      class_hierarchy h
+  ', schema_name, class_id, schema_name);
+END;
+$$
+LANGUAGE plpgsql STRICT;
