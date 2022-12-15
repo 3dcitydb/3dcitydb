@@ -1,6 +1,6 @@
 Change Log
 ==========
-### 4.4.0 - tba
+### 4.4.0 - 2022-12-15
 
 ##### Additions
 * Added support for PolarDB/Ganos database. [#134](https://github.com/3dcitydb/3dcitydb/pull/134)
