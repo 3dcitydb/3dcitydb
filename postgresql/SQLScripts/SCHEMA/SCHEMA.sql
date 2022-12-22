@@ -67,6 +67,7 @@ CREATE  TABLE objectclass (
   id                   integer  NOT NULL  ,
   superclass_id        integer    ,
   classname            text    ,
+  is_abstract          numeric    ,
   is_toplevel          numeric    ,
   ade_id               integer    ,
   namespace_id         integer    ,
@@ -77,10 +78,10 @@ CREATE INDEX objectclass_superclass_fkx ON objectclass  ( superclass_id );
 
 CREATE  TABLE tex_image (
   id                   bigint DEFAULT nextval('tex_image_seq'::regclass) NOT NULL  ,
-  tex_image_uri        text    ,
-  tex_image_data       bytea    ,
-  tex_mime_type        text    ,
-  tex_mime_type_codespace text    ,
+  image_uri            text    ,
+  image_data           bytea    ,
+  mime_type            text    ,
+  mime_type_codespace  text    ,
   CONSTRAINT tex_image_pk PRIMARY KEY ( id )
 );
 
@@ -126,7 +127,7 @@ CREATE  TABLE geometry_data (
   objectid             text    ,
   geometry             geometry(GEOMETRYZ)    ,
   implicit_geometry    geometry(GEOMETRYZ)    ,
-  geom_properties      json    ,
+  geometry_properties  json    ,
   feature_id           bigint    ,
   CONSTRAINT geometry_data_pk PRIMARY KEY ( id )
 );
@@ -141,6 +142,7 @@ CREATE  TABLE implicit_geometry (
   id                   bigint DEFAULT nextval('implicit_geometry_seq'::regclass) NOT NULL  ,
   objectid             text    ,
   mime_type            text    ,
+  mime_type_codespace  text    ,
   reference_to_library text    ,
   library_object       bytea    ,
   relative_geometry_id bigint    ,
@@ -225,6 +227,7 @@ CREATE  TABLE appearance (
   valid_to             timestamptz    ,
   is_global            numeric    ,
   feature_id           bigint    ,
+  implicit_geometry_id bigint    ,
   CONSTRAINT appearance_pk PRIMARY KEY ( id )
 );
 
@@ -236,6 +239,8 @@ CREATE INDEX appearance_feature_fkx ON appearance  ( feature_id );
 
 CREATE INDEX appearance_identifier_inx ON appearance  ( identifier, identifier_codespace );
 
+CREATE INDEX appearance_implicit_geom_fkx ON appearance  ( implicit_geometry_id );
+
 CREATE  TABLE property (
   id                   bigint DEFAULT nextval('property_seq'::regclass) NOT NULL  ,
   feature_id           bigint    ,
@@ -244,8 +249,6 @@ CREATE  TABLE property (
   lod                  text    ,
   namespace_id         integer    ,
   name                 text    ,
-  index_number         integer    ,
-  data_valtype         integer    ,
   val_int              bigint    ,
   val_double           double precision    ,
   val_string           text    ,
@@ -257,11 +260,12 @@ CREATE  TABLE property (
   val_implicitgeom_transform text    ,
   val_appearance_id    bigint    ,
   val_feature_id       bigint    ,
-  val_is_reference     integer    ,
+  val_reference_type   integer    ,
   val_codespace        text    ,
   val_uom              text    ,
   val_content          text    ,
   val_content_mime_type text    ,
+  val_array_value      json    ,
   CONSTRAINT property_pk PRIMARY KEY ( id )
 );
 
@@ -270,8 +274,6 @@ CREATE INDEX property_feature_fkx ON property  ( feature_id );
 CREATE INDEX property_parent_fkx ON property  ( parent_id );
 
 CREATE INDEX property_root_fkx ON property  ( root_id );
-
-CREATE INDEX property_data_valtype_inx ON property  ( data_valtype );
 
 CREATE INDEX property_val_feature_fkx ON property  ( val_feature_id );
 
@@ -324,6 +326,8 @@ ALTER TABLE appear_to_surface_data ADD CONSTRAINT appear_to_surface_data_fk1 FOR
 ALTER TABLE appear_to_surface_data ADD CONSTRAINT appear_to_surface_data_fk2 FOREIGN KEY ( appearance_id ) REFERENCES appearance( id )  ON UPDATE CASCADE;
 
 ALTER TABLE appearance ADD CONSTRAINT appearance_feature_fk FOREIGN KEY ( feature_id ) REFERENCES feature( id )  ON UPDATE CASCADE;
+
+ALTER TABLE appearance ADD CONSTRAINT appearance_implicit_geom_fk FOREIGN KEY ( implicit_geometry_id ) REFERENCES implicit_geometry( id ) ON DELETE CASCADE;
 
 ALTER TABLE codelist_entry ADD CONSTRAINT codelist_entry_codelist_fk FOREIGN KEY ( codelist_id ) REFERENCES codelist( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
