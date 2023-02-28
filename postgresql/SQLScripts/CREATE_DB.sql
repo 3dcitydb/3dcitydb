@@ -36,18 +36,6 @@ SET client_min_messages TO WARNING;
 SELECT postgis_lib_version() AS postgis_version;
 \gset
 
---// check if the PostGIS raster extension is available
-SELECT EXISTS(SELECT 1 AS create_raster FROM pg_extension WHERE extname = 'postgis_raster') AS postgis_raster_exists;
-\gset
-
---// break if the PostGIS version >= 3 and the PostGIS raster extension is not installed
-SELECT CASE WHEN :'postgis_version' < '3' OR :'postgis_raster_exists' = 't'
-  THEN 'UTIL/HINTS/DO_NOTHING.sql'
-  ELSE 'UTIL/HINTS/HINT_ON_MISSING_RASTER_EXTENSION.sql'
-  END AS do_action_for_raster_extension_check;
-\gset
-\ir :do_action_for_raster_extension_check
-
 --// create schema
 CREATE SCHEMA citydb;
 
