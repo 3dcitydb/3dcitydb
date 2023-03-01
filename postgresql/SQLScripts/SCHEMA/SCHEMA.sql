@@ -308,8 +308,9 @@ CREATE INDEX property_namespace_fkx ON property  ( namespace_id );
 
 CREATE  TABLE appear_to_surface_data (
   id                   bigint DEFAULT nextval('appear_to_surface_data_seq'::regclass) NOT NULL  ,
-  surface_data_id      bigint  NOT NULL  ,
   appearance_id        bigint  NOT NULL  ,
+  surface_data_id      bigint    ,
+  val_reference_type   integer    ,
   CONSTRAINT appear_to_surface_data_pk PRIMARY KEY ( id )
 );
 
