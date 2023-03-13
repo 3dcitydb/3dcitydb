@@ -1,5 +1,3 @@
-CREATE SEQUENCE address_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
-
 CREATE SEQUENCE ade_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 2147483647 CACHE 1 NO CYCLE;
 
 CREATE SEQUENCE appear_to_surface_data_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
@@ -205,19 +203,6 @@ CREATE INDEX surface_data_mapping_fkx1 ON surface_data_mapping  ( geometry_data_
 
 CREATE INDEX surface_data_mapping_fkx2 ON surface_data_mapping  ( surface_data_id );
 
-CREATE  TABLE address (
-  id                   bigint DEFAULT nextval('address_seq'::regclass) NOT NULL  ,
-  street               text    ,
-  house_number         text    ,
-  po_box               text    ,
-  zip_code             text    ,
-  city                 text    ,
-  "state"              text    ,
-  country              text    ,
-  free_text            json    ,
-  CONSTRAINT address_pk PRIMARY KEY ( id )
-);
-
 CREATE  TABLE appearance (
   id                   bigint DEFAULT nextval('appearance_seq'::regclass) NOT NULL  ,
   objectid             text    ,
@@ -317,8 +302,6 @@ CREATE  TABLE appear_to_surface_data (
 CREATE INDEX appear_to_surface_data_fkx1 ON appear_to_surface_data  ( surface_data_id );
 
 CREATE INDEX appear_to_surface_data_fkx2 ON appear_to_surface_data  ( appearance_id );
-
-ALTER TABLE address ADD CONSTRAINT address_feature_fk FOREIGN KEY ( id ) REFERENCES feature( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_child_fk FOREIGN KEY ( child_id ) REFERENCES objectclass( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
