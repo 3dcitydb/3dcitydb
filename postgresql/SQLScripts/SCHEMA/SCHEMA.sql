@@ -95,6 +95,18 @@ CREATE  TABLE aggregation_info (
   is_composite         numeric
 );
 
+CREATE  TABLE datatype (
+  id                   integer  NOT NULL  ,
+  supertype_id         integer    ,
+  typename             text    ,
+  is_abstract          numeric    ,
+  ade_id               integer    ,
+  namespace_id         integer    ,
+  CONSTRAINT datatype_pk PRIMARY KEY ( id )
+);
+
+CREATE INDEX datatype_supertype_fkx ON datatype  ( supertype_id );
+
 CREATE  TABLE feature (
   id                   bigint DEFAULT nextval('feature_seq'::regclass) NOT NULL  ,
   objectclass_id       integer  NOT NULL  ,
@@ -235,6 +247,7 @@ CREATE  TABLE property (
   parent_id            bigint    ,
   root_id              bigint    ,
   lod                  text    ,
+  datatype_id          integer    ,
   namespace_id         integer    ,
   name                 text    ,
   val_int              bigint    ,
@@ -242,6 +255,9 @@ CREATE  TABLE property (
   val_string           text    ,
   val_timestamp        timestamptz    ,
   val_uri              text    ,
+  val_codespace        text    ,
+  val_uom              text    ,
+  val_array            json    ,
   val_geometry_id      bigint    ,
   val_implicitgeom_id  bigint    ,
   val_implicitgeom_refpoint geometry(GEOMETRYZ)    ,
@@ -249,11 +265,8 @@ CREATE  TABLE property (
   val_appearance_id    bigint    ,
   val_feature_id       bigint    ,
   val_reference_type   integer    ,
-  val_codespace        text    ,
-  val_uom              text    ,
   val_content          text    ,
   val_content_mime_type text    ,
-  val_array_value      json    ,
   CONSTRAINT property_pk PRIMARY KEY ( id )
 );
 
@@ -319,6 +332,12 @@ ALTER TABLE appearance ADD CONSTRAINT appearance_implicit_geom_fk FOREIGN KEY ( 
 
 ALTER TABLE codelist_entry ADD CONSTRAINT codelist_entry_codelist_fk FOREIGN KEY ( codelist_id ) REFERENCES codelist( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE datatype ADD CONSTRAINT datatype_ade_fk FOREIGN KEY ( ade_id ) REFERENCES ade( id )  ON UPDATE CASCADE;
+
+ALTER TABLE datatype ADD CONSTRAINT datatype_supertype_fk FOREIGN KEY ( supertype_id ) REFERENCES objectclass( id )  ON UPDATE CASCADE;
+
+ALTER TABLE datatype ADD CONSTRAINT datatype_namespace_fk FOREIGN KEY ( namespace_id ) REFERENCES namespace( id )  ON UPDATE CASCADE;
+
 ALTER TABLE feature ADD CONSTRAINT feature_objectclass_fk FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id )  ON UPDATE CASCADE;
 
 ALTER TABLE geometry_data ADD CONSTRAINT geometry_data_feature_fk FOREIGN KEY ( feature_id ) REFERENCES feature( id )  ON UPDATE CASCADE;
@@ -347,7 +366,9 @@ ALTER TABLE property ADD CONSTRAINT property_root_fk FOREIGN KEY ( root_id ) REF
 
 ALTER TABLE property ADD CONSTRAINT property_val_geometry_fk FOREIGN KEY ( val_geometry_id ) REFERENCES geometry_data( id )  ON UPDATE CASCADE;
 
-ALTER TABLE property ADD CONSTRAINT property_namespace_fk FOREIGN KEY ( namespace_id ) REFERENCES namespace( id );
+ALTER TABLE property ADD CONSTRAINT property_namespace_fk FOREIGN KEY ( namespace_id ) REFERENCES namespace( id )  ON UPDATE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_datatype_fk FOREIGN KEY ( datatype_id ) REFERENCES datatype( id )  ON UPDATE CASCADE;
 
 ALTER TABLE surface_data ADD CONSTRAINT surface_data_objclass_fk FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id )  ON UPDATE CASCADE;
 
