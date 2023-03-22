@@ -9,6 +9,7 @@ FOR rec IN
 SELECT table_name FROM information_schema.tables where table_schema = 'citydb'
         AND table_name <> 'database_srs'
         AND table_name <> 'objectclass'
+        AND table_name <> 'datatype'
         AND table_name <> 'index_table'
         AND table_name <> 'ade'
         AND table_name <> 'namespace'
