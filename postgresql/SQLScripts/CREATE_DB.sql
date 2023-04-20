@@ -71,11 +71,7 @@ CREATE SCHEMA citydb_pkg;
 \ir CITYDB_PKG/TYPES/TYPES.sql
 \ir CITYDB_PKG/UTIL/UTIL.sql
 \ir CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql
-\ir CITYDB_PKG/INDEX/IDX.sql
 \ir CITYDB_PKG/SRS/SRS.sql
-
---// create and fill INDEX_TABLE
-\ir SCHEMA/INDEX_TABLE/INDEX_TABLE.sql
 
 --// update search_path on database level
 ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
