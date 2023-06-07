@@ -3,7 +3,10 @@ DELETE FROM aggregation_info;
 -- Core Module --
 
 INSERT INTO aggregation_info (CHILD_ID, PARENT_ID, PROPERTY_NAME, PROPERTY_NAMESPACE_ID, MIN_OCCURS, MAX_OCCURS, IS_COMPOSITE)
-VALUES (20, 7, 'appearance', 1, 0, -1, 0);
+VALUES (13, 8, 'boundary', 0, 0, -1, 0);
+
+INSERT INTO aggregation_info (CHILD_ID, PARENT_ID, PROPERTY_NAME, PROPERTY_NAMESPACE_ID, MIN_OCCURS, MAX_OCCURS, IS_COMPOSITE)
+VALUES (20, 7, 'appearance', 0, 0, -1, 0);
 
 -- Dynamizer Module --
 
@@ -88,7 +91,7 @@ INSERT INTO aggregation_info (CHILD_ID, PARENT_ID, PROPERTY_NAME, PROPERTY_NAMES
 VALUES (806, 804, 'tunnelFurniture', 8, 0, -1, 0);
 
 INSERT INTO aggregation_info (CHILD_ID, PARENT_ID, PROPERTY_NAME, PROPERTY_NAMESPACE_ID, MIN_OCCURS, MAX_OCCURS, IS_COMPOSITE)
-VALUES (805, 804, '805', 8, 0, -1, 0);
+VALUES (805, 804, 'tunnelInstallation', 8, 0, -1, 0);
 
 -- Building Module --
 
