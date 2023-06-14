@@ -43,13 +43,13 @@
           "type": "string",
           "enum": ["Polygon", "MultiSurface", "CompositeSurface", "TriangulatedSurface", "Solid", "MultiSolid", "CompositeSolid"]
         },
-        "identifier": {
+        "objectid": {
           "type": "string"
         },
         "parent": {
           "type": "integer"
         },
-        "geometry_index": {
+        "geometryIndex": {
           "type": "integer"
         },
         "referenceType": {
