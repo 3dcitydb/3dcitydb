@@ -61,9 +61,6 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 \ir ../../SCHEMA/CODELIST/CODELIST_INSTANCES.sql
 \ir ../../SCHEMA/CODELIST/CODELIST_ENTRY_INSTANCES.sql
 
---// create and fill INDEX_TABLE
-\ir ../../SCHEMA/INDEX_TABLE/INDEX_TABLE.sql
-
 --// create schema FUNCTIONS
 \ir :TMP_ENVELOPE_FILE
 \ir :TMP_DELETE_FILE
