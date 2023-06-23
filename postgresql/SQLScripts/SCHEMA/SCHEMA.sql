@@ -304,6 +304,8 @@ CREATE INDEX property_val_implicitgeom_spx ON property USING GiST ( val_implicit
 
 CREATE INDEX property_namespace_fkx ON property  ( namespace_id );
 
+CREATE INDEX property_val_reference_inx ON property  ( val_reference_type );
+
 CREATE  TABLE appear_to_surface_data (
   id                   bigint DEFAULT nextval('appear_to_surface_data_seq'::regclass) NOT NULL  ,
   appearance_id        bigint  NOT NULL  ,
