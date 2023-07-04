@@ -148,13 +148,13 @@ LANGUAGE plpgsql STABLE;
 * @param schema_name name of database schema
 *
 * @RETURN RECORD with columns
-*    SCHEMA_SRID, SCHEMA_GML_SRS_NAME,
+*    SRID, SRS_NAME,
 *    COORD_REF_SYS_NAME, COORD_REF_SYS_KIND, VERSIONING
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(
   schema_name TEXT DEFAULT 'citydb',
-  OUT schema_srid INTEGER, 
-  OUT schema_gml_srs_name TEXT, 
+  OUT srid INTEGER,
+  OUT srs_name TEXT,
   OUT coord_ref_sys_name TEXT, 
   OUT coord_ref_sys_kind TEXT,
   OUT wktext TEXT,  
@@ -176,7 +176,7 @@ BEGIN
      WHERE
        d.srid = s.srid', schema_name)
     USING schema_name
-    INTO schema_srid, schema_gml_srs_name, coord_ref_sys_name, coord_ref_sys_kind, wktext, versioning;
+    INTO srid, srs_name, coord_ref_sys_name, coord_ref_sys_kind, wktext, versioning;
 END;
 $$
 LANGUAGE plpgsql STABLE;
