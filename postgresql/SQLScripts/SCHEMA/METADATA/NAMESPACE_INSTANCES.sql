@@ -83,3 +83,7 @@ VALUES (15, 'wtr', 'http://www.3dcitydb.org/3dcitydb/waterbody/5.0');
 -- CityFurniture Module --
 INSERT INTO namespace (ID, ALIAS, NAMESPACE)
 VALUES (16, 'frn', 'http://www.3dcitydb.org/3dcitydb/cityfurniture/5.0');
+
+-- Deprecated Module --
+INSERT INTO namespace (ID, ALIAS, NAMESPACE)
+VALUES (17, 'depr', 'http://www.3dcitydb.org/3dcitydb/ade/deprecated/5.0');
