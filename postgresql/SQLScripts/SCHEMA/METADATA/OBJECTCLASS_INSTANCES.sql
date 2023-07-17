@@ -100,7 +100,7 @@ INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL,
 VALUES (202, 11, 'GenericUnoccupiedSpace', 0, 1, 2);
 
 INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID)
-VALUES (203, 14, 'GenericThematicSurface', 0, 1, 2);
+VALUES (203, 14, 'GenericThematicSurface', 0, 0, 2);
 
 -- LandUse Module --
 
