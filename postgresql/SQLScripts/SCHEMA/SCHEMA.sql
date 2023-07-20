@@ -1,3 +1,5 @@
+CREATE SEQUENCE address_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+
 CREATE SEQUENCE ade_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 2147483647 CACHE 1 NO CYCLE;
 
 CREATE SEQUENCE appear_to_surface_data_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
@@ -19,6 +21,22 @@ CREATE SEQUENCE property_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 922
 CREATE SEQUENCE surface_data_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
 
 CREATE SEQUENCE tex_image_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+
+CREATE  TABLE address (
+  id                   bigint DEFAULT nextval('address_seq'::regclass) NOT NULL  ,
+  objectid             text    ,
+  street               text    ,
+  house_number         text    ,
+  po_box               text    ,
+  zip_code             text    ,
+  city                 text    ,
+  "state"              text    ,
+  country              text    ,
+  free_text            json    ,
+  multi_point          geometry(MULTIPOINTZ)    ,
+  xal_source           text    ,
+  CONSTRAINT pk_address PRIMARY KEY ( id )
+);
 
 CREATE  TABLE ade (
   id                   integer DEFAULT nextval('ade_seq'::regclass) NOT NULL  ,
@@ -263,6 +281,7 @@ CREATE  TABLE property (
   val_implicitgeom_refpoint geometry(GEOMETRYZ)    ,
   val_implicitgeom_transform text    ,
   val_appearance_id    bigint    ,
+  val_address_id       bigint    ,
   val_feature_id       bigint    ,
   val_reference_type   integer    ,
   val_content          text    ,
@@ -305,6 +324,8 @@ CREATE INDEX property_val_implicitgeom_spx ON property USING GiST ( val_implicit
 CREATE INDEX property_namespace_fkx ON property  ( namespace_id );
 
 CREATE INDEX property_val_reference_inx ON property  ( val_reference_type );
+
+CREATE INDEX property_val_address_fkx ON property  ( val_address_id );
 
 CREATE  TABLE appear_to_surface_data (
   id                   bigint DEFAULT nextval('appear_to_surface_data_seq'::regclass) NOT NULL  ,
@@ -371,6 +392,8 @@ ALTER TABLE property ADD CONSTRAINT property_val_geometry_fk FOREIGN KEY ( val_g
 ALTER TABLE property ADD CONSTRAINT property_namespace_fk FOREIGN KEY ( namespace_id ) REFERENCES namespace( id )  ON UPDATE CASCADE;
 
 ALTER TABLE property ADD CONSTRAINT property_datatype_fk FOREIGN KEY ( datatype_id ) REFERENCES datatype( id )  ON UPDATE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_val_address_fk FOREIGN KEY ( val_address_id ) REFERENCES address( id );
 
 ALTER TABLE surface_data ADD CONSTRAINT surface_data_objclass_fk FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id )  ON UPDATE CASCADE;
 
