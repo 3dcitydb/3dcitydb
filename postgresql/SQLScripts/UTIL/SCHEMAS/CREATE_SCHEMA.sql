@@ -55,6 +55,7 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 --// fill metadata tables
 \ir ../../SCHEMA/METADATA/NAMESPACE_INSTANCES.sql
 \ir ../../SCHEMA/METADATA/OBJECTCLASS_INSTANCES.sql
+\ir ../../SCHEMA/METADATA/DATATYPE_INSTANCES.sql
 \ir ../../SCHEMA/METADATA/AGGREGATION_INFO_INSTANCES.sql
 
 --// fill codelist tables
