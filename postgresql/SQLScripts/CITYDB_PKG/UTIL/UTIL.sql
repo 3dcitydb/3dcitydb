@@ -244,6 +244,8 @@ LANGUAGE plpgsql STRICT;
 * get_child_objectclass_ids
 *
 * @param class_id identifier for object class
+* @param skip_abstract 1 if abstract classes shall be skipped, 0 if not
+* @param schema_name name of schema
 *
 * @return QUERY the IDs of all transitive subclasses of the given object class
 ******************************************************************/
