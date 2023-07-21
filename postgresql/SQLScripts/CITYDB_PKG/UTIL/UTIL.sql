@@ -251,7 +251,7 @@ LANGUAGE plpgsql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_child_objectclass_ids(
   class_id INTEGER,
-  skip_abstract INTEGER DEFAULT 0,
+  skip_abstract INTEGER DEFAULT 0,	
   schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER AS
 $$
 DECLARE
@@ -260,14 +260,14 @@ BEGIN
   IF skip_abstract <> 0 THEN
     where_clause = 'WHERE is_abstract <> 1';
   END IF;
-
+  
   RETURN QUERY EXECUTE format('
     WITH RECURSIVE class_hierarchy AS (
       SELECT
         id,
         superclass_id,
         classname,
-		    is_abstract,
+        is_abstract,		
         is_toplevel,
         ade_id,
         namespace_id
@@ -286,7 +286,8 @@ BEGIN
       id
     FROM
       class_hierarchy ' || where_clause
-    , schema_name, class_id, schema_name);
+  , schema_name, class_id, schema_name);
 END;
 $$
 LANGUAGE plpgsql STRICT;
+
