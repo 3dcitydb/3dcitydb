@@ -86,4 +86,4 @@ VALUES (16, 'frn', 'http://www.3dcitydb.org/3dcitydb/cityfurniture/5.0');
 
 -- Deprecated Module --
 INSERT INTO namespace (ID, ALIAS, NAMESPACE)
-VALUES (17, 'depr', 'http://www.3dcitydb.org/3dcitydb/ade/deprecated/5.0');
+VALUES (17, 'depr', 'http://www.3dcitydb.org/3dcitydb/deprecated/5.0');
