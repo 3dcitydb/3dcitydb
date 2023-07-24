@@ -25,6 +25,8 @@ CREATE SEQUENCE tex_image_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 92
 CREATE  TABLE address (
   id                   bigint DEFAULT nextval('address_seq'::regclass) NOT NULL  ,
   objectid             text    ,
+  identifier           text    ,
+  identifier_codespace text    ,
   street               text    ,
   house_number         text    ,
   po_box               text    ,
@@ -35,8 +37,14 @@ CREATE  TABLE address (
   free_text            json    ,
   multi_point          geometry(MULTIPOINTZ)    ,
   xal_source           text    ,
-  CONSTRAINT pk_address PRIMARY KEY ( id )
+  CONSTRAINT address_pk PRIMARY KEY ( id )
 );
+
+CREATE INDEX address_objectid_inx ON address  ( objectid );
+
+CREATE INDEX address_identifier_inx ON address  ( identifier, identifier_codespace );
+
+CREATE INDEX address_multi_point_spx ON address USING GiST ( multi_point );
 
 CREATE  TABLE ade (
   id                   integer DEFAULT nextval('ade_seq'::regclass) NOT NULL  ,
