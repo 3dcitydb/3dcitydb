@@ -68,7 +68,6 @@ SET search_path TO citydb, :current_path;
 \echo 'Creating additional schema ''citydb_pkg'' ...'
 CREATE SCHEMA citydb_pkg;
 
-\ir CITYDB_PKG/TYPES/TYPES.sql
 \ir CITYDB_PKG/UTIL/UTIL.sql
 \ir CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql
 \ir CITYDB_PKG/SRS/SRS.sql
