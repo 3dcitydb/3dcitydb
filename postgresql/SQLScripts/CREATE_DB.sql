@@ -59,10 +59,6 @@ SET search_path TO citydb, :current_path;
 \ir SCHEMA/CODELIST/CODELIST_INSTANCES.sql
 \ir SCHEMA/CODELIST/CODELIST_ENTRY_INSTANCES.sql
 
---// create schema FUNCTIONS
-\ir SCHEMA/ENVELOPE/ENVELOPE.sql
-\ir SCHEMA/DELETE/DELETE.sql
-
 --// create CITYDB_PKG (additional schema with PL/pgSQL-Functions)
 \echo
 \echo 'Creating additional schema ''citydb_pkg'' ...'
@@ -71,6 +67,8 @@ CREATE SCHEMA citydb_pkg;
 \ir CITYDB_PKG/UTIL/UTIL.sql
 \ir CITYDB_PKG/CONSTRAINT/CONSTRAINT.sql
 \ir CITYDB_PKG/SRS/SRS.sql
+\ir CITYDB_PKG/ENVELOPE/ENVELOPE.sql
+\ir CITYDB_PKG/DELETE/DELETE.sql
 
 --// update search_path on database level
 ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;

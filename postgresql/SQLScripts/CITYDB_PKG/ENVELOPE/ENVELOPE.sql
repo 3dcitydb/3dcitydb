@@ -2,17 +2,17 @@
 * CONTENT
 *
 * FUNCTIONS:
-* citydb.get_feature_envelope(fid BIGINT, set_envelope INTEGER DEFAULT 0) RETURNS GEOMETRY
-* citydb.box2envelope(box BOX3D) RETURNS GEOMETRY
-* citydb.update_bounds(old_bbox GEOMETRY, new_bbox GEOMETRY) RETURNS GEOMETRY
-* citydb.calc_implicit_geometry_envelope(gid BIGINT, ref_pt GEOMETRY, matrix VARCHAR) RETURNS GEOMETRY
+* get_feature_envelope(fid BIGINT, set_envelope INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS GEOMETRY
+* box2envelope(box BOX3D, schema_name TEXT DEFAULT 'citydb') RETURNS GEOMETRY
+* update_bounds(old_bbox GEOMETRY, new_bbox GEOMETRY, schema_name TEXT DEFAULT 'citydb') RETURNS GEOMETRY
+* calc_implicit_geometry_envelope(gid BIGINT, ref_pt GEOMETRY, matrix VARCHAR, schema_name TEXT DEFAULT 'citydb') RETURNS GEOMETRY
 ******************************************************************/
 
 /*****************************************************************
 * returns the envelope geometry of a given feature
 * if the parameter set_envelope = 1 (default = 0), the ENVELOPE column of the FEATURE table will be updated
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb.get_feature_envelope(fid BIGINT, set_envelope INTEGER DEFAULT 0) RETURNS GEOMETRY AS
+CREATE OR REPLACE FUNCTION citydb_pkg.get_feature_envelope(fid BIGINT, set_envelope INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS GEOMETRY AS
 $body$
 DECLARE
   bbox GEOMETRY;
@@ -20,34 +20,34 @@ DECLARE
   rec RECORD;
 BEGIN
   FOR rec IN
-    SELECT
+    EXECUTE format('SELECT
       p.val_feature_id
     FROM
-      citydb.property p
+      %I.property p
     WHERE
-      p.id = fid AND p.val_feature_id IS NOT NULL AND p.val_reference_type <> 2
+      p.id = $1 AND p.val_feature_id IS NOT NULL AND p.val_reference_type <> 2', schema_name) USING fid
   LOOP
-    bbox_tmp := citydb.get_feature_envelope(rec.id::bigint, set_envelope);
-    bbox := citydb.update_bounds(bbox, bbox_tmp);    
+    bbox_tmp := citydb_pkg.get_feature_envelope(rec.id::bigint, set_envelope, schema_name);
+    bbox := citydb_pkg.update_bounds(bbox, bbox_tmp, schema_name);
   END LOOP;    
 
-  SELECT citydb.box2envelope(ST_3DExtent(geom)) INTO bbox_tmp FROM (
+  EXECUTE format('SELECT citydb_pkg.box2envelope(ST_3DExtent(geom), $1) FROM (
     SELECT
       gd.geometry AS geom
     FROM
-      citydb.geometry_data gd, citydb.property p
-    WHERE gd.id = p.val_geometry_id AND p.feature_id = fid AND gd.geometry IS NOT NULL
+      %I.geometry_data gd, %I.property p
+    WHERE gd.id = p.val_geometry_id AND p.feature_id = $2 AND gd.geometry IS NOT NULL
     UNION ALL
     SELECT
-      citydb.calc_implicit_geometry_envelope(val_implicitgeom_id, val_implicitgeom_refpoint, val_implicitgeom_transform) AS geom
+      citydb_pkg.calc_implicit_geometry_envelope(val_implicitgeom_id, val_implicitgeom_refpoint, val_implicitgeom_transform, $3) AS geom
     FROM
-      citydb.property p
-    WHERE p.feature_id = fid AND p.val_implicitgeom_id IS NOT NULL
-  ) g;
-  bbox := citydb.update_bounds(bbox, bbox_tmp);
+      %I.property p
+    WHERE p.feature_id = $4 AND p.val_implicitgeom_id IS NOT NULL
+  ) g', schema_name, schema_name, schema_name) INTO bbox_tmp USING schema_name, fid, schema_name, fid;
+  bbox := citydb_pkg.update_bounds(bbox, bbox_tmp, schema_name);
 
   IF set_envelope <> 0 THEN
-    UPDATE citydb.feature SET envelope = bbox WHERE id = fid;
+    EXECUTE format('UPDATE %I.feature SET envelope = bbox WHERE id = $1', schema_name) USING fid;
   END IF;
   
   RETURN bbox;
@@ -58,14 +58,14 @@ LANGUAGE plpgsql STRICT;
 /*****************************************************************
 * returns the envelope geometry of a given
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb.box2envelope(box BOX3D) RETURNS GEOMETRY AS
+CREATE OR REPLACE FUNCTION citydb_pkg.box2envelope(box BOX3D, schema_name TEXT DEFAULT 'citydb') RETURNS GEOMETRY AS
 $body$
 DECLARE
   envelope GEOMETRY;
   db_srid INTEGER;
 BEGIN
   IF ST_SRID(box) = 0 THEN
-    SELECT srid INTO db_srid FROM citydb.database_srs;
+    EXECUTE format ('SELECT srid FROM %I.database_srs', schema_name) INTO db_srid;
   ELSE
     db_srid := ST_SRID(box);
   END IF;
@@ -88,7 +88,7 @@ LANGUAGE plpgsql STABLE STRICT;
 /*****************************************************************
 * returns the envelope geometry of two bounding boxes
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb.update_bounds(old_bbox GEOMETRY, new_bbox GEOMETRY) RETURNS GEOMETRY AS
+CREATE OR REPLACE FUNCTION citydb_pkg.update_bounds(old_bbox GEOMETRY, new_bbox GEOMETRY, schema_name TEXT DEFAULT 'citydb') RETURNS GEOMETRY AS
 $body$
 BEGIN
   IF old_bbox IS NULL AND new_bbox IS NULL THEN
@@ -102,7 +102,7 @@ BEGIN
       RETURN old_bbox;
     END IF;
 
-    RETURN citydb.box2envelope(ST_3DExtent(ST_Collect(old_bbox, new_bbox)));
+    RETURN citydb_pkg.box2envelope(ST_3DExtent(ST_Collect(old_bbox, new_bbox)), schema_name);
   END IF;
 END;
 $body$
@@ -111,17 +111,17 @@ LANGUAGE plpgsql STABLE;
 /*****************************************************************
 * returns the envelope geometry of a given implicit geometry
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb.calc_implicit_geometry_envelope(gid BIGINT, ref_pt GEOMETRY, matrix VARCHAR) RETURNS GEOMETRY AS
+CREATE OR REPLACE FUNCTION citydb_pkg.calc_implicit_geometry_envelope(gid BIGINT, ref_pt GEOMETRY, matrix VARCHAR, schema_name TEXT DEFAULT 'citydb') RETURNS GEOMETRY AS
 $body$
 DECLARE
   envelope GEOMETRY;
   params DOUBLE PRECISION[ ] := '{}';
 BEGIN
-  SELECT ST_3DExtent(gd.implicit_geometry) INTO envelope
-    FROM citydb.geometry_data gd, citydb.implicit_geometry ig
+  EXECUTE format('SELECT ST_3DExtent(gd.implicit_geometry)
+    FROM %I.geometry_data gd, %I.implicit_geometry ig
       WHERE gd.id = ig.relative_geometry_id
-        AND ig.id = gid
-        AND gd.implicit_geometry IS NOT NULL;
+        AND ig.id = $1
+        AND gd.implicit_geometry IS NOT NULL', schema_name, schema_name) INTO envelope USING gid;
 
   IF matrix IS NOT NULL THEN
     params := string_to_array(matrix, ' ')::float8[];

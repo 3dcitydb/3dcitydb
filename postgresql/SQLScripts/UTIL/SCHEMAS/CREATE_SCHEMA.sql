@@ -30,8 +30,6 @@ SET client_min_messages TO WARNING;
 \set ON_ERROR_STOP ON
 
 \set SCHEMA_NAME :schema_name
-\set TMP_DELETE_FILE :tmp_delete_file
-\set TMP_ENVELOPE_FILE :tmp_envelope_file
 
 \echo 'Creating 3DCityDB schema "':SCHEMA_NAME'" ...'
 
@@ -61,10 +59,6 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 --// fill codelist tables
 \ir ../../SCHEMA/CODELIST/CODELIST_INSTANCES.sql
 \ir ../../SCHEMA/CODELIST/CODELIST_ENTRY_INSTANCES.sql
-
---// create schema FUNCTIONS
-\ir :TMP_ENVELOPE_FILE
-\ir :TMP_DELETE_FILE
 
 \echo
 \echo 'Created 3DCityDB schema "':SCHEMA_NAME'".'

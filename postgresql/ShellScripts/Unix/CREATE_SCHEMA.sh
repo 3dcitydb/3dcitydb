@@ -58,27 +58,10 @@ echo 'Please enter the name of the 3DCityDB schema you want to create.'
 read -p "(default SCHEMA_NAME=$SCHEMA_NAME): " var
 SCHEMA_NAME=${var:-$SCHEMA_NAME}
 
-# Create temporary SQL scripts ------------------------------------------------
-echo
-echo -n "Preparing SQL scripts for setting up \"$SCHEMA_NAME\" ... "
-TOKEN=citydb
-DELETE_FILE=../../SCHEMA/DELETE/DELETE.sql
-TMP_DELETE_FILE=TMP_${SCHEMA_NAME}_DELETE.sql
-ENVELOPE_FILE=../../SCHEMA/ENVELOPE/ENVELOPE.sql
-TMP_ENVELOPE_FILE=TMP_${SCHEMA_NAME}_ENVELOPE.sql
-
-sed 's/'$TOKEN'/'$SCHEMA_NAME'/g' $DELETE_FILE > $TMP_DELETE_FILE
-sed 's/'$TOKEN'/'$SCHEMA_NAME'/g' $ENVELOPE_FILE > $TMP_ENVELOPE_FILE
-echo 'Done.'
-
 # Run CREATE_SCHEMA.sql to create a new 3DCityDB schema -----------------------
 echo
 echo "Connecting to \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "CREATE_SCHEMA.sql" -v schema_name="$SCHEMA_NAME" -v tmp_delete_file="$TMP_DELETE_FILE" -v tmp_envelope_file="$TMP_ENVELOPE_FILE"
-
-# Remove temporary SQL scripts ------------------------------------------------
-rm -f $TMP_DELETE_FILE
-rm -f $TMP_ENVELOPE_FILE
+psql -d "$CITYDB" -f "CREATE_SCHEMA.sql" -v schema_name="$SCHEMA_NAME"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'
