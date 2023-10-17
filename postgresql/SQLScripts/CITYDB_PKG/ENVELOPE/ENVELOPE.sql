@@ -19,35 +19,37 @@ DECLARE
   bbox_tmp GEOMETRY;
   rec RECORD;
 BEGIN
+  EXECUTE format('set search_path to %I', schema_name);
+
   FOR rec IN
-    EXECUTE format('SELECT
+    SELECT
       p.val_feature_id
     FROM
-      %I.property p
+      property p
     WHERE
-      p.id = $1 AND p.val_feature_id IS NOT NULL AND p.val_reference_type <> 2', schema_name) USING fid
+      p.id = fid AND p.val_feature_id IS NOT NULL AND p.val_reference_type <> 2
   LOOP
     bbox_tmp := citydb_pkg.get_feature_envelope(rec.id::bigint, set_envelope, schema_name);
     bbox := citydb_pkg.update_bounds(bbox, bbox_tmp, schema_name);
   END LOOP;    
 
-  EXECUTE format('SELECT citydb_pkg.box2envelope(ST_3DExtent(geom), $1) FROM (
+  SELECT citydb_pkg.box2envelope(ST_3DExtent(geom), schema_name) INTO bbox_tmp FROM (
     SELECT
       gd.geometry AS geom
     FROM
-      %I.geometry_data gd, %I.property p
-    WHERE gd.id = p.val_geometry_id AND p.feature_id = $2 AND gd.geometry IS NOT NULL
+      geometry_data gd, property p
+    WHERE gd.id = p.val_geometry_id AND p.feature_id = fid AND gd.geometry IS NOT NULL
     UNION ALL
     SELECT
-      citydb_pkg.calc_implicit_geometry_envelope(val_implicitgeom_id, val_implicitgeom_refpoint, val_implicitgeom_transform, $3) AS geom
+      citydb_pkg.calc_implicit_geometry_envelope(val_implicitgeom_id, val_implicitgeom_refpoint, val_implicitgeom_transform, schema_name) AS geom
     FROM
-      %I.property p
-    WHERE p.feature_id = $4 AND p.val_implicitgeom_id IS NOT NULL
-  ) g', schema_name, schema_name, schema_name) INTO bbox_tmp USING schema_name, fid, schema_name, fid;
+      property p
+    WHERE p.feature_id = fid AND p.val_implicitgeom_id IS NOT NULL
+  ) g;
   bbox := citydb_pkg.update_bounds(bbox, bbox_tmp, schema_name);
 
   IF set_envelope <> 0 THEN
-    EXECUTE format('UPDATE %I.feature SET envelope = bbox WHERE id = $1', schema_name) USING fid;
+    UPDATE feature SET envelope = bbox WHERE id = fid;
   END IF;
   
   RETURN bbox;
@@ -64,8 +66,10 @@ DECLARE
   envelope GEOMETRY;
   db_srid INTEGER;
 BEGIN
+  EXECUTE format('set search_path to %I', schema_name);
+
   IF ST_SRID(box) = 0 THEN
-    EXECUTE format ('SELECT srid FROM %I.database_srs', schema_name) INTO db_srid;
+    SELECT srid INTO db_srid FROM database_srs;
   ELSE
     db_srid := ST_SRID(box);
   END IF;
@@ -91,6 +95,8 @@ LANGUAGE plpgsql STABLE STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.update_bounds(old_bbox GEOMETRY, new_bbox GEOMETRY, schema_name TEXT DEFAULT 'citydb') RETURNS GEOMETRY AS
 $body$
 BEGIN
+  EXECUTE format('set search_path to %I', schema_name);
+
   IF old_bbox IS NULL AND new_bbox IS NULL THEN
     RETURN NULL;
   ELSE
@@ -117,11 +123,13 @@ DECLARE
   envelope GEOMETRY;
   params DOUBLE PRECISION[ ] := '{}';
 BEGIN
-  EXECUTE format('SELECT ST_3DExtent(gd.implicit_geometry)
-    FROM %I.geometry_data gd, %I.implicit_geometry ig
+  EXECUTE format('set search_path to %I', schema_name);
+
+  SELECT ST_3DExtent(gd.implicit_geometry) INTO envelope
+    FROM geometry_data gd, implicit_geometry ig
       WHERE gd.id = ig.relative_geometry_id
-        AND ig.id = $1
-        AND gd.implicit_geometry IS NOT NULL', schema_name, schema_name) INTO envelope USING gid;
+        AND ig.id = gid
+        AND gd.implicit_geometry IS NOT NULL;
 
   IF matrix IS NOT NULL THEN
     params := string_to_array(matrix, ' ')::float8[];
