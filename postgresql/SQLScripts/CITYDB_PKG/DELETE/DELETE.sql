@@ -105,15 +105,11 @@ LANGUAGE plpgsql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_feature(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
-DECLARE
-  deleted_ids bigint[] := '{}';
 BEGIN
   EXECUTE format('set search_path to %I', schema_name);
 
-  deleted_ids := citydb_pkg.delete_feature($1);
-
   RETURN QUERY
-    SELECT unnest(deleted_ids);
+    SELECT citydb_pkg.delete_feature($1);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -229,15 +225,11 @@ LANGUAGE plpgsql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_property(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
-DECLARE
-  deleted_ids bigint[] := '{}';
 BEGIN
   EXECUTE format('set search_path to %I', schema_name);
 
-  deleted_ids := citydb_pkg.delete_property($1);
-
   RETURN QUERY
-    SELECT unnest(deleted_ids);
+    SELECT citydb_pkg.delete_property($1);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -294,15 +286,11 @@ LANGUAGE plpgsql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_geometry_data(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
-DECLARE
-  deleted_ids bigint[] := '{}';
 BEGIN
   EXECUTE format('set search_path to %I', schema_name);
 
-  deleted_ids := citydb_pkg.delete_geometry_data($1);
-
   RETURN QUERY
-    SELECT unnest(deleted_ids);
+    SELECT citydb_pkg.delete_geometry_data($1);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -378,15 +366,11 @@ LANGUAGE plpgsql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_implicit_geometry(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
-DECLARE
-  deleted_ids bigint[] := '{}';
 BEGIN
   EXECUTE format('set search_path to %I', schema_name);
 
-  deleted_ids := citydb_pkg.delete_implicit_geometry($1);
-
   RETURN QUERY
-    SELECT unnest(deleted_ids);
+    SELECT citydb_pkg.delete_implicit_geometry($1);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -472,15 +456,11 @@ LANGUAGE plpgsql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_appearance(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
-DECLARE
-  deleted_ids bigint[] := '{}';
 BEGIN
   EXECUTE format('set search_path to %I', schema_name);
 
-  deleted_ids := citydb_pkg.delete_appearance($1);
-
   RETURN QUERY
-    SELECT unnest(deleted_ids);
+    SELECT citydb_pkg.delete_appearance($1);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -552,15 +532,11 @@ LANGUAGE plpgsql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_surface_data(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
-DECLARE
-  deleted_ids bigint[] := '{}';
 BEGIN
   EXECUTE format('set search_path to %I', schema_name);
 
-  deleted_ids := citydb_pkg.delete_surface_data($1);
-
   RETURN QUERY
-    SELECT unnest(deleted_ids);
+    SELECT citydb_pkg.delete_surface_data($1);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -617,15 +593,11 @@ LANGUAGE plpgsql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_tex_image(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
-DECLARE
-  deleted_ids bigint[] := '{}';
 BEGIN
   EXECUTE format('set search_path to %I', schema_name);
 
-  deleted_ids := citydb_pkg.delete_tex_image($1);
-
   RETURN QUERY
-    SELECT unnest(deleted_ids);
+    SELECT citydb_pkg.delete_tex_image($1);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -682,15 +654,11 @@ LANGUAGE plpgsql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_address(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
-DECLARE
-  deleted_ids bigint[] := '{}';
 BEGIN
   EXECUTE format('set search_path to %I', schema_name);
 
-  deleted_ids := citydb_pkg.delete_address($1);
-
   RETURN QUERY
-    SELECT unnest(deleted_ids);
+    SELECT citydb_pkg.delete_address($1);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
