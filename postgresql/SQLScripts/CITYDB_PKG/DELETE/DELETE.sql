@@ -153,6 +153,7 @@ BEGIN
     RETURNING
       p.id,
       p.val_feature_id,
+      p.val_reference_type,
       p.val_geometry_id,
       p.val_implicitgeom_id,
       p.val_appearance_id,
@@ -173,7 +174,9 @@ BEGIN
     appearance_ids,
     address_ids
   FROM
-    child_refs;
+    child_refs
+  WHERE
+    val_feature_id IS NULL OR val_reference_type IS NULL OR val_reference_type = 1;
 
   IF -1 = ALL(feature_ids) IS NOT NULL THEN
     PERFORM
@@ -183,7 +186,7 @@ BEGIN
     LEFT JOIN
       property p
       ON p.val_feature_id  = a.a_id
-    WHERE p.val_feature_id IS NULL AND (p.VAL_REFERENCE_TYPE IS NULL OR p.VAL_REFERENCE_TYPE <> 2);
+    WHERE p.val_feature_id IS NULL OR p.val_reference_type = 2;
   END IF;
 
   IF -1 = ALL(geometry_ids) IS NOT NULL THEN
