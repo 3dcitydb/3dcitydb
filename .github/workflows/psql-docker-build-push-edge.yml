@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        baseimage-tag: ['15-3.3']   # base image tags for 'edge' image
+        baseimage-tag: ['16-3.4']   # base image tags for 'edge' image
         variant: ['', '-alpine']    # image variants: '' = debian
 
     steps:
