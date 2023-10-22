@@ -17,15 +17,15 @@ jobs:
     steps:
     -
       name: Parse short sha
-      uses: benjlevesque/short-sha@v1.2
+      uses: benjlevesque/short-sha@v2.2
       id: short-sha
     -
       name: Checkout repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     -
       name: Build image
       id: docker_build
-      uses: docker/build-push-action@v3
+      uses: docker/build-push-action@v5
       with:
         context: ./postgresql
         push: false
