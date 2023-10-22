@@ -1,6 +1,7 @@
 name: oracle-docker-build-edge
 
 on:
+  workflow_dispatch:
   push:
     branches:
     - master

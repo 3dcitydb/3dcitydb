@@ -1,6 +1,7 @@
 name: psql-docker-build-push-release-latest
 
 on:
+  workflow_dispatch:
   release:
     types: [released, edited]
 

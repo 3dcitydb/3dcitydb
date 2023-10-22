@@ -2,6 +2,7 @@ name: psql-docker-build-edge
 
 on:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
