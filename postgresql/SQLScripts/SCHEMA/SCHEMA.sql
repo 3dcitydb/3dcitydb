@@ -36,7 +36,8 @@ CREATE  TABLE address (
 	country              text    ,
 	free_text            json    ,
 	multi_point          geometry(MULTIPOINTZ)    ,
-	xal_source           text    ,
+	content              text    ,
+	content_mime_type    text    ,
 	CONSTRAINT address_pk PRIMARY KEY ( id )
  );
 
@@ -161,7 +162,6 @@ CREATE INDEX feature_identifier_inx ON feature  ( identifier , identifier_codesp
 
 CREATE  TABLE geometry_data (
 	id                   bigint DEFAULT nextval('geometry_data_seq'::regclass) NOT NULL  ,
-	"type"               integer    ,
 	objectid             text    ,
 	geometry             geometry(GEOMETRYZ)    ,
 	implicit_geometry    geometry(GEOMETRYZ)    ,
@@ -211,7 +211,6 @@ CREATE  TABLE surface_data (
 	tex_texture_type     text    ,
 	tex_wrap_mode        text    ,
 	tex_border_color     text    ,
-	gt_prefer_worldfile  numeric    ,
 	gt_orientation       text    ,
 	gt_reference_point   geometry(POINT)    ,
 	CONSTRAINT surface_data_pk PRIMARY KEY ( id )
@@ -272,7 +271,6 @@ CREATE  TABLE property (
 	feature_id           bigint    ,
 	parent_id            bigint    ,
 	root_id              bigint    ,
-	lod                  text    ,
 	datatype_id          integer    ,
 	namespace_id         integer    ,
 	name                 text    ,
@@ -284,6 +282,7 @@ CREATE  TABLE property (
 	val_codespace        text    ,
 	val_uom              text    ,
 	val_array            json    ,
+	val_lod              text    ,
 	val_geometry_id      bigint    ,
 	val_implicitgeom_id  bigint    ,
 	val_implicitgeom_refpoint geometry(GEOMETRYZ)    ,
@@ -305,15 +304,13 @@ CREATE INDEX property_root_fkx ON property  ( root_id );
 
 CREATE INDEX property_val_feature_fkx ON property  ( val_feature_id );
 
-CREATE INDEX property_namespace_name_inx ON property  ( namespace_id, name );
-
 CREATE INDEX property_val_string_inx ON property  ( val_string );
 
 CREATE INDEX property_val_uom_inx ON property  ( val_uom );
 
 CREATE INDEX property_val_uri_inx ON property  ( val_uri );
 
-CREATE INDEX property_lod_inx ON property  ( lod );
+CREATE INDEX property_lod_inx ON property  ( val_lod );
 
 CREATE INDEX property_val_int_inx ON property  ( val_int );
 
@@ -334,6 +331,8 @@ CREATE INDEX property_namespace_fkx ON property  ( namespace_id );
 CREATE INDEX property_val_reference_inx ON property  ( val_reference_type );
 
 CREATE INDEX property_val_address_fkx ON property  ( val_address_id );
+
+CREATE INDEX property_name_inx ON property  ( name );
 
 CREATE  TABLE appear_to_surface_data (
 	id                   bigint DEFAULT nextval('appear_to_surface_data_seq'::regclass) NOT NULL  ,
@@ -365,9 +364,9 @@ ALTER TABLE codelist_entry ADD CONSTRAINT codelist_entry_codelist_fk FOREIGN KEY
 
 ALTER TABLE datatype ADD CONSTRAINT datatype_ade_fk FOREIGN KEY ( ade_id ) REFERENCES ade( id ) ON DELETE CASCADE;
 
-ALTER TABLE datatype ADD CONSTRAINT datatype_supertype_fk FOREIGN KEY ( supertype_id ) REFERENCES objectclass( id ) ON DELETE CASCADE;
-
 ALTER TABLE datatype ADD CONSTRAINT datatype_namespace_fk FOREIGN KEY ( namespace_id ) REFERENCES namespace( id ) ON DELETE CASCADE;
+
+ALTER TABLE datatype ADD CONSTRAINT datatype_supertype_fk FOREIGN KEY ( supertype_id ) REFERENCES datatype( id ) ON DELETE CASCADE;
 
 ALTER TABLE feature ADD CONSTRAINT feature_objectclass_fk FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id ) ON DELETE SET NULL;
 
