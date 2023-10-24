@@ -2,9 +2,9 @@ name: psql-docker-build-push-edge
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-    - master
+  # push:
+  #   branches:
+  #   - master
 
 jobs:
   build:

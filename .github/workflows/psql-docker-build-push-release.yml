@@ -2,8 +2,8 @@ name: psql-docker-build-push-release
 
 on:
   workflow_dispatch:
-  release:
-    types: [released, edited]
+  # release:
+  #   types: [released, edited]
 
 jobs:
   build:
