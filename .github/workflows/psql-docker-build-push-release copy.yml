@@ -1,0 +1,89 @@
+name: psql-docker-build-push-release-new
+
+on:
+  workflow_dispatch:
+  release:
+    types: [released, edited]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        baseimage-tag: [
+          '9.5-2.5',  '9.5-3.0',
+          '9.6-2.5',  '9.6-3.0',  '9.6-3.1',  '9.6-3.2',
+          '10-2.5',   '10-3.0',   '10-3.1',   '10-3.2',
+          '11-2.5',   '11-3.0',   '11-3.1',   '11-3.2',   '11-3.3',
+          '12-2.5',   '12-3.0',   '12-3.1',   '12-3.2',   '12-3.3',   '12-3.4',
+                      '13-3.0',   '13-3.1',   '13-3.2',   '13-3.3',   '13-3.4',
+                                  '14-3.1',   '14-3.2',   '14-3.3',   '14-3.4',
+                                                          '15-3.3',   '15-3.4',
+                                                                      '16-3.4'
+        ]
+        variant: ['', '-alpine']    # image variants: '' = debian
+
+    steps:
+    -
+      name: Checkout repo
+      uses: actions/checkout@v4
+    -
+      name: Get release version without v
+      id: release_version
+      uses: battila7/get-version-action@v2
+    -
+      name: Docker login Dockerhub
+      id: docker_login
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    -
+      name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    -
+      name: Extract metadata (tags, labels) for docker image
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: |
+          bwibo/3dcitydb-pg
+          ghcr.io/bwibo/3dcitydb-pg
+        tags: |
+          # Latest tag for PR, PR number only
+          type=semver,pattern={{version}},prefix=${{ matrix.baseimage-tag }}-,suffix=${{ matrix.variant }}
+        labels: |
+          maintainer=Bruno Willenborg
+          org.opencontainers.image.vendor=3DCityDB Partners
+          org.opencontainers.image.title=3D City Database PostgreSQL/PostGIS Docker image
+          org.opencontainers.image.description=Docker image for the 3D City Database based on PostgreSQL and PostGIS
+          org.opencontainers.image.url=https://github.com/3dcitydb/
+          org.opencontainers.image.documentation=https://3dcitydb-docs.readthedocs.io/en/latest/3dcitydb/docker.html
+          org.opencontainers.image.source=https://github.com/3dcitydb/3dcitydb
+    -
+      name: Build and publish
+      id: docker_build
+      uses: docker/build-push-action@v4
+      with:
+        push: false
+        context: ./postgresql
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        build-args: |
+          BASEIMAGE_TAG=${{ matrix.baseimage-tag }}${{ matrix.variant }}
+          CITYDB_VERSION=${{ steps.release_version.outputs.version }}
+    -
+      name: Image digest
+      run: echo ${{ steps.docker_build.outputs.digest }}
+    -
+      name: Inspect image
+      run: docker inspect bwibo/3dcitydb-pg:${{ matrix.baseimage-tag }}-${{ steps.release_version.outputs.version-without-v }}${{ matrix.variant }}
