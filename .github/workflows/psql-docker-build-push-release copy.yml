@@ -58,7 +58,7 @@ jobs:
         images: |
           bwibo/3dcitydb-pg
           ghcr.io/bwibo/3dcitydb-pg
-        flavor:
+        flavor: |
           latest=false
           prefix=${{ matrix.baseimage-tag }}-
           suffix=${{ matrix.variant }}
