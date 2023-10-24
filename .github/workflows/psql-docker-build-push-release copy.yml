@@ -58,9 +58,15 @@ jobs:
         images: |
           bwibo/3dcitydb-pg
           ghcr.io/bwibo/3dcitydb-pg
+        flavor:
+          latest=false
+          prefix=${{ matrix.baseimage-tag }}-
+          suffix=${{ matrix.variant }}
         tags: |
           # Latest tag for PR, PR number only
-          type=semver,pattern={{version}},prefix=${{ matrix.baseimage-tag }}-,suffix=${{ matrix.variant }}
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}
+          type=semver,pattern={{major}}.{{minor}}
         labels: |
           maintainer=Bruno Willenborg
           org.opencontainers.image.vendor=3DCityDB Partners
