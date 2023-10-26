@@ -41,7 +41,7 @@ BEGIN
     WHERE gd.id = p.val_geometry_id AND p.feature_id = fid AND gd.geometry IS NOT NULL
     UNION ALL
     SELECT
-      citydb_pkg.calc_implicit_geometry_envelope(val_implicitgeom_id, val_implicitgeom_refpoint, val_implicitgeom_transform, schema_name) AS geom
+      citydb_pkg.calc_implicit_geometry_envelope(val_implicitgeom_id, val_implicitgeom_refpoint, val_array, schema_name) AS geom
     FROM
       property p
     WHERE p.feature_id = fid AND p.val_implicitgeom_id IS NOT NULL
@@ -117,7 +117,7 @@ LANGUAGE plpgsql STABLE;
 /*****************************************************************
 * returns the envelope geometry of a given implicit geometry
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.calc_implicit_geometry_envelope(gid BIGINT, ref_pt GEOMETRY, matrix VARCHAR, schema_name TEXT DEFAULT 'citydb') RETURNS GEOMETRY AS
+CREATE OR REPLACE FUNCTION citydb_pkg.calc_implicit_geometry_envelope(gid BIGINT, ref_pt GEOMETRY, matrix JSON, schema_name TEXT DEFAULT 'citydb') RETURNS GEOMETRY AS
 $body$
 DECLARE
   envelope GEOMETRY;
@@ -132,7 +132,7 @@ BEGIN
         AND gd.implicit_geometry IS NOT NULL;
 
   IF matrix IS NOT NULL THEN
-    params := string_to_array(matrix, ' ')::float8[];
+    params := ARRAY(SELECT json_array_elements_text(matrix):float8[];
     IF array_length(params, 1) < 12 THEN
       RAISE EXCEPTION 'Malformed transformation matrix: %', matrix USING HINT = '16 values are required';
     END IF;

@@ -286,7 +286,6 @@ CREATE  TABLE property (
 	val_geometry_id      bigint    ,
 	val_implicitgeom_id  bigint    ,
 	val_implicitgeom_refpoint geometry(GEOMETRYZ)    ,
-	val_implicitgeom_transform text    ,
 	val_appearance_id    bigint    ,
 	val_address_id       bigint    ,
 	val_feature_id       bigint    ,
