@@ -132,7 +132,7 @@ BEGIN
         AND gd.implicit_geometry IS NOT NULL;
 
   IF matrix IS NOT NULL THEN
-    params := ARRAY(SELECT json_array_elements_text(matrix):float8[];
+    params := ARRAY(SELECT json_array_elements_text(matrix))::float8[];
     IF array_length(params, 1) < 12 THEN
       RAISE EXCEPTION 'Malformed transformation matrix: %', matrix USING HINT = '16 values are required';
     END IF;
