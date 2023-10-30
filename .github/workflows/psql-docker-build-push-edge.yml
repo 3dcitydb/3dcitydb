@@ -69,7 +69,7 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         build-args: |
-          BASEIMAGE_TAG=edge${{ matrix.variant }}
+          BASEIMAGE_TAG=${{ matrix.baseimage-tag }}${{ matrix.variant }}
           CITYDB_VERSION=${{ steps.short-sha.outputs.sha }}
     -
       name: Image digest
