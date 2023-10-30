@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-    - $repo.default_branch
+    - master
 
 jobs:
   build:
@@ -50,7 +50,7 @@ jobs:
           latest=false
           suffix=${{ matrix.variant }}
         tags: |
-          type=edge,branch=$repo.default_branch
+          type=edge,branch=master
         labels: |
           maintainer=Bruno Willenborg
           org.opencontainers.image.vendor=3DCityDB Partners
