@@ -58,23 +58,13 @@ fi
 
 # Add PostGIS SFCGAL extension ------------------------------------------------
 if [ ! -z ${POSTGIS_SFCGAL+x} ] && [ ${POSTGIS_SFCGAL} = true ] || [ "${POSTGIS_SFCGAL}" = "yes" ] ; then
-  # SFCGAL is currently not available in the post/postgis:alpine images.
-  # Test for Alpine Linux and warn if enabled and alpine image variant.
 
-  if grep -iq "alpine" /etc/os-release; then
-    echo
-    echo "!!! WARNING: POSTGIS_SFCGAL was set, but SFCGAL is not available on Alpine Linux image variants."
-    echo "!!! Please use the Debian based image variants if you require SFCGAL support."
-    SFCGAL=false
-  else
-    echo
-    echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' ..."
+  echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' ..."
 
-    "${psql[@]}" -d "$POSTGRES_DB" -c "CREATE EXTENSION IF NOT EXISTS postgis_sfcgal;"
+  "${psql[@]}" -d "$POSTGRES_DB" -c "CREATE EXTENSION IF NOT EXISTS postgis_sfcgal;"
 
-    echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' ...done!"
-    SFCGAL=true
-  fi
+  echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' ...done!"
+  SFCGAL=true
 else
   SFCGAL=false
 fi
