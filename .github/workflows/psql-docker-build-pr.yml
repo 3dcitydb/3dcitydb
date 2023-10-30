@@ -1,4 +1,4 @@
-name: psql-docker-build-edge
+name: psql-docker-build-pr
 
 on:
   workflow_dispatch:
