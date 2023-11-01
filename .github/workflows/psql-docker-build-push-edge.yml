@@ -59,7 +59,10 @@ jobs:
           type=edge,branch=master
         labels: |
           maintainer=Bruno Willenborg
-          org.opencontainers.image.vendor=3DCityDB Partners
+          maintainer.email=b.willenborg(at)tum.de
+          maintainer.organization=Chair of Geoinformatics, Technical University of Munich (TUM)
+          org.opencontainers.image.authors=Bruno Willenborg
+          org.opencontainers.image.vendor=3DCityDB Steering Committee
           org.opencontainers.image.title=3D City Database PostgreSQL/PostGIS Docker image
           org.opencontainers.image.description=Docker image for the 3D City Database based on PostgreSQL and PostGIS
           org.opencontainers.image.url=https://github.com/3dcitydb/
