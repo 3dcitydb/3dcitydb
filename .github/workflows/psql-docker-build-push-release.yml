@@ -64,7 +64,7 @@ jobs:
         flavor: |
           latest=${{ matrix.baseimage-tag == env.LATEST_BASEIMAGE }}
           prefix=${{ matrix.baseimage-tag }}-
-          suffix=${{ matrix.variant }}
+          suffix=${{ matrix.variant }},onlatest=true
         tags: |
           # Latest tag for PR, PR number only
           type=semver,pattern={{version}}
