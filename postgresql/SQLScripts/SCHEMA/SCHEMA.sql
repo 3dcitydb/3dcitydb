@@ -211,7 +211,7 @@ CREATE  TABLE surface_data (
 	tex_texture_type     text    ,
 	tex_wrap_mode        text    ,
 	tex_border_color     text    ,
-	gt_orientation       text    ,
+	gt_orientation       json    ,
 	gt_reference_point   geometry(POINT)    ,
 	CONSTRAINT surface_data_pk PRIMARY KEY ( id )
  );
