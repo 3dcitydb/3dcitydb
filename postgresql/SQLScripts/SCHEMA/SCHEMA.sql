@@ -49,7 +49,6 @@ CREATE INDEX address_multi_point_spx ON address USING GiST ( multi_point );
 
 CREATE  TABLE ade (
 	id                   integer DEFAULT nextval('ade_seq'::regclass) NOT NULL  ,
-	adeid                text  NOT NULL  ,
 	name                 text  NOT NULL  ,
 	description          text    ,
 	"version"            text    ,
