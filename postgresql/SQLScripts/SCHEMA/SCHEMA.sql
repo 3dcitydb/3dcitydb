@@ -285,7 +285,6 @@ CREATE  TABLE property (
 	val_lod              text    ,
 	val_geometry_id      bigint    ,
 	val_implicitgeom_id  bigint    ,
-	val_implicitgeom_refpoint geometry(GEOMETRYZ)    ,
 	val_appearance_id    bigint    ,
 	val_address_id       bigint    ,
 	val_feature_id       bigint    ,
@@ -322,8 +321,6 @@ CREATE INDEX property_val_geometry_fkx ON property  ( val_geometry_id );
 CREATE INDEX property_val_implicitgeom_fkx ON property  ( val_implicitgeom_id );
 
 CREATE INDEX property_val_appearance_fkx ON property  ( val_appearance_id );
-
-CREATE INDEX property_val_implicitgeom_spx ON property USING GiST ( val_implicitgeom_refpoint );
 
 CREATE INDEX property_namespace_fkx ON property  ( namespace_id );
 

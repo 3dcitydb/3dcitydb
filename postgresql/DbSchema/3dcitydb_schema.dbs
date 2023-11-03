@@ -333,7 +333,6 @@
 			<column name="val_lod" prior="lod" type="text" length="256" jt="12" />
 			<column name="val_geometry_id" prior="val_geometry" type="bigint" length="19" decimal="0" jt="-5" />
 			<column name="val_implicitgeom_id" prior="val_implicitgeom" type="bigint" length="19" decimal="0" jt="-5" />
-			<column name="val_implicitgeom_refpoint" type="geometry(GEOMETRYZ)" jt="1111" />
 			<column name="val_appearance_id" prior="val_appearance" type="bigint" length="19" decimal="0" jt="-5" />
 			<column name="val_address_id" type="bigint" length="100" jt="-5" />
 			<column name="val_feature_id" prior="val_feature" type="bigint" length="19" decimal="0" jt="-5" />
@@ -384,9 +383,6 @@
 			</index>
 			<index name="property_val_appearance_fkx" unique="NORMAL" >
 				<column name="val_appearance_id" />
-			</index>
-			<index name="property_val_implicitgeom_spx" unique="NORMAL" spec="USING GiST" >
-				<column name="val_implicitgeom_refpoint" />
 			</index>
 			<index name="property_namespace_fkx" unique="NORMAL" >
 				<column name="namespace_id" />
@@ -528,8 +524,8 @@
 		<sequence name="surface_data_seq" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE" />
 		<sequence name="tex_image_seq" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE" />
 	</schema>
-	<connector name="PostgreSQL" database="PostgreSQL" driver_class="org.postgresql.Driver" driver_jar="postgresql-42.5.0.jar" driver_desc="Standard" host="localhost" port="5432" instance="test" user="postgres" passwd="MTI1MTI1" schema_mapping="citydb:public" useSystemProxy="false" />
 	<connector name="PostgreSQL" database="PostgreSQL" driver_class="org.postgresql.Driver" driver_jar="postgresql-42.5.0.jar" driver_desc="Standard" host="localhost" port="9020" instance="demo20_db" user="demo20" passwd="bGFoYW5h" useSystemProxy="false" />
+	<connector name="PostgreSQL" database="PostgreSQL" driver_class="org.postgresql.Driver" driver_jar="postgresql-42.5.0.jar" driver_desc="Standard" host="localhost" port="5432" instance="test" user="postgres" passwd="MTI1MTI1" schema_mapping="citydb:public" useSystemProxy="false" />
 	<layout name="Appearance" id="Layout-f00" show_relation="columns" >
 		<entity schema="citydb" name="appear_to_surface_data" color="3986C1" x="816" y="48" />
 		<entity schema="citydb" name="appearance" color="3986C1" x="592" y="160" />
@@ -37146,6 +37142,418 @@ CREATE INDEX property_val_implicitgeom_fkx ON property  ( val_implicitgeom_id );
 CREATE INDEX property_val_appearance_fkx ON property  ( val_appearance_id );
 
 CREATE INDEX property_val_implicitgeom_spx ON property USING GiST ( val_implicitgeom_refpoint );
+
+CREATE INDEX property_namespace_fkx ON property  ( namespace_id );
+
+CREATE INDEX property_val_reference_inx ON property  ( val_reference_type );
+
+CREATE INDEX property_val_address_fkx ON property  ( val_address_id );
+
+CREATE INDEX property_name_inx ON property  ( name );
+
+CREATE  TABLE appear_to_surface_data ( 
+	id                   bigint DEFAULT nextval('appear_to_surface_data_seq'::regclass) NOT NULL  ,
+	appearance_id        bigint  NOT NULL  ,
+	surface_data_id      bigint    ,
+	val_reference_type   integer    ,
+	CONSTRAINT appear_to_surface_data_pk PRIMARY KEY ( id )
+ );
+
+CREATE INDEX appear_to_surface_data_fkx1 ON appear_to_surface_data  ( surface_data_id );
+
+CREATE INDEX appear_to_surface_data_fkx2 ON appear_to_surface_data  ( appearance_id );
+
+ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_child_fk FOREIGN KEY ( child_id ) REFERENCES objectclass( id ) ON DELETE CASCADE;
+
+ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_parent_fk FOREIGN KEY ( parent_id ) REFERENCES objectclass( id ) ON DELETE CASCADE;
+
+ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_namespace_fk FOREIGN KEY ( property_namespace_id ) REFERENCES namespace( id ) ON DELETE CASCADE;
+
+ALTER TABLE appear_to_surface_data ADD CONSTRAINT appear_to_surface_data_fk1 FOREIGN KEY ( surface_data_id ) REFERENCES surface_data( id ) ON DELETE CASCADE;
+
+ALTER TABLE appear_to_surface_data ADD CONSTRAINT appear_to_surface_data_fk2 FOREIGN KEY ( appearance_id ) REFERENCES appearance( id ) ON DELETE CASCADE;
+
+ALTER TABLE appearance ADD CONSTRAINT appearance_feature_fk FOREIGN KEY ( feature_id ) REFERENCES feature( id ) ON DELETE SET NULL;
+
+ALTER TABLE appearance ADD CONSTRAINT appearance_implicit_geom_fk FOREIGN KEY ( implicit_geometry_id ) REFERENCES implicit_geometry( id ) ON DELETE CASCADE;
+
+ALTER TABLE codelist_entry ADD CONSTRAINT codelist_entry_codelist_fk FOREIGN KEY ( codelist_id ) REFERENCES codelist( id ) ON DELETE CASCADE;
+
+ALTER TABLE datatype ADD CONSTRAINT datatype_ade_fk FOREIGN KEY ( ade_id ) REFERENCES ade( id ) ON DELETE CASCADE;
+
+ALTER TABLE datatype ADD CONSTRAINT datatype_namespace_fk FOREIGN KEY ( namespace_id ) REFERENCES namespace( id ) ON DELETE CASCADE;
+
+ALTER TABLE datatype ADD CONSTRAINT datatype_supertype_fk FOREIGN KEY ( supertype_id ) REFERENCES datatype( id ) ON DELETE CASCADE;
+
+ALTER TABLE feature ADD CONSTRAINT feature_objectclass_fk FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id ) ON DELETE SET NULL;
+
+ALTER TABLE geometry_data ADD CONSTRAINT geometry_data_feature_fk FOREIGN KEY ( feature_id ) REFERENCES feature( id ) ON DELETE SET NULL;
+
+ALTER TABLE implicit_geometry ADD CONSTRAINT implicit_geometry_fk FOREIGN KEY ( relative_geometry_id ) REFERENCES geometry_data( id ) ON DELETE CASCADE;
+
+ALTER TABLE namespace ADD CONSTRAINT fk_namespace_ade FOREIGN KEY ( ade_id ) REFERENCES ade( id ) ON DELETE CASCADE;
+
+ALTER TABLE objectclass ADD CONSTRAINT objectclass_ade_fk FOREIGN KEY ( ade_id ) REFERENCES ade( id ) ON DELETE CASCADE;
+
+ALTER TABLE objectclass ADD CONSTRAINT objectclass_superclass_fk FOREIGN KEY ( superclass_id ) REFERENCES objectclass( id ) ON DELETE CASCADE;
+
+ALTER TABLE objectclass ADD CONSTRAINT objectclass_namespace_fk FOREIGN KEY ( namespace_id ) REFERENCES namespace( id ) ON DELETE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_appearance_fk FOREIGN KEY ( val_appearance_id ) REFERENCES appearance( id ) ON DELETE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_feature_fk FOREIGN KEY ( feature_id ) REFERENCES feature( id );
+
+ALTER TABLE property ADD CONSTRAINT property_val_feature_fk FOREIGN KEY ( val_feature_id ) REFERENCES feature( id ) ON DELETE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_val_implicitgeom_fk FOREIGN KEY ( val_implicitgeom_id ) REFERENCES implicit_geometry( id ) ON DELETE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_parent_fk FOREIGN KEY ( parent_id ) REFERENCES property( id ) ON DELETE SET NULL;
+
+ALTER TABLE property ADD CONSTRAINT property_root_fk FOREIGN KEY ( root_id ) REFERENCES property( id ) ON DELETE SET NULL;
+
+ALTER TABLE property ADD CONSTRAINT property_val_geometry_fk FOREIGN KEY ( val_geometry_id ) REFERENCES geometry_data( id ) ON DELETE CASCADE;
+
+ALTER TABLE property ADD CONSTRAINT property_namespace_fk FOREIGN KEY ( namespace_id ) REFERENCES namespace( id ) ON DELETE SET NULL;
+
+ALTER TABLE property ADD CONSTRAINT property_datatype_fk FOREIGN KEY ( datatype_id ) REFERENCES datatype( id ) ON DELETE SET NULL;
+
+ALTER TABLE property ADD CONSTRAINT property_val_address_fk FOREIGN KEY ( val_address_id ) REFERENCES address( id ) ON DELETE CASCADE;
+
+ALTER TABLE surface_data ADD CONSTRAINT surface_data_objclass_fk FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id ) ON DELETE SET NULL;
+
+ALTER TABLE surface_data ADD CONSTRAINT surface_data_tex_image_fk FOREIGN KEY ( tex_image_id ) REFERENCES tex_image( id ) ON DELETE SET NULL;
+
+ALTER TABLE surface_data_mapping ADD CONSTRAINT surface_data_mapping_fk1 FOREIGN KEY ( geometry_data_id ) REFERENCES geometry_data( id ) ON DELETE CASCADE;
+
+ALTER TABLE surface_data_mapping ADD CONSTRAINT surface_data_mapping_fk2 FOREIGN KEY ( surface_data_id ) REFERENCES surface_data( id ) ON DELETE CASCADE;
+]]></string>
+		</script>
+		<script name="SQL_Editor_105" id="Editor-1e7a" language="SQL" >
+			<string><![CDATA[CREATE SCHEMA IF NOT EXISTS citydb;
+
+CREATE SEQUENCE address_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+
+CREATE SEQUENCE ade_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 2147483647 CACHE 1 NO CYCLE;
+
+CREATE SEQUENCE appear_to_surface_data_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+
+CREATE SEQUENCE appearance_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+
+CREATE SEQUENCE codelist_entry_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+
+CREATE SEQUENCE codelist_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+
+CREATE SEQUENCE feature_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+
+CREATE SEQUENCE geometry_data_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+
+CREATE SEQUENCE implicit_geometry_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+
+CREATE SEQUENCE property_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+
+CREATE SEQUENCE surface_data_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+
+CREATE SEQUENCE tex_image_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+
+CREATE  TABLE address ( 
+	id                   bigint DEFAULT nextval('address_seq'::regclass) NOT NULL  ,
+	objectid             text    ,
+	identifier           text    ,
+	identifier_codespace text    ,
+	street               text    ,
+	house_number         text    ,
+	po_box               text    ,
+	zip_code             text    ,
+	city                 text    ,
+	"state"              text    ,
+	country              text    ,
+	free_text            json    ,
+	multi_point          geometry(MULTIPOINTZ)    ,
+	content              text    ,
+	content_mime_type    text    ,
+	CONSTRAINT address_pk PRIMARY KEY ( id )
+ );
+
+CREATE INDEX address_objectid_inx ON address  ( objectid );
+
+CREATE INDEX address_identifier_inx ON address  ( identifier, identifier_codespace );
+
+CREATE INDEX address_multi_point_spx ON address USING GiST ( multi_point );
+
+CREATE  TABLE ade ( 
+	id                   integer DEFAULT nextval('ade_seq'::regclass) NOT NULL  ,
+	adeid                text  NOT NULL  ,
+	name                 text  NOT NULL  ,
+	description          text    ,
+	"version"            text    ,
+	CONSTRAINT ade_pk PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE codelist ( 
+	id                   bigint DEFAULT nextval('codelist_seq'::regclass) NOT NULL  ,
+	codelist_type        text    ,
+	url                  text    ,
+	mime_type            text    ,
+	CONSTRAINT codelist_pkey PRIMARY KEY ( id )
+ );
+
+CREATE INDEX codelist_codelist_type_inx ON codelist  ( codelist_type );
+
+CREATE  TABLE codelist_entry ( 
+	id                   bigint DEFAULT nextval('codelist_entry_seq'::regclass) NOT NULL  ,
+	codelist_id          bigint  NOT NULL  ,
+	code                 text    ,
+	definition           text    ,
+	CONSTRAINT codelist_entry_pkey PRIMARY KEY ( id )
+ );
+
+CREATE INDEX codelist_entry_codelist_idx ON codelist_entry  ( codelist_id );
+
+CREATE  TABLE database_srs ( 
+	srid                 integer  NOT NULL  ,
+	srs_name             text    ,
+	CONSTRAINT database_srs_pk PRIMARY KEY ( srid )
+ );
+
+CREATE  TABLE namespace ( 
+	id                   integer  NOT NULL  ,
+	"alias"              text    ,
+	namespace            text    ,
+	ade_id               integer    ,
+	CONSTRAINT namespace_pk PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE objectclass ( 
+	id                   integer  NOT NULL  ,
+	superclass_id        integer    ,
+	classname            text    ,
+	is_abstract          numeric    ,
+	is_toplevel          numeric    ,
+	ade_id               integer    ,
+	namespace_id         integer    ,
+	CONSTRAINT objectclass_pk PRIMARY KEY ( id )
+ );
+
+CREATE INDEX objectclass_superclass_fkx ON objectclass  ( superclass_id );
+
+CREATE  TABLE tex_image ( 
+	id                   bigint DEFAULT nextval('tex_image_seq'::regclass) NOT NULL  ,
+	image_uri            text    ,
+	image_data           bytea    ,
+	mime_type            text    ,
+	mime_type_codespace  text    ,
+	CONSTRAINT tex_image_pk PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE aggregation_info ( 
+	child_id             integer  NOT NULL  ,
+	parent_id            integer  NOT NULL  ,
+	property_name        text  NOT NULL  ,
+	property_namespace_id integer    ,
+	min_occurs           integer    ,
+	max_occurs           integer    ,
+	is_composite         numeric    
+ );
+
+CREATE  TABLE datatype ( 
+	id                   integer  NOT NULL  ,
+	supertype_id         integer    ,
+	typename             text    ,
+	is_abstract          numeric    ,
+	ade_id               integer    ,
+	namespace_id         integer    ,
+	CONSTRAINT datatype_pk PRIMARY KEY ( id )
+ );
+
+CREATE INDEX datatype_supertype_fkx ON datatype  ( supertype_id );
+
+CREATE  TABLE feature ( 
+	id                   bigint DEFAULT nextval('feature_seq'::regclass) NOT NULL  ,
+	objectclass_id       integer  NOT NULL  ,
+	objectid             text    ,
+	identifier           text    ,
+	identifier_codespace text    ,
+	envelope             geometry(GEOMETRYZ)    ,
+	last_modification_date timestamptz    ,
+	updating_person      text    ,
+	reason_for_update    text    ,
+	lineage              text    ,
+	creation_date        timestamptz    ,
+	termination_date     timestamptz    ,
+	valid_from           timestamptz    ,
+	valid_to             timestamptz    ,
+	CONSTRAINT feature_pk PRIMARY KEY ( id )
+ );
+
+CREATE INDEX feature_objectclass_fkx ON feature  ( objectclass_id  );
+
+CREATE INDEX feature_objectid_inx ON feature  ( objectid  );
+
+CREATE INDEX feature_envelope_spx ON feature USING GiST ( envelope );
+
+CREATE INDEX feature_identifier_inx ON feature  ( identifier , identifier_codespace );
+
+CREATE  TABLE geometry_data ( 
+	id                   bigint DEFAULT nextval('geometry_data_seq'::regclass) NOT NULL  ,
+	objectid             text    ,
+	geometry             geometry(GEOMETRYZ)    ,
+	implicit_geometry    geometry(GEOMETRYZ)    ,
+	geometry_properties  json    ,
+	feature_id           bigint    ,
+	CONSTRAINT geometry_data_pk PRIMARY KEY ( id )
+ );
+
+CREATE INDEX geometry_data_objectid_inx ON geometry_data  ( objectid );
+
+CREATE INDEX geometry_data_feature_fkx ON geometry_data  ( feature_id );
+
+CREATE INDEX geometry_data_spx ON geometry_data USING GiST ( geometry );
+
+CREATE  TABLE implicit_geometry ( 
+	id                   bigint DEFAULT nextval('implicit_geometry_seq'::regclass) NOT NULL  ,
+	objectid             text    ,
+	mime_type            text    ,
+	mime_type_codespace  text    ,
+	reference_to_library text    ,
+	library_object       bytea    ,
+	relative_geometry_id bigint    ,
+	CONSTRAINT implicit_geometry_pk PRIMARY KEY ( id )
+ );
+
+CREATE INDEX implicit_geom_ref2lib_inx ON implicit_geometry  ( reference_to_library );
+
+CREATE INDEX implicit_geometry_fkx ON implicit_geometry  ( relative_geometry_id );
+
+CREATE INDEX implicit_geometry_inx ON implicit_geometry  ( objectid );
+
+CREATE  TABLE surface_data ( 
+	id                   bigint DEFAULT nextval('surface_data_seq'::regclass) NOT NULL  ,
+	objectid             text    ,
+	identifier           text    ,
+	identifier_codespace text    ,
+	is_front             numeric    ,
+	objectclass_id       integer  NOT NULL  ,
+	x3d_shininess        double precision    ,
+	x3d_transparency     double precision    ,
+	x3d_ambient_intensity double precision    ,
+	x3d_specular_color   text    ,
+	x3d_diffuse_color    text    ,
+	x3d_emissive_color   text    ,
+	x3d_is_smooth        numeric    ,
+	tex_image_id         bigint    ,
+	tex_texture_type     text    ,
+	tex_wrap_mode        text    ,
+	tex_border_color     text    ,
+	gt_orientation       text    ,
+	gt_reference_point   geometry(POINT)    ,
+	CONSTRAINT surface_data_pk PRIMARY KEY ( id )
+ );
+
+CREATE INDEX surface_data_objectid_inx ON surface_data  ( objectid );
+
+CREATE INDEX surface_data_tex_image_fkx ON surface_data  ( tex_image_id );
+
+CREATE INDEX surface_data_objclass_fkx ON surface_data  ( objectclass_id );
+
+CREATE INDEX surface_data_spx ON surface_data  ( gt_reference_point );
+
+CREATE INDEX surface_data_identifier_inx ON surface_data  ( identifier, identifier_codespace );
+
+CREATE  TABLE surface_data_mapping ( 
+	surface_data_id      bigint  NOT NULL  ,
+	geometry_data_id     bigint  NOT NULL  ,
+	material_mapping     json    ,
+	texture_mapping      json    ,
+	world_to_texture_mapping json    ,
+	georeferenced_texture_mapping json    ,
+	CONSTRAINT surface_data_mapping_pk PRIMARY KEY ( geometry_data_id, surface_data_id )
+ );
+
+CREATE INDEX surface_data_mapping_fkx1 ON surface_data_mapping  ( geometry_data_id );
+
+CREATE INDEX surface_data_mapping_fkx2 ON surface_data_mapping  ( surface_data_id );
+
+CREATE  TABLE appearance ( 
+	id                   bigint DEFAULT nextval('appearance_seq'::regclass) NOT NULL  ,
+	objectid             text    ,
+	identifier           text    ,
+	identifier_codespace text    ,
+	theme                text    ,
+	creation_date        timestamptz    ,
+	termination_date     timestamptz    ,
+	valid_from           timestamptz    ,
+	valid_to             timestamptz    ,
+	is_global            numeric    ,
+	feature_id           bigint    ,
+	implicit_geometry_id bigint    ,
+	CONSTRAINT appearance_pk PRIMARY KEY ( id )
+ );
+
+CREATE INDEX appearance_objectid_inx ON appearance  ( objectid );
+
+CREATE INDEX appearance_theme_inx ON appearance  ( theme );
+
+CREATE INDEX appearance_feature_fkx ON appearance  ( feature_id );
+
+CREATE INDEX appearance_identifier_inx ON appearance  ( identifier, identifier_codespace );
+
+CREATE INDEX appearance_implicit_geom_fkx ON appearance  ( implicit_geometry_id );
+
+CREATE  TABLE property ( 
+	id                   bigint DEFAULT nextval('property_seq'::regclass) NOT NULL  ,
+	feature_id           bigint    ,
+	parent_id            bigint    ,
+	root_id              bigint    ,
+	datatype_id          integer    ,
+	namespace_id         integer    ,
+	name                 text    ,
+	val_int              bigint    ,
+	val_double           double precision    ,
+	val_string           text    ,
+	val_timestamp        timestamptz    ,
+	val_uri              text    ,
+	val_codespace        text    ,
+	val_uom              text    ,
+	val_array            json    ,
+	val_lod              text    ,
+	val_geometry_id      bigint    ,
+	val_implicitgeom_id  bigint    ,
+	val_appearance_id    bigint    ,
+	val_address_id       bigint    ,
+	val_feature_id       bigint    ,
+	val_reference_type   integer    ,
+	val_content          text    ,
+	val_content_mime_type text    ,
+	CONSTRAINT property_pk PRIMARY KEY ( id )
+ );
+
+CREATE INDEX property_feature_fkx ON property  ( feature_id );
+
+CREATE INDEX property_parent_fkx ON property  ( parent_id );
+
+CREATE INDEX property_root_fkx ON property  ( root_id );
+
+CREATE INDEX property_val_feature_fkx ON property  ( val_feature_id );
+
+CREATE INDEX property_val_string_inx ON property  ( val_string );
+
+CREATE INDEX property_val_uom_inx ON property  ( val_uom );
+
+CREATE INDEX property_val_uri_inx ON property  ( val_uri );
+
+CREATE INDEX property_lod_inx ON property  ( val_lod );
+
+CREATE INDEX property_val_int_inx ON property  ( val_int );
+
+CREATE INDEX property_val_double_inx ON property  ( val_double );
+
+CREATE INDEX property_val_date_inx ON property  ( val_timestamp );
+
+CREATE INDEX property_val_geometry_fkx ON property  ( val_geometry_id );
+
+CREATE INDEX property_val_implicitgeom_fkx ON property  ( val_implicitgeom_id );
+
+CREATE INDEX property_val_appearance_fkx ON property  ( val_appearance_id );
 
 CREATE INDEX property_namespace_fkx ON property  ( namespace_id );
 
