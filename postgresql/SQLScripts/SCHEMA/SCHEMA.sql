@@ -161,15 +161,12 @@ CREATE INDEX feature_identifier_inx ON feature  ( identifier , identifier_codesp
 
 CREATE  TABLE geometry_data (
 	id                   bigint DEFAULT nextval('geometry_data_seq'::regclass) NOT NULL  ,
-	objectid             text    ,
 	geometry             geometry(GEOMETRYZ)    ,
 	implicit_geometry    geometry(GEOMETRYZ)    ,
 	geometry_properties  json    ,
 	feature_id           bigint    ,
 	CONSTRAINT geometry_data_pk PRIMARY KEY ( id )
  );
-
-CREATE INDEX geometry_data_objectid_inx ON geometry_data  ( objectid );
 
 CREATE INDEX geometry_data_feature_fkx ON geometry_data  ( feature_id );
 
