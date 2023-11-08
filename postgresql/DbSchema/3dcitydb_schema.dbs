@@ -357,7 +357,7 @@
 			<index name="property_val_uri_inx" unique="NORMAL" >
 				<column name="val_uri" />
 			</index>
-			<index name="property_lod_inx" unique="NORMAL" >
+			<index name="property_val_lod_inx" unique="NORMAL" >
 				<column name="val_lod" />
 			</index>
 			<index name="property_val_int_inx" unique="NORMAL" >
@@ -377,9 +377,6 @@
 			</index>
 			<index name="property_val_appearance_fkx" unique="NORMAL" >
 				<column name="val_appearance_id" />
-			</index>
-			<index name="property_val_implicitgeom_spx" unique="NORMAL" spec="USING GiST" >
-				<column name="val_implicitgeom_refpoint" />
 			</index>
 			<index name="property_namespace_fkx" unique="NORMAL" >
 				<column name="namespace_id" />
@@ -511,8 +508,8 @@
 		<sequence name="surface_data_seq" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE" />
 		<sequence name="tex_image_seq" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE" />
 	</schema>
-	<connector name="PostgreSQL" database="PostgreSQL" driver_class="org.postgresql.Driver" driver_jar="postgresql-42.5.0.jar" driver_desc="Standard" host="localhost" port="5432" instance="test" user="postgres" passwd="MTI1MTI1" schema_mapping="citydb:public" useSystemProxy="false" />
 	<connector name="PostgreSQL" database="PostgreSQL" driver_class="org.postgresql.Driver" driver_jar="postgresql-42.5.0.jar" driver_desc="Standard" host="localhost" port="9020" instance="demo20_db" user="demo20" passwd="bGFoYW5h" useSystemProxy="false" />
+	<connector name="PostgreSQL" database="PostgreSQL" driver_class="org.postgresql.Driver" driver_jar="postgresql-42.5.0.jar" driver_desc="Standard" host="localhost" port="5432" instance="test" user="postgres" passwd="MTI1MTI1" schema_mapping="citydb:public" useSystemProxy="false" />
 	<layout name="Appearance" id="Layout-f00" show_relation="columns" >
 		<entity schema="citydb" name="appear_to_surface_data" color="3986C1" x="816" y="48" />
 		<entity schema="citydb" name="appearance" color="3986C1" x="592" y="160" />
@@ -564,9 +561,9 @@
 		</group>
 		<group name="Core" color="F7F2EC" >
 			<entity schema="citydb" name="feature" />
-			<entity schema="citydb" name="property" />
 			<entity schema="citydb" name="codelist" />
 			<entity schema="citydb" name="codelist_entry" />
+			<entity schema="citydb" name="property" />
 		</group>
 		<group name="Appearance" color="FFCCFF" >
 			<entity schema="citydb" name="surface_data_mapping" />

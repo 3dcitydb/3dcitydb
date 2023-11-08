@@ -299,7 +299,7 @@ CREATE INDEX property_val_uom_inx ON property  ( val_uom );
 
 CREATE INDEX property_val_uri_inx ON property  ( val_uri );
 
-CREATE INDEX property_lod_inx ON property  ( val_lod );
+CREATE INDEX property_val_lod_inx ON property  ( val_lod );
 
 CREATE INDEX property_val_int_inx ON property  ( val_int );
 
@@ -312,8 +312,6 @@ CREATE INDEX property_val_geometry_fkx ON property  ( val_geometry_id );
 CREATE INDEX property_val_implicitgeom_fkx ON property  ( val_implicitgeom_id );
 
 CREATE INDEX property_val_appearance_fkx ON property  ( val_appearance_id );
-
-CREATE INDEX property_val_implicitgeom_spx ON property USING GiST ( val_implicitgeom_refpoint );
 
 CREATE INDEX property_namespace_fkx ON property  ( namespace_id );
 
