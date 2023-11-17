@@ -60,7 +60,7 @@ jobs:
           latest=false
           suffix=${{ matrix.variant }}
         tags: |
-          type=edge,branch=master
+          type=edge,branch=v5-devel
         labels: |
           maintainer=Bruno Willenborg
           maintainer.email=b.willenborg(at)tum.de
