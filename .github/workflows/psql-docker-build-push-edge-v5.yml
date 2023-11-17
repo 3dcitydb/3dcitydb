@@ -8,7 +8,7 @@ on:
     - v5-docker
 
 env:
-  IMAGE_NAME=3dcitydb-pg-v5
+  IMAGE_NAME: 3dcitydb-pg-v5
 
 jobs:
   build:
