@@ -75,6 +75,68 @@ CREATE  TABLE database_srs (
 	CONSTRAINT database_srs_pk PRIMARY KEY ( srid )
  );
 
+CREATE  TABLE feature (
+	id                   bigint DEFAULT nextval('feature_seq'::regclass) NOT NULL  ,
+	objectclass_id       integer  NOT NULL  ,
+	objectid             text    ,
+	identifier           text    ,
+	identifier_codespace text    ,
+	envelope             geometry(GEOMETRYZ)    ,
+	last_modification_date timestamptz    ,
+	updating_person      text    ,
+	reason_for_update    text    ,
+	lineage              text    ,
+	creation_date        timestamptz    ,
+	termination_date     timestamptz    ,
+	valid_from           timestamptz    ,
+	valid_to             timestamptz    ,
+	CONSTRAINT feature_pk PRIMARY KEY ( id )
+ );
+
+CREATE INDEX feature_objectclass_inx ON feature  ( objectclass_id  );
+
+CREATE INDEX feature_objectid_inx ON feature  ( objectid  );
+
+CREATE INDEX feature_envelope_spx ON feature USING GiST ( envelope );
+
+CREATE INDEX feature_identifier_inx ON feature  ( identifier , identifier_codespace );
+
+CREATE INDEX feature_creation_date_inx ON feature  ( creation_date );
+
+CREATE INDEX feature_termination_date_inx ON feature  ( termination_date );
+
+CREATE INDEX feature_valid_from_inx ON feature  ( valid_from );
+
+CREATE INDEX feature_valid_to_inx ON feature  ( valid_to );
+
+CREATE  TABLE geometry_data (
+	id                   bigint DEFAULT nextval('geometry_data_seq'::regclass) NOT NULL  ,
+	geometry             geometry(GEOMETRYZ)    ,
+	implicit_geometry    geometry(GEOMETRYZ)    ,
+	geometry_properties  json    ,
+	feature_id           bigint    ,
+	CONSTRAINT geometry_data_pk PRIMARY KEY ( id )
+ );
+
+CREATE INDEX geometry_data_feature_fkx ON geometry_data  ( feature_id );
+
+CREATE INDEX geometry_data_spx ON geometry_data USING GiST ( geometry );
+
+CREATE  TABLE implicit_geometry (
+	id                   bigint DEFAULT nextval('implicit_geometry_seq'::regclass) NOT NULL  ,
+	objectid             text    ,
+	mime_type            text    ,
+	mime_type_codespace  text    ,
+	reference_to_library text    ,
+	library_object       bytea    ,
+	relative_geometry_id bigint    ,
+	CONSTRAINT implicit_geometry_pk PRIMARY KEY ( id )
+ );
+
+CREATE INDEX implicit_geometry_fkx ON implicit_geometry  ( relative_geometry_id );
+
+CREATE INDEX implicit_geometry_objectid_inx ON implicit_geometry  ( objectid );
+
 CREATE  TABLE namespace (
 	id                   integer  NOT NULL  ,
 	"alias"              text    ,
@@ -121,6 +183,26 @@ CREATE INDEX aggregation_info_parent_fkx ON aggregation_info  ( parent_id );
 
 CREATE INDEX aggregation_info_namespace_fkx ON aggregation_info  ( property_namespace_id );
 
+CREATE  TABLE appearance (
+	id                   bigint DEFAULT nextval('appearance_seq'::regclass) NOT NULL  ,
+	objectid             text    ,
+	identifier           text    ,
+	identifier_codespace text    ,
+	theme                text    ,
+	creation_date        timestamptz    ,
+	termination_date     timestamptz    ,
+	valid_from           timestamptz    ,
+	valid_to             timestamptz    ,
+	is_global            numeric    ,
+	feature_id           bigint    ,
+	implicit_geometry_id bigint    ,
+	CONSTRAINT appearance_pk PRIMARY KEY ( id )
+ );
+
+CREATE INDEX appearance_feature_fkx ON appearance  ( feature_id );
+
+CREATE INDEX appearance_implicit_geom_fkx ON appearance  ( implicit_geometry_id );
+
 CREATE  TABLE datatype (
 	id                   integer  NOT NULL  ,
 	supertype_id         integer    ,
@@ -133,67 +215,67 @@ CREATE  TABLE datatype (
 
 CREATE INDEX datatype_supertype_fkx ON datatype  ( supertype_id );
 
-CREATE  TABLE feature (
-	id                   bigint DEFAULT nextval('feature_seq'::regclass) NOT NULL  ,
-	objectclass_id       integer  NOT NULL  ,
-	objectid             text    ,
-	identifier           text    ,
-	identifier_codespace text    ,
-	envelope             geometry(GEOMETRYZ)    ,
-	last_modification_date timestamptz    ,
-	updating_person      text    ,
-	reason_for_update    text    ,
-	lineage              text    ,
-	creation_date        timestamptz    ,
-	termination_date     timestamptz    ,
-	valid_from           timestamptz    ,
-	valid_to             timestamptz    ,
-	CONSTRAINT feature_pk PRIMARY KEY ( id )
- );
-
-CREATE INDEX feature_objectclass_fkx ON feature  ( objectclass_id  );
-
-CREATE INDEX feature_objectid_inx ON feature  ( objectid  );
-
-CREATE INDEX feature_envelope_spx ON feature USING GiST ( envelope );
-
-CREATE INDEX feature_identifier_inx ON feature  ( identifier , identifier_codespace );
-
-CREATE INDEX feature_creation_date_inx ON feature  ( creation_date );
-
-CREATE INDEX feature_termination_date_inx ON feature  ( termination_date );
-
-CREATE INDEX feature_valid_from_inx ON feature  ( valid_from );
-
-CREATE INDEX feature_valid_to_inx ON feature  ( valid_to );
-
-CREATE  TABLE geometry_data (
-	id                   bigint DEFAULT nextval('geometry_data_seq'::regclass) NOT NULL  ,
-	geometry             geometry(GEOMETRYZ)    ,
-	implicit_geometry    geometry(GEOMETRYZ)    ,
-	geometry_properties  json    ,
+CREATE  TABLE property (
+	id                   bigint DEFAULT nextval('property_seq'::regclass) NOT NULL  ,
 	feature_id           bigint    ,
-	CONSTRAINT geometry_data_pk PRIMARY KEY ( id )
+	parent_id            bigint    ,
+	datatype_id          integer    ,
+	namespace_id         integer    ,
+	name                 text    ,
+	val_int              bigint    ,
+	val_double           double precision    ,
+	val_string           text    ,
+	val_timestamp        timestamptz    ,
+	val_uri              text    ,
+	val_codespace        text    ,
+	val_uom              text    ,
+	val_array            json    ,
+	val_lod              text    ,
+	val_geometry_id      bigint    ,
+	val_implicitgeom_id  bigint    ,
+	val_implicitgeom_refpoint geometry(GEOMETRYZ)    ,
+	val_appearance_id    bigint    ,
+	val_address_id       bigint    ,
+	val_feature_id       bigint    ,
+	val_reference_type   integer    ,
+	val_content          text    ,
+	val_content_mime_type text    ,
+	CONSTRAINT property_pk PRIMARY KEY ( id )
  );
 
-CREATE INDEX geometry_data_feature_fkx ON geometry_data  ( feature_id );
+CREATE INDEX property_feature_fkx ON property  ( feature_id );
 
-CREATE INDEX geometry_data_spx ON geometry_data USING GiST ( geometry );
+CREATE INDEX property_parent_fkx ON property  ( parent_id );
 
-CREATE  TABLE implicit_geometry (
-	id                   bigint DEFAULT nextval('implicit_geometry_seq'::regclass) NOT NULL  ,
-	objectid             text    ,
-	mime_type            text    ,
-	mime_type_codespace  text    ,
-	reference_to_library text    ,
-	library_object       bytea    ,
-	relative_geometry_id bigint    ,
-	CONSTRAINT implicit_geometry_pk PRIMARY KEY ( id )
- );
+CREATE INDEX property_val_feature_fkx ON property  ( val_feature_id );
 
-CREATE INDEX implicit_geometry_fkx ON implicit_geometry  ( relative_geometry_id );
+CREATE INDEX property_val_string_inx ON property  ( val_string );
 
-CREATE INDEX implicit_geometry_objectid_inx ON implicit_geometry  ( objectid );
+CREATE INDEX property_val_uom_inx ON property  ( val_uom );
+
+CREATE INDEX property_val_uri_inx ON property  ( val_uri );
+
+CREATE INDEX property_val_lod_inx ON property  ( val_lod );
+
+CREATE INDEX property_val_int_inx ON property  ( val_int );
+
+CREATE INDEX property_val_double_inx ON property  ( val_double );
+
+CREATE INDEX property_val_date_inx ON property  ( val_timestamp );
+
+CREATE INDEX property_val_geometry_fkx ON property  ( val_geometry_id );
+
+CREATE INDEX property_val_implicitgeom_fkx ON property  ( val_implicitgeom_id );
+
+CREATE INDEX property_val_appearance_fkx ON property  ( val_appearance_id );
+
+CREATE INDEX property_namespace_inx ON property  ( namespace_id );
+
+CREATE INDEX property_val_reference_inx ON property  ( val_reference_type );
+
+CREATE INDEX property_val_address_fkx ON property  ( val_address_id );
+
+CREATE INDEX property_name_inx ON property  ( name );
 
 CREATE  TABLE surface_data (
 	id                   bigint DEFAULT nextval('surface_data_seq'::regclass) NOT NULL  ,
@@ -236,91 +318,6 @@ CREATE INDEX surface_data_mapping_fkx1 ON surface_data_mapping  ( geometry_data_
 
 CREATE INDEX surface_data_mapping_fkx2 ON surface_data_mapping  ( surface_data_id );
 
-CREATE  TABLE appearance (
-	id                   bigint DEFAULT nextval('appearance_seq'::regclass) NOT NULL  ,
-	objectid             text    ,
-	identifier           text    ,
-	identifier_codespace text    ,
-	theme                text    ,
-	creation_date        timestamptz    ,
-	termination_date     timestamptz    ,
-	valid_from           timestamptz    ,
-	valid_to             timestamptz    ,
-	is_global            numeric    ,
-	feature_id           bigint    ,
-	implicit_geometry_id bigint    ,
-	CONSTRAINT appearance_pk PRIMARY KEY ( id )
- );
-
-CREATE INDEX appearance_feature_fkx ON appearance  ( feature_id );
-
-CREATE INDEX appearance_implicit_geom_fkx ON appearance  ( implicit_geometry_id );
-
-CREATE  TABLE property (
-	id                   bigint DEFAULT nextval('property_seq'::regclass) NOT NULL  ,
-	feature_id           bigint    ,
-	parent_id            bigint    ,
-	root_id              bigint    ,
-	datatype_id          integer    ,
-	namespace_id         integer    ,
-	name                 text    ,
-	val_int              bigint    ,
-	val_double           double precision    ,
-	val_string           text    ,
-	val_timestamp        timestamptz    ,
-	val_uri              text    ,
-	val_codespace        text    ,
-	val_uom              text    ,
-	val_array            json    ,
-	val_lod              text    ,
-	val_geometry_id      bigint    ,
-	val_implicitgeom_id  bigint    ,
-	val_implicitgeom_refpoint geometry(GEOMETRYZ)    ,
-	val_appearance_id    bigint    ,
-	val_address_id       bigint    ,
-	val_feature_id       bigint    ,
-	val_reference_type   integer    ,
-	val_content          text    ,
-	val_content_mime_type text    ,
-	CONSTRAINT property_pk PRIMARY KEY ( id )
- );
-
-CREATE INDEX property_feature_fkx ON property  ( feature_id );
-
-CREATE INDEX property_parent_fkx ON property  ( parent_id );
-
-CREATE INDEX property_root_fkx ON property  ( root_id );
-
-CREATE INDEX property_val_feature_fkx ON property  ( val_feature_id );
-
-CREATE INDEX property_val_string_inx ON property  ( val_string );
-
-CREATE INDEX property_val_uom_inx ON property  ( val_uom );
-
-CREATE INDEX property_val_uri_inx ON property  ( val_uri );
-
-CREATE INDEX property_val_lod_inx ON property  ( val_lod );
-
-CREATE INDEX property_val_int_inx ON property  ( val_int );
-
-CREATE INDEX property_val_double_inx ON property  ( val_double );
-
-CREATE INDEX property_val_date_inx ON property  ( val_timestamp );
-
-CREATE INDEX property_val_geometry_fkx ON property  ( val_geometry_id );
-
-CREATE INDEX property_val_implicitgeom_fkx ON property  ( val_implicitgeom_id );
-
-CREATE INDEX property_val_appearance_fkx ON property  ( val_appearance_id );
-
-CREATE INDEX property_namespace_fkx ON property  ( namespace_id );
-
-CREATE INDEX property_val_reference_inx ON property  ( val_reference_type );
-
-CREATE INDEX property_val_address_fkx ON property  ( val_address_id );
-
-CREATE INDEX property_name_inx ON property  ( name );
-
 CREATE  TABLE appear_to_surface_data (
 	id                   bigint DEFAULT nextval('appear_to_surface_data_seq'::regclass) NOT NULL  ,
 	appearance_id        bigint  NOT NULL  ,
@@ -355,8 +352,6 @@ ALTER TABLE datatype ADD CONSTRAINT datatype_namespace_fk FOREIGN KEY ( namespac
 
 ALTER TABLE datatype ADD CONSTRAINT datatype_supertype_fk FOREIGN KEY ( supertype_id ) REFERENCES datatype( id ) ON DELETE CASCADE;
 
-ALTER TABLE feature ADD CONSTRAINT feature_objectclass_fk FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id ) ON DELETE SET NULL;
-
 ALTER TABLE geometry_data ADD CONSTRAINT geometry_data_feature_fk FOREIGN KEY ( feature_id ) REFERENCES feature( id ) ON DELETE SET NULL;
 
 ALTER TABLE implicit_geometry ADD CONSTRAINT implicit_geometry_fk FOREIGN KEY ( relative_geometry_id ) REFERENCES geometry_data( id ) ON DELETE CASCADE;
@@ -379,13 +374,7 @@ ALTER TABLE property ADD CONSTRAINT property_val_implicitgeom_fk FOREIGN KEY ( v
 
 ALTER TABLE property ADD CONSTRAINT property_parent_fk FOREIGN KEY ( parent_id ) REFERENCES property( id ) ON DELETE SET NULL;
 
-ALTER TABLE property ADD CONSTRAINT property_root_fk FOREIGN KEY ( root_id ) REFERENCES property( id ) ON DELETE SET NULL;
-
 ALTER TABLE property ADD CONSTRAINT property_val_geometry_fk FOREIGN KEY ( val_geometry_id ) REFERENCES geometry_data( id ) ON DELETE CASCADE;
-
-ALTER TABLE property ADD CONSTRAINT property_namespace_fk FOREIGN KEY ( namespace_id ) REFERENCES namespace( id ) ON DELETE SET NULL;
-
-ALTER TABLE property ADD CONSTRAINT property_datatype_fk FOREIGN KEY ( datatype_id ) REFERENCES datatype( id ) ON DELETE SET NULL;
 
 ALTER TABLE property ADD CONSTRAINT property_val_address_fk FOREIGN KEY ( val_address_id ) REFERENCES address( id ) ON DELETE CASCADE;
 

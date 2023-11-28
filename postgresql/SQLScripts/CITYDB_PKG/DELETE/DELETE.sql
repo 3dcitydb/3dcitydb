@@ -149,7 +149,7 @@ BEGIN
     USING
       unnest($1) a(a_id)
     WHERE
-      p.root_id = a.a_id
+      p.id = a.a_id
     RETURNING
       p.id,
       p.val_feature_id,
