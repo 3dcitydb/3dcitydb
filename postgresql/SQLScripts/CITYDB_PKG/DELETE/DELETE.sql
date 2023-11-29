@@ -6,6 +6,7 @@
 * delete_feature(pid_array bigint[]) RETURNS SETOF BIGINT
 * delete_feature(pid_array bigint[], schema_name TEXT) RETURNS SETOF BIGINT
 * delete_feature(pid bigint, schema_name TEXT) RETURNS BIGINT
+* delete_property_row(pid_array bigint[]) RETURNS SETOF BIGINT
 * delete_property(pid_array bigint[]) RETURNS SETOF BIGINT
 * delete_property(pid_array bigint[], schema_name TEXT) RETURNS SETOF BIGINT
 * delete_property(pid bigint, schema_name TEXT) RETURNS BIGINT
@@ -70,7 +71,7 @@ DECLARE
   deleted_ids bigint[] := '{}';
 BEGIN
   PERFORM
-    citydb_pkg.delete_property(array_agg(p.id))
+    citydb_pkg.delete_property_row(array_agg(p.id))
   FROM
     property p,
     unnest($1) a(a_id)
@@ -131,9 +132,9 @@ $body$
 LANGUAGE plpgsql STRICT;
 
 /******************************************************************
-* delete from PROPERTY table based on an id array
+* delete single row from PROPERTY table based on an id array
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_property(bigint[]) RETURNS SETOF BIGINT AS
+CREATE OR REPLACE FUNCTION citydb_pkg.delete_property_row(bigint[]) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
   deleted_ids bigint[] := '{}';
@@ -143,7 +144,7 @@ DECLARE
   appearance_ids bigint[] := '{}';
   address_ids bigint[] := '{}';
 BEGIN
-  WITH child_refs AS (
+  WITH property_ids AS (
     DELETE FROM
       property p
     USING
@@ -174,7 +175,7 @@ BEGIN
     appearance_ids,
     address_ids
   FROM
-    child_refs
+    property_ids
   WHERE
     val_feature_id IS NULL OR val_reference_type IS NULL OR val_reference_type = 1;
 
@@ -219,6 +220,46 @@ BEGIN
 
   RETURN QUERY
     SELECT unnest(deleted_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+
+/******************************************************************
+* delete from PROPERTY table based on an id array
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.delete_property(bigint[]) RETURNS SETOF BIGINT AS
+$body$
+DECLARE
+  property_ids bigint[] := '{}';
+BEGIN
+  WITH RECURSIVE child_refs AS (
+    SELECT
+      p.id
+    FROM
+      property p,
+      unnest($1) a(a_id)
+    WHERE
+      p.id = a.a_id
+    UNION ALL
+    SELECT
+      p.id
+    FROM
+      property p,
+      child_refs c
+    WHERE
+      p.parent_id = c.id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    property_ids
+  FROM
+    child_refs;
+
+  RETURN QUERY
+    SELECT citydb_pkg.delete_property_row(property_ids)
+    INTERSECT
+    SELECT unnest($1);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
