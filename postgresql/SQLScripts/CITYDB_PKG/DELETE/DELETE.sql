@@ -234,19 +234,19 @@ DECLARE
 BEGIN
   WITH RECURSIVE child_refs AS (
     SELECT
-	  p.id
-	FROM
-	  property p,
-	  unnest($1) a(a_id)
-	WHERE
-	  p.id = a.a_id
-	UNION ALL
-	SELECT
-	  p.id
-	FROM
-	  property p,
-	  child_refs c
-	WHERE
+      p.id
+    FROM
+      property p,
+      unnest($1) a(a_id)
+    WHERE
+      p.id = a.a_id
+    UNION ALL
+    SELECT
+      p.id
+    FROM
+      property p,
+      child_refs c
+    WHERE
       p.parent_id = c.id
   )
   SELECT
@@ -258,8 +258,8 @@ BEGIN
 
   RETURN QUERY
     SELECT citydb_pkg.delete_property_row(property_ids)
-	INTERSECT
-	SELECT unnest($1);
+    INTERSECT
+    SELECT unnest($1);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
