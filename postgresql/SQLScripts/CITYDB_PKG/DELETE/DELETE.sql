@@ -71,7 +71,7 @@ DECLARE
   deleted_ids bigint[] := '{}';
 BEGIN
   PERFORM
-    citydb_pkg.delete_property(array_agg(p.id))
+    citydb_pkg.delete_property_row(array_agg(p.id))
   FROM
     property p,
     unnest($1) a(a_id)
