@@ -144,7 +144,7 @@ DECLARE
   appearance_ids bigint[] := '{}';
   address_ids bigint[] := '{}';
 BEGIN
-  WITH child_refs AS (
+  WITH property_ids AS (
     DELETE FROM
       property p
     USING
@@ -175,7 +175,7 @@ BEGIN
     appearance_ids,
     address_ids
   FROM
-    child_refs
+    property_ids
   WHERE
     val_feature_id IS NULL OR val_reference_type IS NULL OR val_reference_type = 1;
 
