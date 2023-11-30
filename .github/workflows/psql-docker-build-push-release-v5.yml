@@ -86,9 +86,3 @@ jobs:
     -
       name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
-    -
-      name: Inspect image Dockerhub
-      run: docker inspect ${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}:edge${{ matrix.variant }}
-    -
-      name: Inspect image ghcr.io
-      run: docker inspect ghcr.io/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}:edge${{ matrix.variant }}
