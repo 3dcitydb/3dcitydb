@@ -19,7 +19,7 @@ jobs:
         variant: ['', '-alpine']    # image variants: '' = debian
 
     # This should only run for releases frm the v5-devel branch
-    if: github.ref == 'refs/heads/v5-devel'
+    if: github.event.release.target_commitish == 'v5-devel'
     steps:
     -
       name: Get release version without v
