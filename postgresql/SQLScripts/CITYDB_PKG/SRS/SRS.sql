@@ -4,7 +4,7 @@
 * FUNCTIONS:
 *   change_column_srid(table_name TEXT, column_name TEXT, dim INTEGER, schema_srid INTEGER,
 *     transform INTEGER DEFAULT 0, geom_type TEXT DEFAULT 'GEOMETRY', schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
-*   change_schema_srid(schema_srid INTEGER, schema_gml_srs_name TEXT,
+*   change_schema_srid(schema_srid INTEGER, schema_srs_name TEXT,
 *     transform INTEGER DEFAULT 0, schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 *   check_srid(srsno INTEGER DEFAULT 0) RETURNS TEXT
 *   is_coord_ref_sys_3d(schema_srid INTEGER) RETURNS INTEGER
@@ -184,14 +184,14 @@ LANGUAGE plpgsql STRICT;
 *
 * @param schema_srid       the SRID of the coordinate system to be 
 *                          further used in the database
-* @param db_gml_srs_name   the SRS_NAME of the coordinate system
+* @param schema_srs_name   the SRS_NAME of the coordinate system
 *                          to be further used in the database
 * @param transform         1 if existing data shall be transformed, 0 if not
-* @param schema name       name of schema
+* @param schema_name       name of schema
 *******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.change_schema_srid(
   schema_srid INTEGER,
-  schema_gml_srs_name TEXT,
+  schema_srs_name TEXT,
   transform INTEGER DEFAULT 0,
   schema_name TEXT DEFAULT 'citydb'
   ) RETURNS SETOF VOID AS $$

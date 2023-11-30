@@ -29,8 +29,8 @@
 SET client_min_messages TO WARNING;
 \set ON_ERROR_STOP ON
 
-\set SRSNO :srsno
-\set GMLSRSNAME :gmlsrsname
+\set SRID :srid
+\set SRS_NAME :srs_name
 
 --// check if the PostGIS extension is available
 SELECT postgis_lib_version() AS postgis_version;
@@ -79,8 +79,8 @@ ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
 --// checks if the chosen SRID is provided by the spatial_ref_sys table
 \echo
 \echo 'Checking spatial reference system ...'
-SELECT citydb_pkg.check_srid(:SRSNO);
+SELECT citydb_pkg.check_srid(:SRID);
 
 \echo 'Setting spatial reference system of 3DCityDB instance ...'
-SELECT citydb_pkg.change_schema_srid(:SRSNO,:'GMLSRSNAME');
+SELECT citydb_pkg.change_schema_srid(:SRID,:'SRS_NAME');
 \echo 'Done'

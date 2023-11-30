@@ -40,15 +40,15 @@ echo '##########################################################################
 # cd to path of the SQL scripts
 cd ../../SQLScripts
 
-# Prompt for SRSNO ------------------------------------------------------------
+# Prompt for SRID -------------------------------------------------------------
 re='^[0-9]+$'
 while [ 1 ]; do
   echo
   echo 'Please enter a valid SRID (e.g., EPSG code of the CRS to be used).'
-  read -p "(SRID must be an integer greater than zero): " SRSNO
-  SRSNO=${SRSNO:-0}
+  read -p "(SRID must be an integer greater than zero): " SRID
+  SRID=${SRID:-0}
 
-  if [[ ! $SRSNO =~ $re ]] || [ $SRSNO -le 0 ]; then
+  if [[ ! $SRID =~ $re ]] || [ $SRID -le 0 ]; then
     echo
     echo 'Illegal input! Enter a positive integer for the SRID.'
   else
@@ -59,7 +59,7 @@ done
 # Prompt for HEIGHT_EPSG ------------------------------------------------------
 while [ 1 ]; do
   echo
-  echo "Please enter the EPSG code of the height system (use 0 if unknown or '$SRSNO' is already 3D)."
+  echo "Please enter the EPSG code of the height system (use 0 if unknown or '$SRID' is already 3D)."
   read -p "(default HEIGHT_EPSG=0): " HEIGHT_EPSG
   HEIGHT_EPSG=${HEIGHT_EPSG:-0}
 
@@ -71,22 +71,22 @@ while [ 1 ]; do
   fi
 done
 
-# Prompt for GMLSRSNAME -------------------------------------------------------
+# Prompt for SRS_NAME ---------------------------------------------------------
 if [ $HEIGHT_EPSG -gt 0 ]; then
-  GMLSRSNAME=urn:ogc:def:crs,crs:EPSG::$SRSNO,crs:EPSG::$HEIGHT_EPSG
+  SRS_NAME=urn:ogc:def:crs,crs:EPSG::$SRID,crs:EPSG::$HEIGHT_EPSG
 else
-  GMLSRSNAME=urn:ogc:def:crs:EPSG::$SRSNO
+  SRS_NAME=urn:ogc:def:crs:EPSG::$SRID
 fi
 
 echo
-echo 'Please enter the corresponding gml:srsName to be used in GML exports.'
-read -p "(default GMLSRSNAME=$GMLSRSNAME): " var
-GMLSRSNAME=${var:-$GMLSRSNAME}
+echo 'Please enter the corresponding SRS name to be used in exports.'
+read -p "(default SRS_NAME=$SRS_NAME): " var
+SRS_NAME=${var:-$SRS_NAME}
 
 # Run CREATE_DB.sql to create the 3D City Database instance -------------------
 echo
 echo "Connecting to \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "CREATE_DB.sql" -v srsno="$SRSNO" -v gmlsrsname="$GMLSRSNAME"
+psql -d "$CITYDB" -f "CREATE_DB.sql" -v srid="$SRID" -v srs_name="$SRS_NAME"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'

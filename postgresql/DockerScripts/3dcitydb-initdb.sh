@@ -74,7 +74,7 @@ echo
 echo "Setting up 3DCityDB database schema in database '$POSTGRES_DB' ..."
 
 "${psql[@]}" -d "$POSTGRES_DB" -f "CREATE_DB.sql" \
-  -v srsno="$SRID" -v gmlsrsname="$SRS_NAME" > /dev/null
+  -v srid="$SRID" -v srs_name="$SRS_NAME" > /dev/null
 
 echo "Setting up 3DCityDB database schema in database '$POSTGRES_DB' ...done!"
 

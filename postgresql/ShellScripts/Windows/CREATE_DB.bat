@@ -40,7 +40,7 @@ echo ###########################################################################
 :: cd to path of the SQL scripts
 cd ..\..\SQLScripts
 
-:: Prompt for SRSNO -----------------------------------------------------------
+:: Prompt for SRID ------------------------------------------------------------
 :srid
 set var=
 echo.
@@ -48,7 +48,7 @@ echo Please enter a valid SRID (e.g., EPSG code of the CRS to be used).
 set /p var="(SRID must be an integer greater than zero): "
 
 if /i not "%var%"=="" (
-  set SRSNO=%var%
+  set SRID=%var%
 ) else (
   goto invalid_srid
 )
@@ -56,7 +56,7 @@ if /i not "%var%"=="" (
 :: SRID is a positive integer?
 set "num="&for /f "delims=0123456789" %%i in ("%var%") do set num=%%i
 if defined num goto invalid_srid
-if %SRSNO% LEQ 0 goto invalid_srid
+if %SRID% LEQ 0 goto invalid_srid
 goto height_epsg
 
 :invalid_srid
@@ -68,7 +68,7 @@ goto srid
 :height_epsg
 set var=
 echo.
-echo Please enter the EPSG code of the height system (use 0 if unknown or '%SRSNO%' is already 3D).
+echo Please enter the EPSG code of the height system (use 0 if unknown or '%SRID%' is already 3D).
 set /p var="(default HEIGHT_EPSG=0): "
 
 if /i not "%var%"=="" (
@@ -85,24 +85,24 @@ if defined num (
   goto height_epsg
 )
 
-:: Prompt for GMLSRSNAME ------------------------------------------------------
-:srsname
+:: Prompt for SRS_NAME --------------------------------------------------------
+:srs_name
 set var=
 if %HEIGHT_EPSG% GTR 0 (
-  set GMLSRSNAME=urn:ogc:def:crs,crs:EPSG::%SRSNO%,crs:EPSG::%HEIGHT_EPSG%
+  set SRS_NAME=urn:ogc:def:crs,crs:EPSG::%SRID%,crs:EPSG::%HEIGHT_EPSG%
 ) else (
-  set GMLSRSNAME=urn:ogc:def:crs:EPSG::%SRSNO%
+  set SRS_NAME=urn:ogc:def:crs:EPSG::%SRID%
 )
 
 echo.
-echo Please enter the corresponding gml:srsName to be used in GML exports.
-set /p var="(default GMLSRSNAME=%GMLSRSNAME%): "
+echo Please enter the corresponding SRS name to be used in exports.
+set /p var="(default SRS_NAME=%SRS_NAME%): "
 
-if /i not "%var%"=="" set GMLSRSNAME=%var%
+if /i not "%var%"=="" set SRS_NAME=%var%
 
 :: Run CREATE_DB.sql to create the 3D City Database instance ------------------
 echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "CREATE_DB.sql" -v srsno="%SRSNO%" -v gmlsrsname="%GMLSRSNAME%"
+psql -d "%CITYDB%" -f "CREATE_DB.sql" -v srid="%SRID%" -v srs_name="%SRS_NAME%"
 
 pause
