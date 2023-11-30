@@ -22,25 +22,25 @@ else
   fi
 fi
 
-# GMLSRSNAME  -----------------------------------------------------------------
-if [ -z ${GMLSRSNAME+x} ]; then
-  # GMLSRSNAME unset, set default GMLSRSNAME using HEIGHT_EPSG if set
+# SRS_NAME --------------------------------------------------------------------
+if [ -z ${SRS_NAME+x} ]; then
+  # SRS_NAME unset, set default SRS_NAME using HEIGHT_EPSG if set
   # HEIGHT EPSG ---------------------------------------------------------------
   if [ -z ${HEIGHT_EPSG+x} ]; then
     # No HEIGHT_EPSG given
-    GMLSRSNAME="urn:ogc:def:crs:EPSG::$SRID"
+    SRS_NAME="urn:ogc:def:crs:EPSG::$SRID"
   else
     if [ $HEIGHT_EPSG -gt 0 ]; then
-      GMLSRSNAME="urn:ogc:def:crs,crs:EPSG::$SRID,crs:EPSG::$HEIGHT_EPSG"
+      SRS_NAME="urn:ogc:def:crs,crs:EPSG::$SRID,crs:EPSG::$HEIGHT_EPSG"
     else
-      GMLSRSNAME="urn:ogc:def:crs:EPSG::$SRID"
+      SRS_NAME="urn:ogc:def:crs:EPSG::$SRID"
     fi
   fi
 else
   if [ ! -z ${HEIGHT_EPSG+x} ]; then
-    # GMLSRSNAME is set, HEIGHT_EPSG is ignored
+    # SRS_NAME is set, HEIGHT_EPSG is ignored
     echo
-    echo "!!! WARNING: GMLSRSNAME is set. HEIGHT_EPSG will be ignored."
+    echo "!!! WARNING: SRS_NAME is set. HEIGHT_EPSG will be ignored."
   fi
 fi
 
@@ -58,23 +58,13 @@ fi
 
 # Add PostGIS SFCGAL extension ------------------------------------------------
 if [ ! -z ${POSTGIS_SFCGAL+x} ] && [ ${POSTGIS_SFCGAL} = true ] || [ "${POSTGIS_SFCGAL}" = "yes" ] ; then
-  # SFCGAL is currently not available in the post/postgis:alpine images.
-  # Test for Alpine Linux and warn if enabled and alpine image variant.
 
-  if grep -iq "alpine" /etc/os-release; then
-    echo
-    echo "!!! WARNING: POSTGIS_SFCGAL was set, but SFCGAL is not available on Alpine Linux image variants."
-    echo "!!! Please use the Debian based image variants if you require SFCGAL support."
-    SFCGAL=false
-  else
-    echo
-    echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' ..."
+  echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' ..."
 
-    "${psql[@]}" -d "$POSTGRES_DB" -c "CREATE EXTENSION IF NOT EXISTS postgis_sfcgal;"
+  "${psql[@]}" -d "$POSTGRES_DB" -c "CREATE EXTENSION IF NOT EXISTS postgis_sfcgal;"
 
-    echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' ...done!"
-    SFCGAL=true
-  fi
+  echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' ...done!"
+  SFCGAL=true
 else
   SFCGAL=false
 fi
@@ -84,7 +74,7 @@ echo
 echo "Setting up 3DCityDB database schema in database '$POSTGRES_DB' ..."
 
 "${psql[@]}" -d "$POSTGRES_DB" -f "CREATE_DB.sql" \
-  -v srsno="$SRID" -v gmlsrsname="$GMLSRSNAME" > /dev/null
+  -v srsno="$SRID" -v gmlsrsname="$SRS_NAME" > /dev/null
 
 echo "Setting up 3DCityDB database schema in database '$POSTGRES_DB' ...done!"
 
@@ -103,7 +93,7 @@ cat <<EOF
 #   3DCityDB version  $CITYDBVERSION
 #   DBNAME            $POSTGRES_DB
 #   SRID              $SRID
-#   SRSNAME           $GMLSRSNAME
+#   SRSNAME           $SRS_NAME
 #   HEIGHT_EPSG       $HEIGHT_EPSG
 #   SFCGAL enabled    $SFCGAL
 #
