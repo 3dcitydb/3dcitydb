@@ -33,7 +33,7 @@ SET client_min_messages TO WARNING;
 \set SCHEMA_NAME :schema_name
 
 \echo
-\echo 'Revoking access priviliges priviliges on schema "':SCHEMA_NAME'" from user "':USERNAME'" ...' 
+\echo 'Revoking access privileges on schema "':SCHEMA_NAME'" from user "':USERNAME'" ...'
 
 REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA :"SCHEMA_NAME" FROM :"USERNAME";
 REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA :"SCHEMA_NAME" FROM :"USERNAME";
@@ -45,4 +45,4 @@ REVOKE USAGE ON SCHEMA public FROM :"USERNAME";
 REVOKE CONNECT, TEMP ON DATABASE :"DBNAME" FROM :"USERNAME";
 
 \echo
-\echo 'Access priviliges successfully revoked.'
+\echo 'Access privileges successfully revoked.'

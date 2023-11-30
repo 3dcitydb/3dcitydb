@@ -36,7 +36,7 @@ SET client_min_messages TO WARNING;
 SELECT CASE WHEN upper(:'ACCESS_MODE') = 'RW' THEN 'read-write' ELSE 'read-only' END AS priviliges_type;
 \gset
 
-\echo 'Granting ':priviliges_type' priviliges on schema "':SCHEMA_NAME'" to user "':USERNAME'" ...'
+\echo 'Granting ':priviliges_type' privileges on schema "':SCHEMA_NAME'" to user "':USERNAME'" ...'
 
 SET tmp.dbname TO :"DBNAME";
 SET tmp.username TO :"USERNAME";
@@ -44,21 +44,21 @@ SET tmp.schema_name TO :"SCHEMA_NAME";
 SET tmp.access_mode TO :"ACCESS_MODE";
 
 DO $$
-DECLARE priviliges_type text;
+DECLARE privileges_type text;
 BEGIN
   IF upper(current_setting('tmp.access_mode')) = 'RW' THEN
-    priviliges_type := 'ALL';
+    privileges_type := 'ALL';
   ELSE
-    priviliges_type := 'SELECT';
+    privileges_type := 'SELECT';
   END IF;
 
   EXECUTE format('GRANT CONNECT, TEMP ON DATABASE %I TO %I', current_setting('tmp.dbname'), current_setting('tmp.username'));
   EXECUTE format('GRANT USAGE, CREATE ON SCHEMA %I TO %I', current_setting('tmp.schema_name'), current_setting('tmp.username'));
-  EXECUTE format('GRANT '||priviliges_type||' ON ALL TABLES IN SCHEMA %I TO %I', current_setting('tmp.schema_name'), current_setting('tmp.username'));
+  EXECUTE format('GRANT '||privileges_type||' ON ALL TABLES IN SCHEMA %I TO %I', current_setting('tmp.schema_name'), current_setting('tmp.username'));
   EXECUTE format('GRANT USAGE ON SCHEMA citydb_pkg TO %I', current_setting('tmp.username'));
-  EXECUTE format('GRANT '||priviliges_type||' ON ALL TABLES IN SCHEMA citydb_pkg TO %I', current_setting('tmp.username'));
+  EXECUTE format('GRANT '||privileges_type||' ON ALL TABLES IN SCHEMA citydb_pkg TO %I', current_setting('tmp.username'));
   EXECUTE format('GRANT USAGE ON SCHEMA public TO %I', current_setting('tmp.username'));
-  EXECUTE format('GRANT '||priviliges_type||' ON ALL TABLES IN SCHEMA public TO %I', current_setting('tmp.username'));
+  EXECUTE format('GRANT '||privileges_type||' ON ALL TABLES IN SCHEMA public TO %I', current_setting('tmp.username'));
   
   IF upper(current_setting('tmp.access_mode')) = 'RW' THEN
     EXECUTE format('GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA %I TO %I', current_setting('tmp.schema_name'), current_setting('tmp.username'));
@@ -67,4 +67,4 @@ END
 $$;
 
 \echo
-\echo 'Successfully granted ':priviliges_type' priviliges.'
+\echo 'Successfully granted ':privileges_type' privileges.'
