@@ -22,25 +22,25 @@ else
   fi
 fi
 
-# SRSNAME ---------------------------------------------------------------------
-if [ -z ${SRSNAME+x} ]; then
-  # SRSNAME unset, set default SRSNAME using HEIGHT_EPSG if set
+# SRS_NAME --------------------------------------------------------------------
+if [ -z ${SRS_NAME+x} ]; then
+  # SRS_NAME unset, set default SRS_NAME using HEIGHT_EPSG if set
   # HEIGHT EPSG ---------------------------------------------------------------
   if [ -z ${HEIGHT_EPSG+x} ]; then
     # No HEIGHT_EPSG given
-    SRSNAME="urn:ogc:def:crs:EPSG::$SRID"
+    SRS_NAME="urn:ogc:def:crs:EPSG::$SRID"
   else
     if [ $HEIGHT_EPSG -gt 0 ]; then
-      SRSNAME="urn:ogc:def:crs,crs:EPSG::$SRID,crs:EPSG::$HEIGHT_EPSG"
+      SRS_NAME="urn:ogc:def:crs,crs:EPSG::$SRID,crs:EPSG::$HEIGHT_EPSG"
     else
-      SRSNAME="urn:ogc:def:crs:EPSG::$SRID"
+      SRS_NAME="urn:ogc:def:crs:EPSG::$SRID"
     fi
   fi
 else
   if [ ! -z ${HEIGHT_EPSG+x} ]; then
-    # SRSNAME is set, HEIGHT_EPSG is ignored
+    # SRS_NAME is set, HEIGHT_EPSG is ignored
     echo
-    echo "!!! WARNING: SRSNAME is set. HEIGHT_EPSG will be ignored."
+    echo "!!! WARNING: SRS_NAME is set. HEIGHT_EPSG will be ignored."
   fi
 fi
 
@@ -74,7 +74,7 @@ echo
 echo "Setting up 3DCityDB database schema in database '$POSTGRES_DB' ..."
 
 "${psql[@]}" -d "$POSTGRES_DB" -f "CREATE_DB.sql" \
-  -v srsno="$SRID" -v gmlsrsname="$SRSNAME" > /dev/null
+  -v srsno="$SRID" -v gmlsrsname="$SRS_NAME" > /dev/null
 
 echo "Setting up 3DCityDB database schema in database '$POSTGRES_DB' ...done!"
 
@@ -93,7 +93,7 @@ cat <<EOF
 #   3DCityDB version  $CITYDBVERSION
 #   DBNAME            $POSTGRES_DB
 #   SRID              $SRID
-#   SRSNAME           $SRSNAME
+#   SRSNAME           $SRS_NAME
 #   HEIGHT_EPSG       $HEIGHT_EPSG
 #   SFCGAL enabled    $SFCGAL
 #
