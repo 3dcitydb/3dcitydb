@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://3dcitydb.org/json-schema/5.0/valArray.schema.json",
+  "title": "3DCityDB 5.0 array value schema",
+  "description": "Schema for the JSON column val_array of the property table.",
+  "type": "array",
+  "items": {
+    "anyOf": [
+      {
+        "type": "integer"
+      },
+      {
+        "type": "number"
+      },
+      {
+        "type": "string"
+      },
+      {
+        "type": "boolean"
+      }
+    ]
+  },
+  "additionalItems": false
+}

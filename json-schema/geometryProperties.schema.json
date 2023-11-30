@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://3dcitydb.org/json-schema/5.0/geometryProperties.schema.json",
+  "title": "3DCityDB 5.0 geometry properties schema",
+  "description": "Schema for the JSON column geometry_properties of the geometry_data table.",
+  "type": "object",
+  "properties": {
+    "objectId": {
+      "type": "string"
+    },
+    "is2D": {
+      "type": "boolean",
+      "default": false
+    },
+    "hierarchy": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 11
+          },
+          "objectId": {
+            "type": "string"
+          },
+          "parent": {
+            "type": "number"
+          },
+          "geometryIndex": {
+            "type": "number"
+          },
+          "isReversed": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "additionalItems": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://3dcitydb.org/json-schema/5.0/textureMapping.schema.json",
+  "title": "3DCityDB 5.0 texture mapping schema",
+  "description": "Schema for the JSON column texture_mapping of the surface_data_mapping table.",
+  "type": "object",
+  "additionalProperties": {
+    "type": "array",
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2,
+        "additionalItems": false
+      },
+      "additionalItems": false
+    },
+    "additionalItems": false
+  }
+}
