@@ -17,7 +17,6 @@
 *     OUT wktext TEXT,  
 *     OUT versioning TEXT
 *     ) RETURNS RECORD
-*   versioning_db(schema_name TEXT DEFAULT 'citydb') RETURNS TEXT
 *   get_seq_values(seq_name TEXT, seq_count BIGINT) RETURNS SETOF BIGINT
 *   drop_tmp_tables(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
 ******************************************************************/
@@ -85,20 +84,6 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql STABLE;
-
-
-/*****************************************************************
-* versioning_db
-*
-* @param schema_name name of schema
-*
-* @RETURN TEXT 'ON' for version-enabled, 'OFF' for version-disabled
-******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.versioning_db(schema_name TEXT DEFAULT 'citydb') RETURNS TEXT AS
-$$
-SELECT 'OFF'::text;
-$$
-LANGUAGE sql IMMUTABLE;
 
 
 /*****************************************************************
