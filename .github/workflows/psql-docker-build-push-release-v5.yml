@@ -1,0 +1,94 @@
+name: psql-docker-build-push-release-v5
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published, edited]
+
+env:
+  IMAGE_NAME: 3dcitydb-pg-v5
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        baseimage-tag: ['16-3.4']   # base image tags for 'edge' image
+        variant: ['', '-alpine']    # image variants: '' = debian
+
+    # This should only run for releases frm the v5-devel branch
+    if: github.ref == 'refs/heads/v5-devel'
+    steps:
+    -
+      name: Get release version without v
+      id: release_version
+      uses: battila7/get-version-action@v2
+    -
+      name: set lower case owner name
+      run: |
+        echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+      env:
+        OWNER: '${{ github.repository_owner }}'
+    -
+      name: Checkout repo
+      uses: actions/checkout@v4
+    -
+      name: Docker login Dockerhub
+      id: docker_login
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    -
+      name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    -
+      name: Extract metadata (tags, labels) for docker image
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: |
+          ${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}
+          ghcr.io/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}
+        flavor: |
+          latest=${{ !github.event.release.prerelease }}
+        tags: |
+          type=semver,pattern={{version}}
+        labels: |
+          maintainer=Bruno Willenborg
+          maintainer.email=b.willenborg(at)tum.de
+          maintainer.organization=Chair of Geoinformatics, Technical University of Munich (TUM)
+          org.opencontainers.image.authors=Bruno Willenborg
+          org.opencontainers.image.vendor=3DCityDB Steering Committee
+          org.opencontainers.image.title=3D City Database PostgreSQL/PostGIS Docker image
+          org.opencontainers.image.description=Docker image for the 3D City Database based on PostgreSQL and PostGIS
+          org.opencontainers.image.url=https://github.com/3dcitydb/
+          org.opencontainers.image.documentation=https://3dcitydb-docs.readthedocs.io/en/latest/3dcitydb/docker.html
+          org.opencontainers.image.source=https://github.com/3dcitydb/3dcitydb
+    -
+      name: Build and push image
+      id: docker_build
+      uses: docker/build-push-action@v5
+      with:
+        context: ./postgresql
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        build-args: |
+          BASEIMAGE_TAG=${{ matrix.baseimage-tag }}${{ matrix.variant }}
+          CITYDB_VERSION=${{ steps.release_version.outputs.version }}
+    -
+      name: Image digest
+      run: echo ${{ steps.docker_build.outputs.digest }}
+    -
+      name: Inspect image Dockerhub
+      run: docker inspect ${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}:edge${{ matrix.variant }}
+    -
+      name: Inspect image ghcr.io
+      run: docker inspect ghcr.io/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}:edge${{ matrix.variant }}
