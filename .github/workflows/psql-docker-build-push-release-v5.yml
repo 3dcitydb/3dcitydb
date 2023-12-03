@@ -59,8 +59,8 @@ jobs:
         flavor: |
           latest=${{ !github.event.release.prerelease }}
         tags: |
-          type=semver,pattern={{version}}
-          type=raw,value=latest-beta
+          type=semver,pattern={{version}},suffix=${{ matrix.variant }}
+          type=raw,value=latest-beta,suffix=${{ matrix.variant }}
         labels: |
           maintainer=Bruno Willenborg
           maintainer.email=b.willenborg(at)tum.de
