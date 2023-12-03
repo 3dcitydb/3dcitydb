@@ -87,3 +87,9 @@ jobs:
     -
       name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
+    -
+      name: Inspect image
+      run: docker inspect ${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}:${{ steps.release_version.outputs.version-without-v }}${{ matrix.variant }}
+    -
+      name: Inspect image ghcr.io
+      run: docker inspect ghcr.io/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}:${{ steps.release_version.outputs.version-without-v }}${{ matrix.variant }}
