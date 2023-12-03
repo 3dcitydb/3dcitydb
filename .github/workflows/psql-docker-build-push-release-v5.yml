@@ -60,6 +60,7 @@ jobs:
           latest=${{ !github.event.release.prerelease }}
         tags: |
           type=semver,pattern={{version}}
+          type=raw,value=latest-beta
         labels: |
           maintainer=Bruno Willenborg
           maintainer.email=b.willenborg(at)tum.de
