@@ -5,6 +5,11 @@
   "description": "Schema for the JSON column geometry_properties of the geometry_data table.",
   "type": "object",
   "properties": {
+    "type": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 11
+    },
     "objectId": {
       "type": "string"
     },
@@ -12,7 +17,7 @@
       "type": "boolean",
       "default": false
     },
-    "hierarchy": {
+    "children": {
       "type": "array",
       "items": {
         "type": "object",
@@ -36,10 +41,16 @@
             "default": false
           }
         },
+        "required": [
+          "type"
+        ],
         "additionalProperties": false
       },
       "additionalItems": false
     }
   },
+  "required": [
+    "type"
+  ],
   "additionalProperties": false
 }
