@@ -43,7 +43,6 @@ SELECT table_name FROM information_schema.tables where table_schema = schema_nam
         AND table_name <> 'ade'
         AND table_name <> 'datatype'
         AND table_name <> 'database_srs'
-        AND table_name <> 'aggregation_info'
         AND table_name <> 'codelist'
         AND table_name <> 'codelist_entry'
         AND table_name <> 'namespace'
@@ -154,7 +153,7 @@ BEGIN
     RETURNING
       p.id,
       p.val_feature_id,
-      p.val_reference_type,
+      p.val_relation_type,
       p.val_geometry_id,
       p.val_implicitgeom_id,
       p.val_appearance_id,
@@ -177,7 +176,7 @@ BEGIN
   FROM
     property_ids
   WHERE
-    val_feature_id IS NULL OR val_reference_type IS NULL OR val_reference_type = 1;
+    val_feature_id IS NULL OR val_relation_type = 1;
 
   IF -1 = ALL(feature_ids) IS NOT NULL THEN
     PERFORM
@@ -187,7 +186,7 @@ BEGIN
     LEFT JOIN
       property p
       ON p.val_feature_id  = a.a_id
-    WHERE p.val_feature_id IS NULL OR p.val_reference_type = 2;
+    WHERE p.val_feature_id IS NULL OR p.val_relation_type IS NULL OR p.val_relation_type = 0;
   END IF;
 
   IF -1 = ALL(geometry_ids) IS NOT NULL THEN

@@ -27,7 +27,7 @@ BEGIN
     FROM
       property p
     WHERE
-      p.id = fid AND p.val_feature_id IS NOT NULL AND p.val_reference_type <> 2
+      p.id = fid AND p.val_feature_id IS NOT NULL AND p.val_relation_type = 1
   LOOP
     bbox_tmp := citydb_pkg.get_feature_envelope(rec.id::bigint, set_envelope, schema_name);
     bbox := citydb_pkg.update_bounds(bbox, bbox_tmp, schema_name);

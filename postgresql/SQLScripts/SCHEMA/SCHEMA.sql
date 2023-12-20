@@ -167,22 +167,6 @@ CREATE  TABLE tex_image (
 	CONSTRAINT tex_image_pk PRIMARY KEY ( id )
  );
 
-CREATE  TABLE aggregation_info (
-	child_id             integer  NOT NULL  ,
-	parent_id            integer  NOT NULL  ,
-	property_name        text  NOT NULL  ,
-	property_namespace_id integer    ,
-	min_occurs           integer    ,
-	max_occurs           integer    ,
-	is_composite         numeric
- );
-
-CREATE INDEX aggregation_info_child_fkx ON aggregation_info  ( child_id );
-
-CREATE INDEX aggregation_info_parent_fkx ON aggregation_info  ( parent_id );
-
-CREATE INDEX aggregation_info_namespace_fkx ON aggregation_info  ( property_namespace_id );
-
 CREATE  TABLE appearance (
 	id                   bigint DEFAULT nextval('appearance_seq'::regclass) NOT NULL  ,
 	objectid             text    ,
@@ -237,7 +221,7 @@ CREATE  TABLE property (
 	val_appearance_id    bigint    ,
 	val_address_id       bigint    ,
 	val_feature_id       bigint    ,
-	val_reference_type   integer    ,
+	val_relation_type    integer    ,
 	val_content          text    ,
 	val_content_mime_type text    ,
 	CONSTRAINT property_pk PRIMARY KEY ( id )
@@ -271,7 +255,7 @@ CREATE INDEX property_val_appearance_fkx ON property  ( val_appearance_id );
 
 CREATE INDEX property_namespace_inx ON property  ( namespace_id );
 
-CREATE INDEX property_val_reference_inx ON property  ( val_reference_type );
+CREATE INDEX property_val_relation_type_inx ON property  ( val_relation_type );
 
 CREATE INDEX property_val_address_fkx ON property  ( val_address_id );
 
@@ -322,19 +306,12 @@ CREATE  TABLE appear_to_surface_data (
 	id                   bigint DEFAULT nextval('appear_to_surface_data_seq'::regclass) NOT NULL  ,
 	appearance_id        bigint  NOT NULL  ,
 	surface_data_id      bigint    ,
-	val_reference_type   integer    ,
 	CONSTRAINT appear_to_surface_data_pk PRIMARY KEY ( id )
  );
 
 CREATE INDEX appear_to_surface_data_fkx1 ON appear_to_surface_data  ( surface_data_id );
 
 CREATE INDEX appear_to_surface_data_fkx2 ON appear_to_surface_data  ( appearance_id );
-
-ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_child_fk FOREIGN KEY ( child_id ) REFERENCES objectclass( id ) ON DELETE CASCADE;
-
-ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_parent_fk FOREIGN KEY ( parent_id ) REFERENCES objectclass( id ) ON DELETE CASCADE;
-
-ALTER TABLE aggregation_info ADD CONSTRAINT aggregation_info_namespace_fk FOREIGN KEY ( property_namespace_id ) REFERENCES namespace( id ) ON DELETE CASCADE;
 
 ALTER TABLE appear_to_surface_data ADD CONSTRAINT appear_to_surface_data_fk1 FOREIGN KEY ( surface_data_id ) REFERENCES surface_data( id ) ON DELETE CASCADE;
 
