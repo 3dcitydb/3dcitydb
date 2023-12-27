@@ -4,6 +4,10 @@
   "title": "3DCityDB 5.0 geometry properties schema",
   "description": "Schema for the JSON column geometry_properties of the geometry_data table.",
   "type": "object",
+  "required": [
+    "type"
+  ],
+  "additionalProperties": false,
   "properties": {
     "type": {
       "type": "number",
@@ -19,8 +23,13 @@
     },
     "children": {
       "type": "array",
+      "additionalItems": false,
       "items": {
         "type": "object",
+        "required": [
+          "type"
+        ],
+        "additionalProperties": false,
         "properties": {
           "type": {
             "type": "number",
@@ -40,17 +49,8 @@
             "type": "boolean",
             "default": false
           }
-        },
-        "required": [
-          "type"
-        ],
-        "additionalProperties": false
-      },
-      "additionalItems": false
+        }
+      }
     }
-  },
-  "required": [
-    "type"
-  ],
-  "additionalProperties": false
+  }
 }

@@ -6,19 +6,19 @@
   "type": "object",
   "additionalProperties": {
     "type": "array",
+    "additionalItems": false,
     "items": {
       "type": "array",
+      "additionalItems": false,
       "items": {
         "type": "array",
+        "additionalItems": false,
         "items": {
           "type": "number"
         },
         "minItems": 2,
-        "maxItems": 2,
-        "additionalItems": false
-      },
-      "additionalItems": false
-    },
-    "additionalItems": false
+        "maxItems": 2
+      }
+    }
   }
 }
