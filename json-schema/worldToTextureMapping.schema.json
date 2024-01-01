@@ -6,7 +6,6 @@
   "type": "object",
   "additionalProperties": {
     "type": "array",
-    "additionalItems": false,
     "items": {
       "type": "number"
     },

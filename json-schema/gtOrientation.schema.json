@@ -4,7 +4,6 @@
   "title": "3DCityDB 5.0 geo-referenced texture orientation schema",
   "description": "Schema for the JSON column gt_orientation of the surface_data table.",
   "type": "array",
-  "additionalItems": false,
   "items": {
     "type": "number"
   },

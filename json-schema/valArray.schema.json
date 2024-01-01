@@ -4,21 +4,12 @@
   "title": "3DCityDB 5.0 array value schema",
   "description": "Schema for the JSON column val_array of the property table.",
   "type": "array",
-  "additionalItems": false,
   "items": {
-    "anyOf": [
-      {
-        "type": "integer"
-      },
-      {
-        "type": "number"
-      },
-      {
-        "type": "string"
-      },
-      {
-        "type": "boolean"
-      }
+    "type": [
+      "integer",
+      "number",
+      "string",
+      "boolean"
     ]
   }
 }
