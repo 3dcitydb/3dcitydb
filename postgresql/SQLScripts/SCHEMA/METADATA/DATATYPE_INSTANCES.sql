@@ -3,109 +3,106 @@ DELETE FROM datatype;
 -- Core Module --
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (0, null, 'AppearanceProperty', 0, 0);
+VALUES (1, null, 'AppearanceProperty', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (1, null, 'Boolean', 0, 0);
+VALUES (2, null, 'Boolean', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (2, null, 'CityObjectRelation', 0, 0);
+VALUES (3, null, 'CityObjectRelation', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (3, null, 'Code', 0, 0);
+VALUES (4, null, 'Code', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (4, null, 'Double', 0, 0);
+VALUES (5, null, 'Double', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (5, null, 'DoubleList', 0, 0);
+VALUES (6, null, 'DoubleList', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (6, null, 'ExternalReference', 0, 0);
+VALUES (7, null, 'ExternalReference', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (7, null, 'FeatureProperty', 0, 0);
+VALUES (8, null, 'FeatureProperty', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (8, null, 'GeometryProperty', 0, 0);
+VALUES (9, null, 'GeometryProperty', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (9, null, 'ImplicitGeometryProperty', 0, 0);
+VALUES (10, null, 'ImplicitGeometryProperty', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (10, null, 'Integer', 0, 0);
+VALUES (11, null, 'Integer', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (11, null, 'Measure', 0, 0);
+VALUES (12, null, 'Measure', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (12, null, 'MeasureOrNilReasonList', 0, 0);
+VALUES (13, null, 'MeasureOrNilReasonList', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (13, null, 'Occupancy', 0, 0);
+VALUES (14, null, 'Occupancy', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (15, null, 'QualifiedArea', 0, 0);
+VALUES (15, null, 'QualifiedArea', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (16, null, 'QualifiedVolume', 0, 0);
+VALUES (16, null, 'QualifiedVolume', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (17, null, 'Reference', 0, 0);
+VALUES (17, null, 'String', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (18, null, 'String', 0, 0);
+VALUES (18, null, 'StringOrRef', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (19, null, 'StringOrRef', 0, 0);
+VALUES (19, null, 'Timestamp', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (20, null, 'Timestamp', 0, 0);
+VALUES (20, null, 'URI', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (21, null, 'URI', 0, 0);
-
-INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (22, null, 'AddressProperty', 0, 0);
+VALUES (21, null, 'AddressProperty', 0, 1);
 
 -- Dynamizer Module --
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (100, null, 'SensorConnection', 0, 1);
+VALUES (100, null, 'SensorConnection', 0, 2);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (101, null, 'TimeseriesComponent', 0, 1);
+VALUES (101, null, 'TimeseriesComponent', 0, 2);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (102, null, 'TimePairValue', 0, 1);
+VALUES (102, null, 'TimePairValue', 0, 2);
 
 
 -- Generics Module --
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (200, null, 'GenericAttributeSet', 0, 2);
+VALUES (200, null, 'GenericAttributeSet', 0, 3);
 
 -- Construction Module --
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (700, null, 'ConstructionEvent', 0, 7);
+VALUES (700, null, 'ConstructionEvent', 0, 8);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (701, null, 'Elevation', 0, 7);
+VALUES (701, null, 'Elevation', 0, 8);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (702, null, 'Height', 0, 7);
+VALUES (702, null, 'Height', 0, 8);
 
 -- CityObjectGroup Module --
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (1200, null, 'Role', 0, 12);
+VALUES (1200, null, 'Role', 0, 13);
 
 
 -- Versioning Module --
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (1400, null, 'Transaction', 0, 14);
+VALUES (1400, null, 'Transaction', 0, 15);
 
 
 
