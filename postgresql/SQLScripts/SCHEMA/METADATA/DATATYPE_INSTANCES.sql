@@ -76,7 +76,6 @@ VALUES (101, null, 'TimeseriesComponent', 0, 2);
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
 VALUES (102, null, 'TimePairValue', 0, 2);
 
-
 -- Generics Module --
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
@@ -97,7 +96,6 @@ VALUES (702, null, 'Height', 0, 8);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
 VALUES (1200, null, 'Role', 0, 13);
-
 
 -- Versioning Module --
 

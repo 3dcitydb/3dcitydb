@@ -81,9 +81,11 @@ INSERT INTO namespace (ID, ALIAS, NAMESPACE)
 VALUES (16, 'wtr', 'http://3dcitydb.org/3dcitydb/waterbody/5.0');
 
 -- CityFurniture Module --
+
 INSERT INTO namespace (ID, ALIAS, NAMESPACE)
 VALUES (17, 'frn', 'http://3dcitydb.org/3dcitydb/cityfurniture/5.0');
 
 -- Deprecated Module --
+
 INSERT INTO namespace (ID, ALIAS, NAMESPACE)
 VALUES (18, 'depr', 'http://3dcitydb.org/3dcitydb/deprecated/5.0');
