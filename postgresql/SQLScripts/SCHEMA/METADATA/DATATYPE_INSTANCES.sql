@@ -39,7 +39,7 @@ INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
 VALUES (12, null, 'CityObjectRelation', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (13, 4, 'Code', 0, 1);
+VALUES (13, null, 'Code', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
 VALUES (14, null, 'ExternalReference', 0, 1);
@@ -48,7 +48,7 @@ INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
 VALUES (15, null, 'ImplicitGeometryProperty', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (16, 3, 'Measure', 0, 1);
+VALUES (16, null, 'Measure', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
 VALUES (17, null, 'MeasureOrNilReasonList', 0, 1);
@@ -63,7 +63,7 @@ INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
 VALUES (20, null, 'QualifiedVolume', 0, 1);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
-VALUES (21, 4, 'StringOrRef', 0, 1);
+VALUES (21, null, 'StringOrRef', 0, 1);
 
 -- Dynamizer Module --
 
