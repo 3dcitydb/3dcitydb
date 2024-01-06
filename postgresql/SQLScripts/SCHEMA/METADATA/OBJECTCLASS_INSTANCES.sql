@@ -6,7 +6,7 @@ INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL,
 VALUES (1, null, 'Undefined', 1, 0, 1);
 
 INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID)
-VALUES (2, null, 'ObjectType', 1, 0, 1);
+VALUES (2, null, 'AbstractObject', 1, 0, 1);
 
 INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID)
 VALUES (3, 2, 'AbstractFeature', 1, 0, 1);
