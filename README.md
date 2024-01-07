@@ -1,7 +1,7 @@
 3D City Database
 ================
 
-[![Build Status](https://travis-ci.org/3dcitydb/3dcitydb.svg?branch=master)](https://travis-ci.org/3dcitydb/3dcitydb)
+![Gradle build](https://img.shields.io/github/actions/workflow/status/3dcitydb/3dcitydb/build-3dcitydb-scripts.yml?logo=Gradle&logoColor=white&style=flat-square)
 
 The 3D City Database is a free 3D geo database to store, represent, and manage virtual 3D city models on top of a
 standard spatial relational database. The database model contains semantically rich, hierarchically structured,
