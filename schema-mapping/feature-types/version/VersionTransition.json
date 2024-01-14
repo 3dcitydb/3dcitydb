@@ -1,0 +1,36 @@
+{
+  "identifier": "vers:VersionTransition",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "reason",
+      "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "type": "core:String"
+    },
+    {
+      "name": "clonePredecessor",
+      "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "type": "core:Boolean"
+    },
+    {
+      "name": "type",
+      "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "type": "core:String"
+    },
+    {
+      "name": "from",
+      "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "to",
+      "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "transaction",
+      "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "type": "vers:Transaction"
+    }
+  ]
+}

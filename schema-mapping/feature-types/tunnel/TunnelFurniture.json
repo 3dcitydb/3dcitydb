@@ -1,0 +1,31 @@
+{
+  "identifier": "tun:TunnelFurniture",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "class",
+      "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "function",
+      "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "usage",
+      "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "lod4Geometry",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod4ImplicitRepresentation",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:ImplicitGeometryProperty"
+    }
+  ]
+}

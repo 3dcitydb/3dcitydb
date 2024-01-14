@@ -1,0 +1,38 @@
+{
+  "identifier": "core:AbstractFeatureWithLifespan",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "creationDate",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "creation_date",
+        "type": "timestamp"
+      }
+    },
+    {
+      "name": "terminationDate",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "termination_date",
+        "type": "timestamp"
+      }
+    },
+    {
+      "name": "validFrom",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "valid_from",
+        "type": "timestamp"
+      }
+    },
+    {
+      "name": "validTo",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "valid_to",
+        "type": "timestamp"
+      }
+    }
+  ]
+}

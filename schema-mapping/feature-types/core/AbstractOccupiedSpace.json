@@ -1,0 +1,21 @@
+{
+  "identifier": "core:AbstractOccupiedSpace",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "lod1ImplicitRepresentation",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:ImplicitGeometryProperty"
+    },
+    {
+      "name": "lod2ImplicitRepresentation",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:ImplicitGeometryProperty"
+    },
+    {
+      "name": "lod3ImplicitRepresentation",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:ImplicitGeometryProperty"
+    }
+  ]
+}

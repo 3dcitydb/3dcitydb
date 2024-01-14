@@ -1,0 +1,66 @@
+{
+  "identifier": "tun:AbstractTunnel",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "class",
+      "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "function",
+      "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "usage",
+      "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "tunnelConstructiveElement",
+      "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "tunnelInstallation",
+      "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "hollowSpace",
+      "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "tunnelFurniture",
+      "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "lod1MultiSurface",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod4MultiCurve",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod4MultiSurface",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod4Solid",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod4TerrainIntersectionCurve",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    }
+  ]
+}

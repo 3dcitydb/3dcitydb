@@ -1,0 +1,26 @@
+{
+  "identifier": "core:CityModel",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "cityObjectMember",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "versionMember",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "versionTransitionMember",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "appearanceMember",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:AppearanceProperty"
+    }
+  ]
+}

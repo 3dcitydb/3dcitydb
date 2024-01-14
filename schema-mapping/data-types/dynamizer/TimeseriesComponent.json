@@ -1,0 +1,36 @@
+{
+  "identifier": "dyn:TimeseriesComponent",
+  "table": "property",
+  "properties": [
+    {
+      "name": "repetitions",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:Integer",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "additionalGap",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "timeseries",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:FeatureProperty",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "identifier": "bldg:Building",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "buildingPart",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:FeatureProperty"
+    }
+  ]
+}

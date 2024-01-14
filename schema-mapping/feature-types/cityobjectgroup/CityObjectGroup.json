@@ -1,0 +1,36 @@
+{
+  "identifier": "grp:CityObjectGroup",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "class",
+      "namespace": "http://3dcitydb.org/3dcitydb/cityobjectgroup/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "function",
+      "namespace": "http://3dcitydb.org/3dcitydb/cityobjectgroup/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "usage",
+      "namespace": "http://3dcitydb.org/3dcitydb/cityobjectgroup/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "groupMember",
+      "namespace": "http://3dcitydb.org/3dcitydb/cityobjectgroup/5.0",
+      "type": "grp:Role"
+    },
+    {
+      "name": "parent",
+      "namespace": "http://3dcitydb.org/3dcitydb/cityobjectgroup/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "geometry",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    }
+  ]
+}

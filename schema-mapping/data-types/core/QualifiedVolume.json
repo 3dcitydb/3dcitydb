@@ -1,0 +1,19 @@
+{
+  "identifier": "core:QualifiedVolume",
+  "table": "property",
+  "value": {
+    "property": 0
+  },
+  "properties": [
+    {
+      "name": "volume",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:Measure"
+    },
+    {
+      "name": "typeOfVolume",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:Code"
+    }
+  ]
+}

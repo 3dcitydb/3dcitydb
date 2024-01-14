@@ -1,0 +1,11 @@
+{
+  "identifier": "tun:Tunnel",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "tunnelPart",
+      "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
+      "type": "core:FeatureProperty"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "identifier": "core:Address",
+  "table": "address",
+  "properties": [
+    {
+      "name": "id",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "objectid",
+        "type": "string"
+      }
+    },
+    {
+      "name": "identifier",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "identifier",
+        "type": "string"
+      }
+    },
+    {
+      "name": "codeSpace",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "identifier_codespace",
+        "type": "string"
+      },
+      "parent": 1
+    },
+    {
+      "name": "street",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "street",
+        "type": "string"
+      }
+    },
+    {
+      "name": "houseNumber",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "house_number",
+        "type": "string"
+      }
+    },
+    {
+      "name": "poBox",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "po_box",
+        "type": "string"
+      }
+    },
+    {
+      "name": "zipCode",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "zip_code",
+        "type": "string"
+      }
+    },
+    {
+      "name": "city",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "city",
+        "type": "string"
+      }
+    },
+    {
+      "name": "state",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "state",
+        "type": "string"
+      }
+    },
+    {
+      "name": "country",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "country",
+        "type": "string"
+      }
+    },
+    {
+      "name": "multiPoint",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "multi_point",
+        "type": "geometry"
+      }
+    }
+  ]
+}

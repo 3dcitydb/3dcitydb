@@ -1,0 +1,11 @@
+{
+  "identifier": "con:AbstractInstallation",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "relationToConstruction",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:String"
+    }
+  ]
+}

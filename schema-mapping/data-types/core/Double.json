@@ -1,0 +1,8 @@
+{
+  "identifier": "core:Double",
+  "table": "property",
+  "value": {
+    "column": "val_double",
+    "type": "double"
+  }
+}

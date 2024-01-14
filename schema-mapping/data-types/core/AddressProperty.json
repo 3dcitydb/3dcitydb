@@ -1,0 +1,9 @@
+{
+  "identifier": "core:AddressProperty",
+  "table": "property",
+  "join": {
+    "table": "address",
+    "fromColumn": "val_address_id",
+    "toColumn": "id"
+  }
+}

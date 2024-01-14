@@ -1,0 +1,8 @@
+{
+  "identifier": "core:Reference",
+  "table": "property",
+  "value": {
+    "column": "val_uri",
+    "type": "uri"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "identifier": "app:AbstractSurfaceData",
+  "table": "surface_data",
+  "properties": [
+    {
+      "name": "id",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "objectid",
+        "type": "string"
+      }
+    },
+    {
+      "name": "identifier",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "identifier",
+        "type": "string"
+      }
+    },
+    {
+      "name": "codeSpace",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "identifier_codespace",
+        "type": "string"
+      },
+      "parent": 1
+    },
+    {
+      "name": "isFront",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "is_front",
+        "type": "boolean"
+      }
+    }
+  ]
+}

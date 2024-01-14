@@ -1,0 +1,26 @@
+{
+  "identifier": "core:MeasureOrNilReasonList",
+  "table": "property",
+  "value": {
+    "column": "val_array",
+    "type": "array",
+    "schema": {
+      "items": {
+        "type": [
+          "number",
+          "string"
+        ]
+      }
+    }
+  },
+  "properties": [
+    {
+      "name": "uom",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "val_uom",
+        "type": "string"
+      }
+    }
+  ]
+}

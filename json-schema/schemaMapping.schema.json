@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://3dcitydb.org/json-schema/5.0/schemaMapping.schema.json",
+  "title": "3DCityDB 5.0 schema mapping",
+  "description": "JSON schema for the 3DCityDB 5.0 schema mapping.",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/featureType"
+    },
+    {
+      "$ref": "#/$defs/dataType"
+    }
+  ],
+  "$defs": {
+    "featureType": {
+      "type": "object",
+      "unevaluatedProperties": false,
+      "required": [
+        "identifier",
+        "table"
+      ],
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "table": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/property"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/$defs/joinOrJoinTable"
+        }
+      ]
+    },
+    "dataType": {
+      "type": "object",
+      "unevaluatedProperties": false,
+      "required": [
+        "identifier",
+        "table"
+      ],
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "table": {
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/value"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/property"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/$defs/joinOrJoinTable"
+        }
+      ]
+    },
+    "property": {
+      "type": "object",
+      "unevaluatedProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "table": {
+          "type": "string"
+        },
+        "parent": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/$defs/valueOrTypeRef"
+        },
+        {
+          "$ref": "#/$defs/joinOrJoinTable"
+        }
+      ]
+    },
+    "value": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "column": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/$defs/simpleType"
+        },
+        "schema": {
+          "type": "object"
+        },
+        "property": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "column",
+            "type"
+          ],
+          "properties": {
+            "property": false
+          }
+        },
+        {
+          "required": [
+            "property"
+          ],
+          "properties": {
+            "column": false,
+            "type": false,
+            "schema": false
+          }
+        },
+        {
+          "properties": {
+            "column": false,
+            "type": false,
+            "schema": false,
+            "property": false
+          }
+        }
+      ]
+    },
+    "valueOrTypeRef": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "$ref": "#/$defs/value"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "value"
+          ],
+          "properties": {
+            "type": false
+          }
+        },
+        {
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "value": false
+          }
+        },
+        {
+          "properties": {
+            "value": false,
+            "type": false
+          }
+        }
+      ]
+    },
+    "join": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "table",
+        "fromColumn",
+        "toColumn"
+      ],
+      "properties": {
+        "table": {
+          "type": "string"
+        },
+        "fromColumn": {
+          "type": "string"
+        },
+        "toColumn": {
+          "type": "string"
+        }
+      }
+    },
+    "joinTable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "table",
+        "sourceJoin",
+        "targetJoin"
+      ],
+      "properties": {
+        "table": {
+          "type": "string"
+        },
+        "sourceJoin": {
+          "$ref": "#/$defs/join"
+        },
+        "targetJoin": {
+          "$ref": "#/$defs/join"
+        }
+      }
+    },
+    "joinOrJoinTable": {
+      "type": "object",
+      "properties": {
+        "join": {
+          "$ref": "#/$defs/join"
+        },
+        "joinTable": {
+          "$ref": "#/$defs/joinTable"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "join"
+          ],
+          "properties": {
+            "joinTable": false
+          }
+        },
+        {
+          "required": [
+            "joinTable"
+          ],
+          "properties": {
+            "join": false
+          }
+        },
+        {
+          "properties": {
+            "join": false,
+            "joinTable": false
+          }
+        }
+      ]
+    },
+    "simpleType": {
+      "type": "string",
+      "enum": [
+        "boolean",
+        "integer",
+        "double",
+        "string",
+        "uri",
+        "timestamp",
+        "array",
+        "booleanArray",
+        "integerArray",
+        "doubleArray",
+        "stringArray",
+        "geometry"
+      ]
+    }
+  }
+}

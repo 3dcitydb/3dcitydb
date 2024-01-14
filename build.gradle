@@ -1,20 +1,63 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
+import java.util.regex.Pattern
+
 plugins {
     id 'distribution'
 }
 
-version '5.0.0-alpha.1'
+version '5.0.0-alpha.4'
 
 distributions.main.contents {
+    def types = readJsonTypes('schema-mapping')
+    filteringCharset = 'UTF-8'
+
     from 'LICENSE'
     from 'README.md'
     from("$projectDir/build/tmp") {
         mkdir "$projectDir/build/tmp"
         file("$projectDir/build/tmp/VERSION.txt").text = project.version
     }
+    into('json-schema') {
+        from 'json-schema'
+    }
     into('oracle') {
         from 'oracle' exclude 'JDeveloper'
     }
     into('postgresql') {
         from 'postgresql' exclude 'DbSchema'
+        filesMatching('**/DATATYPE_INSTANCES.sql') {
+            filter { String line -> replaceTokens(line, types) }
+        }
+        filesMatching('**/OBJECTCLASS_INSTANCES.sql') {
+            filter { String line -> replaceTokens(line, types) }
+        }
     }
+}
+
+def readJsonTypes(String path) {
+    def types = [:]
+    def parser = new JsonSlurper()
+    fileTree(path)
+            .matching { '**/*.json' }
+            .each { File file ->
+                {
+                    def type = parser.parse(file, "UTF-8")
+                    if (type in Map) {
+                        types[type.identifier] = JsonOutput.toJson(type)
+                    }
+                }
+            }
+    types
+}
+
+static def replaceTokens(String text, Map values, String defaultValue = 'null',
+                         String beginToken = '@', String endToken = '@',
+                         String beginReplacement = "'", String endReplacement = "'") {
+    Pattern.compile(beginToken + "(.*?)" + endToken, Pattern.MULTILINE)
+            .matcher(text)
+            .replaceAll(matcher -> values[matcher.group(1)] ?
+                    beginReplacement + values[matcher.group(1)] + endReplacement :
+                    defaultValue)
 }

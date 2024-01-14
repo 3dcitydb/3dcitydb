@@ -1,0 +1,96 @@
+{
+  "identifier": "dyn:TimePairValue",
+  "table": "property",
+  "properties": [
+    {
+      "name": "timestamp",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:Timestamp",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "intValue",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:Integer",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "doubleValue",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:Double",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "stringValue",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "geometryValue",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:GeometryProperty",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "uriValue",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:URI",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "boolValue",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:Boolean",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "implicitGeometryValue",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:ImplicitGeometryProperty",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "appearanceValue",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:AppearanceProperty",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    }
+  ]
+}

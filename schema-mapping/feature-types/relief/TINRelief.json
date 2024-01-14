@@ -1,0 +1,11 @@
+{
+  "identifier": "dem:TINRelief",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "tin",
+      "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
+      "type": "core:GeometryProperty"
+    }
+  ]
+}

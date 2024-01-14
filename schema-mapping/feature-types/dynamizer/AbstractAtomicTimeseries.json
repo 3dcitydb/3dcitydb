@@ -1,0 +1,16 @@
+{
+  "identifier": "dyn:AbstractAtomicTimeseries",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "observationProperty",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:String"
+    },
+    {
+      "name": "uom",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:String"
+    }
+  ]
+}

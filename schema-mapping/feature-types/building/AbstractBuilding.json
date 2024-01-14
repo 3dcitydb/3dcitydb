@@ -1,0 +1,106 @@
+{
+  "identifier": "bldg:AbstractBuilding",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "class",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "function",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "usage",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "roofType",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "storeysAboveGround",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:Integer"
+    },
+    {
+      "name": "storeysBelowGround",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:Integer"
+    },
+    {
+      "name": "storeyHeightsAboveGround",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:MeasureOrNilReasonList"
+    },
+    {
+      "name": "storeyHeightsBelowGround",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:MeasureOrNilReasonList"
+    },
+    {
+      "name": "buildingConstructiveElement",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "buildingInstallation",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "buildingRoom",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "buildingFurniture",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "buildingSubdivision",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "address",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:AddressProperty"
+    },
+    {
+      "name": "lod0RoofEdge",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod1MultiSurface",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod4MultiCurve",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod4MultiSurface",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod4Solid",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod4TerrainIntersectionCurve",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    }
+  ]
+}

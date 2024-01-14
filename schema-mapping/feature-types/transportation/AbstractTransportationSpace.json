@@ -1,0 +1,46 @@
+{
+  "identifier": "tran:AbstractTransportationSpace",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "trafficDirection",
+      "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "type": "core:String"
+    },
+    {
+      "name": "occupancy",
+      "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "type": "core:Occupancy"
+    },
+    {
+      "name": "trafficSpace",
+      "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "auxiliaryTrafficSpace",
+      "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "hole",
+      "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "marking",
+      "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "lod1MultiSurface",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod4MultiSurface",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    }
+  ]
+}

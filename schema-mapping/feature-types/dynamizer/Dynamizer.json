@@ -1,0 +1,31 @@
+{
+  "identifier": "dyn:Dynamizer",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "attributeRef",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:String"
+    },
+    {
+      "name": "startTime",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:Timestamp"
+    },
+    {
+      "name": "endTime",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:Timestamp"
+    },
+    {
+      "name": "dynamicData",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "sensorConnection",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "dyn:SensorConnection"
+    }
+  ]
+}

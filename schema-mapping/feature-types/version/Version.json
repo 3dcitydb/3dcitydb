@@ -1,0 +1,16 @@
+{
+  "identifier": "vers:Version",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "tag",
+      "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "type": "core:String"
+    },
+    {
+      "name": "versionMember",
+      "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "type": "core:FeatureProperty"
+    }
+  ]
+}

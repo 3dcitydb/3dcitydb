@@ -1,0 +1,16 @@
+{
+  "identifier": "dyn:AbstractTimeseries",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "firstTimestamp",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:Timestamp"
+    },
+    {
+      "name": "lastTimestamp",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:Timestamp"
+    }
+  ]
+}

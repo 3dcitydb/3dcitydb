@@ -1,0 +1,19 @@
+{
+  "identifier": "con:Elevation",
+  "table": "property",
+  "properties": [
+    {
+      "name": "elevationValue",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "value": {
+        "column": "val_array",
+        "type": "doubleArray"
+      }
+    },
+    {
+      "name": "elevationReference",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:Code"
+    }
+  ]
+}

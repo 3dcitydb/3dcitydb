@@ -1,0 +1,39 @@
+{
+  "identifier": "con:ConstructionEvent",
+  "table": "property",
+  "value": {
+    "property": 0
+  },
+  "properties": [
+    {
+      "name": "event",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:Code",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "dateOfEvent",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:Timestamp",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "description",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    }
+  ]
+}

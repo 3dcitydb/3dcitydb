@@ -1,0 +1,26 @@
+{
+  "identifier": "grp:Role",
+  "table": "property",
+  "properties": [
+    {
+      "name": "groupMember",
+      "namespace": "http://3dcitydb.org/3dcitydb/cityobjectgroup/5.0",
+      "type": "core:FeatureProperty",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "role",
+      "namespace": "http://3dcitydb.org/3dcitydb/cityobjectgroup/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    }
+  ]
+}

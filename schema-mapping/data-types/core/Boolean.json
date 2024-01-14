@@ -1,0 +1,8 @@
+{
+  "identifier": "core:Boolean",
+  "table": "property",
+  "value": {
+    "column": "val_int",
+    "type": "boolean"
+  }
+}
