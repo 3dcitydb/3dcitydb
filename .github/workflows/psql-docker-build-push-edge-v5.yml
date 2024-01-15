@@ -5,6 +5,7 @@ on:
   push:
     branches:
     - v5-devel
+    - feature-schema-mapping
 
 env:
   IMAGE_NAME: 3dcitydb-pg-v5
