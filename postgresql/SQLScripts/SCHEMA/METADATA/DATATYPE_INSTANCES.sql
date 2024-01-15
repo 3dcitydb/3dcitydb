@@ -77,7 +77,7 @@ INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCH
 VALUES (101, null, 'TimeseriesComponent', 0, 2, @dyn:TimeseriesComponent@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (102, null, 'TimePairValue', 0, 2, @dyn:TimePairValue@);
+VALUES (102, null, 'TimeValuePair', 0, 2, @dyn:TimeValuePair@);
 
 -- Generics Module --
 

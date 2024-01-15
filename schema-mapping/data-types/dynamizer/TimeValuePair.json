@@ -1,5 +1,5 @@
 {
-  "identifier": "dyn:TimePairValue",
+  "identifier": "dyn:TimeValuePair",
   "table": "property",
   "properties": [
     {
