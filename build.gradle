@@ -10,6 +10,9 @@ plugins {
 version '5.0.0-alpha.4'
 
 distributions.main.contents {
+    def types = readJsonTypes('schema-mapping')
+    filteringCharset = 'UTF-8'
+
     from 'LICENSE'
     from 'README.md'
     from("$projectDir/build/tmp") {
@@ -24,22 +27,11 @@ distributions.main.contents {
     }
     into('postgresql') {
         from 'postgresql' exclude 'DbSchema'
-    }
-}
-
-tasks.register('buildSchemaMapping') {
-    doLast {
-        def types = readJsonTypes('schema-mapping')
-        copy {
-            from 'schema-mapping/sql-scripts'
-            into 'postgresql/SQLScripts/SCHEMA/METADATA'
-            filteringCharset = 'UTF-8'
-            filesMatching('**/DATATYPE_INSTANCES.sql') {
-                filter { String line -> replaceTokens(line, types) }
-            }
-            filesMatching('**/OBJECTCLASS_INSTANCES.sql') {
-                filter { String line -> replaceTokens(line, types) }
-            }
+        filesMatching('**/DATATYPE_INSTANCES.sql') {
+            filter { String line -> replaceTokens(line, types) }
+        }
+        filesMatching('**/OBJECTCLASS_INSTANCES.sql') {
+            filter { String line -> replaceTokens(line, types) }
         }
     }
 }
