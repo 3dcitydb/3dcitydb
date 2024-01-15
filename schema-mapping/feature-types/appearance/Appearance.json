@@ -29,7 +29,7 @@
     },
     {
       "name": "theme",
-      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
       "value": {
         "column": "theme",
         "type": "string"
