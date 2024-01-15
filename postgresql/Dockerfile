@@ -20,7 +20,7 @@ RUN chmod u+x ./gradlew && ./gradlew installDist
 
 # Runtime stage ###############################################################
 # Base image
-FROM postgis/postgis:${BASEIMAGE_TAG}
+FROM postgis/postgis:${BASEIMAGE_TAG} AS runtime
 
 # Set 3DCityDB version
 ARG CITYDB_VERSION='5.0.0'
