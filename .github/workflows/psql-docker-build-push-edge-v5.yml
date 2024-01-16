@@ -5,7 +5,6 @@ on:
   push:
     branches:
     - v5-devel
-    - feature-schema-mapping
 
 env:
   IMAGE_NAME: 3dcitydb-pg-v5
@@ -60,7 +59,7 @@ jobs:
           latest=false
           suffix=${{ matrix.variant }}
         tags: |
-          type=edge,branch=feature-schema-mapping
+          type=edge,branch=v5-devel
         labels: |
           maintainer=Bruno Willenborg
           maintainer.email=b.willenborg(at)tum.de
