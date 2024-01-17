@@ -153,7 +153,7 @@ CREATE  TABLE objectclass (
 	is_toplevel          numeric    ,
 	ade_id               integer    ,
 	namespace_id         integer    ,
-	schema               json    ,
+	"schema"             json    ,
 	CONSTRAINT objectclass_pk PRIMARY KEY ( id )
  );
 
@@ -195,7 +195,7 @@ CREATE  TABLE datatype (
 	is_abstract          numeric    ,
 	ade_id               integer    ,
 	namespace_id         integer    ,
-	schema               json    ,
+	"schema"             json    ,
 	CONSTRAINT datatype_pk PRIMARY KEY ( id )
  );
 
