@@ -22,15 +22,12 @@ distributions.main.contents {
     into('json-schema') {
         from 'json-schema'
     }
-    into('oracle') {
-        from 'oracle' exclude 'JDeveloper'
-    }
     into('postgresql') {
-        from 'postgresql' exclude 'DbSchema'
-        filesMatching('**/DATATYPE_INSTANCES.sql') {
+        from 'postgresql' exclude 'db-schema'
+        filesMatching('**/datatype-instances.sql') {
             filter { String line -> replaceTokens(line, types) }
         }
-        filesMatching('**/OBJECTCLASS_INSTANCES.sql') {
+        filesMatching('**/objectclass-instances.sql') {
             filter { String line -> replaceTokens(line, types) }
         }
     }

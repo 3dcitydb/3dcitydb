@@ -28,8 +28,8 @@ ENV CITYDBVERSION=${CITYDB_VERSION}
 
 # Copy SQL scripts
 WORKDIR /3dcitydb
-COPY --from=builder /build/build/install/3dcitydb/postgresql/SQLScripts .
-COPY --from=builder /build/build/install/3dcitydb/postgresql/DockerScripts/3dcitydb-initdb.sh /docker-entrypoint-initdb.d/
+COPY --from=builder /build/build/install/3dcitydb/postgresql/sql-scripts .
+COPY --from=builder /build/build/install/3dcitydb/postgresql/docker-scripts/3dcitydb-initdb.sh /docker-entrypoint-initdb.d/
 
 # Set labels
 LABEL maintainer="Bruno Willenborg"

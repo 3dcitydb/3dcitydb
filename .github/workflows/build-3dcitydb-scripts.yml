@@ -14,7 +14,7 @@ jobs:
         run: npm install -g ajv-cli
       - name: Validate schema mapping
         run: ajv test --valid --spec=draft2019
-          -s json-schema/schemaMapping.schema.json
+          -s json-schema/schema-mapping.schema.json
           -d schema-mapping/**/*.json
   build:
     runs-on: ubuntu-latest
