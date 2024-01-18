@@ -22,9 +22,6 @@ distributions.main.contents {
     into('json-schema') {
         from 'json-schema'
     }
-    into('oracle') {
-        from 'oracle' exclude 'JDeveloper'
-    }
     into('postgresql') {
         from 'postgresql' exclude 'DbSchema'
         filesMatching('**/DATATYPE_INSTANCES.sql') {
