@@ -1,0 +1,76 @@
+{
+  "identifier": "veg:SolitaryVegetationObject",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "class",
+      "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "function",
+      "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "usage",
+      "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "species",
+      "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "height",
+      "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "type": "core:Measure"
+    },
+    {
+      "name": "trunkDiameter",
+      "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "type": "core:Measure"
+    },
+    {
+      "name": "crownDiameter",
+      "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "type": "core:Measure"
+    },
+    {
+      "name": "rootBallDiameter",
+      "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "type": "core:Measure"
+    },
+    {
+      "name": "maxRootBallDepth",
+      "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "type": "core:Measure"
+    },
+    {
+      "name": "lod1Geometry",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod2Geometry",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod3Geometry",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod4Geometry",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod4ImplicitRepresentation",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:ImplicitGeometryProperty"
+    }
+  ]
+}

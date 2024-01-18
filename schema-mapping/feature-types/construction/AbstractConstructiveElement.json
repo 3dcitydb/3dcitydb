@@ -1,0 +1,16 @@
+{
+  "identifier": "con:AbstractConstructiveElement",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "isStructuralElement",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:Boolean"
+    },
+    {
+      "name": "filling",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:FeatureProperty"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "identifier": "vers:Transaction",
+  "table": "property",
+  "properties": [
+    {
+      "name": "type",
+      "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "oldFeature",
+      "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "type": "core:FeatureProperty",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "newFeature",
+      "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "type": "core:FeatureProperty",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    }
+  ]
+}

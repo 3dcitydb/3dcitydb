@@ -1,0 +1,18 @@
+{
+  "identifier": "core:Measure",
+  "table": "property",
+  "value": {
+    "column": "val_double",
+    "type": "double"
+  },
+  "properties": [
+    {
+      "name": "uom",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "val_uom",
+        "type": "string"
+      }
+    }
+  ]
+}

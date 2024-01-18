@@ -1,0 +1,11 @@
+{
+  "identifier": "dyn:CompositeTimeseries",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "component",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "dyn:TimeseriesComponent"
+    }
+  ]
+}

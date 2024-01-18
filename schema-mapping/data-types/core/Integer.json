@@ -1,0 +1,8 @@
+{
+  "identifier": "core:Integer",
+  "table": "property",
+  "value": {
+    "column": "val_int",
+    "type": "integer"
+  }
+}

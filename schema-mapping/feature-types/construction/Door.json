@@ -1,0 +1,26 @@
+{
+  "identifier": "con:Door",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "class",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "function",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "usage",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "address",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:AddressProperty"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "identifier": "core:GeometryProperty",
+  "table": "property",
+  "properties": [
+    {
+      "name": "lod",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "val_lod",
+        "type": "string"
+      }
+    }
+  ],
+  "join": {
+    "table": "geometry_data",
+    "fromColumn": "val_geometry_id",
+    "toColumn": "id"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "identifier": "bldg:BuildingUnit",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "storey",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "address",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:AddressProperty"
+    }
+  ]
+}

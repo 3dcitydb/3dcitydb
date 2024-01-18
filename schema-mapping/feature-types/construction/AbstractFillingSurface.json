@@ -1,0 +1,16 @@
+{
+  "identifier": "con:AbstractFillingSurface",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "lod3ImplicitRepresentation",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:ImplicitGeometryProperty"
+    },
+    {
+      "name": "lod4ImplicitRepresentation",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:ImplicitGeometryProperty"
+    }
+  ]
+}

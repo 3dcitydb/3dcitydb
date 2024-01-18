@@ -1,0 +1,51 @@
+{
+  "identifier": "bldg:AbstractBuildingSubdivision",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "class",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "function",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "usage",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "elevation",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "con:Elevation"
+    },
+    {
+      "name": "sortKey",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:Double"
+    },
+    {
+      "name": "buildingConstructiveElement",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "buildingFurniture",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "buildingInstallation",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "buildingRoom",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:FeatureProperty"
+    }
+  ]
+}

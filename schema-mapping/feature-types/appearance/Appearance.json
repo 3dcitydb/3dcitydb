@@ -1,0 +1,96 @@
+{
+  "identifier": "app:Appearance",
+  "table": "appearance",
+  "properties": [
+    {
+      "name": "id",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "objectid",
+        "type": "string"
+      }
+    },
+    {
+      "name": "identifier",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "identifier",
+        "type": "string"
+      }
+    },
+    {
+      "name": "codeSpace",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "identifier_codespace",
+        "type": "string"
+      },
+      "parent": 1
+    },
+    {
+      "name": "theme",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "theme",
+        "type": "string"
+      }
+    },
+    {
+      "name": "creationDate",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "creation_date",
+        "type": "timestamp"
+      }
+    },
+    {
+      "name": "terminationDate",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "termination_date",
+        "type": "timestamp"
+      }
+    },
+    {
+      "name": "validFrom",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "valid_from",
+        "type": "timestamp"
+      }
+    },
+    {
+      "name": "validTo",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "valid_to",
+        "type": "timestamp"
+      }
+    },
+    {
+      "name": "isGlobal",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "is_global",
+        "type": "boolean"
+      }
+    },
+    {
+      "name": "surfaceData",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "joinTable": {
+        "table": "appear_to_surface_data",
+        "sourceJoin": {
+          "table": "appearance",
+          "fromColumn": "appearance_id",
+          "toColumn": "id"
+        },
+        "targetJoin": {
+          "table": "surface_data",
+          "fromColumn": "surface_data_id",
+          "toColumn": "id"
+        }
+      }
+    }
+  ]
+}

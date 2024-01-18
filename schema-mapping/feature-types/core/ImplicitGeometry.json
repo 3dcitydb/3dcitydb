@@ -1,0 +1,57 @@
+{
+  "identifier": "core:ImplicitGeometry",
+  "table": "implicit_geometry",
+  "properties": [
+    {
+      "name": "id",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "objectid",
+        "type": "string"
+      }
+    },
+    {
+      "name": "mimeType",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "mime_type",
+        "type": "string"
+      }
+    },
+    {
+      "name": "codeSpace",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "mime_type_codespace",
+        "type": "string"
+      },
+      "parent": 1
+    },
+    {
+      "name": "libraryObject",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "reference_to_library",
+        "type": "uri"
+      }
+    },
+    {
+      "name": "relativeGeometry",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "join": {
+        "table": "geometry_data",
+        "fromColumn": "relative_geometry_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "appearance",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "join": {
+        "table": "appearance",
+        "fromColumn": "id",
+        "toColumn": "implicit_geometry_id"
+      }
+    }
+  ]
+}

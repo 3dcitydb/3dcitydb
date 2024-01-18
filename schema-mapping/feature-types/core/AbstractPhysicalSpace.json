@@ -1,0 +1,26 @@
+{
+  "identifier": "core:AbstractPhysicalSpace",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "lod1TerrainIntersectionCurve",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod2TerrainIntersectionCurve",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod3TerrainIntersectionCurve",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "pointCloud",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:FeatureProperty"
+    }
+  ]
+}

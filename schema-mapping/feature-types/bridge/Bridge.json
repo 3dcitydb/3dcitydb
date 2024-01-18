@@ -1,0 +1,11 @@
+{
+  "identifier": "brid:Bridge",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "bridgePart",
+      "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
+      "type": "core:FeatureProperty"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "identifier": "dyn:StandardFileTimeseries",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "fileLocation",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:URI"
+    },
+    {
+      "name": "fileType",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "mimeType",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:Code"
+    }
+  ]
+}

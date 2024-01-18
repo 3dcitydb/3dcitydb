@@ -1,0 +1,27 @@
+{
+  "identifier": "core:ExternalReference",
+  "table": "property",
+  "properties": [
+    {
+      "name": "targetResource",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:URI"
+    },
+    {
+      "name": "informationSystem",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "val_codespace",
+        "type": "uri"
+      }
+    },
+    {
+      "name": "relationType",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "val_string",
+        "type": "uri"
+      }
+    }
+  ]
+}

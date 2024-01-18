@@ -1,0 +1,26 @@
+{
+  "identifier": "core:CityObjectRelation",
+  "table": "property",
+  "properties": [
+    {
+      "name": "relatedTo",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:FeatureProperty",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "relationType",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:Code",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    }
+  ]
+}

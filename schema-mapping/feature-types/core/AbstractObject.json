@@ -1,0 +1,94 @@
+{
+  "identifier": "core:AbstractObject",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "id",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "objectid",
+        "type": "string"
+      }
+    },
+    {
+      "name": "identifier",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "identifier",
+        "type": "string"
+      }
+    },
+    {
+      "name": "codeSpace",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "identifier_codespace",
+        "type": "string"
+      },
+      "parent": 1
+    },
+    {
+      "name": "envelope",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "envelope",
+        "type": "geometry"
+      }
+    },
+    {
+      "name": "objectClassId",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "objectclass_id",
+        "type": "integer"
+      }
+    },
+    {
+      "name": "lastModificationDate",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "last_modification_date",
+        "type": "timestamp"
+      }
+    },
+    {
+      "name": "updatingPerson",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "updating_person",
+        "type": "string"
+      }
+    },
+    {
+      "name": "reasonForUpdate",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "reason_for_update",
+        "type": "string"
+      }
+    },
+    {
+      "name": "lineage",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "lineage",
+        "type": "string"
+      }
+    },
+    {
+      "name": "description",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:StringOrRef"
+    },
+    {
+      "name": "descriptionReference",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:Reference"
+    },
+    {
+      "name": "name",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:Code"
+    }
+  ]
+}

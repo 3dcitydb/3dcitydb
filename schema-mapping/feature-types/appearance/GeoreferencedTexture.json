@@ -1,0 +1,14 @@
+{
+  "identifier": "app:GeoreferencedTexture",
+  "table": "surface_data",
+  "properties": [
+    {
+      "name": "referencePoint",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "gt_reference_point",
+        "type": "geometry"
+      }
+    }
+  ]
+}

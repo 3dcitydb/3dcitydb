@@ -1,0 +1,62 @@
+{
+  "identifier": "app:X3DMaterial",
+  "table": "surface_data",
+  "properties": [
+    {
+      "name": "shininess",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "x3d_shininess",
+        "type": "double"
+      }
+    },
+    {
+      "name": "transparency",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "x3d_transparency",
+        "type": "double"
+      }
+    },
+    {
+      "name": "ambientIntensity",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "x3d_ambient_intensity",
+        "type": "double"
+      }
+    },
+    {
+      "name": "specularColor",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "x3d_specular_color",
+        "type": "string"
+      }
+    },
+    {
+      "name": "diffuseColor",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "x3d_diffuse_color",
+        "type": "string"
+      }
+    },
+    {
+      "name": "emissiveColor",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "x3d_emissive_color",
+        "type": "string"
+      }
+    },
+    {
+      "name": "isSmooth",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "x3d_is_smooth",
+        "type": "boolean"
+      }
+    }
+  ]
+}

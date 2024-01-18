@@ -1,0 +1,41 @@
+{
+  "identifier": "core:AbstractCityObject",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "externalReference",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:ExternalReference"
+    },
+    {
+      "name": "generalizesTo",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "relativeToTerrain",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:String"
+    },
+    {
+      "name": "relativeToWater",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:String"
+    },
+    {
+      "name": "relatedTo",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:FeatureProperty"
+    },
+    {
+      "name": "appearance",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:AppearanceProperty"
+    },
+    {
+      "name": "dynamizer",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:FeatureProperty"
+    }
+  ]
+}

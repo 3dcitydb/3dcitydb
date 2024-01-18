@@ -1,0 +1,19 @@
+{
+  "identifier": "core:QualifiedArea",
+  "table": "property",
+  "value": {
+    "property": 0
+  },
+  "properties": [
+    {
+      "name": "area",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:Measure"
+    },
+    {
+      "name": "typeOfArea",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:Code"
+    }
+  ]
+}

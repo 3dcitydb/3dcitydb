@@ -1,0 +1,27 @@
+{
+  "identifier": "core:ImplicitGeometryProperty",
+  "table": "property",
+  "properties": [
+    {
+      "name": "transformationMatrix",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "val_array",
+        "type": "doubleArray"
+      }
+    },
+    {
+      "name": "referencePoint",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
+        "column": "val_implicitgeom_refpoint",
+        "type": "geometry"
+      }
+    }
+  ],
+  "join": {
+    "table": "implicit_geometry",
+    "fromColumn": "val_implicitgeom_id",
+    "toColumn": "id"
+  }
+}

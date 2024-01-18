@@ -1,0 +1,16 @@
+{
+  "identifier": "dem:BreaklineRelief",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "ridgeOrValleyLines",
+      "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "breaklines",
+      "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
+      "type": "core:GeometryProperty"
+    }
+  ]
+}

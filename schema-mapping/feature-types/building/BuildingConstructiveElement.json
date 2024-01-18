@@ -1,0 +1,21 @@
+{
+  "identifier": "bldg:BuildingConstructiveElement",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "class",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "function",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "usage",
+      "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "type": "core:Code"
+    }
+  ]
+}

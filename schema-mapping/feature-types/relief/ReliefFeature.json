@@ -1,0 +1,16 @@
+{
+  "identifier": "dem:ReliefFeature",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "lod",
+      "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
+      "type": "core:Integer"
+    },
+    {
+      "name": "reliefComponent",
+      "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
+      "type": "core:FeatureProperty"
+    }
+  ]
+}

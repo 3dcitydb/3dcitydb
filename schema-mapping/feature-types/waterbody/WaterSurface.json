@@ -1,0 +1,11 @@
+{
+  "identifier": "wtr:WaterSurface",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "waterLevel",
+      "namespace": "http://3dcitydb.org/3dcitydb/waterbody/5.0",
+      "type": "core:Code"
+    }
+  ]
+}

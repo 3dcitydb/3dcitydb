@@ -1,0 +1,36 @@
+name: build-3dcitydb-scripts
+
+on: [push, pull_request]
+
+jobs:
+  validate-schema-mapping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+      - name: Install Ajv JSON schema validator
+        run: npm install -g ajv-cli
+      - name: Validate schema mapping
+        run: ajv test --valid --spec=draft2019
+          -s json-schema/schemaMapping.schema.json
+          -d schema-mapping/**/*.json
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          cache-disabled: true
+      - name: Grant execute permission to Gradle
+        run: chmod +x ./gradlew
+      - name: Execute Gradle build
+        run: ./gradlew installDist

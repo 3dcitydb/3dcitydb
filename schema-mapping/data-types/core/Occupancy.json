@@ -1,0 +1,39 @@
+{
+  "identifier": "core:Occupancy",
+  "table": "property",
+  "value": {
+    "property": 0
+  },
+  "properties": [
+    {
+      "name": "numberOfOccupants",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:Integer",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "interval",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:Code",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "occupantType",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "type": "core:Code",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    }
+  ]
+}

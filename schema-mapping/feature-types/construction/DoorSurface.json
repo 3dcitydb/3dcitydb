@@ -1,0 +1,11 @@
+{
+  "identifier": "con:DoorSurface",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "address",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:AddressProperty"
+    }
+  ]
+}

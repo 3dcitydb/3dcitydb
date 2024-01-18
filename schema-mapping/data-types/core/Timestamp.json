@@ -1,0 +1,8 @@
+{
+  "identifier": "core:Timestamp",
+  "table": "property",
+  "value": {
+    "column": "val_timestamp",
+    "type": "timestamp"
+  }
+}

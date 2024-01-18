@@ -1,0 +1,66 @@
+{
+  "identifier": "veg:PlantCover",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "class",
+      "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "function",
+      "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "usage",
+      "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "type": "core:Code"
+    },
+    {
+      "name": "averageHeight",
+      "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "type": "core:Measure"
+    },
+    {
+      "name": "minHeight",
+      "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "type": "core:Measure"
+    },
+    {
+      "name": "maxHeight",
+      "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "type": "core:Measure"
+    },
+    {
+      "name": "lod1MultiSurface",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod4MultiSurface",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod1MultiSolid",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod2MultiSolid",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod3MultiSolid",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    },
+    {
+      "name": "lod4MultiSolid",
+      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "type": "core:GeometryProperty"
+    }
+  ]
+}

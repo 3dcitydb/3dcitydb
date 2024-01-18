@@ -1,0 +1,41 @@
+{
+  "identifier": "con:AbstractConstruction",
+  "table": "feature",
+  "properties": [
+    {
+      "name": "conditionOfConstruction",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:String"
+    },
+    {
+      "name": "dateOfConstruction",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:Timestamp"
+    },
+    {
+      "name": "dateOfDemolition",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:Timestamp"
+    },
+    {
+      "name": "constructionEvent",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "con:ConstructionEvent"
+    },
+    {
+      "name": "elevation",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "con:Elevation"
+    },
+    {
+      "name": "height",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "con:Height"
+    },
+    {
+      "name": "occupancy",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:Occupancy"
+    }
+  ]
+}

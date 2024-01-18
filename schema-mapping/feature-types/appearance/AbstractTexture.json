@@ -1,0 +1,57 @@
+{
+  "identifier": "app:AbstractTexture",
+  "table": "surface_data",
+  "properties": [
+    {
+      "name": "imageURI",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "image_uri",
+        "type": "uri"
+      },
+      "join": {
+        "table": "tex_image",
+        "fromColumn": "tex_image_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "mimeType",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "mime_type",
+        "type": "string"
+      },
+      "join": {
+        "table": "tex_image",
+        "fromColumn": "tex_image_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "codeSpace",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "mime_type_codespace",
+        "type": "string"
+      },
+      "parent": 1
+    },
+    {
+      "name": "wrapMode",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "tex_wrap_mode",
+        "type": "string"
+      }
+    },
+    {
+      "name": "borderColor",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "value": {
+        "column": "tex_border_color",
+        "type": "string"
+      }
+    }
+  ]
+}

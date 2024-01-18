@@ -1,0 +1,146 @@
+{
+  "identifier": "dyn:SensorConnection",
+  "table": "property",
+  "properties": [
+    {
+      "name": "connectionType",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:Code",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "observationProperty",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "uom",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "sensorID",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "sensorName",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "observationID",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "datastreamID",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "baseURL",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:URI",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "authType",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:Code",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "mqttServer",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "mqttTopic",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "linkToObservation",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "linkToSensorDescription",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "sensorLocation",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "type": "core:FeatureProperty",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    }
+  ]
+}

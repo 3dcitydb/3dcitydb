@@ -1,0 +1,49 @@
+{
+  "identifier": "con:Height",
+  "table": "property",
+  "value": {
+    "property": 0
+  },
+  "properties": [
+    {
+      "name": "value",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:Measure",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "status",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:String",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "lowReference",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:Code",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    },
+    {
+      "name": "highReference",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "type": "core:Code",
+      "join": {
+        "table": "property",
+        "fromColumn": "parent_id",
+        "toColumn": "id"
+      }
+    }
+  ]
+}
