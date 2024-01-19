@@ -17,17 +17,17 @@ distributions.main.contents {
     from 'README.md'
     from("$projectDir/build/tmp") {
         mkdir "$projectDir/build/tmp"
-        file("$projectDir/build/tmp/VERSION.txt").text = project.version
+        file("$projectDir/build/tmp/version.txt").text = project.version
     }
     into('json-schema') {
         from 'json-schema'
     }
     into('postgresql') {
-        from 'postgresql' exclude 'DbSchema'
-        filesMatching('**/DATATYPE_INSTANCES.sql') {
+        from 'postgresql' exclude 'db-schema'
+        filesMatching('**/datatype-instances.sql') {
             filter { String line -> replaceTokens(line, types) }
         }
-        filesMatching('**/OBJECTCLASS_INSTANCES.sql') {
+        filesMatching('**/objectclass-instances.sql') {
             filter { String line -> replaceTokens(line, types) }
         }
     }

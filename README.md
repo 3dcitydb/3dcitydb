@@ -3,6 +3,6 @@
 3D City Database
 ================
 
-Overview of the current [database structure](postgresql/DbSchema/3dcitydb_schema.pdf)
+Overview of the current [database structure](postgresql/db-schema/3dcitydb-schema.pdf)
 
 
