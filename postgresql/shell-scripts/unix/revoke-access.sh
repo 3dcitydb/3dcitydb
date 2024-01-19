@@ -40,7 +40,7 @@ echo
 echo '#######################################################################################'
 
 # cd to path of the SQL scripts
-cd ../../sql-scripts/util
+cd ../../sql-scripts
 
 # Prompt for GRANTEE ----------------------------------------------------------
 while [ 1 ]; do
@@ -59,7 +59,7 @@ done
 # List the 3DCityDB schemas granted to GRANTEE --------------------------------
 echo
 echo "Reading 3DCityDB schemas granted to \"$GRANTEE\" from \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "list-schemas-with-access-grant.sql" -v username="$GRANTEE"
+psql -d "$CITYDB" -f "util/list-schemas-with-access-grant.sql" -v username="$GRANTEE"
 
 if [[ $? -ne 0 ]] ; then
   echo 'Failed to read 3DCityDB schemas from database.'

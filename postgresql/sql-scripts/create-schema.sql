@@ -48,16 +48,16 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 --// create tables, sequences, constraints, indexes
 \echo
 \echo 'Setting up database schema ...'
-\ir ../schema/schema.sql
+\ir schema/schema.sql
 
 --// populate metadata tables
-\ir ../schema/namespace-instances.sql
-\ir ../schema/objectclass-instances.sql
-\ir ../schema/datatype-instances.sql
+\ir schema/namespace-instances.sql
+\ir schema/objectclass-instances.sql
+\ir schema/datatype-instances.sql
 
 --// populate codelist tables
-\ir ../schema/codelist-instances.sql
-\ir ../schema/codelist-entry-instances.sql
+\ir schema/codelist-instances.sql
+\ir schema/codelist-entry-instances.sql
 
 \echo
 \echo 'Created 3DCityDB schema "':SCHEMA_NAME'".'

@@ -40,7 +40,7 @@ echo.
 echo ####################################################################################
 
 :: cd to path of the SQL scripts
-cd ..\..\sql-scripts\util
+cd ..\..\sql-scripts
 
 :: Prompt for GRANTEE ---------------------------------------------------------
 :grantee
@@ -60,7 +60,7 @@ if /i not "%var%"=="" (
 :: List the existing 3DCityDB schemas -----------------------------------------
 echo.
 echo Reading 3DCityDB schemas from "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "list-schemas.sql"
+psql -d "%CITYDB%" -f "util\list-schemas.sql"
 
 if errorlevel 1 (
   echo Failed to read 3DCityDB schemas from database.

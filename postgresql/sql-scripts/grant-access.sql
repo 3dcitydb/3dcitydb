@@ -33,10 +33,10 @@ SET client_min_messages TO WARNING;
 \set SCHEMA_NAME :schema_name
 \set ACCESS_MODE :access_mode
 
-SELECT CASE WHEN upper(:'ACCESS_MODE') = 'RW' THEN 'read-write' ELSE 'read-only' END AS priviliges_type;
+SELECT CASE WHEN upper(:'ACCESS_MODE') = 'RW' THEN 'read-write' ELSE 'read-only' END AS privileges_type;
 \gset
 
-\echo 'Granting ':priviliges_type' privileges on schema "':SCHEMA_NAME'" to user "':USERNAME'" ...'
+\echo 'Granting ':privileges_type' privileges on schema "':SCHEMA_NAME'" to user "':USERNAME'" ...'
 
 SET tmp.dbname TO :"DBNAME";
 SET tmp.username TO :"USERNAME";

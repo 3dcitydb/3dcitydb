@@ -73,7 +73,7 @@ CREATE SCHEMA citydb_pkg;
 ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
 
 \echo
-\echo '3DCityDB creation complete!'
+\echo '3DCityDB creation complete.'
 
 --// checks if the chosen SRID is provided by the spatial_ref_sys table
 \echo

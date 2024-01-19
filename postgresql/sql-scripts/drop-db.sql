@@ -49,4 +49,4 @@ $$;
 ALTER DATABASE :"DBNAME" RESET search_path;
 
 \echo
-\echo '3DCityDB instance successfully removed!'
+\echo '3DCityDB instance successfully removed.'

@@ -37,4 +37,4 @@ SET client_min_messages TO WARNING;
 DROP SCHEMA :SCHEMA_NAME CASCADE;
 
 \echo
-\echo '3DCityDB schema "':SCHEMA_NAME'" successfully removed!'
+\echo '3DCityDB schema "':SCHEMA_NAME'" successfully removed.'

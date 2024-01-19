@@ -40,7 +40,7 @@ echo.
 echo #######################################################################################
 
 :: cd to path of the SQL scripts
-cd ..\..\sql-scripts\util
+cd ..\..\sql-scripts
 
 :: Prompt for GRANTEE ---------------------------------------------------------
 :username
@@ -60,7 +60,7 @@ if /i not "%var%"=="" (
 :: List the 3DCityDB schemas granted to GRANTEE -------------------------------
 echo.
 echo Reading 3DCityDB schemas granted to "%GRANTEE%" from "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "list-schemas-with-access-grant.sql" -v username="%GRANTEE%"
+psql -d "%CITYDB%" -f "util\list-schemas-with-access-grant.sql" -v username="%GRANTEE%"
 
 if errorlevel 1 (
   echo Failed to read 3DCityDB schemas from database.
