@@ -17,7 +17,7 @@ distributions.main.contents {
     from 'README.md'
     from("$projectDir/build/tmp") {
         mkdir "$projectDir/build/tmp"
-        file("$projectDir/build/tmp/VERSION.txt").text = project.version
+        file("$projectDir/build/tmp/version.txt").text = project.version
     }
     into('json-schema') {
         from 'json-schema'
