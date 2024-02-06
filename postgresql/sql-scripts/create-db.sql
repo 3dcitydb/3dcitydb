@@ -31,6 +31,7 @@ SET client_min_messages TO WARNING;
 
 \set SRID :srid
 \set SRS_NAME :srs_name
+\set CHANGELOG :changelog
 
 --// check if the PostGIS extension is available
 SELECT postgis_lib_version() AS postgis_version;
@@ -71,6 +72,18 @@ CREATE SCHEMA citydb_pkg;
 
 --// update search_path on database level
 ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
+
+--// create changelog extension
+\echo
+SELECT 'citydb' AS schema_name;
+\gset
+
+SELECT CASE
+  WHEN upper(:'CHANGELOG') = 'YES' THEN 'changelog/create-db-extension.sql'
+  ELSE 'util/do-nothing.sql'
+  END AS create_changelog_extension;
+\gset
+\ir :create_changelog_extension;
 
 \echo
 \echo '3DCityDB creation complete.'

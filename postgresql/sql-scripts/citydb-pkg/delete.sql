@@ -106,7 +106,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_feature(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_feature($1);
@@ -122,7 +122,7 @@ $body$
 DECLARE
   deleted_id bigint;
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   deleted_id := citydb_pkg.delete_feature(ARRAY[pid]);
   RETURN deleted_id;
@@ -269,7 +269,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_property(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_property($1);
@@ -285,7 +285,7 @@ $body$
 DECLARE
   deleted_id bigint;
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   deleted_id := citydb_pkg.delete_property(ARRAY[pid]);
   RETURN deleted_id;
@@ -330,7 +330,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_geometry_data(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_geometry_data($1);
@@ -346,7 +346,7 @@ $body$
 DECLARE
   deleted_id bigint;
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   deleted_id := citydb_pkg.delete_geometry_data(ARRAY[pid]);
   RETURN deleted_id;
@@ -410,7 +410,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_implicit_geometry(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_implicit_geometry($1);
@@ -426,7 +426,7 @@ $body$
 DECLARE
   deleted_id bigint;
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   deleted_id := citydb_pkg.delete_implicit_geometry(ARRAY[pid]);
   RETURN deleted_id;
@@ -500,7 +500,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_appearance(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_appearance($1);
@@ -516,7 +516,7 @@ $body$
 DECLARE
   deleted_id bigint;
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   deleted_id := citydb_pkg.delete_appearance(ARRAY[pid]);
   RETURN deleted_id;
@@ -576,7 +576,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_surface_data(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_surface_data($1);
@@ -592,7 +592,7 @@ $body$
 DECLARE
   deleted_id bigint;
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   deleted_id := citydb_pkg.delete_surface_data(ARRAY[pid]);
   RETURN deleted_id;
@@ -637,7 +637,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_tex_image(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_tex_image($1);
@@ -653,7 +653,7 @@ $body$
 DECLARE
   deleted_id bigint;
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   deleted_id := citydb_pkg.delete_tex_image(ARRAY[pid]);
   RETURN deleted_id;
@@ -698,7 +698,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_address(bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_address($1);
@@ -714,7 +714,7 @@ $body$
 DECLARE
   deleted_id bigint;
 BEGIN
-  EXECUTE format('set search_path to %I', schema_name);
+  EXECUTE format('set search_path to %I, public', schema_name);
 
   deleted_id := citydb_pkg.del_address(ARRAY[pid]);
   RETURN deleted_id;
