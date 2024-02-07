@@ -2,9 +2,6 @@
 # Shell script to create an new new 3DCityDB schema
 # on PostgreSQL/PostGIS
 
-# Add PGBIN to PATH
-export PATH="$PGBIN:$PATH"
-
 # Get the current directory path of this script file
 CURRENT_DIR="$( cd "$( dirname "$0" )" && pwd )"
 if [ $# -ne 0 ]; then
@@ -16,6 +13,9 @@ else
 	  source "$CURRENT_DIR/connection-details.sh"
   fi
 fi
+
+# Add PGBIN to PATH
+export PATH="$PGBIN:$PATH"
 
 # Welcome message
 echo ' _______   ___ _ _        ___  ___ '

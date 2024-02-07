@@ -2,9 +2,6 @@
 :: Shell script to create an instance of the 3D City Database
 :: on PostgreSQL/PostGIS
 
-:: Add PGBIN to PATH
-set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
-
 :: Get the current directory path of this script file
 set CURRENT_DIR=%~dp0
 
@@ -18,6 +15,9 @@ if NOT [%1]==[] (
     call "%CURRENT_DIR%connection-details.bat"
   )
 )
+
+:: Add PGBIN to PATH
+set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
 
 :: Welcome message
 echo  _______   ___ _ _        ___  ___
