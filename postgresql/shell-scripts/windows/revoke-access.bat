@@ -2,14 +2,22 @@
 :: Shell script to revoke access privileges from a 3DCityDB schema
 :: on PostgreSQL/PostGIS
 
-:: read database connection details  
-call connection-details.bat
-
 :: add PGBIN to PATH
 set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
 
-:: cd to path of the shell script
-cd /d %~dp0
+:: Get the current directory path of this script file
+set CURRENT_DIR=%~dp0
+
+:: Read database connection details
+if NOT [%1]==[] (
+  call %1
+) else (
+  if exist connection-details.bat (
+    call connection-details.bat
+  ) else (
+    call "%CURRENT_DIR%connection-details.bat"
+  )
+)
 
 :: Welcome message
 echo  _______   ___ _ _        ___  ___
@@ -60,7 +68,7 @@ if /i not "%var%"=="" (
 :: List the 3DCityDB schemas granted to GRANTEE -------------------------------
 echo.
 echo Reading 3DCityDB schemas granted to "%GRANTEE%" from "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "util\list-schemas-with-access-grant.sql" -v username="%GRANTEE%"
+psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\util\list-schemas-with-access-grant.sql" -v username="%GRANTEE%"
 
 if errorlevel 1 (
   echo Failed to read 3DCityDB schemas from database.
@@ -78,6 +86,6 @@ if /i not "%var%"=="" set SCHEMA_NAME=%var%
 :: Run revoke-access.sql to revoke access privileges on a specific schema -----
 echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "revoke-access.sql" -v username="%GRANTEE%" -v schema_name="%SCHEMA_NAME%"
+psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\revoke-access.sql" -v username="%GRANTEE%" -v schema_name="%SCHEMA_NAME%"
 
 pause

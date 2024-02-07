@@ -2,14 +2,20 @@
 # Shell script to drop a schema from a 3DCityDB instance
 # on PostgreSQL/PostGIS
 
-# read database connection details 
-source connection-details.sh
-
-# add PGBIN to PATH
+# Add PGBIN to PATH
 export PATH="$PGBIN:$PATH"
 
-# cd to path of the shell script
-cd "$( cd "$( dirname "$0" )" && pwd )" > /dev/null
+# Get the current directory path of this script file
+CURRENT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+if [ $# -ne 0 ]; then
+  source "$1"
+else
+  if [ -f connection-details.sh ]; then
+	  source connection-details.sh
+  else
+	  source "$CURRENT_DIR/connection-details.sh"
+  fi
+fi
 
 # Welcome message
 echo ' _______   ___ _ _        ___  ___ '
@@ -37,13 +43,10 @@ echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
 echo '############################################################################'
 
-# cd to path of the SQL scripts
-cd ../../sql-scripts
-
 # List the existing 3DCityDB schemas ------------------------------------------
 echo
 echo "Reading 3DCityDB schemas from \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "util/list-schemas.sql"
+psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/util/list-schemas.sql"
 
 if [[ $? -ne 0 ]] ; then
   echo 'Failed to read 3DCityDB schemas from database.'
@@ -69,7 +72,7 @@ done;
 # Run drop-schema.sql to remove the selected 3DCityDB schema ------------------
 echo
 echo "Connecting to \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "drop-schema.sql" -v schema_name="$SCHEMA_NAME"
+psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/drop-schema.sql" -v schema_name="$SCHEMA_NAME"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'

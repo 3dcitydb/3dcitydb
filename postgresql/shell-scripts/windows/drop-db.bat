@@ -2,14 +2,22 @@
 :: Shell script to drop an instance of the 3D City Database
 :: on PostgreSQL/PostGIS
 
-:: read database connection details  
-call connection-details.bat
-
 :: add PGBIN to PATH
 set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
 
-:: cd to path of the shell script
-cd /d %~dp0
+:: Get the current directory path of this script file
+set CURRENT_DIR=%~dp0
+
+:: Read database connection details
+if NOT [%1]==[] (
+  call %1
+) else (
+  if exist connection-details.bat (
+    call connection-details.bat
+  ) else (
+    call "%CURRENT_DIR%connection-details.bat"
+  )
+)
 
 :: Welcome message
 echo  _______   ___ _ _        ___  ___
@@ -35,12 +43,9 @@ echo    https://github.com/3dcitydb/3dcitydb/issues
 echo.
 echo ################################################################################
 
-:: cd to path of the SQL scripts
-cd ..\..\sql-scripts
-
 REM Run drop-db.sql to drop the 3D City Database instance ---------------------
 echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "drop-db.sql"
+psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\drop-db.sql"
 
 pause
