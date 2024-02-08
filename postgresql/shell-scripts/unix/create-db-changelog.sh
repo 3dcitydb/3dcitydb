@@ -1,5 +1,5 @@
 #!/bin/bash
-# Shell script to drop the changelog extension of the 3DCityDB
+# Shell script to create a changelog extension of the 3DCityDB
 # on PostgreSQL/PostGIS
 
 # Get the current directory path of this script file
@@ -7,10 +7,10 @@ CURRENT_DIR="$( cd "$( dirname "$0" )" && pwd )"
 if [ $# -ne 0 ]; then
   source "$1"
 else
-  if [ -f ../connection-details.sh ]; then
-	  source ../connection-details.sh
+  if [ -f connection-details.sh ]; then
+	  source connection-details.sh
   else
-	  source "$CURRENT_DIR/../connection-details.sh"
+	  source "$CURRENT_DIR/connection-details.sh"
   fi
 fi
 
@@ -46,7 +46,7 @@ echo '##########################################################################
 # List the existing 3DCityDB schemas -------------------------------------
 echo
 echo "Reading 3DCityDB schemas from \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../../sql-scripts/util/list-schemas.sql"
+psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/util/list-schemas.sql"
 
 if [[ $? -ne 0 ]] ; then
   echo 'Failed to read schemas from database.'
@@ -57,14 +57,14 @@ fi
 
 # Prompt for schema name ------------------------------------------------------
 SCHEMA_NAME=citydb
-echo 'Please enter the name of the 3DCityDB schema from which the changelog extension will be removed.'
+echo 'Please enter the name of the 3DCityDB schema in which the changelog extension will be created.'
 read -p "(default SCHEMA_NAME=$SCHEMA_NAME): " var
 SCHEMA_NAME=${var:-$SCHEMA_NAME}
 
-# Run drop-db-extension.sql to drop the 3DCityDB changelog extension ---------------
+# Run create-db-extension.sql to create the 3DCityDB changelog extension ---------------
 echo
 echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../../sql-scripts/changelog/drop-db-extension.sql" -v schema_name="$SCHEMA_NAME"
+psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/create-db-changelog.sql" -v schema_name="$SCHEMA_NAME"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'

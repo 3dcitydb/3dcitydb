@@ -119,11 +119,12 @@ BEGIN
                                         $1, $2, $3, $4, $5, $6, $7, $8, $9', TG_TABLE_SCHEMA, TG_TABLE_SCHEMA)
             USING feature_id, objectclass_id, objectid, identifier, identifier_codespace, envelope, transaction_type, now(), user, reason_for_update;
 		END IF;
-	ELSE
+	ELSIF (transaction_type = 'UPDATE' AND OLD.last_modification_date <> NEW.last_modification_date) THEN
     FOR rec IN
       EXECUTE format('select feature_id from %I.property where val_feature_id = %L and val_relation_type = 1', TG_TABLE_SCHEMA, feature_id)
     LOOP
-      EXECUTE format('update %I.feature set last_modification_date = $1 where id = %L', TG_TABLE_SCHEMA, rec.feature_id) using NEW.last_modification_date;
+      EXECUTE format('update %I.feature set last_modification_date = $1, updating_person = $2, reason_for_update = $3
+            where id = $4', TG_TABLE_SCHEMA) using NEW.last_modification_date, NEW.updating_person, NEW.reason_for_update, rec.feature_id;
     END LOOP;
 	END IF;
 
