@@ -2,14 +2,22 @@
 :: Shell script to create an instance of the 3D City Database
 :: on PostgreSQL/PostGIS
 
-:: read database connection details  
-call connection-details.bat
+:: Get the current directory path of this script file
+set CURRENT_DIR=%~dp0
 
-:: add PGBIN to PATH
+:: Read database connection details
+if NOT [%1]==[] (
+  call %1
+) else (
+  if exist connection-details.bat (
+    call connection-details.bat
+  ) else (
+    call "%CURRENT_DIR%connection-details.bat"
+  )
+)
+
+:: Add PGBIN to PATH
 set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
-
-:: cd to path of the shell script
-cd /d %~dp0
 
 :: Welcome message
 echo  _______   ___ _ _        ___  ___
@@ -36,9 +44,6 @@ echo    Please file an issue here:
 echo    https://github.com/3dcitydb/3dcitydb/issues
 echo.
 echo ######################################################################################
-
-:: cd to path of the SQL scripts
-cd ..\..\sql-scripts
 
 :: Prompt for SRID ------------------------------------------------------------
 :srid
@@ -103,6 +108,6 @@ if /i not "%var%"=="" set SRS_NAME=%var%
 :: Run create-db.sql to create the 3D City Database instance ------------------
 echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "create-db.sql" -v srid="%SRID%" -v srs_name="%SRS_NAME%"
+psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\create-db.sql" -v srid="%SRID%" -v srs_name="%SRS_NAME%"
 
 pause

@@ -2,14 +2,22 @@
 :: Shell script to grant access privileges to a 3DCityDB schema
 :: on PostgreSQL/PostGIS
 
-:: read database connection details  
-call connection-details.bat
+:: Get the current directory path of this script file
+set CURRENT_DIR=%~dp0
 
-:: add PGBIN to PATH
+:: Read database connection details
+if NOT [%1]==[] (
+  call %1
+) else (
+  if exist connection-details.bat (
+    call connection-details.bat
+  ) else (
+    call "%CURRENT_DIR%connection-details.bat"
+  )
+)
+
+:: Add PGBIN to PATH
 set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
-
-:: cd to path of the shell script
-cd /d %~dp0
 
 :: Welcome message
 echo  _______   ___ _ _        ___  ___
@@ -39,9 +47,6 @@ echo    https://github.com/3dcitydb/3dcitydb/issues
 echo.
 echo ####################################################################################
 
-:: cd to path of the SQL scripts
-cd ..\..\sql-scripts
-
 :: Prompt for GRANTEE ---------------------------------------------------------
 :grantee
 set var=
@@ -60,7 +65,7 @@ if /i not "%var%"=="" (
 :: List the existing 3DCityDB schemas -----------------------------------------
 echo.
 echo Reading 3DCityDB schemas from "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "util\list-schemas.sql"
+psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\util\list-schemas.sql"
 
 if errorlevel 1 (
   echo Failed to read 3DCityDB schemas from database.
@@ -100,6 +105,6 @@ if "%res%"=="f" (
 :: Run grant-access.sql to grant access privileges on a specific schema -------
 echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "grant-access.sql" -v username="%GRANTEE%" -v schema_name="%SCHEMA_NAME%" -v access_mode="%ACCESS_MODE%"
+psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\grant-access.sql" -v username="%GRANTEE%" -v schema_name="%SCHEMA_NAME%" -v access_mode="%ACCESS_MODE%"
 
 pause
