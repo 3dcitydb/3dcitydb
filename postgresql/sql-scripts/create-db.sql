@@ -79,7 +79,7 @@ SELECT 'citydb' AS schema_name;
 \gset
 
 SELECT CASE
-  WHEN upper(:'CHANGELOG') = 'YES' THEN 'create-db-changelog.sql'
+  WHEN upper(:'CHANGELOG') = 'YES' THEN 'create-changelog.sql'
   ELSE 'util/do-nothing.sql'
   END AS create_changelog_extension;
 \gset

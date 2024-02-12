@@ -30,8 +30,8 @@ echo 3D City Database - The Open Source CityGML Database
 echo.
 echo ######################################################################################
 echo.
-echo Welcome to the 3DCityDB Setup Script. This script will guide you through the process
-echo of setting up a 3DCityDB instance. Please follow the instructions of the script.
+echo This script will guide you through the process of dropping the changelog extension
+echo for an existing 3DCityDB instance. Please follow the instructions of the script.
 echo Enter the required parameters when prompted and press ENTER to confirm.
 echo Just press ENTER to use the default values.
 echo.
@@ -45,10 +45,10 @@ echo    https://github.com/3dcitydb/3dcitydb/issues
 echo.
 echo ######################################################################################
 
-:: List the existing 3DCityDB schemas ------------------------------------
+:: List the existing 3DCityDB schemas with changelog ------------------------------------
 echo.
 echo Reading 3DCityDB schemas "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\util\list-schemas.sql"
+psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\util\list-schemas-with-changelog.sql"
 
 if errorlevel 1 (
   echo Failed to read schemas from database.

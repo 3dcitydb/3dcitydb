@@ -28,9 +28,9 @@ echo '3D City Database - The Open Source CityGML Database'
 echo
 echo '######################################################################################'
 echo
-echo 'Welcome to the 3DCityDB Setup Script. This script will guide you through the process'
-echo 'of setting up a 3DCityDB instance. Please follow the instructions of the script.'
-echo 'Enter the required parameters when prompted and press ENTER to confirm.'
+echo 'This script will guide you through the process of creating the changelog extension'
+echo 'for an existing 3DCitDB instance. Please follow the instructions of the script.'
+echo 'Enter the required parameters when prompted and press ENTER to confirm'
 echo 'Just press ENTER to use the default values.'
 echo
 echo 'Documentation and help:'
@@ -43,10 +43,10 @@ echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
 echo '######################################################################################'
 
-# List the existing 3DCityDB schemas -------------------------------------
+# List the existing 3DCityDB schemas without changelog -------------------------------------
 echo
 echo "Reading 3DCityDB schemas from \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/util/list-schemas.sql"
+psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/util/list-schemas-without-changelog.sql"
 
 if [[ $? -ne 0 ]] ; then
   echo 'Failed to read schemas from database.'
@@ -64,7 +64,7 @@ SCHEMA_NAME=${var:-$SCHEMA_NAME}
 # Run create-db-extension.sql to create the 3DCityDB changelog extension ---------------
 echo
 echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/create-db-changelog.sql" -v schema_name="$SCHEMA_NAME"
+psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/create-changelog.sql" -v schema_name="$SCHEMA_NAME"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'
