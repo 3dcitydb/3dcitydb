@@ -29,7 +29,7 @@ echo
 echo '######################################################################################'
 echo
 echo 'This script will guide you through the process of creating the changelog extension'
-echo 'for an existing 3DCitDB instance. Please follow the instructions of the script.'
+echo 'for an existing 3DCityDB instance. Please follow the instructions of the script.'
 echo 'Enter the required parameters when prompted and press ENTER to confirm'
 echo 'Just press ENTER to use the default values.'
 echo
