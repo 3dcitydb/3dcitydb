@@ -43,10 +43,10 @@ echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
 echo '######################################################################################'
 
-# List the existing 3DCityDB schemas without changelog -------------------------------------
+# List the existing 3DCityDB schemas -------------------------------------
 echo
 echo "Reading 3DCityDB schemas from \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/util/list-schemas-without-changelog.sql"
+psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/util/list-schemas-with-changelog.sql"
 
 if [[ $? -ne 0 ]] ; then
   echo 'Failed to read schemas from database.'
