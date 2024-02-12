@@ -86,10 +86,28 @@ echo 'Please enter the corresponding SRS name to be used in exports.'
 read -p "(default SRS_NAME=$SRS_NAME): " var
 SRS_NAME=${var:-$SRS_NAME}
 
+# Prompt for CHANGELOG ---------------------------------------------------------
+while [ 1 ]; do
+  echo
+  echo "Shall the changelog extension be created (yes/no)?"
+  read -p "(default CHANGELOG=no): " CHANGELOG
+  CHANGELOG=${CHANGELOG:-no}
+
+  # to lower case
+  CHANGELOG=$(echo "$CHANGELOG" | awk '{print tolower($0)}')
+
+  if [ "$CHANGELOG" = "yes" ] || [ "$CHANGELOG" = "no" ] ; then
+    break;
+  else
+    echo
+    echo "Illegal input! Enter yes or no."
+  fi
+done
+
 # Run create-db.sql to create the 3D City Database instance -------------------
 echo
 echo "Connecting to \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/create-db.sql" -v srid="$SRID" -v srs_name="$SRS_NAME"
+psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/create-db.sql" -v srid="$SRID" -v srs_name="$SRS_NAME" -v changelog="$CHANGELOG"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'

@@ -105,9 +105,31 @@ set /p var="(default SRS_NAME=%SRS_NAME%): "
 
 if /i not "%var%"=="" set SRS_NAME=%var%
 
+:: Prompt for CHANGELOG ------------------------------------------------------
+:changelog
+set var=
+echo.
+echo Shall the changelog extension be created (yes/no)?
+set /p var="(default CHANGELOG=no): "
+
+if /i not "%var%"=="" (
+  set CHANGELOG=%var%
+) else (
+  set CHANGELOG=no
+)
+
+set res=f
+if /i "%CHANGELOG%"=="no" (set res=t)
+if /i "%CHANGELOG%"=="yes" (set res=t)
+if "%res%"=="f" (
+  echo.
+  echo Illegal input! Enter yes or no.
+  goto changelog
+)
+
 :: Run create-db.sql to create the 3D City Database instance ------------------
 echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\create-db.sql" -v srid="%SRID%" -v srs_name="%SRS_NAME%"
+psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\create-db.sql" -v srid="%SRID%" -v srs_name="%SRS_NAME%" -v changelog="%CHANGELOG%"
 
 pause
