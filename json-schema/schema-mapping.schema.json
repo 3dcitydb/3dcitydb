@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://3dcitydb.org/json-schema/5.0/schemaMapping.schema.json",
   "title": "3DCityDB 5.0 schema mapping",
   "description": "JSON schema for the 3DCityDB 5.0 schema mapping.",
@@ -101,81 +101,73 @@
       ]
     },
     "value": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "column": {
-          "type": "string"
-        },
-        "type": {
-          "$ref": "#/$defs/simpleType"
-        },
-        "schema": {
-          "type": "object"
-        },
-        "property": {
-          "type": "integer",
-          "minimum": 0
-        }
-      },
       "oneOf": [
         {
+          "type": "object",
+          "additionalProperties": false,
           "required": [
             "column",
             "type"
           ],
           "properties": {
+            "column": {
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/$defs/simpleType"
+            },
+            "schema": {
+              "type": "object"
+            },
             "property": false
           }
         },
         {
+          "type": "object",
+          "additionalProperties": false,
           "required": [
             "property"
           ],
           "properties": {
+            "property": {
+              "type": "integer",
+              "minimum": 0
+            },
             "column": false,
             "type": false,
             "schema": false
-          }
-        },
-        {
-          "properties": {
-            "column": false,
-            "type": false,
-            "schema": false,
-            "property": false
           }
         }
       ]
     },
     "valueOrTypeRef": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "$ref": "#/$defs/value"
-        },
-        "type": {
-          "type": "string"
-        }
-      },
       "oneOf": [
         {
+          "type": "object",
           "required": [
             "value"
           ],
           "properties": {
+            "value": {
+              "$ref": "#/$defs/value"
+            },
             "type": false
           }
         },
         {
+          "type": "object",
           "required": [
             "type"
           ],
           "properties": {
+            "type": {
+              "type": "string"
+            },
             "value": false
           }
         },
         {
+          "type": "object",
           "properties": {
             "value": false,
             "type": false
@@ -224,33 +216,33 @@
       }
     },
     "joinOrJoinTable": {
-      "type": "object",
-      "properties": {
-        "join": {
-          "$ref": "#/$defs/join"
-        },
-        "joinTable": {
-          "$ref": "#/$defs/joinTable"
-        }
-      },
       "oneOf": [
         {
+          "type": "object",
           "required": [
             "join"
           ],
           "properties": {
+            "join": {
+              "$ref": "#/$defs/join"
+            },
             "joinTable": false
           }
         },
         {
+          "type": "object",
           "required": [
             "joinTable"
           ],
           "properties": {
+            "joinTable": {
+              "$ref": "#/$defs/joinTable"
+            },
             "join": false
           }
         },
         {
+          "type": "object",
           "properties": {
             "join": false,
             "joinTable": false

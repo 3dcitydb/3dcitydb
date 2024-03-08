@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://3dcitydb.org/json-schema/5.0/worldToTextureMapping.schema.json",
   "title": "3DCityDB 5.0 world-to-texture mapping schema",
   "description": "Schema for the JSON column world_to_texture_mapping of the surface_data_mapping table.",
