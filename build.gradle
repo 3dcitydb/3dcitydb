@@ -10,7 +10,8 @@ plugins {
 version '5.0.0-alpha.4'
 
 distributions.main.contents {
-    def types = readJsonTypes('schema-mapping')
+    def featureTypes = readJsonTypes('schema-mapping/feature-types')
+    def dataTypes = readJsonTypes('schema-mapping/data-types')
     filteringCharset = 'UTF-8'
 
     from 'LICENSE'
@@ -25,10 +26,10 @@ distributions.main.contents {
     into('postgresql') {
         from 'postgresql' exclude 'db-schema'
         filesMatching('**/datatype-instances.sql') {
-            filter { String line -> replaceTokens(line, types) }
+            filter { String line -> replaceTokens(line, dataTypes) }
         }
         filesMatching('**/objectclass-instances.sql') {
-            filter { String line -> replaceTokens(line, types) }
+            filter { String line -> replaceTokens(line, featureTypes) }
         }
     }
 }
