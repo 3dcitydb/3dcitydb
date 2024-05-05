@@ -20,7 +20,8 @@
     {
       "name": "pointCloud",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "core:AbstractPointCloud"
     }
   ]
 }

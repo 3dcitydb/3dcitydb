@@ -6,6 +6,7 @@
       "name": "groupMember",
       "namespace": "http://3dcitydb.org/3dcitydb/cityobjectgroup/5.0",
       "type": "core:FeatureProperty",
+      "target": "core:AbstractCityObject",
       "join": {
         "table": "property",
         "fromColumn": "parent_id",

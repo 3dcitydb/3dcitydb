@@ -5,17 +5,20 @@
     {
       "name": "cityObjectMember",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "core:AbstractCityObject"
     },
     {
       "name": "versionMember",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "core:AbstractVersion"
     },
     {
       "name": "versionTransitionMember",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "core:AbstractVersionTransition"
     },
     {
       "name": "appearanceMember",

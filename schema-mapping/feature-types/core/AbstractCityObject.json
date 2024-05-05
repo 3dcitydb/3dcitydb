@@ -10,7 +10,8 @@
     {
       "name": "generalizesTo",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "core:AbstractCityObject"
     },
     {
       "name": "relativeToTerrain",
@@ -25,7 +26,8 @@
     {
       "name": "relatedTo",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "core:AbstractCityObject"
     },
     {
       "name": "appearance",
@@ -35,7 +37,8 @@
     {
       "name": "dynamizer",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "core:AbstractDynamizer"
     }
   ]
 }

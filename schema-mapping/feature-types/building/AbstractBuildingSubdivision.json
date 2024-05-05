@@ -30,22 +30,26 @@
     {
       "name": "buildingConstructiveElement",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "bldg:BuildingConstructiveElement"
     },
     {
       "name": "buildingFurniture",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "bldg:BuildingFurniture"
     },
     {
       "name": "buildingInstallation",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "bldg:BuildingInstallation"
     },
     {
       "name": "buildingRoom",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "bldg:BuildingRoom"
     }
   ]
 }

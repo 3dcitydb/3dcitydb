@@ -20,12 +20,14 @@
     {
       "name": "section",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "tran:Section"
     },
     {
       "name": "intersection",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "tran:Intersection"
     }
   ]
 }

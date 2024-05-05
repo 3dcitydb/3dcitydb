@@ -20,12 +20,14 @@
     {
       "name": "bridgeFurniture",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "brid:BridgeFurniture"
     },
     {
       "name": "bridgeInstallation",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "brid:BridgeInstallation"
     },
     {
       "name": "lod4Solid",

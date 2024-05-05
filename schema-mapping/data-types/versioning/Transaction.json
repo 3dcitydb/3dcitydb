@@ -16,6 +16,7 @@
       "name": "oldFeature",
       "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
       "type": "core:FeatureProperty",
+      "target": "core:AbstractFeatureWithLifespan",
       "join": {
         "table": "property",
         "fromColumn": "parent_id",
@@ -26,6 +27,7 @@
       "name": "newFeature",
       "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
       "type": "core:FeatureProperty",
+      "target": "core:AbstractFeatureWithLifespan",
       "join": {
         "table": "property",
         "fromColumn": "parent_id",

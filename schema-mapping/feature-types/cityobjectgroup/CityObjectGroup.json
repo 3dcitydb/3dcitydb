@@ -25,7 +25,8 @@
     {
       "name": "parent",
       "namespace": "http://3dcitydb.org/3dcitydb/cityobjectgroup/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "core:AbstractCityObject"
     },
     {
       "name": "geometry",
