@@ -9,7 +9,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
       - name: Install Ajv JSON schema validator
         run: npm install -g ajv-cli
       - name: Validate schema mapping
