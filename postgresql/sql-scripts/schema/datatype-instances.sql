@@ -69,13 +69,13 @@ INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCH
 VALUES (22, null, 'StringOrRef', 0, 1, @core:StringOrRef@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (23, null, 'ADEOfAbstractAppearance', 1, 1, @core:ADEOfAbstractAppearance@);
+VALUES (23, null, 'ADEOfAbstractCityObject', 1, 1, @core:ADEOfAbstractCityObject@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (24, null, 'ADEOfAbstractCityObject', 1, 1, @core:ADEOfAbstractCityObject@);
+VALUES (24, null, 'ADEOfAbstractDynamizer', 1, 1, @core:ADEOfAbstractDynamizer@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (25, null, 'ADEOfAbstractDynamizer', 1, 1, @core:ADEOfAbstractDynamizer@);
+VALUES (25, null, 'ADEOfAbstractFeature', 1, 1, @core:ADEOfAbstractFeature@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
 VALUES (26, null, 'ADEOfAbstractFeatureWithLifespan', 1, 1, @core:ADEOfAbstractFeatureWithLifespan@);
@@ -111,16 +111,10 @@ INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCH
 VALUES (36, null, 'ADEOfAbstractVersionTransition', 1, 1, @core:ADEOfAbstractVersionTransition@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (37, null, 'ADEOfAddress', 1, 1, @core:ADEOfAddress@);
+VALUES (37, null, 'ADEOfCityModel', 1, 1, @core:ADEOfCityModel@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (38, null, 'ADEOfCityModel', 1, 1, @core:ADEOfCityModel@);
-
-INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (39, null, 'ADEOfClosureSurface', 1, 1, @core:ADEOfClosureSurface@);
-
-INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (40, null, 'ADEOfImplicitGeometry', 1, 1, @core:ADEOfImplicitGeometry@);
+VALUES (38, null, 'ADEOfClosureSurface', 1, 1, @core:ADEOfClosureSurface@);
 
 -- Dynamizer Module --
 
@@ -184,7 +178,7 @@ VALUES (400, null, 'ADEOfPointCloud', 1, 5, @pcl:ADEOfPointCloud@);
 -- Relief Module --
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (500, null, 'ADEOfPointCloud', 1, 6, @dem:ADEOfAbstractReliefComponent@);
+VALUES (500, null, 'ADEOfAbstractReliefComponent', 1, 6, @dem:ADEOfAbstractReliefComponent@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
 VALUES (501, null, 'ADEOfBreaklineRelief', 1, 6, @dem:ADEOfBreaklineRelief@);
@@ -386,7 +380,7 @@ INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCH
 VALUES (1000, null, 'ADEOfAbstractBridge', 1, 11, @brid:ADEOfAbstractBridge@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (1001, null, 'ADEOfBridge', 1, 11, @bridADEOfBridge@);
+VALUES (1001, null, 'ADEOfBridge', 1, 11, @brid:ADEOfBridge@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
 VALUES (1002, null, 'ADEOfBridgeConstructiveElement', 1, 11, @brid:ADEOfBridgeConstructiveElement@);
@@ -402,26 +396,6 @@ VALUES (1005, null, 'ADEOfBridgePart', 1, 11, @brid:ADEOfBridgePart@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
 VALUES (1006, null, 'ADEOfBridgeRoom', 1, 11, @brid:ADEOfBridgeRoom@);
-
--- Appearance Module --
-
-INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (1100, null, 'ADEOfAbstractSurfaceData', 1, 12, @app:ADEOfAbstractSurfaceData@);
-
-INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (1101, null, 'ADEOfAbstractTexture', 1, 12, @app:ADEOfAbstractTexture@);
-
-INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (1102, null, 'ADEOfAppearance', 1, 12, @app:ADEOfAppearance@);
-
-INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (1103, null, 'ADEOfGeoreferencedTexture', 1, 12, @app:ADEOfGeoreferencedTexture@);
-
-INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (1104, null, 'ADEOfParameterizedTexture', 1, 12, @app:ADEOfParameterizedTexture@);
-
-INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (1105, null, 'ADEOfX3DMaterial', 1, 12, @app:ADEOfX3DMaterial@);
 
 -- CityObjectGroup Module --
 
@@ -471,4 +445,3 @@ VALUES (1503, null, 'ADEOfWaterSurface', 1, 16, @wtr:ADEOfWaterSurface@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
 VALUES (1600, null, 'ADEOfCityFurniture', 1, 17, @frn:ADEOfCityFurniture@);
-
