@@ -8,7 +8,7 @@
     "conditions": [
       {
         "column": "objectclass_id",
-        "value": "${target.objectclass_id}",
+        "value": "@target.objectclass_id@",
         "type": "integer"
       }
     ]

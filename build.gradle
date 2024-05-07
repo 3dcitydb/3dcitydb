@@ -1,6 +1,7 @@
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
+import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 plugins {
@@ -55,6 +56,6 @@ static def replaceTokens(String text, Map values, String defaultValue = 'null',
     Pattern.compile(beginToken + "(.*?)" + endToken, Pattern.MULTILINE)
             .matcher(text)
             .replaceAll(matcher -> values[matcher.group(1)] ?
-                    beginReplacement + values[matcher.group(1)] + endReplacement :
+                    Matcher.quoteReplacement(beginReplacement + values[matcher.group(1)] + endReplacement) :
                     defaultValue)
 }
