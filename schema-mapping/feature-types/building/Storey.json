@@ -5,7 +5,8 @@
     {
       "name": "buildingUnit",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "bldg:BuildingUnit"
     }
   ]
 }

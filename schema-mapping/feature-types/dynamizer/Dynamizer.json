@@ -20,7 +20,8 @@
     {
       "name": "dynamicData",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "dyn:AbstractTimeseries"
     },
     {
       "name": "sensorConnection",

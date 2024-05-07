@@ -15,22 +15,26 @@
     {
       "name": "trafficSpace",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "tran:TrafficSpace"
     },
     {
       "name": "auxiliaryTrafficSpace",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "tran:AuxiliaryTrafficSpace"
     },
     {
       "name": "hole",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "tran:Hole"
     },
     {
       "name": "marking",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "tran:Marking"
     },
     {
       "name": "lod1MultiSurface",

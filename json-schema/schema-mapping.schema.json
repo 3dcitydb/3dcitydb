@@ -151,7 +151,8 @@
             "value": {
               "$ref": "#/$defs/value"
             },
-            "type": false
+            "type": false,
+            "target": false
           }
         },
         {
@@ -161,6 +162,26 @@
           ],
           "properties": {
             "type": {
+              "type": "string",
+              "not": {
+                "const": "core:FeatureProperty"
+              }
+            },
+            "value": false,
+            "target": false
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "target"
+          ],
+          "properties": {
+            "type": {
+              "const": "core:FeatureProperty"
+            },
+            "target": {
               "type": "string"
             },
             "value": false
@@ -170,7 +191,8 @@
           "type": "object",
           "properties": {
             "value": false,
-            "type": false
+            "type": false,
+            "target": false
           }
         }
       ]

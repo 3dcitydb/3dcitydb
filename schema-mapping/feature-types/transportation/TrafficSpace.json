@@ -35,17 +35,20 @@
     {
       "name": "predecessor",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "tran:TrafficSpace"
     },
     {
       "name": "successor",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "tran:TrafficSpace"
     },
     {
       "name": "clearanceSpace",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
-      "type": "core:FeatureProperty"
+      "type": "core:FeatureProperty",
+      "target": "tran:ClearanceSpace"
     }
   ]
 }
