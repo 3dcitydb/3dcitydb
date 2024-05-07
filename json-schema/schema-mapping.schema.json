@@ -211,6 +211,32 @@
         },
         "toColumn": {
           "type": "string"
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/joinCondition"
+          }
+        }
+      }
+    },
+    "joinCondition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "column",
+        "value",
+        "type"
+      ],
+      "properties": {
+        "column": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/$defs/simpleType"
         }
       }
     },

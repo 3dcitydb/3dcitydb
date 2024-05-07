@@ -88,7 +88,14 @@
         "targetJoin": {
           "table": "surface_data",
           "fromColumn": "surface_data_id",
-          "toColumn": "id"
+          "toColumn": "id",
+          "conditions": [
+            {
+              "column": "objectclass_id",
+              "value": "${target.objectclass_id}",
+              "type": "integer"
+            }
+          ]
         }
       }
     }
