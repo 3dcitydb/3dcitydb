@@ -16,11 +16,6 @@
       "name": "usage",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
       "type": "core:Code"
-    },
-    {
-      "name": "address",
-      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
-      "type": "core:AddressProperty"
     }
   ]
 }
