@@ -20,27 +20,32 @@
     {
       "name": "lod1Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:AbstractGeometry"
     },
     {
       "name": "lod2Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:AbstractGeometry"
     },
     {
       "name": "lod3Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:AbstractGeometry"
     },
     {
       "name": "lod4Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:AbstractGeometry"
     },
     {
       "name": "lod4TerrainIntersectionCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiLineString"
     },
     {
       "name": "lod4ImplicitRepresentation",

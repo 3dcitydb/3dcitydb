@@ -5,17 +5,20 @@
     {
       "name": "lod1TerrainIntersectionCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiLineString"
     },
     {
       "name": "lod2TerrainIntersectionCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiLineString"
     },
     {
       "name": "lod3TerrainIntersectionCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiLineString"
     },
     {
       "name": "pointCloud",

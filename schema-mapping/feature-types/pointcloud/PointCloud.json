@@ -20,7 +20,8 @@
     {
       "name": "points",
       "namespace": "http://3dcitydb.org/3dcitydb/pointcloud/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiPoint"
     }
   ]
 }

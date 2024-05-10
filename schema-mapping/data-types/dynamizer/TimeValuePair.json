@@ -46,6 +46,7 @@
       "name": "geometryValue",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "type": "core:GeometryProperty",
+      "target": "core:AbstractGeometry",
       "join": {
         "table": "property",
         "fromColumn": "parent_id",

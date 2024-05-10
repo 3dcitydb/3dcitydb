@@ -75,37 +75,44 @@
     {
       "name": "address",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
-      "type": "core:AddressProperty"
+      "type": "core:AddressProperty",
+      "target": "core:Address"
     },
     {
       "name": "lod0RoofEdge",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiSurface"
     },
     {
       "name": "lod1MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiSurface"
     },
     {
       "name": "lod4MultiCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiLineString"
     },
     {
       "name": "lod4MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiSurface"
     },
     {
       "name": "lod4Solid",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:AbstractSolid"
     },
     {
       "name": "lod4TerrainIntersectionCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiLineString"
     }
   ]
 }

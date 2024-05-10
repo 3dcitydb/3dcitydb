@@ -7,7 +7,7 @@
       "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
       "value": {
         "column": "gt_reference_point",
-        "type": "geometry"
+        "type": "core:Point"
       }
     }
   ]

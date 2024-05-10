@@ -31,7 +31,8 @@
     {
       "name": "geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:AbstractGeometry"
     }
   ]
 }

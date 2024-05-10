@@ -161,11 +161,16 @@
             "type": {
               "type": "string",
               "not": {
-                "const": "core:FeatureProperty"
+                "enum": [
+                  "core:FeatureProperty",
+                  "core:GeometryProperty"
+                ]
               }
             },
-            "value": false,
-            "target": false
+            "target": {
+              "type": "string"
+            },
+            "value": false
           }
         },
         {
@@ -186,10 +191,28 @@
         },
         {
           "type": "object",
+          "required": [
+            "type",
+            "target"
+          ],
+          "properties": {
+            "type": {
+              "const": "core:GeometryProperty"
+            },
+            "target": {
+              "$ref": "#/$defs/geometryTypes"
+            },
+            "value": false
+          }
+        },
+        {
+          "type": "object",
           "properties": {
             "value": false,
             "type": false,
-            "target": false
+            "target": {
+              "type": "string"
+            }
           }
         }
       ]
@@ -297,19 +320,45 @@
     },
     "simpleType": {
       "type": "string",
+      "oneOf": [
+        {
+          "enum": [
+            "boolean",
+            "integer",
+            "double",
+            "string",
+            "uri",
+            "timestamp",
+            "array",
+            "booleanArray",
+            "integerArray",
+            "doubleArray",
+            "stringArray"
+          ]
+        },
+        {
+          "$ref": "#/$defs/geometryTypes"
+        }
+      ]
+    },
+    "geometryTypes": {
+      "type": "string",
       "enum": [
-        "boolean",
-        "integer",
-        "double",
-        "string",
-        "uri",
-        "timestamp",
-        "array",
-        "booleanArray",
-        "integerArray",
-        "doubleArray",
-        "stringArray",
-        "geometry"
+        "core:AbstractGeometry",
+        "core:AbstractSurface",
+        "core:AbstractSolid",
+        "core:Envelope",
+        "core:Point",
+        "core:MultiPoint",
+        "core:LineString",
+        "core:MultiLineString",
+        "core:Polygon",
+        "core:CompositeSurface",
+        "core:TriangulatedSurface",
+        "core:MultiSurface",
+        "core:Solid",
+        "core:CompositeSolid",
+        "core:MultiSolid"
       ]
     }
   }
