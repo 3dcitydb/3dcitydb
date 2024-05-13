@@ -75,8 +75,7 @@
     {
       "name": "address",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
-      "type": "core:AddressProperty",
-      "target": "core:Address"
+      "type": "core:AddressProperty"
     },
     {
       "name": "lod0RoofEdge",

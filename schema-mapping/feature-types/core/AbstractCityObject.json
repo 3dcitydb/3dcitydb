@@ -32,8 +32,7 @@
     {
       "name": "appearance",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:AppearanceProperty",
-      "target": "app:Appearance"
+      "type": "core:AppearanceProperty"
     },
     {
       "name": "dynamizer",
