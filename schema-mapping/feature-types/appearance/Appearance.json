@@ -78,6 +78,7 @@
     {
       "name": "surfaceData",
       "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "target": "app:AbstractSurfaceData",
       "joinTable": {
         "table": "appear_to_surface_data",
         "sourceJoin": {

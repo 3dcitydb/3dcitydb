@@ -5,7 +5,8 @@
     {
       "name": "reliefPoints",
       "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiPoint"
     },
     {
       "name": "pointCloud",

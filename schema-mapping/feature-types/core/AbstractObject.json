@@ -32,7 +32,7 @@
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "value": {
         "column": "envelope",
-        "type": "geometry"
+        "type": "core:Envelope"
       }
     },
     {

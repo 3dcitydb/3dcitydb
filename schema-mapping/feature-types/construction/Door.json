@@ -20,7 +20,8 @@
     {
       "name": "address",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
-      "type": "core:AddressProperty"
+      "type": "core:AddressProperty",
+      "target": "core:Address"
     }
   ]
 }

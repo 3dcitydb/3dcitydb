@@ -32,12 +32,14 @@
     {
       "name": "lod4Solid",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:AbstractSolid"
     },
     {
       "name": "lod4MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiSurface"
     }
   ]
 }

@@ -35,32 +35,38 @@
     {
       "name": "lod1MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiSurface"
     },
     {
       "name": "lod4MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiSurface"
     },
     {
       "name": "lod1MultiSolid",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiSolid"
     },
     {
       "name": "lod2MultiSolid",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiSolid"
     },
     {
       "name": "lod3MultiSolid",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiSolid"
     },
     {
       "name": "lod4MultiSolid",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiSolid"
     }
   ]
 }

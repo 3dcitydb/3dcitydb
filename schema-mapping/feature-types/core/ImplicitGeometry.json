@@ -38,6 +38,7 @@
     {
       "name": "relativeGeometry",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "target": "core:AbstractGeometry",
       "join": {
         "table": "geometry_data",
         "fromColumn": "relative_geometry_id",

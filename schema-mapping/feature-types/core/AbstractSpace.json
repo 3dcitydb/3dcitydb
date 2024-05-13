@@ -26,52 +26,62 @@
     {
       "name": "lod0Point",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:Point"
     },
     {
       "name": "lod0MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiSurface"
     },
     {
       "name": "lod0MultiCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiLineString"
     },
     {
       "name": "lod1Solid",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:AbstractSolid"
     },
     {
       "name": "lod2Solid",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:AbstractSolid"
     },
     {
       "name": "lod2MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiSurface"
     },
     {
       "name": "lod2MultiCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiLineString"
     },
     {
       "name": "lod3Solid",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:AbstractSolid"
     },
     {
       "name": "lod3MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiSurface"
     },
     {
       "name": "lod3MultiCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:GeometryProperty"
+      "type": "core:GeometryProperty",
+      "target": "core:MultiLineString"
     }
   ]
 }

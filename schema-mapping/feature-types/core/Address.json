@@ -88,7 +88,7 @@
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "value": {
         "column": "multi_point",
-        "type": "geometry"
+        "type": "core:MultiPoint"
       }
     }
   ]

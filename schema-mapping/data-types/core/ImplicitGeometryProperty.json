@@ -15,7 +15,7 @@
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "value": {
         "column": "val_implicitgeom_refpoint",
-        "type": "geometry"
+        "type": "core:Point"
       }
     }
   ],
