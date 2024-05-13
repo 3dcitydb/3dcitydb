@@ -111,7 +111,7 @@
               "type": "string"
             },
             "type": {
-              "$ref": "#/$defs/simpleType"
+              "$ref": "#/$defs/columnType"
             },
             "schema": {
               "type": "object"
@@ -200,7 +200,7 @@
               "const": "core:GeometryProperty"
             },
             "target": {
-              "$ref": "#/$defs/geometryTypes"
+              "$ref": "#/$defs/geometryType"
             },
             "value": false
           }
@@ -259,7 +259,7 @@
           "type": "string"
         },
         "type": {
-          "$ref": "#/$defs/simpleType"
+          "$ref": "#/$defs/columnType"
         }
       }
     },
@@ -320,28 +320,21 @@
     },
     "simpleType": {
       "type": "string",
-      "oneOf": [
-        {
-          "enum": [
-            "boolean",
-            "integer",
-            "double",
-            "string",
-            "uri",
-            "timestamp",
-            "array",
-            "booleanArray",
-            "integerArray",
-            "doubleArray",
-            "stringArray"
-          ]
-        },
-        {
-          "$ref": "#/$defs/geometryTypes"
-        }
+      "enum": [
+        "boolean",
+        "integer",
+        "double",
+        "string",
+        "uri",
+        "timestamp",
+        "array",
+        "booleanArray",
+        "integerArray",
+        "doubleArray",
+        "stringArray"
       ]
     },
-    "geometryTypes": {
+    "geometryType": {
       "type": "string",
       "enum": [
         "core:AbstractGeometry",
@@ -359,6 +352,16 @@
         "core:Solid",
         "core:CompositeSolid",
         "core:MultiSolid"
+      ]
+    },
+    "columnType": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/simpleType"
+        },
+        {
+          "$ref": "#/$defs/geometryType"
+        }
       ]
     }
   }
