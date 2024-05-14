@@ -8,8 +8,8 @@
       "type": "core:Integer",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     },
     {
@@ -18,8 +18,8 @@
       "type": "core:String",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     },
     {
@@ -29,8 +29,8 @@
       "target": "dyn:AbstractTimeseries",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     }
   ]

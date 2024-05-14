@@ -11,8 +11,8 @@
       "type": "core:Code",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     },
     {
@@ -21,8 +21,8 @@
       "type": "core:Timestamp",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     },
     {
@@ -31,8 +31,8 @@
       "type": "core:String",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     }
   ]

@@ -259,7 +259,7 @@
           "type": "string"
         },
         "type": {
-          "$ref": "#/$defs/columnType"
+          "$ref": "#/$defs/simpleType"
         }
       }
     },

@@ -8,8 +8,8 @@
       "type": "core:Timestamp",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     },
     {
@@ -18,8 +18,8 @@
       "type": "core:Integer",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     },
     {
@@ -28,8 +28,8 @@
       "type": "core:Double",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     },
     {
@@ -38,8 +38,8 @@
       "type": "core:String",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     },
     {
@@ -49,8 +49,8 @@
       "target": "core:AbstractGeometry",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     },
     {
@@ -59,8 +59,8 @@
       "type": "core:URI",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     },
     {
@@ -69,8 +69,8 @@
       "type": "core:Boolean",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     },
     {
@@ -79,8 +79,8 @@
       "type": "core:ImplicitGeometryProperty",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     },
     {
@@ -89,8 +89,8 @@
       "type": "core:AppearanceProperty",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     }
   ]

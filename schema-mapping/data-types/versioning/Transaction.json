@@ -8,8 +8,8 @@
       "type": "core:String",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     },
     {
@@ -19,8 +19,8 @@
       "target": "core:AbstractFeatureWithLifespan",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     },
     {
@@ -30,8 +30,8 @@
       "target": "core:AbstractFeatureWithLifespan",
       "join": {
         "table": "property",
-        "fromColumn": "parent_id",
-        "toColumn": "id"
+        "fromColumn": "id",
+        "toColumn": "parent_id"
       }
     }
   ]
