@@ -83,8 +83,8 @@
         "table": "appear_to_surface_data",
         "sourceJoin": {
           "table": "appearance",
-          "fromColumn": "appearance_id",
-          "toColumn": "id"
+          "fromColumn": "id",
+          "toColumn": "appearance_id"
         },
         "targetJoin": {
           "table": "surface_data",
