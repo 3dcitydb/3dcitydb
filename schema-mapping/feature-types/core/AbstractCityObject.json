@@ -26,8 +26,7 @@
     {
       "name": "relatedTo",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "type": "core:FeatureProperty",
-      "target": "core:AbstractCityObject"
+      "type": "core:CityObjectRelation"
     },
     {
       "name": "appearance",
