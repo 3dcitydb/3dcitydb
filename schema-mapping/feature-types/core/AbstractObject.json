@@ -6,6 +6,14 @@
       "name": "id",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "value": {
+        "column": "id",
+        "type": "integer"
+      }
+    },
+    {
+      "name": "objectId",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "value": {
         "column": "objectid",
         "type": "string"
       }
