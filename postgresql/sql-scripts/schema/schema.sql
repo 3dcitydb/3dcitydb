@@ -22,7 +22,7 @@ CREATE SEQUENCE surface_data_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE
 
 CREATE SEQUENCE tex_image_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
 
-CREATE  TABLE address (
+CREATE  TABLE address ( 
 	id                   bigint DEFAULT nextval('address_seq'::regclass) NOT NULL  ,
 	objectid             text    ,
 	identifier           text    ,
@@ -41,7 +41,7 @@ CREATE  TABLE address (
 	CONSTRAINT address_pk PRIMARY KEY ( id )
  );
 
-CREATE  TABLE ade (
+CREATE  TABLE ade ( 
 	id                   integer DEFAULT nextval('ade_seq'::regclass) NOT NULL  ,
 	name                 text  NOT NULL  ,
 	description          text    ,
@@ -49,7 +49,7 @@ CREATE  TABLE ade (
 	CONSTRAINT ade_pk PRIMARY KEY ( id )
  );
 
-CREATE  TABLE codelist (
+CREATE  TABLE codelist ( 
 	id                   bigint DEFAULT nextval('codelist_seq'::regclass) NOT NULL  ,
 	codelist_type        text    ,
 	url                  text    ,
@@ -59,7 +59,7 @@ CREATE  TABLE codelist (
 
 CREATE INDEX codelist_codelist_type_inx ON codelist  ( codelist_type );
 
-CREATE  TABLE codelist_entry (
+CREATE  TABLE codelist_entry ( 
 	id                   bigint DEFAULT nextval('codelist_entry_seq'::regclass) NOT NULL  ,
 	codelist_id          bigint  NOT NULL  ,
 	code                 text    ,
@@ -69,13 +69,13 @@ CREATE  TABLE codelist_entry (
 
 CREATE INDEX codelist_entry_codelist_fkx ON codelist_entry  ( codelist_id );
 
-CREATE  TABLE database_srs (
+CREATE  TABLE database_srs ( 
 	srid                 integer  NOT NULL  ,
 	srs_name             text    ,
 	CONSTRAINT database_srs_pk PRIMARY KEY ( srid )
  );
 
-CREATE  TABLE feature (
+CREATE  TABLE feature ( 
 	id                   bigint DEFAULT nextval('feature_seq'::regclass) NOT NULL  ,
 	objectclass_id       integer  NOT NULL  ,
 	objectid             text    ,
@@ -109,7 +109,7 @@ CREATE INDEX feature_valid_from_inx ON feature  ( valid_from );
 
 CREATE INDEX feature_valid_to_inx ON feature  ( valid_to );
 
-CREATE  TABLE geometry_data (
+CREATE  TABLE geometry_data ( 
 	id                   bigint DEFAULT nextval('geometry_data_seq'::regclass) NOT NULL  ,
 	geometry             geometry(GEOMETRYZ)    ,
 	implicit_geometry    geometry(GEOMETRYZ)    ,
@@ -122,7 +122,7 @@ CREATE INDEX geometry_data_feature_fkx ON geometry_data  ( feature_id );
 
 CREATE INDEX geometry_data_spx ON geometry_data USING GiST ( geometry );
 
-CREATE  TABLE implicit_geometry (
+CREATE  TABLE implicit_geometry ( 
 	id                   bigint DEFAULT nextval('implicit_geometry_seq'::regclass) NOT NULL  ,
 	objectid             text    ,
 	mime_type            text    ,
@@ -137,7 +137,7 @@ CREATE INDEX implicit_geometry_fkx ON implicit_geometry  ( relative_geometry_id 
 
 CREATE INDEX implicit_geometry_objectid_inx ON implicit_geometry  ( objectid );
 
-CREATE  TABLE namespace (
+CREATE  TABLE namespace ( 
 	id                   integer  NOT NULL  ,
 	"alias"              text    ,
 	namespace            text    ,
@@ -145,7 +145,7 @@ CREATE  TABLE namespace (
 	CONSTRAINT namespace_pk PRIMARY KEY ( id )
  );
 
-CREATE  TABLE objectclass (
+CREATE  TABLE objectclass ( 
 	id                   integer  NOT NULL  ,
 	superclass_id        integer    ,
 	classname            text    ,
@@ -159,7 +159,7 @@ CREATE  TABLE objectclass (
 
 CREATE INDEX objectclass_superclass_fkx ON objectclass  ( superclass_id );
 
-CREATE  TABLE tex_image (
+CREATE  TABLE tex_image ( 
 	id                   bigint DEFAULT nextval('tex_image_seq'::regclass) NOT NULL  ,
 	image_uri            text    ,
 	image_data           bytea    ,
@@ -168,7 +168,7 @@ CREATE  TABLE tex_image (
 	CONSTRAINT tex_image_pk PRIMARY KEY ( id )
  );
 
-CREATE  TABLE appearance (
+CREATE  TABLE appearance ( 
 	id                   bigint DEFAULT nextval('appearance_seq'::regclass) NOT NULL  ,
 	objectid             text    ,
 	identifier           text    ,
@@ -188,7 +188,7 @@ CREATE INDEX appearance_feature_fkx ON appearance  ( feature_id );
 
 CREATE INDEX appearance_implicit_geom_fkx ON appearance  ( implicit_geometry_id );
 
-CREATE  TABLE datatype (
+CREATE  TABLE datatype ( 
 	id                   integer  NOT NULL  ,
 	supertype_id         integer    ,
 	typename             text    ,
@@ -201,7 +201,7 @@ CREATE  TABLE datatype (
 
 CREATE INDEX datatype_supertype_fkx ON datatype  ( supertype_id );
 
-CREATE  TABLE property (
+CREATE  TABLE property ( 
 	id                   bigint DEFAULT nextval('property_seq'::regclass) NOT NULL  ,
 	feature_id           bigint    ,
 	parent_id            bigint    ,
@@ -263,7 +263,7 @@ CREATE INDEX property_val_address_fkx ON property  ( val_address_id );
 
 CREATE INDEX property_name_inx ON property  ( name );
 
-CREATE  TABLE surface_data (
+CREATE  TABLE surface_data ( 
 	id                   bigint DEFAULT nextval('surface_data_seq'::regclass) NOT NULL  ,
 	objectid             text    ,
 	identifier           text    ,
@@ -290,7 +290,7 @@ CREATE INDEX surface_data_tex_image_fkx ON surface_data  ( tex_image_id );
 
 CREATE INDEX surface_data_objclass_fkx ON surface_data  ( objectclass_id );
 
-CREATE  TABLE surface_data_mapping (
+CREATE  TABLE surface_data_mapping ( 
 	surface_data_id      bigint  NOT NULL  ,
 	geometry_data_id     bigint  NOT NULL  ,
 	material_mapping     json    ,
@@ -304,7 +304,7 @@ CREATE INDEX surface_data_mapping_fkx1 ON surface_data_mapping  ( geometry_data_
 
 CREATE INDEX surface_data_mapping_fkx2 ON surface_data_mapping  ( surface_data_id );
 
-CREATE  TABLE appear_to_surface_data (
+CREATE  TABLE appear_to_surface_data ( 
 	id                   bigint DEFAULT nextval('appear_to_surface_data_seq'::regclass) NOT NULL  ,
 	appearance_id        bigint  NOT NULL  ,
 	surface_data_id      bigint    ,
@@ -357,10 +357,9 @@ ALTER TABLE property ADD CONSTRAINT property_val_geometry_fk FOREIGN KEY ( val_g
 
 ALTER TABLE property ADD CONSTRAINT property_val_address_fk FOREIGN KEY ( val_address_id ) REFERENCES address( id ) ON DELETE CASCADE;
 
-ALTER TABLE surface_data ADD CONSTRAINT surface_data_objclass_fk FOREIGN KEY ( objectclass_id ) REFERENCES objectclass( id ) ON DELETE SET NULL;
-
 ALTER TABLE surface_data ADD CONSTRAINT surface_data_tex_image_fk FOREIGN KEY ( tex_image_id ) REFERENCES tex_image( id ) ON DELETE SET NULL;
 
 ALTER TABLE surface_data_mapping ADD CONSTRAINT surface_data_mapping_fk1 FOREIGN KEY ( geometry_data_id ) REFERENCES geometry_data( id ) ON DELETE CASCADE;
 
 ALTER TABLE surface_data_mapping ADD CONSTRAINT surface_data_mapping_fk2 FOREIGN KEY ( surface_data_id ) REFERENCES surface_data( id ) ON DELETE CASCADE;
+
