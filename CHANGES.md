@@ -1,5 +1,13 @@
 Change Log
 ==========
+
+### Unreleased - 2024-09-08
+
+#### Additions
+* Added PostgreSQL 16 and PostGIS 3.4 support for Docker images. [#207](https://github.com/3dcitydb/3dcitydb/pull/207)
+* Publish images to Github container registry in addition to Dockerhub. [#207](https://github.com/3dcitydb/3dcitydb/pull/207)
+* Sunset Docker images that reached end of life (Postgres <= v10). [#207](https://github.com/3dcitydb/3dcitydb/pull/207)
+
 ### 4.4.0 - 2022-12-15
 
 ##### Additions
@@ -44,10 +52,10 @@ Change Log
 ### 4.1.0 - 2021-04-28
 
 ##### Additions
-* Added support for running the 3D City Database in a Docker container. This work is based on the previous 
+* Added support for running the 3D City Database in a Docker container. This work is based on the previous
   developments from TUM GIS at https://github.com/tum-gis/3dcitydb-docker-postgis, which have been moved to the 3DCityDB
   GitHub repository. Kudos to TUM GIS for this great contribution. [#54](https://github.com/3dcitydb/3dcitydb/pull/54)
-* The `IS_XLINK` column of the `SURFACE_GEOMETRY` table can now take the values 0, 1, and 2 to be able to 
+* The `IS_XLINK` column of the `SURFACE_GEOMETRY` table can now take the values 0, 1, and 2 to be able to
   distinguish between geometry references across top-level features (`IS_XLINK` = 1) and references within the same
   top-level feature (`IS_XLINK` = 2). This information helps to substantially increase the performance of CityGML
   exports in case mainly local references are used (which is true for most real-world CityGML datasets). The
@@ -64,22 +72,22 @@ Change Log
 ##### Fixes
 * PostgreSQL: fixed a bug in the SQL script `GRANT_ACCESS.sql` which fails when the database, user, or schema name contains an uppercase letter.
 * PostgreSQL: fixed a bug in the SQL script `REVOKE_ACCESS.sql` which fails when the GRANTEE name contains an uppercase letter.
-* Fixed a bug in the shell (UNIX, macOS) script `MIGRATE_DB.sh` which fails when migrating a 3DCityDB instance from v2 to v4. 
+* Fixed a bug in the shell (UNIX, macOS) script `MIGRATE_DB.sh` which fails when migrating a 3DCityDB instance from v2 to v4.
 * PostgreSQL: Fixed a bug in the SQL script `CONSTRAINT.sql`which causes an error when running the upgrade script on multiple 3DCityDB schemas. [#41](https://github.com/3dcitydb/3dcitydb/pull/41)
 * PostgreSQL: Added existence check of the `postgis_raster` extension which is required by the 3DCityDB when using PostGIS 3 or higher.
 
 ##### Additions
 * Added indexes on the columns `CREATION_DATE`, `TERMINATION_DATE` and `LAST_MODIFICATION_DATE` in the CITYOBJECT table.
 
-##### Miscellaneous 
+##### Miscellaneous
 * Removed the `Documentation` folder. Instead, the 3DCityDB documentation is now maintained in a separate Github repository [here](https://github.com/3dcitydb/3dcitydb-docs).
-* Renamed the `Oracle` and `PostgreSQL` folders to lowercase. 
+* Renamed the `Oracle` and `PostgreSQL` folders to lowercase.
 * Automated creation of release packages using Gradle as build system.
 
 ### 4.0.2 - 2019-08-06
 
 ##### Fixes
-* Oracle: Fixed `sdo2geojson3d` function to correctly format coordinate values. 
+* Oracle: Fixed `sdo2geojson3d` function to correctly format coordinate values.
 * PostgreSQL: Fixed a bug in the `V3_to_V4` migration script where the `citydb` prefix should not be used.
 
 ##### Additions
@@ -99,10 +107,10 @@ Change Log
   - Aligned `DELETE` API under Oracle and PostgreSQL (no more `_pre` and `_post` methods).
   - Two delete endpoints are provided for each feature class: Delete by single ID value or delete by a set of IDs.
   - All 1:n references are deleted right away. Replaced all explicit cleanup scripts (except for `cleanup_appearances`) with one generic cleanup function.
-* Added `OBJECTCLASS_ID` column to all feature tables to distinguish CityGML core features from features defined in a CityGML ADE. 
+* Added `OBJECTCLASS_ID` column to all feature tables to distinguish CityGML core features from features defined in a CityGML ADE.
 * Added `NOT NULL` constraints on each OBJECTCLASS_ID column.
 * Augmented `OBJECTCLASS` table with more feature-specific columns and added new entries for missing core features.
-* Improved performance of stored procedures by reducing amount of dynamic SQL. 
+* Improved performance of stored procedures by reducing amount of dynamic SQL.
   - `schema_name` parameter has been removed from `DELETE` and `ENVELOPE` scripts.
   - Under PostgreSQL these scripts (as well as the `INDEX_TABLE`) are now part of a data schema (e.g. `citydb`).
 * Removed the `CITYDB_DELETE_BY_LINEAGE` package. The only function left is `del_cityobjects_by_lineage` which is now part of the `DELETE` package.
@@ -123,7 +131,7 @@ Change Log
 ##### Additions
 * New metadata tables `ADE`, `SCHEMA`, `SCHEMA_REFERENCING` and `SCHEMA_TO_OBJECTCLASS` for registering CityGML ADEs.
 * New prefilled metadata table `AGGREGATION_INFO` that supports the automatic generation of `DELETE` and `ENVELOPE` scripts.
-* Added batch (Windows) and shell (UNIX, macOS) scripts for interactively setting up or dropping a 3DCityDB instance of both PostgreSQL and Oracle. The new shell scripts provide improved user dialogs. 
+* Added batch (Windows) and shell (UNIX, macOS) scripts for interactively setting up or dropping a 3DCityDB instance of both PostgreSQL and Oracle. The new shell scripts provide improved user dialogs.
 * Function `objectclass_id_to_table_name` now has a counterpart: `table_name_to_objectclass_ids` returning an array of objectclass ids (`CITYDB_OBJCLASS` package in Oracle, part of a data schema in PostgreSQL).
 * New database procedures to enable/disable foreign key constraints to speed up bulk write operations (`CITYDB_CONSTRAINT` package in Oracle, part of the `citydb_pkg` schema in PostgreSQL).
 * New SQL script to create additional 3DCityDB data schemas in one database (PostgreSQL).
@@ -143,5 +151,5 @@ Change Log
 * Fixed envelope calculation for ReliefFeature. [#36](https://github.com/3dcitydb/3dcitydb/issues/36)
 * Fixed `CREATE_DB` error due to disabled GeoRaster support under Oracle Spatial 12.1.0.2. [#10](https://github.com/3dcitydb/3dcitydb/issues/10)
 
-##### Miscellaneous 
+##### Miscellaneous
 * [3DCityDB Docker images](https://github.com/tum-gis/3dcitydb-docker-postgis) are now available for a range of 3DCityDB versions to support continuous integration workflows.
