@@ -168,7 +168,7 @@ DECLARE
   rec RECORD;
 BEGIN
   FOR rec IN
-    SELECT table_name FROM information_schema.tables where table_schema = 'citydb'
+    SELECT table_name FROM information_schema.tables WHERE table_schema = 'citydb' AND table_type = 'BASE TABLE'
     AND table_name <> 'database_srs'
     AND table_name <> 'objectclass'
     AND table_name <> 'index_table'
@@ -183,7 +183,7 @@ BEGIN
   END LOOP;
 
   FOR rec IN 
-    SELECT sequence_name FROM information_schema.sequences where sequence_schema = 'citydb'
+    SELECT sequence_name FROM information_schema.sequences WHERE sequence_schema = 'citydb'
     AND sequence_name <> 'ade_seq'
     AND sequence_name <> 'schema_seq'
   LOOP
