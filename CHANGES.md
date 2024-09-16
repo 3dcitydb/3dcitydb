@@ -1,39 +1,43 @@
 Change Log
 ==========
 
-### Unreleased - 2024-09-08
+### 4.4.1 - tba
 
-#### Additions
+#### Changes
 * Added PostgreSQL 16 and PostGIS 3.4 support for Docker images. [#207](https://github.com/3dcitydb/3dcitydb/pull/207)
-* Publish images to Github container registry in addition to Dockerhub. [#207](https://github.com/3dcitydb/3dcitydb/pull/207)
+* Publish images to GitHub container registry in addition to Dockerhub. [#207](https://github.com/3dcitydb/3dcitydb/pull/207)
 * Sunset Docker images that reached end of life (Postgres <= v10). [#207](https://github.com/3dcitydb/3dcitydb/pull/207)
+
+#### Fixes
+* Fixed error in `cleanup_schema` function when schema contains user-defined views. [#48](https://github.com/3dcitydb/3dcitydb/issues/48),
+  [#236](https://github.com/3dcitydb/3dcitydb/pull/236)
 
 ### 4.4.0 - 2022-12-15
 
-##### Additions
+#### Additions
 * Added support for PolarDB/Ganos database. [#134](https://github.com/3dcitydb/3dcitydb/pull/134)
 * Added PostgreSQL 15 and PostGIS 3.3 support for Docker images. [#152](https://github.com/3dcitydb/3dcitydb/pull/152)
 
-##### Changes
+#### Changes
 * Updated system requirements for Oracle (>= 19c), PostgreSQL(>= 11), and PostGIS(>= 2.5). [#154](https://github.com/3dcitydb/3dcitydb/pull/154), [#155](https://github.com/3dcitydb/3dcitydb/pull/155)
 * Changed the default PORT value (e.g. `1521`) in the `CONNECTION_DETAILS` files to a token text (e.g. `your_db_port(e.g. 1521)`).
 
-##### Fixes
+#### Fixes
 * Fixed missing `ON DELETE CASCADE` referential action for the foreign keys in the table `GENERALIZATION`, which causes errors when calling the `del_cityobject` function.
 
 ### 4.3.0 - 2022-05-23
 
-##### Changes
+#### Changes
 * PostgreSQL: Run `VACUUM ANALYZE` after DB migration or upgrade. [#87](https://github.com/3dcitydb/3dcitydb/pull/87)
 * PostgreSQL: The `VACUUM_SPATIAL_COLUMNS.sql` has been simplified and now also works for ADE tables. [#77](https://github.com/3dcitydb/3dcitydb/pull/77)
 * Added two new columns `GMLID` and `GMLID_CODESPACE` to the `IMPLICIT_GEOMETRY` table. [#79](https://github.com/3dcitydb/3dcitydb/pull/79)
 
-##### Fixes
+#### Fixes
 * PostgreSQL: Fixed DB Upgrade from an earlier version (< 4.2) in case the citydb schema contains a user-defined view. [#82](https://github.com/3dcitydb/3dcitydb/issues/82)
 
 ### 4.2.0 - 2021-10-08
 
-##### Changes
+#### Changes
 * PostgreSQL: Changed all primary key columns to use 64-bit `bigint` as data type instead of 32-bit `integer`.
   This change increases the maximum value of primary keys and, thus, the number of city objects and
   surface geometries that can be stored in the database. Foreign key columns as well as affected database
@@ -42,7 +46,7 @@ Change Log
     includes ADE schemas that have been registered with a 3DCityDB instance.
   * This change *does not affect* 3DCityDB instances running on Oracle.
 
-##### Fixes
+#### Fixes
 * PostgreSQL: Fixed `change_schema_srid` function to avoid inconsistencies in the database schema when the new SRID
   matches the old one. [#67](https://github.com/3dcitydb/3dcitydb/issues/67), [#68](https://github.com/3dcitydb/3dcitydb/pull/68)
 * PostgreSQL: Fixed `get_index` function.
@@ -51,7 +55,7 @@ Change Log
 
 ### 4.1.0 - 2021-04-28
 
-##### Additions
+#### Additions
 * Added support for running the 3D City Database in a Docker container. This work is based on the previous
   developments from TUM GIS at https://github.com/tum-gis/3dcitydb-docker-postgis, which have been moved to the 3DCityDB
   GitHub repository. Kudos to TUM GIS for this great contribution. [#54](https://github.com/3dcitydb/3dcitydb/pull/54)
@@ -61,7 +65,7 @@ Change Log
   exports in case mainly local references are used (which is true for most real-world CityGML datasets). The
   Importer/Exporter version 4.3.0 fully supports this change. [importer-exporter #159](https://github.com/3dcitydb/importer-exporter/pull/159)
 
-##### Fixes
+#### Fixes
 * PostgreSQL: Fixed a bug in `GRANT_ACCESS.sql`, which may cause the CityGML export to fail due to insufficient privileges
   when using a read-only user. [importer-exporter #167](https://github.com/3dcitydb/importer-exporter/issues/167)
 * Oracle: Fixed a bug in `GRANT_ACCESS.sql`, where database views are not taken into account while granting users access.
@@ -69,38 +73,38 @@ Change Log
 
 ### 4.0.3 - 2020-04-06
 
-##### Fixes
+#### Fixes
 * PostgreSQL: fixed a bug in the SQL script `GRANT_ACCESS.sql` which fails when the database, user, or schema name contains an uppercase letter.
 * PostgreSQL: fixed a bug in the SQL script `REVOKE_ACCESS.sql` which fails when the GRANTEE name contains an uppercase letter.
 * Fixed a bug in the shell (UNIX, macOS) script `MIGRATE_DB.sh` which fails when migrating a 3DCityDB instance from v2 to v4.
 * PostgreSQL: Fixed a bug in the SQL script `CONSTRAINT.sql`which causes an error when running the upgrade script on multiple 3DCityDB schemas. [#41](https://github.com/3dcitydb/3dcitydb/pull/41)
 * PostgreSQL: Added existence check of the `postgis_raster` extension which is required by the 3DCityDB when using PostGIS 3 or higher.
 
-##### Additions
+#### Additions
 * Added indexes on the columns `CREATION_DATE`, `TERMINATION_DATE` and `LAST_MODIFICATION_DATE` in the CITYOBJECT table.
 
-##### Miscellaneous
+#### Miscellaneous
 * Removed the `Documentation` folder. Instead, the 3DCityDB documentation is now maintained in a separate Github repository [here](https://github.com/3dcitydb/3dcitydb-docs).
 * Renamed the `Oracle` and `PostgreSQL` folders to lowercase.
 * Automated creation of release packages using Gradle as build system.
 
 ### 4.0.2 - 2019-08-06
 
-##### Fixes
+#### Fixes
 * Oracle: Fixed `sdo2geojson3d` function to correctly format coordinate values.
 * PostgreSQL: Fixed a bug in the `V3_to_V4` migration script where the `citydb` prefix should not be used.
 
-##### Additions
+#### Additions
 * Added upgrade scripts for upgrading or migrating to the latest 3dcitydb version.
 
 ### 4.0.1 - 2019-01-09
 
-##### Fixes
+#### Fixes
 * Fixed a bug in the `V3_to_V4` migration script when updating a 3DCityDB v3.0.0 instance to v4.0. The previous version of the migration script missed to add the `GMLID_CODESPACE` column to some feature tables. _Note:_ There is no need to take any action if you have set up the 3DCityDB v4.0 using the `CREATE_DB` scripts or if you have updated from v3.1.0 or higher.
 
 ### 4.0 - 2018-09-18
 
-##### Breaking Changes
+#### Breaking Changes
 * New packages `CITYDB_CONSTRAINT` and `CITYDB_OBJCLASS`.
 * Removed user prompts from SQL scripts for setting up or dropping 3DCityDB instances to better support automation workflows.
 * `DELETE` and `ENVELOPE` are now generated automatically in order to deal with schema changes introduced by ADEs. The function prefix has been shortened to `del_` and `env_` to avoid exceeding the character limit under Oracle.
@@ -128,7 +132,7 @@ Change Log
   - Oracle: Moved versioning scripts to their own directory in the `UTIL` folder.
   - Oracle: Renamed `CREATE_DB` folder in `UTIL` directory to `HINTS`.
 
-##### Additions
+#### Additions
 * New metadata tables `ADE`, `SCHEMA`, `SCHEMA_REFERENCING` and `SCHEMA_TO_OBJECTCLASS` for registering CityGML ADEs.
 * New prefilled metadata table `AGGREGATION_INFO` that supports the automatic generation of `DELETE` and `ENVELOPE` scripts.
 * Added batch (Windows) and shell (UNIX, macOS) scripts for interactively setting up or dropping a 3DCityDB instance of both PostgreSQL and Oracle. The new shell scripts provide improved user dialogs.
@@ -147,9 +151,9 @@ Change Log
 * Oracle: Do not delete spatial metadata when spatial index is not valid.
 * Oracle: Added schema_name parameter to `get_dim` function.
 
-##### Fixes
+#### Fixes
 * Fixed envelope calculation for ReliefFeature. [#36](https://github.com/3dcitydb/3dcitydb/issues/36)
 * Fixed `CREATE_DB` error due to disabled GeoRaster support under Oracle Spatial 12.1.0.2. [#10](https://github.com/3dcitydb/3dcitydb/issues/10)
 
-##### Miscellaneous
+#### Miscellaneous
 * [3DCityDB Docker images](https://github.com/tum-gis/3dcitydb-docker-postgis) are now available for a range of 3DCityDB versions to support continuous integration workflows.
