@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-### 4.4.1 - tba
+### 4.4.1 - 2024-09-19
 
 #### Changes
 * Added PostgreSQL 16 and PostGIS 3.4 support for Docker images. [#207](https://github.com/3dcitydb/3dcitydb/pull/207)
