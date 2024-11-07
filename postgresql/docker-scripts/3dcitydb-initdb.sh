@@ -44,6 +44,13 @@ else
   fi
 fi
 
+# CHANGELOG ------------------------------------------------------------------
+if [ -z ${CHANGELOG+x} ]; then
+  CHANGELOG="no"
+else
+  CHANGELOG="$CHANGELOG"
+fi
+
 # Add PostGIS raster extension ------------------------------------------------
 # Get major version from POSTGIS_VERSION, POSTGIS_MAJOR may return string
 postgis_major=$( echo $POSTGIS_VERSION | cut -f1 -d '.' )
@@ -74,7 +81,7 @@ echo
 echo "Setting up 3DCityDB database schema in database '$POSTGRES_DB' ..."
 
 "${psql[@]}" -d "$POSTGRES_DB" -f "create-db.sql" \
-  -v srid="$SRID" -v srs_name="$SRS_NAME" > /dev/null
+  -v srid="$SRID" -v srs_name="$SRS_NAME" -v changelog="$CHANGELOG" > /dev/null
 
 echo "Setting up 3DCityDB database schema in database '$POSTGRES_DB' ...done!"
 
@@ -90,12 +97,13 @@ cat <<EOF
 # 3DCityDB ---------------------------------------------------------------------
 #   https://github.com/3dcitydb/3dcitydb
 #
-#   3DCityDB version  $CITYDBVERSION
-#   DBNAME            $POSTGRES_DB
-#   SRID              $SRID
-#   SRSNAME           $SRS_NAME
-#   HEIGHT_EPSG       $HEIGHT_EPSG
-#   SFCGAL enabled    $SFCGAL
+#   3DCityDB version      $CITYDBVERSION
+#   DBNAME                $POSTGRES_DB
+#   SRID                  $SRID
+#   SRSNAME               $SRS_NAME
+#   HEIGHT_EPSG           $HEIGHT_EPSG
+#   SFCGAL enabled        $SFCGAL
+#   CHANGELOG enabled     $CHANGELOG
 #
 # Maintainer -------------------------------------------------------------------
 #   Bruno Willenborg
