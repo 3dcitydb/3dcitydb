@@ -233,35 +233,35 @@ CREATE INDEX property_feature_fkx ON property  ( feature_id );
 
 CREATE INDEX property_parent_fkx ON property  ( parent_id );
 
-CREATE INDEX property_val_feature_fkx ON property  ( val_feature_id );
-
-CREATE INDEX property_val_string_inx ON property  ( val_string );
-
-CREATE INDEX property_val_uom_inx ON property  ( val_uom );
-
-CREATE INDEX property_val_uri_inx ON property  ( val_uri );
-
-CREATE INDEX property_val_lod_inx ON property  ( val_lod );
-
-CREATE INDEX property_val_int_inx ON property  ( val_int );
-
-CREATE INDEX property_val_double_inx ON property  ( val_double );
-
-CREATE INDEX property_val_date_inx ON property  ( val_timestamp );
-
-CREATE INDEX property_val_geometry_fkx ON property  ( val_geometry_id );
-
-CREATE INDEX property_val_implicitgeom_fkx ON property  ( val_implicitgeom_id );
-
-CREATE INDEX property_val_appearance_fkx ON property  ( val_appearance_id );
-
 CREATE INDEX property_namespace_inx ON property  ( namespace_id );
 
-CREATE INDEX property_val_relation_type_inx ON property  ( val_relation_type );
-
-CREATE INDEX property_val_address_fkx ON property  ( val_address_id );
-
 CREATE INDEX property_name_inx ON property  ( name );
+
+CREATE INDEX property_val_feature_fkx ON property  ( val_feature_id ) WHERE val_feature_id IS NOT NULL;
+
+CREATE INDEX property_val_string_inx ON property  ( val_string ) WHERE val_string IS NOT NULL;
+
+CREATE INDEX property_val_uom_inx ON property  ( val_uom ) WHERE val_uom IS NOT NULL;
+
+CREATE INDEX property_val_uri_inx ON property  ( val_uri ) WHERE val_uri IS NOT NULL;
+
+CREATE INDEX property_val_lod_inx ON property  ( val_lod ) WHERE val_lod IS NOT NULL;
+
+CREATE INDEX property_val_int_inx ON property  ( val_int ) WHERE val_int IS NOT NULL;
+
+CREATE INDEX property_val_double_inx ON property  ( val_double ) WHERE val_double IS NOT NULL;
+
+CREATE INDEX property_val_date_inx ON property  ( val_timestamp ) WHERE val_timestamp IS NOT NULL;
+
+CREATE INDEX property_val_geometry_fkx ON property  ( val_geometry_id ) WHERE val_geometry_id IS NOT NULL;
+
+CREATE INDEX property_val_implicitgeom_fkx ON property  ( val_implicitgeom_id ) WHERE val_implicitgeom_id IS NOT NULL;
+
+CREATE INDEX property_val_appearance_fkx ON property  ( val_appearance_id ) WHERE val_appearance_id IS NOT NULL;
+
+CREATE INDEX property_val_relation_type_inx ON property  ( val_relation_type ) WHERE val_relation_type IS NOT NULL;
+
+CREATE INDEX property_val_address_fkx ON property  ( val_address_id ) WHERE val_address_id IS NOT NULL;
 
 CREATE  TABLE surface_data ( 
 	id                   bigint DEFAULT nextval('surface_data_seq'::regclass) NOT NULL  ,
