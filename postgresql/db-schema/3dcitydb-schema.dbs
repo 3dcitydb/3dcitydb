@@ -64,10 +64,6 @@
 			<column name="identifier" type="text" length="256" jt="12" />
 			<column name="identifier_codespace" type="text" length="256" jt="12" />
 			<column name="theme" type="text" length="256" jt="12" />
-			<column name="creation_date" type="timestamptz" jt="93" />
-			<column name="termination_date" type="timestamptz" jt="93" />
-			<column name="valid_from" type="timestamptz" jt="93" />
-			<column name="valid_to" type="timestamptz" jt="93" />
 			<column name="is_global" type="numeric" jt="2" />
 			<column name="feature_id" prior="cityobject_id" type="bigint" jt="-5" />
 			<column name="implicit_geometry_id" type="bigint" jt="-5" />
@@ -467,7 +463,7 @@
 		<comment><![CDATA[3DCityDB]]></comment>
 		<entity schema="citydb" name="address" color="F4DDBE" x="48" y="368" />
 		<entity schema="citydb" name="ade" color="BEBEF4" x="304" y="720" />
-		<entity schema="citydb" name="appear_to_surface_data" color="F4BEC7" x="800" y="560" />
+		<entity schema="citydb" name="appear_to_surface_data" color="F4BEC7" x="800" y="528" />
 		<entity schema="citydb" name="appearance" color="F4BEC7" x="768" y="304" />
 		<entity schema="citydb" name="codelist" color="F4DDBE" x="768" y="880" />
 		<entity schema="citydb" name="codelist_entry" color="F4DDBE" x="1216" y="880" />
@@ -500,10 +496,10 @@
 		</group>
 		<group name="Appearance" color="FFCCFF" >
 			<entity schema="citydb" name="surface_data" />
-			<entity schema="citydb" name="appear_to_surface_data" />
-			<entity schema="citydb" name="appearance" />
 			<entity schema="citydb" name="tex_image" />
 			<entity schema="citydb" name="surface_data_mapping" />
+			<entity schema="citydb" name="appearance" />
+			<entity schema="citydb" name="appear_to_surface_data" />
 		</group>
 		<group name="Codelist" color="C4E0F9" >
 			<entity schema="citydb" name="codelist" />
