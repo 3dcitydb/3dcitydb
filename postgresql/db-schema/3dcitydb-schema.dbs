@@ -463,7 +463,7 @@
 		<comment><![CDATA[3DCityDB]]></comment>
 		<entity schema="citydb" name="address" color="F4DDBE" x="48" y="368" />
 		<entity schema="citydb" name="ade" color="BEBEF4" x="304" y="720" />
-		<entity schema="citydb" name="appear_to_surface_data" color="F4BEC7" x="800" y="528" />
+		<entity schema="citydb" name="appear_to_surface_data" color="F4BEC7" x="784" y="528" />
 		<entity schema="citydb" name="appearance" color="F4BEC7" x="768" y="304" />
 		<entity schema="citydb" name="codelist" color="F4DDBE" x="768" y="880" />
 		<entity schema="citydb" name="codelist_entry" color="F4DDBE" x="1216" y="880" />
@@ -477,7 +477,7 @@
 		<entity schema="citydb" name="property" color="F4DDBE" x="352" y="80" />
 		<entity schema="citydb" name="surface_data" color="F4BEC7" x="1088" y="464" />
 		<entity schema="citydb" name="surface_data_mapping" color="F4BEC7" x="1088" y="304" />
-		<entity schema="citydb" name="tex_image" color="F4BEC7" x="784" y="672" />
+		<entity schema="citydb" name="tex_image" color="F4BEC7" x="768" y="672" />
 		<group name="Geometry" color="EEF7EC" >
 			<entity schema="citydb" name="geometry_data" />
 			<entity schema="citydb" name="implicit_geometry" />
@@ -496,10 +496,10 @@
 		</group>
 		<group name="Appearance" color="FFCCFF" >
 			<entity schema="citydb" name="surface_data" />
-			<entity schema="citydb" name="tex_image" />
 			<entity schema="citydb" name="surface_data_mapping" />
 			<entity schema="citydb" name="appearance" />
 			<entity schema="citydb" name="appear_to_surface_data" />
+			<entity schema="citydb" name="tex_image" />
 		</group>
 		<group name="Codelist" color="C4E0F9" >
 			<entity schema="citydb" name="codelist" />
