@@ -1,5 +1,6 @@
 {
   "identifier": "core:AbstractOccupiedSpace",
+  "description": "AbstractOccupiedSpace is the abstract superclass for all types of physically occupied spaces. Occupied space refers to spaces that are partially or entirely filled with matter.",
   "table": "feature",
   "properties": [
     {

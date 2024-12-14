@@ -1,5 +1,6 @@
 {
   "identifier": "bldg:AbstractBuilding",
+  "description": "AbstractBuilding is an abstract superclass representing the common attributes and associations of the classes Building and BuildingPart.",
   "table": "feature",
   "properties": [
     {

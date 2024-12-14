@@ -1,4 +1,5 @@
 {
   "identifier": "con:InteriorWallSurface",
+  "description": "An InteriorWallSurface is a surface that is visible from inside a construction. An example is the wall of a room.",
   "table": "feature"
 }

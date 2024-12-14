@@ -1,4 +1,5 @@
 {
   "identifier": "core:AbstractVersion",
+  "description": "AbstractVersion is the abstract superclass to represent Version objects.",
   "table": "feature"
 }

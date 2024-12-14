@@ -1,5 +1,6 @@
 {
   "identifier": "tran:Square",
+  "description": "A Square is a transportation space for unrestricted movement for vehicles, bicycles and/or pedestrians. This includes plazas as well as large sealed surfaces such as parking lots.",
   "table": "feature",
   "properties": [
     {

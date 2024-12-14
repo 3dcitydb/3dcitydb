@@ -1,5 +1,6 @@
 {
   "identifier": "brid:BridgeFurniture",
+  "description": "A BridgeFurniture is an equipment for occupant use, usually not fixed to the bridge.",
   "table": "feature",
   "properties": [
     {

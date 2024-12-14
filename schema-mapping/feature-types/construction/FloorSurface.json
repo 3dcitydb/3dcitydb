@@ -1,4 +1,5 @@
 {
   "identifier": "con:FloorSurface",
+  "description": "A FloorSurface is surface that represents the interior floor of a construction. An example is the floor of a room.",
   "table": "feature"
 }

@@ -1,5 +1,6 @@
 {
   "identifier": "wtr:WaterBody",
+  "description": "A WaterBody represents significant and permanent or semi-permanent accumulations of surface water, usually covering a part of the Earth.",
   "table": "feature",
   "properties": [
     {

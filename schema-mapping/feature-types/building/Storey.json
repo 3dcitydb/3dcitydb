@@ -1,5 +1,6 @@
 {
   "identifier": "bldg:Storey",
+  "description": "A Storey is typically a horizontal section of a Building. Storeys are not always defined according to the building structure, but can also be defined according to logical considerations.",
   "table": "feature",
   "properties": [
     {

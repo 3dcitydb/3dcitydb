@@ -1,5 +1,6 @@
 {
   "identifier": "tran:AbstractTransportationSpace",
+  "description": "AbstractTransportationSpace is the abstract superclass of transportation objects such as Roads, Tracks, Railways, Waterways or Squares.",
   "table": "feature",
   "properties": [
     {

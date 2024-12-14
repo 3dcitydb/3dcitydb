@@ -1,5 +1,6 @@
 {
   "identifier": "gen:GenericUnoccupiedSpace",
+  "description": "A GenericUnoccupiedSpace is a space that is not represented by any explicitly modelled AbstractUnoccupiedSpace subclass.",
   "table": "feature",
   "properties": [
     {

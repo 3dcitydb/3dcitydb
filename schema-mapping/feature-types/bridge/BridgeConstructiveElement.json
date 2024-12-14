@@ -1,5 +1,6 @@
 {
   "identifier": "brid:BridgeConstructiveElement",
+  "description": "A BridgeConstructiveElement is an element of a bridge which is essential from a structural point of view. Examples are pylons, anchorages, slabs, beams.",
   "table": "feature",
   "properties": [
     {

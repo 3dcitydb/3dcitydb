@@ -1,5 +1,6 @@
 {
   "identifier": "tran:Intersection",
+  "description": "An Intersection is a transportation space that is a shared segment of multiple Road, Track, Railway, or Waterway objects (e.g. a crossing of two roads or a level crossing of a road and a railway).",
   "table": "feature",
   "properties": [
     {

@@ -1,5 +1,6 @@
 {
   "identifier": "dem:AbstractReliefComponent",
+  "description": "An AbstractReliefComponent represents an element of the terrain surface - either a TIN, a raster or grid, mass points or break lines.",
   "table": "feature",
   "properties": [
     {

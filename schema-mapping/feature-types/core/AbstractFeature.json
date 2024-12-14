@@ -1,4 +1,5 @@
 {
   "identifier": "core:AbstractFeature",
+  "description": "AbstractFeature is the abstract superclass of all feature types.",
   "table": "feature"
 }

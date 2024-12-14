@@ -1,5 +1,6 @@
 {
   "identifier": "grp:CityObjectGroup",
+  "description": "A CityObjectGroup represents an application-specific aggregation of city objects according to some user-defined criteria. Examples for groups are the buildings in a specific region, the result of a query, or objects put together for visualization purposes. Each member of a group may be qualified by a role name, reflecting the role each city object plays in the context of the group.",
   "table": "feature",
   "properties": [
     {

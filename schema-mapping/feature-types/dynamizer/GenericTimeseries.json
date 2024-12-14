@@ -1,5 +1,6 @@
 {
   "identifier": "dyn:GenericTimeseries",
+  "description": "A GenericTimeseries represents time-varying data in the form of embedded time-value-pairs of a specific data type for a single contiguous time interval.",
   "table": "feature",
   "properties": [
     {

@@ -1,5 +1,6 @@
 {
   "identifier": "tun:Tunnel",
+  "description": "A Tunnel represents a horizontal or sloping enclosed passage way of a certain length, mainly underground or underwater.",
   "table": "feature",
   "properties": [
     {

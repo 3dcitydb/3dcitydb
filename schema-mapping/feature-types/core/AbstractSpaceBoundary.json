@@ -1,4 +1,5 @@
 {
   "identifier": "core:AbstractSpaceBoundary",
+  "description": "AbstractSpaceBoundary is the abstract superclass for all types of space boundaries. A space boundary is an entity with areal extent in the real world. Space boundaries are objects that bound a Space. They also realize the contact between adjacent spaces.",
   "table": "feature"
 }

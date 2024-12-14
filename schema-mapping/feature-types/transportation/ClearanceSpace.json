@@ -1,5 +1,6 @@
 {
   "identifier": "tran:ClearanceSpace",
+  "description": "A ClearanceSpace represents the actual free space above a TrafficArea within which a mobile object can move without contacting an obstruction.",
   "table": "feature",
   "properties": [
     {

@@ -1,5 +1,6 @@
 {
   "identifier": "bldg:BuildingFurniture",
+  "description": "A BuildingFurniture is an equipment for occupant use, usually not fixed to the building.",
   "table": "feature",
   "properties": [
     {

@@ -1,5 +1,6 @@
 {
   "identifier": "dyn:AbstractTimeseries",
+  "description": "AbstractTimeseries is the abstract superclass representing any type of timeseries data.",
   "table": "feature",
   "properties": [
     {

@@ -1,5 +1,6 @@
 {
   "identifier": "vers:VersionTransition",
+  "description": "VersionTransition describes the change of the state of a city model from one version to another. Version transitions can have names, a description and can be further qualified by a type and a reason.",
   "table": "feature",
   "properties": [
     {

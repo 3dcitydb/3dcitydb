@@ -1,5 +1,6 @@
 {
   "identifier": "brid:BridgeInstallation",
+  "description": "A BridgeInstallation is a permanent part of a Bridge (inside and/or outside) which does not have the significance of a BridgePart. In contrast to BridgeConstructiveElements, a BridgeInstallation is not essential from a structural point of view. Examples are stairs, antennas or railways.",
   "table": "feature",
   "properties": [
     {

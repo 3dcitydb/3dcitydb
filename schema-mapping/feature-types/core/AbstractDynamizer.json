@@ -1,4 +1,5 @@
 {
   "identifier": "core:AbstractDynamizer",
+  "description": "AbstractDynamizer is the abstract superclass to represent Dynamizer objects.",
   "table": "feature"
 }

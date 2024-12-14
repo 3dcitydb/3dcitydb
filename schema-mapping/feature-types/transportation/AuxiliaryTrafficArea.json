@@ -1,5 +1,6 @@
 {
   "identifier": "tran:AuxiliaryTrafficArea",
+  "description": "An AuxiliaryTrafficArea is the ground surface of an AuxiliaryTrafficSpace.",
   "table": "feature",
   "properties": [
     {

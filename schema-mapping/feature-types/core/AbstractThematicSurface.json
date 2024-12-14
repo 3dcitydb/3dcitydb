@@ -1,5 +1,6 @@
 {
   "identifier": "core:AbstractThematicSurface",
+  "description": "AbstractThematicSurface is the abstract superclass for all types of thematic surfaces.",
   "table": "feature",
   "properties": [
     {

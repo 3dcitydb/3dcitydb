@@ -1,5 +1,6 @@
 {
   "identifier": "dem:BreaklineRelief",
+  "description": "A BreaklineRelief represents a terrain component with 3D lines. These lines denote break lines or ridge/valley lines.",
   "table": "feature",
   "properties": [
     {

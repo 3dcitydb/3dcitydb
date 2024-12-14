@@ -1,5 +1,6 @@
 {
   "identifier": "tran:TrafficArea",
+  "description": "A TrafficArea is the ground surface of a TrafficSpace. Traffic areas are the surfaces upon which traffic actually takes place.",
   "table": "feature",
   "properties": [
     {

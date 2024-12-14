@@ -1,5 +1,6 @@
 {
   "identifier": "app:AbstractSurfaceData",
+  "description": "AbstractSurfaceData is the abstract superclass for different kinds of textures and material.",
   "table": "surface_data",
   "properties": [
     {

@@ -1,5 +1,6 @@
 {
   "identifier": "wtr:WaterSurface",
+  "description": "A WaterSurface represents the upper exterior interface between a water body and the atmosphere.",
   "table": "feature",
   "properties": [
     {

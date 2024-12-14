@@ -1,5 +1,6 @@
 {
   "identifier": "tran:Waterway",
+  "description": "A Waterway is a transportation space used for the movement of vessels upon or within a water body.",
   "table": "feature",
   "properties": [
     {

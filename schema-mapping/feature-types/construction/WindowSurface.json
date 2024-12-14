@@ -1,4 +1,5 @@
 {
   "identifier": "con:WindowSurface",
+  "description": "A WindowSurface is either a boundary surface of a Window feature or a surface that seals an opening filled by a window.",
   "table": "feature"
 }

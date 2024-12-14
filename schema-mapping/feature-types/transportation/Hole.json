@@ -1,5 +1,6 @@
 {
   "identifier": "tran:Hole",
+  "description": "A Hole is an opening in the surface of a Road, Track or Square such as road damages, manholes or drains. Holes can span multiple transportation objects.",
   "table": "feature",
   "properties": [
     {

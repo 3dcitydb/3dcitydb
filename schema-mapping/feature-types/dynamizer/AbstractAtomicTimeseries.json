@@ -1,5 +1,6 @@
 {
   "identifier": "dyn:AbstractAtomicTimeseries",
+  "description": "AbstractAtomicTimeseries represents the attributes and relationships that are common to all kinds of atomic timeseries (GenericTimeseries, TabulatedFileTimeseries, StandardFileTimeseries). An atomic timeseries represents time-varying data of a specific data type for a single contiguous time interval.",
   "table": "feature",
   "properties": [
     {

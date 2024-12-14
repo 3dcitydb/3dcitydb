@@ -1,5 +1,6 @@
 {
   "identifier": "tran:Marking",
+  "description": "A Marking is a visible pattern on a transportation area relevant to the structuring or restriction of traffic. Examples are road markings and markings related to railway or waterway traffic.",
   "table": "feature",
   "properties": [
     {

@@ -1,5 +1,6 @@
 {
   "identifier": "tran:TrafficSpace",
+  "description": "A TrafficSpace is a space in which traffic takes place. Traffic includes the movement of entities such as trains, vehicles, pedestrians, ships, or other transportation types.",
   "table": "feature",
   "properties": [
     {

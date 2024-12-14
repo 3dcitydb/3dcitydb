@@ -1,4 +1,5 @@
 {
   "identifier": "bldg:BuildingPart",
+  "description": "A BuildingPart is a physical or functional subdivision of a Building. It would be considered a Building, if it were not part of a collection of other BuildingParts.",
   "table": "feature"
 }

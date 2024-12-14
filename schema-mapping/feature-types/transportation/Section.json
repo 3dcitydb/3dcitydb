@@ -1,5 +1,6 @@
 {
   "identifier": "tran:Section",
+  "description": "A Section is a transportation space that is a segment of a Road, Railway, Track, or Waterway.",
   "table": "feature",
   "properties": [
     {

@@ -1,5 +1,6 @@
 {
   "identifier": "dyn:CompositeTimeseries",
+  "description": "A CompositeTimeseries is a (possibly recursive) aggregation of atomic and composite timeseries. The components of a composite timeseries must have non-overlapping time intervals.",
   "table": "feature",
   "properties": [
     {

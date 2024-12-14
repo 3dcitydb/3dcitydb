@@ -1,5 +1,6 @@
 {
   "identifier": "frn:CityFurniture",
+  "description": "CityFurniture is an object or piece of equipment installed in the outdoor environment for various purposes. Examples include street signs, traffic signals, street lamps, benches, fountains.",
   "table": "feature",
   "properties": [
     {

@@ -1,4 +1,5 @@
 {
   "identifier": "core:AbstractPointCloud",
+  "description": "AbstractPointCloud is the abstract superclass to represent PointCloud objects.",
   "table": "feature"
 }

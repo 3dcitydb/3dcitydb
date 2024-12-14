@@ -1,5 +1,6 @@
 {
   "identifier": "dem:TINRelief",
+  "description": "A TINRelief represents a terrain component as a triangulated irregular network.",
   "table": "feature",
   "properties": [
     {

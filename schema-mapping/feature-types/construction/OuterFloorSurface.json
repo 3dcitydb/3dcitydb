@@ -1,4 +1,5 @@
 {
   "identifier": "con:OuterFloorSurface",
+  "description": "An OuterFloorSurface is a surface that belongs to the outer construction shell with the orientation pointing upwards. An example is the floor of a loggia.",
   "table": "feature"
 }

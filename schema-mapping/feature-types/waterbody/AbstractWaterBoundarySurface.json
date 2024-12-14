@@ -1,4 +1,5 @@
 {
   "identifier": "wtr:AbstractWaterBoundarySurface",
+  "description": "AbstractWaterBoundarySurface is the abstract superclass for all kinds of thematic surfaces bounding a water body.",
   "table": "feature"
 }

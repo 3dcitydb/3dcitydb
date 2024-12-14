@@ -1,4 +1,5 @@
 {
   "identifier": "app:ParameterizedTexture",
+  "description": "A ParameterizedTexture is a texture that uses texture coordinates or a transformation matrix for parameterization.",
   "table": "surface_data"
 }

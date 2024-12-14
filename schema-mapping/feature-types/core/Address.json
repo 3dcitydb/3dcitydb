@@ -1,5 +1,6 @@
 {
   "identifier": "core:Address",
+  "description": "Address represents an address of a city object.",
   "table": "address",
   "properties": [
     {

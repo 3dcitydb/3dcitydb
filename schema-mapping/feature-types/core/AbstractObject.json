@@ -1,5 +1,6 @@
 {
   "identifier": "core:AbstractObject",
+  "description": "AbstractObject is the abstract superclass of all feature and object types.",
   "table": "feature",
   "properties": [
     {

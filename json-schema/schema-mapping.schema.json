@@ -23,6 +23,9 @@
         "identifier": {
           "type": "string"
         },
+        "description": {
+          "type": "string"
+        },
         "table": {
           "type": "string"
         },
@@ -48,6 +51,9 @@
       ],
       "properties": {
         "identifier": {
+          "type": "string"
+        },
+        "description": {
           "type": "string"
         },
         "table": {
@@ -81,6 +87,9 @@
           "type": "string"
         },
         "namespace": {
+          "type": "string"
+        },
+        "description": {
           "type": "string"
         },
         "parent": {

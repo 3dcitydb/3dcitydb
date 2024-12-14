@@ -1,5 +1,6 @@
 {
   "identifier": "app:X3DMaterial",
+  "description": "X3DMaterial defines properties for surface geometry objects based on the material definitions from the X3D and COLLADA standards.",
   "table": "surface_data",
   "properties": [
     {

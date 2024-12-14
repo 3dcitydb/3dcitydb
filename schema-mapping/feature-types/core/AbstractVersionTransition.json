@@ -1,4 +1,5 @@
 {
   "identifier": "core:AbstractVersionTransition",
+  "description": "AbstractVersionTransition is the abstract superclass to represent VersionTransition objects.",
   "table": "feature"
 }

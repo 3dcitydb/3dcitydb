@@ -1,4 +1,5 @@
 {
   "identifier": "tran:HoleSurface",
+  "description": "A HoleSurface is a representation of the ground surface of a hole.",
   "table": "feature"
 }

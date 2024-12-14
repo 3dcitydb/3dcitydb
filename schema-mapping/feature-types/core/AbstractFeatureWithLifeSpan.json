@@ -1,5 +1,6 @@
 {
   "identifier": "core:AbstractFeatureWithLifespan",
+  "description": "AbstractFeatureWithLifespan is the base class for all features. This class allows the optional specification of the real-world and database times for the existence of each feature.",
   "table": "feature",
   "properties": [
     {

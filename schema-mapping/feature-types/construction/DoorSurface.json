@@ -1,5 +1,6 @@
 {
   "identifier": "con:DoorSurface",
+  "description": "A DoorSurface is either a boundary surface of a Door feature or a surface that seals an opening filled by a door.",
   "table": "feature",
   "properties": [
     {

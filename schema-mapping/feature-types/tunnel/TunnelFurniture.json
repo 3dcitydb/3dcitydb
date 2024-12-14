@@ -1,5 +1,6 @@
 {
   "identifier": "tun:TunnelFurniture",
+  "description": "A TunnelFurniture is an equipment for occupant use, usually not fixed to the tunnel.",
   "table": "feature",
   "properties": [
     {

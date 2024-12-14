@@ -1,4 +1,5 @@
 {
   "identifier": "con:AbstractFillingElement",
+  "description": "AbstractFillingElement is the abstract superclass for different kinds of elements that fill the openings of a construction.",
   "table": "feature"
 }

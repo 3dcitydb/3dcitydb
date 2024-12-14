@@ -1,5 +1,6 @@
 {
   "identifier": "dem:ReliefFeature",
+  "description": "A ReliefFeature is a collection of terrain components representing the earth''s surface, also known as the Digital Terrain Model.",
   "table": "feature",
   "properties": [
     {

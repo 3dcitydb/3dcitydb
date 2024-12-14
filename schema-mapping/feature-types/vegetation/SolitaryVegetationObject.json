@@ -1,5 +1,6 @@
 {
   "identifier": "veg:SolitaryVegetationObject",
+  "description": "A SolitaryVegetationObject represents individual vegetation objects, e.g. trees or bushes.",
   "table": "feature",
   "properties": [
     {

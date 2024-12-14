@@ -1,5 +1,6 @@
 {
   "identifier": "con:Window",
+  "description": "A Window is a construction for closing an opening in a wall  or roof, primarily intended to admit light and/or provide ventilation.",
   "table": "feature",
   "properties": [
     {

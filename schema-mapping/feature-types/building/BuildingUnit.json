@@ -1,5 +1,6 @@
 {
   "identifier": "bldg:BuildingUnit",
+  "description": "A BuildingUnit is a logical subdivision of a Building. BuildingUnits are formed according to some homogeneous property like function, ownership, management, or accessibility. They may be separately sold, rented out, inherited, managed, etc.",
   "table": "feature",
   "properties": [
     {

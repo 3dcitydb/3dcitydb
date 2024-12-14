@@ -1,4 +1,5 @@
 {
   "identifier": "core:AbstractAppearance",
+  "description": "AbstractAppearance is the abstract superclass to represent any kind of appearance objects.",
   "table": "appearance"
 }

@@ -1,5 +1,6 @@
 {
   "identifier": "pcl:PointCloud",
+  "description": "A PointCloud is an unordered collection of points that is a sampling of the geometry of a space or space boundary.",
   "table": "feature",
   "properties": [
     {

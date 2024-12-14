@@ -1,4 +1,5 @@
 {
   "identifier": "con:CeilingSurface",
+  "description": "A CeilingSurface is a surface that represents the interior ceiling of a construction. An example is the ceiling of a room.",
   "table": "feature"
 }

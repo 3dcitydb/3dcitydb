@@ -1,4 +1,5 @@
 {
   "identifier": "veg:AbstractVegetationObject",
+  "description": "AbstractVegetationObject is the abstract superclass for all kinds of vegetation objects.",
   "table": "feature"
 }

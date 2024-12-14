@@ -1,5 +1,6 @@
 {
   "identifier": "con:AbstractConstructiveElement",
+  "description": "AbstractConstructiveElement is the abstract superclass for the representation of volumetric elements of a construction. Examples are walls, beams, slabs.",
   "table": "feature",
   "properties": [
     {

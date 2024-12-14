@@ -1,5 +1,6 @@
 {
   "identifier": "core:AbstractSpace",
+  "description": "AbstractSpace is the abstract superclass for all types of spaces. A space is an entity of volumetric extent in the real world.",
   "table": "feature",
   "properties": [
     {

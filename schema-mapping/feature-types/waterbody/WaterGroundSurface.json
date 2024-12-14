@@ -1,4 +1,5 @@
 {
   "identifier": "wtr:WaterGroundSurface",
+  "description": "A WaterGroundSurface represents the exterior boundary surface of the submerged bottom of a water body.",
   "table": "feature"
 }

@@ -1,5 +1,6 @@
 {
   "identifier": "tun:TunnelInstallation",
+  "description": "A TunnelInstallation is a permanent part of a Tunnel (inside and/or outside) which does not have the significance of a TunnelPart. In contrast to TunnelConstructiveElement, a TunnelInstallation is not essential from a structural point of view. Examples are stairs, antennas or railings.",
   "table": "feature",
   "properties": [
     {

@@ -1,5 +1,6 @@
 {
   "identifier": "tran:AuxiliaryTrafficSpace",
+  "description": "An AuxiliaryTrafficSpace is a space within the transportation space not intended for traffic purposes.",
   "table": "feature",
   "properties": [
     {

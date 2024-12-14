@@ -1,4 +1,5 @@
 {
   "identifier": "dem:RasterRelief",
+  "description": "A RasterRelief represents a terrain component as a regular raster or grid.",
   "table": "feature"
 }

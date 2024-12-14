@@ -1,4 +1,5 @@
 {
   "identifier": "core:AbstractLogicalSpace",
+  "description": "AbstractLogicalSpace is the abstract superclass for all types of logical spaces. Logical space refers to spaces that are not bounded by physical surfaces but are defined according to thematic considerations.",
   "table": "feature"
 }

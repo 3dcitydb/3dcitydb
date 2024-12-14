@@ -1,5 +1,6 @@
 {
   "identifier": "dyn:Dynamizer",
+  "description": "A Dynamizer is an object that injects timeseries data for an individual attribute of the city object in which it is included. The timeseries data overrides the static value of the referenced city object attribute in order to represent dynamic (time-dependent) variations of its value.",
   "table": "feature",
   "properties": [
     {

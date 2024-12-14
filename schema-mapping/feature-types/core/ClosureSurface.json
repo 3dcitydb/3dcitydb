@@ -1,4 +1,5 @@
 {
   "identifier": "core:ClosureSurface",
+  "description": "ClosureSurface is a special type of thematic surface used to close holes in volumetric objects. Closure surfaces are virtual (non-physical) surfaces.",
   "table": "feature"
 }

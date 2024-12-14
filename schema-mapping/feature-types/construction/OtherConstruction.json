@@ -1,5 +1,6 @@
 {
   "identifier": "con:OtherConstruction",
+  "description": "An OtherConstruction is a construction that is not covered by any of the other subclasses of AbstractConstruction.",
   "table": "feature",
   "properties": [
     {

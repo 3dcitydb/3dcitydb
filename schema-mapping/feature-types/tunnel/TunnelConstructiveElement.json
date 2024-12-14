@@ -1,5 +1,6 @@
 {
   "identifier": "tun:TunnelConstructiveElement",
+  "description": "A TunnelConstructiveElement is an element of a Tunnel which is essential from a structural point of view. Examples are walls, slabs, beams.",
   "table": "feature",
   "properties": [
     {

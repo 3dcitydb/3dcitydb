@@ -1,5 +1,6 @@
 {
   "identifier": "con:AbstractConstructionSurface",
+  "description": "AbstractConstructionSurface is the abstract superclass for different kinds of surfaces that bound a construction.",
   "table": "feature",
   "properties": [
     {

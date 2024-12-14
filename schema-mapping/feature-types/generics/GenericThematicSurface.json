@@ -1,5 +1,6 @@
 {
   "identifier": "gen:GenericThematicSurface",
+  "description": "A GenericThematicSurface is a surface that is not represented by any explicitly modelled AbstractThematicSurface subclass.",
   "table": "feature",
   "properties": [
     {

@@ -1,5 +1,6 @@
 {
   "identifier": "core:AbstractPhysicalSpace",
+  "description": "AbstractPhysicalSpace is the abstract superclass for all types of physical spaces. Physical space refers to spaces that are fully or partially bounded by physical objects.",
   "table": "feature",
   "properties": [
     {

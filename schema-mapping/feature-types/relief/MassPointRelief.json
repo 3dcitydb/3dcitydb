@@ -1,5 +1,6 @@
 {
   "identifier": "dem:MassPointRelief",
+  "description": "A MassPointRelief represents a terrain component as a collection of 3D points.",
   "table": "feature",
   "properties": [
     {

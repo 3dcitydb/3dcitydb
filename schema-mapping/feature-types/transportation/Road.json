@@ -1,5 +1,6 @@
 {
   "identifier": "tran:Road",
+  "description": "A Road is a transportation space used by vehicles, bicycles and/or pedestrians.",
   "table": "feature",
   "properties": [
     {

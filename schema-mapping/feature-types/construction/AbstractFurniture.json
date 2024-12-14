@@ -1,4 +1,5 @@
 {
   "identifier": "con:AbstractFurniture",
+  "description": "AbstractFurniture is the abstract superclass for the representation of furniture objects of a construction.",
   "table": "feature"
 }

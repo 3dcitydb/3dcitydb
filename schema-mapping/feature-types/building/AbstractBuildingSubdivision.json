@@ -1,5 +1,6 @@
 {
   "identifier": "bldg:AbstractBuildingSubdivision",
+  "description": "AbstractBuildingSubdivision is the abstract superclass for different kinds of logical building subdivisions.",
   "table": "feature",
   "properties": [
     {

@@ -1,4 +1,5 @@
 {
   "identifier": "tun:TunnelPart",
+  "description": "A TunnelPart is a physical or functional subdivision of a Tunnel. It would be considered a Tunnel, if it were not part of a collection of other TunnelParts.",
   "table": "feature"
 }

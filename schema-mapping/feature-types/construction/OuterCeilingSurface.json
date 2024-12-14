@@ -1,4 +1,5 @@
 {
   "identifier": "con:OuterCeilingSurface",
+  "description": "An OuterCeilingSurface is a surface that belongs to the outer building shell with the orientation pointing downwards. An example is the ceiling of a loggia.",
   "table": "feature"
 }

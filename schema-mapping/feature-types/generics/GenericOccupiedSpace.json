@@ -1,5 +1,6 @@
 {
   "identifier": "gen:GenericOccupiedSpace",
+  "description": "A GenericOccupiedSpace is a space that is not represented by any explicitly modelled AbstractOccupiedSpace subclass.",
   "table": "feature",
   "properties": [
     {

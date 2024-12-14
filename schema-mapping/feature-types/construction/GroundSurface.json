@@ -1,4 +1,5 @@
 {
   "identifier": "con:GroundSurface",
+  "description": "A GroundSurface is a surface that represents the ground plate of a construction. The polygon defining the ground plate is congruent with the footprint of the construction.",
   "table": "feature"
 }

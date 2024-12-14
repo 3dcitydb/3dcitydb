@@ -1,5 +1,6 @@
 {
   "identifier": "brid:Bridge",
+  "description": "A Bridge represents a structure that affords the passage of pedestrians, animals, vehicles, and service(s) above obstacles or between two points at a height above ground.",
   "table": "feature",
   "properties": [
     {

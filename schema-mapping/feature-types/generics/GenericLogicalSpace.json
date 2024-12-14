@@ -1,5 +1,6 @@
 {
   "identifier": "gen:GenericLogicalSpace",
+  "description": "A GenericLogicalSpace is a space that is not represented by any explicitly modelled AbstractLogicalSpace subclass.",
   "table": "feature",
   "properties": [
     {

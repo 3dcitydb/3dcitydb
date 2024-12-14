@@ -1,5 +1,6 @@
 {
   "identifier": "core:CityModel",
+  "description": "CityModel is the container for all objects belonging to a city model.",
   "table": "feature",
   "properties": [
     {

@@ -1,5 +1,6 @@
 {
   "identifier": "app:GeoreferencedTexture",
+  "description": "A GeoreferencedTexture is a texture that uses a planimetric projection. It contains an implicit parameterization that is either stored within the image file, an accompanying world file or specified using the orientation and referencePoint elements.",
   "table": "surface_data",
   "properties": [
     {

@@ -1,5 +1,6 @@
 {
   "identifier": "app:Appearance",
+  "description": "An Appearance is a collection of surface data, i.e. observable properties for surface geometry objects in the form of textures and material.",
   "table": "appearance",
   "properties": [
     {

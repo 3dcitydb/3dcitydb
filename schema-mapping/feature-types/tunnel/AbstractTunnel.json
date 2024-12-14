@@ -1,5 +1,6 @@
 {
   "identifier": "tun:AbstractTunnel",
+  "description": "AbstractTunnel is an abstract superclass representing the common attributes and associations of the classes Tunnel and TunnelPart.",
   "table": "feature",
   "properties": [
     {

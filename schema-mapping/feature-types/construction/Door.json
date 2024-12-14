@@ -1,5 +1,6 @@
 {
   "identifier": "con:Door",
+  "description": "A Door is a construction for closing an opening intended primarily for access or egress or both.",
   "table": "feature",
   "properties": [
     {

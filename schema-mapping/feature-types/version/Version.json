@@ -1,5 +1,6 @@
 {
   "identifier": "vers:Version",
+  "description": "Version represents a defined state of a city model consisting of the dedicated versions of all city object instances that belong to the respective city model version. Versions can have names, a description and can be labeled with an arbitrary number of user defined tags.",
   "table": "feature",
   "properties": [
     {

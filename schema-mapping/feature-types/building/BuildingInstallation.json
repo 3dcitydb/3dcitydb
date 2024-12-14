@@ -1,5 +1,6 @@
 {
   "identifier": "bldg:BuildingInstallation",
+  "description": "A BuildingInstallation is a permanent part of a Building (inside and/or outside) which has not the significance of a BuildingPart. Examples are stairs, antennas, balconies or small roofs.",
   "table": "feature",
   "properties": [
     {

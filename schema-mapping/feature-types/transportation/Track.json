@@ -1,5 +1,6 @@
 {
   "identifier": "tran:Track",
+  "description": "A Track is a small path mainly used by pedestrians. Tracks can be segmented into Sections and Intersections.",
   "table": "feature",
   "properties": [
     {

@@ -1,5 +1,6 @@
 {
   "identifier": "core:AbstractCityObject",
+  "description": "AbstractCityObject is the abstract superclass of all thematic classes.",
   "table": "feature",
   "properties": [
     {

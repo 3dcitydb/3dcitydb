@@ -1,5 +1,6 @@
 {
   "identifier": "con:AbstractInstallation",
+  "description": "AbstractInstallation is the abstract superclass for the representation of installation objects of a construction.",
   "table": "feature",
   "properties": [
     {

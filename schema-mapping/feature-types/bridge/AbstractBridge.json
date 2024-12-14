@@ -1,5 +1,6 @@
 {
   "identifier": "brid:AbstractBridge",
+  "description": "AbstractBridge is an abstract superclass representing the common attributes and associations of the classes Bridge and BridgePart.",
   "table": "feature",
   "properties": [
     {

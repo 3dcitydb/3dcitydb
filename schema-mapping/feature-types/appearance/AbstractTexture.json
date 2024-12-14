@@ -1,5 +1,6 @@
 {
   "identifier": "app:AbstractTexture",
+  "description": "AbstractTexture is the abstract superclass to represent the common attributes of the classes ParameterizedTexture and GeoreferencedTexture.",
   "table": "surface_data",
   "properties": [
     {

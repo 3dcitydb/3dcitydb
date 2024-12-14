@@ -1,5 +1,6 @@
 {
   "identifier": "veg:PlantCover",
+  "description": "A PlantCover represents a space covered by vegetation.",
   "table": "feature",
   "properties": [
     {

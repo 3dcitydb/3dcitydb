@@ -1,5 +1,6 @@
 {
   "identifier": "core:ImplicitGeometry",
+  "description": "ImplicitGeometry is a geometry representation where the shape is stored only once as a prototypical geometry. Examples are a tree or other vegetation object, a traffic light or a traffic sign. This prototypic geometry object can be re-used or referenced many times, wherever the corresponding feature occurs in the 3D city model.",
   "table": "implicit_geometry",
   "properties": [
     {

@@ -1,5 +1,6 @@
 {
   "identifier": "bldg:BuildingConstructiveElement",
+  "description": "A BuildingConstructiveElement is an element of a Building which is essential from a structural point of view. Examples are walls, slabs, staircases, beams.",
   "table": "feature",
   "properties": [
     {

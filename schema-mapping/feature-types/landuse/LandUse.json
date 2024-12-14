@@ -1,5 +1,6 @@
 {
   "identifier": "luse:LandUse",
+  "description": "A LandUse object is an area of the earth''s surface dedicated to a specific land use or having a specific land cover with or without vegetation, such as sand, rock, mud flats, forest, grasslands, or wetlands.",
   "table": "feature",
   "properties": [
     {

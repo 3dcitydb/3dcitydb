@@ -1,4 +1,5 @@
 {
   "identifier": "core:AbstractUnoccupiedSpace",
+  "description": "AbstractUnoccupiedSpace is the abstract superclass for all types of physically unoccupied spaces. Unoccupied space refers to spaces that are entirely or mostly free of matter.",
   "table": "feature"
 }

@@ -1,5 +1,6 @@
 {
   "identifier": "bldg:Building",
+  "description": "A Building is a free-standing, self-supporting construction that is roofed, usually walled, and can be entered by humans and is normally designed to stand permanently in one place. It is intended for human occupancy (e.g. a place of work or recreation), habitation and/or shelter of humans, animals or things.",
   "table": "feature",
   "properties": [
     {

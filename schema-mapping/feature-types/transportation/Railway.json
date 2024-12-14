@@ -1,5 +1,6 @@
 {
   "identifier": "tran:Railway",
+  "description": "A Railway is a transportation space used by wheeled vehicles on rails.",
   "table": "feature",
   "properties": [
     {

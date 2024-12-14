@@ -1,4 +1,5 @@
 {
   "identifier": "core:Undefined",
+  "description": "Undefined is the abstract superclass of all types that are not part of the predefined class hierarchy.",
   "table": "feature"
 }

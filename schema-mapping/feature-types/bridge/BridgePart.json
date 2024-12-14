@@ -1,4 +1,5 @@
 {
   "identifier": "brid:BridgePart",
+  "description": "A BridgePart is a physical or functional subdivision of a Bridge. It would be considered a Bridge, if it were not part of a collection of other BridgeParts.",
   "table": "feature"
 }

@@ -1,4 +1,5 @@
 {
   "identifier": "con:RoofSurface",
+  "description": "A RoofSurface is a surface that delimits major roof parts of a construction.",
   "table": "feature"
 }

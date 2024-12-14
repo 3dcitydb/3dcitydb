@@ -1,5 +1,6 @@
 {
   "identifier": "con:AbstractFillingSurface",
+  "description": "AbstractFillingSurface is the abstract superclass for different kinds of surfaces that seal openings filled by filling elements.",
   "table": "feature",
   "properties": [
     {

@@ -1,4 +1,5 @@
 {
   "identifier": "con:WallSurface",
+  "description": "A WallSurface is a surface that is part of the building facade visible from the outside.",
   "table": "feature"
 }
