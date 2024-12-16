@@ -6,6 +6,7 @@
     {
       "name": "type",
       "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "description": "Indicates the specific type of the Transaction.",
       "type": "core:String",
       "join": {
         "table": "property",
@@ -16,6 +17,7 @@
     {
       "name": "oldFeature",
       "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "description": "Relates to the version of the city object prior to the Transaction.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractFeatureWithLifespan",
       "join": {
@@ -27,6 +29,7 @@
     {
       "name": "newFeature",
       "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "description": "Relates to the version of the city object subsequent to the Transaction.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractFeatureWithLifespan",
       "join": {

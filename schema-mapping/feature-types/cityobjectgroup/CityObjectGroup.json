@@ -24,7 +24,7 @@
     {
       "name": "groupMember",
       "namespace": "http://3dcitydb.org/3dcitydb/cityobjectgroup/5.0",
-      "description": "Relates to the city objects that are part of the CityObjectGroup.",
+      "description": "Relates to the city objects that are part of the CityObjectGroup and indicates their role.",
       "type": "grp:Role"
     },
     {

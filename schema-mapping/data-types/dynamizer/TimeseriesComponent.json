@@ -6,6 +6,7 @@
     {
       "name": "repetitions",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies how often the timeseries that is referenced by the TimeseriesComponent should be iterated.",
       "type": "core:Integer",
       "join": {
         "table": "property",
@@ -16,6 +17,7 @@
     {
       "name": "additionalGap",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies how much extra time is added after all repetitions as an additional gap.",
       "type": "core:String",
       "join": {
         "table": "property",
@@ -26,6 +28,7 @@
     {
       "name": "timeseries",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Relates a timeseries to the TimeseriesComponent.",
       "type": "core:FeatureProperty",
       "target": "dyn:AbstractTimeseries",
       "join": {

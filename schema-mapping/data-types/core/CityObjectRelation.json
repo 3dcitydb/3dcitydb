@@ -6,6 +6,7 @@
     {
       "name": "relatedTo",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Relates other city objects to the CityObjectRelation.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractCityObject",
       "join": {
@@ -17,6 +18,7 @@
     {
       "name": "relationType",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Indicates the specific type of the CityObjectRelation.",
       "type": "core:Code",
       "join": {
         "table": "property",

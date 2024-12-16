@@ -9,6 +9,7 @@
     {
       "name": "value",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Specifies the value of the height above or below ground.",
       "type": "core:Measure",
       "join": {
         "table": "property",
@@ -19,6 +20,7 @@
     {
       "name": "status",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Indicates the way the height has been captured.",
       "type": "core:String",
       "join": {
         "table": "property",
@@ -29,6 +31,7 @@
     {
       "name": "lowReference",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Indicates the low point used to calculate the value of the height.",
       "type": "core:Code",
       "join": {
         "table": "property",
@@ -39,6 +42,7 @@
     {
       "name": "highReference",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Indicates the high point used to calculate the value of the height.",
       "type": "core:Code",
       "join": {
         "table": "property",

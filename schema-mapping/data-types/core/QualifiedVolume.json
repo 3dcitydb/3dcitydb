@@ -9,11 +9,13 @@
     {
       "name": "volume",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the value of the QualifiedVolume.",
       "type": "core:Measure"
     },
     {
       "name": "typeOfVolume",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Indicates the specific type of the QualifiedVolume.",
       "type": "core:Code"
     }
   ]

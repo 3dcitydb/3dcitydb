@@ -6,6 +6,7 @@
     {
       "name": "groupMember",
       "namespace": "http://3dcitydb.org/3dcitydb/cityobjectgroup/5.0",
+      "description": "Relates to the city objects that are part of the CityObjectGroup.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractCityObject",
       "join": {
@@ -17,6 +18,7 @@
     {
       "name": "role",
       "namespace": "http://3dcitydb.org/3dcitydb/cityobjectgroup/5.0",
+      "description": "Describes the role the city object plays within the CityObjectGroup.",
       "type": "core:String",
       "join": {
         "table": "property",

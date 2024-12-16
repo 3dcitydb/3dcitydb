@@ -10,6 +10,7 @@
     {
       "name": "codeSpace",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the code space of the term, typically a dictionary, thesaurus, classification scheme, authority, or pattern for the term.",
       "value": {
         "column": "val_codespace",
         "type": "uri"

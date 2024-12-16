@@ -6,6 +6,7 @@
     {
       "name": "connectionType",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Indicates the type of Sensor API to which the SensorConnection refers.",
       "type": "core:Code",
       "join": {
         "table": "property",
@@ -16,6 +17,7 @@
     {
       "name": "observationProperty",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the phenomenon for which the SensorConnection provides observations.",
       "type": "core:String",
       "join": {
         "table": "property",
@@ -26,6 +28,7 @@
     {
       "name": "uom",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the unit of measurement of the observations.",
       "type": "core:String",
       "join": {
         "table": "property",
@@ -36,6 +39,7 @@
     {
       "name": "sensorID",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the unique identifier of the sensor from which the SensorConnection retrieves observations.",
       "type": "core:String",
       "join": {
         "table": "property",
@@ -46,6 +50,7 @@
     {
       "name": "sensorName",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the name of the sensor from which the SensorConnection retrieves observations.",
       "type": "core:String",
       "join": {
         "table": "property",
@@ -56,6 +61,7 @@
     {
       "name": "observationID",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the unique identifier of the observation that is retrieved by the SensorConnection.",
       "type": "core:String",
       "join": {
         "table": "property",
@@ -66,6 +72,7 @@
     {
       "name": "datastreamID",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the datastream that is retrieved by the SensorConnection.",
       "type": "core:String",
       "join": {
         "table": "property",
@@ -76,6 +83,7 @@
     {
       "name": "baseURL",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the base URL of the Sensor API request.",
       "type": "core:URI",
       "join": {
         "table": "property",
@@ -86,6 +94,7 @@
     {
       "name": "authType",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the type of authentication required to be able to access the Sensor API.",
       "type": "core:Code",
       "join": {
         "table": "property",
@@ -96,6 +105,7 @@
     {
       "name": "mqttServer",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the name of the MQTT Server. This attribute is relevant when the MQTT Protocol is used to connect to a Sensor API.",
       "type": "core:String",
       "join": {
         "table": "property",
@@ -106,6 +116,7 @@
     {
       "name": "mqttTopic",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Names the specific datastream that is retrieved by the SensorConnection. This attribute is relevant when the MQTT Protocol is used to connect to a Sensor API.",
       "type": "core:String",
       "join": {
         "table": "property",
@@ -116,6 +127,7 @@
     {
       "name": "linkToObservation",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the complete URL to the observation request.",
       "type": "core:String",
       "join": {
         "table": "property",
@@ -126,6 +138,7 @@
     {
       "name": "linkToSensorDescription",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the complete URL to the sensor description request.",
       "type": "core:String",
       "join": {
         "table": "property",
@@ -136,6 +149,7 @@
     {
       "name": "sensorLocation",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Relates the sensor to the city object where it is located.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractCityObject",
       "join": {

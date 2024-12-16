@@ -6,6 +6,7 @@
     {
       "name": "timestamp",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the timepoint at which the value of the TimeValuePair is valid.",
       "type": "core:Timestamp",
       "join": {
         "table": "property",
@@ -16,6 +17,7 @@
     {
       "name": "intValue",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the Integer value of the TimeValuePair.",
       "type": "core:Integer",
       "join": {
         "table": "property",
@@ -26,6 +28,7 @@
     {
       "name": "doubleValue",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the Double value of the TimeValuePair.",
       "type": "core:Double",
       "join": {
         "table": "property",
@@ -36,6 +39,7 @@
     {
       "name": "stringValue",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the String value of the TimeValuePair.",
       "type": "core:String",
       "join": {
         "table": "property",
@@ -46,6 +50,7 @@
     {
       "name": "geometryValue",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the geometry value of the TimeValuePair.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractGeometry",
       "join": {
@@ -57,6 +62,7 @@
     {
       "name": "uriValue",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the URI value of the TimeValuePair.",
       "type": "core:URI",
       "join": {
         "table": "property",
@@ -67,6 +73,7 @@
     {
       "name": "boolValue",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the Boolean value of the TimeValuePair.",
       "type": "core:Boolean",
       "join": {
         "table": "property",
@@ -77,6 +84,7 @@
     {
       "name": "implicitGeometryValue",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the ImplicitGeometry value of the TimeValuePair.",
       "type": "core:ImplicitGeometryProperty",
       "join": {
         "table": "property",
@@ -87,6 +95,7 @@
     {
       "name": "appearanceValue",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the Appearance value of the TimeValuePair.",
       "type": "core:AppearanceProperty",
       "join": {
         "table": "property",

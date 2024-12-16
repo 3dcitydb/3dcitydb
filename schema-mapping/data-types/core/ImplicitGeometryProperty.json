@@ -6,6 +6,7 @@
     {
       "name": "transformationMatrix",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the mathematical transformation (translation, rotation, and scaling) between the prototypical geometry and the actual spatial position of the object.",
       "value": {
         "column": "val_array",
         "type": "doubleArray"
@@ -14,6 +15,7 @@
     {
       "name": "referencePoint",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Relates to a 3D Point geometry that represents the base point of the object in the coordinate system of the database.",
       "value": {
         "column": "val_implicitgeom_refpoint",
         "type": "core:Point"

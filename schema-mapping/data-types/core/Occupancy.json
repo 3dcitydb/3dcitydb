@@ -9,6 +9,7 @@
     {
       "name": "numberOfOccupants",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Indicates the number of occupants contained by a feature.",
       "type": "core:Integer",
       "join": {
         "table": "property",
@@ -19,6 +20,7 @@
     {
       "name": "interval",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Indicates the time period the occupants are contained by a feature.",
       "type": "core:Code",
       "join": {
         "table": "property",
@@ -29,6 +31,7 @@
     {
       "name": "occupantType",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Indicates the specific type of the occupants that are contained by a feature.",
       "type": "core:Code",
       "join": {
         "table": "property",

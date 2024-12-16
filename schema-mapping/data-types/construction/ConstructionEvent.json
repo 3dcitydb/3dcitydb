@@ -9,6 +9,7 @@
     {
       "name": "event",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Indicates the specific event type.",
       "type": "core:Code",
       "join": {
         "table": "property",
@@ -19,6 +20,7 @@
     {
       "name": "dateOfEvent",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Specifies the date and time at which the event took or will take place.",
       "type": "core:Timestamp",
       "join": {
         "table": "property",
@@ -29,6 +31,7 @@
     {
       "name": "description",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Provides additional information on the event.",
       "type": "core:String",
       "join": {
         "table": "property",

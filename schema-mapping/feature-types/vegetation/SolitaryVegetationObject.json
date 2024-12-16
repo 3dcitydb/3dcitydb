@@ -36,25 +36,25 @@
     {
       "name": "trunkDiameter",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
-      "description": "Specifies the diameter of the SolitaryCityObject's trunk.",
+      "description": "Specifies the diameter of the SolitaryCityObject''s trunk.",
       "type": "core:Measure"
     },
     {
       "name": "crownDiameter",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
-      "description": "Specifies the diameter of the SolitaryCityObject's crown.",
+      "description": "Specifies the diameter of the SolitaryCityObject''s crown.",
       "type": "core:Measure"
     },
     {
       "name": "rootBallDiameter",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
-      "description": "Specifies the diameter of the SolitaryCityObject's root ball.",
+      "description": "Specifies the diameter of the SolitaryCityObject''s root ball.",
       "type": "core:Measure"
     },
     {
       "name": "maxRootBallDepth",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
-      "description": "Specifies the vertical distance between the lowest point of the SolitaryVegetationObject's root ball and the terrain surface.",
+      "description": "Specifies the vertical distance between the lowest point of the SolitaryVegetationObject''s root ball and the terrain surface.",
       "type": "core:Measure"
     },
     {

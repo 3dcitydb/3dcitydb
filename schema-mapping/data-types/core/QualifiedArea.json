@@ -9,11 +9,13 @@
     {
       "name": "area",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the value of the QualifiedArea.",
       "type": "core:Measure"
     },
     {
       "name": "typeOfArea",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Indicates the specific type of the QualifiedArea.",
       "type": "core:Code"
     }
   ]

@@ -1,6 +1,6 @@
 {
   "identifier": "core:Measure",
-  "description": "Measure is a basic type that represents an amount encoded as double value with a unit of measure.",
+  "description": "Measure is a basic type that represents an amount encoded as double value with a unit of measurement.",
   "table": "property",
   "value": {
     "column": "val_double",
@@ -10,6 +10,7 @@
     {
       "name": "uom",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the unit of measurement of the amount.",
       "value": {
         "column": "val_uom",
         "type": "string"

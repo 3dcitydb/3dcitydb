@@ -6,6 +6,7 @@
     {
       "name": "elevationValue",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Specifies the value of the elevation.",
       "value": {
         "column": "val_array",
         "type": "doubleArray"
@@ -14,6 +15,7 @@
     {
       "name": "elevationReference",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Specifies the level from which the elevation was measured.",
       "type": "core:Code"
     }
   ]

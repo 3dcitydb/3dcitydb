@@ -6,11 +6,13 @@
     {
       "name": "targetResource",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the URI that points to the object in the external information system.",
       "type": "core:URI"
     },
     {
       "name": "informationSystem",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the URI that points to the external information system.",
       "value": {
         "column": "val_codespace",
         "type": "uri"
@@ -19,6 +21,7 @@
     {
       "name": "relationType",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies a URI that additionally qualifies the ExternalReference. The URI can point to a definition from an external ontology (e.g. the sameAs relation from OWL) and allows for mapping the ExternalReference to RDF triples.",
       "value": {
         "column": "val_string",
         "type": "uri"
