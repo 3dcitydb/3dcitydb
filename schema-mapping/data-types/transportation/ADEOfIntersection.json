@@ -1,4 +1,5 @@
 {
   "identifier": "tran:ADEOfIntersection",
+  "description": "ADEOfIntersection acts as a hook to define properties within an ADE that are to be added to an Intersection.",
   "table": "property"
 }

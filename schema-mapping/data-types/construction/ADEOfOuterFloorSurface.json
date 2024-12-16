@@ -1,4 +1,5 @@
 {
   "identifier": "con:ADEOfOuterFloorSurface",
+  "description": "ADEOfOuterFloorSurface acts as a hook to define properties within an ADE that are to be added to an OuterFloorSurface.",
   "table": "property"
 }

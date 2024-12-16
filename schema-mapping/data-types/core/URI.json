@@ -1,5 +1,6 @@
 {
   "identifier": "core:URI",
+  "description": "A URI (Uniform Resource Identifier) is a string to uniquely identify a resource, either by its location, name, or both, in a standardized format.",
   "table": "property",
   "value": {
     "column": "val_uri",

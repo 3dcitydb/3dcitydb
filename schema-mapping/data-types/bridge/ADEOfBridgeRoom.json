@@ -1,4 +1,5 @@
 {
   "identifier": "brid:ADEOfBridgeRoom",
+  "description": "ADEOfBridgeRoom acts as a hook to define properties within an ADE that are to be added to a BridgeRoom.",
   "table": "property"
 }

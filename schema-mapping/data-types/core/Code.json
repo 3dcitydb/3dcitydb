@@ -1,5 +1,6 @@
 {
   "identifier": "core:Code",
+  "description": "Code is a basic type for a string-based term, keyword, or name that can additionally have a code space.",
   "table": "property",
   "value": {
     "column": "val_string",

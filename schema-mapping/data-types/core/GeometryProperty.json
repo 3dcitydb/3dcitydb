@@ -1,5 +1,6 @@
 {
   "identifier": "core:GeometryProperty",
+  "description": "GeometryProperty links a feature or property to a geometry.",
   "table": "property",
   "properties": [
     {

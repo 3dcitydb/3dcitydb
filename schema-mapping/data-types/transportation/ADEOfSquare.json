@@ -1,4 +1,5 @@
 {
   "identifier": "tran:ADEOfSquare",
+  "description": "ADEOfSquare acts as a hook to define properties within an ADE that are to be added to a Square.",
   "table": "property"
 }

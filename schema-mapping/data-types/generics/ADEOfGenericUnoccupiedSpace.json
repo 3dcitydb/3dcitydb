@@ -1,4 +1,5 @@
 {
   "identifier": "gen:ADEOfGenericUnoccupiedSpace",
+  "description": "ADEOfGenericUnoccupiedSpace acts as a hook to define properties within an ADE that are to be added to a GenericUnoccupiedSpace.",
   "table": "property"
 }

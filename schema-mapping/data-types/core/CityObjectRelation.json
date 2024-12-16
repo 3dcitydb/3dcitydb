@@ -1,5 +1,6 @@
 {
   "identifier": "core:CityObjectRelation",
+  "description": "CityObjectRelation represents a specific relation from the city object in which the relation is included to another city object.",
   "table": "property",
   "properties": [
     {

@@ -1,4 +1,5 @@
 {
   "identifier": "veg:ADEOfPlantCover",
+  "description": "ADEOfPlantCover acts as a hook to define properties within an ADE that are to be added to a PlantCover.",
   "table": "property"
 }

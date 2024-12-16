@@ -1,5 +1,6 @@
 {
   "identifier": "vers:Transaction",
+  "description": "Transaction represents a modification of the city model by the creation, termination, or replacement of a specific city object. While the creation of a city object also marks its first object version, the termination marks the end of existence of a real world object and, hence, also terminates the final version of a city object. The replacement of a city object means that a specific version of it is replaced by a new version.",
   "table": "property",
   "properties": [
     {

@@ -1,5 +1,6 @@
 {
   "identifier": "core:Boolean",
+  "description": "Boolean is a basic type and can have one of two values: true (represented as 1) or false (represented as 0).",
   "table": "property",
   "value": {
     "column": "val_int",

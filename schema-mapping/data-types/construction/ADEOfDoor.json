@@ -1,4 +1,5 @@
 {
   "identifier": "con:ADEOfDoor",
+  "description": "ADEOfDoor acts as a hook to define properties within an ADE that are to be added to a Door.",
   "table": "property"
 }

@@ -1,5 +1,6 @@
 {
   "identifier": "core:Occupancy",
+  "description": "Occupancy is an application-dependent indication of what is contained by a feature.",
   "table": "property",
   "value": {
     "property": 0

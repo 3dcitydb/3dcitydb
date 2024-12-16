@@ -1,5 +1,6 @@
 {
   "identifier": "core:MeasureOrNilReasonList",
+  "description": "MeasureOrNilReasonList is a basic type that represents a list of double values and/or nil reasons together with a unit of measure.",
   "table": "property",
   "value": {
     "column": "val_array",

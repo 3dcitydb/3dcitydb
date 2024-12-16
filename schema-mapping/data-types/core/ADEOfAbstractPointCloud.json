@@ -1,4 +1,5 @@
 {
   "identifier": "core:ADEOfAbstractPointCloud",
+  "description": "ADEOfAbstractPointCloud acts as a hook to define properties within an ADE that are to be added to AbstractPointCloud.",
   "table": "property"
 }

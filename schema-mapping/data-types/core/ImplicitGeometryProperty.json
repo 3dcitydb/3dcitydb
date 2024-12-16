@@ -1,5 +1,6 @@
 {
   "identifier": "core:ImplicitGeometryProperty",
+  "description": "ImplicitGeometryProperty links a feature or property to an implicit geometry.",
   "table": "property",
   "properties": [
     {

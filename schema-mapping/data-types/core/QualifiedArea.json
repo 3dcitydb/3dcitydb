@@ -1,5 +1,6 @@
 {
   "identifier": "core:QualifiedArea",
+  "description": "QualifiedArea is an application-dependent measure of the area of a space or of a thematic surface.",
   "table": "property",
   "value": {
     "property": 0

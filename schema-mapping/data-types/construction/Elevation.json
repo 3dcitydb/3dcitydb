@@ -1,5 +1,6 @@
 {
   "identifier": "con:Elevation",
+  "description": "Elevation is a data type that includes the elevation value itself and information on how this elevation was measured.",
   "table": "property",
   "properties": [
     {

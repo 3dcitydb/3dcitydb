@@ -1,5 +1,6 @@
 {
   "identifier": "core:Integer",
+  "description": "Integer is a basic type that represents a whole number without fractional or decimal components.",
   "table": "property",
   "value": {
     "column": "val_int",

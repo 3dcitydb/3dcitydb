@@ -1,4 +1,5 @@
 {
   "identifier": "grp:ADEOfCityObjectGroup",
+  "description": "ADEOfCityObjectGroup acts as a hook to define properties within an ADE that are to be added to a CityObjectGroup.",
   "table": "property"
 }

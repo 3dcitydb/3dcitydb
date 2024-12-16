@@ -1,5 +1,6 @@
 {
   "identifier": "core:Measure",
+  "description": "Measure is a basic type that represents an amount encoded as double value with a unit of measure.",
   "table": "property",
   "value": {
     "column": "val_double",

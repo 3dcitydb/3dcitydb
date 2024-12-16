@@ -1,4 +1,5 @@
 {
   "identifier": "brid:ADEOfAbstractBridge",
+  "description": "ADEOfAbstractBridge acts as a hook to define properties within an ADE that are to be added to AbstractBridge.",
   "table": "property"
 }

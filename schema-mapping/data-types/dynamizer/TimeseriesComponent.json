@@ -1,5 +1,6 @@
 {
   "identifier": "dyn:TimeseriesComponent",
+  "description": "TimeseriesComponent represents an element of a CompositeTimeseries.",
   "table": "property",
   "properties": [
     {

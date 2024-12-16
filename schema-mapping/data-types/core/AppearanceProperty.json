@@ -1,5 +1,6 @@
 {
   "identifier": "core:AppearanceProperty",
+  "description": "AppearanceProperty links a feature or property to an appearance.",
   "table": "property",
   "join": {
     "table": "appearance",

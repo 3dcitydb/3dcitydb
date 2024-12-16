@@ -1,5 +1,6 @@
 {
   "identifier": "core:AddressProperty",
+  "description": "AddressProperty links a feature or property to an address.",
   "table": "property",
   "join": {
     "table": "address",

@@ -1,5 +1,6 @@
 {
   "identifier": "grp:Role",
+  "description": "Role qualifies the function of a city object within the CityObjectGroup.",
   "table": "property",
   "properties": [
     {

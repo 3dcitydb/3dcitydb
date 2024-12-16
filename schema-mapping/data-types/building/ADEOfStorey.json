@@ -1,4 +1,5 @@
 {
   "identifier": "bldg:ADEOfStorey",
+  "description": "ADEOfStorey acts as a hook to define properties within an ADE that are to be added to a Storey.",
   "table": "property"
 }

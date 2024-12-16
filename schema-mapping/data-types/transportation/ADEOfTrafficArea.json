@@ -1,4 +1,5 @@
 {
   "identifier": "tran:ADEOfTrafficArea",
+  "description": "ADEOfTrafficArea acts as a hook to define properties within an ADE that are to be added to a TrafficArea.",
   "table": "property"
 }

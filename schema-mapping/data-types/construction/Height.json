@@ -1,5 +1,6 @@
 {
   "identifier": "con:Height",
+  "description": "Height represents a vertical distance (measured or estimated) between a low reference and a high reference.",
   "table": "property",
   "value": {
     "property": 0

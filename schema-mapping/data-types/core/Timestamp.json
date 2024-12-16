@@ -1,5 +1,6 @@
 {
   "identifier": "core:Timestamp",
+  "description": "Timestamp is a basic type that represents a specific point in time.",
   "table": "property",
   "value": {
     "column": "val_timestamp",

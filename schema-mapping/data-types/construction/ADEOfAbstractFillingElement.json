@@ -1,4 +1,5 @@
 {
   "identifier": "con:ADEOfAbstractFillingElement",
+  "description": "ADEOfAbstractFillingElement acts as a hook to define properties within an ADE that are to be added to AbstractFillingElement.",
   "table": "property"
 }

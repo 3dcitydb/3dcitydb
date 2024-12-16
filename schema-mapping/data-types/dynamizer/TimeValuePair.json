@@ -1,5 +1,6 @@
 {
   "identifier": "dyn:TimeValuePair",
+  "description": "A TimeValuePair represents a value that is valid for a given point in time. For each TimeValuePair, only one of the value properties can be used mutually exclusive. Which value property has to be provided depends on the selected value type in the GenericTimeSeries feature, in which the TimeValuePair is included.",
   "table": "property",
   "properties": [
     {

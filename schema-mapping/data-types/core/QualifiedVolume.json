@@ -1,5 +1,6 @@
 {
   "identifier": "core:QualifiedVolume",
+  "description": "QualifiedVolume is an application-dependent measure of the volume of a space.",
   "table": "property",
   "value": {
     "property": 0

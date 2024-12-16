@@ -1,4 +1,5 @@
 {
   "identifier": "gen:GenericAttributeSet",
+  "description": "A GenericAttributeSet is a named collection of generic attributes.",
   "table": "property"
 }

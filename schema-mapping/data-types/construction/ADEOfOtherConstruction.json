@@ -1,4 +1,5 @@
 {
   "identifier": "con:ADEOfOtherConstruction",
+  "description": "ADEOfOtherConstruction acts as a hook to define properties within an ADE that are to be added to an OtherConstruction.",
   "table": "property"
 }

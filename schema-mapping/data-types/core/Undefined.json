@@ -1,4 +1,5 @@
 {
   "identifier": "core:Undefined",
+  "description": "Undefined is a fallback data type used to represent values that do not match any of the predefined types.",
   "table": "property"
 }

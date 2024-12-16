@@ -1,5 +1,6 @@
 {
   "identifier": "core:Reference",
+  "description": "Reference links a feature or property to a remote resource identified by a URI.",
   "table": "property",
   "value": {
     "column": "val_uri",

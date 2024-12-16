@@ -1,5 +1,6 @@
 {
   "identifier": "core:FeatureProperty",
+  "description": "FeatureProperty links a feature or property to a feature.",
   "table": "property",
   "join": {
     "table": "feature",

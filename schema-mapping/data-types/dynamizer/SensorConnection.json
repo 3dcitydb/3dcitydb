@@ -1,5 +1,6 @@
 {
   "identifier": "dyn:SensorConnection",
+  "description": "A SensorConnection provides all details that are required to retrieve a specific data stream from an external sensor web service. This data type comprises the service type (e.g. OGC SensorThings API, OGC Sensor Observation Services, MQTT, proprietary platforms), the URL of the sensor service, the identifier for the sensor or thing, and its observed property as well as information about the required authentication method.",
   "table": "property",
   "properties": [
     {

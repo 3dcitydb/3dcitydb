@@ -1,5 +1,6 @@
 {
   "identifier": "core:ExternalReference",
+  "description": "ExternalReference is a reference to a corresponding object in another information system, for example in the German cadastre (ALKIS), the German topographic information system (ATKIS), or the OS UK MasterMap.",
   "table": "property",
   "properties": [
     {

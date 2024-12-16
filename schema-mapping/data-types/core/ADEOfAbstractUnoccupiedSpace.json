@@ -1,4 +1,5 @@
 {
   "identifier": "core:ADEOfAbstractUnoccupiedSpace",
+  "description": "ADEOfAbstractUnoccupiedSpace acts as a hook to define properties within an ADE that are to be added to AbstractUnoccupiedSpace.",
   "table": "property"
 }

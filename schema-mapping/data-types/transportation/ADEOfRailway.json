@@ -1,4 +1,5 @@
 {
   "identifier": "tran:ADEOfRailway",
+  "description": "ADEOfRailway acts as a hook to define properties within an ADE that are to be added to a Railway.",
   "table": "property"
 }

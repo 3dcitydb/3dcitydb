@@ -1,4 +1,5 @@
 {
   "identifier": "tran:ADEOfMarking",
+  "description": "ADEOfMarking acts as a hook to define properties within an ADE that are to be added to a Marking.",
   "table": "property"
 }

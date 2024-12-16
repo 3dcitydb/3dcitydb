@@ -1,4 +1,5 @@
 {
   "identifier": "dyn:ADEOfAbstractTimeseries",
+  "description": "ADEOfAbstractTimeseries acts as a hook to define properties within an ADE that are to be added to AbstractTimeseries.",
   "table": "property"
 }

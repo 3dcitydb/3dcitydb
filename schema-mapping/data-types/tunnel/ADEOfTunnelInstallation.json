@@ -1,4 +1,5 @@
 {
   "identifier": "tun:ADEOfTunnelInstallation",
+  "description": "ADEOfTunnelInstallation acts as a hook to define properties within an ADE that are to be added to a TunnelInstallation.",
   "table": "property"
 }
