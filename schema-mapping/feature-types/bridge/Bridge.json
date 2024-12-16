@@ -6,6 +6,7 @@
     {
       "name": "bridgePart",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
+      "description": "Relates the bridge parts to the Bridge.",
       "type": "core:FeatureProperty",
       "target": "brid:BridgePart"
     }

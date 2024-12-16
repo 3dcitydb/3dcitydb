@@ -6,6 +6,7 @@
     {
       "name": "relationToConstruction",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Indicates whether the installation is located inside and/or outside of the construction.",
       "type": "core:String"
     }
   ]

@@ -6,6 +6,7 @@
     {
       "name": "component",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Relates to the atomic and composite timeseries that are part of the CompositeTimeseries. The referenced timeseries are sequentially ordered.",
       "type": "dyn:TimeseriesComponent"
     }
   ]

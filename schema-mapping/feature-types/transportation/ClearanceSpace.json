@@ -6,6 +6,7 @@
     {
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Indicates the specific type of the ClearanceSpace.",
       "type": "core:Code"
     }
   ]

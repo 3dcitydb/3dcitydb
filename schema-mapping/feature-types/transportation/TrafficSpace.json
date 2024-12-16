@@ -6,48 +6,57 @@
     {
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Indicates the specific type of the TrafficSpace.",
       "type": "core:Code"
     },
     {
       "name": "function",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Specifies the intended purposes of the TrafficSpace.",
       "type": "core:Code"
     },
     {
       "name": "usage",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Specifies the actual uses of the TrafficSpace.",
       "type": "core:Code"
     },
     {
       "name": "granularity",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Defines whether traffic spaces are represented by individual ways or by individual lanes, depending on the desired level of spatial and semantic decomposition.",
       "type": "core:String"
     },
     {
       "name": "trafficDirection",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Indicates the direction of traffic flow relative to the corresponding linear geometry representation.",
       "type": "core:String"
     },
     {
       "name": "occupancy",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Provides information on the residency of persons, vehicles, or other moving features in the TrafficSpace.",
       "type": "core:Occupancy"
     },
     {
       "name": "predecessor",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Indicates the predecessor(s) of the TrafficSpace.",
       "type": "core:FeatureProperty",
       "target": "tran:TrafficSpace"
     },
     {
       "name": "successor",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Indicates the successor(s) of the TrafficSpace.",
       "type": "core:FeatureProperty",
       "target": "tran:TrafficSpace"
     },
     {
       "name": "clearanceSpace",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Relates to the clearance spaces that are part of the TrafficSpace.",
       "type": "core:FeatureProperty",
       "target": "tran:ClearanceSpace"
     }

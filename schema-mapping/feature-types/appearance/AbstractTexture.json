@@ -6,6 +6,7 @@
     {
       "name": "imageURI",
       "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "description": "Specifies the URI that points to the external texture image.",
       "value": {
         "column": "image_uri",
         "type": "uri"
@@ -19,6 +20,7 @@
     {
       "name": "mimeType",
       "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "description": "Specifies the MIME type of the texture image.",
       "value": {
         "column": "mime_type",
         "type": "string"
@@ -32,6 +34,7 @@
     {
       "name": "codeSpace",
       "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "description": "Specifies the code space of the MIME type, typically a dictionary, thesaurus, classification scheme, authority, or pattern for the MIME type.",
       "value": {
         "column": "mime_type_codespace",
         "type": "string"
@@ -41,6 +44,7 @@
     {
       "name": "wrapMode",
       "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "description": "Specifies the behaviour of the texture when the texture is smaller than the surface to which it is applied.",
       "value": {
         "column": "tex_wrap_mode",
         "type": "string"
@@ -49,6 +53,7 @@
     {
       "name": "borderColor",
       "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "description": "Specifies the color of that part of the surface that is not covered by the texture.",
       "value": {
         "column": "tex_border_color",
         "type": "string"

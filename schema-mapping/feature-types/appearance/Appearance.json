@@ -6,6 +6,7 @@
     {
       "name": "objectId",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the identifier of the appearance that is unique within the database. Using a globally unique identifier is recommended.",
       "value": {
         "column": "objectid",
         "type": "string"
@@ -14,6 +15,7 @@
     {
       "name": "identifier",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies an optional identifier of the appearance that is globally unique.",
       "value": {
         "column": "identifier",
         "type": "string"
@@ -22,6 +24,7 @@
     {
       "name": "codeSpace",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the code space of the identifier, typically a reference to the maintaining authority.",
       "value": {
         "column": "identifier_codespace",
         "type": "string"
@@ -31,6 +34,7 @@
     {
       "name": "theme",
       "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "description": "Specifies the topic of the Appearance. Each Appearance contains surface data for one theme only. Examples of themes are infrared radiation, noise pollution, or earthquake-induced structural stress.",
       "value": {
         "column": "theme",
         "type": "string"
@@ -39,6 +43,7 @@
     {
       "name": "isGlobal",
       "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "description": "Indicates whether the Appearance is global, i.e. is not associated with a specific feature.",
       "value": {
         "column": "is_global",
         "type": "boolean"
@@ -47,6 +52,7 @@
     {
       "name": "surfaceData",
       "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "description": "Relates to the surface data that are part of the Appearance.",
       "target": "app:AbstractSurfaceData",
       "joinTable": {
         "table": "appear_to_surface_data",

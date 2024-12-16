@@ -6,75 +6,89 @@
     {
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "description": "Indicates the specific type of the SolitaryVegetationObject.",
       "type": "core:Code"
     },
     {
       "name": "function",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "description": "Specifies the intended purposes of the SolitaryVegetationObject.",
       "type": "core:Code"
     },
     {
       "name": "usage",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "description": "Specifies the actual uses of the SolitaryVegetationObject.",
       "type": "core:Code"
     },
     {
       "name": "species",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "description": "Indicates the botanical name of the SolitaryVegetationObject.",
       "type": "core:Code"
     },
     {
       "name": "height",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "description": "Distance between the highest point of the vegetation object and the lowest point of the terrain at the bottom of the object.",
       "type": "core:Measure"
     },
     {
       "name": "trunkDiameter",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "description": "Specifies the diameter of the SolitaryCityObject's trunk.",
       "type": "core:Measure"
     },
     {
       "name": "crownDiameter",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "description": "Specifies the diameter of the SolitaryCityObject's crown.",
       "type": "core:Measure"
     },
     {
       "name": "rootBallDiameter",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "description": "Specifies the diameter of the SolitaryCityObject's root ball.",
       "type": "core:Measure"
     },
     {
       "name": "maxRootBallDepth",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "description": "Specifies the vertical distance between the lowest point of the SolitaryVegetationObject's root ball and the terrain surface.",
       "type": "core:Measure"
     },
     {
       "name": "lod1Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D geometry that represents the SolitaryVegetationObject in Level of Detail 1. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractGeometry"
     },
     {
       "name": "lod2Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D geometry that represents the SolitaryVegetationObject in Level of Detail 2. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractGeometry"
     },
     {
       "name": "lod3Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D geometry that represents the SolitaryVegetationObject in Level of Detail 3. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractGeometry"
     },
     {
       "name": "lod4Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D geometry that represents the SolitaryVegetationObject in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractGeometry"
     },
     {
       "name": "lod4ImplicitRepresentation",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to an implicit geometry that represents the SolitaryVegetationObject in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:ImplicitGeometryProperty"
     }
   ]

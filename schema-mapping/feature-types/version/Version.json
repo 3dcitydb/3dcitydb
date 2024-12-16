@@ -6,11 +6,13 @@
     {
       "name": "tag",
       "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "description": "Allows for adding keywords to the city model version.",
       "type": "core:String"
     },
     {
       "name": "versionMember",
       "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
+      "description": "Relates to all city objects that are part of the city model version.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractFeatureWithLifespan"
     }

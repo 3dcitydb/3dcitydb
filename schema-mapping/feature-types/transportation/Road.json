@@ -6,27 +6,32 @@
     {
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Indicates the specific type of the Road.",
       "type": "core:Code"
     },
     {
       "name": "function",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Specifies the intended purposes of the Road.",
       "type": "core:Code"
     },
     {
       "name": "usage",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Specifies the actual uses of the Road.",
       "type": "core:Code"
     },
     {
       "name": "section",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Relates to the sections that are part of the Road.",
       "type": "core:FeatureProperty",
       "target": "tran:Section"
     },
     {
       "name": "intersection",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Relates to the intersections that are part of the Road.",
       "type": "core:FeatureProperty",
       "target": "tran:Intersection"
     }

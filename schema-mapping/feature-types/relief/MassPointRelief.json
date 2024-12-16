@@ -6,12 +6,14 @@
     {
       "name": "reliefPoints",
       "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
+      "description": "Relates to the 3D MultiPoint geometry of the MassPointRelief.",
       "type": "core:GeometryProperty",
       "target": "core:MultiPoint"
     },
     {
       "name": "pointCloud",
       "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
+      "description": "Relates to the 3D PointCloud of the MassPointRelief.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractPointCloud"
     }

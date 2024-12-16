@@ -6,68 +6,80 @@
     {
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/generics/5.0",
+      "description": "Indicates the specific type of the GenericOccupiedSpace.",
       "type": "core:Code"
     },
     {
       "name": "function",
       "namespace": "http://3dcitydb.org/3dcitydb/generics/5.0",
+      "description": "Specifies the intended purposes of the GenericOccupiedSpace.",
       "type": "core:Code"
     },
     {
       "name": "usage",
       "namespace": "http://3dcitydb.org/3dcitydb/generics/5.0",
+      "description": "Specifies the actual uses of the GenericOccupiedSpace.",
       "type": "core:Code"
     },
     {
       "name": "lod0Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D geometry that represents the GenericOccupiedSpace in Level of Detail 0. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractGeometry"
     },
     {
       "name": "lod1Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D geometry that represents the GenericOccupiedSpace in Level of Detail 1. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractGeometry"
     },
     {
       "name": "lod2Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D geometry that represents the GenericOccupiedSpace in Level of Detail 2. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractGeometry"
     },
     {
       "name": "lod3Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D geometry that represents the GenericOccupiedSpace in Level of Detail 3. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractGeometry"
     },
     {
       "name": "lod4Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D geometry that represents the GenericOccupiedSpace in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractGeometry"
     },
     {
       "name": "lod0TerrainIntersectionCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiCurve geometry that represents the terrain intersection curve of the GenericOccupiedSpace in Level of Detail 0. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiLineString"
     },
     {
       "name": "lod4TerrainIntersectionCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiCurve geometry that represents the terrain intersection curve of the GenericOccupiedSpace in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiLineString"
     },
     {
       "name": "lod0ImplicitRepresentation",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to an implicit geometry that represents the GenericOccupiedSpace in Level of Detail 0. Deprecated since CityGML 3.0.",
       "type": "core:ImplicitGeometryProperty"
     },
     {
       "name": "lod4ImplicitRepresentation",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to an implicit geometry that represents the GenericOccupiedSpace in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:ImplicitGeometryProperty"
     }
   ]

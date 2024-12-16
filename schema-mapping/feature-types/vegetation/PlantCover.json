@@ -6,66 +6,78 @@
     {
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "description": "Indicates the specific type of the PlantCover.",
       "type": "core:Code"
     },
     {
       "name": "function",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "description": "Specifies the intended purposes of the PlantCover.",
       "type": "core:Code"
     },
     {
       "name": "usage",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "description": "Specifies the actual uses of the PlantCover.",
       "type": "core:Code"
     },
     {
       "name": "averageHeight",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "description": "Specifies the average height of the PlantCover.",
       "type": "core:Measure"
     },
     {
       "name": "minHeight",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "description": "Specifies the minimum height of the PlantCover.",
       "type": "core:Measure"
     },
     {
       "name": "maxHeight",
       "namespace": "http://3dcitydb.org/3dcitydb/vegetation/5.0",
+      "description": "Specifies the maximum height of the PlantCover.",
       "type": "core:Measure"
     },
     {
       "name": "lod1MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiSurface geometry that represents the PlantCover in Level of Detail 1. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSurface"
     },
     {
       "name": "lod4MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiSurface geometry that represents the PlantCover in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSurface"
     },
     {
       "name": "lod1MultiSolid",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiSolid geometry that represents the PlantCover in Level of Detail 1. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSolid"
     },
     {
       "name": "lod2MultiSolid",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiSolid geometry that represents the PlantCover in Level of Detail 2. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSolid"
     },
     {
       "name": "lod3MultiSolid",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiSolid geometry that represents the PlantCover in Level of Detail 3. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSolid"
     },
     {
       "name": "lod4MultiSolid",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiSolid geometry that represents the PlantCover in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSolid"
     }

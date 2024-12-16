@@ -6,6 +6,7 @@
     {
       "name": "creationDate",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Indicates the date and time at which the feature was added to the database.",
       "value": {
         "column": "creation_date",
         "type": "timestamp"
@@ -14,6 +15,7 @@
     {
       "name": "terminationDate",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Indicates the date and time at which the feature was removed from the database.",
       "value": {
         "column": "termination_date",
         "type": "timestamp"
@@ -22,6 +24,7 @@
     {
       "name": "validFrom",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Indicates the date and time at which the feature started to exist in the real world.",
       "value": {
         "column": "valid_from",
         "type": "timestamp"
@@ -30,6 +33,7 @@
     {
       "name": "validTo",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Indicates the date and time at which the feature ended to exist in the real world.",
       "value": {
         "column": "valid_to",
         "type": "timestamp"

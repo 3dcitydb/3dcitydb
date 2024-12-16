@@ -6,39 +6,46 @@
     {
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Indicates the specific type of the BuildingInstallation.",
       "type": "core:Code"
     },
     {
       "name": "function",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Specifies the intended purposes of the BuildingInstallation.",
       "type": "core:Code"
     },
     {
       "name": "usage",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Specifies the actual uses of the BuildingInstallation.",
       "type": "core:Code"
     },
     {
       "name": "lod2Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D geometry that represents the BuildingInstallation in Level of Detail 2. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractGeometry"
     },
     {
       "name": "lod3Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D geometry that represents the BuildingInstallation in Level of Detail 3. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractGeometry"
     },
     {
       "name": "lod4Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D geometry that represents the BuildingInstallation in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractGeometry"
     },
     {
       "name": "lod4ImplicitRepresentation",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to an implicit geometry that represents the BuildingInstallation in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:ImplicitGeometryProperty"
     }
   ]

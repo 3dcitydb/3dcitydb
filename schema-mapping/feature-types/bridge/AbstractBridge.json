@@ -6,79 +6,93 @@
     {
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
+      "description": "Indicates the specific type of the Bridge or BridgePart.",
       "type": "core:Code"
     },
     {
       "name": "function",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
+      "description": "Specifies the intended purposes of the Bridge or BridgePart.",
       "type": "core:Code"
     },
     {
       "name": "usage",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
+      "description": "Specifies the actual uses of the Bridge or BridgePart.",
       "type": "core:Code"
     },
     {
       "name": "isMovable",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
+      "description": "Indicates whether the Bridge or BridgePart can be moved to allow for watercraft to pass.",
       "type": "core:Boolean"
     },
     {
       "name": "bridgeConstructiveElement",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
+      "description": "Relates the constructive elements to the Bridge or BridgePart.",
       "type": "core:FeatureProperty",
       "target": "brid:BridgeConstructiveElement"
     },
     {
       "name": "bridgeInstallation",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
+      "description": "Relates the installation objects to the Bridge or BridgePart.",
       "type": "core:FeatureProperty",
       "target": "brid:BridgeInstallation"
     },
     {
       "name": "bridgeRoom",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
+      "description": "Relates the rooms to the Bridge or BridgePart.",
       "type": "core:FeatureProperty",
       "target": "brid:BridgeRoom"
     },
     {
       "name": "bridgeFurniture",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
+      "description": "Relates the furniture objects to the Bridge or BridgePart.",
       "type": "core:FeatureProperty",
       "target": "brid:BridgeFurniture"
     },
     {
       "name": "address",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
+      "description": "Relates the addresses to the Bridge or BridgePart.",
       "type": "core:AddressProperty"
     },
     {
       "name": "lod1MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiSurface geometry that represents the Bridge or BridgePart in Level of Detail 1. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSurface"
     },
     {
       "name": "lod4MultiCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiCurve geometry that represents the Bridge or BridgePart in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiLineString"
     },
     {
       "name": "lod4MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiSurface geometry that represents the Bridge or BridgePart in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSurface"
     },
     {
       "name": "lod4Solid",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D Solid geometry that represents the Bridge or BridgePart in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractSolid"
     },
     {
       "name": "lod4TerrainIntersectionCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiCurve geometry that represents the terrain intersection curve of the Bridge or BridgePart in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiLineString"
     }

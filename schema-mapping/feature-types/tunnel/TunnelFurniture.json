@@ -6,27 +6,32 @@
     {
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
+      "description": "Indicates the specific type of the TunnelFurniture.",
       "type": "core:Code"
     },
     {
       "name": "function",
       "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
+      "description": "Specifies the intended purposes of the TunnelFurniture.",
       "type": "core:Code"
     },
     {
       "name": "usage",
       "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
+      "description": "Specifies the actual uses of the TunnelFurniture.",
       "type": "core:Code"
     },
     {
       "name": "lod4Geometry",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D geometry that represents the TunnelFurniture in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractGeometry"
     },
     {
       "name": "lod4ImplicitRepresentation",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to an implicit geometry that represents the TunnelFurniture in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:ImplicitGeometryProperty"
     }
   ]

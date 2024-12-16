@@ -6,6 +6,7 @@
     {
       "name": "id",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the internal database ID of the object.",
       "value": {
         "column": "id",
         "type": "integer"
@@ -14,6 +15,7 @@
     {
       "name": "objectId",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the identifier of the object that is unique within the database. Using a globally unique identifier is recommended.",
       "value": {
         "column": "objectid",
         "type": "string"
@@ -22,6 +24,7 @@
     {
       "name": "identifier",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies an optional identifier of the object that is globally unique.",
       "value": {
         "column": "identifier",
         "type": "string"
@@ -30,6 +33,7 @@
     {
       "name": "codeSpace",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the code space of the identifier, typically a reference to the maintaining authority.",
       "value": {
         "column": "identifier_codespace",
         "type": "string"
@@ -39,6 +43,7 @@
     {
       "name": "envelope",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the minimum bounding box that encloses the entire feature.",
       "value": {
         "column": "envelope",
         "type": "core:Envelope"
@@ -47,6 +52,7 @@
     {
       "name": "objectClassId",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the internal object class ID of the object.",
       "value": {
         "column": "objectclass_id",
         "type": "integer"
@@ -55,6 +61,7 @@
     {
       "name": "lastModificationDate",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Indicates the date and time at which the object was last updated in the database.",
       "value": {
         "column": "last_modification_date",
         "type": "timestamp"
@@ -63,6 +70,7 @@
     {
       "name": "updatingPerson",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the person who last updated the object in the database.",
       "value": {
         "column": "updating_person",
         "type": "string"
@@ -71,6 +79,7 @@
     {
       "name": "reasonForUpdate",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the reason for the last update of the object in the database.",
       "value": {
         "column": "reason_for_update",
         "type": "string"
@@ -79,6 +88,7 @@
     {
       "name": "lineage",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the lineage information of the object.",
       "value": {
         "column": "lineage",
         "type": "string"
@@ -87,16 +97,19 @@
     {
       "name": "description",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies a text description of the object.",
       "type": "core:StringOrRef"
     },
     {
       "name": "descriptionReference",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies a remote text description of the object.",
       "type": "core:Reference"
     },
     {
       "name": "name",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies a label or identifier of the object, commonly a descriptive name.",
       "type": "core:Code"
     }
   ]

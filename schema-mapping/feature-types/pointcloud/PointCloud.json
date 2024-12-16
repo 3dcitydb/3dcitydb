@@ -6,21 +6,25 @@
     {
       "name": "mimeType",
       "namespace": "http://3dcitydb.org/3dcitydb/pointcloud/5.0",
+      "description": "Specifies the MIME type of the external point cloud file.",
       "type": "core:Code"
     },
     {
       "name": "pointFile",
       "namespace": "http://3dcitydb.org/3dcitydb/pointcloud/5.0",
+      "description": "Specifies the URI that points to the external point cloud file.",
       "type": "core:URI"
     },
     {
       "name": "pointFileSrsName",
       "namespace": "http://3dcitydb.org/3dcitydb/pointcloud/5.0",
+      "description": "Indicates the coordinate reference system used by the external point cloud file.",
       "type": "core:String"
     },
     {
       "name": "points",
       "namespace": "http://3dcitydb.org/3dcitydb/pointcloud/5.0",
+      "description": "Relates to the 3D MultiPoint geometry of the PointCloud.",
       "type": "core:GeometryProperty",
       "target": "core:MultiPoint"
     }

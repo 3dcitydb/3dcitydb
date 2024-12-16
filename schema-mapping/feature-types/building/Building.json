@@ -6,6 +6,7 @@
     {
       "name": "buildingPart",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Relates the building parts to the Building.",
       "type": "core:FeatureProperty",
       "target": "bldg:BuildingPart"
     }

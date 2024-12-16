@@ -6,16 +6,19 @@
     {
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/generics/5.0",
+      "description": "Indicates the specific type of the GenericUnoccupiedSpace.",
       "type": "core:Code"
     },
     {
       "name": "function",
       "namespace": "http://3dcitydb.org/3dcitydb/generics/5.0",
+      "description": "Specifies the intended purposes of the GenericUnoccupiedSpace.",
       "type": "core:Code"
     },
     {
       "name": "usage",
       "namespace": "http://3dcitydb.org/3dcitydb/generics/5.0",
+      "description": "Specifies the actual uses of the GenericUnoccupiedSpace.",
       "type": "core:Code"
     }
   ]

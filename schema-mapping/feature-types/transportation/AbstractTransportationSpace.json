@@ -6,46 +6,54 @@
     {
       "name": "trafficDirection",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Indicates the direction of traffic flow relative to the corresponding linear geometry representation.",
       "type": "core:String"
     },
     {
       "name": "occupancy",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Provides information on the residency of persons, vehicles, or other moving features in the transportation space.",
       "type": "core:Occupancy"
     },
     {
       "name": "trafficSpace",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Relates to the traffic spaces that are part of the transportation space.",
       "type": "core:FeatureProperty",
       "target": "tran:TrafficSpace"
     },
     {
       "name": "auxiliaryTrafficSpace",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Relates to the auxiliary traffic spaces that are part of the transportation space.",
       "type": "core:FeatureProperty",
       "target": "tran:AuxiliaryTrafficSpace"
     },
     {
       "name": "hole",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Relates to the holes that are part of the transportation space.",
       "type": "core:FeatureProperty",
       "target": "tran:Hole"
     },
     {
       "name": "marking",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
+      "description": "Relates to the markings that are part of the transportation space.",
       "type": "core:FeatureProperty",
       "target": "tran:Marking"
     },
     {
       "name": "lod1MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiSurface geometry that represents the transportation space in Level of Detail 1. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSurface"
     },
     {
       "name": "lod4MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiSurface geometry that represents the transportation space in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSurface"
     }

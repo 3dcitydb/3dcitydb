@@ -6,11 +6,13 @@
     {
       "name": "isStructuralElement",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Indicates whether the constructive element is essential from a structural point of view. A structural element cannot be omitted without collapsing of the construction. Examples are pylons and anchorages of bridges.",
       "type": "core:Boolean"
     },
     {
       "name": "filling",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Relates to the elements that fill the opening of the constructive element.",
       "type": "core:FeatureProperty",
       "target": "con:AbstractFillingElement"
     }

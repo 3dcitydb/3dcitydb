@@ -6,6 +6,7 @@
     {
       "name": "waterLevel",
       "namespace": "http://3dcitydb.org/3dcitydb/waterbody/5.0",
+      "description": "Specifies the level of the WaterSurface.",
       "type": "core:Code"
     }
   ]

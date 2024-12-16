@@ -6,49 +6,58 @@
     {
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Indicates the specific type of the building subdivision.",
       "type": "core:Code"
     },
     {
       "name": "function",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Specifies the intended purposes of the building subdivision.",
       "type": "core:Code"
     },
     {
       "name": "usage",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Specifies the actual uses of the building subdivision.",
       "type": "core:Code"
     },
     {
       "name": "elevation",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Specifies qualified elevations of the building subdivision in relation to a well-defined surface which is commonly taken as origin (e.g. geoid or water level).",
       "type": "con:Elevation"
     },
     {
       "name": "sortKey",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Defines an order among the objects that belong to the building subdivision. An example is the sorting of storeys.",
       "type": "core:Double"
     },
     {
       "name": "buildingConstructiveElement",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Relates the constructive elements to the building subdivision.",
       "type": "core:FeatureProperty",
       "target": "bldg:BuildingConstructiveElement"
     },
     {
       "name": "buildingFurniture",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Relates the furniture objects to the building subdivision.",
       "type": "core:FeatureProperty",
       "target": "bldg:BuildingFurniture"
     },
     {
       "name": "buildingInstallation",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Relates the installation objects to the building subdivision.",
       "type": "core:FeatureProperty",
       "target": "bldg:BuildingInstallation"
     },
     {
       "name": "buildingRoom",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Relates the rooms to the building subdivision.",
       "type": "core:FeatureProperty",
       "target": "bldg:BuildingRoom"
     }

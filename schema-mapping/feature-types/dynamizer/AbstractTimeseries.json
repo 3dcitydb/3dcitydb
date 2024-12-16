@@ -6,11 +6,13 @@
     {
       "name": "firstTimestamp",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the beginning of the timeseries.",
       "type": "core:Timestamp"
     },
     {
       "name": "lastTimestamp",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the end of the timeseries.",
       "type": "core:Timestamp"
     }
   ]

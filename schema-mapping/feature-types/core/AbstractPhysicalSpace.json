@@ -6,24 +6,28 @@
     {
       "name": "lod1TerrainIntersectionCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Relates to a 3D MultiCurve geometry that represents the terrain intersection curve of the physical space in Level of Detail 1.",
       "type": "core:GeometryProperty",
       "target": "core:MultiLineString"
     },
     {
       "name": "lod2TerrainIntersectionCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Relates to a 3D MultiCurve geometry that represents the terrain intersection curve of the physical space in Level of Detail 2.",
       "type": "core:GeometryProperty",
       "target": "core:MultiLineString"
     },
     {
       "name": "lod3TerrainIntersectionCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Relates to a 3D MultiCurve geometry that represents the terrain intersection curve of the physical space in Level of Detail 3.",
       "type": "core:GeometryProperty",
       "target": "core:MultiLineString"
     },
     {
       "name": "pointCloud",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Relates to a 3D PointCloud that represents the physical space.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractPointCloud"
     }

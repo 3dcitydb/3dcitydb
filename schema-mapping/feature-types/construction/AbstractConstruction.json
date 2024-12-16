@@ -6,36 +6,43 @@
     {
       "name": "conditionOfConstruction",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Indicates the life-cycle status of the construction.",
       "type": "core:String"
     },
     {
       "name": "dateOfConstruction",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Indicates the date at which the construction was completed.",
       "type": "core:Timestamp"
     },
     {
       "name": "dateOfDemolition",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Indicates the date at which the construction was demolished.",
       "type": "core:Timestamp"
     },
     {
       "name": "constructionEvent",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Describes specific events in the life-time of the construction.",
       "type": "con:ConstructionEvent"
     },
     {
       "name": "elevation",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Specifies qualified elevations of the construction in relation to a well-defined surface which is commonly taken as origin (e.g. geoid or water level).",
       "type": "con:Elevation"
     },
     {
       "name": "height",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Specifies qualified heights of the construction above ground or below ground.",
       "type": "con:Height"
     },
     {
       "name": "occupancy",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Provides qualified information on the residency of persons, animals, or other moveable objects in the construction.",
       "type": "core:Occupancy"
     }
   ]

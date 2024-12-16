@@ -6,41 +6,48 @@
     {
       "name": "area",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies qualified areas related to the thematic surface.",
       "type": "core:QualifiedArea"
     },
     {
       "name": "lod0MultiCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Relates to a 3D MultiCurve geometry that represents the thematic surface in Level of Detail 0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiLineString"
     },
     {
       "name": "lod1MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Relates to a 3D MultiSurface geometry that represents the thematic surface in Level of Detail 1.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSurface"
     },
     {
       "name": "lod2MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Relates to a 3D MultiSurface geometry that represents the thematic surface in Level of Detail 2.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSurface"
     },
     {
       "name": "lod3MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Relates to a 3D MultiSurface geometry that represents the thematic surface in Level of Detail 3.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSurface"
     },
     {
       "name": "pointCloud",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Relates to a 3D PointCloud that represents the thematic surface.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractPointCloud"
     },
     {
       "name": "lod4MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiSurface geometry that represents the thematic surface in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSurface"
     }

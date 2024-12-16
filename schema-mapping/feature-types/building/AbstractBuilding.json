@@ -6,111 +6,131 @@
     {
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Indicates the specific type of the Building or BuildingPart.",
       "type": "core:Code"
     },
     {
       "name": "function",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Specifies the intended purposes of the Building or BuildingPart.",
       "type": "core:Code"
     },
     {
       "name": "usage",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Specifies the actual uses of the Building or BuildingPart.",
       "type": "core:Code"
     },
     {
       "name": "roofType",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Indicates the shape of the roof of the Building or BuildingPart.",
       "type": "core:Code"
     },
     {
       "name": "storeysAboveGround",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Indicates the number of storeys positioned above ground level.",
       "type": "core:Integer"
     },
     {
       "name": "storeysBelowGround",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Indicates the number of storeys positioned below ground level.",
       "type": "core:Integer"
     },
     {
       "name": "storeyHeightsAboveGround",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Lists the heights of each storey above ground. The first value in the list denotes the height of the storey closest to the ground level, the last value denotes the height furthest away.",
       "type": "core:MeasureOrNilReasonList"
     },
     {
       "name": "storeyHeightsBelowGround",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Lists the height of each storey below ground. The first value in the list denotes the height of the storey closest to the ground level, the last value denotes the height furthest away.",
       "type": "core:MeasureOrNilReasonList"
     },
     {
       "name": "buildingConstructiveElement",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Relates the constructive elements to the Building or BuildingPart.",
       "type": "core:FeatureProperty",
       "target": "bldg:BuildingConstructiveElement"
     },
     {
       "name": "buildingInstallation",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Relates the installation objects to the Building or BuildingPart.",
       "type": "core:FeatureProperty",
       "target": "bldg:BuildingInstallation"
     },
     {
       "name": "buildingRoom",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Relates the rooms to the Building or BuildingPart.",
       "type": "core:FeatureProperty",
       "target": "bldg:BuildingRoom"
     },
     {
       "name": "buildingFurniture",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Relates the furniture objects to the Building or BuildingPart.",
       "type": "core:FeatureProperty",
       "target": "bldg:BuildingFurniture"
     },
     {
       "name": "buildingSubdivision",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Relates the logical subdivisions to the Building or BuildingPart.",
       "type": "core:FeatureProperty",
       "target": "bldg:AbstractBuildingSubdivision"
     },
     {
       "name": "address",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Relates the addresses to the Building or BuildingPart.",
       "type": "core:AddressProperty"
     },
     {
       "name": "lod0RoofEdge",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiSurface geometry that represents the roof edge of the Building or BuildingPart in Level of Detail 0. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSurface"
     },
     {
       "name": "lod1MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiSurface geometry that represents the Building or BuildingPart in Level of Detail 1. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSurface"
     },
     {
       "name": "lod4MultiCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiCurve geometry that represents the Building or BuildingPart in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiLineString"
     },
     {
       "name": "lod4MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiSurface geometry that represents the Building or BuildingPart in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSurface"
     },
     {
       "name": "lod4Solid",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D Solid geometry that represents the Building or BuildingPart in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractSolid"
     },
     {
       "name": "lod4TerrainIntersectionCurve",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiCurve geometry that represents the terrain intersection curve of the Building or BuildingPart in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiLineString"
     }

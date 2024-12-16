@@ -6,11 +6,13 @@
     {
       "name": "lod",
       "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
+      "description": "Indicates the Level of Detail of the terrain component.",
       "type": "core:Integer"
     },
     {
       "name": "extent",
       "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
+      "description": "Indicates the geometrical extent of the terrain component. The geometrical extent is provided as a 2D Surface geometry.",
       "type": "core:GeometryProperty",
       "target": "core:Polygon"
     }

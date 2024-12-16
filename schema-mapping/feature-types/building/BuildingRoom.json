@@ -6,44 +6,52 @@
     {
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Indicates the specific type of the BuildingRoom.",
       "type": "core:Code"
     },
     {
       "name": "function",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Specifies the intended purposes of the BuildingRoom.",
       "type": "core:Code"
     },
     {
       "name": "usage",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Specifies the actual uses of the BuildingRoom.",
       "type": "core:Code"
     },
     {
       "name": "roomHeight",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Specifies qualified heights of the BuildingRoom.",
       "type": "bldg:RoomHeight"
     },
     {
       "name": "buildingFurniture",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Relates the furniture objects to the BuildingRoom.",
       "type": "core:FeatureProperty",
       "target": "bldg:BuildingFurniture"
     },
     {
       "name": "buildingInstallation",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Relates the installation objects to the BuildingRoom.",
       "type": "core:FeatureProperty",
       "target": "bldg:BuildingInstallation"
     },
     {
       "name": "lod4Solid",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D Solid geometry that represents the BuildingRoom in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractSolid"
     },
     {
       "name": "lod4MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to a 3D MultiSurface geometry that represents the BuildingRoom in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
       "target": "core:MultiSurface"
     }

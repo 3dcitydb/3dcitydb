@@ -6,11 +6,13 @@
     {
       "name": "observationProperty",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the phenomenon for which the atomic timeseries provides observation values.",
       "type": "core:String"
     },
     {
       "name": "uom",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the unit of measurement of the observation values.",
       "type": "core:String"
     }
   ]

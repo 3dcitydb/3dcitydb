@@ -6,21 +6,25 @@
     {
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Indicates the specific type of the Door.",
       "type": "core:Code"
     },
     {
       "name": "function",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Specifies the intended purposes of the Door.",
       "type": "core:Code"
     },
     {
       "name": "usage",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Specifies the actual uses of the Door.",
       "type": "core:Code"
     },
     {
       "name": "address",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Relates to the addresses that are assigned to the Door.",
       "type": "core:AddressProperty"
     }
   ]

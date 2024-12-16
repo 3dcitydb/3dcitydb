@@ -6,11 +6,13 @@
     {
       "name": "lod3ImplicitRepresentation",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to an implicit geometry that represents the AbstractFillingSurface in Level of Detail 3. Deprecated since CityGML 3.0.",
       "type": "core:ImplicitGeometryProperty"
     },
     {
       "name": "lod4ImplicitRepresentation",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "description": "Relates to an implicit geometry that represents the AbstractFillingSurface in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:ImplicitGeometryProperty"
     }
   ]

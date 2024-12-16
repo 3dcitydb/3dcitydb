@@ -5,7 +5,8 @@
   "properties": [
     {
       "name": "address",
-      "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Relates to the addresses that are assigned to the DoorSurface.",
       "type": "core:AddressProperty"
     }
   ]

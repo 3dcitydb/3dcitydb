@@ -6,6 +6,7 @@
     {
       "name": "objectId",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the identifier of the surface data that is unique within the database. Using a globally unique identifier is recommended.",
       "value": {
         "column": "objectid",
         "type": "string"
@@ -14,6 +15,7 @@
     {
       "name": "identifier",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies an optional identifier of the surface data that is globally unique.",
       "value": {
         "column": "identifier",
         "type": "string"
@@ -22,6 +24,7 @@
     {
       "name": "codeSpace",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the code space of the identifier, typically a reference to the maintaining authority.",
       "value": {
         "column": "identifier_codespace",
         "type": "string"
@@ -31,6 +34,7 @@
     {
       "name": "isFront",
       "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "description": "Indicates whether the texture or material is assigned to the front side or the back side of the surface geometry object.",
       "value": {
         "column": "is_front",
         "type": "boolean"

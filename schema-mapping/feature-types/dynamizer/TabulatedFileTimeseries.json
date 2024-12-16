@@ -6,71 +6,85 @@
     {
       "name": "fileLocation",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the URI that points to the external timeseries file.",
       "type": "core:URI"
     },
     {
       "name": "fileType",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the format used to represent the timeseries data.",
       "type": "core:Code"
     },
     {
       "name": "mimeType",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the MIME type of the external timeseries file.",
       "type": "core:Code"
     },
     {
       "name": "valueType",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Indicates the specific type of the timeseries data.",
       "type": "core:String"
     },
     {
       "name": "numberOfHeaderLines",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Indicates the number of lines at the beginning of the tabulated file that represent headers.",
       "type": "core:Integer"
     },
     {
       "name": "fieldSeparator",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Indicates which symbol is used to separate the individual values in the tabulated file.",
       "type": "core:String"
     },
     {
       "name": "decimalSymbol",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Indicates which symbol is used to separate the integer part from the fractional part of a decimal number.",
       "type": "core:String"
     },
     {
       "name": "idColumnNo",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the number of the column that stores the identifier of the time-value-pair.",
       "type": "core:Integer"
     },
     {
       "name": "idColumnName",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the name of the column that stores the identifier of the time-value-pair.",
       "type": "core:String"
     },
     {
       "name": "idValue",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the value of the identifier for which the time-value-pairs are to be selected.",
       "type": "core:String"
     },
     {
       "name": "timeColumnNo",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the number of the column that stores the timestamp of the time-value-pair.",
       "type": "core:Integer"
     },
     {
       "name": "timeColumnName",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the name of the column that stores the timestamp of the time-value-pair.",
       "type": "core:String"
     },
     {
       "name": "valueColumnNo",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the number of the column that stores the value of the time-value-pair.",
       "type": "core:Integer"
     },
     {
       "name": "valueColumnName",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the name of the column that stores the value of the time-value-pair.",
       "type": "core:String"
     }
   ]

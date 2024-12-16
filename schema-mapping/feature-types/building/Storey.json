@@ -6,6 +6,7 @@
     {
       "name": "buildingUnit",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
+      "description": "Relates to the building units that belong to the Storey.",
       "type": "core:FeatureProperty",
       "target": "bldg:BuildingUnit"
     }
