@@ -43,7 +43,7 @@
     {
       "name": "envelope",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "description": "Specifies the minimum bounding box that encloses the entire feature.",
+      "description": "Specifies the minimum bounding box that encloses the entire object.",
       "value": {
         "column": "envelope",
         "type": "core:Envelope"
@@ -103,7 +103,7 @@
     {
       "name": "descriptionReference",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
-      "description": "Specifies a remote text description of the object.",
+      "description": "Specifies a reference to a remote text description of the object.",
       "type": "core:Reference"
     },
     {
