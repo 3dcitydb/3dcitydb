@@ -201,7 +201,7 @@ BEGIN
       (SELECT DISTINCT unnest(feature_ids) AS a_id) a
     LEFT JOIN
       property p
-      ON p.val_feature_id  = a.a_id
+      ON p.val_feature_id = a.a_id
     WHERE p.val_feature_id IS NULL OR p.val_relation_type IS NULL OR p.val_relation_type = 0;
   END IF;
 
@@ -216,7 +216,11 @@ BEGIN
     PERFORM
       citydb_pkg.delete_implicit_geometry(array_agg(a.a_id))
     FROM
-      (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a;
+      (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
+	LEFT JOIN
+      property p
+      ON p.val_implicitgeom_id = a.a_id
+    WHERE p.val_implicitgeom_id IS NULL;
   END IF;
 
   IF -1 = ALL(appearance_ids) IS NOT NULL THEN
