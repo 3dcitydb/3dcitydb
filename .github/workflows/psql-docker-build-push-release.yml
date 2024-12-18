@@ -66,10 +66,14 @@ jobs:
           prefix=${{ matrix.baseimage-tag }}-
           suffix=${{ matrix.variant }},onlatest=true
         tags: |
-          # Latest tag for PR, PR number only
+          # Tags <baseimage-tag>-<semver>[-<variant>]
           type=semver,pattern={{version}}
           type=semver,pattern={{major}}
           type=semver,pattern={{major}}.{{minor}}
+          # For latest baseimage only: <semver>[-<variant>]
+          ${{ matrix.baseimage-tag == env.LATEST_BASEIMAGE && 'type=semver,pattern={{version}},prefix=' || '' }}
+          ${{ matrix.baseimage-tag == env.LATEST_BASEIMAGE && 'type=semver,pattern={{major}},prefix=' || '' }}
+          ${{ matrix.baseimage-tag == env.LATEST_BASEIMAGE && 'type=semver,pattern={{major}}.{{minor}},prefix=' || '' }}
         labels: |
           maintainer=Bruno Willenborg
           maintainer.email=b.willenborg(at)tum.de
