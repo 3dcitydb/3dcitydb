@@ -217,7 +217,7 @@ BEGIN
       citydb_pkg.delete_implicit_geometry(array_agg(a.a_id))
     FROM
       (SELECT DISTINCT unnest(implicit_geometry_ids) AS a_id) a
-	LEFT JOIN
+    LEFT JOIN
       property p
       ON p.val_implicitgeom_id = a.a_id
     WHERE p.val_implicitgeom_id IS NULL;
