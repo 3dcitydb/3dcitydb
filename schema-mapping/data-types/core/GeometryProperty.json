@@ -6,6 +6,7 @@
     {
       "name": "lod",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Specifies the Level of Detail of the geometry.",
       "value": {
         "column": "val_lod",
         "type": "string"
