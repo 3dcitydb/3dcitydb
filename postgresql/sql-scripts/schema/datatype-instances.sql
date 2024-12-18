@@ -3,7 +3,7 @@ DELETE FROM datatype;
 -- Core Module --
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (1, null, 'Undefined', 0, 1, @core:Undefined@);
+VALUES (1, null, 'Undefined', 1, 1, @core:Undefined@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
 VALUES (2, null, 'Boolean', 0, 1, @core:Boolean@);

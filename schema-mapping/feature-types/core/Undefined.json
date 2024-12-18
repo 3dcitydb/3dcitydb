@@ -1,5 +1,5 @@
 {
   "identifier": "core:Undefined",
-  "description": "Undefined is a fallback class used to represent types that do not match any of the predefined classes.",
+  "description": "Undefined object class.",
   "table": "feature"
 }
