@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        baseimage-tag: ['16-3.4']   # base image tags for 'edge' image
+        baseimage-tag: ['17-3.5']   # base image tags for 'edge' image
         variant: ['', '-alpine']    # image variants: '' = debian
 
     steps:
@@ -71,7 +71,7 @@ jobs:
     -
       name: Build and push image
       id: docker_build
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: ./postgresql
         push: true

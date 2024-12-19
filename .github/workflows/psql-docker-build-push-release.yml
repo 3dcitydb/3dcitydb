@@ -8,7 +8,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  LATEST_BASEIMAGE: '16-3.4'
+  LATEST_BASEIMAGE: '17-3.5'
 
 jobs:
   build-push:
@@ -17,11 +17,11 @@ jobs:
     strategy:
       matrix:
         baseimage-tag: [
-          '12-2.5',   '12-3.0',   '12-3.1',   '12-3.2',   '12-3.3',   '12-3.4',
-                      '13-3.0',   '13-3.1',   '13-3.2',   '13-3.3',   '13-3.4',
-                                  '14-3.1',   '14-3.2',   '14-3.3',   '14-3.4',
-                                                          '15-3.3',   '15-3.4',
-                                                                      '16-3.4'
+          '13-3.0',   '13-3.1',   '13-3.2',   '13-3.3',   '13-3.4',   '13-3.5',
+                      '14-3.1',   '14-3.2',   '14-3.3',   '14-3.4',   '14-3.5',
+                                              '15-3.3',   '15-3.4',   '15-3.5',
+                                                          '16-3.4',   '16-3.5',
+                                                          '17-3.4',   '17-3.5'
         ]
         variant: ['', '-alpine']    # image variants: '' = debian
 
@@ -66,10 +66,14 @@ jobs:
           prefix=${{ matrix.baseimage-tag }}-
           suffix=${{ matrix.variant }},onlatest=true
         tags: |
-          # Latest tag for PR, PR number only
+          # Tags <baseimage-tag>-<semver>[-<variant>]
           type=semver,pattern={{version}}
           type=semver,pattern={{major}}
           type=semver,pattern={{major}}.{{minor}}
+          # For latest baseimage only: <semver>[-<variant>]
+          ${{ matrix.baseimage-tag == env.LATEST_BASEIMAGE && 'type=semver,pattern={{version}},prefix=' || '' }}
+          ${{ matrix.baseimage-tag == env.LATEST_BASEIMAGE && 'type=semver,pattern={{major}},prefix=' || '' }}
+          ${{ matrix.baseimage-tag == env.LATEST_BASEIMAGE && 'type=semver,pattern={{major}}.{{minor}},prefix=' || '' }}
         labels: |
           maintainer=Bruno Willenborg
           maintainer.email=b.willenborg(at)tum.de
@@ -84,7 +88,7 @@ jobs:
     -
       name: Build and publish
       id: docker_build
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         push: true
         context: ./postgresql
