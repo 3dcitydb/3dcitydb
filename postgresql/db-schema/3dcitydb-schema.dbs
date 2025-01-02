@@ -314,9 +314,6 @@
 			<index name="property_name_inx" unique="NORMAL" >
 				<column name="name" />
 			</index>
-			<index name="property_val_feature_fkx" unique="NORMAL" options="WHERE val_feature_id IS NOT NULL" >
-				<column name="val_feature_id" />
-			</index>
 			<index name="property_val_string_inx" unique="NORMAL" options="WHERE val_string IS NOT NULL" >
 				<column name="val_string" />
 			</index>
@@ -325,9 +322,6 @@
 			</index>
 			<index name="property_val_uri_inx" unique="NORMAL" options="WHERE val_uri IS NOT NULL" >
 				<column name="val_uri" />
-			</index>
-			<index name="property_val_lod_inx" unique="NORMAL" options="WHERE val_lod IS NOT NULL" >
-				<column name="val_lod" />
 			</index>
 			<index name="property_val_int_inx" unique="NORMAL" options="WHERE val_int IS NOT NULL" >
 				<column name="val_int" />
@@ -338,20 +332,26 @@
 			<index name="property_val_date_inx" unique="NORMAL" options="WHERE val_timestamp IS NOT NULL" >
 				<column name="val_timestamp" />
 			</index>
-			<index name="property_val_geometry_fkx" unique="NORMAL" options="WHERE val_geometry_id IS NOT NULL" >
+			<index name="property_val_feature_fkx" unique="NORMAL" >
+				<column name="val_feature_id" />
+			</index>
+			<index name="property_val_geometry_fkx" unique="NORMAL" >
 				<column name="val_geometry_id" />
 			</index>
-			<index name="property_val_implicitgeom_fkx" unique="NORMAL" options="WHERE val_implicitgeom_id IS NOT NULL" >
+			<index name="property_val_implicitgeom_fkx" unique="NORMAL" >
 				<column name="val_implicitgeom_id" />
 			</index>
-			<index name="property_val_appearance_fkx" unique="NORMAL" options="WHERE val_appearance_id IS NOT NULL" >
+			<index name="property_val_appearance_fkx" unique="NORMAL" >
 				<column name="val_appearance_id" />
 			</index>
-			<index name="property_val_relation_type_inx" unique="NORMAL" options="WHERE val_relation_type IS NOT NULL" >
+			<index name="property_val_relation_type_inx" unique="NORMAL" >
 				<column name="val_relation_type" />
 			</index>
-			<index name="property_val_address_fkx" unique="NORMAL" options="WHERE val_address_id IS NOT NULL" >
+			<index name="property_val_address_fkx" unique="NORMAL" >
 				<column name="val_address_id" />
+			</index>
+			<index name="property_val_lod_inx" unique="NORMAL" >
+				<column name="val_lod" />
 			</index>
 			<fk name="property_appearance_fk" to_schema="citydb" to_table="appearance" delete_action="cascade" >
 				<fk_column name="val_appearance_id" pk="id" />
