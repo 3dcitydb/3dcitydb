@@ -7,6 +7,10 @@
 * delete_feature(pid_array bigint[], schema_name TEXT) RETURNS SETOF BIGINT
 * delete_feature(pid bigint) RETURNS BIGINT
 * delete_feature(pid bigint, schema_name TEXT) RETURNS BIGINT
+* terminate_feature(pid_array bigint[]) RETURNS SETOF BIGINT
+* terminate_feature(pid_array bigint[], schema_name TEXT) RETURNS SETOF BIGINT
+* terminate_feature(pid bigint) RETURNS BIGINT
+* terminate_feature(pid bigint, schema_name TEXT) RETURNS BIGINT
 * delete_property_row(pid_array bigint[]) RETURNS SETOF BIGINT
 * delete_property(pid_array bigint[]) RETURNS SETOF BIGINT
 * delete_property(pid_array bigint[], schema_name TEXT) RETURNS SETOF BIGINT
@@ -142,6 +146,102 @@ BEGIN
   EXECUTE format('set search_path to %I, public', schema_name);
 
   RETURN citydb_pkg.delete_feature(ARRAY[pid]);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+
+/******************************************************************
+* terminate feature based on an id array
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid_array bigint[]) RETURNS SETOF BIGINT AS
+$body$
+DECLARE
+  terminated_ids bigint[] := '{}';
+  child_feature_ids bigint[] := '{}';
+  termination_timestamp TIMESTAMP;
+BEGIN
+  termination_timestamp = now();
+
+  WITH terminated_objects AS (
+    UPDATE
+       feature f
+    SET
+       termination_date = termination_timestamp,
+       last_modification_date = termination_timestamp
+    FROM
+      unnest($1) a(a_id)
+    WHERE
+      f.id = a.a_id AND termination_date IS NULL
+    RETURNING
+      f.id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    terminated_ids
+  FROM
+    terminated_objects;
+
+  SELECT
+    array_agg(val_feature_id)
+  INTO
+    child_feature_ids
+  FROM
+    property p, unnest(terminated_ids) a(a_id)
+  WHERE
+    p.feature_id = a.a_id AND val_relation_type = 1;
+
+  IF -1 = ALL(child_feature_ids) IS NOT NULL THEN
+    PERFORM
+      citydb_pkg.terminate_feature(array_agg(a.a_id))
+    FROM
+      (SELECT DISTINCT unnest(child_feature_ids) AS a_id) a
+    LEFT JOIN
+      property p
+      ON p.val_feature_id = a.a_id AND NOT (p.val_feature_id = ANY(child_feature_ids))
+    WHERE p.val_feature_id IS NULL OR p.val_relation_type IS NULL OR p.val_relation_type = 0;
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(terminated_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+
+/******************************************************************
+* terminate features based on an id array and schema name
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid_array bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
+$body$
+BEGIN
+  EXECUTE format('set search_path to %I, public', schema_name);
+
+  RETURN QUERY
+    SELECT citydb_pkg.terminate_feature($1);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+
+/******************************************************************
+* terminate a feature based on an id and schema name
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid bigint) RETURNS BIGINT AS
+$body$
+BEGIN
+  RETURN citydb_pkg.terminate_feature(ARRAY[pid]);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+
+/******************************************************************
+* terminate a feature based on an id and schema name
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid bigint, schema_name TEXT) RETURNS BIGINT AS
+$body$
+BEGIN
+  EXECUTE format('set search_path to %I, public', schema_name);
+
+  RETURN citydb_pkg.terminate_feature(ARRAY[pid]);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
