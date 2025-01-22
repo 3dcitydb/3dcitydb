@@ -216,10 +216,17 @@ BEGIN
       citydb_pkg.terminate_feature(array_agg(a.a_id), metadata)
     FROM
       (SELECT DISTINCT unnest(child_feature_ids) AS a_id) a
-    LEFT JOIN
-      property p
-      ON p.val_feature_id = a.a_id AND NOT (p.val_feature_id = ANY(child_feature_ids))
-    WHERE p.val_feature_id IS NULL OR p.val_relation_type IS NULL OR p.val_relation_type = 0;
+    WHERE NOT EXISTS
+    (
+      SELECT
+        1
+      FROM
+        property p
+      INNER JOIN
+        feature f
+        ON f.id = p.feature_id
+      WHERE p.val_feature_id = a.a_id AND f.termination_date IS NULL AND p.val_relation_type = 1
+    );
   END IF;
 
   RETURN QUERY
