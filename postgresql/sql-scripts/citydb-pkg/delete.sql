@@ -158,36 +158,16 @@ $body$
 DECLARE
   terminated_ids bigint[] := '{}';
   child_feature_ids bigint[] := '{}';
-  termination_timestamp TIMESTAMP;
-  update_reason TEXT;
-  update_person TEXT DEFAULT USER;
-  udpate_lineage TEXT;
 BEGIN
-  termination_timestamp = now();
-
-  IF metadata IS NOT NULL THEN
-    IF metadata->>'reason_for_update' IS NOT NULL THEN
-      update_reason = metadata->>'reason_for_update';
-    END IF;
-
-    IF metadata->>'updating_person' IS NOT NULL THEN
-      update_person = metadata->>'updating_person';
-    END IF;
-
-    IF metadata->>'lineage' IS NOT NULL THEN
-      udpate_lineage = metadata->>'lineage';
-    END IF;
-  END IF;
-
   WITH terminated_objects AS (
     UPDATE
-       feature f
+      feature f
     SET
-       termination_date = termination_timestamp,
-       last_modification_date = termination_timestamp,
-       reason_for_update = update_reason,
-       updating_person = update_person,
-       lineage = udpate_lineage
+      termination_date = COALESCE((metadata->>'termination_date')::timestamp with time zone, now()),
+      last_modification_date = COALESCE((metadata->>'last_modification_date')::timestamp with time zone, now()),
+      reason_for_update = COALESCE(metadata->>'reason_for_update', f.reason_for_update),
+      updating_person = COALESCE(metadata->>'updating_person', USER),
+      lineage = COALESCE(metadata->>'lineage', f.lineage)
     FROM
       unnest($1) a(a_id)
     WHERE
