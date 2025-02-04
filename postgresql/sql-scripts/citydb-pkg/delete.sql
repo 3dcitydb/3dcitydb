@@ -36,6 +36,10 @@
 * delete_address(pid_array bigint[], schema_name TEXT) RETURNS SETOF BIGINT
 * delete_address(pid bigint) RETURNS BIGINT
 * delete_address(pid bigint, schema_name TEXT) RETURNS BIGINT
+* terminate_feature(pid_array bigint[], metadata JSON DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS SETOF BIGINT
+* terminate_feature(pid_array bigint[], schema_name TEXT, metadata JSON DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS SETOF BIGINT
+* terminate_feature(pid bigint, metadata JSON DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS BIGINT
+* terminate_feature(pid bigint, schema_name TEXT, metadata JSON DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS BIGINT
 ******************************************************************/
 
 /******************************************************************
@@ -794,6 +798,111 @@ BEGIN
   EXECUTE format('set search_path to %I, public', schema_name);
 
   RETURN citydb_pkg.del_address(ARRAY[pid]);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+
+/******************************************************************
+* terminate feature based on an id array
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid_array bigint[], metadata JSON DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS SETOF BIGINT AS
+$body$
+DECLARE
+  terminated_ids bigint[] := '{}';
+  child_feature_ids bigint[] := '{}';
+BEGIN
+  WITH terminated_objects AS (
+    UPDATE
+      feature f
+    SET
+      termination_date = COALESCE((metadata->>'termination_date')::timestamp with time zone, now()),
+      last_modification_date = COALESCE((metadata->>'last_modification_date')::timestamp with time zone, now()),
+      reason_for_update = COALESCE(metadata->>'reason_for_update', f.reason_for_update),
+      updating_person = COALESCE(metadata->>'updating_person', USER),
+      lineage = COALESCE(metadata->>'lineage', f.lineage)
+    FROM
+      unnest($1) a(a_id)
+    WHERE
+      f.id = a.a_id
+    RETURNING
+      f.id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    terminated_ids
+  FROM
+    terminated_objects;
+
+  if cascade THEN
+    SELECT
+      array_agg(val_feature_id)
+    INTO
+      child_feature_ids
+    FROM
+      property p, unnest(terminated_ids) a(a_id)
+    WHERE
+      p.feature_id = a.a_id AND val_relation_type = 1;
+
+    IF -1 = ALL(child_feature_ids) IS NOT NULL THEN
+      PERFORM
+        citydb_pkg.terminate_feature(array_agg(a.a_id), metadata, cascade)
+      FROM
+        (SELECT DISTINCT unnest(child_feature_ids) AS a_id) a
+      WHERE NOT EXISTS
+      (
+        SELECT
+          1
+        FROM
+          property p
+        INNER JOIN
+          feature f
+          ON f.id = p.feature_id
+        WHERE p.val_feature_id = a.a_id AND f.termination_date IS NULL AND p.val_relation_type = 1
+      );
+    END IF;
+  END IF;
+
+  RETURN QUERY
+    SELECT unnest(terminated_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+
+/******************************************************************
+* terminate features based on an id array and schema name
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid_array bigint[], schema_name TEXT, metadata JSON DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS SETOF BIGINT AS
+$body$
+BEGIN
+  EXECUTE format('set search_path to %I, public', schema_name);
+
+  RETURN QUERY
+    SELECT citydb_pkg.terminate_feature(pid_array, metadata, cascade);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+
+/******************************************************************
+* terminate a feature based on an id and schema name
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid bigint, metadata JSON DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS BIGINT AS
+$body$
+BEGIN
+  RETURN citydb_pkg.terminate_feature(ARRAY[pid], metadata, cascade);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+
+/******************************************************************
+* terminate a feature based on an id and schema name
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid bigint, schema_name TEXT, metadata JSON DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS BIGINT AS
+$body$
+BEGIN
+  EXECUTE format('set search_path to %I, public', schema_name);
+
+  RETURN citydb_pkg.terminate_feature(ARRAY[pid], metadata, cascade);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
