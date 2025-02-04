@@ -171,7 +171,7 @@ BEGIN
     FROM
       unnest($1) a(a_id)
     WHERE
-      f.id = a.a_id AND f.termination_date IS NULL
+      f.id = a.a_id
     RETURNING
       f.id
   )
