@@ -13,6 +13,7 @@ version = '5.0.0-beta.3'
 distributions.main.contents {
     def featureTypes = readJsonTypes('schema-mapping/feature-types')
     def dataTypes = readJsonTypes('schema-mapping/data-types')
+    def version = parseVersion("$project.version")
     filteringCharset = 'UTF-8'
 
     from 'LICENSE'
@@ -32,6 +33,9 @@ distributions.main.contents {
         filesMatching('**/objectclass-instances.sql') {
             filter { String line -> replaceTokens(line, featureTypes) }
         }
+        filesMatching('**/util.sql') {
+            filter { String line -> replaceTokens(line, version, '', '') }
+        }
     }
 }
 
@@ -50,9 +54,24 @@ def readJsonTypes(String path) {
     types
 }
 
-static def replaceTokens(String text, Map values, String defaultValue = 'null',
-                         String beginToken = '@', String endToken = '@',
-                         String beginReplacement = "'", String endReplacement = "'") {
+static def parseVersion(String versionString) {
+    def version = [:]
+    Matcher matcher = Pattern.compile("^(\\d+)\\.(\\d+)\\.(\\d+).*?").matcher(versionString)
+    if (matcher.matches()) {
+        version["majorVersion"] = matcher.group(1)
+        version["minorVersion"] = matcher.group(2)
+        version["minorRevision"] = matcher.group(3)
+        version["versionString"] = versionString
+    } else {
+        throw new GradleException("Failed to parse the version '$versionString'. Use SemVer notation.")
+    }
+    version
+}
+
+static def replaceTokens(String text, Map values,
+                         String beginReplacement = "'", String endReplacement = "'",
+                         String defaultValue = 'null',
+                         String beginToken = '@', String endToken = '@') {
     Pattern.compile(beginToken + "(.*?)" + endToken, Pattern.MULTILINE)
             .matcher(text)
             .replaceAll(matcher -> values[matcher.group(1)] ?
