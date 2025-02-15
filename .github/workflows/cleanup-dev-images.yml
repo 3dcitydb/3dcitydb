@@ -1,0 +1,36 @@
+name: Cleanup PR images
+on:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      pr-number:
+        description: "Pull Request Number"
+        required: true
+        default: "0"
+
+env:
+  PACKAGE_NAME: 3dcitydb-pg-dev
+
+jobs:
+  ghcr-cleanup-image:
+    if: github.event_name == 'pull_request'
+    name: ghcr cleanup action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete image
+        uses: dataaxiom/ghcr-cleanup-action@v1
+        with:
+          delete-tags: "*pr-${{github.event.pull_request.number}}*"
+          package: ${{ env.PACKAGE_NAME }}
+
+  ghcr-cleanup-image-manual:
+    if: github.event_name == 'workflow_dispatch'
+    name: ghcr cleanup action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete image
+        uses: dataaxiom/ghcr-cleanup-action@v1
+        with:
+          delete-tags: "*pr-${{ inputs.pr-number }}*"
+          package: ${{ env.PACKAGE_NAME }}
