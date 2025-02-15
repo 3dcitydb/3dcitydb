@@ -74,10 +74,6 @@ jobs:
           build-args: |
             BASEIMAGE_TAG=${{ matrix.baseimage-tag }}${{ matrix.variant }}
             CITYDB_VERSION=${{ steps.short-sha.outputs.sha }}
-      - name: Inspect images
-        run: |
-          docker inspect ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.number }}${{ matrix.variant }}
-          docker inspect ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.number }}-${{ steps.short-sha.outputs.sha }}${{ matrix.variant }}
 
       - name: Print image names
         run: |
