@@ -10,7 +10,7 @@ on:
         default: "0"
 
 env:
-  REGISTRY: ghcr
+  REGISTRY: ghcr.io
   IMAGE_NAME: 3dcitydb-pg-dev
 
 jobs:
