@@ -49,9 +49,9 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}
           tags: |
             # Latest tag for PR, PR number only
-            type=ref,event=pr,prefix=3dcitydb-pr-
+            type=ref,event=pr,prefix=3dcitydb-pr-,suffix=${{ matrix.variant }}
             # Tag for with commit sha appended
-            type=ref,event=pr,prefix=3dcitydb-pr-,suffix=-{{sha}}
+            type=ref,event=pr,prefix=3dcitydb-pr-,suffix=-{{sha}}${{ matrix.variant }}
           labels: |
             maintainer=Bruno Willenborg
             maintainer.email=b.willenborg(at)tum.de
