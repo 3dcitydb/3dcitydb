@@ -37,7 +37,7 @@
       "description": "Specifies the URI that points to the prototypical geometry stored in an external file.",
       "value": {
         "column": "reference_to_library",
-        "type": "uri"
+        "type": "string"
       }
     },
     {

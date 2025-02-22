@@ -13,7 +13,7 @@
       "description": "Specifies the reference to a remote string value.",
       "value": {
         "column": "val_uri",
-        "type": "uri"
+        "type": "string"
       }
     }
   ]

@@ -4,6 +4,6 @@
   "table": "property",
   "value": {
     "column": "val_uri",
-    "type": "uri"
+    "type": "string"
   }
 }
