@@ -9,7 +9,7 @@
       "description": "Specifies the URI that points to the external texture image.",
       "value": {
         "column": "image_uri",
-        "type": "uri"
+        "type": "string"
       },
       "join": {
         "table": "tex_image",

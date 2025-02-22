@@ -334,7 +334,6 @@
         "integer",
         "double",
         "string",
-        "uri",
         "timestamp",
         "array",
         "booleanArray",
