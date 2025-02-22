@@ -7,7 +7,7 @@
       "name": "timestamp",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the timepoint at which the value of the TimeValuePair is valid.",
-      "type": "core:Timestamp",
+      "type": "core:TimePosition",
       "join": {
         "table": "property",
         "fromColumn": "id",

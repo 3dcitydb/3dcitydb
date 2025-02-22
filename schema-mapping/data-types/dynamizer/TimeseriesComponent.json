@@ -18,7 +18,7 @@
       "name": "additionalGap",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies how much extra time is added after all repetitions as an additional gap.",
-      "type": "core:String",
+      "type": "core:Duration",
       "join": {
         "table": "property",
         "fromColumn": "id",
