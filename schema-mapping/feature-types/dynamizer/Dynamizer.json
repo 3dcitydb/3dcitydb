@@ -7,7 +7,7 @@
       "name": "attributeRef",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the attribute of a feature whose value is overridden or replaced by the (dynamic) values specified by the Dynamizer.",
-      "type": "core:String"
+      "type": "dyn:AttributeReference"
     },
     {
       "name": "startTime",

@@ -126,34 +126,37 @@ VALUES (65, null, 'ADEOfClosureSurface', 1, 1, @core:ADEOfClosureSurface@);
 -- Dynamizer Module --
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (100, null, 'SensorConnection', 0, 2, @dyn:SensorConnection@);
+VALUES (100, null, 'AttributeReference', 0, 2, @dyn:AttributeReference@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (101, null, 'TimeseriesComponent', 0, 2, @dyn:TimeseriesComponent@);
+VALUES (101, null, 'SensorConnection', 0, 2, @dyn:SensorConnection@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (102, null, 'TimeValuePair', 0, 2, @dyn:TimeValuePair@);
+VALUES (102, null, 'TimeseriesComponent', 0, 2, @dyn:TimeseriesComponent@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (103, null, 'ADEOfAbstractAtomicTimeseries', 1, 2, @dyn:ADEOfAbstractAtomicTimeseries@);
+VALUES (103, null, 'TimeValuePair', 0, 2, @dyn:TimeValuePair@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (104, null, 'ADEOfAbstractTimeseries', 1, 2, @dyn:ADEOfAbstractTimeseries@);
+VALUES (104, null, 'ADEOfAbstractAtomicTimeseries', 1, 2, @dyn:ADEOfAbstractAtomicTimeseries@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (105, null, 'ADEOfCompositeTimeseries', 1, 2, @dyn:ADEOfCompositeTimeseries@);
+VALUES (105, null, 'ADEOfAbstractTimeseries', 1, 2, @dyn:ADEOfAbstractTimeseries@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (106, null, 'ADEOfDynamizer', 1, 2, @dyn:ADEOfDynamizer@);
+VALUES (106, null, 'ADEOfCompositeTimeseries', 1, 2, @dyn:ADEOfCompositeTimeseries@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (107, null, 'ADEOfGenericTimeseries', 1, 2, @dyn:ADEOfGenericTimeseries@);
+VALUES (107, null, 'ADEOfDynamizer', 1, 2, @dyn:ADEOfDynamizer@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (108, null, 'ADEOfStandardFileTimeseries', 1, 2, @dyn:ADEOfStandardFileTimeseries@);
+VALUES (108, null, 'ADEOfGenericTimeseries', 1, 2, @dyn:ADEOfGenericTimeseries@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (109, null, 'ADEOfTabulatedFileTimeseries', 1, 2, @dyn:ADEOfTabulatedFileTimeseries@);
+VALUES (109, null, 'ADEOfStandardFileTimeseries', 1, 2, @dyn:ADEOfStandardFileTimeseries@);
+
+INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
+VALUES (110, null, 'ADEOfTabulatedFileTimeseries', 1, 2, @dyn:ADEOfTabulatedFileTimeseries@);
 
 -- Generics Module --
 
