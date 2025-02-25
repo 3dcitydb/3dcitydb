@@ -1,5 +1,4 @@
-DELETE
-FROM datatype;
+DELETE FROM datatype;
 
 -- Core Module --
 
