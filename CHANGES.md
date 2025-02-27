@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+### 4.4.2 - tba
+
+#### Changes
+* Added PostgreSQL 17 and PostGIS 3.5 support for Docker images.
+* Sunset Docker images that reached end of life (Postgres <= v12).
+
+#### Fixes
+* Fixed an error in the `ENVELOPE` scripts that caused the envelope of sub-features to be set to `NULL`.
+
 ### 4.4.1 - 2024-09-19
 
 #### Changes
