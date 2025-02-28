@@ -115,3 +115,16 @@ FROM dual;
 @@&ENVELOPE
 
 SELECT 'Packages ''citydb_util'', ''citydb_constraint'', ''citydb_idx'', ''citydb_srs'', ''citydb_stat'', ''citydb_envelope'', ''citydb_delete_by_lineage'', and ''citydb_delete'' created' as message from DUAL;
+
+-- check for registered ADEs
+VARIABLE ADE_COUNT NUMBER;
+BEGIN
+  :ADE_COUNT := 0;
+  SELECT COUNT(*) INTO :ADE_COUNT FROM ADE;
+
+  IF :ADE_COUNT <> 0 THEN
+	dbms_output.put_line('WARNING: Found ' || :ADE_COUNT || ' ADE(s) registered in the 3DCityDB instance. ' ||
+      'Use the ADE Manager to manually upgrade the ''citydb_envelope'' and ''citydb_delete'' packages!');
+  END IF;
+END;
+/

@@ -1,5 +1,3 @@
--- noinspection SqlDialectInspectionForFile
-
 -- 3D City Database - The Open Source CityGML Database
 -- https://www.3dcitydb.org/
 --
@@ -90,6 +88,20 @@ BEGIN
     END LOOP;
 END
 $$;
+
+--// upgrade functions in schema 'citydb'
+\echo
+\echo 'Upgrading DELETE and ENVELOPE functions in schema ''citydb'' ...'
+\echo 'Checking for registered ADEs ...'
+SELECT count(*) AS ade_count FROM citydb.ade;
+\gset
+
+SELECT CASE WHEN :'ade_count' = 0
+  THEN 'SCHEMA_FUNCTIONS.sql'
+  ELSE 'SCHEMA_FUNCTIONS_WARNING.sql'
+  END AS do_action_for_schema_functions;
+\gset
+\ir :do_action_for_schema_functions
 
 --// do bigint update
 \echo

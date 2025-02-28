@@ -1,5 +1,3 @@
--- noinspection SqlDialectInspectionForFile
-
 -- 3D City Database - The Open Source CityGML Database
 -- https://www.3dcitydb.org/
 --
