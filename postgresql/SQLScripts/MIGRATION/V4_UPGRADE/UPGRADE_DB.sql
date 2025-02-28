@@ -37,7 +37,7 @@ SET client_min_messages TO WARNING;
 
 \set NEW_MAJOR 4
 \set NEW_MINOR 4
-\set NEW_REVISION 1
+\set NEW_REVISION 2
 
 \echo
 \echo 'Upgrading 3DCityDB ...'
