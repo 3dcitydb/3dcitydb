@@ -2,7 +2,7 @@ plugins {
     id 'distribution'
 }
 
-version '4.4.1'
+version '4.4.2'
 
 task createVersionTxt(type: Copy)  {
     def tmp = File.createTempFile('tmp', '.txt')

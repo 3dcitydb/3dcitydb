@@ -25,7 +25,7 @@
 -- limitations under the License.
 --
 
--- Automatically generated database script (Creation Date: 2018-08-22 15:04:00)
+-- Automatically generated database script (Creation Date: 2025-02-27 21:23:24)
 -- FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
 -- FUNCTION env_address(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
 -- FUNCTION env_appearance(co_id NUMBER, set_envelope int := 0, caller int := 0) RETURN SDO_GEOMETRY
@@ -203,8 +203,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     nested_feat_id NUMBER;
   BEGIN
     -- bbox from aggregating objects
+    -- _SurfaceData
     OPEN nested_feat_cur FOR
-      -- _SurfaceData
       SELECT c.id FROM surface_data c, appear_to_surface_data p2c WHERE c.id = surface_data_id AND p2c.appearance_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -327,8 +327,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- BridgeConstructionElement
     OPEN nested_feat_cur FOR
-      -- BridgeConstructionElement
       SELECT id FROM bridge_constr_element WHERE bridge_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -337,8 +337,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- BridgeInstallation, IntBridgeInstallation
     OPEN nested_feat_cur FOR
-      -- BridgeInstallation
       SELECT id FROM bridge_installation WHERE bridge_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -347,18 +347,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- _BoundarySurface
     OPEN nested_feat_cur FOR
-      -- IntBridgeInstallation
-      SELECT id FROM bridge_installation WHERE bridge_id = co_id;
-    LOOP
-      FETCH nested_feat_cur INTO nested_feat_id;
-      EXIT WHEN nested_feat_cur%notfound;
-      bbox := update_bounds(bbox, env_bridge_installation(nested_feat_id, set_envelope));
-    END LOOP;
-    CLOSE nested_feat_cur;
-
-    OPEN nested_feat_cur FOR
-      -- _BoundarySurface
       SELECT id FROM bridge_thematic_surface WHERE bridge_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -367,8 +357,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- BridgeRoom
     OPEN nested_feat_cur FOR
-      -- BridgeRoom
       SELECT id FROM bridge_room WHERE bridge_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -377,8 +367,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- BridgePart
     OPEN nested_feat_cur FOR
-      -- BridgePart
       SELECT id FROM bridge WHERE bridge_parent_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -387,8 +377,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- Address
     OPEN nested_feat_cur FOR
-      -- Address
       SELECT c.id FROM address c, address_to_bridge p2c WHERE c.id = address_id AND p2c.bridge_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -396,6 +386,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_address(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -476,6 +470,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     FROM
       collect_geom;
 
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
+
     RETURN bbox;
 
     EXCEPTION
@@ -515,6 +513,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox
     FROM
       collect_geom;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -584,8 +586,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- _BoundarySurface
     OPEN nested_feat_cur FOR
-      -- _BoundarySurface
       SELECT id FROM bridge_thematic_surface WHERE bridge_installation_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -594,15 +596,9 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
-    OPEN nested_feat_cur FOR
-      -- _BoundarySurface
-      SELECT id FROM bridge_thematic_surface WHERE bridge_installation_id = co_id;
-    LOOP
-      FETCH nested_feat_cur INTO nested_feat_id;
-      EXIT WHEN nested_feat_cur%notfound;
-      bbox := update_bounds(bbox, env_bridge_thematic_surface(nested_feat_id, set_envelope));
-    END LOOP;
-    CLOSE nested_feat_cur;
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -648,8 +644,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- Address
     OPEN nested_feat_cur FOR
-      -- Address
       SELECT c.id FROM bridge_opening p, address c WHERE p.id = co_id AND p.address_id = c.id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -657,6 +653,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_address(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -696,8 +696,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- _BoundarySurface
     OPEN nested_feat_cur FOR
-      -- _BoundarySurface
       SELECT id FROM bridge_thematic_surface WHERE bridge_room_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -706,8 +706,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- BridgeFurniture
     OPEN nested_feat_cur FOR
-      -- BridgeFurniture
       SELECT id FROM bridge_furniture WHERE bridge_room_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -716,8 +716,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- IntBridgeInstallation
     OPEN nested_feat_cur FOR
-      -- IntBridgeInstallation
       SELECT id FROM bridge_installation WHERE bridge_room_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -725,6 +725,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_bridge_installation(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -767,8 +771,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- _BridgeOpening
     OPEN nested_feat_cur FOR
-      -- _BridgeOpening
       SELECT c.id FROM bridge_opening c, bridge_open_to_them_srf p2c WHERE c.id = bridge_opening_id AND p2c.bridge_thematic_surface_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -776,6 +780,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_bridge_opening(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -860,8 +868,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- BuildingInstallation, IntBuildingInstallation
     OPEN nested_feat_cur FOR
-      -- BuildingInstallation
       SELECT id FROM building_installation WHERE building_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -870,18 +878,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- _BoundarySurface
     OPEN nested_feat_cur FOR
-      -- IntBuildingInstallation
-      SELECT id FROM building_installation WHERE building_id = co_id;
-    LOOP
-      FETCH nested_feat_cur INTO nested_feat_id;
-      EXIT WHEN nested_feat_cur%notfound;
-      bbox := update_bounds(bbox, env_building_installation(nested_feat_id, set_envelope));
-    END LOOP;
-    CLOSE nested_feat_cur;
-
-    OPEN nested_feat_cur FOR
-      -- _BoundarySurface
       SELECT id FROM thematic_surface WHERE building_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -890,8 +888,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- Room
     OPEN nested_feat_cur FOR
-      -- Room
       SELECT id FROM room WHERE building_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -900,8 +898,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- BuildingPart
     OPEN nested_feat_cur FOR
-      -- BuildingPart
       SELECT id FROM building WHERE building_parent_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -910,8 +908,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- Address
     OPEN nested_feat_cur FOR
-      -- Address
       SELECT c.id FROM address c, address_to_building p2c WHERE c.id = address_id AND p2c.building_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -919,6 +917,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_address(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -959,6 +961,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox
     FROM
       collect_geom;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -1028,8 +1034,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- _BoundarySurface
     OPEN nested_feat_cur FOR
-      -- _BoundarySurface
       SELECT id FROM thematic_surface WHERE building_installation_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -1038,15 +1044,9 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
-    OPEN nested_feat_cur FOR
-      -- _BoundarySurface
-      SELECT id FROM thematic_surface WHERE building_installation_id = co_id;
-    LOOP
-      FETCH nested_feat_cur INTO nested_feat_id;
-      EXIT WHEN nested_feat_cur%notfound;
-      bbox := update_bounds(bbox, env_thematic_surface(nested_feat_id, set_envelope));
-    END LOOP;
-    CLOSE nested_feat_cur;
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -1127,6 +1127,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     FROM
       collect_geom;
 
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
+
     RETURN bbox;
 
     EXCEPTION
@@ -1162,8 +1166,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     nested_feat_id NUMBER;
   BEGIN
     -- bbox from aggregating objects
+    -- Appearance
     OPEN nested_feat_cur FOR
-      -- Appearance
       SELECT id FROM appearance WHERE cityobject_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -1467,7 +1471,7 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       END CASE;
     END IF;
 
-    IF set_envelope <> 0 THEN
+    IF set_envelope <> 0 AND caller = 0 THEN
       UPDATE cityobject SET envelope = bbox WHERE id = co_id;
     END IF;
 
@@ -1509,8 +1513,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- _CityObject
     OPEN nested_feat_cur FOR
-      -- _CityObject
       SELECT c.id FROM cityobject c, group_to_cityobject p2c WHERE c.id = cityobject_id AND p2c.cityobjectgroup_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -1518,6 +1522,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_cityobject(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -1610,6 +1618,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     FROM
       collect_geom;
 
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
+
     RETURN bbox;
 
     EXCEPTION
@@ -1672,6 +1684,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox
     FROM
       collect_geom;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -1751,8 +1767,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- Address
     OPEN nested_feat_cur FOR
-      -- Address
       SELECT c.id FROM opening p, address c WHERE p.id = co_id AND p.address_id = c.id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -1760,6 +1776,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_address(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -1816,6 +1836,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     FROM
       collect_geom;
 
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
+
     RETURN bbox;
 
     EXCEPTION
@@ -1866,6 +1890,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       END CASE;
     END IF;
 
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
+
     RETURN bbox;
 
     EXCEPTION
@@ -1889,8 +1917,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END IF;
 
     -- bbox from aggregating objects
+    -- _ReliefComponent
     OPEN nested_feat_cur FOR
-      -- _ReliefComponent
       SELECT c.id FROM relief_component c, relief_feat_to_rel_comp p2c WHERE c.id = relief_component_id AND p2c.relief_feature_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -1898,6 +1926,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_relief_component(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -1937,8 +1969,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- _BoundarySurface
     OPEN nested_feat_cur FOR
-      -- _BoundarySurface
       SELECT id FROM thematic_surface WHERE room_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -1947,8 +1979,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- BuildingFurniture
     OPEN nested_feat_cur FOR
-      -- BuildingFurniture
       SELECT id FROM building_furniture WHERE room_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -1957,8 +1989,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- IntBuildingInstallation
     OPEN nested_feat_cur FOR
-      -- IntBuildingInstallation
       SELECT id FROM building_installation WHERE room_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -1966,6 +1998,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_building_installation(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -2033,6 +2069,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox
     FROM
       collect_geom;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -2121,8 +2161,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- _Opening
     OPEN nested_feat_cur FOR
-      -- _Opening
       SELECT c.id FROM opening c, opening_to_them_surface p2c WHERE c.id = opening_id AND p2c.thematic_surface_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -2130,6 +2170,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_opening(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -2214,6 +2258,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     FROM
       collect_geom;
 
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
+
     RETURN bbox;
 
     EXCEPTION
@@ -2261,8 +2309,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- TrafficArea, AuxiliaryTrafficArea
     OPEN nested_feat_cur FOR
-      -- TrafficArea
       SELECT id FROM traffic_area WHERE transportation_complex_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -2271,15 +2319,9 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
-    OPEN nested_feat_cur FOR
-      -- AuxiliaryTrafficArea
-      SELECT id FROM traffic_area WHERE transportation_complex_id = co_id;
-    LOOP
-      FETCH nested_feat_cur INTO nested_feat_id;
-      EXIT WHEN nested_feat_cur%notfound;
-      bbox := update_bounds(bbox, env_traffic_area(nested_feat_id, set_envelope));
-    END LOOP;
-    CLOSE nested_feat_cur;
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -2358,8 +2400,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- TunnelInstallation, IntTunnelInstallation
     OPEN nested_feat_cur FOR
-      -- TunnelInstallation
       SELECT id FROM tunnel_installation WHERE tunnel_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -2368,18 +2410,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- _BoundarySurface
     OPEN nested_feat_cur FOR
-      -- IntTunnelInstallation
-      SELECT id FROM tunnel_installation WHERE tunnel_id = co_id;
-    LOOP
-      FETCH nested_feat_cur INTO nested_feat_id;
-      EXIT WHEN nested_feat_cur%notfound;
-      bbox := update_bounds(bbox, env_tunnel_installation(nested_feat_id, set_envelope));
-    END LOOP;
-    CLOSE nested_feat_cur;
-
-    OPEN nested_feat_cur FOR
-      -- _BoundarySurface
       SELECT id FROM tunnel_thematic_surface WHERE tunnel_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -2388,8 +2420,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- HollowSpace
     OPEN nested_feat_cur FOR
-      -- HollowSpace
       SELECT id FROM tunnel_hollow_space WHERE tunnel_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -2398,8 +2430,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- TunnelPart
     OPEN nested_feat_cur FOR
-      -- TunnelPart
       SELECT id FROM tunnel WHERE tunnel_parent_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -2407,6 +2439,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_tunnel(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -2448,6 +2484,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     FROM
       collect_geom;
 
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
+
     RETURN bbox;
 
     EXCEPTION
@@ -2486,8 +2526,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- _BoundarySurface
     OPEN nested_feat_cur FOR
-      -- _BoundarySurface
       SELECT id FROM tunnel_thematic_surface WHERE tunnel_hollow_space_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -2496,8 +2536,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- TunnelFurniture
     OPEN nested_feat_cur FOR
-      -- TunnelFurniture
       SELECT id FROM tunnel_furniture WHERE tunnel_hollow_space_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -2506,8 +2546,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
+    -- IntTunnelInstallation
     OPEN nested_feat_cur FOR
-      -- IntTunnelInstallation
       SELECT id FROM tunnel_installation WHERE tunnel_hollow_space_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -2515,6 +2555,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_tunnel_installation(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -2584,8 +2628,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- _BoundarySurface
     OPEN nested_feat_cur FOR
-      -- _BoundarySurface
       SELECT id FROM tunnel_thematic_surface WHERE tunnel_installation_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -2594,15 +2638,9 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     END LOOP;
     CLOSE nested_feat_cur;
 
-    OPEN nested_feat_cur FOR
-      -- _BoundarySurface
-      SELECT id FROM tunnel_thematic_surface WHERE tunnel_installation_id = co_id;
-    LOOP
-      FETCH nested_feat_cur INTO nested_feat_id;
-      EXIT WHEN nested_feat_cur%notfound;
-      bbox := update_bounds(bbox, env_tunnel_thematic_surface(nested_feat_id, set_envelope));
-    END LOOP;
-    CLOSE nested_feat_cur;
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -2647,6 +2685,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
     FROM
       collect_geom;
 
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
+
     RETURN bbox;
 
     EXCEPTION
@@ -2688,8 +2730,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- _Opening
     OPEN nested_feat_cur FOR
-      -- _Opening
       SELECT c.id FROM tunnel_opening c, tunnel_open_to_them_srf p2c WHERE c.id = tunnel_opening_id AND p2c.tunnel_thematic_surface_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -2697,6 +2739,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_tunnel_opening(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -2754,8 +2800,8 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       collect_geom;
 
     -- bbox from aggregating objects
+    -- _WaterBoundarySurface
     OPEN nested_feat_cur FOR
-      -- _WaterBoundarySurface
       SELECT c.id FROM waterboundary_surface c, waterbod_to_waterbnd_srf p2c WHERE c.id = waterboundary_surface_id AND p2c.waterbody_id = co_id;
     LOOP
       FETCH nested_feat_cur INTO nested_feat_id;
@@ -2763,6 +2809,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox := update_bounds(bbox, env_waterboundary_surface(nested_feat_id, set_envelope));
     END LOOP;
     CLOSE nested_feat_cur;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 
@@ -2803,6 +2853,10 @@ AS  FUNCTION box2envelope(box SDO_GEOMETRY) RETURN SDO_GEOMETRY
       bbox
     FROM
       collect_geom;
+
+    IF set_envelope <> 0 AND caller = 0 THEN
+      UPDATE cityobject SET envelope = bbox WHERE id = co_id;
+    END IF;
 
     RETURN bbox;
 

@@ -47,7 +47,7 @@ To request a previous release of the 3D City Database under Apache License 2.0 c
 
 Latest release
 --------------
-The latest stable release of the 3D City Database is 4.4.1.
+The latest stable release of the 3D City Database is 4.4.2.
 
 You can download the latest release as well as previous releases from the
 [releases section](https://github.com/3dcitydb/3dcitydb/releases).
@@ -57,7 +57,7 @@ System requirements
 Setting up an instance of the 3D City Database requires an existing installation of a PostgreSQL, Oracle,
 or PolarDB database. The following database versions are supported.
 
-* PostgreSQL >= 12 with PostGIS >= 3.0
+* PostgreSQL >= 13 with PostGIS >= 3.0
 * Oracle >= 19c
 * PolarDB for PostgresSQL >= 1.1 with Ganos >= 4.6
 

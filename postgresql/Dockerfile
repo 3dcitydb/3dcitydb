@@ -4,11 +4,11 @@
 ###############################################################################
 
 # Base image
-ARG BASEIMAGE_TAG='16-3.4'
+ARG BASEIMAGE_TAG='17-3.5'
 FROM postgis/postgis:${BASEIMAGE_TAG}
 
 # Set 3DCityDB version
-ARG CITYDB_VERSION='4.4.1'
+ARG CITYDB_VERSION='4.4.2'
 ENV CITYDBVERSION=${CITYDB_VERSION}
 
 # Copy SQL scripts
