@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-### 4.4.2 - tba
+### 4.4.2 - 2025-02-28
 
 #### Changes
 * Added PostgreSQL 17 and PostGIS 3.5 support for Docker images.
