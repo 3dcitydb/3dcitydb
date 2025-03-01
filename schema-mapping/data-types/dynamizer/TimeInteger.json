@@ -4,7 +4,7 @@
   "table": "property",
   "properties": [
     {
-      "name": "intValue",
+      "name": "value",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the integer value at the given timepoint.",
       "type": "core:Integer"

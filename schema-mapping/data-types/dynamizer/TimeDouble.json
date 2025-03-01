@@ -4,7 +4,7 @@
   "table": "property",
   "properties": [
     {
-      "name": "doubleValue",
+      "name": "value",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the double value at the given timepoint.",
       "type": "core:Double"
