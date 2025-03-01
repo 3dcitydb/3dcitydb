@@ -1,0 +1,13 @@
+{
+  "identifier": "dyn:TimeInteger",
+  "description": "TimeInteger represents an integer value that is valid for a given timepoint.",
+  "table": "property",
+  "properties": [
+    {
+      "name": "intValue",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the integer value at the given timepoint.",
+      "type": "core:Integer"
+    }
+  ]
+}

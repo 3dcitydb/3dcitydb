@@ -1,0 +1,13 @@
+{
+  "identifier": "dyn:TimeString",
+  "description": "TimeString represents a string value that is valid for a given timepoint.",
+  "table": "property",
+  "properties": [
+    {
+      "name": "stringValue",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the string value at the given timepoint.",
+      "type": "core:String"
+    }
+  ]
+}

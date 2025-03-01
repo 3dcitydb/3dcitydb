@@ -1,0 +1,13 @@
+{
+  "identifier": "dyn:TimeBoolean",
+  "description": "TimeBoolean represents a boolean value that is valid for a given timepoint.",
+  "table": "property",
+  "properties": [
+    {
+      "name": "boolValue",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the boolean value at the given timepoint.",
+      "type": "core:Boolean"
+    }
+  ]
+}

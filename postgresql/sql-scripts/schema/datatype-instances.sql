@@ -125,37 +125,61 @@ VALUES (65, null, 'ADEOfClosureSurface', 1, 1, @core:ADEOfClosureSurface@);
 -- Dynamizer Module --
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (100, null, 'AttributeReference', 0, 2, @dyn:AttributeReference@);
+VALUES (100, null, 'AbstractTimeValuePair', 1, 2, @dyn:AbstractTimeValuePair@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (101, null, 'SensorConnection', 0, 2, @dyn:SensorConnection@);
+VALUES (101, null, 'AttributeReference', 0, 2, @dyn:AttributeReference@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (102, null, 'TimeseriesComponent', 0, 2, @dyn:TimeseriesComponent@);
+VALUES (102, null, 'SensorConnection', 0, 2, @dyn:SensorConnection@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (103, null, 'TimeValuePair', 0, 2, @dyn:TimeValuePair@);
+VALUES (103, 100, 'TimeAppearance', 0, 2, @dyn:TimeAppearance@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (104, null, 'ADEOfAbstractAtomicTimeseries', 1, 2, @dyn:ADEOfAbstractAtomicTimeseries@);
+VALUES (104, 100, 'TimeBoolean', 0, 2, @dyn:TimeBoolean@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (105, null, 'ADEOfAbstractTimeseries', 1, 2, @dyn:ADEOfAbstractTimeseries@);
+VALUES (105, 100, 'TimeDouble', 0, 2, @dyn:TimeDouble@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (106, null, 'ADEOfCompositeTimeseries', 1, 2, @dyn:ADEOfCompositeTimeseries@);
+VALUES (106, 100, 'TimeGeometry', 0, 2, @dyn:TimeGeometry@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (107, null, 'ADEOfDynamizer', 1, 2, @dyn:ADEOfDynamizer@);
+VALUES (107, 100, 'TimeImplicitGeometry', 0, 2, @dyn:TimeImplicitGeometry@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (108, null, 'ADEOfGenericTimeseries', 1, 2, @dyn:ADEOfGenericTimeseries@);
+VALUES (108, 100, 'TimeInteger', 0, 2, @dyn:TimeInteger@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (109, null, 'ADEOfStandardFileTimeseries', 1, 2, @dyn:ADEOfStandardFileTimeseries@);
+VALUES (109, null, 'TimeseriesComponent', 0, 2, @dyn:TimeseriesComponent@);
 
 INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
-VALUES (110, null, 'ADEOfTabulatedFileTimeseries', 1, 2, @dyn:ADEOfTabulatedFileTimeseries@);
+VALUES (110, 100, 'TimeString', 0, 2, @dyn:TimeString@);
+
+INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
+VALUES (111, 100, 'TimeURI', 0, 2, @dyn:TimeURI@);
+
+INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
+VALUES (112, null, 'ADEOfAbstractAtomicTimeseries', 1, 2, @dyn:ADEOfAbstractAtomicTimeseries@);
+
+INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
+VALUES (113, null, 'ADEOfAbstractTimeseries', 1, 2, @dyn:ADEOfAbstractTimeseries@);
+
+INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
+VALUES (114, null, 'ADEOfCompositeTimeseries', 1, 2, @dyn:ADEOfCompositeTimeseries@);
+
+INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
+VALUES (115, null, 'ADEOfDynamizer', 1, 2, @dyn:ADEOfDynamizer@);
+
+INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
+VALUES (116, null, 'ADEOfGenericTimeseries', 1, 2, @dyn:ADEOfGenericTimeseries@);
+
+INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
+VALUES (117, null, 'ADEOfStandardFileTimeseries', 1, 2, @dyn:ADEOfStandardFileTimeseries@);
+
+INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
+VALUES (118, null, 'ADEOfTabulatedFileTimeseries', 1, 2, @dyn:ADEOfTabulatedFileTimeseries@);
 
 -- Generics Module --
 
