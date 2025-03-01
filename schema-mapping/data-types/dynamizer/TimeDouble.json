@@ -1,0 +1,13 @@
+{
+  "identifier": "dyn:TimeDouble",
+  "description": "TimeDouble represents a double value that is valid for a given timepoint.",
+  "table": "property",
+  "properties": [
+    {
+      "name": "value",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the double value at the given timepoint.",
+      "type": "core:Double"
+    }
+  ]
+}

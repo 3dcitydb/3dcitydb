@@ -1,0 +1,9 @@
+{
+  "identifier": "core:TimePosition",
+  "description": "TimePosition is a basic type that represents a specific temporal position, stored as a timestamp. Local times are converted to timestamps by adding ''0001-01-01T00:00:00Z'' as the base date.",
+  "table": "property",
+  "value": {
+    "column": "val_timestamp",
+    "type": "timestamp"
+  }
+}

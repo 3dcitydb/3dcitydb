@@ -1,0 +1,13 @@
+{
+  "identifier": "dyn:TimeURI",
+  "description": "TimeURI represents a URI value that is valid for a given timepoint.",
+  "table": "property",
+  "properties": [
+    {
+      "name": "value",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the URI value at the given timepoint.",
+      "type": "core:URI"
+    }
+  ]
+}

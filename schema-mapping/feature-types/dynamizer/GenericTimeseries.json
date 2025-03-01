@@ -13,7 +13,7 @@
       "name": "timeValuePair",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Relates to the time-value-pairs that are part of the GenericTimeseries.",
-      "type": "dyn:TimeValuePair"
+      "type": "dyn:AbstractTimeValuePair"
     }
   ]
 }

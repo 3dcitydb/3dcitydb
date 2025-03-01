@@ -1,0 +1,18 @@
+{
+  "identifier": "dyn:TimeImplicitGeometry",
+  "description": "TimeImplicitGeometry represents an implicit geometry value that is valid for a given timepoint.",
+  "table": "property",
+  "properties": [
+    {
+      "name": "value",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the implicit geometry value at the given timepoint.",
+      "type": "core:ImplicitGeometryProperty",
+      "join": {
+        "table": "property",
+        "fromColumn": "id",
+        "toColumn": "parent_id"
+      }
+    }
+  ]
+}

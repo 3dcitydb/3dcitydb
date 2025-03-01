@@ -1,0 +1,20 @@
+{
+  "identifier": "dyn:AttributeReference",
+  "description": "AttributeReference specifies a reference to a specific attribute of a feature.",
+  "table": "property",
+  "value": {
+    "column": "val_string",
+    "type": "string"
+  },
+  "properties": [
+    {
+      "name": "id",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the internal database ID of the target attribute.",
+      "value": {
+        "column": "val_int",
+        "type": "integer"
+      }
+    }
+  ]
+}
