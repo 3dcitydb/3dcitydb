@@ -10,6 +10,14 @@ plugins {
 
 version = '5.0.0-beta.3'
 
+tasks.register('versionFile') {
+    outputs.dir "$projectDir/build/version"
+    doLast {
+        mkdir "$projectDir/build/version"
+        file("$projectDir/build/version/version.txt").text = version
+    }
+}
+
 distributions.main.contents {
     def featureTypes = readJsonTypes('schema-mapping/feature-types')
     def dataTypes = readJsonTypes('schema-mapping/data-types')
@@ -18,10 +26,7 @@ distributions.main.contents {
 
     from 'LICENSE'
     from 'README.md'
-    from("$projectDir/build/tmp") {
-        mkdir "$projectDir/build/tmp"
-        file("$projectDir/build/tmp/version.txt").text = project.version
-    }
+    from versionFile
     into('json-schema') {
         from 'json-schema'
     }
