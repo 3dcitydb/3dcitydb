@@ -1,0 +1,13 @@
+{
+  "identifier": "dyn:AbstractTimeValuePair",
+  "description": "AbstractTimeValuePair is the abstract superclass for value types that are valid for a given timepoint.",
+  "table": "property",
+  "properties": [
+    {
+      "name": "timestamp",
+      "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
+      "description": "Specifies the timepoint at which the value of the AbstractTimeValuePair is valid.",
+      "type": "core:TimePosition"
+    }
+  ]
+}

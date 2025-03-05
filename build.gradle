@@ -8,7 +8,7 @@ plugins {
     id 'distribution'
 }
 
-version = '5.0.0-beta.3'
+version = '5.0.0-beta.4'
 
 tasks.register('versionFile') {
     outputs.dir "$projectDir/build/version"
