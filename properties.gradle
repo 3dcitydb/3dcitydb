@@ -1,0 +1,4 @@
+ext {
+    githubUrl = 'https://github.com/3dcitydb/3dcitydb'
+    gitConnection = githubUrl + '.git'
+}

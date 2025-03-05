@@ -6,9 +6,13 @@ import java.util.regex.Pattern
 
 plugins {
     id 'distribution'
+    id 'maven-publish'
 }
 
+apply from: 'properties.gradle'
+
 version = '5.0.0-beta.4'
+group = 'org.citydb'
 
 tasks.register('versionFile') {
     outputs.dir "$projectDir/build/version"
@@ -82,4 +86,39 @@ static def replaceTokens(String text, Map values,
             .replaceAll(matcher -> values[matcher.group(1)] ?
                     Matcher.quoteReplacement(beginReplacement + values[matcher.group(1)] + endReplacement) :
                     defaultValue)
+}
+
+artifacts { distZip }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact distZip
+            pom {
+                name = project.name
+                url = githubUrl
+                scm {
+                    url = githubUrl
+                    connection = 'scm:git:' + gitConnection
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = project.hasProperty('gitLab_maven_url') ?
+                    project.property('gitLab_maven_url') :
+                    System.getenv('GITLAB_MAVEN_URL')
+            name = 'gitlab-maven'
+            credentials(HttpHeaderCredentials) {
+                name = 'Private-Token'
+                value = project.hasProperty('gitLab_private_token') ?
+                        project.property('gitLab_private_token') :
+                        System.getenv('GITLAB_PRIVATE_TOKEN')
+            }
+            authentication {
+                header(HttpHeaderAuthentication)
+            }
+        }
+    }
 }
