@@ -1,0 +1,21 @@
+name: cleanup ghcr.io/3dcitydb/3dcitydb-pg
+
+on:
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: 3dcitydb-pg
+
+jobs:
+  ghcr-cleanup-image:
+      name: ghcr cleanup action
+      runs-on: ubuntu-latest
+      steps:
+        - name: Delete image
+          uses: dataaxiom/ghcr-cleanup-action@v1
+          with:
+            package: ${{ env.IMAGE_NAME }}
+            delete-untagged: true
+            delete-ghost-images: true
+            delete-partial-images: true
+            delete-orphaned-images: true
