@@ -27,7 +27,7 @@ like QGIS or ArcGIS and utilize the spatial objects. Overview of the
 
 The 3D City Database has been realized as a PostgreSQL/PostGIS database schema with a collection of pgSQL utility functions, supporting following key features:
 
- * Full support for CityGML versions 3.0, 2.0 and 1.0 (small restriction: the CityGML 3.0 modules `Versioning` and `Pointcloud` are not yet supported)
+ * Full support for CityGML versions 3.0, 2.0 and 1.0
  * Complex thematic modelling including support for Application Domain Extensions (ADE). 
  * Four (CityGML 3.0) or Five (CityGML 2.0 and 1.0) different Levels of Detail (LODs)
  * Appearance information (textures and materials)
@@ -188,6 +188,7 @@ Further plans
 -------------
 We are currently working on a couple of things and functionalities, that are intended to be provided in the future:
 
+* Support for the Oracle database management system (sponsors or contributors are welcome!)
 * Support for a tool to export visualization data in the form of 3DTiles. For that purpose we are 
   currently customizing the third-party Open Source tool [pg2b3dm](https://github.com/Geodan/pg2b3dm) 
   developed by Bert Temme to directly work on the 3DCityDB V5. The tool will be provided as a customized 
@@ -198,7 +199,7 @@ We are currently working on a couple of things and functionalities, that are int
 * Collaboration with Giorgio Agugiaro from TU Delft on getting the 
   [QGIS plugin for 3DCityDB V4](https://github.com/tudelft3d/3DCityDB-Tools-for-QGIS) upgraded
   to V5. (In fact, Giorgio and his team are already working on this)
-* Support for the CityGML 3.0 modules Versioning and Pointcloud
+* Support for the CityGML 3.0 modules Versioning and Pointcloud in the citydb-tool
 
 More information on CityGML
 ---------------------------
