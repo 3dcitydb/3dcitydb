@@ -1,13 +1,13 @@
-name: psql-docker-build-push-edge-v5
+name: psql-docker-build-push-edge
 
 on:
   workflow_dispatch:
   push:
     branches:
-    - v5-devel
+    - master
 
 env:
-  IMAGE_NAME: 3dcitydb-pg-v5
+  IMAGE_NAME: 3dcitydb-pg
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        baseimage-tag: ['16-3.4']   # base image tags for 'edge' image
+        baseimage-tag: ['17-3.5']   # base image tags for 'edge' image
         variant: ['', '-alpine']    # image variants: '' = debian
 
     steps:
@@ -59,22 +59,22 @@ jobs:
           latest=false
           suffix=${{ matrix.variant }}
         tags: |
-          type=edge,branch=v5-devel
+          type=edge,branch=master
         labels: |
           maintainer=Bruno Willenborg
-          maintainer.email=b.willenborg(at)tum.de
-          maintainer.organization=Chair of Geoinformatics, Technical University of Munich (TUM)
+          maintainer.email=bruno.willenborg(at)list-eco.de
+          maintainer.organization=LIST Eco GmbH & Co. KG
           org.opencontainers.image.authors=Bruno Willenborg
           org.opencontainers.image.vendor=3DCityDB Steering Committee
           org.opencontainers.image.title=3D City Database PostgreSQL/PostGIS Docker image
           org.opencontainers.image.description=Docker image for the 3D City Database based on PostgreSQL and PostGIS
           org.opencontainers.image.url=https://github.com/3dcitydb/
-          org.opencontainers.image.documentation=https://3dcitydb-docs.readthedocs.io/en/latest/3dcitydb/docker.html
+          org.opencontainers.image.documentation=https://3dcitydb.github.io/3dcitydb-mkdocs/
           org.opencontainers.image.source=https://github.com/3dcitydb/3dcitydb
     -
       name: Build and push image
       id: docker_build
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: .
         push: true
@@ -83,9 +83,6 @@ jobs:
         build-args: |
           BASEIMAGE_TAG=${{ matrix.baseimage-tag }}${{ matrix.variant }}
           CITYDB_VERSION=${{ steps.short-sha.outputs.sha }}
-    -
-      name: Image digest
-      run: echo ${{ steps.docker_build.outputs.digest }}
     -
       name: Inspect image Dockerhub
       run: docker inspect ${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}:edge${{ matrix.variant }}
