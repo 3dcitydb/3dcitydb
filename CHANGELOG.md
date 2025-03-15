@@ -10,3 +10,4 @@ The changelog of previous 3D City Database releases before version 5.0 is availa
 
 [Unreleased]: https://github.com/3dcitydb/3dcitydb/compare/v5.0.0..HEAD
 [5.0.0]: https://github.com/3dcitydb/3dcitydb/releases/tag/v5.0.0
+[Before 5.0.0]: https://github.com/3dcitydb/3dcitydb/tree/3dcitydb-v4/CHANGES.md
