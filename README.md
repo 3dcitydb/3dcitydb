@@ -1,6 +1,12 @@
 3D City Database
 ================
 
+> [!NOTE]
+> This branch hosts the 3DCityDB v4 and earlier versions. While 3DCityDB v5 is now available,
+> v4 remains stable and operational. However, it is in **maintenance mode**, meaning no significant new features are
+> planned, though existing bugs will continue to be addressed. Development is now focused on 3DCityDB v5, so we recommend
+> upgrading to take advantage of new features and improvements.
+
 The 3D City Database is a free 3D geo database to store, represent, and manage virtual 3D city models on top of a
 standard spatial relational database. The database model contains semantically rich, hierarchically structured,
 multi-scale urban objects facilitating complex GIS modeling and analysis tasks, far beyond visualization.
