@@ -57,7 +57,7 @@ Who is using the 3D City Database?
 The 3DCityDB V5 has just been released and we expect that most users of the earlier
 version (V4) will migrate to the new version sometime in the future. Note, that the 
 earlier version V4 is still working, 
-[available](https://github.com/3dcitydb/3dcitydb/tree/release-4.4), and will also still 
+[available](https://github.com/3dcitydb/3dcitydb/tree/3dcitydb-v4), and will also still
 be supported for some time in the next 1-2 years. However, we recommend to start new projects 
 using the new version V5. V4 of the 3D City Database is in use in real life production systems in 
 many places around the world such as Berlin, Potsdam, Hamburg, Munich, Frankfurt, Dresden, 
