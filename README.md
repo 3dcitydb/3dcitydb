@@ -182,7 +182,7 @@ the root of the repository.
 
     > gradlew installDist
 
-The build process runs on all major operating systems and only requires a Java 11 JDK or
+The build process runs on all major operating systems and only requires Java 11 or
 higher to run.
 
 If the build was successful, you will find the 3D City Database scripts
