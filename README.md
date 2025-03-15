@@ -117,13 +117,17 @@ Please use this reference when citing the 3DCityDB project.
 
 Database setup
 --------------
-To create a new database instance of the 3D City Database, simply execute
-the `CREATE_DB.bat` batch script under Windows respectively the `CREATE_DB.sh`
-shell script under UNIX/Linux/MacOS environments. These scripts are available
-for PostgreSQL with PostGIS extension and can be found in the subfolders "3dcitydb/postgresql/shell-scripts/windows" and "3dcitydb/postgresql/shell-scripts/unix".
+To create a new database instance of the 3D City Database, download and unzip the
+latest release from the [releases section](https://github.com/3dcitydb/3dcitydb/releases)
+or [build](https://github.com/3dcitydb/3dcitydb#building) the database scripts
+from source. Afterwards, simply execute the `create-db.bat` batch script
+under Windows respectively the `create-db.sh` shell script under UNIX/Linux/MacOS
+environments. These scripts are available for PostgreSQL with PostGIS extension
+and can be found in the subfolders "3dcitydb/postgresql/shell-scripts/windows"
+and "3dcitydb/postgresql/shell-scripts/unix".
 
 The connection details for your database account have to be edited in the
-`CONNECTION_DETAILS` script prior to running the `CREATE_DB` script (or any
+`connection-details` script prior to running the `create-db` script (or any
 other shell script provided in these folders).
 
 The shell scripts can usually be executed on double click. For some UNIX/Linux
@@ -133,11 +137,11 @@ correctly set for the script.
 
 To make the script executable for the owner of the file, enter the following:
 
-    chmod u+x CREATE_DB.sh
+    chmod u+x create-db.sh
 
 Afterwards, simply run the script by the following command:
 
-    ./CREATE_DB.sh
+    ./create-db.sh
 
 The setup procedure requires the following mandatory user inputs:
 1) Spatial Reference System ID (SRID) to be used for all geometry objects,
@@ -152,9 +156,9 @@ of the 3D City Database for a comprehensive step-by-step guide.
 Database deletion
 -----------------
 To drop an existing database instance of the 3D City Database, simply execute
-the shell script `DROP_DB` for your database and operating system. Make sure 
+the shell script `drop-db` for your database and operating system. Make sure 
 that you have entered the correct connection details in the script 
-`CONNECTION_DETAILS` beforehand.
+`connection-details` beforehand.
 
 Using with Docker
 -----------------
@@ -167,6 +171,22 @@ or from Github container registry at
 
 A comprehensive documentation on how to use the 3D City Database with Docker can be found in the
 [online user manual](https://3dcitydb.github.io/3dcitydb-mkdocs/3dcitydb/docker/).
+
+Building
+--------
+
+The 3D City Database uses [Gradle](https://gradle.org/) as build system. To build the
+database scripts for setting up and running a database instance from source,
+clone the repository to your local machine and run the following command from
+the root of the repository.
+
+    > gradlew installDist
+
+The build process runs on all major operating systems and only requires a Java 11 JDK or
+higher to run.
+
+If the build was successful, you will find the 3D City Database scripts
+under `build/install/3dcitydb`.
 
 Contributing
 ------------
