@@ -33,6 +33,6 @@ COPY --from=builder /build/build/install/3dcitydb/postgresql/docker-scripts/3dci
 
 # Set labels
 LABEL maintainer="Bruno Willenborg"
-LABEL maintainer.email="b.willenborg(at)tum.de"
-LABEL maintainer.organization="Chair of Geoinformatics, Technical University of Munich (TUM)"
+LABEL maintainer.email="bruno.willenborg(at)list-eco.de"
+LABEL maintainer.organization="LIST Eco GmbH & Co. KG"
 LABEL source.repo="https://github.com/3dcitydb/3dcitydb"

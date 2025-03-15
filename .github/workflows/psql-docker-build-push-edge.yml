@@ -1,12 +1,13 @@
-name: psql-docker-build-push-release-v5
+name: psql-docker-build-push-edge
 
 on:
   workflow_dispatch:
-  release:
-    types: [published, edited]
+  push:
+    branches:
+    - master
 
 env:
-  IMAGE_NAME: 3dcitydb-pg-v5
+  IMAGE_NAME: 3dcitydb-pg
 
 jobs:
   build:
@@ -15,16 +16,14 @@ jobs:
 
     strategy:
       matrix:
-        baseimage-tag: ['16-3.4']   # base image tags for 'edge' image
+        baseimage-tag: ['17-3.5']   # base image tags for 'edge' image
         variant: ['', '-alpine']    # image variants: '' = debian
 
-    # This should only run for releases frm the v5-devel branch
-    if: github.event.release.target_commitish == 'v5-devel'
     steps:
     -
-      name: Get release version without v
-      id: release_version
-      uses: battila7/get-version-action@v2
+      name: Parse short sha
+      uses: benjlevesque/short-sha@v3.0
+      id: short-sha
     -
       name: set lower case owner name
       run: |
@@ -57,25 +56,25 @@ jobs:
           ${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}
           ghcr.io/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}
         flavor: |
-          latest=${{ !github.event.release.prerelease }}
+          latest=false
+          suffix=${{ matrix.variant }}
         tags: |
-          type=semver,pattern={{version}},suffix=${{ matrix.variant }}
-          type=raw,value=latest-beta,suffix=${{ matrix.variant }}
+          type=edge,branch=master
         labels: |
           maintainer=Bruno Willenborg
-          maintainer.email=b.willenborg(at)tum.de
-          maintainer.organization=Chair of Geoinformatics, Technical University of Munich (TUM)
+          maintainer.email=bruno.willenborg(at)list-eco.de
+          maintainer.organization=LIST Eco GmbH & Co. KG
           org.opencontainers.image.authors=Bruno Willenborg
           org.opencontainers.image.vendor=3DCityDB Steering Committee
-          org.opencontainers.image.title=3D City Database v5 PostgreSQL/PostGIS Docker image
-          org.opencontainers.image.description=Docker image for the 3D City Database v5 based on PostgreSQL and PostGIS
+          org.opencontainers.image.title=3D City Database PostgreSQL/PostGIS Docker image
+          org.opencontainers.image.description=Docker image for the 3D City Database based on PostgreSQL and PostGIS
           org.opencontainers.image.url=https://github.com/3dcitydb/
-          org.opencontainers.image.documentation=https://3dcitydb-docs.readthedocs.io/en/latest/3dcitydb/docker.html
-          org.opencontainers.image.source=https://github.com/3dcitydb/3dcitydb/tree/v5-devel
+          org.opencontainers.image.documentation=https://3dcitydb.github.io/3dcitydb-mkdocs/
+          org.opencontainers.image.source=https://github.com/3dcitydb/3dcitydb
     -
       name: Build and push image
       id: docker_build
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: .
         push: true
@@ -83,13 +82,10 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         build-args: |
           BASEIMAGE_TAG=${{ matrix.baseimage-tag }}${{ matrix.variant }}
-          CITYDB_VERSION=${{ steps.release_version.outputs.version }}
+          CITYDB_VERSION=${{ steps.short-sha.outputs.sha }}
     -
-      name: Image digest
-      run: echo ${{ steps.docker_build.outputs.digest }}
-    -
-      name: Inspect image
-      run: docker inspect ${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}:${{ steps.release_version.outputs.version-without-v }}${{ matrix.variant }}
+      name: Inspect image Dockerhub
+      run: docker inspect ${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}:edge${{ matrix.variant }}
     -
       name: Inspect image ghcr.io
-      run: docker inspect ghcr.io/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}:${{ steps.release_version.outputs.version-without-v }}${{ matrix.variant }}
+      run: docker inspect ghcr.io/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}:edge${{ matrix.variant }}
