@@ -23,11 +23,12 @@ RUN chmod u+x ./gradlew && ./gradlew installDist
 FROM postgis/postgis:${BASEIMAGE_TAG} AS runtime
 
 # Set 3DCityDB version
-ARG CITYDB_VERSION='5.0.0'
+ARG CITYDB_VERSION
 ENV CITYDBVERSION=${CITYDB_VERSION}
 
 # Copy SQL scripts
 WORKDIR /3dcitydb
+COPY --from=builder /build/build/install/3dcitydb/version.txt .
 COPY --from=builder /build/build/install/3dcitydb/postgresql/sql-scripts .
 COPY --from=builder /build/build/install/3dcitydb/postgresql/docker-scripts/3dcitydb-initdb.sh /docker-entrypoint-initdb.d/
 
