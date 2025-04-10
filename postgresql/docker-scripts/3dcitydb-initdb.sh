@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
 # 3DCityDB setup --------------------------------------------------------------
 
+# Set 3DCityDB version --------------------------------------------------------
+if [ -z $CITYDBVERSION ]; then
+  # CITYDBVERSION unset, read version from the version.txt file
+  read -r CITYDB_VERSION < version.txt
+else
+  CITYDB_VERSION=$CITYDBVERSION
+fi
+
 # Print commands and their arguments as they are executed
-set -e;
+set -e
 
 # psql should stop on error
 psql=( psql -v ON_ERROR_STOP=1 )
@@ -97,7 +105,7 @@ cat <<EOF
 # 3DCityDB ---------------------------------------------------------------------
 #   https://github.com/3dcitydb/3dcitydb
 #
-#   3DCityDB version      $CITYDBVERSION
+#   3DCityDB version      $CITYDB_VERSION
 #   DBNAME                $POSTGRES_DB
 #   SRID                  $SRID
 #   SRSNAME               $SRS_NAME
