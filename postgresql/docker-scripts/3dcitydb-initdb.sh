@@ -59,18 +59,6 @@ else
   CHANGELOG="$CHANGELOG"
 fi
 
-# Add PostGIS raster extension ------------------------------------------------
-# Get major version from POSTGIS_VERSION, POSTGIS_MAJOR may return string
-postgis_major=$( echo $POSTGIS_VERSION | cut -f1 -d '.' )
-if [ $postgis_major -gt 2 ]; then
-  echo
-  echo "Create PostGIS raster extensions in database '$POSTGRES_DB' ..."
-
-  "${psql[@]}" -d "$POSTGRES_DB" -c "CREATE EXTENSION IF NOT EXISTS postgis_raster;"
-
-  echo "Create PostGIS raster extensions in database '$POSTGRES_DB' ...done!"
-fi
-
 # Add PostGIS SFCGAL extension ------------------------------------------------
 if [ ! -z ${POSTGIS_SFCGAL+x} ] && [ ${POSTGIS_SFCGAL} = true ] || [ "${POSTGIS_SFCGAL}" = "yes" ] ; then
 
