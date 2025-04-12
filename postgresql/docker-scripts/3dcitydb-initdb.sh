@@ -3,7 +3,7 @@
 
 # Set 3DCityDB version --------------------------------------------------------
 if [ -z $CITYDB_VERSION ]; then
-  # CITYDBVERSION unset, read version from the version.txt file
+  # CITYDB_VERSION unset, read version from the version.txt file
   read -r CITYDB_VERSION < version.txt
 fi
 
