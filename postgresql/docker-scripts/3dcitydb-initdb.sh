@@ -2,11 +2,9 @@
 # 3DCityDB setup --------------------------------------------------------------
 
 # Set 3DCityDB version --------------------------------------------------------
-if [ -z $CITYDBVERSION ]; then
+if [ -z $CITYDB_VERSION ]; then
   # CITYDBVERSION unset, read version from the version.txt file
   read -r CITYDB_VERSION < version.txt
-else
-  CITYDB_VERSION=$CITYDBVERSION
 fi
 
 # Print commands and their arguments as they are executed
@@ -84,30 +82,35 @@ echo "Setting up 3DCityDB database schema in database '$POSTGRES_DB' ...done!"
 # Echo info -------------------------------------------------------------------
 cat <<EOF
 
-# 3DCityDB Docker PostGIS ######################################################
+###############################################################################
+#  _______   ___ _ _        ___  ___
+# |__ /   \ / __(_) |_ _  _|   \| _ )
+#  |_ \ |) | (__| |  _| || | |) | _ \\
+# |___/___/ \___|_|\__|\_, |___/|___/
+#                      |__/
 #
-# PostgreSQL/PostGIS -----------------------------------------------------------
+# 3DCityDB Docker PostGIS
+#
+# PostgreSQL/PostGIS ----------------------------------------------------------
 #   PostgreSQL version  $PG_MAJOR - $PG_VERSION
 #   PostGIS version     $POSTGIS_VERSION
 #
-# 3DCityDB ---------------------------------------------------------------------
-#   https://github.com/3dcitydb/3dcitydb
+# 3DCityDB --------------------------------------------------------------------
+#   3DCityDB version    $CITYDB_VERSION
+#   DBNAME              $POSTGRES_DB
+#   SRID                $SRID
+#   SRSNAME             $SRS_NAME
+#   HEIGHT_EPSG         $HEIGHT_EPSG
+#   SFCGAL enabled      $SFCGAL
+#   CHANGELOG enabled   $CHANGELOG
 #
-#   3DCityDB version      $CITYDB_VERSION
-#   DBNAME                $POSTGRES_DB
-#   SRID                  $SRID
-#   SRSNAME               $SRS_NAME
-#   HEIGHT_EPSG           $HEIGHT_EPSG
-#   SFCGAL enabled        $SFCGAL
-#   CHANGELOG enabled     $CHANGELOG
+#   https://github.com/3dcitydb
 #
-# Maintainer -------------------------------------------------------------------
+# Maintainer ------------------------------------------------------------------
 #   Bruno Willenborg
-#   Chair of Geoinformatics
-#   Department of Aerospace and Geodesy
-#   Technical University of Munich (TUM)
-#   b.willenborg(at)tum.de
+#   LIST Eco GmbH & Co. KG
+#   bruno.willenborg(at)list-eco.de
 #
-################################################################################
+###############################################################################
 
 EOF
