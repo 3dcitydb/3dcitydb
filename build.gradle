@@ -22,7 +22,7 @@ tasks.register('versionFile') {
     }
 }
 
-tasks.register('mavenDistZip', Zip) {
+tasks.register('bundleMavenZip', Zip) {
     group = distZip.group
     archiveFileName = "${project.name}-${project.version}.zip"
     destinationDirectory = file("$projectDir/build/maven")
@@ -96,13 +96,13 @@ static def replaceTokens(String text, Map values,
 }
 
 artifacts {
-    mavenDistZip
+    bundleMavenZip
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact mavenDistZip
+            artifact bundleMavenZip
             pom {
                 name = project.name
                 url = githubUrl
