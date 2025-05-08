@@ -42,7 +42,7 @@ distributions.main.contents {
         from 'json-schema'
     }
     into('postgresql') {
-        from 'postgresql' exclude 'db-schema'
+        from 'postgresql' exclude ('db-schema', 'docker-scripts')
         filesMatching('**/datatype-instances.sql') {
             filter { String line -> replaceTokens(line, dataTypes) }
         }
