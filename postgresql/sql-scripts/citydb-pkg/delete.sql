@@ -48,10 +48,10 @@
 CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_schema(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF void AS
 $body$
 DECLARE
-rec RECORD;
+  rec RECORD;
 BEGIN
-FOR rec IN
-SELECT table_name FROM information_schema.tables where table_schema = schema_name
+  FOR rec IN
+    SELECT table_name FROM information_schema.tables where table_schema = schema_name
         AND table_name <> 'ade'
         AND table_name <> 'datatype'
         AND table_name <> 'database_srs'
@@ -61,14 +61,14 @@ SELECT table_name FROM information_schema.tables where table_schema = schema_nam
         AND table_name <> 'objectclass'
   LOOP
     EXECUTE format('TRUNCATE TABLE %I.%I CASCADE', schema_name, rec.table_name);
-END LOOP;
+  END LOOP;
 
-FOR rec IN
-SELECT sequence_name FROM information_schema.sequences where sequence_schema = schema_name
+  FOR rec IN
+    SELECT sequence_name FROM information_schema.sequences where sequence_schema = schema_name
         AND sequence_name <> 'ade_seq'
   LOOP
     EXECUTE format('ALTER SEQUENCE %I.%I RESTART', schema_name, rec.sequence_name);
-END LOOP;
+  END LOOP;
 END;
 $body$
 LANGUAGE plpgsql;
