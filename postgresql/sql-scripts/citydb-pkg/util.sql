@@ -1,30 +1,7 @@
 /*****************************************************************
-* CONTENT
-*
-* FUNCTIONS:
-*   citydb_version( 
-*     OUT version TEXT, 
-*     OUT major_version INTEGER, 
-*     OUT minor_version INTEGER, 
-*     OUT minor_revision INTEGER
-*     ) RETURNS RECORD
-*   db_metadata(
-*     schema_name TEXT DEFAULT 'citydb',
-*     OUT srid INTEGER,
-*     OUT srs_name TEXT,
-*     OUT coord_ref_sys_name TEXT, 
-*     OUT coord_ref_sys_kind TEXT,
-*     OUT wktext TEXT,  
-*     OUT versioning TEXT
-*     ) RETURNS RECORD
-*   get_seq_values(seq_name TEXT, seq_count BIGINT) RETURNS SETOF BIGINT
-*   drop_tmp_tables(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF VOID
-******************************************************************/
-
-/*****************************************************************
 * citydb_version
 *
-* @RETURN RECORD with columns
+* @return RECORD with columns
 *   version - version of 3DCityDB as string
 *   major_version - major version number of 3DCityDB instance
 *   minor_version - minor version number of 3DCityDB instance
@@ -45,15 +22,13 @@ SELECT
 $$
 LANGUAGE sql IMMUTABLE;
 
-
 /******************************************************************
 * db_metadata
 *
-* @param schema_name name of database schema
-*
-* @RETURN RECORD with columns
-*    SRID, SRS_NAME,
-*    COORD_REF_SYS_NAME, COORD_REF_SYS_KIND, VERSIONING
+* @param schema_name Name of database schema
+* @return RECORD with columns
+*    srid, srs_name,
+*    coord_ref_sys_name, coord_ref_sys_kind, wktext
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(
   schema_name TEXT DEFAULT 'citydb',
@@ -83,15 +58,12 @@ END;
 $$
 LANGUAGE plpgsql STABLE;
 
-
 /*****************************************************************
-* get_sequence_values
+* get_seq_values
 *
-* @param seq_name name of the sequence
-* @param count number of values to be queried from the sequence
-* @param schema_name name of schema of target sequence
-*
-* @RETURN BIGINT SET list of sequence values from given sequence
+* @param seq_name Name of the sequence including a schema prefix
+* @param count Number of values to be queried from the sequence
+* @return List of sequence values from given sequence
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_seq_values(
   seq_name TEXT,
@@ -102,15 +74,13 @@ SELECT nextval($1)::bigint FROM generate_series(1, $2);
 $$
 LANGUAGE sql STRICT;
 
-
 /*****************************************************************
 * get_child_objectclass_ids
 *
-* @param class_id identifier for object class
-* @param skip_abstract 1 if abstract classes shall be skipped, 0 if not
-* @param schema_name name of schema
-*
-* @return QUERY the IDs of all transitive subclasses of the given object class
+* @param class_id Identifier for object class
+* @param skip_abstract Set to 1 if abstract classes shall be skipped, 0 if not
+* @param schema_name Name of schema
+* @return The IDs of all transitive subclasses of the given object class
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_child_objectclass_ids(
   class_id INTEGER,
@@ -121,36 +91,31 @@ DECLARE
   where_clause TEXT := '';
 BEGIN
   IF skip_abstract <> 0 THEN
-    where_clause = 'WHERE is_abstract <> 1';
+    where_clause = 'WHERE h.is_abstract <> 1';
   END IF;
   
   RETURN QUERY EXECUTE format('
     WITH RECURSIVE class_hierarchy AS (
       SELECT
-        id,
-        superclass_id,
-        classname,
-        is_abstract,		
-        is_toplevel,
-        ade_id,
-        namespace_id
-      FROM
-        %I.objectclass
-      WHERE
-        id = %L
-      UNION ALL
-      SELECT
-        o.*
+        o.id,
+		o.is_abstract
       FROM
         %I.objectclass o
-          INNER JOIN class_hierarchy h ON h.id = o.superclass_id
+      WHERE
+        o.id = %L
+      UNION ALL
+      SELECT
+        p.id,
+		p.is_abstract
+      FROM
+        %I.objectclass p
+        INNER JOIN class_hierarchy h ON h.id = p.superclass_id
     )
     SELECT
-      id
+      h.id
     FROM
-      class_hierarchy ' || where_clause
-  , schema_name, class_id, schema_name);
+      class_hierarchy h ' || where_clause,
+	schema_name, class_id, schema_name);
 END;
 $$
 LANGUAGE plpgsql STRICT;
-
