@@ -65,7 +65,6 @@ SET search_path TO citydb, :current_path;
 CREATE SCHEMA citydb_pkg;
 
 \ir citydb-pkg/util.sql
-\ir citydb-pkg/constraint.sql
 \ir citydb-pkg/srs.sql
 \ir citydb-pkg/envelope.sql
 \ir citydb-pkg/delete.sql
