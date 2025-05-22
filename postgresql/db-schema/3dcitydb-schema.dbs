@@ -461,77 +461,77 @@
 	</schema>
 	<layout name="3DCityDB" id="Layout-1758" confirmed="y" joined_routing="y" show_column_type="y" show_relation="no_text" >
 		<comment><![CDATA[3DCityDB]]></comment>
-		<entity schema="citydb" name="address" color="F4DDBE" x="48" y="368" />
-		<entity schema="citydb" name="ade" color="BEBEF4" x="304" y="720" />
-		<entity schema="citydb" name="appear_to_surface_data" color="F4BEC7" x="784" y="528" />
-		<entity schema="citydb" name="appearance" color="F4BEC7" x="768" y="304" />
-		<entity schema="citydb" name="codelist" color="F4F3BE" x="768" y="880" />
-		<entity schema="citydb" name="codelist_entry" color="F4F3BE" x="1216" y="880" />
-		<entity schema="citydb" name="database_srs" color="BEBEF4" x="48" y="912" />
-		<entity schema="citydb" name="datatype" color="BEBEF4" x="512" y="720" />
-		<entity schema="citydb" name="feature" color="F4DDBE" x="48" y="80" />
-		<entity schema="citydb" name="geometry_data" color="C7F4BE" x="768" y="80" />
-		<entity schema="citydb" name="implicit_geometry" color="C7F4BE" x="1152" y="80" />
-		<entity schema="citydb" name="namespace" color="BEBEF4" x="304" y="880" />
-		<entity schema="citydb" name="objectclass" color="BEBEF4" x="48" y="720" />
-		<entity schema="citydb" name="property" color="F4DDBE" x="352" y="80" />
-		<entity schema="citydb" name="surface_data" color="F4BEC7" x="1088" y="464" />
-		<entity schema="citydb" name="surface_data_mapping" color="F4BEC7" x="1088" y="304" />
-		<entity schema="citydb" name="tex_image" color="F4BEC7" x="768" y="672" />
+		<entity schema="citydb" name="datatype" color="BEBEF4" x="513" y="912" />
+		<entity schema="citydb" name="objectclass" color="BEBEF4" x="57" y="912" />
+		<entity schema="citydb" name="feature" color="F4DDBE" x="57" y="95" />
+		<entity schema="citydb" name="property" color="F4DDBE" x="361" y="95" />
+		<entity schema="citydb" name="geometry_data" color="C7F4BE" x="779" y="95" />
+		<entity schema="citydb" name="appearance" color="F4BEC7" x="779" y="399" />
+		<entity schema="citydb" name="codelist" color="F4F3BE" x="779" y="1121" />
+		<entity schema="citydb" name="database_srs" color="BEBEF4" x="57" y="1159" />
+		<entity schema="citydb" name="ade" color="BEBEF4" x="304" y="912" />
+		<entity schema="citydb" name="namespace" color="BEBEF4" x="304" y="1121" />
+		<entity schema="citydb" name="appear_to_surface_data" color="F4BEC7" x="817" y="646" />
+		<entity schema="citydb" name="tex_image" color="F4BEC7" x="779" y="798" />
+		<entity schema="citydb" name="surface_data_mapping" color="F4BEC7" x="1083" y="399" />
+		<entity schema="citydb" name="surface_data" color="F4BEC7" x="1083" y="589" />
+		<entity schema="citydb" name="codelist_entry" color="F4F3BE" x="1197" y="1121" />
+		<entity schema="citydb" name="implicit_geometry" color="C7F4BE" x="1140" y="95" />
+		<entity schema="citydb" name="address" color="F4DDBE" x="57" y="456" />
 		<group name="Geometry" color="EEF7EC" >
-			<entity schema="citydb" name="implicit_geometry" />
 			<entity schema="citydb" name="geometry_data" />
+			<entity schema="citydb" name="implicit_geometry" />
 		</group>
 		<group name="Metadata" color="ECECF7" >
-			<entity schema="citydb" name="namespace" />
 			<entity schema="citydb" name="datatype" />
-			<entity schema="citydb" name="database_srs" />
 			<entity schema="citydb" name="objectclass" />
+			<entity schema="citydb" name="database_srs" />
 			<entity schema="citydb" name="ade" />
+			<entity schema="citydb" name="namespace" />
 		</group>
 		<group name="Feature" color="F7F2EC" >
-			<entity schema="citydb" name="address" />
-			<entity schema="citydb" name="property" />
 			<entity schema="citydb" name="feature" />
+			<entity schema="citydb" name="property" />
+			<entity schema="citydb" name="address" />
 		</group>
 		<group name="Appearance" color="FFCCFF" >
-			<entity schema="citydb" name="surface_data" />
-			<entity schema="citydb" name="surface_data_mapping" />
+			<entity schema="citydb" name="appearance" />
 			<entity schema="citydb" name="appear_to_surface_data" />
 			<entity schema="citydb" name="tex_image" />
-			<entity schema="citydb" name="appearance" />
+			<entity schema="citydb" name="surface_data_mapping" />
+			<entity schema="citydb" name="surface_data" />
 		</group>
 		<group name="Codelist" color="F4F3BE" >
-			<entity schema="citydb" name="codelist_entry" />
 			<entity schema="citydb" name="codelist" />
+			<entity schema="citydb" name="codelist_entry" />
 		</group>
 	</layout>
 	<layout name="Appearance module" id="Diagram-466" joined_routing="y" show_column_type="y" show_relation="no_text" >
-		<entity schema="citydb" name="appear_to_surface_data" color="F4BEC7" x="48" y="256" />
-		<entity schema="citydb" name="appearance" color="F4BEC7" x="48" y="48" />
-		<entity schema="citydb" name="surface_data" color="F4BEC7" x="304" y="48" />
-		<entity schema="citydb" name="surface_data_mapping" color="F4BEC7" x="624" y="48" />
-		<entity schema="citydb" name="tex_image" color="F4BEC7" x="624" y="256" />
+		<entity schema="citydb" name="appearance" color="F4BEC7" x="57" y="57" />
+		<entity schema="citydb" name="appear_to_surface_data" color="F4BEC7" x="57" y="285" />
+		<entity schema="citydb" name="surface_data_mapping" color="F4BEC7" x="646" y="57" />
+		<entity schema="citydb" name="surface_data" color="F4BEC7" x="323" y="57" />
+		<entity schema="citydb" name="tex_image" color="F4BEC7" x="646" y="304" />
 	</layout>
 	<layout name="Codelist module" id="Diagram-207" joined_routing="y" show_column_type="y" show_relation="no_text" >
-		<entity schema="citydb" name="codelist" color="F4F3BE" x="48" y="48" />
-		<entity schema="citydb" name="codelist_entry" color="F4F3BE" x="256" y="48" />
+		<entity schema="citydb" name="codelist" color="F4F3BE" x="57" y="57" />
+		<entity schema="citydb" name="codelist_entry" color="F4F3BE" x="266" y="57" />
 	</layout>
 	<layout name="Feature module" id="Diagram-1266" confirmed="y" joined_routing="y" show_column_type="y" show_relation="no_text" >
 		<comment><![CDATA[Feature module]]></comment>
-		<entity schema="citydb" name="address" color="F4DDBE" x="736" y="48" />
-		<entity schema="citydb" name="feature" color="F4DDBE" x="48" y="48" />
-		<entity schema="citydb" name="property" color="F4DDBE" x="352" y="48" />
+		<entity schema="citydb" name="feature" color="F4DDBE" x="57" y="57" />
+		<entity schema="citydb" name="property" color="F4DDBE" x="380" y="57" />
+		<entity schema="citydb" name="address" color="F4DDBE" x="779" y="57" />
 	</layout>
 	<layout name="Geometry module" id="Diagram-153a" joined_routing="y" show_column_type="y" show_relation="no_text" >
-		<entity schema="citydb" name="geometry_data" color="C7F4BE" x="48" y="48" />
-		<entity schema="citydb" name="implicit_geometry" color="C7F4BE" x="384" y="48" />
+		<entity schema="citydb" name="geometry_data" color="C7F4BE" x="57" y="57" />
+		<entity schema="citydb" name="implicit_geometry" color="C7F4BE" x="399" y="57" />
 	</layout>
 	<layout name="Metadata module" id="Diagram-1691" joined_routing="y" show_column_type="y" show_relation="no_text" >
-		<entity schema="citydb" name="ade" color="BEBEF4" x="272" y="48" />
-		<entity schema="citydb" name="database_srs" color="BEBEF4" x="48" y="256" />
-		<entity schema="citydb" name="datatype" color="BEBEF4" x="464" y="48" />
-		<entity schema="citydb" name="namespace" color="BEBEF4" x="272" y="224" />
-		<entity schema="citydb" name="objectclass" color="BEBEF4" x="48" y="48" />
+		<entity schema="citydb" name="objectclass" color="BEBEF4" x="57" y="57" />
+		<entity schema="citydb" name="database_srs" color="BEBEF4" x="57" y="285" />
+		<entity schema="citydb" name="ade" color="BEBEF4" x="304" y="57" />
+		<entity schema="citydb" name="datatype" color="BEBEF4" x="513" y="57" />
+		<entity schema="citydb" name="namespace" color="BEBEF4" x="304" y="247" />
 	</layout>
 </project>
