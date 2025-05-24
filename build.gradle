@@ -11,7 +11,7 @@ plugins {
 
 apply from: 'properties.gradle'
 
-version = '5.0.0'
+version = '5.1.0'
 group = 'org.citydb'
 
 tasks.register('versionFile') {
@@ -49,7 +49,7 @@ distributions.main.contents {
         filesMatching('**/objectclass-instances.sql') {
             filter { String line -> replaceTokens(line, featureTypes) }
         }
-        filesMatching('**/util.sql') {
+        filesMatching(['**/upgrade-db.sql', '**/util.sql']) {
             filter { String line -> replaceTokens(line, version, '', '') }
         }
     }
