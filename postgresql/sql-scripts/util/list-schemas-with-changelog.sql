@@ -27,7 +27,7 @@
 
 \t on
 
-\echo 'List of 3DCityDB schemas (* means that the changelog extension has already be created):'
+\echo 'List of 3DCityDB schemas (* means that the changelog extension has already been created):'
 WITH schema_names as (
   SELECT n.nspname AS schema_name
   FROM pg_catalog.pg_class c

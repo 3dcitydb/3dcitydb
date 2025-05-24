@@ -36,7 +36,7 @@ DROP SCHEMA IF EXISTS citydb_pkg CASCADE;
 DO $$
 DECLARE schema_name text;
 BEGIN
-  FOR schema_name in SELECT nspname AS schema_name FROM pg_catalog.pg_class c
+  FOR schema_name IN SELECT nspname AS schema_name FROM pg_catalog.pg_class c
                      JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
                      WHERE c.relname = 'database_srs' AND c.relkind = 'r'
   LOOP

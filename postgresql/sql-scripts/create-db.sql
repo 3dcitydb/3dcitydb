@@ -84,14 +84,12 @@ SELECT CASE
 \gset
 \ir :create_changelog_extension;
 
-\echo
-\echo '3DCityDB creation complete.'
-
---// checks if the chosen SRID is provided by the spatial_ref_sys table
+--// check if the chosen SRID is provided by the spatial_ref_sys table
 \echo
 \echo 'Checking spatial reference system ...'
 SELECT citydb_pkg.check_srid(:SRID);
 
 \echo 'Setting spatial reference system of 3DCityDB instance ...'
 SELECT citydb_pkg.change_schema_srid(:SRID,:'SRS_NAME');
-\echo 'Done'
+
+\echo '3DCityDB instance successfully created.'

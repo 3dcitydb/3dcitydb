@@ -1,0 +1,1 @@
+\echo 'The 3DCityDB instance is already up to date. No action required.'
