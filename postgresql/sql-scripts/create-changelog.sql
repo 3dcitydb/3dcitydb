@@ -139,4 +139,3 @@ AFTER INSERT OR UPDATE OR DELETE ON :SCHEMA_NAME.feature
 
 \echo
 \echo 'Changelog extension created!'
-  

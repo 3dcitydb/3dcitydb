@@ -1,9 +1,9 @@
-\set QUIET 1
+\pset footer off
 SET client_min_messages TO WARNING;
 \set ON_ERROR_STOP ON
 
-\pset footer off
-\pset tuples_only on
+\set QUIET 1
+\t on
 \pset format unaligned
 \pset fieldsep '.'
 
@@ -13,7 +13,7 @@ SET client_min_messages TO WARNING;
 
 \echo 'Upgrading 3DCityDB to version ':major'.':minor'.':revision' ...'
 
---// check the current version
+-- check the current version
 \echo
 \echo 'Checking version of the 3DCityDB instance ...'
 SELECT major_version AS current_major,
@@ -21,7 +21,7 @@ SELECT major_version AS current_major,
        minor_revision AS current_revision FROM citydb_pkg.citydb_version();
 \gset
 
---// execute upgrade action depending on the current version
+-- execute upgrade action depending on the current version
 SELECT CASE
   WHEN :major = :current_major
        AND ((:minor = :current_minor AND :revision > :current_revision)
@@ -31,4 +31,5 @@ SELECT CASE
   ELSE 'upgrade/no-action.sql'
 END AS do_action;
 \gset
+
 \ir :do_action
