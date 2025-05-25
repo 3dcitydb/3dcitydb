@@ -10,6 +10,18 @@ SET client_min_messages TO WARNING;
 SELECT postgis_lib_version() AS postgis_version;
 \gset
 
+-- check if the provided SRID is supported
+\echo
+\echo 'Checking spatial reference system ...'
+SET tmp.srid to :"srid";
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM spatial_ref_sys WHERE srid = current_setting('tmp.srid')::int) THEN
+    RAISE EXCEPTION 'The SRID % is not supported. To add it manually, see CRS definitions at https://spatialreference.org/.', current_setting('tmp.srid');
+  END IF;
+END
+$$;
+
 -- create schema
 CREATE SCHEMA citydb;
 
@@ -56,11 +68,6 @@ SELECT CASE
   END AS create_changelog_extension;
 \gset
 \ir :create_changelog_extension;
-
--- check if the chosen SRID is provided by the spatial_ref_sys table
-\echo
-\echo 'Checking spatial reference system ...'
-SELECT citydb_pkg.check_srid(:SRID);
 
 \echo 'Setting spatial reference system of 3DCityDB instance ...'
 SELECT citydb_pkg.change_schema_srid(:SRID,:'SRS_NAME');
