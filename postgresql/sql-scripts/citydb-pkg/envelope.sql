@@ -200,9 +200,11 @@ BEGIN
   IF geom1 IS NOT NULL AND geom2 IS NOT NULL THEN
     RETURN citydb_pkg.get_envelope(ST_Collect(geom1, geom2), schema_name);
   ELSIF geom1 IS NOT NULL THEN
-    RETURN geom1;
+    RETURN citydb_pkg.get_envelope(geom1);
+  ELSIF geom2 IS NOT NULL THEN
+    RETURN citydb_pkg.get_envelope(geom2);
   ELSE
-    RETURN geom2;
+    RETURN NULL;
   END IF;
 END;
 $body$
