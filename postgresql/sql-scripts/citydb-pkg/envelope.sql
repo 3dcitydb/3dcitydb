@@ -96,6 +96,29 @@ LANGUAGE plpgsql;
 * @param gid ID of the entry in the IMPLICIT_GEOMETRY table
 * @param ref_pt Reference point provided as POINT geometry
 * @param matrix Transformation matrix represented as JSON array of double values
+* @param schema_name Name of schema
+* @return Envelope geometry as required by the ENVELOPE column of the FEATURE table
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.get_implicit_geometry_envelope(
+  gid BIGINT,
+  ref_pt GEOMETRY,
+  matrix JSON,
+  schema_name TEXT) RETURNS GEOMETRY AS
+$body$
+BEGIN
+    EXECUTE format('set search_path to %I, public', schema_name);
+
+    RETURN citydb_pkg.get_implicit_geometry_envelope(gid, ref_pt, matrix);
+END;
+$body$
+LANGUAGE plpgsql;
+
+/*****************************************************************
+* Returns the envelope geometry of a given implicit geometry
+*
+* @param gid ID of the entry in the IMPLICIT_GEOMETRY table
+* @param ref_pt Reference point provided as POINT geometry
+* @param matrix Transformation matrix represented as JSON array of double values
 * @return Envelope geometry as required by the ENVELOPE column of the FEATURE table
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_implicit_geometry_envelope(
