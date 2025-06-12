@@ -38,18 +38,30 @@ DECLARE
   deleted_ids bigint[] := '{}';
 BEGIN
   PERFORM
-    citydb_pkg.delete_property_row(array_agg(p.id))
-  FROM
-    property p,
-    unnest($1) a(a_id)
-  WHERE
-    p.feature_id = a.a_id;
+    citydb_pkg.delete_property(array_agg(p.id))
+  FROM (
+    SELECT
+      p.id
+    FROM
+      property p,
+      unnest($1) AS a(a_id)
+    WHERE
+      p.feature_id = a.a_id
+    UNION ALL
+    SELECT
+      p.id
+    FROM
+      property p,
+      unnest($1) AS a(a_id)
+    WHERE
+      p.val_feature_id = a.a_id
+  ) AS p;
 
   WITH delete_objects AS (
     DELETE FROM
       feature f
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       f.id = a.a_id
     RETURNING
@@ -123,7 +135,7 @@ BEGIN
     DELETE FROM
       property p
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       p.id = a.a_id
     RETURNING
@@ -209,14 +221,36 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_property(pid_array bigint[]) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
+  deleted_by_parent_ids bigint[] := '{}';
   property_ids bigint[] := '{}';
 BEGIN
+  WITH parent_refs AS (
+    SELECT
+      c.id, citydb_pkg.delete_property(p.id)
+    FROM
+      property c
+    INNER JOIN unnest($1) AS a(a_id) ON c.id = a.a_id
+    INNER JOIN property p ON p.id = c.parent_id
+    INNER JOIN datatype d ON d.id = p.datatype_id
+    INNER JOIN namespace n ON n.id = c.namespace_id
+    WHERE
+      jsonb_path_query_first((d.schema ->> 'properties')::jsonb,
+        format('$[*] ? (@.name == "%s" && @.namespace == "%s" && !exists(@.parent))', c.name, n.namespace)::jsonpath
+      ) ->> 'onDelete' = 'cascadeToParent'
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    deleted_by_parent_ids
+  FROM
+    parent_refs;
+
   WITH RECURSIVE child_refs AS (
     SELECT
       p.id
     FROM
       property p,
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       p.id = a.a_id
     UNION ALL
@@ -236,9 +270,11 @@ BEGIN
     child_refs;
 
   RETURN QUERY
-    SELECT citydb_pkg.delete_property_row(property_ids)
+    SELECT unnest(deleted_by_parent_ids)
+    UNION
+    (SELECT citydb_pkg.delete_property_row(property_ids)
     INTERSECT
-    SELECT unnest($1);
+    SELECT unnest($1));
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -293,7 +329,7 @@ BEGIN
     DELETE FROM
       geometry_data t
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       t.id = a.a_id
     RETURNING
@@ -363,7 +399,7 @@ BEGIN
     citydb_pkg.delete_appearance(array_agg(t.id))
   FROM
     appearance t,
-    unnest($1) a(a_id)
+    unnest($1) AS a(a_id)
   WHERE
     t.implicit_geometry_id = a.a_id;
 
@@ -371,7 +407,7 @@ BEGIN
     DELETE FROM
       implicit_geometry t
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       t.id = a.a_id
     RETURNING
@@ -451,7 +487,7 @@ BEGIN
     DELETE FROM
       appear_to_surface_data t
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       t.appearance_id = a.a_id
     RETURNING
@@ -479,7 +515,7 @@ BEGIN
     DELETE FROM
       appearance t
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       t.id = a.a_id
     RETURNING
@@ -549,7 +585,7 @@ BEGIN
     DELETE FROM
       surface_data t
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       t.id = a.a_id
     RETURNING
@@ -632,7 +668,7 @@ BEGIN
     DELETE FROM
       tex_image t
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       t.id = a.a_id
     RETURNING
@@ -701,7 +737,7 @@ BEGIN
     DELETE FROM
       address t
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       t.id = a.a_id
     RETURNING
@@ -777,7 +813,7 @@ BEGIN
       updating_person = COALESCE(metadata->>'updating_person', USER),
       lineage = COALESCE(metadata->>'lineage', f.lineage)
     FROM
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       f.id = a.a_id
     RETURNING
@@ -790,13 +826,14 @@ BEGIN
   FROM
     terminated_objects;
 
-  if cascade THEN
+  IF cascade THEN
     SELECT
       array_agg(val_feature_id)
     INTO
       child_feature_ids
     FROM
-      property p, unnest(terminated_ids) a(a_id)
+      property p,
+      unnest(terminated_ids) AS a(a_id)
     WHERE
       p.feature_id = a.a_id AND val_relation_type = 1;
 
