@@ -41,7 +41,7 @@ BEGIN
     citydb_pkg.delete_property_row(array_agg(p.id))
   FROM
     property p,
-    unnest($1) a(a_id)
+    unnest($1) AS a(a_id)
   WHERE
     p.feature_id = a.a_id;
 
@@ -49,7 +49,7 @@ BEGIN
     DELETE FROM
       feature f
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       f.id = a.a_id
     RETURNING
@@ -123,7 +123,7 @@ BEGIN
     DELETE FROM
       property p
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       p.id = a.a_id
     RETURNING
@@ -216,7 +216,7 @@ BEGIN
       p.id
     FROM
       property p,
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       p.id = a.a_id
     UNION ALL
@@ -293,7 +293,7 @@ BEGIN
     DELETE FROM
       geometry_data t
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       t.id = a.a_id
     RETURNING
@@ -363,7 +363,7 @@ BEGIN
     citydb_pkg.delete_appearance(array_agg(t.id))
   FROM
     appearance t,
-    unnest($1) a(a_id)
+    unnest($1) AS a(a_id)
   WHERE
     t.implicit_geometry_id = a.a_id;
 
@@ -371,7 +371,7 @@ BEGIN
     DELETE FROM
       implicit_geometry t
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       t.id = a.a_id
     RETURNING
@@ -451,7 +451,7 @@ BEGIN
     DELETE FROM
       appear_to_surface_data t
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       t.appearance_id = a.a_id
     RETURNING
@@ -479,7 +479,7 @@ BEGIN
     DELETE FROM
       appearance t
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       t.id = a.a_id
     RETURNING
@@ -549,7 +549,7 @@ BEGIN
     DELETE FROM
       surface_data t
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       t.id = a.a_id
     RETURNING
@@ -632,7 +632,7 @@ BEGIN
     DELETE FROM
       tex_image t
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       t.id = a.a_id
     RETURNING
@@ -701,7 +701,7 @@ BEGIN
     DELETE FROM
       address t
     USING
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       t.id = a.a_id
     RETURNING
@@ -777,7 +777,7 @@ BEGIN
       updating_person = COALESCE(metadata->>'updating_person', USER),
       lineage = COALESCE(metadata->>'lineage', f.lineage)
     FROM
-      unnest($1) a(a_id)
+      unnest($1) AS a(a_id)
     WHERE
       f.id = a.a_id
     RETURNING
@@ -790,13 +790,14 @@ BEGIN
   FROM
     terminated_objects;
 
-  if cascade THEN
+  IF cascade THEN
     SELECT
       array_agg(val_feature_id)
     INTO
       child_feature_ids
     FROM
-      property p, unnest(terminated_ids) a(a_id)
+      property p,
+      unnest(terminated_ids) AS a(a_id)
     WHERE
       p.feature_id = a.a_id AND val_relation_type = 1;
 
