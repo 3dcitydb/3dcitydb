@@ -42,7 +42,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Relates to a 3D PointCloud that represents the thematic surface.",
       "type": "core:FeatureProperty",
-      "target": "core:AbstractPointCloud"
+      "target": "core:AbstractPointCloud",
+      "relationType": "contains"
     },
     {
       "name": "lod4MultiSurface",

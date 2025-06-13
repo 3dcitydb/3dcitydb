@@ -158,7 +158,8 @@
               "$ref": "#/$defs/value"
             },
             "type": false,
-            "target": false
+            "target": false,
+            "relationType": false
           }
         },
         {
@@ -179,14 +180,16 @@
             "target": {
               "type": "string"
             },
-            "value": false
+            "value": false,
+            "relationType": false
           }
         },
         {
           "type": "object",
           "required": [
             "type",
-            "target"
+            "target",
+            "relationType"
           ],
           "properties": {
             "type": {
@@ -194,6 +197,13 @@
             },
             "target": {
               "type": "string"
+            },
+            "relationType": {
+              "type": "string",
+              "enum": [
+                "relates",
+                "contains"
+              ]
             },
             "value": false
           }
@@ -211,17 +221,22 @@
             "target": {
               "$ref": "#/$defs/geometryType"
             },
-            "value": false
+            "value": false,
+            "relationType": false
           }
         },
         {
           "type": "object",
+          "required": [
+            "target"
+          ],
           "properties": {
-            "value": false,
-            "type": false,
             "target": {
               "type": "string"
-            }
+            },
+            "value": false,
+            "type": false,
+            "relationType": false
           }
         }
       ]

@@ -14,7 +14,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
       "description": "Relates to the elements that fill the opening of the constructive element.",
       "type": "core:FeatureProperty",
-      "target": "con:AbstractFillingElement"
+      "target": "con:AbstractFillingElement",
+      "relationType": "contains"
     }
   ]
 }

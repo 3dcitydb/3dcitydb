@@ -8,7 +8,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
       "description": "Relates the tunnel parts to the Tunnel.",
       "type": "core:FeatureProperty",
-      "target": "tun:TunnelPart"
+      "target": "tun:TunnelPart",
+      "relationType": "contains"
     }
   ]
 }

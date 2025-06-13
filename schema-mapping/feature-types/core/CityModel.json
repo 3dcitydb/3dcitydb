@@ -8,21 +8,24 @@
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Specifies the city objects that are part of the CityModel.",
       "type": "core:FeatureProperty",
-      "target": "core:AbstractCityObject"
+      "target": "core:AbstractCityObject",
+      "relationType": "contains"
     },
     {
       "name": "versionMember",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Specifies the different versions of the CityModel.",
       "type": "core:FeatureProperty",
-      "target": "core:AbstractVersion"
+      "target": "core:AbstractVersion",
+      "relationType": "contains"
     },
     {
       "name": "versionTransitionMember",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Specifies the transitions between the different versions of the CityModel.",
       "type": "core:FeatureProperty",
-      "target": "core:AbstractVersionTransition"
+      "target": "core:AbstractVersionTransition",
+      "relationType": "contains"
     },
     {
       "name": "appearanceMember",
@@ -35,7 +38,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Specifies the feature objects that are part of the CityModel. It allows to include features that are not derived from core:AbstractCityObject.",
       "type": "core:FeatureProperty",
-      "target": "core:AbstractFeature"
+      "target": "core:AbstractFeature",
+      "relationType": "contains"
     }
   ]
 }

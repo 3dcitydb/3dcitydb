@@ -14,7 +14,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
       "description": "Relates to all city objects that are part of the city model version.",
       "type": "core:FeatureProperty",
-      "target": "core:AbstractFeatureWithLifespan"
+      "target": "core:AbstractFeatureWithLifespan",
+      "relationType": "relates"
     }
   ]
 }

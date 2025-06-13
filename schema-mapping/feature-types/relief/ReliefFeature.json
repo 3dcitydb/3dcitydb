@@ -14,7 +14,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
       "description": "Relates to the terrain components that are part of the ReliefFeature.",
       "type": "core:FeatureProperty",
-      "target": "dem:AbstractReliefComponent"
+      "target": "dem:AbstractReliefComponent",
+      "relationType": "contains"
     }
   ]
 }

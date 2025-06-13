@@ -26,7 +26,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Relates to surfaces that bound the space.",
       "type": "core:FeatureProperty",
-      "target": "core:AbstractSpaceBoundary"
+      "target": "core:AbstractSpaceBoundary",
+      "relationType": "contains"
     },
     {
       "name": "lod0Point",

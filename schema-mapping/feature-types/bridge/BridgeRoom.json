@@ -26,14 +26,16 @@
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
       "description": "Relates the furniture objects to the BridgeRoom.",
       "type": "core:FeatureProperty",
-      "target": "brid:BridgeFurniture"
+      "target": "brid:BridgeFurniture",
+      "relationType": "contains"
     },
     {
       "name": "bridgeInstallation",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
       "description": "Relates to the installation objects to the BridgeRoom.",
       "type": "core:FeatureProperty",
-      "target": "brid:BridgeInstallation"
+      "target": "brid:BridgeInstallation",
+      "relationType": "contains"
     },
     {
       "name": "lod4Solid",

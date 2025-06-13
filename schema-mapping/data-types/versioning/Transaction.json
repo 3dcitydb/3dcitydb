@@ -20,6 +20,7 @@
       "description": "Relates to the version of the city object prior to the Transaction.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractFeatureWithLifespan",
+      "relationType": "relates",
       "join": {
         "table": "property",
         "fromColumn": "id",
@@ -32,6 +33,7 @@
       "description": "Relates to the version of the city object subsequent to the Transaction.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractFeatureWithLifespan",
+      "relationType": "relates",
       "join": {
         "table": "property",
         "fromColumn": "id",

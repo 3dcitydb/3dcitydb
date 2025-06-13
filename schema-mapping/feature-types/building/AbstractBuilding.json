@@ -56,35 +56,40 @@
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
       "description": "Relates the constructive elements to the Building or BuildingPart.",
       "type": "core:FeatureProperty",
-      "target": "bldg:BuildingConstructiveElement"
+      "target": "bldg:BuildingConstructiveElement",
+      "relationType": "contains"
     },
     {
       "name": "buildingInstallation",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
       "description": "Relates the installation objects to the Building or BuildingPart.",
       "type": "core:FeatureProperty",
-      "target": "bldg:BuildingInstallation"
+      "target": "bldg:BuildingInstallation",
+      "relationType": "contains"
     },
     {
       "name": "buildingRoom",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
       "description": "Relates the rooms to the Building or BuildingPart.",
       "type": "core:FeatureProperty",
-      "target": "bldg:BuildingRoom"
+      "target": "bldg:BuildingRoom",
+      "relationType": "contains"
     },
     {
       "name": "buildingFurniture",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
       "description": "Relates the furniture objects to the Building or BuildingPart.",
       "type": "core:FeatureProperty",
-      "target": "bldg:BuildingFurniture"
+      "target": "bldg:BuildingFurniture",
+      "relationType": "contains"
     },
     {
       "name": "buildingSubdivision",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
       "description": "Relates the logical subdivisions to the Building or BuildingPart.",
       "type": "core:FeatureProperty",
-      "target": "bldg:AbstractBuildingSubdivision"
+      "target": "bldg:AbstractBuildingSubdivision",
+      "relationType": "contains"
     },
     {
       "name": "address",

@@ -26,14 +26,16 @@
       "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
       "description": "Relates to the predecessor version of the VersionTransition.",
       "type": "core:FeatureProperty",
-      "target": "vers:Version"
+      "target": "vers:Version",
+      "relationType": "contains"
     },
     {
       "name": "to",
       "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
       "description": "Relates to the successor version of the VersionTransition.",
       "type": "core:FeatureProperty",
-      "target": "vers:Version"
+      "target": "vers:Version",
+      "relationType": "contains"
     },
     {
       "name": "transaction",

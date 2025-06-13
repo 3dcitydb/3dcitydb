@@ -32,28 +32,32 @@
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
       "description": "Relates the constructive elements to the Bridge or BridgePart.",
       "type": "core:FeatureProperty",
-      "target": "brid:BridgeConstructiveElement"
+      "target": "brid:BridgeConstructiveElement",
+      "relationType": "contains"
     },
     {
       "name": "bridgeInstallation",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
       "description": "Relates the installation objects to the Bridge or BridgePart.",
       "type": "core:FeatureProperty",
-      "target": "brid:BridgeInstallation"
+      "target": "brid:BridgeInstallation",
+      "relationType": "contains"
     },
     {
       "name": "bridgeRoom",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
       "description": "Relates the rooms to the Bridge or BridgePart.",
       "type": "core:FeatureProperty",
-      "target": "brid:BridgeRoom"
+      "target": "brid:BridgeRoom",
+      "relationType": "contains"
     },
     {
       "name": "bridgeFurniture",
       "namespace": "http://3dcitydb.org/3dcitydb/bridge/5.0",
       "description": "Relates the furniture objects to the Bridge or BridgePart.",
       "type": "core:FeatureProperty",
-      "target": "brid:BridgeFurniture"
+      "target": "brid:BridgeFurniture",
+      "relationType": "contains"
     },
     {
       "name": "address",

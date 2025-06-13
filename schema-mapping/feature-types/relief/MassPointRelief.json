@@ -15,7 +15,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
       "description": "Relates to the 3D PointCloud of the MassPointRelief.",
       "type": "core:FeatureProperty",
-      "target": "core:AbstractPointCloud"
+      "target": "core:AbstractPointCloud",
+      "relationType": "contains"
     }
   ]
 }

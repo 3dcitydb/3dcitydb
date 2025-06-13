@@ -26,14 +26,16 @@
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
       "description": "Relates to the sections that are part of the Railway.",
       "type": "core:FeatureProperty",
-      "target": "tran:Section"
+      "target": "tran:Section",
+      "relationType": "contains"
     },
     {
       "name": "intersection",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
       "description": "Relates to the intersections that are part of the Railway.",
       "type": "core:FeatureProperty",
-      "target": "tran:Intersection"
+      "target": "tran:Intersection",
+      "relationType": "contains"
     }
   ]
 }

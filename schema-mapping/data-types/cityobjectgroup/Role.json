@@ -9,6 +9,7 @@
       "description": "Relates to the city objects that are part of the CityObjectGroup.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractCityObject",
+      "relationType": "relates",
       "join": {
         "table": "property",
         "fromColumn": "id",

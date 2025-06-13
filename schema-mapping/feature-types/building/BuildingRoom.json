@@ -32,14 +32,16 @@
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
       "description": "Relates the furniture objects to the BuildingRoom.",
       "type": "core:FeatureProperty",
-      "target": "bldg:BuildingFurniture"
+      "target": "bldg:BuildingFurniture",
+      "relationType": "contains"
     },
     {
       "name": "buildingInstallation",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
       "description": "Relates the installation objects to the BuildingRoom.",
       "type": "core:FeatureProperty",
-      "target": "bldg:BuildingInstallation"
+      "target": "bldg:BuildingInstallation",
+      "relationType": "contains"
     },
     {
       "name": "lod4Solid",

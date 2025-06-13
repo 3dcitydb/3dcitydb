@@ -26,14 +26,16 @@
       "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
       "description": "Relates the furniture objects to the HollowSpace.",
       "type": "core:FeatureProperty",
-      "target": "tun:TunnelFurniture"
+      "target": "tun:TunnelFurniture",
+      "relationType": "contains"
     },
     {
       "name": "tunnelInstallation",
       "namespace": "http://3dcitydb.org/3dcitydb/tunnel/5.0",
       "description": "Relates the installation objects to the HollowSpace.",
       "type": "core:FeatureProperty",
-      "target": "tun:TunnelInstallation"
+      "target": "tun:TunnelInstallation",
+      "relationType": "contains"
     },
     {
       "name": "lod4Solid",

@@ -26,7 +26,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Relates to the timeseries data.",
       "type": "core:FeatureProperty",
-      "target": "dyn:AbstractTimeseries"
+      "target": "dyn:AbstractTimeseries",
+      "relationType": "contains"
     },
     {
       "name": "sensorConnection",

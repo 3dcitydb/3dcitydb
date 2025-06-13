@@ -8,7 +8,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
       "description": "Relates to the storeys on which the BuildingUnit is located.",
       "type": "core:FeatureProperty",
-      "target": "bldg:Storey"
+      "target": "bldg:Storey",
+      "relationType": "contains"
     },
     {
       "name": "address",

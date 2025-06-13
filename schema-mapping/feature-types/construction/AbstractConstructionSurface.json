@@ -8,7 +8,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
       "description": "Relates to the surfaces that seal the openings of the construction surface.",
       "type": "core:FeatureProperty",
-      "target": "con:AbstractFillingSurface"
+      "target": "con:AbstractFillingSurface",
+      "relationType": "contains"
     }
   ]
 }

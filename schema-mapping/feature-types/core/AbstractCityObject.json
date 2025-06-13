@@ -14,7 +14,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Relates generalized representations of the same real-world object in different Levels of Detail to the city object. The direction of this relation is from the city object to the corresponding generalized city objects.",
       "type": "core:FeatureProperty",
-      "target": "core:AbstractCityObject"
+      "target": "core:AbstractCityObject",
+      "relationType": "relates"
     },
     {
       "name": "relativeToTerrain",
@@ -45,7 +46,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Relates Dynamizer objects to the city object. These allow timeseries data to override static attribute values of the city object.",
       "type": "core:FeatureProperty",
-      "target": "core:AbstractDynamizer"
+      "target": "core:AbstractDynamizer",
+      "relationType": "contains"
     }
   ]
 }

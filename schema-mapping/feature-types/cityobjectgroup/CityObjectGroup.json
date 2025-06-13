@@ -32,7 +32,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/cityobjectgroup/5.0",
       "description": "Relates to a city object to which the CityObjectGroup belongs.",
       "type": "core:FeatureProperty",
-      "target": "core:AbstractCityObject"
+      "target": "core:AbstractCityObject",
+      "relationType": "relates"
     },
     {
       "name": "geometry",
