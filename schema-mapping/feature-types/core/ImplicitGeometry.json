@@ -55,6 +55,7 @@
       "name": "appearance",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Relates appearances to the ImplicitGeometry.",
+      "target": "app:Appearance",
       "join": {
         "table": "appearance",
         "fromColumn": "id",
