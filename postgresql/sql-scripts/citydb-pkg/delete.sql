@@ -54,7 +54,7 @@ BEGIN
       property p,
       unnest($1) AS a(a_id)
     WHERE
-      p.val_feature_id = a.a_id
+      p.val_feature_id = a.a_id AND p.datatype_id = 10
   ) AS p;
 
   WITH delete_objects AS (
