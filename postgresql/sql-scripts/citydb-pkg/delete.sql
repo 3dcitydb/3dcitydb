@@ -38,24 +38,20 @@ DECLARE
   deleted_ids bigint[] := '{}';
 BEGIN
   PERFORM
+    citydb_pkg.delete_property_row(array_agg(p.id))
+  FROM
+    property p,
+    unnest($1) AS a(a_id)
+  WHERE
+    p.feature_id = a.a_id;
+
+  PERFORM
     citydb_pkg.delete_property(array_agg(p.id))
-  FROM (
-    SELECT
-      p.id
-    FROM
-      property p,
-      unnest($1) AS a(a_id)
-    WHERE
-      p.feature_id = a.a_id
-    UNION ALL
-    SELECT
-      p.id
-    FROM
-      property p,
-      unnest($1) AS a(a_id)
-    WHERE
-      p.val_feature_id = a.a_id AND p.datatype_id = 10
-  ) AS p;
+  FROM
+    property p,
+    unnest($1) AS a(a_id)
+  WHERE
+    p.val_feature_id = a.a_id;
 
   WITH delete_objects AS (
     DELETE FROM
