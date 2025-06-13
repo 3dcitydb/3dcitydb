@@ -359,7 +359,7 @@
 			<fk name="property_feature_fk" to_schema="citydb" to_table="feature" >
 				<fk_column name="feature_id" pk="id" />
 			</fk>
-			<fk name="property_val_feature_fk" to_schema="citydb" to_table="feature" delete_action="cascade" >
+			<fk name="property_val_feature_fk" to_schema="citydb" to_table="feature" delete_action="setNull" >
 				<fk_column name="val_feature_id" pk="id" />
 			</fk>
 			<fk name="property_val_implicitgeom_fk" to_schema="citydb" to_table="implicit_geometry" delete_action="cascade" >

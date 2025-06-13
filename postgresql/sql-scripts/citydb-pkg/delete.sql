@@ -45,6 +45,14 @@ BEGIN
   WHERE
     p.feature_id = a.a_id;
 
+  PERFORM
+    citydb_pkg.delete_property(array_agg(p.id))
+  FROM
+    property p,
+    unnest($1) AS a(a_id)
+  WHERE
+    p.val_feature_id = a.a_id;
+
   WITH delete_objects AS (
     DELETE FROM
       feature f
@@ -209,8 +217,26 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_property(pid_array bigint[]) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
+  cascade_delete_ids bigint[] := '{}';
   property_ids bigint[] := '{}';
 BEGIN
+  WITH parent_refs AS (
+    SELECT
+      c.id, citydb_pkg.delete_property(p.id)
+    FROM
+      property c
+    INNER JOIN unnest($1) AS a(a_id) ON c.id = a.a_id
+    INNER JOIN property p ON p.id = c.parent_id
+    WHERE
+      p.name = c.name AND p.namespace_id = c.namespace_id
+  )
+  SELECT
+    array_agg(id)
+  INTO
+    cascade_delete_ids
+  FROM
+    parent_refs;
+
   WITH RECURSIVE child_refs AS (
     SELECT
       p.id
@@ -238,7 +264,9 @@ BEGIN
   RETURN QUERY
     SELECT citydb_pkg.delete_property_row(property_ids)
     INTERSECT
-    SELECT unnest($1);
+    SELECT unnest($1)
+    UNION
+    SELECT unnest(cascade_delete_ids);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
