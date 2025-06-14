@@ -11,8 +11,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.citydb_version(
   OUT version TEXT, 
   OUT major_version INTEGER, 
   OUT minor_version INTEGER, 
-  OUT minor_revision INTEGER
-  ) RETURNS RECORD AS 
+  OUT minor_revision INTEGER) RETURNS RECORD AS
 $$
 SELECT 
   '@versionString@'::text AS version,
@@ -36,8 +35,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(
   OUT srs_name TEXT,
   OUT coord_ref_sys_name TEXT, 
   OUT coord_ref_sys_kind TEXT,
-  OUT wktext TEXT
-  ) RETURNS RECORD AS 
+  OUT wktext TEXT) RETURNS RECORD AS
 $$
 BEGIN
   EXECUTE format(
@@ -66,8 +64,7 @@ LANGUAGE plpgsql STABLE;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_seq_values(
   seq_name TEXT,
-  seq_count BIGINT
-  ) RETURNS SETOF BIGINT AS
+  seq_count BIGINT) RETURNS SETOF BIGINT AS
 $$
 SELECT nextval($1)::bigint FROM generate_series(1, $2);
 $$
@@ -115,6 +112,49 @@ BEGIN
     FROM
       class_hierarchy h ' || where_clause,
 	schema_name, class_id, schema_name);
+END;
+$$
+LANGUAGE plpgsql STABLE STRICT;
+
+/*****************************************************************
+* get_current_schema
+*
+* @return The current 3DCityDB schema based on the search_path
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.get_current_schema() RETURNS text AS
+$$
+DECLARE
+  table_oid oid;
+  schema_name text;
+BEGIN
+  table_oid := to_regclass('feature');
+
+  IF table_oid IS NULL THEN
+    RAISE EXCEPTION 'No 3DCityDB schema found in the current search_path %.', current_setting('search_path');
+  END IF;
+
+  SELECT n.nspname INTO schema_name
+  FROM pg_class c
+  JOIN pg_namespace n ON c.relnamespace = n.oid
+  WHERE c.oid = table_oid;
+
+  RETURN schema_name;
+END;
+$$
+LANGUAGE plpgsql STABLE;
+
+/*****************************************************************
+* set_current_schema
+*
+* @param schema_name Name of schema to set as the current 3DCityDB schema
+* @param local Scope of change: true = local (transaction), false = session
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.set_current_schema(
+  schema_name TEXT,
+  local BOOLEAN DEFAULT true) RETURNS SETOF VOID AS
+$$
+BEGIN
+  PERFORM set_config('search_path', format('%I, citydb_pkg, public', schema_name), local);
 END;
 $$
 LANGUAGE plpgsql STABLE STRICT;
