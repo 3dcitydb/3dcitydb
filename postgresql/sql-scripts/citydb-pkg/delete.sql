@@ -1,33 +1,49 @@
 /******************************************************************
 * truncates all data tables
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_schema(schema_name TEXT DEFAULT 'citydb') RETURNS SETOF void AS
+CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_schema() RETURNS SETOF void AS
 $body$
 DECLARE
   rec RECORD;
+  schema_name TEXT;
 BEGIN
+  SELECT citydb_pkg.get_current_schema() into schema_name;
+
   FOR rec IN
-    SELECT table_name FROM information_schema.tables where table_schema = schema_name
-        AND table_name <> 'ade'
-        AND table_name <> 'datatype'
-        AND table_name <> 'database_srs'
-        AND table_name <> 'codelist'
-        AND table_name <> 'codelist_entry'
-        AND table_name <> 'namespace'
-        AND table_name <> 'objectclass'
+    SELECT table_name FROM information_schema.tables WHERE table_schema = schema_name
+      AND table_name <> 'ade'
+      AND table_name <> 'datatype'
+      AND table_name <> 'database_srs'
+      AND table_name <> 'codelist'
+      AND table_name <> 'codelist_entry'
+      AND table_name <> 'namespace'
+      AND table_name <> 'objectclass'
   LOOP
     EXECUTE format('TRUNCATE TABLE %I.%I CASCADE', schema_name, rec.table_name);
   END LOOP;
 
   FOR rec IN
-    SELECT sequence_name FROM information_schema.sequences where sequence_schema = schema_name
-        AND sequence_name <> 'ade_seq'
+    SELECT sequence_name FROM information_schema.sequences WHERE sequence_schema = schema_name
+      AND sequence_name <> 'ade_seq'
   LOOP
     EXECUTE format('ALTER SEQUENCE %I.%I RESTART', schema_name, rec.sequence_name);
   END LOOP;
 END;
 $body$
 LANGUAGE plpgsql;
+
+/******************************************************************
+* truncates all data tables in the given schema
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_schema(schema_name TEXT) RETURNS SETOF void AS
+$body$
+BEGIN
+  PERFORM citydb_pkg.set_current_schema(schema_name);
+
+  PERFORM citydb_pkg.cleanup_schema();
+END;
+$body$
+LANGUAGE plpgsql STRICT;
 
 /******************************************************************
 * delete from FEATURE table based on an id array
