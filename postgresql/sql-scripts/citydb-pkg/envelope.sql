@@ -111,7 +111,7 @@ BEGIN
     RETURN citydb_pkg.get_implicit_geometry_envelope(gid, ref_pt, matrix);
 END;
 $body$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STABLE;
 
 /*****************************************************************
 * Returns the envelope geometry of a given implicit geometry
@@ -140,7 +140,7 @@ BEGIN
     AND gd.implicit_geometry IS NOT NULL;
 
   IF matrix IS NOT NULL THEN
-    params := ARRAY(SELECT json_array_elements_text(matrix))::float8[];
+    params := ARRAY(SELECT json_array_elements_text(matrix)::float8);
     IF array_length(params, 1) < 12 THEN
       RAISE EXCEPTION 'Invalid transformation matrix: %', matrix USING HINT = '12 elements are required';
     END IF;
@@ -171,7 +171,7 @@ BEGIN
   END IF;
 END;
 $body$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STABLE;
 
 /*****************************************************************
 * Returns the envelope geometry for a given geometry
@@ -185,7 +185,7 @@ BEGIN
   RETURN citydb_pkg.get_envelope(ST_3DExtent(geom));
 END;
 $body$
-LANGUAGE plpgsql STRICT;
+LANGUAGE plpgsql STRICT STABLE;
 
 /*****************************************************************
 * Returns the envelope geometry for a given box3d
@@ -218,7 +218,7 @@ BEGIN
   RETURN envelope;
 END;
 $body$
-LANGUAGE plpgsql STRICT;
+LANGUAGE plpgsql STRICT STABLE;
 
 /*****************************************************************
 * Returns the envelope geometry of two geometries
@@ -240,4 +240,4 @@ BEGIN
   END IF;
 END;
 $body$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql STABLE;

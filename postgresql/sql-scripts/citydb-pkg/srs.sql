@@ -50,7 +50,7 @@ BEGIN
 
   IF transform <> 0 THEN
     -- construct correct geometry type
-    IF dim = 3 AND substr($6, length($6), 1) <> 'M' THEN
+    IF dim = 3 AND right($6, 1) <> 'M' THEN
       geometry_type := $6 || 'Z';
     ELSIF dim = 4 THEN
       geometry_type := $6 || 'ZM';
@@ -59,20 +59,25 @@ BEGIN
     END IF;
 
     -- coordinates of existent geometries will be transformed
-    EXECUTE format('ALTER TABLE %I.%I ALTER COLUMN %I TYPE geometry(%I,%L) USING ST_Transform(%I,%L::int)',
-                     $7, $1, $2, geometry_type, $4, $2, $4);
+    EXECUTE format(
+      'ALTER TABLE %I.%I ALTER COLUMN %I TYPE geometry(%I,%L) USING ST_Transform(%I,%L::int)',
+      $7, $1, $2, geometry_type, $4, $2, $4
+    );
   ELSE
-    -- only metadata of geometry columns is updated, coordinates keep unchanged
+    -- only update metadata
     PERFORM UpdateGeometrySRID($7, $1, $2, $4);
   END IF;
 
   IF idx_name IS NOT NULL THEN
     -- recreate spatial index again
-    EXECUTE format('CREATE INDEX %I ON %I.%I USING GIST (%I %I)', idx_name, $7, $1, $2, opclass_param);
+    EXECUTE format(
+      'CREATE INDEX %I ON %I.%I USING GIST (%I %I)',
+      idx_name, $7, $1, $2, opclass_param
+    );
   END IF;
 END;
 $$
-LANGUAGE plpgsql STRICT;
+LANGUAGE plpgsql;
 
 /*******************************************************************
 * change_schema_srid
@@ -101,10 +106,10 @@ BEGIN
   PERFORM citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $3, type, f_table_schema)
     FROM geometry_columns
     WHERE lower(f_table_schema) = lower($4)
-      AND srid = db_srid;
+      AND f_geometry_column <> 'implicit_geometry';
 END;
 $$
-LANGUAGE plpgsql STRICT;
+LANGUAGE plpgsql;
 
 /******************************************************************
 * is_coord_ref_sys_3d

@@ -52,7 +52,6 @@ BEGIN
        spatial_ref_sys s 
      WHERE
        d.srid = s.srid', schema_name)
-    USING schema_name
     INTO srid, srs_name, coord_ref_sys_name, coord_ref_sys_kind, wktext;
 END;
 $$
@@ -118,4 +117,4 @@ BEGIN
 	schema_name, class_id, schema_name);
 END;
 $$
-LANGUAGE plpgsql STRICT;
+LANGUAGE plpgsql STABLE STRICT;
