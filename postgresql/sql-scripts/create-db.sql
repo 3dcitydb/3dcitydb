@@ -65,7 +65,7 @@ SELECT 'citydb' AS schema_name;
 SELECT CASE
   WHEN upper(:'CHANGELOG') = 'YES' THEN 'create-changelog.sql'
   ELSE 'util/do-nothing.sql'
-  END AS create_changelog_extension;
+END AS create_changelog_extension;
 \gset
 \ir :create_changelog_extension;
 

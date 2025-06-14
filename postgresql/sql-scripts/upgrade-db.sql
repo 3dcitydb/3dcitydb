@@ -24,8 +24,8 @@ SELECT major_version AS current_major,
 -- execute upgrade action depending on the current version
 SELECT CASE
   WHEN :major = :current_major
-       AND ((:minor = :current_minor AND :revision > :current_revision)
-       OR :minor > :current_minor) THEN 'upgrade/upgrade.sql'
+    AND ((:minor = :current_minor AND :revision > :current_revision)
+    OR :minor > :current_minor) THEN 'upgrade/upgrade.sql'
   WHEN :current_major < 5 THEN 'upgrade/no-upgrade.sql'
   WHEN :major > :current_major THEN 'upgrade/no-upgrade.sql'
   ELSE 'upgrade/no-action.sql'
