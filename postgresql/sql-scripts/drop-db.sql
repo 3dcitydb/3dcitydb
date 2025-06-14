@@ -9,9 +9,10 @@ DROP SCHEMA IF EXISTS citydb_pkg CASCADE;
 DO $$
 DECLARE schema_name text;
 BEGIN
-  FOR schema_name IN SELECT nspname FROM pg_catalog.pg_class c
-                     JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-                     WHERE c.relname = 'feature' AND c.relkind = 'r'
+  FOR schema_name IN
+    SELECT nspname FROM pg_catalog.pg_class c
+    JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+    WHERE c.relname = 'feature' AND c.relkind = 'r'
   LOOP
     EXECUTE format('DROP SCHEMA %I CASCADE', schema_name);
   END LOOP;

@@ -15,9 +15,10 @@ DECLARE
   current_minor integer := current_setting('tmp.current_minor')::integer;
   current_revision integer := current_setting('tmp.current_revision')::integer;
 BEGIN
-  FOR schema_name IN SELECT nspname FROM pg_catalog.pg_class c
-                     JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-                     WHERE c.relname = 'feature' AND c.relkind = 'r'
+  FOR schema_name IN
+    SELECT nspname FROM pg_catalog.pg_class c
+    JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+    WHERE c.relname = 'feature' AND c.relkind = 'r'
   LOOP
     EXECUTE format('set search_path to %I, citydb_pkg, public', schema_name);
 
@@ -37,9 +38,10 @@ DO $$
 DECLARE
   proname text;
 BEGIN
-  FOR proname IN SELECT oid::regprocedure
-               FROM pg_proc
-               WHERE pronamespace = 'citydb_pkg'::regnamespace
+  FOR proname IN
+    SELECT oid::regprocedure
+    FROM pg_proc
+    WHERE pronamespace = 'citydb_pkg'::regnamespace
   LOOP
     EXECUTE format('DROP ROUTINE %s', proname);
   END LOOP;
