@@ -82,7 +82,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_feature(pid_array bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_feature($1);
@@ -107,7 +107,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_feature(pid bigint, schema_name TEXT) RETURNS BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN citydb_pkg.delete_feature(ARRAY[pid]);
 END;
@@ -277,7 +277,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_property(pid_array bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_property($1);
@@ -302,7 +302,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_property(pid bigint, schema_name TEXT) RETURNS BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN citydb_pkg.delete_property(ARRAY[pid]);
 END;
@@ -346,7 +346,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_geometry_data(pid_array bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_geometry_data($1);
@@ -371,7 +371,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_geometry_data(pid bigint, schema_name TEXT) RETURNS BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN citydb_pkg.delete_geometry_data(ARRAY[pid]);
 END;
@@ -434,7 +434,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_implicit_geometry(pid_array bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_implicit_geometry($1);
@@ -459,7 +459,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_implicit_geometry(pid bigint, schema_name TEXT) RETURNS BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN citydb_pkg.delete_implicit_geometry(ARRAY[pid]);
 END;
@@ -532,7 +532,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_appearance(pid_array bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_appearance($1);
@@ -557,7 +557,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_appearance(pid bigint, schema_name TEXT) RETURNS BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN citydb_pkg.delete_appearance(ARRAY[pid]);
 END;
@@ -616,7 +616,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_surface_data(pid_array bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_surface_data($1);
@@ -641,7 +641,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_surface_data(pid bigint, schema_name TEXT) RETURNS BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN citydb_pkg.delete_surface_data(ARRAY[pid]);
 END;
@@ -685,7 +685,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_tex_image(pid_array bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_tex_image($1);
@@ -710,7 +710,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_tex_image(pid bigint, schema_name TEXT) RETURNS BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN citydb_pkg.delete_tex_image(ARRAY[pid]);
 END;
@@ -754,7 +754,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_address(pid_array bigint[], schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.delete_address($1);
@@ -779,7 +779,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_address(pid bigint, schema_name TEXT) RETURNS BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN citydb_pkg.del_address(ARRAY[pid]);
 END;
@@ -860,7 +860,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid_array bigint[], schema_name TEXT, metadata JSON DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN QUERY
     SELECT citydb_pkg.terminate_feature(pid_array, metadata, cascade);
@@ -885,7 +885,7 @@ LANGUAGE plpgsql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid bigint, schema_name TEXT, metadata JSON DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS BIGINT AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN citydb_pkg.terminate_feature(ARRAY[pid], metadata, cascade);
 END;

@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_feature_envelope(
   set_envelope INTEGER DEFAULT 0) RETURNS GEOMETRY AS
 $body$
 BEGIN
-  EXECUTE format('set search_path to %I, public', schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
   RETURN citydb_pkg.get_feature_envelope(fid, compute_envelope, set_envelope);
 END;
@@ -106,7 +106,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_implicit_geometry_envelope(
   schema_name TEXT) RETURNS GEOMETRY AS
 $body$
 BEGIN
-    EXECUTE format('set search_path to %I, public', schema_name);
+    PERFORM citydb_pkg.set_current_schema(schema_name);
 
     RETURN citydb_pkg.get_implicit_geometry_envelope(gid, ref_pt, matrix);
 END;
