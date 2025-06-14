@@ -15,10 +15,12 @@ DECLARE
   current_minor integer := current_setting('tmp.current_minor')::integer;
   current_revision integer := current_setting('tmp.current_revision')::integer;
 BEGIN
-  FOR schema_name IN SELECT nspname AS schema_name FROM pg_catalog.pg_class c
+  FOR schema_name IN SELECT nspname FROM pg_catalog.pg_class c
                      JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
                      WHERE c.relname = 'feature' AND c.relkind = 'r'
   LOOP
+    EXECUTE format('set search_path to %I, citydb_pkg, public', schema_name);
+
     IF current_major = 5 AND current_minor = 0 THEN
       RAISE NOTICE E'Re-creating foreign key ''property_val_feature_fk'' with ON DELETE SET NULL in schema ''%'' ...\n', schema_name;
       ALTER TABLE property DROP CONSTRAINT property_val_feature_fk;
@@ -35,11 +37,11 @@ DO $$
 DECLARE
   proname text;
 BEGIN
-  FOR proname IN SELECT oid::regprocedure AS proc_name
+  FOR proname IN SELECT oid::regprocedure
                FROM pg_proc
                WHERE pronamespace = 'citydb_pkg'::regnamespace
   LOOP
-    EXECUTE format('DROP ROUTINE citydb_pkg.%s', proname);
+    EXECUTE format('DROP ROUTINE %s', proname);
   END LOOP;
 END
 $$;
