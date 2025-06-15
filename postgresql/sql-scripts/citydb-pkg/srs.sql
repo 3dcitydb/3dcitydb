@@ -100,7 +100,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_column_srid(
 $$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   PERFORM citydb_pkg.change_column_srid(table_name, column_name, dim, target_srid, transform, geom_type);
 END;
 $$
@@ -148,7 +147,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_schema_srid(
 $$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   PERFORM citydb_pkg.change_schema_srid(target_srid, target_srs_name, transform);
 END;
 $$
@@ -190,7 +188,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d(schema_name TEXT) R
 $$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN citydb_pkg.is_db_coord_ref_sys_3d();
 END;
 $$

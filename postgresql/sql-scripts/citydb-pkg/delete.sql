@@ -39,7 +39,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.cleanup_schema(schema_name TEXT) RETURNS S
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   PERFORM citydb_pkg.cleanup_schema();
 END;
 $body$
@@ -99,7 +98,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_feature(pid_array bigint[], schema_
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN QUERY
     SELECT citydb_pkg.delete_feature($1);
 END;
@@ -124,7 +122,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_feature(pid bigint, schema_name TEX
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN citydb_pkg.delete_feature(ARRAY[pid]);
 END;
 $body$
@@ -294,7 +291,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_property(pid_array bigint[], schema
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN QUERY
     SELECT citydb_pkg.delete_property($1);
 END;
@@ -319,7 +315,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_property(pid bigint, schema_name TE
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN citydb_pkg.delete_property(ARRAY[pid]);
 END;
 $body$
@@ -363,7 +358,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_geometry_data(pid_array bigint[], s
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN QUERY
     SELECT citydb_pkg.delete_geometry_data($1);
 END;
@@ -388,7 +382,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_geometry_data(pid bigint, schema_na
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN citydb_pkg.delete_geometry_data(ARRAY[pid]);
 END;
 $body$
@@ -451,7 +444,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_implicit_geometry(pid_array bigint[
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN QUERY
     SELECT citydb_pkg.delete_implicit_geometry($1);
 END;
@@ -476,7 +468,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_implicit_geometry(pid bigint, schem
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN citydb_pkg.delete_implicit_geometry(ARRAY[pid]);
 END;
 $body$
@@ -549,7 +540,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_appearance(pid_array bigint[], sche
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN QUERY
     SELECT citydb_pkg.delete_appearance($1);
 END;
@@ -574,7 +564,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_appearance(pid bigint, schema_name 
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN citydb_pkg.delete_appearance(ARRAY[pid]);
 END;
 $body$
@@ -633,7 +622,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_surface_data(pid_array bigint[], sc
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN QUERY
     SELECT citydb_pkg.delete_surface_data($1);
 END;
@@ -658,7 +646,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_surface_data(pid bigint, schema_nam
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN citydb_pkg.delete_surface_data(ARRAY[pid]);
 END;
 $body$
@@ -702,7 +689,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_tex_image(pid_array bigint[], schem
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN QUERY
     SELECT citydb_pkg.delete_tex_image($1);
 END;
@@ -727,7 +713,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_tex_image(pid bigint, schema_name T
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN citydb_pkg.delete_tex_image(ARRAY[pid]);
 END;
 $body$
@@ -771,7 +756,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_address(pid_array bigint[], schema_
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN QUERY
     SELECT citydb_pkg.delete_address($1);
 END;
@@ -796,7 +780,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_address(pid bigint, schema_name TEX
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN citydb_pkg.del_address(ARRAY[pid]);
 END;
 $body$
@@ -877,7 +860,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid_array bigint[], sche
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN QUERY
     SELECT citydb_pkg.terminate_feature(pid_array, metadata, cascade);
 END;
@@ -902,7 +884,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid bigint, schema_name 
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN citydb_pkg.terminate_feature(ARRAY[pid], metadata, cascade);
 END;
 $body$

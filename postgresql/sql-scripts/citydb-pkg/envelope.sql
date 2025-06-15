@@ -84,7 +84,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_feature_envelope(
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN citydb_pkg.get_feature_envelope(fid, compute_envelope, set_envelope);
 END;
 $body$
@@ -167,7 +166,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_implicit_geometry_envelope(
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN citydb_pkg.get_implicit_geometry_envelope(gid, ref_pt, matrix);
 END;
 $body$
@@ -219,7 +217,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope(
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
   RETURN citydb_pkg.get_envelope(geom);
 END;
 $body$
