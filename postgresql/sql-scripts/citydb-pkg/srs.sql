@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_column_srid(
   target_srid INTEGER,
   transform INTEGER DEFAULT 0,
   geom_type TEXT DEFAULT 'GEOMETRY') RETURNS SETOF VOID AS
-$$
+$body$
 DECLARE
   schema_name TEXT;
   idx_name TEXT;
@@ -75,7 +75,7 @@ BEGIN
     );
   END IF;
 END;
-$$
+$body$
 LANGUAGE plpgsql;
 
 /*****************************************************************
@@ -97,12 +97,12 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_column_srid(
   schema_name TEXT,
   transform INTEGER DEFAULT 0,
   geom_type TEXT DEFAULT 'GEOMETRY') RETURNS SETOF VOID AS
-$$
+$body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
   PERFORM citydb_pkg.change_column_srid(table_name, column_name, dim, target_srid, transform, geom_type);
 END;
-$$
+$body$
 LANGUAGE plpgsql;
 
 /*******************************************************************
@@ -116,7 +116,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_schema_srid(
   target_srid INTEGER,
   target_srs_name TEXT,
   transform INTEGER DEFAULT 0) RETURNS SETOF VOID AS
-$$
+$body$
 BEGIN
   -- update entry in database_srs table
   DELETE FROM database_srs;
@@ -128,7 +128,7 @@ BEGIN
   WHERE f_table_schema = citydb_pkg.get_current_schema()
     AND f_geometry_column <> 'implicit_geometry';
 END;
-$$
+$body$
 LANGUAGE plpgsql;
 
 /*******************************************************************
@@ -144,12 +144,12 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_schema_srid(
   target_srs_name TEXT,
   schema_name TEXT,
   transform INTEGER DEFAULT 0) RETURNS SETOF VOID AS
-$$
+$body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
   PERFORM citydb_pkg.change_schema_srid(target_srid, target_srs_name, transform);
 END;
-$$
+$body$
 LANGUAGE plpgsql;
 
 /******************************************************************
@@ -160,11 +160,11 @@ LANGUAGE plpgsql;
 * @return The boolean result encoded as INTEGER: 0 = false, 1 = true
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.is_coord_ref_sys_3d(srid INTEGER) RETURNS INTEGER AS
-$$
+$body$
 SELECT COALESCE((
   SELECT 1 FROM spatial_ref_sys WHERE srid = $1 AND lower(srtext) SIMILAR TO '%\Wup\W%'
 ), 0);
-$$
+$body$
 LANGUAGE sql STABLE;
 
 /******************************************************************
@@ -173,9 +173,9 @@ LANGUAGE sql STABLE;
 * @return The boolean result encoded as INTEGER: 0 = false, 1 = true
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d() RETURNS INTEGER AS
-$$
+$body$
 SELECT citydb_pkg.is_coord_ref_sys_3d(srid) FROM database_srs;
-$$
+$body$
 LANGUAGE sql STABLE;
 
 /******************************************************************
@@ -185,12 +185,12 @@ LANGUAGE sql STABLE;
 * @return The boolean result encoded as INTEGER: 0 = false, 1 = true
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.is_db_coord_ref_sys_3d(schema_name TEXT) RETURNS INTEGER AS
-$$
+$body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
   RETURN citydb_pkg.is_db_coord_ref_sys_3d();
 END;
-$$
+$body$
 LANGUAGE plpgsql STABLE;
 
 /*******************************************************************
@@ -200,11 +200,11 @@ LANGUAGE plpgsql STABLE;
 * @return The boolean result encoded as INTEGER: 0 = false, 1 = true
 *******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.check_srid(srid INTEGER) RETURNS INTEGER AS
-$$
+$body$
 SELECT COALESCE((
   SELECT 1 FROM spatial_ref_sys WHERE srid = $1
 ), 0);
-$$
+$body$
 LANGUAGE sql STABLE;
 
 /******************************************************************
@@ -217,9 +217,9 @@ LANGUAGE sql STABLE;
 CREATE OR REPLACE FUNCTION citydb_pkg.transform_or_null(
   geom GEOMETRY,
   srid INTEGER) RETURNS GEOMETRY AS
-$$
+$body$
 BEGIN
   RETURN ST_Transform($1, $2);
 END;
-$$
+$body$
 LANGUAGE plpgsql STABLE STRICT;

@@ -12,13 +12,13 @@ CREATE OR REPLACE FUNCTION citydb_pkg.citydb_version(
   OUT major_version INTEGER, 
   OUT minor_version INTEGER, 
   OUT minor_revision INTEGER) RETURNS RECORD AS
-$$
+$body$
 SELECT 
   '@versionString@'::text AS version,
   @majorVersion@::int AS major_version,
   @minorVersion@::int AS minor_version,
   @minorRevision@::int AS minor_revision;
-$$
+$body$
 LANGUAGE sql IMMUTABLE;
 
 /******************************************************************
@@ -34,7 +34,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(
   OUT coord_ref_sys_name TEXT, 
   OUT coord_ref_sys_kind TEXT,
   OUT wktext TEXT) RETURNS RECORD AS
-$$
+$body$
 SELECT
   d.srid,
   d.srs_name,
@@ -46,7 +46,7 @@ FROM
   spatial_ref_sys s
 WHERE
   d.srid = s.srid;
-$$
+$body$
 LANGUAGE sql STABLE;
 
 /******************************************************************
@@ -64,7 +64,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(
   OUT coord_ref_sys_name TEXT,
   OUT coord_ref_sys_kind TEXT,
   OUT wktext TEXT) RETURNS RECORD AS
-$$
+$body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
 
@@ -75,7 +75,7 @@ BEGIN
   FROM
     citydb_pkg.db_metadata() m;
 END;
-$$
+$body$
 LANGUAGE plpgsql STABLE;
 
 /*****************************************************************
@@ -88,9 +88,9 @@ LANGUAGE plpgsql STABLE;
 CREATE OR REPLACE FUNCTION citydb_pkg.get_seq_values(
   seq_name TEXT,
   seq_count BIGINT) RETURNS SETOF BIGINT AS
-$$
+$body$
 SELECT nextval($1)::bigint FROM generate_series(1, $2);
-$$
+$body$
 LANGUAGE sql STRICT;
 
 /*****************************************************************
@@ -103,7 +103,7 @@ LANGUAGE sql STRICT;
 CREATE OR REPLACE FUNCTION citydb_pkg.get_child_objectclass_ids(
   class_id INTEGER,
   skip_abstract INTEGER DEFAULT 0) RETURNS SETOF INTEGER AS
-$$
+$body$
 DECLARE
   where_clause TEXT := '';
 BEGIN
@@ -134,7 +134,7 @@ BEGIN
       class_hierarchy h ' || where_clause,
 	class_id);
 END;
-$$
+$body$
 LANGUAGE plpgsql STABLE STRICT;
 
 /*****************************************************************
@@ -149,13 +149,13 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_child_objectclass_ids(
   class_id INTEGER,
   schema_name TEXT,
   skip_abstract INTEGER DEFAULT 0) RETURNS SETOF INTEGER AS
-$$
+$body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
   RETURN QUERY
     SELECT citydb_pkg.get_child_objectclass_ids(class_id, skip_abstract);
 END;
-$$
+$body$
 LANGUAGE plpgsql STABLE STRICT;
 
 /*****************************************************************
@@ -164,7 +164,7 @@ LANGUAGE plpgsql STABLE STRICT;
 * @return The current 3DCityDB schema based on the search_path
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_current_schema() RETURNS text AS
-$$
+$body$
 DECLARE
   table_oid oid;
   schema_name text;
@@ -182,7 +182,7 @@ BEGIN
 
   RETURN schema_name;
 END;
-$$
+$body$
 LANGUAGE plpgsql STABLE;
 
 /*****************************************************************
@@ -194,9 +194,9 @@ LANGUAGE plpgsql STABLE;
 CREATE OR REPLACE FUNCTION citydb_pkg.set_current_schema(
   schema_name TEXT,
   local BOOLEAN DEFAULT true) RETURNS SETOF VOID AS
-$$
+$body$
 BEGIN
   PERFORM set_config('search_path', format('%I, citydb_pkg, public', schema_name), local);
 END;
-$$
+$body$
 LANGUAGE plpgsql STABLE STRICT;
