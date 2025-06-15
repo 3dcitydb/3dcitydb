@@ -126,7 +126,7 @@ BEGIN
       1, 0, 0, 0,
       0, 1, 0, 0,
       0, 0, 1, 0,
-	  0, 0, 0, 1}';
+      0, 0, 0, 1}';
   END IF;
 
   IF ref_pt IS NOT NULL THEN
@@ -166,9 +166,9 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_implicit_geometry_envelope(
   schema_name TEXT) RETURNS GEOMETRY AS
 $body$
 BEGIN
-    PERFORM citydb_pkg.set_current_schema(schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
-    RETURN citydb_pkg.get_implicit_geometry_envelope(gid, ref_pt, matrix);
+  RETURN citydb_pkg.get_implicit_geometry_envelope(gid, ref_pt, matrix);
 END;
 $body$
 LANGUAGE plpgsql STABLE;
