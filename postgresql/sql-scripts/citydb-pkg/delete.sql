@@ -7,7 +7,7 @@ DECLARE
   rec RECORD;
   schema_name TEXT;
 BEGIN
-  SELECT citydb_pkg.get_current_schema() into schema_name;
+  schema_name := citydb_pkg.get_current_schema();
 
   FOR rec IN
     SELECT table_name FROM information_schema.tables WHERE table_schema = schema_name
