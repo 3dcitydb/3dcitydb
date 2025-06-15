@@ -2,29 +2,6 @@
 * Returns the envelope geometry of a given feature
 *
 * @param fid ID of the feature for which the envelope is computed
-* @param schema_name Name of schema
-* @param compute_envelope If 0 (default), returns the envelope from the ENVELOPE column unless it is NULL, in which case the envelope is computed. If 1, the envelope is always computed.
-* @param set_envelope If 1 (default = 0), the ENVELOPE column of the FEATURE table will be updated with the computed envelope.
-* @return Envelope geometry as required by the ENVELOPE column of the FEATURE table
-******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_feature_envelope(
-  fid BIGINT,
-  schema_name TEXT,
-  compute_envelope INTEGER DEFAULT 0,
-  set_envelope INTEGER DEFAULT 0) RETURNS GEOMETRY AS
-$body$
-BEGIN
-  PERFORM citydb_pkg.set_current_schema(schema_name);
-
-  RETURN citydb_pkg.get_feature_envelope(fid, compute_envelope, set_envelope);
-END;
-$body$
-LANGUAGE plpgsql;
-
-/*****************************************************************
-* Returns the envelope geometry of a given feature
-*
-* @param fid ID of the feature for which the envelope is computed
 * @param compute_envelope If 0 (default), returns the envelope from the ENVELOPE column unless it is NULL, in which case the envelope is computed. If 1, the envelope is always computed.
 * @param set_envelope If 1 (default = 0), the ENVELOPE column of the FEATURE table will be updated with the computed envelope.
 * @return Envelope geometry as required by the ENVELOPE column of the FEATURE table
@@ -53,33 +30,33 @@ BEGIN
       property p
     WHERE
       p.feature_id = fid
-	  AND p.val_feature_id IS NOT NULL
-	  AND p.val_relation_type = 1
+      AND p.val_feature_id IS NOT NULL
+      AND p.val_relation_type = 1
   LOOP
-    bbox_tmp := citydb_pkg.get_feature_envelope(rec.val_feature_id, compute_envelope, set_envelope);
-    bbox := citydb_pkg.get_envelope(bbox, bbox_tmp);
+    bbox := ST_Collect(bbox,
+      citydb_pkg.get_feature_envelope(rec.val_feature_id, compute_envelope, set_envelope));
   END LOOP;    
 
-  SELECT citydb_pkg.get_envelope(ST_Collect(geom)) INTO bbox_tmp FROM (
+  SELECT ST_Collect(citydb_pkg.get_envelope(geom)) INTO bbox_tmp FROM (
     SELECT
       gd.geometry AS geom
     FROM
       geometry_data gd
     WHERE
-	  gd.feature_id = fid
-	  AND gd.geometry IS NOT NULL
+      gd.feature_id = fid
+      AND gd.geometry IS NOT NULL
     UNION ALL
     SELECT
-      citydb_pkg.get_implicit_geometry_envelope(p.val_implicitgeom_id,
-	    p.val_implicitgeom_refpoint, p.val_array) AS geom
+      citydb_pkg.get_implicit_geometry_envelope(
+        p.val_implicitgeom_id, p.val_implicitgeom_refpoint, p.val_array) AS geom
     FROM
       property p
     WHERE
-	  p.feature_id = fid
-	  AND p.val_implicitgeom_id IS NOT NULL
+      p.feature_id = fid
+      AND p.val_implicitgeom_id IS NOT NULL
   ) g;
   
-  bbox := citydb_pkg.get_envelope(bbox, bbox_tmp);
+  bbox := citydb_pkg.get_envelope(ST_Collect(bbox, bbox_tmp));
 
   IF set_envelope <> 0 THEN
     UPDATE feature SET envelope = bbox WHERE id = fid;
@@ -91,27 +68,27 @@ $body$
 LANGUAGE plpgsql;
 
 /*****************************************************************
-* Returns the envelope geometry of a given implicit geometry
+* Returns the envelope geometry of a given feature
 *
-* @param gid ID of the entry in the IMPLICIT_GEOMETRY table
-* @param ref_pt Reference point provided as POINT geometry
-* @param matrix Transformation matrix represented as JSON array of double values
+* @param fid ID of the feature for which the envelope is computed
 * @param schema_name Name of schema
+* @param compute_envelope If 0 (default), returns the envelope from the ENVELOPE column unless it is NULL, in which case the envelope is computed. If 1, the envelope is always computed.
+* @param set_envelope If 1 (default = 0), the ENVELOPE column of the FEATURE table will be updated with the computed envelope.
 * @return Envelope geometry as required by the ENVELOPE column of the FEATURE table
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_implicit_geometry_envelope(
-  gid BIGINT,
-  ref_pt GEOMETRY,
-  matrix JSON,
-  schema_name TEXT) RETURNS GEOMETRY AS
+CREATE OR REPLACE FUNCTION citydb_pkg.get_feature_envelope(
+  fid BIGINT,
+  schema_name TEXT,
+  compute_envelope INTEGER DEFAULT 0,
+  set_envelope INTEGER DEFAULT 0) RETURNS GEOMETRY AS
 $body$
 BEGIN
-    PERFORM citydb_pkg.set_current_schema(schema_name);
+  PERFORM citydb_pkg.set_current_schema(schema_name);
 
-    RETURN citydb_pkg.get_implicit_geometry_envelope(gid, ref_pt, matrix);
+  RETURN citydb_pkg.get_feature_envelope(fid, compute_envelope, set_envelope);
 END;
 $body$
-LANGUAGE plpgsql STABLE;
+LANGUAGE plpgsql;
 
 /*****************************************************************
 * Returns the envelope geometry of a given implicit geometry
@@ -174,6 +151,29 @@ $body$
 LANGUAGE plpgsql STABLE;
 
 /*****************************************************************
+* Returns the envelope geometry of a given implicit geometry
+*
+* @param gid ID of the entry in the IMPLICIT_GEOMETRY table
+* @param ref_pt Reference point provided as POINT geometry
+* @param matrix Transformation matrix represented as JSON array of double values
+* @param schema_name Name of schema
+* @return Envelope geometry as required by the ENVELOPE column of the FEATURE table
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.get_implicit_geometry_envelope(
+  gid BIGINT,
+  ref_pt GEOMETRY,
+  matrix JSON,
+  schema_name TEXT) RETURNS GEOMETRY AS
+$body$
+BEGIN
+    PERFORM citydb_pkg.set_current_schema(schema_name);
+
+    RETURN citydb_pkg.get_implicit_geometry_envelope(gid, ref_pt, matrix);
+END;
+$body$
+LANGUAGE plpgsql STABLE;
+
+/*****************************************************************
 * Returns the envelope geometry for a given geometry
 *
 * @param geom The GEOMETRY for which the envelope is computed
@@ -181,31 +181,19 @@ LANGUAGE plpgsql STABLE;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope(geom GEOMETRY) RETURNS GEOMETRY AS
 $body$
-BEGIN
-  RETURN citydb_pkg.get_envelope(ST_3DExtent(geom));
-END;
-$body$
-LANGUAGE plpgsql STRICT STABLE;
-
-/*****************************************************************
-* Returns the envelope geometry for a given box3d
-*
-* @param bbox The BOX3D geometry for which the envelope is computed
-* @return Envelope geometry as required by the ENVELOPE column of the FEATURE table
-******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope(bbox BOX3D) RETURNS GEOMETRY AS
-$body$
 DECLARE
-  envelope GEOMETRY;
+  bbox BOX3D;
   db_srid INTEGER;
 BEGIN
-  IF ST_SRID(bbox) = 0 THEN
+  IF ST_SRID(geom) = 0 THEN
     SELECT srid INTO db_srid FROM database_srs;
   ELSE
-    db_srid := ST_SRID(bbox);
+    db_srid := ST_SRID(geom);
   END IF;
 
-  SELECT ST_SetSRID(ST_MakePolygon(ST_MakeLine(
+  bbox := ST_3DExtent(geom);
+
+  RETURN ST_SetSRID(ST_MakePolygon(ST_MakeLine(
     ARRAY[
       ST_MakePoint(ST_XMin(bbox), ST_YMin(bbox), ST_ZMin(bbox)),
       ST_MakePoint(ST_XMax(bbox), ST_YMin(bbox), ST_ZMin(bbox)),
@@ -213,31 +201,26 @@ BEGIN
       ST_MakePoint(ST_XMin(bbox), ST_YMax(bbox), ST_ZMax(bbox)),
       ST_MakePoint(ST_XMin(bbox), ST_YMin(bbox), ST_ZMin(bbox))
     ]
-  )), db_srid) INTO envelope;
-
-  RETURN envelope;
+  )), db_srid);
 END;
 $body$
 LANGUAGE plpgsql STRICT STABLE;
 
 /*****************************************************************
-* Returns the envelope geometry of two geometries
+* Returns the envelope geometry for a given geometry
 *
-* @param geom1, geom2 The input geometries for which the envelope is computed
+* @param geom The GEOMETRY for which the envelope is computed
+* @param schema_name Name of schema
 * @return Envelope geometry as required by the ENVELOPE column of the FEATURE table
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope(geom1 GEOMETRY, geom2 GEOMETRY) RETURNS GEOMETRY AS
+CREATE OR REPLACE FUNCTION citydb_pkg.get_envelope(
+  geom GEOMETRY,
+  schema_name TEXT) RETURNS GEOMETRY AS
 $body$
 BEGIN
-  IF geom1 IS NOT NULL AND geom2 IS NOT NULL THEN
-    RETURN citydb_pkg.get_envelope(ST_Collect(geom1, geom2));
-  ELSIF geom1 IS NOT NULL THEN
-    RETURN citydb_pkg.get_envelope(geom1);
-  ELSIF geom2 IS NOT NULL THEN
-    RETURN citydb_pkg.get_envelope(geom2);
-  ELSE
-    RETURN NULL;
-  END IF;
+  PERFORM citydb_pkg.set_current_schema(schema_name);
+
+  RETURN citydb_pkg.get_envelope(geom);
 END;
 $body$
-LANGUAGE plpgsql STABLE;
+LANGUAGE plpgsql STRICT STABLE;
