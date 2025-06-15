@@ -24,33 +24,56 @@ LANGUAGE sql IMMUTABLE;
 /******************************************************************
 * db_metadata
 *
-* @param schema_name Name of database schema
 * @return RECORD with columns
 *    srid, srs_name,
 *    coord_ref_sys_name, coord_ref_sys_kind, wktext
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(
-  schema_name TEXT DEFAULT 'citydb',
   OUT srid INTEGER,
   OUT srs_name TEXT,
   OUT coord_ref_sys_name TEXT, 
   OUT coord_ref_sys_kind TEXT,
   OUT wktext TEXT) RETURNS RECORD AS
 $$
+SELECT
+  d.srid,
+  d.srs_name,
+  split_part(s.srtext, '"', 2) as coord_ref_sys_name,
+  split_part(s.srtext, '[', 1) as coord_ref_sys_kind,
+  s.srtext as wktext
+FROM
+  database_srs d,
+  spatial_ref_sys s
+WHERE
+  d.srid = s.srid;
+$$
+LANGUAGE sql STABLE;
+
+/******************************************************************
+* db_metadata
+*
+* @param schema_name Name of database schema
+* @return RECORD with columns
+*    srid, srs_name,
+*    coord_ref_sys_name, coord_ref_sys_kind, wktext
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(
+  schema_name TEXT,
+  OUT srid INTEGER,
+  OUT srs_name TEXT,
+  OUT coord_ref_sys_name TEXT,
+  OUT coord_ref_sys_kind TEXT,
+  OUT wktext TEXT) RETURNS RECORD AS
+$$
 BEGIN
-  EXECUTE format(
-    'SELECT 
-       d.srid,
-       d.srs_name,
-       split_part(s.srtext, ''"'', 2),
-       split_part(s.srtext, ''['', 1),
-       s.srtext
-     FROM 
-       %I.database_srs d,
-       spatial_ref_sys s 
-     WHERE
-       d.srid = s.srid', schema_name)
-    INTO srid, srs_name, coord_ref_sys_name, coord_ref_sys_kind, wktext;
+  PERFORM citydb_pkg.set_current_schema(schema_name);
+
+  SELECT
+    m.srid, m.srs_name, m.coord_ref_sys_name, m.coord_ref_sys_kind, m.wktext
+  INTO
+    srid, srs_name, coord_ref_sys_name, coord_ref_sys_kind, wktext
+  FROM
+    citydb_pkg.db_metadata() m;
 END;
 $$
 LANGUAGE plpgsql STABLE;
@@ -75,13 +98,11 @@ LANGUAGE sql STRICT;
 *
 * @param class_id Identifier for object class
 * @param skip_abstract Set to 1 if abstract classes shall be skipped, 0 if not
-* @param schema_name Name of schema
 * @return The IDs of all transitive subclasses of the given object class
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_child_objectclass_ids(
   class_id INTEGER,
-  skip_abstract INTEGER DEFAULT 0,	
-  schema_name TEXT DEFAULT 'citydb') RETURNS SETOF INTEGER AS
+  skip_abstract INTEGER DEFAULT 0) RETURNS SETOF INTEGER AS
 $$
 DECLARE
   where_clause TEXT := '';
@@ -94,24 +115,45 @@ BEGIN
     WITH RECURSIVE class_hierarchy AS (
       SELECT
         o.id,
-		o.is_abstract
+        o.is_abstract
       FROM
-        %I.objectclass o
+        objectclass o
       WHERE
         o.id = %L
       UNION ALL
       SELECT
         p.id,
-		p.is_abstract
+        p.is_abstract
       FROM
-        %I.objectclass p
+        objectclass p
         INNER JOIN class_hierarchy h ON h.id = p.superclass_id
     )
     SELECT
       h.id
     FROM
       class_hierarchy h ' || where_clause,
-	schema_name, class_id, schema_name);
+	class_id);
+END;
+$$
+LANGUAGE plpgsql STABLE STRICT;
+
+/*****************************************************************
+* get_child_objectclass_ids
+*
+* @param class_id Identifier for object class
+* @param schema_name Name of schema
+* @param skip_abstract Set to 1 if abstract classes shall be skipped, 0 if not
+* @return The IDs of all transitive subclasses of the given object class
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.get_child_objectclass_ids(
+  class_id INTEGER,
+  schema_name TEXT,
+  skip_abstract INTEGER DEFAULT 0) RETURNS SETOF INTEGER AS
+$$
+BEGIN
+  PERFORM citydb_pkg.set_current_schema(schema_name);
+  RETURN QUERY
+    SELECT citydb_pkg.get_child_objectclass_ids(class_id, skip_abstract);
 END;
 $$
 LANGUAGE plpgsql STABLE STRICT;
@@ -147,7 +189,7 @@ LANGUAGE plpgsql STABLE;
 * set_current_schema
 *
 * @param schema_name Name of schema to set as the current 3DCityDB schema
-* @param local Scope of change: true = local (transaction), false = session
+* @param local Scope of the change: true = transaction-local (default), false = session-wide
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.set_current_schema(
   schema_name TEXT,
