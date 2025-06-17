@@ -218,8 +218,6 @@ CREATE OR REPLACE FUNCTION citydb_pkg.transform_or_null(
   geom GEOMETRY,
   srid INTEGER) RETURNS GEOMETRY AS
 $body$
-BEGIN
-  RETURN ST_Transform($1, $2);
-END;
+SELECT ST_Transform($1, $2);
 $body$
-LANGUAGE plpgsql STABLE STRICT;
+LANGUAGE sql STABLE STRICT;
