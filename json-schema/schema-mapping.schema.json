@@ -235,6 +235,7 @@
           ],
           "properties": {
             "type": {
+              "type": "string",
               "enum": [
                 "core:AddressProperty",
                 "core:AppearanceProperty",
