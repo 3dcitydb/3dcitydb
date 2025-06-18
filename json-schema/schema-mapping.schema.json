@@ -173,7 +173,10 @@
               "not": {
                 "enum": [
                   "core:FeatureProperty",
-                  "core:GeometryProperty"
+                  "core:GeometryProperty",
+                  "core:AddressProperty",
+                  "core:AppearanceProperty",
+                  "core:ImplicitGeometryProperty"
                 ]
               }
             },
@@ -221,6 +224,24 @@
             "target": {
               "$ref": "#/$defs/geometryType"
             },
+            "value": false,
+            "relationType": false
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "enum": [
+                "core:AddressProperty",
+                "core:AppearanceProperty",
+                "core:ImplicitGeometryProperty"
+              ]
+            },
+            "target": false,
             "value": false,
             "relationType": false
           }
