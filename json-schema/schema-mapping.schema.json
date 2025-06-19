@@ -202,11 +202,7 @@
               "type": "string"
             },
             "relationType": {
-              "type": "string",
-              "enum": [
-                "relates",
-                "contains"
-              ]
+              "$ref": "#/$defs/relationType"
             },
             "value": false
           }
@@ -407,6 +403,13 @@
         {
           "$ref": "#/$defs/geometryType"
         }
+      ]
+    },
+    "relationType": {
+      "type": "string",
+      "enum": [
+        "relates",
+        "contains"
       ]
     }
   }
