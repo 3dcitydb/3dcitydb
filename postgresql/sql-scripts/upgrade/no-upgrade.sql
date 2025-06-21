@@ -1,2 +1,2 @@
-\echo 'Upgrading from version ':current_major'.':current_minor'.':current_revision' to version ':major'.':minor'.':revision' is not supported automatically.'
+\echo 'Upgrading from version ':current_version_string' to version ':version_string' is not supported automatically.'
 \echo 'Please see the documentation for manual upgrade steps.'

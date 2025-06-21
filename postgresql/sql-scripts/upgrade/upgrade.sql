@@ -6,13 +6,13 @@
 SELECT CASE
   WHEN :current_major = 5 AND :current_minor < 1 THEN 'upgrade-5.0.sql'
   ELSE '../util/do-nothing.sql'
-END AS do_action;
+END AS do_action
 \gset
 
 \ir :do_action
 
 -- upgrade citydb_pkg schema
-\echo 'Upgrading schema ''citydb_pkg'' ...'
+\echo 'Upgrading schema "citydb_pkg" ...'
 
 DO $$
 DECLARE
