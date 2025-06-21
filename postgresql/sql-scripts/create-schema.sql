@@ -10,7 +10,7 @@ SET client_min_messages TO WARNING;
 CREATE SCHEMA :"SCHEMA_NAME";
 
 -- set search_path for this session
-SELECT current_setting('search_path') AS current_path;
+SELECT current_setting('search_path') AS current_path
 \gset
 SET search_path TO :"SCHEMA_NAME", :current_path;
 
@@ -36,6 +36,7 @@ SELECT version as citydb_version from citydb_pkg.citydb_version();
 \echo 'Created 3DCityDB schema "':SCHEMA_NAME'".'
 
 \echo 'Setting spatial reference system for schema "':SCHEMA_NAME'" (will be the same as for the "citydb" schema) ...'
-\set SCHEMA_NAME_QUOTED '\'':SCHEMA_NAME'\''
-SELECT citydb_pkg.change_schema_srid(database_srs.srid, database_srs.srs_name, 0, :SCHEMA_NAME_QUOTED) FROM citydb.database_srs LIMIT 1;
+SELECT citydb_pkg.change_schema_srid(database_srs.srid, database_srs.srs_name, :'SCHEMA_NAME', 0)
+  FROM citydb.database_srs
+  LIMIT 1;
 \echo 'Done'

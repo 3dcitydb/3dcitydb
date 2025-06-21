@@ -7,12 +7,12 @@ SET client_min_messages TO WARNING;
 \set CHANGELOG :changelog
 
 -- check if the PostGIS extension is available
-SELECT postgis_lib_version() AS postgis_version;
+SELECT postgis_lib_version() AS postgis_version
 \gset
 
 -- check if the provided SRID is supported
 \echo
-\echo 'Checking spatial reference system ...'
+\echo 'Checking spatial reference system for SRID ':SRID' ...'
 SET tmp.srid to :"srid";
 DO $$
 BEGIN
@@ -26,7 +26,7 @@ $$;
 CREATE SCHEMA citydb;
 
 -- set search_path for this session
-SELECT current_setting('search_path') AS current_path;
+SELECT current_setting('search_path') AS current_path
 \gset
 SET search_path TO citydb, :current_path;
 
@@ -46,7 +46,7 @@ SET search_path TO citydb, :current_path;
 
 -- create citydb_pkg schema
 \echo
-\echo 'Creating additional schema ''citydb_pkg'' ...'
+\echo 'Creating additional schema "citydb_pkg" ...'
 CREATE SCHEMA citydb_pkg;
 
 \ir citydb-pkg/util.sql
@@ -59,13 +59,13 @@ ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
 
 -- create changelog extension
 \echo
-SELECT 'citydb' AS schema_name;
+SELECT 'citydb' AS schema_name
 \gset
 
 SELECT CASE
   WHEN upper(:'CHANGELOG') = 'YES' THEN 'create-changelog.sql'
   ELSE 'util/do-nothing.sql'
-END AS create_changelog_extension;
+END AS create_changelog_extension
 \gset
 \ir :create_changelog_extension;
 

@@ -6,7 +6,7 @@ SET client_min_messages TO WARNING;
 \set SCHEMA_NAME :schema_name
 \set ACCESS_MODE :access_mode
 
-SELECT CASE WHEN upper(:'ACCESS_MODE') = 'RW' THEN 'read-write' ELSE 'read-only' END AS privileges_type;
+SELECT CASE WHEN upper(:'ACCESS_MODE') = 'RW' THEN 'read-write' ELSE 'read-only' END AS privileges_type
 \gset
 
 \echo 'Granting ':privileges_type' privileges on schema "':SCHEMA_NAME'" to user "':USERNAME'" ...'
