@@ -1,5 +1,4 @@
 \set USERNAME :username
-\set USERNAME_QUOTED '\'':username'\''
 \t on
 
 \echo 'List of 3DCityDB schemas with usage privilege for "':USERNAME'":'
@@ -11,6 +10,6 @@ WITH schema_names AS (
 	    AND c.relkind = 'r'
 ) SELECT schema_name
     FROM schema_names
-	  WHERE pg_catalog.has_schema_privilege(:USERNAME_QUOTED, schema_name, 'USAGE');
+	  WHERE pg_catalog.has_schema_privilege(:'USERNAME', schema_name, 'USAGE');
 	  
 \t off
