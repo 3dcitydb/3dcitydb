@@ -205,7 +205,7 @@ LANGUAGE plpgsql STABLE STRICT;
 * @param schema_name Name of 3DCityDB schema to verify
 * @return The boolean result encoded as INTEGER: 1 = schema exists; 0 otherwise
 ******************************************************************/
-CREATE OR REPLACE FUNCTION schema_exists(schema_name TEXT) RETURNS INTEGER AS
+CREATE OR REPLACE FUNCTION citydb_pkg.schema_exists(schema_name TEXT) RETURNS INTEGER AS
 $body$
 SELECT COALESCE((
   SELECT 1
