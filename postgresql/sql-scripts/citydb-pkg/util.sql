@@ -200,3 +200,22 @@ BEGIN
 END;
 $body$
 LANGUAGE plpgsql STABLE STRICT;
+
+/*****************************************************************
+* schema_exists
+*
+* @param schema_name Name of 3DCityDB schema to verify
+* @return The boolean result encoded as INTEGER: 1 = schema exists; 0 otherwise
+******************************************************************/
+CREATE OR REPLACE FUNCTION schema_exists(schema_name TEXT) RETURNS INTEGER AS
+$body$
+SELECT COALESCE((
+  SELECT 1
+  FROM information_schema.schemata s
+  JOIN information_schema.tables t ON t.table_schema = s.schema_name
+  WHERE s.schema_name = $1
+    AND t.table_name = 'feature'
+  LIMIT 1
+), 0)
+$body$
+LANGUAGE sql STABLE;
