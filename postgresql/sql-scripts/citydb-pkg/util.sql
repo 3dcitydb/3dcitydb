@@ -35,19 +35,17 @@ CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(
   OUT coord_ref_sys_kind TEXT,
   OUT wktext TEXT) RETURNS RECORD AS
 $body$
-SELECT
-  d.srid,
-  d.srs_name,
-  split_part(s.srtext, '"', 2) as coord_ref_sys_name,
-  split_part(s.srtext, '[', 1) as coord_ref_sys_kind,
-  s.srtext as wktext
-FROM
-  database_srs d,
-  spatial_ref_sys s
-WHERE
-  d.srid = s.srid;
+BEGIN
+  SELECT
+    d.srid, d.srs_name, crs.coord_ref_sys_name, crs.coord_ref_sys_kind, crs.wktext
+  INTO
+    srid, srs_name, coord_ref_sys_name, coord_ref_sys_kind, wktext
+  FROM
+    database_srs d,
+    citydb_pkg.get_coord_ref_sys_info(d.srid) crs;
+END;
 $body$
-LANGUAGE sql STABLE;
+LANGUAGE plpgsql STABLE;
 
 /******************************************************************
 * db_metadata
