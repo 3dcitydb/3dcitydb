@@ -10,7 +10,8 @@
 
 ### Added
 - Introduced the `relationType` attribute in the JSON schema mapping of feature properties. The attribute can take the
-  values `relates` and `contains`, reflecting the value stored in `val_relation_type` column of the `PROPERTY` table.
+  values `relates` and `contains`, reflecting the value stored in the `val_relation_type` column of the
+  `PROPERTY` table.
 - Added new database functions `get_current_schema`, `set_current_schema`, and `schema_exists` to manage the
   active 3DCityDB schema.
 - Added shell and SQL scripts for upgrading an existing 3DCityDB instance to the latest minor or patch version.
