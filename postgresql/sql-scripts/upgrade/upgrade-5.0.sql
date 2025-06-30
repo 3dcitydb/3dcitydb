@@ -14,7 +14,7 @@ BEGIN
   FOR schema_name IN
     SELECT nspname FROM pg_catalog.pg_class c
     JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-    WHERE c.relname = 'feature' AND c.relkind = 'r'
+    WHERE c.relname = 'database_srs' AND c.relkind = 'r'
   LOOP
     EXECUTE format('set search_path to %I, citydb_pkg, public', schema_name);
 

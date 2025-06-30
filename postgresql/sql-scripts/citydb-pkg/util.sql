@@ -167,7 +167,7 @@ DECLARE
   table_oid oid;
   schema_name text;
 BEGIN
-  table_oid := to_regclass('feature');
+  table_oid := to_regclass('database_srs');
 
   IF table_oid IS NULL THEN
     RAISE EXCEPTION 'No 3DCityDB schema found in the current search_path %.', current_setting('search_path');
@@ -212,7 +212,7 @@ SELECT COALESCE((
   FROM information_schema.schemata s
   JOIN information_schema.tables t ON t.table_schema = s.schema_name
   WHERE s.schema_name = $1
-    AND t.table_name = 'feature'
+    AND t.table_name = 'database_srs'
   LIMIT 1
 ), 0)
 $body$
