@@ -27,13 +27,6 @@ BEGIN
       schema_srid
     );
 
-    RAISE NOTICE 'Fixing layout and primary key of the table "appear_to_surface_data" ...';
-    ALTER TABLE appear_to_surface_data DROP CONSTRAINT IF EXISTS appear_to_surface_data_pk;
-    ALTER TABLE appear_to_surface_data DROP COLUMN IF EXISTS id;
-    ALTER TABLE appear_to_surface_data ALTER COLUMN surface_data_id SET NOT NULL;
-    ALTER TABLE appear_to_surface_data ADD CONSTRAINT appear_to_surface_data_pk PRIMARY KEY (appearance_id, surface_data_id);
-    DROP SEQUENCE IF EXISTS appear_to_surface_data_seq;
-
     RAISE NOTICE 'Adding an index on the "theme" column of the "appearance" table ...';
     CREATE INDEX IF NOT EXISTS appearance_theme_inx ON appearance (theme);
 

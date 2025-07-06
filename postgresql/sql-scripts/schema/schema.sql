@@ -2,6 +2,8 @@ CREATE SEQUENCE address_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223
 
 CREATE SEQUENCE ade_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 2147483647 CACHE 1 NO CYCLE;
 
+CREATE SEQUENCE appear_to_surface_data_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+
 CREATE SEQUENCE appearance_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
 
 CREATE SEQUENCE codelist_entry_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
@@ -301,9 +303,10 @@ CREATE INDEX surface_data_mapping_fkx1 ON surface_data_mapping  ( geometry_data_
 CREATE INDEX surface_data_mapping_fkx2 ON surface_data_mapping  ( surface_data_id );
 
 CREATE  TABLE appear_to_surface_data ( 
+	"id"                 bigint DEFAULT nextval('appear_to_surface_data_seq'::regclass) NOT NULL  ,
 	appearance_id        bigint  NOT NULL  ,
-	surface_data_id      bigint  NOT NULL  ,
-	CONSTRAINT appear_to_surface_data_pk PRIMARY KEY ( appearance_id, surface_data_id )
+	surface_data_id      bigint    ,
+	CONSTRAINT appear_to_surface_data_pk PRIMARY KEY ( "id" )
  );
 
 CREATE INDEX appear_to_surface_data_fkx1 ON appear_to_surface_data  ( surface_data_id );
