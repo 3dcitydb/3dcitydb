@@ -33,6 +33,14 @@ BEGIN
     RAISE NOTICE 'Setting NOT NULL constraint on the "datatype_id" column of the "property" table ...';
     ALTER TABLE property ALTER COLUMN datatype_id SET NOT NULL;
 
+    RAISE NOTICE 'Replacing all columns of type NUMERIC with INTEGER ...';
+    ALTER TABLE objectclass ALTER COLUMN is_abstract TYPE integer;
+    ALTER TABLE objectclass ALTER COLUMN is_toplevel TYPE integer;
+    ALTER TABLE appearance ALTER COLUMN is_global TYPE integer;
+    ALTER TABLE datatype ALTER COLUMN is_abstract TYPE integer;
+    ALTER TABLE surface_data ALTER COLUMN is_front TYPE integer;
+    ALTER TABLE surface_data ALTER COLUMN x3d_is_smooth TYPE integer;
+
     RAISE NOTICE 'Updating table "objectclass" ...';
     UPDATE objectclass
     SET SCHEMA = '{"identifier":"core:AbstractCityObject","description":"AbstractCityObject is the abstract superclass of all thematic classes.","table":"feature","properties":[{"name":"externalReference","namespace":"http://3dcitydb.org/3dcitydb/core/5.0","description":"References external objects in other information systems that have a relation to the city object.","type":"core:ExternalReference"},{"name":"generalizesTo","namespace":"http://3dcitydb.org/3dcitydb/core/5.0","description":"Relates generalized representations of the same real-world object in different Levels of Detail to the city object. The direction of this relation is from the city object to the corresponding generalized city objects.","type":"core:FeatureProperty","target":"core:AbstractCityObject","relationType":"relates"},{"name":"relativeToTerrain","namespace":"http://3dcitydb.org/3dcitydb/core/5.0","description":"Describes the vertical position of the city object relative to the surrounding terrain.","type":"core:String"},{"name":"relativeToWater","namespace":"http://3dcitydb.org/3dcitydb/core/5.0","description":"Describes the vertical position of the city object relative to the surrounding water surface.","type":"core:String"},{"name":"relatedTo","namespace":"http://3dcitydb.org/3dcitydb/core/5.0","description":"Relates other city objects to the city object. It also describes how the city objects are related to each other.","type":"core:CityObjectRelation"},{"name":"appearance","namespace":"http://3dcitydb.org/3dcitydb/core/5.0","description":"Relates appearances to the city object.","type":"core:AppearanceProperty"},{"name":"dynamizer","namespace":"http://3dcitydb.org/3dcitydb/core/5.0","description":"Relates Dynamizer objects to the city object. These allow timeseries data to override static attribute values of the city object.","type":"core:FeatureProperty","target":"core:AbstractDynamizer","relationType":"contains"}]}'

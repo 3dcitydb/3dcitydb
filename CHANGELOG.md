@@ -7,7 +7,8 @@
   property.
 - Changed the geometry type of the column `val_implicitgeom_refpoint` in the `property` table from `GEOMETRYZ`
   to `POINTZ`.
-- Updated the behaviour of database functions that take a `schema_name` parameter. The schema is now consistently
+- Replaced all `NUMERIC` columns used as flags with `INTEGER` to reduce storage overhead.
+- Updated the behavior of database functions that take a `schema_name` parameter. The schema is now consistently
   set by temporarily changing the `search_path` for the scope of the current transaction. If `schema_name` is
   omitted, the function operates on the current 3DCityDB schema in the `search_path`. [#260](https://github.com/3dcitydb/3dcitydb/pull/260)
 - Removed database functions for setting and dropping foreign keys.

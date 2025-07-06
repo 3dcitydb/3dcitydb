@@ -64,7 +64,7 @@
 			<column name="identifier" type="text" length="256" />
 			<column name="identifier_codespace" type="text" length="256" />
 			<column name="theme" type="text" length="256" />
-			<column name="is_global" type="numeric" />
+			<column name="is_global" type="integer" />
 			<column name="feature_id" prior="cityobject_id" type="bigint" />
 			<column name="implicit_geometry_id" type="bigint" />
 			<index name="appearance_pk" unique="PRIMARY_KEY" >
@@ -128,7 +128,7 @@
 			<column name="id" type="integer" length="10" decimal="0" mandatory="y" />
 			<column name="supertype_id" prior="superclass_id" type="integer" length="10" decimal="0" />
 			<column name="typename" prior="name" type="text" length="256" />
-			<column name="is_abstract" type="numeric" />
+			<column name="is_abstract" type="integer" />
 			<column name="ade_id" type="integer" length="10" decimal="0" />
 			<column name="namespace_id" type="integer" />
 			<column name="schema" type="json" />
@@ -254,8 +254,8 @@
 			<column name="id" type="integer" length="10" decimal="0" mandatory="y" />
 			<column name="superclass_id" type="integer" length="10" decimal="0" />
 			<column name="classname" type="text" length="256" />
-			<column name="is_abstract" type="numeric" />
-			<column name="is_toplevel" type="numeric" />
+			<column name="is_abstract" type="integer" />
+			<column name="is_toplevel" type="integer" />
 			<column name="ade_id" type="integer" length="10" decimal="0" />
 			<column name="namespace_id" prior="namespace_prefix" type="integer" />
 			<column name="schema" type="json" />
@@ -385,7 +385,7 @@
 			<column name="objectid" prior="surfacedataid" type="text" length="256" />
 			<column name="identifier" type="text" length="256" />
 			<column name="identifier_codespace" type="text" length="256" />
-			<column name="is_front" type="numeric" />
+			<column name="is_front" type="integer" />
 			<column name="objectclass_id" type="integer" length="10" decimal="0" mandatory="y" />
 			<column name="x3d_shininess" type="double precision" length="17" decimal="17" />
 			<column name="x3d_transparency" type="double precision" length="17" decimal="17" />
@@ -393,7 +393,7 @@
 			<column name="x3d_specular_color" type="text" length="256" />
 			<column name="x3d_diffuse_color" type="text" length="256" />
 			<column name="x3d_emissive_color" type="text" length="256" />
-			<column name="x3d_is_smooth" type="numeric" />
+			<column name="x3d_is_smooth" type="integer" />
 			<column name="tex_image_id" type="bigint" length="19" decimal="0" />
 			<column name="tex_texture_type" type="text" length="256" />
 			<column name="tex_wrap_mode" type="text" length="256" />
@@ -464,8 +464,6 @@
 	</schema>
 	<layout name="3DCityDB" id="Layout-1758" confirmed="y" joined_routing="y" show_column_type="y" show_relation="no_text" >
 		<comment><![CDATA[3DCityDB]]></comment>
-		<entity schema="citydb" name="datatype" color="BEBEF4" x="513" y="912" />
-		<entity schema="citydb" name="objectclass" color="BEBEF4" x="57" y="912" />
 		<entity schema="citydb" name="feature" color="F4DDBE" x="57" y="95" />
 		<entity schema="citydb" name="geometry_data" color="C7F4BE" x="779" y="95" />
 		<entity schema="citydb" name="codelist" color="F4F3BE" x="779" y="1121" />
@@ -475,22 +473,24 @@
 		<entity schema="citydb" name="appear_to_surface_data" color="F4BEC7" x="817" y="646" />
 		<entity schema="citydb" name="tex_image" color="F4BEC7" x="779" y="798" />
 		<entity schema="citydb" name="surface_data_mapping" color="F4BEC7" x="1083" y="399" />
-		<entity schema="citydb" name="surface_data" color="F4BEC7" x="1083" y="589" />
 		<entity schema="citydb" name="codelist_entry" color="F4F3BE" x="1197" y="1121" />
 		<entity schema="citydb" name="implicit_geometry" color="C7F4BE" x="1140" y="95" />
 		<entity schema="citydb" name="address" color="F4DDBE" x="57" y="456" />
-		<entity schema="citydb" name="appearance" color="F4BEC7" x="779" y="399" />
 		<entity schema="citydb" name="property" color="F4DDBE" x="361" y="95" />
+		<entity schema="citydb" name="objectclass" color="BEBEF4" x="57" y="912" />
+		<entity schema="citydb" name="appearance" color="F4BEC7" x="779" y="399" />
+		<entity schema="citydb" name="datatype" color="BEBEF4" x="513" y="912" />
+		<entity schema="citydb" name="surface_data" color="F4BEC7" x="1083" y="589" />
 		<group name="Geometry" color="EEF7EC" >
 			<entity schema="citydb" name="geometry_data" />
 			<entity schema="citydb" name="implicit_geometry" />
 		</group>
 		<group name="Metadata" color="ECECF7" >
-			<entity schema="citydb" name="datatype" />
-			<entity schema="citydb" name="objectclass" />
 			<entity schema="citydb" name="database_srs" />
 			<entity schema="citydb" name="ade" />
 			<entity schema="citydb" name="namespace" />
+			<entity schema="citydb" name="objectclass" />
+			<entity schema="citydb" name="datatype" />
 		</group>
 		<group name="Feature" color="F7F2EC" >
 			<entity schema="citydb" name="feature" />
@@ -501,8 +501,8 @@
 			<entity schema="citydb" name="appear_to_surface_data" />
 			<entity schema="citydb" name="tex_image" />
 			<entity schema="citydb" name="surface_data_mapping" />
-			<entity schema="citydb" name="surface_data" />
 			<entity schema="citydb" name="appearance" />
+			<entity schema="citydb" name="surface_data" />
 		</group>
 		<group name="Codelist" color="F4F3BE" >
 			<entity schema="citydb" name="codelist" />
