@@ -292,7 +292,7 @@
 			<column name="val_lod" prior="lod" type="text" length="256" jt="12" />
 			<column name="val_geometry_id" prior="val_geometry" type="bigint" length="19" decimal="0" jt="-5" />
 			<column name="val_implicitgeom_id" prior="val_implicitgeom" type="bigint" length="19" decimal="0" jt="-5" />
-			<column name="val_implicitgeom_refpoint" type="geometry(GEOMETRYZ)" jt="1111" />
+			<column name="val_implicitgeom_refpoint" type="geometry(POINTZ)" jt="1111" />
 			<column name="val_appearance_id" prior="val_appearance" type="bigint" length="19" decimal="0" jt="-5" />
 			<column name="val_address_id" type="bigint" length="100" jt="-5" />
 			<column name="val_feature_id" prior="val_feature" type="bigint" length="19" decimal="0" jt="-5" />
@@ -464,7 +464,6 @@
 		<entity schema="citydb" name="datatype" color="BEBEF4" x="513" y="912" />
 		<entity schema="citydb" name="objectclass" color="BEBEF4" x="57" y="912" />
 		<entity schema="citydb" name="feature" color="F4DDBE" x="57" y="95" />
-		<entity schema="citydb" name="property" color="F4DDBE" x="361" y="95" />
 		<entity schema="citydb" name="geometry_data" color="C7F4BE" x="779" y="95" />
 		<entity schema="citydb" name="appearance" color="F4BEC7" x="779" y="399" />
 		<entity schema="citydb" name="codelist" color="F4F3BE" x="779" y="1121" />
@@ -478,6 +477,7 @@
 		<entity schema="citydb" name="codelist_entry" color="F4F3BE" x="1197" y="1121" />
 		<entity schema="citydb" name="implicit_geometry" color="C7F4BE" x="1140" y="95" />
 		<entity schema="citydb" name="address" color="F4DDBE" x="57" y="456" />
+		<entity schema="citydb" name="property" color="F4DDBE" x="361" y="95" />
 		<group name="Geometry" color="EEF7EC" >
 			<entity schema="citydb" name="geometry_data" />
 			<entity schema="citydb" name="implicit_geometry" />
@@ -491,8 +491,8 @@
 		</group>
 		<group name="Feature" color="F7F2EC" >
 			<entity schema="citydb" name="feature" />
-			<entity schema="citydb" name="property" />
 			<entity schema="citydb" name="address" />
+			<entity schema="citydb" name="property" />
 		</group>
 		<group name="Appearance" color="FFCCFF" >
 			<entity schema="citydb" name="appearance" />
