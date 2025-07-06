@@ -76,6 +76,9 @@
 			<index name="appearance_implicit_geom_fkx" unique="NORMAL" >
 				<column name="implicit_geometry_id" />
 			</index>
+			<index name="appearance_theme_inx" unique="NORMAL" >
+				<column name="theme" />
+			</index>
 			<fk name="appearance_feature_fk" to_schema="citydb" to_table="feature" delete_action="setNull" >
 				<fk_column name="feature_id" pk="id" />
 			</fk>
@@ -465,7 +468,6 @@
 		<entity schema="citydb" name="objectclass" color="BEBEF4" x="57" y="912" />
 		<entity schema="citydb" name="feature" color="F4DDBE" x="57" y="95" />
 		<entity schema="citydb" name="geometry_data" color="C7F4BE" x="779" y="95" />
-		<entity schema="citydb" name="appearance" color="F4BEC7" x="779" y="399" />
 		<entity schema="citydb" name="codelist" color="F4F3BE" x="779" y="1121" />
 		<entity schema="citydb" name="database_srs" color="BEBEF4" x="57" y="1159" />
 		<entity schema="citydb" name="ade" color="BEBEF4" x="304" y="912" />
@@ -478,6 +480,7 @@
 		<entity schema="citydb" name="implicit_geometry" color="C7F4BE" x="1140" y="95" />
 		<entity schema="citydb" name="address" color="F4DDBE" x="57" y="456" />
 		<entity schema="citydb" name="property" color="F4DDBE" x="361" y="95" />
+		<entity schema="citydb" name="appearance" color="F4BEC7" x="779" y="399" />
 		<group name="Geometry" color="EEF7EC" >
 			<entity schema="citydb" name="geometry_data" />
 			<entity schema="citydb" name="implicit_geometry" />
@@ -495,11 +498,11 @@
 			<entity schema="citydb" name="property" />
 		</group>
 		<group name="Appearance" color="FFCCFF" >
-			<entity schema="citydb" name="appearance" />
 			<entity schema="citydb" name="appear_to_surface_data" />
 			<entity schema="citydb" name="tex_image" />
 			<entity schema="citydb" name="surface_data_mapping" />
 			<entity schema="citydb" name="surface_data" />
+			<entity schema="citydb" name="appearance" />
 		</group>
 		<group name="Codelist" color="F4F3BE" >
 			<entity schema="citydb" name="codelist" />

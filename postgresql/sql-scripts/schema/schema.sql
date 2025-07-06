@@ -184,6 +184,8 @@ CREATE INDEX appearance_feature_fkx ON appearance  ( feature_id );
 
 CREATE INDEX appearance_implicit_geom_fkx ON appearance  ( implicit_geometry_id );
 
+CREATE INDEX appearance_theme_inx ON appearance  ( theme );
+
 CREATE  TABLE datatype ( 
 	id                   integer  NOT NULL  ,
 	supertype_id         integer    ,

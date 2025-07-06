@@ -20,12 +20,15 @@ BEGIN
     EXECUTE format('set search_path to %I, citydb_pkg, public', schema_name);
     RAISE NOTICE 'Upgrading schema "%" ...', schema_name;
 
-    RAISE NOTICE 'Changing the geometry type of column "val_implicitgeom_refpoint" to POINTZ ...';
+    RAISE NOTICE 'Changing the geometry type of the column "val_implicitgeom_refpoint" in the "property" table to POINTZ ...';
     SELECT srid INTO schema_srid FROM database_srs;
     EXECUTE format(
       'ALTER TABLE property ALTER COLUMN val_implicitgeom_refpoint TYPE geometry(POINTZ, %L)',
       schema_srid
     );
+
+    RAISE NOTICE 'Adding an index on the "theme" column of the "appearance" table ...';
+    CREATE INDEX IF NOT EXISTS appearance_theme_inx ON appearance (theme);
 
     RAISE NOTICE 'Updating table "objectclass" ...';
     UPDATE objectclass
