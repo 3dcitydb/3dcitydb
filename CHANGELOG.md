@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 ### Changed
+- Added a `NOT NULL` constraint on the `datatype_id` column of the `property` table to require a data type for each
+  property.
 - Changed the geometry type of the column `val_implicitgeom_refpoint` in the `property` table from `GEOMETRYZ`
   to `POINTZ`.
 - Updated the behaviour of database functions that take a `schema_name` parameter. The schema is now consistently
@@ -18,10 +20,10 @@
 - Added an index on the `theme` column of the `appearance` table to improve query performance.
 - Added new database functions `get_current_schema`, `set_current_schema`, and `schema_exists` to manage the
   active 3DCityDB schema.
-- Added shell and SQL scripts for upgrading an existing 3DCityDB instance to the latest minor or patch version.
+- Added shell and SQL scripts to upgrade an existing 3DCityDB instance to the latest minor or patch version.
 
 ### Fixed
-- Resolved issues that prevented the `get_feature_envelope` function from working correctly. [#258](https://github.com/3dcitydb/3dcitydb/issues/258)
+- Fixed issues that prevented the `get_feature_envelope` function from working correctly. [#258](https://github.com/3dcitydb/3dcitydb/issues/258)
 - Fixed delete scripts to correctly remove parent attributes of feature properties that share the same attribute name
   when the referenced features are deleted. This primarily affects the attributes `grp:groupMember` and
   `core:relatedTo`. [#261](https://github.com/3dcitydb/3dcitydb/pull/261)

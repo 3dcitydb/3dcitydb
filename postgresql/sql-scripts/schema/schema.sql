@@ -203,7 +203,7 @@ CREATE  TABLE property (
 	"id"                 bigint DEFAULT nextval('property_seq'::regclass) NOT NULL  ,
 	feature_id           bigint    ,
 	parent_id            bigint    ,
-	datatype_id          integer    ,
+	datatype_id          integer  NOT NULL  ,
 	namespace_id         integer    ,
 	"name"               text    ,
 	val_int              bigint    ,

@@ -2,44 +2,44 @@
 <project name="3DCityDB" database="PostgreSQL" id="Project-1a7" >
 	<schema name="citydb" >
 		<table name="address" >
-			<column name="id" type="bigint" jt="-5" mandatory="y" >
+			<column name="id" type="bigint" mandatory="y" >
 				<defo><![CDATA[nextval('address_seq'::regclass)]]></defo>
 			</column>
-			<column name="objectid" type="text" jt="12" />
-			<column name="identifier" type="text" jt="12" />
-			<column name="identifier_codespace" type="text" jt="12" />
-			<column name="street" type="text" jt="12" />
-			<column name="house_number" type="text" jt="12" />
-			<column name="po_box" type="text" jt="12" />
-			<column name="zip_code" type="text" jt="12" />
-			<column name="city" type="text" jt="12" />
-			<column name="state" type="text" jt="12" />
-			<column name="country" type="text" length="2" jt="12" />
-			<column name="free_text" type="json" jt="2000" />
-			<column name="multi_point" type="geometry(MULTIPOINTZ)" jt="1111" />
-			<column name="content" prior="xal_source" type="text" jt="12" />
-			<column name="content_mime_type" type="text" jt="12" />
+			<column name="objectid" type="text" />
+			<column name="identifier" type="text" />
+			<column name="identifier_codespace" type="text" />
+			<column name="street" type="text" />
+			<column name="house_number" type="text" />
+			<column name="po_box" type="text" />
+			<column name="zip_code" type="text" />
+			<column name="city" type="text" />
+			<column name="state" type="text" />
+			<column name="country" type="text" length="2" />
+			<column name="free_text" type="json" />
+			<column name="multi_point" type="geometry(MULTIPOINTZ)" />
+			<column name="content" prior="xal_source" type="text" />
+			<column name="content_mime_type" type="text" />
 			<index name="address_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 		</table>
 		<table name="ade" >
-			<column name="id" type="integer" length="10" decimal="0" jt="4" mandatory="y" >
+			<column name="id" type="integer" length="10" decimal="0" mandatory="y" >
 				<defo><![CDATA[nextval('ade_seq'::regclass)]]></defo>
 			</column>
-			<column name="name" type="text" length="1000" jt="12" mandatory="y" />
-			<column name="description" type="text" length="4000" jt="12" />
-			<column name="version" type="text" length="50" jt="12" />
+			<column name="name" type="text" length="1000" mandatory="y" />
+			<column name="description" type="text" length="4000" />
+			<column name="version" type="text" length="50" />
 			<index name="ade_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 		</table>
 		<table name="appear_to_surface_data" >
-			<column name="id" type="bigint" jt="-5" mandatory="y" >
+			<column name="id" type="bigint" mandatory="y" >
 				<defo><![CDATA[nextval('appear_to_surface_data_seq'::regclass)]]></defo>
 			</column>
-			<column name="appearance_id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
-			<column name="surface_data_id" type="bigint" jt="-5" />
+			<column name="appearance_id" type="bigint" length="19" decimal="0" mandatory="y" />
+			<column name="surface_data_id" type="bigint" />
 			<index name="appear_to_surface_data_fkx1" unique="NORMAL" >
 				<column name="surface_data_id" />
 			</index>
@@ -57,16 +57,16 @@
 			</fk>
 		</table>
 		<table name="appearance" >
-			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" >
+			<column name="id" type="bigint" length="19" decimal="0" mandatory="y" >
 				<defo><![CDATA[nextval('appearance_seq'::regclass)]]></defo>
 			</column>
-			<column name="objectid" prior="appearanceid" type="text" length="256" jt="12" />
-			<column name="identifier" type="text" length="256" jt="12" />
-			<column name="identifier_codespace" type="text" length="256" jt="12" />
-			<column name="theme" type="text" length="256" jt="12" />
-			<column name="is_global" type="numeric" jt="2" />
-			<column name="feature_id" prior="cityobject_id" type="bigint" jt="-5" />
-			<column name="implicit_geometry_id" type="bigint" jt="-5" />
+			<column name="objectid" prior="appearanceid" type="text" length="256" />
+			<column name="identifier" type="text" length="256" />
+			<column name="identifier_codespace" type="text" length="256" />
+			<column name="theme" type="text" length="256" />
+			<column name="is_global" type="numeric" />
+			<column name="feature_id" prior="cityobject_id" type="bigint" />
+			<column name="implicit_geometry_id" type="bigint" />
 			<index name="appearance_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -87,12 +87,12 @@
 			</fk>
 		</table>
 		<table name="codelist" >
-			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" >
+			<column name="id" type="bigint" length="19" decimal="0" mandatory="y" >
 				<defo><![CDATA[nextval('codelist_seq'::regclass)]]></defo>
 			</column>
-			<column name="codelist_type" type="text" length="256" jt="12" />
-			<column name="url" type="text" length="4000" jt="12" />
-			<column name="mime_type" prior="mimetype" type="text" length="256" jt="12" />
+			<column name="codelist_type" type="text" length="256" />
+			<column name="url" type="text" length="4000" />
+			<column name="mime_type" prior="mimetype" type="text" length="256" />
 			<index name="codelist_pkey" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -101,12 +101,12 @@
 			</index>
 		</table>
 		<table name="codelist_entry" >
-			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" >
+			<column name="id" type="bigint" length="19" decimal="0" mandatory="y" >
 				<defo><![CDATA[nextval('codelist_entry_seq'::regclass)]]></defo>
 			</column>
-			<column name="codelist_id" type="bigint" jt="-5" mandatory="y" />
-			<column name="code" type="text" length="256" jt="12" />
-			<column name="definition" type="text" length="256" jt="12" />
+			<column name="codelist_id" type="bigint" mandatory="y" />
+			<column name="code" type="text" length="256" />
+			<column name="definition" type="text" length="256" />
 			<index name="codelist_entry_pkey" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -118,20 +118,20 @@
 			</fk>
 		</table>
 		<table name="database_srs" >
-			<column name="srid" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="srs_name" prior="gml_srs_name" type="text" length="1000" jt="12" />
+			<column name="srid" type="integer" length="10" decimal="0" mandatory="y" />
+			<column name="srs_name" prior="gml_srs_name" type="text" length="1000" />
 			<index name="database_srs_pk" unique="PRIMARY_KEY" >
 				<column name="srid" />
 			</index>
 		</table>
 		<table name="datatype" prior="objectclass_0" >
-			<column name="id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="supertype_id" prior="superclass_id" type="integer" length="10" decimal="0" jt="4" />
-			<column name="typename" prior="name" type="text" length="256" jt="12" />
-			<column name="is_abstract" type="numeric" jt="2" />
-			<column name="ade_id" type="integer" length="10" decimal="0" jt="4" />
-			<column name="namespace_id" type="integer" jt="4" />
-			<column name="schema" type="json" jt="2000" />
+			<column name="id" type="integer" length="10" decimal="0" mandatory="y" />
+			<column name="supertype_id" prior="superclass_id" type="integer" length="10" decimal="0" />
+			<column name="typename" prior="name" type="text" length="256" />
+			<column name="is_abstract" type="numeric" />
+			<column name="ade_id" type="integer" length="10" decimal="0" />
+			<column name="namespace_id" type="integer" />
+			<column name="schema" type="json" />
 			<index name="datatype_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -149,22 +149,22 @@
 			</fk>
 		</table>
 		<table name="feature" >
-			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" >
+			<column name="id" type="bigint" length="19" decimal="0" mandatory="y" >
 				<defo><![CDATA[nextval('feature_seq'::regclass)]]></defo>
 			</column>
-			<column name="objectclass_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="objectid" prior="featureid" type="text" length="256" jt="12" />
-			<column name="identifier" type="text" length="256" jt="12" />
-			<column name="identifier_codespace" prior="identifier_namespace" type="text" length="256" jt="12" />
-			<column name="envelope" type="geometry(GEOMETRYZ)" jt="1111" />
-			<column name="last_modification_date" type="timestamptz" decimal="6" jt="93" />
-			<column name="updating_person" type="text" length="256" jt="12" />
-			<column name="reason_for_update" type="text" length="4000" jt="12" />
-			<column name="lineage" type="text" length="256" jt="12" />
-			<column name="creation_date" type="timestamptz" decimal="6" jt="93" />
-			<column name="termination_date" type="timestamptz" decimal="6" jt="93" />
-			<column name="valid_from" type="timestamptz" decimal="6" jt="93" />
-			<column name="valid_to" type="timestamptz" decimal="6" jt="93" />
+			<column name="objectclass_id" type="integer" length="10" decimal="0" mandatory="y" />
+			<column name="objectid" prior="featureid" type="text" length="256" />
+			<column name="identifier" type="text" length="256" />
+			<column name="identifier_codespace" prior="identifier_namespace" type="text" length="256" />
+			<column name="envelope" type="geometry(GEOMETRYZ)" />
+			<column name="last_modification_date" type="timestamptz" decimal="6" />
+			<column name="updating_person" type="text" length="256" />
+			<column name="reason_for_update" type="text" length="4000" />
+			<column name="lineage" type="text" length="256" />
+			<column name="creation_date" type="timestamptz" decimal="6" />
+			<column name="termination_date" type="timestamptz" decimal="6" />
+			<column name="valid_from" type="timestamptz" decimal="6" />
+			<column name="valid_to" type="timestamptz" decimal="6" />
 			<index name="feature_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -195,13 +195,13 @@
 			</index>
 		</table>
 		<table name="geometry_data" prior="explicit_geometry" >
-			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" >
+			<column name="id" type="bigint" length="19" decimal="0" mandatory="y" >
 				<defo><![CDATA[nextval('geometry_data_seq'::regclass)]]></defo>
 			</column>
-			<column name="geometry" type="geometry(GEOMETRYZ)" jt="1111" />
-			<column name="implicit_geometry" type="geometry(GEOMETRYZ)" jt="1111" />
-			<column name="geometry_properties" prior="geom_properties" type="json" jt="2000" />
-			<column name="feature_id" prior="cityobject_id" type="bigint" length="19" decimal="0" jt="-5" />
+			<column name="geometry" type="geometry(GEOMETRYZ)" />
+			<column name="implicit_geometry" type="geometry(GEOMETRYZ)" />
+			<column name="geometry_properties" prior="geom_properties" type="json" />
+			<column name="feature_id" prior="cityobject_id" type="bigint" length="19" decimal="0" />
 			<index name="geometry_data_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -216,15 +216,15 @@
 			</fk>
 		</table>
 		<table name="implicit_geometry" >
-			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" >
+			<column name="id" type="bigint" length="19" decimal="0" mandatory="y" >
 				<defo><![CDATA[nextval('implicit_geometry_seq'::regclass)]]></defo>
 			</column>
-			<column name="objectid" prior="gmlid" type="text" length="256" jt="12" />
-			<column name="mime_type" type="text" length="256" jt="12" />
-			<column name="mime_type_codespace" type="text" jt="12" />
-			<column name="reference_to_library" type="text" length="4000" jt="12" />
-			<column name="library_object" type="bytea" decimal="0" jt="-2" />
-			<column name="relative_geometry_id" prior="relative_brep_id" type="bigint" length="19" decimal="0" jt="-5" />
+			<column name="objectid" prior="gmlid" type="text" length="256" />
+			<column name="mime_type" type="text" length="256" />
+			<column name="mime_type_codespace" type="text" />
+			<column name="reference_to_library" type="text" length="4000" />
+			<column name="library_object" type="bytea" decimal="0" />
+			<column name="relative_geometry_id" prior="relative_brep_id" type="bigint" length="19" decimal="0" />
 			<index name="implicit_geometry_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -239,10 +239,10 @@
 			</fk>
 		</table>
 		<table name="namespace" >
-			<column name="id" type="integer" jt="4" mandatory="y" />
-			<column name="alias" prior="prefix" type="text" jt="12" />
-			<column name="namespace" type="text" length="100" jt="12" />
-			<column name="ade_id" type="integer" jt="4" />
+			<column name="id" type="integer" mandatory="y" />
+			<column name="alias" prior="prefix" type="text" />
+			<column name="namespace" type="text" length="100" />
+			<column name="ade_id" type="integer" />
 			<index name="namespace_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -251,14 +251,14 @@
 			</fk>
 		</table>
 		<table name="objectclass" >
-			<column name="id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="superclass_id" type="integer" length="10" decimal="0" jt="4" />
-			<column name="classname" type="text" length="256" jt="12" />
-			<column name="is_abstract" type="numeric" jt="2" />
-			<column name="is_toplevel" type="numeric" jt="2" />
-			<column name="ade_id" type="integer" length="10" decimal="0" jt="4" />
-			<column name="namespace_id" prior="namespace_prefix" type="integer" jt="4" />
-			<column name="schema" type="json" jt="2000" />
+			<column name="id" type="integer" length="10" decimal="0" mandatory="y" />
+			<column name="superclass_id" type="integer" length="10" decimal="0" />
+			<column name="classname" type="text" length="256" />
+			<column name="is_abstract" type="numeric" />
+			<column name="is_toplevel" type="numeric" />
+			<column name="ade_id" type="integer" length="10" decimal="0" />
+			<column name="namespace_id" prior="namespace_prefix" type="integer" />
+			<column name="schema" type="json" />
 			<index name="objectclass_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -276,32 +276,32 @@
 			</fk>
 		</table>
 		<table name="property" >
-			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" >
+			<column name="id" type="bigint" length="19" decimal="0" mandatory="y" >
 				<defo><![CDATA[nextval('property_seq'::regclass)]]></defo>
 			</column>
-			<column name="feature_id" type="bigint" length="19" decimal="0" jt="-5" />
-			<column name="parent_id" type="bigint" length="19" decimal="0" jt="-5" />
-			<column name="datatype_id" type="integer" jt="4" />
-			<column name="namespace_id" prior="namespace_alias" type="integer" jt="4" />
-			<column name="name" type="text" length="256" jt="12" />
-			<column name="val_int" type="bigint" length="19" decimal="0" jt="-5" />
-			<column name="val_double" type="double precision" jt="3" />
-			<column name="val_string" type="text" length="4000" jt="12" />
-			<column name="val_timestamp" prior="val_date" type="timestamptz" decimal="6" jt="93" />
-			<column name="val_uri" type="text" length="4000" jt="12" />
-			<column name="val_codespace" prior="val_codelist_id" type="text" jt="12" />
-			<column name="val_uom" type="text" jt="12" />
-			<column name="val_array" prior="val_array_value" type="json" jt="2000" />
-			<column name="val_lod" prior="lod" type="text" length="256" jt="12" />
-			<column name="val_geometry_id" prior="val_geometry" type="bigint" length="19" decimal="0" jt="-5" />
-			<column name="val_implicitgeom_id" prior="val_implicitgeom" type="bigint" length="19" decimal="0" jt="-5" />
-			<column name="val_implicitgeom_refpoint" type="geometry(POINTZ)" jt="1111" />
-			<column name="val_appearance_id" prior="val_appearance" type="bigint" length="19" decimal="0" jt="-5" />
-			<column name="val_address_id" type="bigint" length="100" jt="-5" />
-			<column name="val_feature_id" prior="val_feature" type="bigint" length="19" decimal="0" jt="-5" />
-			<column name="val_relation_type" prior="val_reference_type" type="integer" length="10" decimal="0" jt="4" />
-			<column name="val_content" prior="val_source" type="text" jt="12" />
-			<column name="val_content_mime_type" prior="val_source_mime_type" type="text" length="256" jt="12" />
+			<column name="feature_id" type="bigint" length="19" decimal="0" />
+			<column name="parent_id" type="bigint" length="19" decimal="0" />
+			<column name="datatype_id" type="integer" mandatory="y" />
+			<column name="namespace_id" prior="namespace_alias" type="integer" />
+			<column name="name" type="text" length="256" />
+			<column name="val_int" type="bigint" length="19" decimal="0" />
+			<column name="val_double" type="double precision" />
+			<column name="val_string" type="text" length="4000" />
+			<column name="val_timestamp" prior="val_date" type="timestamptz" decimal="6" />
+			<column name="val_uri" type="text" length="4000" />
+			<column name="val_codespace" prior="val_codelist_id" type="text" />
+			<column name="val_uom" type="text" />
+			<column name="val_array" prior="val_array_value" type="json" />
+			<column name="val_lod" prior="lod" type="text" length="256" />
+			<column name="val_geometry_id" prior="val_geometry" type="bigint" length="19" decimal="0" />
+			<column name="val_implicitgeom_id" prior="val_implicitgeom" type="bigint" length="19" decimal="0" />
+			<column name="val_implicitgeom_refpoint" type="geometry(POINTZ)" />
+			<column name="val_appearance_id" prior="val_appearance" type="bigint" length="19" decimal="0" />
+			<column name="val_address_id" type="bigint" length="100" />
+			<column name="val_feature_id" prior="val_feature" type="bigint" length="19" decimal="0" />
+			<column name="val_relation_type" prior="val_reference_type" type="integer" length="10" decimal="0" />
+			<column name="val_content" prior="val_source" type="text" />
+			<column name="val_content_mime_type" prior="val_source_mime_type" type="text" length="256" />
 			<index name="property_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -379,27 +379,27 @@
 			</fk>
 		</table>
 		<table name="surface_data" >
-			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" >
+			<column name="id" type="bigint" length="19" decimal="0" mandatory="y" >
 				<defo><![CDATA[nextval('surface_data_seq'::regclass)]]></defo>
 			</column>
-			<column name="objectid" prior="surfacedataid" type="text" length="256" jt="12" />
-			<column name="identifier" type="text" length="256" jt="12" />
-			<column name="identifier_codespace" type="text" length="256" jt="12" />
-			<column name="is_front" type="numeric" jt="2" />
-			<column name="objectclass_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="x3d_shininess" type="double precision" length="17" decimal="17" jt="3" />
-			<column name="x3d_transparency" type="double precision" length="17" decimal="17" jt="3" />
-			<column name="x3d_ambient_intensity" type="double precision" length="17" decimal="17" jt="3" />
-			<column name="x3d_specular_color" type="text" length="256" jt="12" />
-			<column name="x3d_diffuse_color" type="text" length="256" jt="12" />
-			<column name="x3d_emissive_color" type="text" length="256" jt="12" />
-			<column name="x3d_is_smooth" type="numeric" jt="2" />
-			<column name="tex_image_id" type="bigint" length="19" decimal="0" jt="-5" />
-			<column name="tex_texture_type" type="text" length="256" jt="12" />
-			<column name="tex_wrap_mode" type="text" length="256" jt="12" />
-			<column name="tex_border_color" type="text" length="256" jt="12" />
-			<column name="gt_orientation" type="json" jt="2000" />
-			<column name="gt_reference_point" type="geometry(POINT)" jt="1111" />
+			<column name="objectid" prior="surfacedataid" type="text" length="256" />
+			<column name="identifier" type="text" length="256" />
+			<column name="identifier_codespace" type="text" length="256" />
+			<column name="is_front" type="numeric" />
+			<column name="objectclass_id" type="integer" length="10" decimal="0" mandatory="y" />
+			<column name="x3d_shininess" type="double precision" length="17" decimal="17" />
+			<column name="x3d_transparency" type="double precision" length="17" decimal="17" />
+			<column name="x3d_ambient_intensity" type="double precision" length="17" decimal="17" />
+			<column name="x3d_specular_color" type="text" length="256" />
+			<column name="x3d_diffuse_color" type="text" length="256" />
+			<column name="x3d_emissive_color" type="text" length="256" />
+			<column name="x3d_is_smooth" type="numeric" />
+			<column name="tex_image_id" type="bigint" length="19" decimal="0" />
+			<column name="tex_texture_type" type="text" length="256" />
+			<column name="tex_wrap_mode" type="text" length="256" />
+			<column name="tex_border_color" type="text" length="256" />
+			<column name="gt_orientation" type="json" />
+			<column name="gt_reference_point" type="geometry(POINT)" />
 			<index name="surface_data_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -414,12 +414,12 @@
 			</fk>
 		</table>
 		<table name="surface_data_mapping" prior="textureparam" >
-			<column name="surface_data_id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
-			<column name="geometry_data_id" prior="geometry_id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
-			<column name="material_mapping" prior="texture_coordinates" type="json" jt="2000" />
-			<column name="texture_mapping" prior="is_texture_parametrization" type="json" jt="2000" />
-			<column name="world_to_texture_mapping" prior="world_to_texture" type="json" length="1000" jt="2000" />
-			<column name="georeferenced_texture_mapping" type="json" jt="2000" />
+			<column name="surface_data_id" type="bigint" length="19" decimal="0" mandatory="y" />
+			<column name="geometry_data_id" prior="geometry_id" type="bigint" length="19" decimal="0" mandatory="y" />
+			<column name="material_mapping" prior="texture_coordinates" type="json" />
+			<column name="texture_mapping" prior="is_texture_parametrization" type="json" />
+			<column name="world_to_texture_mapping" prior="world_to_texture" type="json" length="1000" />
+			<column name="georeferenced_texture_mapping" type="json" />
 			<index name="surface_data_mapping_pk" unique="PRIMARY_KEY" >
 				<column name="geometry_data_id" />
 				<column name="surface_data_id" />
@@ -438,13 +438,13 @@
 			</fk>
 		</table>
 		<table name="tex_image" >
-			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" >
+			<column name="id" type="bigint" length="19" decimal="0" mandatory="y" >
 				<defo><![CDATA[nextval('tex_image_seq'::regclass)]]></defo>
 			</column>
-			<column name="image_uri" prior="tex_image_uri" type="text" length="4000" jt="12" />
-			<column name="image_data" prior="tex_image_data" type="bytea" decimal="0" jt="-2" />
-			<column name="mime_type" prior="tex_mime_type" type="text" length="256" jt="12" />
-			<column name="mime_type_codespace" prior="tex_mime_type_codespace" type="text" length="4000" jt="12" />
+			<column name="image_uri" prior="tex_image_uri" type="text" length="4000" />
+			<column name="image_data" prior="tex_image_data" type="bytea" decimal="0" />
+			<column name="mime_type" prior="tex_mime_type" type="text" length="256" />
+			<column name="mime_type_codespace" prior="tex_mime_type_codespace" type="text" length="4000" />
 			<index name="tex_image_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -479,8 +479,8 @@
 		<entity schema="citydb" name="codelist_entry" color="F4F3BE" x="1197" y="1121" />
 		<entity schema="citydb" name="implicit_geometry" color="C7F4BE" x="1140" y="95" />
 		<entity schema="citydb" name="address" color="F4DDBE" x="57" y="456" />
-		<entity schema="citydb" name="property" color="F4DDBE" x="361" y="95" />
 		<entity schema="citydb" name="appearance" color="F4BEC7" x="779" y="399" />
+		<entity schema="citydb" name="property" color="F4DDBE" x="361" y="95" />
 		<group name="Geometry" color="EEF7EC" >
 			<entity schema="citydb" name="geometry_data" />
 			<entity schema="citydb" name="implicit_geometry" />
