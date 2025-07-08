@@ -41,6 +41,18 @@ BEGIN
     ALTER TABLE surface_data ALTER COLUMN is_front TYPE integer;
     ALTER TABLE surface_data ALTER COLUMN x3d_is_smooth TYPE integer;
 
+    RAISE NOTICE 'Replacing all columns of type JSON with JSONB ...';
+    ALTER TABLE address ALTER COLUMN free_text TYPE jsonb;
+    ALTER TABLE geometry_data ALTER COLUMN geometry_properties TYPE jsonb;
+    ALTER TABLE objectclass ALTER COLUMN schema TYPE jsonb;
+    ALTER TABLE datatype ALTER COLUMN schema TYPE jsonb;
+    ALTER TABLE property ALTER COLUMN val_array TYPE jsonb;
+    ALTER TABLE surface_data ALTER COLUMN gt_orientation TYPE jsonb;
+    ALTER TABLE surface_data_mapping ALTER COLUMN material_mapping TYPE jsonb;
+    ALTER TABLE surface_data_mapping ALTER COLUMN texture_mapping TYPE jsonb;
+    ALTER TABLE surface_data_mapping ALTER COLUMN world_to_texture_mapping TYPE jsonb;
+    ALTER TABLE surface_data_mapping ALTER COLUMN georeferenced_texture_mapping TYPE jsonb;
+
     RAISE NOTICE 'Updating table "objectclass" ...';
     UPDATE objectclass
     SET SCHEMA = '{"identifier":"core:AbstractCityObject","description":"AbstractCityObject is the abstract superclass of all thematic classes.","table":"feature","properties":[{"name":"externalReference","namespace":"http://3dcitydb.org/3dcitydb/core/5.0","description":"References external objects in other information systems that have a relation to the city object.","type":"core:ExternalReference"},{"name":"generalizesTo","namespace":"http://3dcitydb.org/3dcitydb/core/5.0","description":"Relates generalized representations of the same real-world object in different Levels of Detail to the city object. The direction of this relation is from the city object to the corresponding generalized city objects.","type":"core:FeatureProperty","target":"core:AbstractCityObject","relationType":"relates"},{"name":"relativeToTerrain","namespace":"http://3dcitydb.org/3dcitydb/core/5.0","description":"Describes the vertical position of the city object relative to the surrounding terrain.","type":"core:String"},{"name":"relativeToWater","namespace":"http://3dcitydb.org/3dcitydb/core/5.0","description":"Describes the vertical position of the city object relative to the surrounding water surface.","type":"core:String"},{"name":"relatedTo","namespace":"http://3dcitydb.org/3dcitydb/core/5.0","description":"Relates other city objects to the city object. It also describes how the city objects are related to each other.","type":"core:CityObjectRelation"},{"name":"appearance","namespace":"http://3dcitydb.org/3dcitydb/core/5.0","description":"Relates appearances to the city object.","type":"core:AppearanceProperty"},{"name":"dynamizer","namespace":"http://3dcitydb.org/3dcitydb/core/5.0","description":"Relates Dynamizer objects to the city object. These allow timeseries data to override static attribute values of the city object.","type":"core:FeatureProperty","target":"core:AbstractDynamizer","relationType":"contains"}]}'
