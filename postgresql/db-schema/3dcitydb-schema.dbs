@@ -15,7 +15,7 @@
 			<column name="city" type="text" />
 			<column name="state" type="text" />
 			<column name="country" type="text" length="2" />
-			<column name="free_text" type="json" />
+			<column name="free_text" type="jsonb" />
 			<column name="multi_point" type="geometry(MULTIPOINTZ)" />
 			<column name="content" prior="xal_source" type="text" />
 			<column name="content_mime_type" type="text" />
@@ -131,7 +131,7 @@
 			<column name="is_abstract" type="integer" />
 			<column name="ade_id" type="integer" length="10" decimal="0" />
 			<column name="namespace_id" type="integer" />
-			<column name="schema" type="json" />
+			<column name="schema" type="jsonb" />
 			<index name="datatype_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -200,7 +200,7 @@
 			</column>
 			<column name="geometry" type="geometry(GEOMETRYZ)" />
 			<column name="implicit_geometry" type="geometry(GEOMETRYZ)" />
-			<column name="geometry_properties" prior="geom_properties" type="json" />
+			<column name="geometry_properties" prior="geom_properties" type="jsonb" />
 			<column name="feature_id" prior="cityobject_id" type="bigint" length="19" decimal="0" />
 			<index name="geometry_data_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
@@ -258,7 +258,7 @@
 			<column name="is_toplevel" type="integer" />
 			<column name="ade_id" type="integer" length="10" decimal="0" />
 			<column name="namespace_id" prior="namespace_prefix" type="integer" />
-			<column name="schema" type="json" />
+			<column name="schema" type="jsonb" />
 			<index name="objectclass_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -291,7 +291,7 @@
 			<column name="val_uri" type="text" length="4000" />
 			<column name="val_codespace" prior="val_codelist_id" type="text" />
 			<column name="val_uom" type="text" />
-			<column name="val_array" prior="val_array_value" type="json" />
+			<column name="val_array" prior="val_array_value" type="jsonb" />
 			<column name="val_lod" prior="lod" type="text" length="256" />
 			<column name="val_geometry_id" prior="val_geometry" type="bigint" length="19" decimal="0" />
 			<column name="val_implicitgeom_id" prior="val_implicitgeom" type="bigint" length="19" decimal="0" />
@@ -398,7 +398,7 @@
 			<column name="tex_texture_type" type="text" length="256" />
 			<column name="tex_wrap_mode" type="text" length="256" />
 			<column name="tex_border_color" type="text" length="256" />
-			<column name="gt_orientation" type="json" />
+			<column name="gt_orientation" type="jsonb" />
 			<column name="gt_reference_point" type="geometry(POINT)" />
 			<index name="surface_data_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
@@ -416,10 +416,10 @@
 		<table name="surface_data_mapping" prior="textureparam" >
 			<column name="surface_data_id" type="bigint" length="19" decimal="0" mandatory="y" />
 			<column name="geometry_data_id" prior="geometry_id" type="bigint" length="19" decimal="0" mandatory="y" />
-			<column name="material_mapping" prior="texture_coordinates" type="json" />
-			<column name="texture_mapping" prior="is_texture_parametrization" type="json" />
-			<column name="world_to_texture_mapping" prior="world_to_texture" type="json" length="1000" />
-			<column name="georeferenced_texture_mapping" type="json" />
+			<column name="material_mapping" prior="texture_coordinates" type="jsonb" />
+			<column name="texture_mapping" prior="is_texture_parametrization" type="jsonb" />
+			<column name="world_to_texture_mapping" prior="world_to_texture" type="jsonb" />
+			<column name="georeferenced_texture_mapping" type="jsonb" />
 			<index name="surface_data_mapping_pk" unique="PRIMARY_KEY" >
 				<column name="geometry_data_id" />
 				<column name="surface_data_id" />
@@ -465,43 +465,43 @@
 	<layout name="3DCityDB" id="Layout-1758" confirmed="y" joined_routing="y" show_column_type="y" show_relation="no_text" >
 		<comment><![CDATA[3DCityDB]]></comment>
 		<entity schema="citydb" name="feature" color="F4DDBE" x="57" y="95" />
-		<entity schema="citydb" name="geometry_data" color="C7F4BE" x="760" y="95" />
 		<entity schema="citydb" name="codelist" color="F4F3BE" x="760" y="1121" />
 		<entity schema="citydb" name="database_srs" color="BEBEF4" x="57" y="1159" />
 		<entity schema="citydb" name="appear_to_surface_data" color="F4BEC7" x="798" y="646" />
 		<entity schema="citydb" name="tex_image" color="F4BEC7" x="760" y="798" />
-		<entity schema="citydb" name="surface_data_mapping" color="F4BEC7" x="1064" y="399" />
 		<entity schema="citydb" name="codelist_entry" color="F4F3BE" x="1178" y="1121" />
 		<entity schema="citydb" name="implicit_geometry" color="C7F4BE" x="1121" y="95" />
-		<entity schema="citydb" name="address" color="F4DDBE" x="57" y="456" />
-		<entity schema="citydb" name="property" color="F4DDBE" x="361" y="95" />
-		<entity schema="citydb" name="objectclass" color="BEBEF4" x="57" y="912" />
 		<entity schema="citydb" name="appearance" color="F4BEC7" x="760" y="399" />
-		<entity schema="citydb" name="surface_data" color="F4BEC7" x="1064" y="589" />
 		<entity schema="citydb" name="ade" color="BEBEF4" x="285" y="912" />
 		<entity schema="citydb" name="namespace" color="BEBEF4" x="285" y="1121" />
+		<entity schema="citydb" name="property" color="F4DDBE" x="361" y="95" />
+		<entity schema="citydb" name="address" color="F4DDBE" x="57" y="456" />
+		<entity schema="citydb" name="geometry_data" color="C7F4BE" x="760" y="95" />
+		<entity schema="citydb" name="surface_data_mapping" color="F4BEC7" x="1064" y="399" />
+		<entity schema="citydb" name="surface_data" color="F4BEC7" x="1064" y="589" />
+		<entity schema="citydb" name="objectclass" color="BEBEF4" x="57" y="912" />
 		<entity schema="citydb" name="datatype" color="BEBEF4" x="494" y="912" />
 		<group name="Geometry" color="EEF7EC" >
-			<entity schema="citydb" name="geometry_data" />
 			<entity schema="citydb" name="implicit_geometry" />
+			<entity schema="citydb" name="geometry_data" />
 		</group>
 		<group name="Metadata" color="ECECF7" >
 			<entity schema="citydb" name="database_srs" />
-			<entity schema="citydb" name="objectclass" />
 			<entity schema="citydb" name="ade" />
 			<entity schema="citydb" name="namespace" />
+			<entity schema="citydb" name="objectclass" />
 			<entity schema="citydb" name="datatype" />
 		</group>
 		<group name="Feature" color="F7F2EC" >
 			<entity schema="citydb" name="feature" />
-			<entity schema="citydb" name="address" />
 			<entity schema="citydb" name="property" />
+			<entity schema="citydb" name="address" />
 		</group>
 		<group name="Appearance" color="FFCCFF" >
 			<entity schema="citydb" name="appear_to_surface_data" />
 			<entity schema="citydb" name="tex_image" />
-			<entity schema="citydb" name="surface_data_mapping" />
 			<entity schema="citydb" name="appearance" />
+			<entity schema="citydb" name="surface_data_mapping" />
 			<entity schema="citydb" name="surface_data" />
 		</group>
 		<group name="Codelist" color="F4F3BE" >

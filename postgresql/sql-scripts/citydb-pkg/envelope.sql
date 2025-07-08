@@ -100,11 +100,11 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION citydb_pkg.get_implicit_geometry_envelope(
   gid BIGINT,
   ref_pt GEOMETRY,
-  matrix JSON) RETURNS GEOMETRY AS
+  matrix JSONB) RETURNS GEOMETRY AS
 $body$
 DECLARE
   envelope GEOMETRY;
-  params DOUBLE PRECISION[] := '{}';
+  params DOUBLE PRECISION[] := ARRAY[]::float8[];
 BEGIN
   SELECT
     citydb_pkg.get_envelope(gd.implicit_geometry) INTO envelope
@@ -116,16 +116,21 @@ BEGIN
     AND gd.implicit_geometry IS NOT NULL;
 
   IF matrix IS NOT NULL THEN
-    params := ARRAY(SELECT json_array_elements_text(matrix)::float8);
+    IF jsonb_typeof(matrix) != 'array' THEN
+      RAISE EXCEPTION 'The transformation matrix must be a JSON array';
+    END IF;
+
+    params := ARRAY(SELECT jsonb_array_elements_text(matrix)::float8);
+
     IF array_length(params, 1) < 12 THEN
       RAISE EXCEPTION 'Invalid transformation matrix: %', matrix USING HINT = '12 elements are required';
     END IF;
   ELSE
-    params := '{
+    params := ARRAY[
       1, 0, 0, 0,
       0, 1, 0, 0,
       0, 0, 1, 0,
-      0, 0, 0, 1}';
+      0, 0, 0, 1];
   END IF;
 
   IF ref_pt IS NOT NULL THEN
@@ -161,7 +166,7 @@ LANGUAGE plpgsql STABLE;
 CREATE OR REPLACE FUNCTION citydb_pkg.get_implicit_geometry_envelope(
   gid BIGINT,
   ref_pt GEOMETRY,
-  matrix JSON,
+  matrix JSONB,
   schema_name TEXT) RETURNS GEOMETRY AS
 $body$
 BEGIN

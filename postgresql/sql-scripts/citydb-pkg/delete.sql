@@ -788,7 +788,7 @@ LANGUAGE plpgsql STRICT;
 /******************************************************************
 * terminate feature based on an id array
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid_array bigint[], metadata JSON DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS SETOF BIGINT AS
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid_array bigint[], metadata JSONB DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
   terminated_ids bigint[] := '{}';
@@ -856,7 +856,7 @@ LANGUAGE plpgsql STRICT;
 /******************************************************************
 * terminate features based on an id array and schema name
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid_array bigint[], schema_name TEXT, metadata JSON DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS SETOF BIGINT AS
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid_array bigint[], schema_name TEXT, metadata JSONB DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
@@ -869,7 +869,7 @@ LANGUAGE plpgsql STRICT;
 /******************************************************************
 * terminate a feature based on an id and schema name
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid bigint, metadata JSON DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS BIGINT AS
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid bigint, metadata JSONB DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS BIGINT AS
 $body$
 BEGIN
   RETURN citydb_pkg.terminate_feature(ARRAY[pid], metadata, cascade);
@@ -880,7 +880,7 @@ LANGUAGE plpgsql STRICT;
 /******************************************************************
 * terminate a feature based on an id and schema name
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid bigint, schema_name TEXT, metadata JSON DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS BIGINT AS
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid bigint, schema_name TEXT, metadata JSONB DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS BIGINT AS
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);

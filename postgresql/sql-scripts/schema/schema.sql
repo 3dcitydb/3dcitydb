@@ -34,7 +34,7 @@ CREATE  TABLE address (
 	city                 text    ,
 	"state"              text    ,
 	country              text    ,
-	free_text            json    ,
+	free_text            jsonb    ,
 	multi_point          geometry(MULTIPOINTZ)    ,
 	content              text    ,
 	content_mime_type    text    ,
@@ -113,7 +113,7 @@ CREATE  TABLE geometry_data (
 	"id"                 bigint DEFAULT nextval('geometry_data_seq'::regclass) NOT NULL  ,
 	geometry             geometry(GEOMETRYZ)    ,
 	implicit_geometry    geometry(GEOMETRYZ)    ,
-	geometry_properties  json    ,
+	geometry_properties  jsonb    ,
 	feature_id           bigint    ,
 	CONSTRAINT geometry_data_pk PRIMARY KEY ( "id" )
  );
@@ -153,7 +153,7 @@ CREATE  TABLE objectclass (
 	is_toplevel          integer    ,
 	ade_id               integer    ,
 	namespace_id         integer    ,
-	"schema"             json    ,
+	"schema"             jsonb    ,
 	CONSTRAINT objectclass_pk PRIMARY KEY ( "id" )
  );
 
@@ -193,7 +193,7 @@ CREATE  TABLE datatype (
 	is_abstract          integer    ,
 	ade_id               integer    ,
 	namespace_id         integer    ,
-	"schema"             json    ,
+	"schema"             jsonb    ,
 	CONSTRAINT datatype_pk PRIMARY KEY ( "id" )
  );
 
@@ -213,7 +213,7 @@ CREATE  TABLE property (
 	val_uri              text    ,
 	val_codespace        text    ,
 	val_uom              text    ,
-	val_array            json    ,
+	val_array            jsonb    ,
 	val_lod              text    ,
 	val_geometry_id      bigint    ,
 	val_implicitgeom_id  bigint    ,
@@ -279,7 +279,7 @@ CREATE  TABLE surface_data (
 	tex_texture_type     text    ,
 	tex_wrap_mode        text    ,
 	tex_border_color     text    ,
-	gt_orientation       json    ,
+	gt_orientation       jsonb    ,
 	gt_reference_point   geometry(POINT)    ,
 	CONSTRAINT surface_data_pk PRIMARY KEY ( "id" )
  );
@@ -291,10 +291,10 @@ CREATE INDEX surface_data_objclass_fkx ON surface_data  ( objectclass_id );
 CREATE  TABLE surface_data_mapping ( 
 	surface_data_id      bigint  NOT NULL  ,
 	geometry_data_id     bigint  NOT NULL  ,
-	material_mapping     json    ,
-	texture_mapping      json    ,
-	world_to_texture_mapping json    ,
-	georeferenced_texture_mapping json    ,
+	material_mapping     jsonb    ,
+	texture_mapping      jsonb    ,
+	world_to_texture_mapping jsonb    ,
+	georeferenced_texture_mapping jsonb    ,
 	CONSTRAINT surface_data_mapping_pk PRIMARY KEY ( geometry_data_id, surface_data_id )
  );
 
