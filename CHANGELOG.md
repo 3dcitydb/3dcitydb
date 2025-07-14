@@ -21,7 +21,7 @@
 - Added an index on the `theme` column of the `appearance` table to improve query performance.
 - Added new database functions `get_current_schema`, `set_current_schema`, and `schema_exists` to manage the
   active 3DCityDB schema.
-- Added a new `db_properties` function that lists database properties relevant to the 3DCityDB as name-value pairs.
+- Added a new `db_properties` function that lists database properties relevant for the 3DCityDB as name-value pairs.
 - Added shell and SQL scripts to upgrade an existing 3DCityDB instance to the latest minor or patch version.
 
 ### Fixed
