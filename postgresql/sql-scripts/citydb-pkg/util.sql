@@ -77,6 +77,39 @@ $body$
 LANGUAGE plpgsql STABLE;
 
 /*****************************************************************
+* db_properties
+*
+* @return A table listing database properties relevant for the 3DCityDB
+*   - id: Unique identifier
+*   - name: Name of the property
+*   - value: Value of the property
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.db_properties()
+  RETURNS TABLE(id TEXT, name TEXT, value TEXT) AS
+$body$
+DECLARE
+  postgis_version TEXT;
+  sfcgal_version TEXT;
+BEGIN
+  BEGIN
+    SELECT postgis_lib_version() INTO postgis_version;
+  EXCEPTION
+    WHEN OTHERS THEN NULL;
+  END;
+
+  BEGIN
+    SELECT postgis_sfcgal_version() INTO sfcgal_version;
+  EXCEPTION
+    WHEN OTHERS THEN NULL;
+  END;
+
+  RETURN QUERY SELECT 'postgis', 'PostGIS', postgis_version;
+  RETURN QUERY SELECT 'postgis_sfcgal', 'SFCGAL', sfcgal_version;
+END;
+$body$
+LANGUAGE plpgsql STABLE;
+
+/*****************************************************************
 * get_seq_values
 *
 * @param seq_name Name of the sequence including a schema prefix
