@@ -524,7 +524,7 @@
 		<comment><![CDATA[Feature module]]></comment>
 		<entity schema="citydb" name="feature" color="F4DDBE" x="57" y="57" />
 		<entity schema="citydb" name="property" color="F4DDBE" x="380" y="57" />
-		<entity schema="citydb" name="address" color="F4DDBE" x="779" y="57" />
+		<entity schema="citydb" name="address" color="F4DDBE" x="760" y="57" />
 	</layout>
 	<layout name="Geometry module" id="Diagram-153a" joined_routing="y" show_column_type="y" show_relation="no_text" >
 		<entity schema="citydb" name="geometry_data" color="C7F4BE" x="57" y="57" />
