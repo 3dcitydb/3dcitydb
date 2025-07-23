@@ -2,17 +2,6 @@
 
 ## [Unreleased]
 
-### Changed
-- Added a `NOT NULL` constraint on the `datatype_id` column of the `property` table to require a data type for each
-  property.
-- Changed the geometry type of the column `val_implicitgeom_refpoint` in the `property` table from `GEOMETRYZ`
-  to `POINTZ`.
-- Replaced all `NUMERIC` columns used as boolean flags with `INTEGER` to reduce storage overhead.
-- Updated the behavior of database functions that take a `schema_name` parameter. The schema is now consistently
-  set by temporarily changing the `search_path` for the scope of the current transaction. If `schema_name` is
-  omitted, the function operates on the current 3DCityDB schema in the `search_path`. [#260](https://github.com/3dcitydb/3dcitydb/pull/260)
-- Removed database functions for setting and dropping foreign keys.
-
 ### Added
 - Introduced the `relationType` attribute in the JSON schema mapping of feature properties. The attribute can take the
   values `relates` and `contains`, reflecting the value stored in the `val_relation_type` column of the
@@ -23,6 +12,17 @@
   active 3DCityDB schema.
 - Added a new `db_properties` function that lists database properties relevant for the 3DCityDB as name-value pairs.
 - Added shell and SQL scripts to upgrade an existing 3DCityDB instance to the latest minor or patch version.
+
+### Changed
+- Added a `NOT NULL` constraint on the `datatype_id` column of the `property` table to require a data type for each
+  property.
+- Changed the geometry type of the column `val_implicitgeom_refpoint` in the `property` table from `GEOMETRYZ`
+  to `POINTZ`.
+- Replaced all `NUMERIC` columns used as boolean flags with `INTEGER` to reduce storage overhead.
+- Updated the behavior of database functions that take a `schema_name` parameter. The schema is now consistently
+  set by temporarily changing the `search_path` for the scope of the current transaction. If `schema_name` is
+  omitted, the function operates on the current 3DCityDB schema in the `search_path`. [#260](https://github.com/3dcitydb/3dcitydb/pull/260)
+- Removed database functions for setting and dropping foreign keys.
 
 ### Fixed
 - Fixed issues that prevented the `get_feature_envelope` function from working correctly. [#258](https://github.com/3dcitydb/3dcitydb/issues/258)
