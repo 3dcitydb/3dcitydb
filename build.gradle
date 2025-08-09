@@ -40,9 +40,12 @@ distributions.main.contents {
     from versionFile
     into('json-schema') {
         from 'json-schema'
+        filesMatching('**/*.json') {
+            filter { String line -> replaceTokens(line, version, '', '') }
+        }
     }
     into('postgresql') {
-        from 'postgresql' exclude ('db-schema')
+        from 'postgresql' exclude('db-schema')
         filesMatching('**/datatype-instances.sql') {
             filter { String line -> replaceTokens(line, dataTypes) }
         }
@@ -84,10 +87,11 @@ static def parseVersion(String versionString) {
     version
 }
 
-static def replaceTokens(String text, Map values,
-                         String beginReplacement = "'", String endReplacement = "'",
-                         String defaultValue = 'null',
-                         String beginToken = '@', String endToken = '@') {
+static def replaceTokens(
+        String text, Map values,
+        String beginReplacement = "'", String endReplacement = "'",
+        String defaultValue = 'null',
+        String beginToken = '@', String endToken = '@') {
     Pattern.compile(beginToken + "(.*?)" + endToken, Pattern.MULTILINE)
             .matcher(text)
             .replaceAll(matcher -> values[matcher.group(1)] ?

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://3dcitydb.org/json-schema/5.0/georeferencedTextureMapping.schema.json",
-  "title": "3DCityDB 5.0 geo-referenced texture mapping schema",
+  "$id": "https://3dcitydb.org/json-schema/@majorVersion@.@minorVersion@/georeferencedTextureMapping.schema.json",
+  "title": "3DCityDB @majorVersion@.@minorVersion@ geo-referenced texture mapping schema",
   "description": "Schema for the JSON column georeferenced_texture_mapping of the surface_data_mapping table.",
   "type": "object",
   "additionalProperties": {

@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://3dcitydb.org/json-schema/5.0/schemaMapping.schema.json",
-  "title": "3DCityDB 5.0 schema mapping",
-  "description": "JSON schema for the 3DCityDB 5.0 schema mapping.",
+  "$id": "https://3dcitydb.org/json-schema/@majorVersion@.@minorVersion@/schemaMapping.schema.json",
+  "title": "3DCityDB @majorVersion@.@minorVersion@ schema mapping",
+  "description": "JSON schema for the 3DCityDB @majorVersion@.@minorVersion@ schema mapping.",
   "anyOf": [
     {
       "$ref": "#/$defs/featureType"
