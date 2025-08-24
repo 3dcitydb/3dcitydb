@@ -150,7 +150,7 @@ The setup procedure requires the following mandatory user inputs:
 
 Afterwards, the script will start the setup procedure and invoke additional
 SQL scripts in the background. Please refer to the 
-[user manual](https://3dcitydb.github.io/3dcitydb-mkdocs/first-steps/)
+[user manual](https://docs.3dcitydb.org/latest/first-steps/)
 of the 3D City Database for a comprehensive step-by-step guide.
 
 Database deletion
@@ -170,7 +170,7 @@ or from Github container registry at
 [https://github.com/orgs/3dcitydb/packages?ecosystem=container](https://github.com/orgs/3dcitydb/packages?ecosystem=container).
 
 A comprehensive documentation on how to use the 3D City Database with Docker can be found in the
-[online user manual](https://3dcitydb.github.io/3dcitydb-mkdocs/3dcitydb/docker/).
+[online user manual](https://docs.3dcitydb.org/latest/3dcitydb/docker/).
 
 Building
 --------
@@ -233,7 +233,7 @@ has been mapped onto different data encodings (i.e. data exchange formats).
 The [GML encoding](https://docs.ogc.org/is/21-006r2/21-006r2.html) 
 ("CityGML files") is a complete mapping of all aspects of the conceptual data model 
 of CityGML 3.0 onto XML and guarantees lossless data transfer of any kind of CityGML data. 
-[CityJSON](https://www.ogc.org/publications/standard/cityjson/) is a mapping of a 
+[CityJSON](https://www.ogc.org/standards/cityjson/) is a mapping of a
 subset of CityGML 3.0 onto a simpler, JSON-based file format. The 3DCityDB can be 
 considered a third type of encoding of the CityGML data model - in this case, data 
 is encoded within the tables of a spatial relational database schema.
