@@ -91,7 +91,7 @@ create a GitHub issue.
 
 Latest release
 --------------
-The latest stable release of the 3D City Database is 5.0.0.
+The latest stable release of the 3D City Database is 5.1.0.
 
 You can download the latest release as well as previous releases from the
 [releases section](https://github.com/3dcitydb/3dcitydb/releases).
@@ -108,7 +108,7 @@ database system. Database versions that have reached end-of-life are no longer s
 Documentation and literature
 ----------------------------
 A complete and comprehensive user manual on the 3D City Database V5 and its tools is
-available [online](https://3dcitydb.github.io/3dcitydb-mkdocs/).
+available [online](https://docs.3dcitydb.org/).
 
 An Open Access paper on the 3DCityDB (version 4) has been published in the International
 Journal on Open Geospatial Data, Software and Standards 3 (5), 2018: 
@@ -239,6 +239,3 @@ considered a third type of encoding of the CityGML data model - in this case, da
 is encoded within the tables of a spatial relational database schema.
 
 CityGML is an international OGC standard and can be used free of charge.
-
-
-
