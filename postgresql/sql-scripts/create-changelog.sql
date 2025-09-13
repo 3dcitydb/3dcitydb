@@ -1,3 +1,5 @@
+\set ON_ERROR_STOP ON
+
 \echo 'Setting up changelog extension ...'
 
 \set SCHEMA_NAME :schema_name

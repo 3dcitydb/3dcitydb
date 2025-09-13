@@ -1,3 +1,5 @@
+\set ON_ERROR_STOP ON
+
 \echo
 \echo 'Dropping changelog extension ...'
 
