@@ -42,59 +42,74 @@ CREATE OR REPLACE FUNCTION :SCHEMA_NAME.log_feature_changes() RETURNS TRIGGER AS
 $body$
 DECLARE
   rec RECORD;
-	feature_id bigint;
-	is_toplevel integer;
-	objectclass_id integer;
-	objectid text;
-	identifier text;
-	identifier_codespace text;
-	envelope geometry;
-	reason_for_update text;
+	v_feature_id bigint;
+	v_is_toplevel integer;
+	v_objectclass_id integer;
+	v_objectid text;
+	v_identifier text;
+	v_identifier_codespace text;
+	v_envelope geometry;
+	v_reason_for_update text;
 	transaction_type text;
 BEGIN
 	transaction_type := TG_OP;
+
 	IF (TG_OP = 'DELETE') THEN
-		feature_id := NULL;
-		objectclass_id := OLD.objectclass_id;
-		objectid := OLD.objectid;
-		identifier := OLD.identifier;
-		identifier_codespace := OLD.identifier_codespace;
-		envelope := OLD.envelope;
-		reason_for_update := NULL;
+		v_feature_id := NULL;
+		v_objectclass_id := OLD.objectclass_id;
+		v_objectid := OLD.objectid;
+		v_identifier := OLD.identifier;
+		v_identifier_codespace := OLD.identifier_codespace;
+		v_envelope := OLD.envelope;
+		v_reason_for_update := NULL;
 	ELSE
-		feature_id := NEW.id;
-		objectclass_id := NEW.objectclass_id;
-		objectid := NEW.objectid;
-		identifier := NEW.identifier;
-		identifier_codespace := NEW.identifier_codespace;
-		envelope := NEW.envelope;
-		reason_for_update := NEW.reason_for_update;
+		v_feature_id := NEW.id;
+		v_objectclass_id := NEW.objectclass_id;
+		v_objectid := NEW.objectid;
+		v_identifier := NEW.identifier;
+		v_identifier_codespace := NEW.identifier_codespace;
+		v_envelope := NEW.envelope;
+		v_reason_for_update := NEW.reason_for_update;
 
 		IF (NEW.termination_date IS NOT NULL) THEN
 			transaction_type := 'TERMINATE';
 		END IF;
 	END IF;
 
-	EXECUTE format('select oc.is_toplevel from %I.objectclass oc where oc.id = %L', TG_TABLE_SCHEMA, objectclass_id) INTO is_toplevel;
+	SELECT o.is_toplevel INTO v_is_toplevel
+	FROM objectclass o
+	WHERE o.id = v_objectclass_id;
 
-	IF (is_toplevel = 1) THEN
-		IF (transaction_type = 'UPDATE' AND OLD.last_modification_date <> NEW.last_modification_date) OR (transaction_type <> 'UPDATE') THEN
-            EXECUTE format('insert into %I.feature_changelog (feature_id, objectclass_id, objectid, identifier, identifier_codespace, envelope, transaction_type, transaction_date, db_user, reason_for_update)
-                                select $1, $2, $3, $4, $5, $6, $7, $8, $9, $10', TG_TABLE_SCHEMA, TG_TABLE_SCHEMA)
-            USING feature_id, objectclass_id, objectid, identifier, identifier_codespace, envelope, transaction_type, now(), user, reason_for_update;
+  IF (v_is_toplevel = 1) THEN
+    IF (transaction_type <> 'UPDATE')
+        OR (transaction_type = 'UPDATE' AND OLD.last_modification_date IS DISTINCT FROM NEW.last_modification_date) THEN
+      INSERT INTO feature_changelog (
+        feature_id, objectclass_id, objectid, identifier, identifier_codespace,
+        envelope, transaction_type, transaction_date, db_user, reason_for_update
+	    )
+      VALUES (
+        v_feature_id, v_objectclass_id, v_objectid, v_identifier, v_identifier_codespace,
+        v_envelope, transaction_type, now(), user, v_reason_for_update
+      );
 		END IF;
-	ELSIF (transaction_type = 'UPDATE' AND OLD.last_modification_date <> NEW.last_modification_date) THEN
-    FOR rec IN
-      EXECUTE format('select feature_id from %I.property where val_feature_id = %L and val_relation_type = 1', TG_TABLE_SCHEMA, feature_id)
-    LOOP
-      EXECUTE format('update %I.feature set last_modification_date = $1, updating_person = $2, reason_for_update = $3
-            where id = $4', TG_TABLE_SCHEMA) using NEW.last_modification_date, NEW.updating_person, NEW.reason_for_update, rec.feature_id;
-    END LOOP;
+	ELSIF (transaction_type = 'UPDATE' AND OLD.last_modification_date IS DISTINCT FROM NEW.last_modification_date) THEN
+    UPDATE feature f
+    SET
+      last_modification_date = NEW.last_modification_date,
+      updating_person = NEW.updating_person,
+      reason_for_update = NEW.reason_for_update
+    WHERE f.id IN (
+      SELECT p.feature_id
+      FROM property p
+      WHERE p.val_feature_id = v_feature_id
+        AND p.val_relation_type = 1
+    );
 	END IF;
 
 	RETURN NULL;
 END;
-$body$ LANGUAGE plpgsql;
+$body$ LANGUAGE plpgsql
+SET search_path = :SCHEMA_NAME, public;
 
 CREATE TRIGGER feature_changelog_trigger
   AFTER INSERT OR UPDATE OR DELETE ON :SCHEMA_NAME.feature
