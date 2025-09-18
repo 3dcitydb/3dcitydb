@@ -16,7 +16,7 @@ CREATE TABLE :SCHEMA_NAME.feature_changelog (
   identifier_codespace text,
   envelope geometry(POLYGONZ),
   transaction_type text NOT NULL,
-  transaction_date timestamp with time zone,
+  transaction_date timestamp with time zone NOT NULL,
   db_user text,
   reason_for_update text,
   CONSTRAINT feature_changelog_pk PRIMARY KEY ( id ) WITH ( FILLFACTOR = 100 )
@@ -52,7 +52,7 @@ DECLARE
 	v_reason_for_update text;
 	transaction_type text;
 BEGIN
-	transaction_type := TG_OP;
+  transaction_type := TG_OP;
 
 	IF (TG_OP = 'DELETE') THEN
 		v_feature_id := NULL;
@@ -76,37 +76,23 @@ BEGIN
 		END IF;
 	END IF;
 
-	SELECT o.is_toplevel INTO v_is_toplevel
-	FROM objectclass o
-	WHERE o.id = v_objectclass_id;
+  IF transaction_type <> 'UPDATE' OR OLD.last_modification_date IS DISTINCT FROM NEW.last_modification_date THEN
+    SELECT o.is_toplevel INTO v_is_toplevel
+    FROM objectclass o
+    WHERE o.id = v_objectclass_id;
 
-  IF (v_is_toplevel = 1) THEN
-    IF (transaction_type <> 'UPDATE')
-        OR (transaction_type = 'UPDATE' AND OLD.last_modification_date IS DISTINCT FROM NEW.last_modification_date) THEN
+    IF v_is_toplevel = 1 THEN
       INSERT INTO feature_changelog (
         feature_id, objectclass_id, objectid, identifier, identifier_codespace,
         envelope, transaction_type, transaction_date, db_user, reason_for_update
-	    )
-      VALUES (
+	    ) VALUES (
         v_feature_id, v_objectclass_id, v_objectid, v_identifier, v_identifier_codespace,
         v_envelope, transaction_type, now(), user, v_reason_for_update
       );
-		END IF;
-	ELSIF (transaction_type = 'UPDATE' AND OLD.last_modification_date IS DISTINCT FROM NEW.last_modification_date) THEN
-    UPDATE feature f
-    SET
-      last_modification_date = NEW.last_modification_date,
-      updating_person = NEW.updating_person,
-      reason_for_update = NEW.reason_for_update
-    WHERE f.id IN (
-      SELECT p.feature_id
-      FROM property p
-      WHERE p.val_feature_id = v_feature_id
-        AND p.val_relation_type = 1
-    );
-	END IF;
+    END IF;
+  END IF;
 
-	RETURN NULL;
+  RETURN NULL;
 END;
 $body$ LANGUAGE plpgsql
 SET search_path = :SCHEMA_NAME, public;
