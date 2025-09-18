@@ -462,9 +462,51 @@
 		<sequence name="surface_data_seq" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE" />
 		<sequence name="tex_image_seq" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE" />
 	</schema>
+	<schema name="feature_changelog" >
+		<table name="feature_changelog" prior="feature_changelof" >
+			<column name="id" type="bigint" mandatory="y" >
+				<defo><![CDATA[nextval('feature_changelog_seq'::regclass)]]></defo>
+			</column>
+			<column name="feature_id" type="bigint" />
+			<column name="objectclass_id" type="integer" mandatory="y" />
+			<column name="objectid" prior="identifier" type="text" />
+			<column name="identifier" type="text" />
+			<column name="identifier_codespace" type="text" />
+			<column name="envelope" type="geometry(GEOMETRYZ)" />
+			<column name="transaction_type" type="text" mandatory="y" />
+			<column name="transaction_date" type="timestamptz" mandatory="y" />
+			<column name="db_user" type="text" />
+			<column name="reason_for_update" type="text" />
+			<index name="feature_changelog_pk" unique="PRIMARY_KEY" options="WITH FILLFACTOR 100" >
+				<column name="id" options="" />
+			</index>
+			<index name="feature_changelog_feature_fkx" unique="NORMAL" options="WITH FILLFACTOR 90" >
+				<column name="feature_id" />
+			</index>
+			<index name="feature_changelog_objectclass_inx" unique="NORMAL" options="WITH FILLFACTOR 90" >
+				<column name="objectclass_id" />
+			</index>
+			<index name="feature_changelog_objectid_inx" unique="NORMAL" options="WITH FILLFACTOR 90" >
+				<column name="objectid" />
+			</index>
+			<index name="feature_changelog_identifier_inx" unique="NORMAL" options="WITH FILLFACTOR 90" >
+				<column name="identifier" />
+				<column name="identifier_codespace" />
+			</index>
+			<index name="feature_changelog_transaction_date_inx" unique="NORMAL" options="WITH FILLFACTOR 100" >
+				<column name="transaction_date" />
+			</index>
+			<index name="feature_changelog_envelope_spx" unique="NORMAL" options="USING GIST" >
+				<column name="envelope" />
+			</index>
+			<fk name="feature_changelog_feature_fk" to_schema="citydb" to_table="feature" delete_action="setNull" >
+				<fk_column name="feature_id" pk="id" />
+			</fk>
+		</table>
+		<sequence name="feature_changelog_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 0  MAXVALUE 9223372036854775807  CACHE 1  NO CYCLE" />
+	</schema>
 	<layout name="3DCityDB" id="Layout-1758" confirmed="y" joined_routing="y" show_column_type="y" show_relation="no_text" >
 		<comment><![CDATA[3DCityDB]]></comment>
-		<entity schema="citydb" name="feature" color="F4DDBE" x="57" y="95" />
 		<entity schema="citydb" name="codelist" color="F4F3BE" x="798" y="1121" />
 		<entity schema="citydb" name="database_srs" color="BEBEF4" x="57" y="1159" />
 		<entity schema="citydb" name="tex_image" color="F4BEC7" x="798" y="798" />
@@ -481,6 +523,7 @@
 		<entity schema="citydb" name="objectclass" color="BEBEF4" x="57" y="912" />
 		<entity schema="citydb" name="implicit_geometry" color="C7F4BE" x="1159" y="95" />
 		<entity schema="citydb" name="codelist_entry" color="F4F3BE" x="1216" y="1121" />
+		<entity schema="citydb" name="feature" color="F4DDBE" x="57" y="95" />
 		<group name="Geometry" color="EEF7EC" >
 			<entity schema="citydb" name="geometry_data" />
 			<entity schema="citydb" name="implicit_geometry" />
@@ -493,9 +536,9 @@
 			<entity schema="citydb" name="objectclass" />
 		</group>
 		<group name="Feature" color="F7F2EC" >
-			<entity schema="citydb" name="feature" />
 			<entity schema="citydb" name="address" />
 			<entity schema="citydb" name="property" />
+			<entity schema="citydb" name="feature" />
 		</group>
 		<group name="Appearance" color="FFCCFF" >
 			<entity schema="citydb" name="tex_image" />
@@ -515,6 +558,10 @@
 		<entity schema="citydb" name="surface_data_mapping" color="F4BEC7" x="646" y="57" />
 		<entity schema="citydb" name="tex_image" color="F4BEC7" x="646" y="304" />
 		<entity schema="citydb" name="surface_data" color="F4BEC7" x="323" y="57" />
+	</layout>
+	<layout name="Changelog module" id="6875c26b-4764-4715-bf9b-7c3657f056a9" confirmed="y" joined_routing="y" show_column_type="y" show_relation="no_text" >
+		<entity schema="citydb" name="feature" color="F4DDBE" x="361" y="57" />
+		<entity schema="feature_changelog" name="feature_changelog" color="3986C1" x="57" y="57" />
 	</layout>
 	<layout name="Codelist module" id="Diagram-207" confirmed="y" joined_routing="y" show_column_type="y" show_relation="no_text" >
 		<entity schema="citydb" name="codelist" color="F4F3BE" x="57" y="57" />
