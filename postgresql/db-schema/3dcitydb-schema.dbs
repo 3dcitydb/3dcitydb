@@ -496,7 +496,7 @@
 			<index name="feature_changelog_transaction_date_inx" unique="NORMAL" options="WITH FILLFACTOR 100" >
 				<column name="transaction_date" />
 			</index>
-			<index name="feature_changelog_envelope_spx" unique="NORMAL" options="USING GIST" >
+			<index name="feature_changelog_envelope_spx" unique="NORMAL" spec="USING GiST" >
 				<column name="envelope" />
 			</index>
 			<fk name="feature_changelog_feature_fk" to_schema="citydb" to_table="feature" delete_action="setNull" >
