@@ -477,23 +477,23 @@
 			<column name="transaction_date" type="timestamptz" mandatory="y" />
 			<column name="db_user" type="text" />
 			<column name="reason_for_update" type="text" />
-			<index name="feature_changelog_pk" unique="PRIMARY_KEY" options="WITH FILLFACTOR 100" >
+			<index name="feature_changelog_pk" unique="PRIMARY_KEY" >
 				<column name="id" options="" />
 			</index>
-			<index name="feature_changelog_feature_fkx" unique="NORMAL" options="WITH FILLFACTOR 90" >
+			<index name="feature_changelog_feature_fkx" unique="NORMAL" options="WITH ( FILLFACTOR = 90 )" >
 				<column name="feature_id" />
 			</index>
-			<index name="feature_changelog_objectclass_inx" unique="NORMAL" options="WITH FILLFACTOR 90" >
+			<index name="feature_changelog_objectclass_inx" unique="NORMAL" options="WITH ( FILLFACTOR = 90 )" >
 				<column name="objectclass_id" />
 			</index>
-			<index name="feature_changelog_objectid_inx" unique="NORMAL" options="WITH FILLFACTOR 90" >
+			<index name="feature_changelog_objectid_inx" unique="NORMAL" options="WITH ( FILLFACTOR = 90 )" >
 				<column name="objectid" />
 			</index>
-			<index name="feature_changelog_identifier_inx" unique="NORMAL" options="WITH FILLFACTOR 90" >
+			<index name="feature_changelog_identifier_inx" unique="NORMAL" options="WITH ( FILLFACTOR = 90 )" >
 				<column name="identifier" />
 				<column name="identifier_codespace" />
 			</index>
-			<index name="feature_changelog_transaction_date_inx" unique="NORMAL" options="WITH FILLFACTOR 100" >
+			<index name="feature_changelog_transaction_date_inx" unique="NORMAL" options="WITH ( FILLFACTOR = 100 )" >
 				<column name="transaction_date" />
 			</index>
 			<index name="feature_changelog_envelope_spx" unique="NORMAL" spec="USING GiST" >
