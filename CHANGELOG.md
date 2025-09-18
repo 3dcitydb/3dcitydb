@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Fixed
+- Fixed a regression where delete scripts did not return the `ID` when deleting nested features.
+
 ## [5.1.0] - 2025-08-24
 
 ### Added
