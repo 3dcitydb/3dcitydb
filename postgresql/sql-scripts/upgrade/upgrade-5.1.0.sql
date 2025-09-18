@@ -1,16 +1,9 @@
 SET client_min_messages TO NOTICE;
 
-SET tmp.current_major TO :current_major;
-SET tmp.current_minor TO :current_minor;
-SET tmp.current_revision TO :current_revision;
-
 DO $$
 DECLARE
   schema_name text;
   schema_srid integer;
-  current_major integer := current_setting('tmp.current_major')::integer;
-  current_minor integer := current_setting('tmp.current_minor')::integer;
-  current_revision integer := current_setting('tmp.current_revision')::integer;
 BEGIN
   FOR schema_name IN
     SELECT nspname FROM pg_catalog.pg_class c
@@ -20,20 +13,21 @@ BEGIN
     EXECUTE format('set search_path to %I, citydb_pkg, public', schema_name);
     RAISE NOTICE 'Upgrading schema "%" ...', schema_name;
 
-    RAISE NOTICE 'Changing the geometry type of the column "val_implicitgeom_refpoint" in the "property" table to POINTZ ...';
+    RAISE NOTICE 'Changing the geometry type of "property.val_implicitgeom_refpoint" to POINTZ ...';
     SELECT srid INTO schema_srid FROM database_srs;
     EXECUTE format(
       'ALTER TABLE property ALTER COLUMN val_implicitgeom_refpoint TYPE geometry(POINTZ, %L)',
       schema_srid
     );
 
-    RAISE NOTICE 'Adding an index on the "theme" column of the "appearance" table ...';
+    RAISE NOTICE 'Adding an index on "appearance.theme" ...';
     CREATE INDEX IF NOT EXISTS appearance_theme_inx ON appearance (theme);
 
-    RAISE NOTICE 'Setting NOT NULL constraint on the "datatype_id" column of the "property" table ...';
+    RAISE NOTICE 'Setting NOT NULL on "property.datatype_id" ...';
+    UPDATE property SET datatype_id = 1 WHERE datatype_id IS NULL;
     ALTER TABLE property ALTER COLUMN datatype_id SET NOT NULL;
 
-    RAISE NOTICE 'Replacing all columns of type NUMERIC with INTEGER ...';
+    RAISE NOTICE 'Replacing all NUMERIC columns with INTEGER ...';
     ALTER TABLE objectclass ALTER COLUMN is_abstract TYPE integer;
     ALTER TABLE objectclass ALTER COLUMN is_toplevel TYPE integer;
     ALTER TABLE appearance ALTER COLUMN is_global TYPE integer;
@@ -41,7 +35,7 @@ BEGIN
     ALTER TABLE surface_data ALTER COLUMN is_front TYPE integer;
     ALTER TABLE surface_data ALTER COLUMN x3d_is_smooth TYPE integer;
 
-    RAISE NOTICE 'Replacing all columns of type JSON with JSONB ...';
+    RAISE NOTICE 'Replacing all JSON columns with JSONB ...';
     ALTER TABLE address ALTER COLUMN free_text TYPE jsonb;
     ALTER TABLE geometry_data ALTER COLUMN geometry_properties TYPE jsonb;
     ALTER TABLE objectclass ALTER COLUMN schema TYPE jsonb;
@@ -203,7 +197,7 @@ BEGIN
     SET SCHEMA = '{"identifier":"vers:Transaction","description":"Transaction represents a modification of the city model by the creation, termination, or replacement of a specific city object. While the creation of a city object also marks its first object version, the termination marks the end of existence of a real world object and, hence, also terminates the final version of a city object. The replacement of a city object means that a specific version of it is replaced by a new version.","table":"property","properties":[{"name":"type","namespace":"http://3dcitydb.org/3dcitydb/versioning/5.0","description":"Indicates the specific type of the Transaction.","type":"core:String","join":{"table":"property","fromColumn":"id","toColumn":"parent_id"}},{"name":"oldFeature","namespace":"http://3dcitydb.org/3dcitydb/versioning/5.0","description":"Relates to the version of the city object prior to the Transaction.","type":"core:FeatureProperty","target":"core:AbstractFeatureWithLifespan","relationType":"relates","join":{"table":"property","fromColumn":"id","toColumn":"parent_id"}},{"name":"newFeature","namespace":"http://3dcitydb.org/3dcitydb/versioning/5.0","description":"Relates to the version of the city object subsequent to the Transaction.","type":"core:FeatureProperty","target":"core:AbstractFeatureWithLifespan","relationType":"relates","join":{"table":"property","fromColumn":"id","toColumn":"parent_id"}}]}'
     WHERE ID = 1400;
 
-    RAISE NOTICE E'Re-creating the foreign key "property_val_feature_fk" with ON DELETE SET NULL ...\n';
+    RAISE NOTICE E'Re-creating foreign key "property_val_feature_fk" with ON DELETE SET NULL ...\n';
     ALTER TABLE property DROP CONSTRAINT IF EXISTS property_val_feature_fk;
     ALTER TABLE property ADD CONSTRAINT property_val_feature_fk FOREIGN KEY ( val_feature_id ) REFERENCES feature( id ) ON DELETE SET NULL;
   END LOOP;

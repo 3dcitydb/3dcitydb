@@ -1,17 +1,23 @@
--- upgrade 3DCityDB schemas
-\echo 'Upgrading 3DCityDB schemas ...'
+\echo 'Upgrading 3DCityDB schemas to version 5.1.0 ...'
 \echo
 
--- upgrade 3DCityDB version 5.0
 SELECT CASE
-  WHEN :current_major = 5 AND :current_minor < 1 THEN 'upgrade-5.0.sql'
+  WHEN :current_major = 5 AND :current_minor < 1 THEN 'upgrade-5.1.0.sql'
   ELSE '../util/do-nothing.sql'
 END AS do_action
 \gset
-
 \ir :do_action
 
--- upgrade citydb_pkg schema
+\echo 'Upgrading 3DCityDB schemas to version 5.1.1 ...'
+\echo
+
+SELECT CASE
+  WHEN :current_major = 5 AND :current_minor <= 1 AND :current_revision < 1 THEN 'upgrade-5.1.1.sql'
+  ELSE '../util/do-nothing.sql'
+END AS do_action
+\gset
+\ir :do_action
+
 \echo 'Upgrading schema "citydb_pkg" ...'
 
 DO $$
