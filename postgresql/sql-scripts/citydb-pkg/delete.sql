@@ -51,6 +51,8 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_feature(pid_array bigint[]) RETURNS
 $body$
 DECLARE
   deleted_ids bigint[] := '{}';
+  candidate_ids bigint[] := '{}';
+  feature_property_ids bigint[] := '{}';
 BEGIN
   PERFORM
     citydb_pkg.delete_property_row(array_agg(p.id))
@@ -60,8 +62,12 @@ BEGIN
   WHERE
     p.feature_id = a.a_id;
 
-  PERFORM
-    citydb_pkg.delete_property(array_agg(p.id))
+  SELECT
+    array_agg(p.val_feature_id),
+    array_agg(p.id)
+  INTO
+    candidate_ids,
+    feature_property_ids
   FROM
     property p,
     unnest($1) AS a(a_id)
@@ -85,8 +91,12 @@ BEGIN
   FROM
     delete_objects;
 
+  PERFORM citydb_pkg.delete_property(feature_property_ids);
+
   RETURN QUERY
-    SELECT unnest(deleted_ids);
+    SELECT unnest(deleted_ids)
+    UNION
+    SELECT unnest(candidate_ids);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
