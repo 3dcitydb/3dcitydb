@@ -65,6 +65,6 @@ if /i not "%var%"=="" set SCHEMA_NAME=%var%
 :: Run drop-db-extension.sql to drop the 3DCityDB changelog extension --------------
 echo.
 echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\drop-db-changelog.sql" -v schema_name="%SCHEMA_NAME%"
+psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\drop-changelog.sql" -v schema_name="%SCHEMA_NAME%"
 
 pause
