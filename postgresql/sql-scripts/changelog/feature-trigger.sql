@@ -1,6 +1,7 @@
 \set SCHEMA_NAME :schema_name
 
-CREATE OR REPLACE FUNCTION :SCHEMA_NAME.log_feature_changes() RETURNS TRIGGER AS
+SELECT format($sql$
+CREATE OR REPLACE FUNCTION %I.log_feature_changes() RETURNS TRIGGER AS
 $body$
 DECLARE
   rec RECORD;
@@ -40,11 +41,11 @@ BEGIN
 
   IF transaction_type <> 'UPDATE' OR OLD.last_modification_date IS DISTINCT FROM NEW.last_modification_date THEN
     SELECT o.is_toplevel INTO v_is_toplevel
-    FROM objectclass o
+    FROM %I.objectclass o
     WHERE o.id = v_objectclass_id;
 
     IF v_is_toplevel = 1 THEN
-      INSERT INTO feature_changelog (
+      INSERT INTO %I.feature_changelog (
         feature_id, objectclass_id, objectid, identifier, identifier_codespace,
         envelope, transaction_type, transaction_date, db_user, reason_for_update
 	    ) VALUES (
@@ -57,7 +58,8 @@ BEGIN
   RETURN NULL;
 END;
 $body$ LANGUAGE plpgsql
-SET search_path = :SCHEMA_NAME, public;
+$sql$, :'SCHEMA_NAME', :'SCHEMA_NAME', :'SCHEMA_NAME')
+\gexec
 
 CREATE OR REPLACE TRIGGER feature_changelog_trigger
   AFTER INSERT OR UPDATE OR DELETE ON :SCHEMA_NAME.feature
