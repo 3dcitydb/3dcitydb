@@ -56,6 +56,18 @@ distributions.main.contents {
             filter { String line -> replaceTokens(line, version, '', '') }
         }
     }
+    into('oracle') {
+        from 'oracle' exclude('db-schema')
+        filesMatching('**/datatype-instances.sql') {
+            filter { String line -> replaceTokens(line, dataTypes) }
+        }
+        filesMatching('**/objectclass-instances.sql') {
+            filter { String line -> replaceTokens(line, featureTypes) }
+        }
+        filesMatching(['**/upgrade-db.sql', '**/util.sql']) {
+            filter { String line -> replaceTokens(line, version, '', '') }
+        }
+    }
 }
 
 def readJsonTypes(String path) {
