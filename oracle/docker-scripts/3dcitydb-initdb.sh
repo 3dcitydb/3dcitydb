@@ -19,7 +19,7 @@ fi
 
 # ORACLE_PDB ------------------------------------------------------------------
 if [ -z ${ORACLE_PDB+x} ]; then
-  ORACLE_PDB="ORCLPDB1"
+  ORACLE_PDB="FREEPDB1"
 else
   ORACLE_PDB="$ORACLE_PDB"
 fi
