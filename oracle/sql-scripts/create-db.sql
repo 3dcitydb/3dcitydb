@@ -28,6 +28,7 @@ COMMIT;
 -- create tables, sequences, constraints, indexes
 SELECT 'Setting up database schema of 3DCityDB instance ...' AS message FROM dual;
 @@schema/schema.sql
+@@schema/schema-annotations.sql
 
 -- populate metadata tables
 @@schema/namespace-instances.sql
