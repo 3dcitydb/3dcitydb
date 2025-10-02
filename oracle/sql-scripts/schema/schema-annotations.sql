@@ -34,8 +34,8 @@ ALTER TABLE feature ANNOTATIONS (
 ALTER TABLE feature MODIFY (id ANNOTATIONS (ADD DESCRIPTION  'Each feature has a unique ID as the primary key assigned.'));
 ALTER TABLE feature MODIFY (objectclass_id ANNOTATIONS (ADD DESCRIPTION 'The OBJECTCLASS_ID enforces the type of the feature, such as building, window, city furniture, or tree. It serves as a foreign key to the OBJECTCLASS table, which lists all feature types supported by the 3DCityDB instance.'));
 ALTER TABLE feature MODIFY (objectid ANNOTATIONS (ADD DESCRIPTION  'The OBJECTID column is a string identifier used to uniquely reference a feature within the database and datasets.'));
-ALTER TABLE feature MODIFY (identifier ANNOTATIONS (ADD DESCRIPTION DESCRIPTION 'The IDENTIFIER column provides an optional identifier to uniquely distinguish the feature across different systems and potentially multiple versions of the same real-world object.'));
-ALTER TABLE feature MODIFY (identifier_codespace ANNOTATIONS (ADD DESCRIPTION DESCRIPTION 'The IDENTIFIER_CODESPACE column indicates the authority responsible for maintaining the identifier.'));
+ALTER TABLE feature MODIFY (identifier ANNOTATIONS (ADD DESCRIPTION 'The IDENTIFIER column provides an optional identifier to uniquely distinguish the feature across different systems and potentially multiple versions of the same real-world object.'));
+ALTER TABLE feature MODIFY (identifier_codespace ANNOTATIONS (ADD DESCRIPTION 'The IDENTIFIER_CODESPACE column indicates the authority responsible for maintaining the identifier.'));
 ALTER TABLE feature MODIFY (envelope ANNOTATIONS (ADD DESCRIPTION 'The spatial ENVELOPE column stores the minimal 3D rectangle that encloses the features. It can be used for efficient spatial queries of features.'));
 ALTER TABLE feature MODIFY (last_modification_date ANNOTATIONS (ADD DESCRIPTION  'The column LAST_MODIFICATION_DATE is specific to 3DCityDB and are not defined in CityGML. It stores the update history.'));
 ALTER TABLE feature MODIFY (updating_person ANNOTATIONS (ADD DESCRIPTION 'The column UPDATING_PERSON is specific to 3DCityDB and are not defined in CityGML. It stores the person responsible for a change.'));
@@ -216,10 +216,10 @@ ALTER TABLE namespace ANNOTATIONS (
     MODULE 'Metadata',
     DESCRIPTION 'All types and properties in the 3DCityDB v5 must be associated with a namespace. This helps avoid name collisions and logically categorizes the content stored in the 3DCityDB v5 according to the CityGML 3.0 CM. Namespaces are recorded in the NAMESPACE table.'
 );
-ALTER TABLE address MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Each entry in the NAMESPACE table has a unique ID as the primary key assigned.'));
-ALTER TABLE address MODIFY (alias ANNOTATIONS (ADD DESCRIPTION 'Each namespace is associated with an ALIAS, which acts as a shortcut for the namespace and must be unique across all entries in the NAMESPACE table.'));
-ALTER TABLE address MODIFY (namespace ANNOTATIONS (ADD DESCRIPTION 'The NAMESPACE column contains the namespace name.'));
-ALTER TABLE address MODIFY (ade_id ANNOTATIONS (ADD DESCRIPTION 'The list of namespaces in the NAMESPACE table is not exhaustive and can be extended with user-defined namespaces, typically from an ADE. In this case, the ade_id foreign key must reference the ADE registered in the ADE table that defines the namespace.'));
+ALTER TABLE namespace MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Each entry in the NAMESPACE table has a unique ID as the primary key assigned.'));
+ALTER TABLE namespace MODIFY (alias ANNOTATIONS (ADD DESCRIPTION 'Each namespace is associated with an ALIAS, which acts as a shortcut for the namespace and must be unique across all entries in the NAMESPACE table.'));
+ALTER TABLE namespace MODIFY (namespace ANNOTATIONS (ADD DESCRIPTION 'The NAMESPACE column contains the namespace name.'));
+ALTER TABLE namespace MODIFY (ade_id ANNOTATIONS (ADD DESCRIPTION 'The list of namespaces in the NAMESPACE table is not exhaustive and can be extended with user-defined namespaces, typically from an ADE. In this case, the ade_id foreign key must reference the ADE registered in the ADE table that defines the namespace.'));
 
 ALTER TABLE objectclass ANNOTATIONS (
   ADD
