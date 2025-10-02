@@ -30,7 +30,5 @@ END;
 
 PURGE RECYCLEBIN;
 
+-- success message
 SELECT '3DCityDB instance successfully removed!' AS message FROM DUAL;
-
-QUIT;
-/

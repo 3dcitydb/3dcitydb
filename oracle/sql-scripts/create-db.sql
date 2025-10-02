@@ -5,8 +5,6 @@ SET VER OFF
 -- parse arguments
 DEFINE SRSNO=&1;
 DEFINE SRSNAME=&2;
--- DEFINE VERSIONING=&3;
--- DEFINE CHANGELOG=&4;
 
 -- check if the chosen SRID is provided by the MDSYS.CS_SRS table
 VARIABLE SRID NUMBER;
@@ -41,7 +39,7 @@ SELECT 'Setting up database schema of 3DCityDB instance ...' AS message FROM dua
 
 -- create citydb_pkg schema
 SELECT 'Creating additional schema ''citydb_pkg'' ...' AS message FROM dual;
-@@citydb-pkg/srs.sql
+-- @@citydb-pkg/srs.sql
 -- @@citydb-pkg/util.sql
 -- @@citydb-pkg/envelope.sql
 -- @@citydb-pkg/delete.sql
@@ -53,5 +51,5 @@ BEGIN
 END;
 /
 
---- success message
+-- success message
 SELECT '3DCityDB instance successfully created.' AS message FROM dual;
