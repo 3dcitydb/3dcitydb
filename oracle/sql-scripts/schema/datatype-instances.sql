@@ -5,6 +5,10 @@
 -- This scripts requires Oracle Database version 23ai
 -----------------------------------------------------
 
+-- turn off the checking for substitution variables
+SET DEFINE OFF;
+
+-- truncate table before insert
 TRUNCATE TABLE datatype DROP STORAGE;
 
 -- Core Module --
@@ -263,6 +267,8 @@ END;
 DECLARE
   v_schema400 CLOB  := @luse:ADEOfPointCloud@;
 
+BEGIN
+
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID)
   VALUES
     (400, null, 'ADEOfPointCloud', 1, 5);
@@ -334,7 +340,7 @@ BEGIN
     (602, null, 'ADEOfAuxiliaryTrafficSpace', 1, 7),
     (603, null, 'ADEOfClearanceSpace', 1, 7),
     (604, null, 'ADEOfHole', 1, 7),
-    (605, null, 'ADEOfHoleSurface'),
+    (605, null, 'ADEOfHoleSurface', 1, 7),
     (606, null, 'ADEOfIntersection', 1, 7),
     (607, null, 'ADEOfMarking', 1, 7),
     (608, null, 'ADEOfRailway', 1, 7),
@@ -535,7 +541,6 @@ END;
 -- Bridge Module --
 
 DECLARE
-  v_schema CLOB  := ;
   v_schema1000 CLOB  := @brid:ADEOfAbstractBridge@;
   v_schema1001 CLOB  := @brid:ADEOfBridge@;
   v_schema1002 CLOB  := @brid:ADEOfBridgeConstructiveElement@;
@@ -616,7 +621,7 @@ END;
 DECLARE
   v_schema1400 CLOB  := @vers:Transaction@;
   v_schema1401 CLOB  := @vers:ADEOfVersion@;
-  v_schema1402 CLOB  := @vers:ADEOfVersionTransition;
+  v_schema1402 CLOB  := @vers:ADEOfVersionTransition@;
 
 BEGIN
 

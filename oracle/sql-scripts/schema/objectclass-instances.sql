@@ -5,6 +5,10 @@
 -- This scripts requires Oracle Database version 23ai
 -----------------------------------------------------
 
+-- turn off the checking for substitution variables
+SET DEFINE OFF;
+
+-- truncate table before insert
 TRUNCATE TABLE objectclass DROP STORAGE;
 
 -- Core Module --
@@ -582,7 +586,7 @@ END;
 -- CityFurniture Module --
 
 DECLARE
-  v_schema CLOB  := @frn:CityFurniture@;
+  v_schema1600 CLOB  := @frn:CityFurniture@;
 
 BEGIN
 
