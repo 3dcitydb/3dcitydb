@@ -28,6 +28,9 @@ SELECT 'Setting up database schema of 3DCityDB instance ...' AS message FROM dua
 @@schema/schema.sql
 @@schema/schema-annotations.sql
 
+-- create procedures used for populating JSON values in metadata tables
+@@schema/schema-mapping-create.sql
+
 -- populate metadata tables
 @@schema/namespace-instances.sql
 @@schema/objectclass-instances.sql
@@ -37,9 +40,12 @@ SELECT 'Setting up database schema of 3DCityDB instance ...' AS message FROM dua
 @@schema/codelist-instances.sql
 @@schema/codelist-entry-instances.sql
 
+-- remove procedures used for populating JSON values in metadata tables
+@@schema/schema-mapping-drop.sql
+
 -- create citydb_pkg schema
 SELECT 'Creating additional schema ''citydb_pkg'' ...' AS message FROM dual;
--- @@citydb-pkg/srs.sql
+@@citydb-pkg/srs.sql
 -- @@citydb-pkg/util.sql
 -- @@citydb-pkg/envelope.sql
 -- @@citydb-pkg/delete.sql
