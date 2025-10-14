@@ -1,20 +1,13 @@
 -----------------------------------------------------
 -- Author: Karin Patenge, Oracle
--- Last update: Okt 1, 2025
+-- Last update: Okt 14, 2025
 -- Status: to be reviewed
 -- This scripts requires Oracle Database version 23ai
 -----------------------------------------------------
 
------------------------------------------------------
--- Open tasks:
---   1. Postprocessing
---     a. Register SDO Metadata
---     b. Create spatial indexes
------------------------------------------------------
-
 
 --
--- Clean up 3DCityDB tables
+-- Clean up 3DCityDB tables and sequences
 --
 
 DROP TABLE IF EXISTS address CASCADE CONSTRAINTS PURGE;
@@ -35,6 +28,20 @@ DROP TABLE IF EXISTS surface_data CASCADE CONSTRAINTS PURGE;
 DROP TABLE IF EXISTS surface_data_mapping CASCADE CONSTRAINTS PURGE;
 DROP TABLE IF EXISTS appear_to_surface_data CASCADE CONSTRAINTS PURGE;
 
+DROP SEQUENCE IF EXISTS address_seq;
+DROP SEQUENCE IF EXISTS ade_seq;
+DROP SEQUENCE IF EXISTS appear_to_surface_data_seq;
+DROP SEQUENCE IF EXISTS appearance_seq;
+DROP SEQUENCE IF EXISTS codelist_entry_seq;
+DROP SEQUENCE IF EXISTS codelist_seq;
+DROP SEQUENCE IF EXISTS feature_seq;
+DROP SEQUENCE IF EXISTS geometry_data_seq;
+DROP SEQUENCE IF EXISTS implicit_geometry_seq;
+DROP SEQUENCE IF EXISTS property_seq;
+DROP SEQUENCE IF EXISTS surface_data_seq;
+DROP SEQUENCE IF EXISTS tex_image_seq;
+
+
 --
 -- Create 3DCityDB tables belonging to the following modules:
 --   * Feature module
@@ -45,25 +52,42 @@ DROP TABLE IF EXISTS appear_to_surface_data CASCADE CONSTRAINTS PURGE;
 --
 
 --
+-- Create sequences
+--
+
+CREATE SEQUENCE address_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 20 NOCYCLE;
+CREATE SEQUENCE ade_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 2147483647 CACHE 20 NOCYCLE;
+CREATE SEQUENCE appear_to_surface_data_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 20 NOCYCLE;
+CREATE SEQUENCE appearance_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 20 NOCYCLE;
+CREATE SEQUENCE codelist_entry_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 20 NOCYCLE;
+CREATE SEQUENCE codelist_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 20 NOCYCLE;
+CREATE SEQUENCE feature_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 20 NOCYCLE;
+CREATE SEQUENCE geometry_data_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 20 NOCYCLE;
+CREATE SEQUENCE implicit_geometry_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 20 NOCYCLE;
+CREATE SEQUENCE property_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 20 NOCYCLE;
+CREATE SEQUENCE surface_data_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 20 NOCYCLE;
+CREATE SEQUENCE tex_image_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 20 NOCYCLE;
+
+--
 -- Table ADDRESS (Feature module)
 --
 
 CREATE TABLE IF NOT EXISTS address (
-  id                            NUMBER(38) GENERATED ALWAYS AS IDENTITY (START WITH 1),
+  id                            NUMBER(38) NOT NULL,
   objectid                      VARCHAR2(4000),
   identifier                    VARCHAR2(4000),
-  identifier_codespace          VARCHAR2(1000),
+  identifier_codespace          VARCHAR2(4000),
   street                        VARCHAR2(4000),
   house_number                  VARCHAR2(4000),
   po_box                        VARCHAR2(4000),
   zip_code                      VARCHAR2(4000),
   city                          VARCHAR2(4000),
   state                         VARCHAR2(4000),
-  country                       VARCHAR2(2),
+  country                       VARCHAR2(4000),
   free_text                     JSON,
   multi_point                   SDO_GEOMETRY,
   content                       CLOB,
-  content_mime_type             VARCHAR2(1000),
+  content_mime_type             VARCHAR2(4000),
   CONSTRAINT address_id_pk PRIMARY KEY ( id ) ENABLE
 );
 
@@ -72,11 +96,11 @@ CREATE TABLE IF NOT EXISTS address (
 --
 
 CREATE TABLE IF NOT EXISTS feature (
-  id                            NUMBER(38) GENERATED ALWAYS AS IDENTITY (START WITH 1),
+  id                            NUMBER(38) NOT NULL,
   objectclass_id                NUMBER(38),
   objectid                      VARCHAR2(4000),
   identifier                    VARCHAR2(4000),
-  identifier_codespace          VARCHAR2(1000),
+  identifier_codespace          VARCHAR2(4000),
   envelope                      SDO_GEOMETRY,
   last_modification_date        TIMESTAMP WITH TIME ZONE,
   updating_person               VARCHAR2(4000),
@@ -89,13 +113,8 @@ CREATE TABLE IF NOT EXISTS feature (
   CONSTRAINT feature_id_pk PRIMARY KEY ( id ) ENABLE
 );
 
--- Register SDO Metadata (Postprocessing)
-
--- INSERT INTO USER_SDO_GEOM_METADATA ( ... );
-
 -- Create indices
 
--- CREATE INDEX feature_envelope_sdx ON feature ( envelope ) INDEXTYPE IS MDSYS.SPATIAL_INDEX_V2; -- Postprocessing
 CREATE INDEX feature_objectclass_idx ON feature ( objectclass_id );
 CREATE INDEX feature_objectid_idx ON feature ( objectid );
 CREATE INDEX feature_identifier_idx ON feature ( identifier, identifier_codespace );
@@ -113,7 +132,7 @@ ALTER TABLE feature ADD PERIOD FOR valid_period (valid_from, valid_to);
 --
 
 CREATE TABLE IF NOT EXISTS property (
-  id                            NUMBER(38) GENERATED ALWAYS AS IDENTITY (START WITH 1),
+  id                            NUMBER(38) NOT NULL,
   feature_id                    NUMBER(38),
   parent_id                     NUMBER(38),
   datatype_id                   NUMBER(38),
@@ -136,9 +155,8 @@ CREATE TABLE IF NOT EXISTS property (
   val_feature_id                NUMBER(38),
   val_relation_type             NUMBER(38),
   val_content                   CLOB,
-  val_content_mime_type         VARCHAR2(1000),
-  CONSTRAINT property_id_pk PRIMARY KEY ( id ) ENABLE,
-  CONSTRAINT property_val_relation_type_chk CHECK (val_relation_type IN (0, 1)) ENABLE
+  val_content_mime_type         VARCHAR2(4000),
+  CONSTRAINT property_id_pk PRIMARY KEY ( id ) ENABLE
 );
 
 -- Create indices
@@ -166,7 +184,7 @@ CREATE INDEX property_val_relation_type_idx ON property ( val_relation_type );
 --
 
 CREATE TABLE IF NOT EXISTS geometry_data (
-  id                            NUMBER(38) GENERATED ALWAYS AS IDENTITY (START WITH 1),
+  id                            NUMBER(38) NOT NULL,
   geometry                      SDO_GEOMETRY,
   implicit_geometry             SDO_GEOMETRY,
   geometry_properties           JSON,
@@ -174,13 +192,8 @@ CREATE TABLE IF NOT EXISTS geometry_data (
   CONSTRAINT geometry_data_id_pk PRIMARY KEY ( id ) ENABLE
 );
 
--- Register SDO Metadata (Postprocessing)
-
--- INSERT INTO USER_SDO_GEOM_METADATA ( ... )
-
 -- Create indices
 
--- CREATE INDEX geometry_data_sdx ON geometry_data ( geometry ) INDEXTYPE IS MDSYS.SPATIAL_INDEX_V2;  -- Postprocessing
 CREATE INDEX geometry_data_feature_idx ON geometry_data ( feature_id );
 
 --
@@ -188,7 +201,7 @@ CREATE INDEX geometry_data_feature_idx ON geometry_data ( feature_id );
 --
 
 CREATE TABLE IF NOT EXISTS implicit_geometry (
-  id                            NUMBER(38) GENERATED ALWAYS AS IDENTITY (START WITH 1),
+  id                            NUMBER(38) NOT NULL,
   objectid                      VARCHAR2(4000),
   mime_type                     VARCHAR2(4000),
   mime_type_codespace           VARCHAR2(4000),
@@ -208,7 +221,7 @@ CREATE INDEX implicit_geometry_relative_geometry_idx ON implicit_geometry ( rela
 --
 
 CREATE TABLE IF NOT EXISTS tex_image (
-  id                            NUMBER(38) GENERATED ALWAYS AS IDENTITY (START WITH 1),
+  id                            NUMBER(38) NOT NULL,
   image_uri                     VARCHAR2(4000),
   image_data                    BLOB,
   mime_type                     VARCHAR2(4000),
@@ -221,10 +234,10 @@ CREATE TABLE IF NOT EXISTS tex_image (
 --
 
 CREATE TABLE IF NOT EXISTS appearance (
-  id                            NUMBER(38) GENERATED ALWAYS AS IDENTITY,
+  id                            NUMBER(38) NOT NULL,
   objectid                      VARCHAR2(4000),
   identifier                    VARCHAR2(4000),
-  identifier_codespace          VARCHAR2(1000),
+  identifier_codespace          VARCHAR2(4000),
   theme                         VARCHAR2(4000),
   is_global                     NUMBER(1),
   feature_id                    NUMBER(38),
@@ -242,10 +255,10 @@ CREATE INDEX appearance_implicit_geometry_idx ON appearance ( implicit_geometry_
 --
 
 CREATE TABLE IF NOT EXISTS surface_data (
-  id                            NUMBER(38) GENERATED ALWAYS AS IDENTITY (START WITH 1),
+  id                            NUMBER(38) NOT NULL,
   objectid                      VARCHAR2(4000),
   identifier                    VARCHAR2(4000),
-  identifier_codespace          VARCHAR2(1000),
+  identifier_codespace          VARCHAR2(4000),
   is_front                      NUMBER(1),
   objectclass_id                NUMBER(38) NOT NULL,
   x3d_shininess                 BINARY_DOUBLE,
@@ -261,8 +274,7 @@ CREATE TABLE IF NOT EXISTS surface_data (
   tex_border_color              VARCHAR2(4000),
   gt_orientation                JSON,
   gt_reference_point            SDO_GEOMETRY,
-  CONSTRAINT surface_data_id_pk PRIMARY KEY ( id ) ENABLE,
-  CONSTRAINT surface_data_is_front_chk CHECK (is_front IN (0, 1)) ENABLE
+  CONSTRAINT surface_data_id_pk PRIMARY KEY ( id ) ENABLE
 );
 
 -- Create indices
@@ -294,7 +306,7 @@ CREATE INDEX surface_data_mapping_surface_data_idx ON surface_data_mapping ( sur
 --
 
 CREATE TABLE IF NOT EXISTS appear_to_surface_data (
-  id                            NUMBER(38) GENERATED ALWAYS AS IDENTITY (START WITH 1),
+  id                            NUMBER(38) NOT NULL,
   appearance_id                 NUMBER(38) NOT NULL,
   surface_data_id               NUMBER(38),
   CONSTRAINT appear_to_surface_data_id_pk PRIMARY KEY ( id ) ENABLE
@@ -326,7 +338,7 @@ CREATE INDEX codelist_codelist_type_idx ON codelist ( codelist_type );
 --
 
 CREATE TABLE IF NOT EXISTS codelist_entry (
-  id                            NUMBER(38) GENERATED ALWAYS AS IDENTITY (START WITH 1),
+  id                            NUMBER(38) NOT NULL,
 	codelist_id                   NUMBER(38) NOT NULL,
 	code                          VARCHAR2(4000),
 	definition                    VARCHAR2(4000),
@@ -342,8 +354,8 @@ CREATE INDEX codelist_entry_codelist_idx ON codelist_entry ( codelist_id );
 --
 
 CREATE TABLE IF NOT EXISTS ade (
-  id                            NUMBER(38) GENERATED ALWAYS AS IDENTITY (START WITH 1),
-  name                          VARCHAR2(1000) NOT NULL,
+  id                            NUMBER(38) NOT NULL,
+  name                          VARCHAR2(4000) NOT NULL,
   description                   VARCHAR2(4000),
   version                       VARCHAR2(4000),
   CONSTRAINT ade_id_pk PRIMARY KEY ( id ) ENABLE
@@ -355,7 +367,7 @@ CREATE TABLE IF NOT EXISTS ade (
 
 CREATE TABLE IF NOT EXISTS database_srs (
 	srid                          NUMBER(38) NOT NULL,
-	srs_name                      VARCHAR2(1000),
+	srs_name                      VARCHAR2(4000),
 	CONSTRAINT database_srs_pk PRIMARY KEY ( srid ) ENABLE
 );
 
@@ -364,7 +376,7 @@ CREATE TABLE IF NOT EXISTS database_srs (
 --
 
 CREATE TABLE IF NOT EXISTS namespace (
-  id                            NUMBER(38),
+  id                            NUMBER(38) NOT NULL,
   alias                         VARCHAR2(4000),
   namespace                     VARCHAR2(4000),
   ade_id                        NUMBER(38),
@@ -377,7 +389,7 @@ CREATE TABLE IF NOT EXISTS namespace (
 --
 
 CREATE TABLE IF NOT EXISTS objectclass (
-  id                            NUMBER(38),
+  id                            NUMBER(38) NOT NULL,
   superclass_id                 NUMBER(38),
   classname                     VARCHAR2(4000),
   is_abstract                   NUMBER(1),
@@ -385,9 +397,7 @@ CREATE TABLE IF NOT EXISTS objectclass (
   ade_id                        NUMBER(38),
   namespace_id                  NUMBER(38),
   schema                        JSON,
-  CONSTRAINT objectclass_id_pk PRIMARY KEY ( id ) ENABLE,
-  CONSTRAINT objectclass_is_abstract_chk CHECK (is_abstract IN (0, 1)) ENABLE,
-  CONSTRAINT objectclass_is_toplevel_chk CHECK (is_toplevel IN (0, 1)) ENABLE
+  CONSTRAINT objectclass_id_pk PRIMARY KEY ( id ) ENABLE
 );
 
 -- Create indices
@@ -406,8 +416,7 @@ CREATE TABLE IF NOT EXISTS datatype (
   ade_id                        NUMBER(38),
   namespace_id                  NUMBER(38),
   schema                        JSON,
-  CONSTRAINT datatype_id_pk PRIMARY KEY ( id ) ENABLE,
-  CONSTRAINT datatype_is_abstract_chk CHECK (is_abstract IN (0, 1)) ENABLE
+  CONSTRAINT datatype_id_pk PRIMARY KEY ( id ) ENABLE
 );
 
 -- Create indices
