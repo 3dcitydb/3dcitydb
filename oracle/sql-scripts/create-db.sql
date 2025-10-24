@@ -28,9 +28,6 @@ SELECT 'Setting up database schema of 3DCityDB instance ...' AS message FROM dua
 @@schema/schema.sql
 @@schema/schema-annotations.sql
 
--- create procedures used for populating JSON values in metadata tables
-@@schema/schema-mapping-create.sql
-
 -- populate metadata tables
 @@schema/namespace-instances.sql
 @@schema/objectclass-instances.sql
@@ -39,9 +36,6 @@ SELECT 'Setting up database schema of 3DCityDB instance ...' AS message FROM dua
 -- populate codelist tables
 @@schema/codelist-instances.sql
 @@schema/codelist-entry-instances.sql
-
--- remove procedures used for populating JSON values in metadata tables
-@@schema/schema-mapping-drop.sql
 
 -- create citydb_pkg schema
 SELECT 'Creating additional schema ''citydb_pkg'' ...' AS message FROM dual;
@@ -53,7 +47,7 @@ SELECT 'Creating additional schema ''citydb_pkg'' ...' AS message FROM dual;
 SELECT 'Setting spatial reference system of 3DCityDB instance ...' AS message FROM dual;
 
 BEGIN
-  citydb_pkg.change_schema_srid(:SRID, '&SRSNAME');
+  citydb_srs.change_schema_srid(:SRID, '&SRSNAME');
 END;
 /
 
