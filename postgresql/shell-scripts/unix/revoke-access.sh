@@ -4,6 +4,8 @@
 
 # Get the current directory path of this script file
 CURRENT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+
+# Read database connection details
 if [ $# -ne 0 ]; then
   source "$1"
 else
