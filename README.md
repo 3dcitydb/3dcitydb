@@ -1,4 +1,5 @@
 ![Build scripts](https://img.shields.io/github/actions/workflow/status/3dcitydb/3dcitydb/build-3dcitydb-scripts.yml?badge=build&style=flat-square)
+![release](https://img.shields.io/github/v/release/3dcitydb/3dcitydb?display_name=tag&style=flat-square)
 
 3D City Database V5
 ===================
