@@ -1,4 +1,4 @@
-SET DEFINE OFF;
+SET DEFINE OFF
 DELETE FROM datatype;
 
 -- Core Module --

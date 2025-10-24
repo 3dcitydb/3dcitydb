@@ -4,6 +4,9 @@
 
 # Get the current directory path of this script file
 CURRENT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+cd "$CURRENT_DIR/../../sql-scripts"
+
+# Read database connection details
 if [ $# -ne 0 ]; then
   source "$1"
 else
@@ -14,8 +17,8 @@ else
   fi
 fi
 
-# add SQLPLUSBIN to PATH
-export PATH="$SQLPLUSBIN:$PATH"
+# Add SQLPLUS_PATH to PATH
+export PATH="$SQLPLUS_PATH:$PATH"
 
 # Welcome message
 echo ' _______   ___ _ _        ___  ___ '
@@ -42,9 +45,6 @@ echo '   Please file an issue here:'
 echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
 echo '######################################################################################'
-
-# cd to path of the SQL scripts
-cd ../../SQLScripts
 
 # Prompt for SRID -------------------------------------------------------------
 re='^[0-9]+$'
@@ -89,23 +89,30 @@ echo 'Please enter the corresponding SRS name to be used in exports.'
 read -p "(default SRS_NAME=$SRS_NAME): " var
 SRS_NAME=${var:-$SRS_NAME}
 
-# Run CREATE_DB.sql to create the 3D City Database instance -------------------
+# Prompt for CHANGELOG ---------------------------------------------------------
+while [ 1 ]; do
+  echo
+  echo "Shall the changelog extension be created (yes/no)?"
+  read -p "(default CHANGELOG=no): " CHANGELOG
+  CHANGELOG=${CHANGELOG:-no}
+
+  # to lower case
+  CHANGELOG=$(echo "$CHANGELOG" | awk '{print tolower($0)}')
+
+  if [ "$CHANGELOG" = "yes" ] || [ "$CHANGELOG" = "no" ] ; then
+    break;
+  else
+    echo
+    echo "Illegal input! Enter yes or no."
+  fi
+done
+
+# Run create-db.sql to create the 3D City Database instance -------------------
 echo
-echo "Connecting to \"$DBUSER@$DBHOST:$DBPORT/$ORACLE_PDB\" ..."
+echo "Connecting to \"$DB_USER@$DB_HOST:$DB_PORT/$DB_SERVICE\" ..."
 echo -n "Enter password: "
-sqlplus -S -L "${DBUSER}@\"${DBHOST}:${DBPORT}/${ORACLE_PDB}\"" @CREATE_DB.sql "${SRID}" "${SRSNAME}"
+sqlplus -S -L "${DB_USER}@${DB_HOST}:${DB_PORT}/${DB_SERVICE}" @create-db.sql "$SRID" "$SRS_NAME" "$CHANGELOG"
+
 echo
 read -rsn1 -p 'Press ENTER to quit.'
 echo
-
-# 3DCityDB create-db.sh #######################################################
-#
-# Maintainer ------------------------------------------------------------------
-#   Karin Patenge
-#   Oracle Global Services Deutschland GmbH
-#   karin.patenge(at)oracle.com
-#
-# Reviewers -------------------------------------------------------------------
-#
-#
-###############################################################################

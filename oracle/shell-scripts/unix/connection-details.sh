@@ -1,7 +1,8 @@
 #!/bin/bash
 # Provide your database details here ------------------------------------------
-export DBHOST=your_host
-export DBPORT=your_port
-export ORACLE_PDB=your_pdb
-export DBUSER=citydb_username
+export SQLPLUS_PATH=path_to_sqlplus
+export DB_HOST=your_host_address
+export DB_PORT=1521
+export DB_SERVICE=your_service_name
+export DB_USER=your_username
 #------------------------------------------------------------------------------

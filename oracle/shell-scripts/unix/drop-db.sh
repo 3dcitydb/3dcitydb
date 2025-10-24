@@ -1,9 +1,12 @@
 #!/bin/bash
 # Shell script to drop an instance of the 3D City Database
-# on Oracle
+# on Oracle Database 23ai or higher
 
 # Get the current directory path of this script file
 CURRENT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+cd "$CURRENT_DIR/../../sql-scripts"
+
+# Read database connection details
 if [ $# -ne 0 ]; then
   source "$1"
 else
@@ -14,8 +17,8 @@ else
   fi
 fi
 
-# add SQLPLUSBIN to PATH
-export PATH="$SQLPLUSBIN:$PATH"
+# Add SQLPLUS_PATH to PATH
+export PATH="$SQLPLUS_PATH:$PATH"
 
 # Welcome message
 echo ' _______   ___ _ _        ___  ___ '
@@ -43,22 +46,10 @@ echo '##########################################################################
 
 # Run drop-db.sql to drop the 3D City Database instance -----------------------
 echo
-
-echo "Connecting to \"$DBUSER@$DBHOST:$DBPORT/$ORACLE_PDB\" ..."
+echo "Connecting to \"$DB_USER@$DB_HOST:$DB_PORT/$DB_SERVICE\" ..."
 echo -n "Enter password: "
-sqlplus -S -L "${DBUSER}@\"${DBHOST}:${DBPORT}/${ORACLE_PDB}\"" @DROP_DB.sql
+sqlplus -S -L "${DB_USER}@${DB_HOST}:${DB_PORT}/${DB_SERVICE}" @drop-db.sql
+
 echo
 read -rsn1 -p 'Press ENTER to quit.'
 echo
-
-# 3DCityDB drop-db.sh #########################################################
-#
-# Maintainer ------------------------------------------------------------------
-#   Karin Patenge
-#   Oracle Global Services Deutschland GmbH
-#   karin.patenge(at)oracle.com
-#
-# Reviewers -------------------------------------------------------------------
-#
-#
-###############################################################################

@@ -1,0 +1,53 @@
+@echo off
+:: Shell script to drop an instance of the 3D City Database
+:: on Oracle Database 23ai or higher
+
+:: Get the current directory path of this script file
+set CURRENT_DIR=%~dp0
+cd "%CURRENT_DIR%/../../sql-scripts"
+
+:: Read database connection details
+if NOT [%1]==[] (
+  call %1
+) else (
+  if exist connection-details.bat (
+    call connection-details.bat
+  ) else (
+    call "%CURRENT_DIR%connection-details.bat"
+  )
+)
+
+:: Add SQLPLUS_PATH to PATH
+set PATH=%SQLPLUS_PATH%;%PATH%;%SYSTEMROOT%\System32
+
+:: Welcome message
+echo  _______   ___ _ _        ___  ___
+echo ^|__ /   \ / __(_) ^|_ _  _^|   ^\^| _ )
+echo  ^|_ \ ^|) ^| (__^| ^|  _^| ^|^| ^| ^|) ^| _ \
+echo ^|___/___/ \___^|_^|\__^|\_, ^|___/^|___/
+echo                      ^|__/
+echo.
+echo 3D City Database - The Open Source CityGML Database
+echo.
+echo ################################################################################
+echo.
+echo This script will drop the 3DCityDB instance including all data. Note that this
+echo operation cannot be undone.
+echo.
+echo Documentation and help:
+echo    3DCityDB website:    https://www.3dcitydb.org
+echo    3DCityDB on GitHub:  https://github.com/3dcitydb
+echo.
+echo Having problems or need support?
+echo    Please file an issue here:
+echo    https://github.com/3dcitydb/3dcitydb/issues
+echo.
+echo ################################################################################
+
+REM Run drop-db.sql to drop the 3D City Database instance ---------------------
+echo.
+echo Connecting to "%DB_USER%@%DB_HOST%:%DB_PORT%/%DB_SERVICE%" ...
+<nul set /p="Enter password: "
+sqlplus -S -L "%DB_USER%@%DB_HOST%:%DB_PORT%/%DB_SERVICE%" @drop-db.sql
+
+pause
