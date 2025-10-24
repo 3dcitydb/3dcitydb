@@ -1,11 +1,4 @@
------------------------------------------------------
--- Author: Karin Patenge, Oracle
--- Last update: June 2025
--- Status: to be reviewed
--- This scripts requires Oracle Database version 23ai
------------------------------------------------------
-
-TRUNCATE TABLE codelist DROP STORAGE;
+DELETE FROM codelist;
 
 -- Building class, function, and usage --
 

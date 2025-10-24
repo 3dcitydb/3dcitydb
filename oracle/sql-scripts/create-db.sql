@@ -1,30 +1,29 @@
 SET SERVEROUTPUT ON
 SET FEEDBACK ON
-SET VER OFF
+SET VERIFY OFF
+SET SHOW OFF
+WHENEVER SQLERROR EXIT
 
 -- parse arguments
-DEFINE SRSNO=&1;
-DEFINE SRSNAME=&2;
+DEFINE SRID=&1;
+DEFINE SRS_NAME=&2;
+VARIABLE V_SRID NUMBER;
+VARIABLE V_SRS_NAME VARCHAR2(4000);
 
--- check if the chosen SRID is provided by the MDSYS.CS_SRS table
-VARIABLE SRID NUMBER;
-
-WHENEVER SQLERROR CONTINUE;
-
+-- check if the provided SRID is supported
+PROMPT
+PROMPT Checking spatial reference system for SRID &SRID ...
 BEGIN
-  SELECT SRID INTO :SRID FROM MDSYS.CS_SRS WHERE SRID=&SRSNO;
+  SELECT SRID INTO :V_SRID FROM MDSYS.CS_SRS WHERE SRID=&SRID;
+  :V_SRS_NAME := '&SRS_NAME';
 EXCEPTION
   WHEN NO_DATA_FOUND THEN
-    RAISE_APPLICATION_ERROR(-20001, 'The SRID ' || &SRSNO || ' is not supported. To add it manually, see CRS definitions at https://spatialreference.org/.');
+    RAISE_APPLICATION_ERROR(-20001, 'The SRID ' || &SRID || ' is not supported. To add it manually, see CRS definitions at https://spatialreference.org/.');
 END;
 /
 
--- populate database SRS
-INSERT INTO DATABASE_SRS(SRID, SRS_NAME) VALUES (&SRSNO, '&SRSNAME');
-COMMIT;
-
 -- create tables, sequences, constraints, indexes
-SELECT 'Setting up database schema of 3DCityDB instance ...' AS message FROM dual;
+PROMPT Setting up database schema of 3DCityDB instance ...
 @@schema/schema.sql
 @@schema/schema-annotations.sql
 
@@ -37,19 +36,13 @@ SELECT 'Setting up database schema of 3DCityDB instance ...' AS message FROM dua
 @@schema/codelist-instances.sql
 @@schema/codelist-entry-instances.sql
 
--- create citydb_pkg schema
-SELECT 'Creating additional schema ''citydb_pkg'' ...' AS message FROM dual;
+-- create citydb packages
+PROMPT Creating 'citydb' packages ...
 @@citydb-pkg/srs.sql
--- @@citydb-pkg/util.sql
--- @@citydb-pkg/envelope.sql
--- @@citydb-pkg/delete.sql
 
 SELECT 'Setting spatial reference system of 3DCityDB instance ...' AS message FROM dual;
+EXEC citydb_srs.change_schema_srid(:V_SRID, :V_SRS_NAME);
 
-BEGIN
-  citydb_srs.change_schema_srid(:SRID, '&SRSNAME');
-END;
+PROMPT 3DCityDB instance successfully created.
+QUIT;
 /
-
--- success message
-SELECT '3DCityDB instance successfully created.' AS message FROM dual;

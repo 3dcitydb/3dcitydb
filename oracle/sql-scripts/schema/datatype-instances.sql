@@ -1,14 +1,4 @@
------------------------------------------------------
--- Author: Karin Patenge, Oracle
--- Last update: October 6, 2025
--- Status: to be reviewed
--- This scripts requires Oracle Database version 23ai
------------------------------------------------------
-
--- turn off the checking for substitution variables
 SET DEFINE OFF;
-
--- truncate table before insert
 DELETE FROM datatype;
 
 -- Core Module --
@@ -54,9 +44,7 @@ DECLARE
   v_schema63 JSON := JSON(@core:ADEOfAbstractVersionTransition@);
   v_schema64 JSON := JSON(@core:ADEOfCityModel@);
   v_schema65 JSON := JSON(@core:ADEOfClosureSurface@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (1, null, 'Undefined', 1, 1, v_schema1),
@@ -126,9 +114,7 @@ DECLARE
   v_schema116 JSON := JSON(@dyn:ADEOfGenericTimeseries@);
   v_schema117 JSON := JSON(@dyn:ADEOfStandardFileTimeseries@);
   v_schema118 JSON := JSON(@dyn:ADEOfTabulatedFileTimeseries@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (100, null, 'AbstractTimeValuePair', 1, 2, v_schema100),
@@ -163,9 +149,7 @@ DECLARE
   v_schema202 JSON := JSON(@gen:ADEOfGenericOccupiedSpace@);
   v_schema203 JSON := JSON(@gen:ADEOfGenericThematicSurface@);
   v_schema204 JSON := JSON(@gen:ADEOfGenericUnoccupiedSpace@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (200, null, 'GenericAttributeSet', 0, 3, v_schema200),
@@ -182,9 +166,7 @@ END;
 
 DECLARE
   v_schema300 JSON := JSON(@luse:ADEOfLandUse@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (300, null, 'ADEOfLandUse', 1, 4, v_schema300);
@@ -197,9 +179,7 @@ END;
 
 DECLARE
   v_schema400 JSON := JSON(@luse:ADEOfPointCloud@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (400, null, 'ADEOfPointCloud', 1, 5, v_schema400);
@@ -217,9 +197,7 @@ DECLARE
   v_schema503 JSON := JSON(@dem:ADEOfRasterRelief@);
   v_schema504 JSON := JSON(@dem:ADEOfReliefFeature@);
   v_schema505 JSON := JSON(@dem:ADEOfTINRelief@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (500, null, 'ADEOfAbstractReliefComponent', 1, 6, v_schema500),
@@ -252,9 +230,7 @@ DECLARE
   v_schema613 JSON := JSON(@tran:ADEOfTrafficArea@);
   v_schema614 JSON := JSON(@tran:ADEOfTrafficSpace@);
   v_schema615 JSON := JSON(@tran:ADEOfWaterway@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (600, null, 'ADEOfAbstractTransportationSpace', 1, 7, v_schema600),
@@ -304,9 +280,7 @@ DECLARE
   v_schema720 JSON := JSON(@con:ADEOfWallSurface@);
   v_schema721 JSON := JSON(@con:ADEOfWindow@);
   v_schema722 JSON := JSON(@con:ADEOfWindowSurface@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (700, null, 'ConstructionEvent', 0, 8, v_schema700),
@@ -347,9 +321,7 @@ DECLARE
   v_schema804 JSON := JSON(@tun:ADEOfTunnelFurniture@);
   v_schema805 JSON := JSON(@tun:ADEOfTunnelInstallation@);
   v_schema806 JSON := JSON(@tun:ADEOfTunnelPart@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (800, null, 'ADEOfAbstractTunnel', 1, 9, v_schema800),
@@ -378,9 +350,7 @@ DECLARE
   v_schema908 JSON := JSON(@bldg:ADEOfBuildingRoom@);
   v_schema909 JSON := JSON(@bldg:ADEOfBuildingUnit@);
   v_schema910 JSON := JSON(@bldg:ADEOfStorey@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (900, null, 'RoomHeight', 0, 10, v_schema900),
@@ -409,9 +379,7 @@ DECLARE
   v_schema1004 JSON := JSON(@brid:ADEOfBridgeInstallation@);
   v_schema1005 JSON := JSON(@brid:ADEOfBridgePart@);
   v_schema1006 JSON := JSON(@brid:ADEOfBridgeRoom@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (1000, null, 'ADEOfAbstractBridge', 1, 11, v_schema1000),
@@ -431,9 +399,7 @@ END;
 DECLARE
   v_schema1200 JSON := JSON(@grp:Role@);
   v_schema1201 JSON := JSON(@grp:ADEOfCityObjectGroup@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (1200, null, 'Role', 0, 13, v_schema1200),
@@ -449,9 +415,7 @@ DECLARE
   v_schema1300 JSON := JSON(@veg:ADEOfAbstractVegetationObject@);
   v_schema1301 JSON := JSON(@veg:ADEOfPlantCover@);
   v_schema1302 JSON := JSON(@veg:ADEOfSolitaryVegetationObject@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (1300, null, 'ADEOfAbstractVegetationObject', 1, 14, v_schema1300),
@@ -468,9 +432,7 @@ DECLARE
   v_schema1400 JSON := JSON(@vers:Transaction@);
   v_schema1401 JSON := JSON(@vers:ADEOfVersion@);
   v_schema1402 JSON := JSON(@vers:ADEOfVersionTransition@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (1400, null, 'Transaction', 0, 15, v_schema1400),
@@ -489,9 +451,7 @@ DECLARE
   v_schema1501 JSON := JSON(@wtr:ADEOfWaterBody@);
   v_schema1502 JSON := JSON(@wtr:ADEOfWaterGroundSurface@);
   v_schema1503 JSON := JSON(@wtr:ADEOfWaterSurface@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (1500, null, 'ADEOfAbstractWaterBoundarySurface', 1, 16, v_schema1500),
@@ -507,9 +467,7 @@ END;
 
 DECLARE
   v_schema1600 JSON := JSON(@frn:ADEOfCityFurniture@);
-
 BEGIN
-
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (1600, null, 'ADEOfCityFurniture', 1, 17, v_schema1600);

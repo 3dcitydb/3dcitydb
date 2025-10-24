@@ -1,11 +1,4 @@
------------------------------------------------------
--- Author: Karin Patenge, Oracle
--- Last update: June 2025
--- Status: to be reviewed
--- This scripts requires Oracle Database version 23ai
------------------------------------------------------
-
-TRUNCATE TABLE codelist_entry DROP STORAGE;
+DELETE FROM codelist_entry;
 
 -- Building class --
 
@@ -15,7 +8,8 @@ VALUES
   (0, 1010, 'sanitation'),
   (0, 1020, 'administration'),
   (0, 1030, 'business, trade'),
-  (0, 1040, 'catering'),(0, 1050, 'recreation'),
+  (0, 1040, 'catering'),
+  (0, 1050, 'recreation'),
   (0, 1060, 'sport'),
   (0, 1070, 'culture'),
   (0, 1080, 'church institution'),
@@ -228,7 +222,7 @@ VALUES
   (2, 1220, 'youth hostel'),
   (2, 1230, 'campsite building'),
   (2, 1240, 'restaurant'),
-  (2, 1250, 'cantine'),
+  (2, 1250, 'canteen'),
   (2, 1260, 'recreational site'),
   (2, 1270, 'function room'),
   (2, 1280, 'cinema'),

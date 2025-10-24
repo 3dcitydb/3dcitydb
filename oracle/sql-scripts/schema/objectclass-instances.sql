@@ -1,14 +1,4 @@
------------------------------------------------------
--- Author: Karin Patenge, Oracle
--- Last update: October 6, 2025
--- Status: to be reviewed
--- This scripts requires Oracle Database version 23ai
------------------------------------------------------
-
--- turn off the checking for substitution variables
 SET DEFINE OFF;
-
--- truncate table before insert
 DELETE FROM objectclass;
 
 -- Core Module --
@@ -35,9 +25,7 @@ DECLARE
   v_schema19 JSON := JSON(@core:AbstractVersion@);
   v_schema20 JSON := JSON(@core:AbstractAppearance@);
   v_schema21 JSON := JSON(@core:ImplicitGeometry@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (1, null, 'Undefined', 1, 0, 1, v_schema1),
@@ -76,9 +64,7 @@ DECLARE
   v_schema104 JSON := JSON(@dyn:StandardFileTimeseries@);
   v_schema105 JSON := JSON(@dyn:GenericTimeseries@);
   v_schema106 JSON := JSON(@dyn:CompositeTimeseries@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (100, 16, 'Dynamizer', 0, 0, 2, v_schema100),
@@ -100,9 +86,7 @@ DECLARE
   v_schema201 JSON := JSON(@gen:GenericOccupiedSpace@);
   v_schema202 JSON := JSON(@gen:GenericUnoccupiedSpace@);
   v_schema203 JSON := JSON(@gen:GenericThematicSurface@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (200, 9, 'GenericLogicalSpace', 0, 1, 3, v_schema200),
@@ -118,9 +102,7 @@ END;
 
 DECLARE
   v_schema300 JSON := JSON(@luse:LandUse@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (300, 14, 'LandUse', 0, 1, 4, v_schema300);
@@ -133,9 +115,7 @@ END;
 
 DECLARE
   v_schema400 JSON := JSON(@pcl:PointCloud@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (400, 5, 'PointCloud', 0, 0, 5, v_schema400);
@@ -153,9 +133,7 @@ DECLARE
   v_schema503 JSON := JSON(@dem:MassPointRelief@);
   v_schema504 JSON := JSON(@dem:BreaklineRelief@);
   v_schema505 JSON := JSON(@dem:RasterRelief@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (500, 13, 'ReliefFeature', 0, 1, 6, v_schema500),
@@ -188,9 +166,7 @@ DECLARE
   v_schema613 JSON := JSON(@tran:TrafficArea@);
   v_schema614 JSON := JSON(@tran:Marking@);
   v_schema615 JSON := JSON(@tran:HoleSurface@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (600, 11, 'AbstractTransportationSpace', 1, 0, 7, v_schema600),
@@ -237,9 +213,7 @@ DECLARE
   v_schema717 JSON := JSON(@con:AbstractFillingSurface@);
   v_schema718 JSON := JSON(@con:DoorSurface@);
   v_schema719 JSON := JSON(@con:WindowSurface@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (700, 12, 'AbstractConstruction', 1, 0, 8, v_schema700),
@@ -277,9 +251,7 @@ DECLARE
   v_schema804 JSON := JSON(@tun:HollowSpace@);
   v_schema805 JSON := JSON(@tun:TunnelInstallation@);
   v_schema806 JSON := JSON(@tun:TunnelFurniture@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (800, 700, 'AbstractTunnel', 1, 0, 9, v_schema800),
@@ -307,9 +279,7 @@ DECLARE
   v_schema907 JSON := JSON(@bldg:AbstractBuildingSubdivision@);
   v_schema908 JSON := JSON(@bldg:BuildingUnit@);
   v_schema909 JSON := JSON(@bldg:Storey@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (900, 700, 'AbstractBuilding', 1, 0, 10, v_schema900),
@@ -337,9 +307,7 @@ DECLARE
   v_schema1004 JSON := JSON(@brid:BridgeRoom@);
   v_schema1005 JSON := JSON(@brid:BridgeInstallation@);
   v_schema1006 JSON := JSON(@brid:BridgeFurniture@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (1000, 700, 'AbstractBridge', 1, 0, 11, v_schema1000),
@@ -363,9 +331,7 @@ DECLARE
   v_schema1103 JSON := JSON(@app:AbstractTexture@);
   v_schema1104 JSON := JSON(@app:ParameterizedTexture@);
   v_schema1105 JSON := JSON(@app:GeoreferencedTexture@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (1100, 20, 'Appearance', 0, 0, 12, v_schema1100),
@@ -383,9 +349,7 @@ END;
 
 DECLARE
   v_schema1200 JSON := JSON(@grp:CityObjectGroup@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (1200, 9, 'CityObjectGroup', 0, 1, 13, v_schema1200);
@@ -400,9 +364,7 @@ DECLARE
   v_schema1300 JSON := JSON(@veg:AbstractVegetationObject@);
   v_schema1301 JSON := JSON(@veg:SolitaryVegetationObject@);
   v_schema1302 JSON := JSON(@veg:PlantCover@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (1300, 12, 'AbstractVegetationObject', 1, 0, 14, v_schema1300),
@@ -418,9 +380,7 @@ END;
 DECLARE
   v_schema1400 JSON := JSON(@vers:Version@);
   v_schema1401 JSON := JSON(@vers:VersionTransition@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (1400, 19, 'Version', 0, 0, 15, v_schema1400),
@@ -437,9 +397,7 @@ DECLARE
   v_schema1501 JSON := JSON(@wtr:AbstractWaterBoundarySurface@);
   v_schema1502 JSON := JSON(@wtr:WaterSurface@);
   v_schema1503 JSON := JSON(@wtr:WaterGroundSurface@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (1500, 12, 'WaterBody', 0, 1, 16, v_schema1500),
@@ -455,9 +413,7 @@ END;
 
 DECLARE
   v_schema1600 JSON := JSON(@frn:CityFurniture@);
-
 BEGIN
-
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (1600, 12, 'CityFurniture', 0, 1, 17, v_schema1600);

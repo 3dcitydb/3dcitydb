@@ -1,8 +1,12 @@
 SET SERVEROUTPUT ON
 SET FEEDBACK ON
-SET VER OFF
+SET VERIFY OFF
+SET SHOW OFF
+WHENEVER SQLERROR EXIT
 
-SELECT 'Dropping 3DCityDB tables and user objects' AS message FROM DUAL;
+-- drop 3DCityDB schema
+PROMPT
+PROMPT Dropping 3DCityDB schema ...
 BEGIN
   FOR cur_rec IN (
     SELECT object_name, object_type
@@ -10,25 +14,25 @@ BEGIN
     WHERE object_type IN ('TABLE', 'VIEW', 'PACKAGE', 'PROCEDURE', 'FUNCTION', 'SEQUENCE', 'TYPE')
   ) LOOP
     BEGIN
-	  IF cur_rec.object_type = 'TABLE' THEN
-	    EXECUTE IMMEDIATE 'DROP ' || cur_rec.object_type || ' "' || cur_rec.object_name || '" CASCADE CONSTRAINTS';
-	  ELSIF cur_rec.object_type = 'TYPE' THEN
-	    EXECUTE IMMEDIATE 'DROP ' || cur_rec.object_type || ' "' || cur_rec.object_name || '" FORCE';
+      IF cur_rec.object_type = 'TABLE' THEN
+        EXECUTE IMMEDIATE 'DROP ' || cur_rec.object_type || ' "' || cur_rec.object_name || '" CASCADE CONSTRAINTS';
+      ELSIF cur_rec.object_type = 'TYPE' THEN
+        EXECUTE IMMEDIATE 'DROP ' || cur_rec.object_type || ' "' || cur_rec.object_name || '" FORCE';
       ELSE
-	    EXECUTE IMMEDIATE 'DROP ' || cur_rec.object_type || ' "' || cur_rec.object_name || '"';
+        EXECUTE IMMEDIATE 'DROP ' || cur_rec.object_type || ' "' || cur_rec.object_name || '"';
       END IF;
     EXCEPTION
-	  WHEN OTHERS THEN
-      NULL;
+	    WHEN OTHERS THEN
+        NULL;
     END;
   END LOOP;
 
-  -- remove spatial metadata
   EXECUTE IMMEDIATE 'DELETE FROM user_sdo_geom_metadata';
 END;
 /
 
 PURGE RECYCLEBIN;
 
--- success message
-SELECT '3DCityDB instance successfully removed!' AS message FROM DUAL;
+PROMPT 3DCityDB instance successfully removed.
+QUIT;
+/
