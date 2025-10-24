@@ -51,7 +51,7 @@ VALUES
   (1, 1220, 'youth hostel'),
   (1, 1230, 'campsite building'),
   (1, 1240, 'restaurant'),
-  (1, 1250, 'cantine'),
+  (1, 1250, 'canteen'),
   (1, 1260, 'recreational site'),
   (1, 1270, 'function room'),
   (1, 1280, 'cinema'),
