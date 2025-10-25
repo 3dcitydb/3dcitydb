@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="3DCityDB" database="Oracle" id="874ed208-eddc-4b1d-9609-15ce7dde86d0" >
+	<schema name="CITYDB" >
+		<table name="ADDRESS" prior="TBL" >
+			<column name="ID" type="NUMBER" length="38" mandatory="y" >
+				<defo><![CDATA[ADDRESS_SEQ.NEXTVAL]]></defo>
+			</column>
+			<column name="OBJECTID" type="VARCHAR2" length="4000" />
+			<column name="IDENTIFIER" type="VARCHAR2" length="4000" />
+			<column name="IDENTIFIER_CODESPACE" type="VARCHAR2" length="4000" />
+			<column name="STREET" type="VARCHAR2" length="4000" />
+			<column name="HOUSE_NUMBER" type="VARCHAR2" length="4000" />
+			<column name="PO_BOX" type="VARCHAR2" length="4000" />
+			<column name="ZIP_CODE" type="VARCHAR2" length="4000" />
+			<column name="CITY" type="VARCHAR2" length="4000" />
+			<column name="STATE" type="VARCHAR2" length="4000" />
+			<column name="COUNTRY" type="VARCHAR2" length="4000" />
+			<column name="FREE_TEXT" type="JSON" />
+			<column name="MULTI_POINT" type="SDO_GEOMETRY" />
+			<column name="CONTENT" type="VARCHAR2" length="4000" />
+			<column name="CONTENT_MIME_TYPE" type="VARCHAR2" length="4000" />
+			<index name="ADDRESS_PK" unique="PRIMARY_KEY" >
+				<column name="ID" />
+			</index>
+		</table>
+		<table name="ADE" prior="TBL" >
+			<column name="ID" type="NUMBER" length="10" mandatory="y" />
+			<column name="NAME" type="VARCHAR2" length="4000" mandatory="y" />
+			<column name="DESCRIPTION" type="VARCHAR2" length="4000" />
+			<column name="VERSION" type="VARCHAR2" length="4000" />
+			<index name="ADE_PK" unique="PRIMARY_KEY" >
+				<column name="ID" />
+			</index>
+		</table>
+		<table name="APPEARANCE" prior="APPEA" >
+			<column name="ID" type="NUMBER" length="38" mandatory="y" >
+				<defo><![CDATA[APPEARANCE_SEQ.NEXTVAL]]></defo>
+			</column>
+			<column name="OBJECTID" type="VARCHAR2" length="4000" />
+			<column name="IDENTIFIER" type="VARCHAR2" length="4000" />
+			<column name="IDENTIFIER_CODESPACE" type="VARCHAR2" length="4000" />
+			<column name="THEME" type="VARCHAR2" length="4000" />
+			<column name="IS_GLOBAL" type="NUMBER" length="1" />
+			<column name="FEATURE_ID" type="NUMBER" length="38" />
+			<column name="IMPLICIT_GEOMETRY_ID" type="NUMBER" length="38" />
+			<index name="APPEARANCE_PK" unique="PRIMARY_KEY" >
+				<column name="ID" />
+			</index>
+			<index name="APPEARANCE_FEATURE_FKX" unique="NORMAL" >
+				<column name="FEATURE_ID" />
+			</index>
+			<index name="APPEARANCE_IMPLICIT_GEOM_FKX" unique="NORMAL" >
+				<column name="IMPLICIT_GEOMETRY_ID" />
+			</index>
+			<index name="APPEARANCE_THEME_INX" unique="NORMAL" >
+				<column name="THEME" />
+			</index>
+			<fk name="APPEARANCE_FEATURE_FK" to_schema="CITYDB" to_table="FEATURE" delete_action="setNull" >
+				<fk_column name="FEATURE_ID" pk="ID" />
+			</fk>
+			<fk name="APPEARANCE_IMPLICIT_GEOM_FK" to_schema="CITYDB" to_table="IMPLICIT_GEOMETRY" delete_action="cascade" >
+				<fk_column name="IMPLICIT_GEOMETRY_ID" pk="ID" />
+			</fk>
+		</table>
+		<table name="APPEAR_TO_SURFACE_DATA" prior="TBL" >
+			<column name="ID" type="NUMBER" length="38" mandatory="y" >
+				<defo><![CDATA[APPEAR_TO_SURFACE_DATA_SEQ.NEXTVAL]]></defo>
+			</column>
+			<column name="APPEARANCE_ID" type="NUMBER" length="38" mandatory="y" />
+			<column name="SURFACE_DATA_ID" type="NUMBER" length="38" />
+			<index name="APPEAR_TO_SURFACE_DATA_PK" unique="PRIMARY_KEY" >
+				<column name="ID" />
+			</index>
+			<index name="APPEAR_TO_SURFACE_DATA_FKX1" unique="NORMAL" >
+				<column name="SURFACE_DATA_ID" />
+			</index>
+			<index name="APPEAR_TO_SURFACE_DATA_FKX2" unique="NORMAL" >
+				<column name="APPEARANCE_ID" />
+			</index>
+			<fk name="APPEAR_TO_SURFACE_DATA_FK1" to_schema="CITYDB" to_table="SURFACE_DATA" delete_action="cascade" >
+				<fk_column name="SURFACE_DATA_ID" pk="ID" />
+			</fk>
+			<fk name="APPEAR_TO_SURFACE_DATA_FK2" to_schema="CITYDB" to_table="APPEARANCE" delete_action="cascade" >
+				<fk_column name="APPEARANCE_ID" pk="ID" />
+			</fk>
+		</table>
+		<table name="CODELIST" prior="TBL" >
+			<column name="ID" type="NUMBER" length="38" mandatory="y" >
+				<defo><![CDATA[CODELIST_SEQ.NEXTVAL]]></defo>
+			</column>
+			<column name="CODELIST_TYPE" type="VARCHAR2" length="4000" />
+			<column name="URL" type="VARCHAR2" length="4000" />
+			<column name="MIME_TYPE" type="VARCHAR2" length="4000" />
+			<index name="CODELIST_PK" unique="PRIMARY_KEY" >
+				<column name="ID" />
+			</index>
+			<index name="CODELIST_CODELIST_TYPE_INX" unique="NORMAL" >
+				<column name="CODELIST_TYPE" />
+			</index>
+		</table>
+		<table name="CODELIST_ENTRY" prior="TBL" >
+			<column name="ID" type="NUMBER" length="38" mandatory="y" >
+				<defo><![CDATA[CODELIST_ENTRY_SEQ.NEXTVAL]]></defo>
+			</column>
+			<column name="CODELIST_ID" type="NUMBER" length="38" />
+			<column name="CODE" type="VARCHAR2" length="4000" />
+			<column name="DEFINITION" type="VARCHAR2" length="4000" />
+			<index name="CODELIST_ENTRY_PK" unique="PRIMARY_KEY" >
+				<column name="ID" />
+			</index>
+			<index name="CODELIST_ENTRY_CODELIST_FKX" unique="NORMAL" >
+				<column name="CODELIST_ID" />
+			</index>
+			<fk name="CODELIST_ENTRY_CODELIST_FK" to_schema="CITYDB" to_table="CODELIST" delete_action="cascade" >
+				<fk_column name="CODELIST_ID" pk="ID" />
+			</fk>
+		</table>
+		<table name="DATABASE_SRS" prior="TBL" >
+			<column name="SRID" prior="ID" type="NUMBER" length="10" mandatory="y" />
+			<column name="SRS_NAME" type="VARCHAR2" length="4000" />
+			<index name="DATABASE_SRS_PK" unique="PRIMARY_KEY" >
+				<column name="SRID" />
+			</index>
+		</table>
+		<table name="DATATYPE" prior="TBL" >
+			<column name="ID" type="NUMBER" length="10" mandatory="y" />
+			<column name="SUPERTYPE_ID" type="NUMBER" length="10" />
+			<column name="TYPENAME" type="VARCHAR2" length="4000" />
+			<column name="IS_ABSTRACT" type="NUMBER" length="1" />
+			<column name="ADE_ID" type="NUMBER" length="10" />
+			<column name="NAMESPACE_ID" type="NUMBER" length="10" />
+			<column name="SCHEMA" type="JSON" />
+			<index name="DATATYPE_PK" unique="PRIMARY_KEY" >
+				<column name="ID" />
+			</index>
+			<index name="DATATYPE_SUPERTYPE_FKX" unique="NORMAL" >
+				<column name="SUPERTYPE_ID" />
+			</index>
+			<fk name="DATATYPE_ADE_FK" to_schema="CITYDB" to_table="ADE" delete_action="cascade" >
+				<fk_column name="ADE_ID" pk="ID" />
+			</fk>
+			<fk name="DATATYPE_NAMESPACE_FK" to_schema="CITYDB" to_table="NAMESPACE" delete_action="cascade" >
+				<fk_column name="NAMESPACE_ID" pk="ID" />
+			</fk>
+			<fk name="DATATYPE_SUPERTYPE_FK" to_schema="CITYDB" to_table="DATATYPE" delete_action="cascade" >
+				<fk_column name="SUPERTYPE_ID" pk="ID" />
+			</fk>
+		</table>
+		<table name="FEATURE" prior="FEA" >
+			<column name="ID" type="NUMBER" length="38" mandatory="y" >
+				<defo><![CDATA[FEATURE_SEQ.NEXTVAL]]></defo>
+			</column>
+			<column name="OBJECTCLASS_ID" type="NUMBER" length="10" mandatory="y" />
+			<column name="OBJECTID" prior="OBJECT_ID" type="VARCHAR2" length="4000" />
+			<column name="IDENTIFIER" type="VARCHAR2" length="4000" />
+			<column name="IDENTIFIER_CODESPACE" type="VARCHAR2" length="4000" />
+			<column name="ENVELOPE" type="SDO_GEOMETRY" />
+			<column name="LAST_MODIFICATION_DATE" type="TIMESTAMP WITH TIME ZONE" />
+			<column name="UPDATING_PERSON" type="VARCHAR2" length="4000" />
+			<column name="REASON_FOR_UPDATE" type="VARCHAR2" length="4000" />
+			<column name="LINEAGE" type="VARCHAR2" length="4000" />
+			<column name="CREATION_DATE" type="TIMESTAMP WITH TIME ZONE" />
+			<column name="TERMINATION_DATE" type="TIMESTAMP WITH TIME ZONE" />
+			<column name="VALID_FROM" type="TIMESTAMP WITH TIME ZONE" />
+			<column name="VALID_TO" type="TIMESTAMP WITH TIME ZONE" />
+			<index name="FEATURE_PK" unique="PRIMARY_KEY" >
+				<column name="ID" />
+			</index>
+			<index name="FEATURE_OBJECTCLASS_INX" unique="NORMAL" >
+				<column name="OBJECTCLASS_ID" />
+			</index>
+			<index name="FEATURE_OBJECTID_INX" unique="NORMAL" >
+				<column name="OBJECTID" />
+			</index>
+			<index name="FEATURE_ENVELOPE_SPX" unique="NORMAL" options="INDEXTYPE IS MDSYS.SPATIAL_INDEX" virtual="y" >
+				<column name="ENVELOPE" />
+			</index>
+			<index name="FEATURE_IDENTIFIER_INX" unique="NORMAL" >
+				<column name="IDENTIFIER" />
+				<column name="IDENTIFIER_CODESPACE" />
+			</index>
+			<index name="FEATURE_CREATION_DATE_INX" unique="NORMAL" >
+				<column name="CREATION_DATE" />
+			</index>
+			<index name="FEATURE_TERMINATION_DATE_INX" unique="NORMAL" >
+				<column name="TERMINATION_DATE" />
+			</index>
+			<index name="FEATURE_VALID_FROM_INX" unique="NORMAL" >
+				<column name="VALID_FROM" />
+			</index>
+			<index name="FEATURE_VALID_TO_INX" unique="NORMAL" >
+				<column name="VALID_TO" />
+			</index>
+		</table>
+		<table name="GEOMETRY_DATA" prior="GEOMETRY_" >
+			<column name="ID" prior="GEOMETRY" type="NUMBER" length="38" mandatory="y" >
+				<defo><![CDATA[GEOMETRY_DATA_SEQ.NEXTVAL]]></defo>
+			</column>
+			<column name="GEOMETRY" type="SDO_GEOMETRY" />
+			<column name="IMPLICIT_GEOMETRY" type="SDO_GEOMETRY" />
+			<column name="GEOMETRY_PROPERTIES" type="JSON" />
+			<column name="FEATURE_ID" type="NUMBER" length="38" />
+			<index name="GEOMETRY_DATA_PK" unique="PRIMARY_KEY" >
+				<column name="ID" />
+			</index>
+			<index name="GEOMETRY_DATA_FEATURE_FKX" unique="NORMAL" >
+				<column name="FEATURE_ID" />
+			</index>
+			<index name="GEOMETRY_DATA_SPX" unique="NORMAL" options="INDEXTYPE IS MDSYS.SPATIAL_INDEX" virtual="y" >
+				<column name="GEOMETRY" />
+			</index>
+			<index name="GEOMETRY_DATA_SPX" unique="NORMAL" options="INDEXTYPE IS MDSYS.SPATIAL_INDEX" virtual="y" >
+				<column name="GEOMETRY" />
+			</index>
+			<fk name="GEOMETRY_DATA_FEATURE_FK" to_schema="CITYDB" to_table="FEATURE" delete_action="setNull" >
+				<fk_column name="FEATURE_ID" pk="ID" />
+			</fk>
+		</table>
+		<table name="IMPLICIT_GEOMETRY" prior="TBL" >
+			<column name="ID" type="NUMBER" length="38" mandatory="y" >
+				<defo><![CDATA[IMPLICIT_GEOMETRY_SEQ.NEXTVAL]]></defo>
+			</column>
+			<column name="OBJECTID" type="VARCHAR2" length="4000" />
+			<column name="MIME_TYPE" type="VARCHAR2" length="4000" />
+			<column name="MIME_TYPE_CODESPACE" type="VARCHAR2" length="4000" />
+			<column name="REFERENCE_TO_LIBRARY" type="VARCHAR2" length="4000" />
+			<column name="LIBRARY_OBJECT" type="BLOB" />
+			<column name="RELATIVE_GEOMETRY_ID" type="NUMBER" length="38" />
+			<index name="IMPLICIT_GEOMETRY_PK" unique="PRIMARY_KEY" >
+				<column name="ID" />
+			</index>
+			<index name="IMPLICIT_GEOMETRY_FKX" unique="NORMAL" >
+				<column name="RELATIVE_GEOMETRY_ID" />
+			</index>
+			<index name="IMPLICIT_GEOMETRY_OBJECTID_INX" unique="NORMAL" >
+				<column name="OBJECTID" />
+			</index>
+			<fk name="IMPLICIT_GEOMETRY_FK" to_schema="CITYDB" to_table="GEOMETRY_DATA" delete_action="cascade" >
+				<fk_column name="RELATIVE_GEOMETRY_ID" pk="ID" />
+			</fk>
+		</table>
+		<table name="NAMESPACE" prior="TBL" >
+			<column name="ID" type="NUMBER" length="10" mandatory="y" />
+			<column name="ALIAS" type="VARCHAR2" length="20" />
+			<column name="NAMESPACE" type="VARCHAR2" length="4000" />
+			<column name="ADE_ID" type="NUMBER" length="10" />
+			<index name="NAMESPACE_PK" unique="PRIMARY_KEY" >
+				<column name="ID" />
+			</index>
+			<fk name="FK_NAMESPACE_ADE" to_schema="CITYDB" to_table="ADE" delete_action="cascade" >
+				<fk_column name="ADE_ID" pk="ID" />
+			</fk>
+		</table>
+		<table name="OBJECTCLASS" prior="TBL" >
+			<column name="ID" prior="SUPERCLASS_ID" type="NUMBER" length="10" mandatory="y" />
+			<column name="SUPERCLASS_ID" type="NUMBER" length="10" />
+			<column name="CLASSNAME" type="VARCHAR2" length="4000" />
+			<column name="IS_ABSTRACT" type="NUMBER" length="1" />
+			<column name="IS_TOPLEVEL" type="NUMBER" length="1" />
+			<column name="ADE_ID" type="NUMBER" length="10" />
+			<column name="NAMESPACE_ID" type="NUMBER" length="10" />
+			<column name="SCHEMA" type="JSON" />
+			<index name="OBJECTCLASS_PK" unique="PRIMARY_KEY" >
+				<column name="ID" />
+			</index>
+			<index name="OBJECTCLASS_SUPERCLASS_FKX" unique="NORMAL" >
+				<column name="SUPERCLASS_ID" />
+			</index>
+			<fk name="OBJECTCLASS_ADE_FK" to_schema="CITYDB" to_table="ADE" delete_action="cascade" >
+				<fk_column name="ADE_ID" pk="ID" />
+			</fk>
+			<fk name="OBJECTCLASS_SUPERCLASS_FK" to_schema="CITYDB" to_table="OBJECTCLASS" delete_action="cascade" >
+				<fk_column name="SUPERCLASS_ID" pk="ID" />
+			</fk>
+			<fk name="OBJECTCLASS_NAMESPACE_FK" to_schema="CITYDB" to_table="NAMESPACE" delete_action="cascade" >
+				<fk_column name="NAMESPACE_ID" pk="ID" />
+			</fk>
+		</table>
+		<table name="PROPERTY" prior="PROPERT" >
+			<column name="ID" type="NUMBER" length="38" mandatory="y" >
+				<defo><![CDATA[PROPERTY_SEQ.NEXTVAL]]></defo>
+			</column>
+			<column name="FEATURE_ID" type="NUMBER" length="38" />
+			<column name="PARENT_ID" type="NUMBER" length="38" />
+			<column name="DATATYPE_ID" type="NUMBER" length="10" mandatory="y" />
+			<column name="NAMESPACE_ID" type="NUMBER" length="10" />
+			<column name="NAME" type="VARCHAR2" length="4000" />
+			<column name="VAL_INT" type="NUMBER" length="38" />
+			<column name="VAL_DOUBLE" type="BINARY_DOUBLE" />
+			<column name="VAL_STRING" type="VARCHAR2" length="4000" />
+			<column name="VAL_TIMESTAMP" type="TIMESTAMP WITH TIME ZONE" />
+			<column name="VAL_URI" type="VARCHAR2" length="4000" />
+			<column name="VAL_CODESPACE" type="VARCHAR2" length="4000" />
+			<column name="VAL_UOM" type="VARCHAR2" length="4000" />
+			<column name="VAL_ARRAY" type="JSON" />
+			<column name="VAL_LOD" type="VARCHAR2" length="4000" />
+			<column name="VAL_GEOMETRY_ID" type="NUMBER" length="38" />
+			<column name="VAL_IMPLICITGEOM_ID" type="NUMBER" length="38" />
+			<column name="VAL_IMPLICITGEOM_REFPOINT" type="SDO_GEOMETRY" />
+			<column name="VAL_APPEARANCE_ID" type="NUMBER" length="38" />
+			<column name="VAL_ADDRESS_ID" type="NUMBER" length="38" />
+			<column name="VAL_FEATURE_ID" type="NUMBER" length="38" />
+			<column name="VAL_RELATION_TYPE" type="NUMBER" length="10" />
+			<column name="VAL_CONTENT" type="VARCHAR2" length="4000" />
+			<column name="VAL_CONTENT_MIME_TYPE" type="VARCHAR2" length="4000" />
+			<index name="PROPERTY_PK" unique="PRIMARY_KEY" >
+				<column name="ID" />
+			</index>
+			<index name="PROPERTY_FEATURE_FKX" unique="NORMAL" >
+				<column name="FEATURE_ID" />
+			</index>
+			<index name="PROPERTY_PARENT_FKX" unique="NORMAL" >
+				<column name="PARENT_ID" />
+			</index>
+			<index name="PROPERTY_NAMESPACE_INX" unique="NORMAL" >
+				<column name="NAMESPACE_ID" />
+			</index>
+			<index name="PROPERTY_NAME_INX" unique="NORMAL" >
+				<column name="NAME" />
+			</index>
+			<index name="PROPERTY_VAL_STRING_INX" unique="NORMAL" >
+				<column name="VAL_STRING" />
+			</index>
+			<index name="PROPERTY_VAL_UOM_INX" unique="NORMAL" >
+				<column name="VAL_UOM" />
+			</index>
+			<index name="PROPERTY_VAL_URI_INX" unique="NORMAL" >
+				<column name="VAL_URI" />
+			</index>
+			<index name="PROPERTY_VAL_INT_INX" unique="NORMAL" >
+				<column name="VAL_INT" />
+			</index>
+			<index name="PROPERTY_VAL_DOUBLE_INX" unique="NORMAL" >
+				<column name="VAL_DOUBLE" />
+			</index>
+			<index name="PROPERTY_VAL_DATE_INX" unique="NORMAL" >
+				<column name="VAL_TIMESTAMP" />
+			</index>
+			<index name="PROPERTY_VAL_FEATURE_FKX" unique="NORMAL" >
+				<column name="VAL_FEATURE_ID" />
+			</index>
+			<index name="PROPERTY_VAL_GEOMETRY_FKX" unique="NORMAL" >
+				<column name="VAL_GEOMETRY_ID" />
+			</index>
+			<index name="PROPERTY_VAL_IMPLICITGEOM_FKX" unique="NORMAL" >
+				<column name="VAL_IMPLICITGEOM_ID" />
+			</index>
+			<index name="PROPERTY_VAL_APPEARANCE_FKX" unique="NORMAL" >
+				<column name="VAL_APPEARANCE_ID" />
+			</index>
+			<index name="PROPERTY_VAL_RELATION_TYPE_INX" unique="NORMAL" >
+				<column name="VAL_RELATION_TYPE" />
+			</index>
+			<index name="PROPERTY_VAL_ADDRESS_FKX" unique="NORMAL" >
+				<column name="VAL_ADDRESS_ID" />
+			</index>
+			<index name="PROPERTY_VAL_LOD_INX" unique="NORMAL" >
+				<column name="VAL_LOD" />
+			</index>
+			<fk name="PROPERTY_APPEARANCE_FK" to_schema="CITYDB" to_table="APPEARANCE" delete_action="cascade" >
+				<fk_column name="VAL_APPEARANCE_ID" pk="ID" />
+			</fk>
+			<fk name="PROPERTY_FEATURE_FK" to_schema="CITYDB" to_table="FEATURE" >
+				<fk_column name="FEATURE_ID" pk="ID" />
+			</fk>
+			<fk name="PROPERTY_VAL_FEATURE_FK" to_schema="CITYDB" to_table="FEATURE" delete_action="setNull" >
+				<fk_column name="VAL_FEATURE_ID" pk="ID" />
+			</fk>
+			<fk name="PROPERTY_VAL_IMPLICITGEOM_FK" to_schema="CITYDB" to_table="IMPLICIT_GEOMETRY" delete_action="cascade" >
+				<fk_column name="VAL_IMPLICITGEOM_ID" pk="ID" />
+			</fk>
+			<fk name="PROPERTY_PARENT_FK" to_schema="CITYDB" to_table="PROPERTY" delete_action="setNull" >
+				<fk_column name="PARENT_ID" pk="ID" />
+			</fk>
+			<fk name="PROPERTY_VAL_GEOMETRY_FK" to_schema="CITYDB" to_table="GEOMETRY_DATA" delete_action="cascade" >
+				<fk_column name="VAL_GEOMETRY_ID" pk="ID" />
+			</fk>
+			<fk name="PROPERTY_VAL_ADDRESS_FK" to_schema="CITYDB" to_table="ADDRESS" delete_action="cascade" >
+				<fk_column name="VAL_ADDRESS_ID" pk="ID" />
+			</fk>
+		</table>
+		<table name="SURFACE_DATA" prior="TBL" >
+			<column name="ID" type="NUMBER" length="38" mandatory="y" >
+				<defo><![CDATA[SURFACE_DATA_SEQ.NEXTVAL]]></defo>
+			</column>
+			<column name="OBJECTID" type="VARCHAR2" length="4000" />
+			<column name="IDENTIFIER" type="VARCHAR2" length="4000" />
+			<column name="IDENTIFIER_CODESPACE" type="VARCHAR2" length="4000" />
+			<column name="IS_FRONT" type="NUMBER" length="1" />
+			<column name="OBJECTCLASS_ID" type="NUMBER" length="10" mandatory="y" />
+			<column name="X3D_SHININESS" type="BINARY_DOUBLE" />
+			<column name="X3D_TRANSPARENCY" type="BINARY_DOUBLE" />
+			<column name="X3D_AMBIENT_INTENSITY" type="BINARY_DOUBLE" />
+			<column name="X3D_SPECULAR_COLOR" type="VARCHAR2" length="20" />
+			<column name="X3D_DIFFUSE_COLOR" type="VARCHAR2" length="20" />
+			<column name="X3D_EMISSIVE_COLOR" type="VARCHAR2" length="20" />
+			<column name="X3D_IS_SMOOTH" type="NUMBER" length="1" />
+			<column name="TEX_IMAGE_ID" type="NUMBER" length="38" />
+			<column name="TEX_TEXTURE_TYPE" type="VARCHAR2" length="4000" />
+			<column name="TEX_WRAP_MODE" type="VARCHAR2" length="4000" />
+			<column name="TEX_BORDER_COLOR" type="VARCHAR2" length="20" />
+			<column name="GT_ORIENTATION" type="JSON" />
+			<column name="GT_REFERENCE_POINT" type="SDO_GEOMETRY" />
+			<index name="SURFACE_DATA_PK" unique="PRIMARY_KEY" >
+				<column name="ID" />
+			</index>
+			<index name="SURFACE_DATA_TEX_IMAGE_FKX" unique="NORMAL" >
+				<column name="TEX_IMAGE_ID" />
+			</index>
+			<index name="SURFACE_DATA_OBJCLASS_FKX" unique="NORMAL" >
+				<column name="OBJECTCLASS_ID" />
+			</index>
+			<fk name="SURFACE_DATA_TEX_IMAGE_FK" to_schema="CITYDB" to_table="TEX_IMAGE" delete_action="setNull" >
+				<fk_column name="TEX_IMAGE_ID" pk="ID" />
+			</fk>
+		</table>
+		<table name="SURFACE_DATA_MAPPING" prior="TBL" >
+			<column name="SURFACE_DATA_ID" prior="ID" type="NUMBER" length="38" mandatory="y" />
+			<column name="GEOMETRY_DATA_ID" type="NUMBER" length="38" mandatory="y" />
+			<column name="MATERIAL_MAPPING" type="JSON" />
+			<column name="TEXTURE_MAPPING" type="JSON" />
+			<column name="WORLD_TO_TEXTURE_MAPPING" type="JSON" />
+			<column name="GEOREFERENCED_TEXTURE_MAPPING" type="JSON" />
+			<index name="SURFACE_DATA_MAPPING_PK" unique="PRIMARY_KEY" >
+				<column name="SURFACE_DATA_ID" />
+				<column name="GEOMETRY_DATA_ID" />
+			</index>
+			<index name="SURFACE_DATA_MAPPING_FKX1" unique="NORMAL" >
+				<column name="GEOMETRY_DATA_ID" />
+			</index>
+			<index name="SURFACE_DATA_MAPPING_FKX2" unique="NORMAL" >
+				<column name="SURFACE_DATA_ID" />
+			</index>
+			<fk name="SURFACE_DATA_MAPPING_FK1" to_schema="CITYDB" to_table="GEOMETRY_DATA" delete_action="cascade" >
+				<fk_column name="GEOMETRY_DATA_ID" pk="ID" />
+			</fk>
+			<fk name="SURFACE_DATA_MAPPING_FK2" to_schema="CITYDB" to_table="SURFACE_DATA" delete_action="cascade" >
+				<fk_column name="SURFACE_DATA_ID" pk="ID" />
+			</fk>
+		</table>
+		<table name="TEX_IMAGE" prior="TBL" >
+			<column name="ID" type="NUMBER" length="38" mandatory="y" >
+				<defo><![CDATA[TEX_IMAGE_SEQ.NEXTVAL]]></defo>
+			</column>
+			<column name="IMAGE_URI" type="VARCHAR2" length="4000" />
+			<column name="IMAGE_DATA" type="BLOB" />
+			<column name="MIME_TYPE" type="VARCHAR2" length="4000" />
+			<column name="MIME_TYPE_CODESPACE" type="VARCHAR2" length="4000" />
+			<index name="PK_TEX_IMAGE" unique="PRIMARY_KEY" >
+				<column name="ID" />
+			</index>
+		</table>
+		<sequence name="ADDRESS_SEQ" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 NOCACHE NOCYCLE" />
+		<sequence name="ADE_SEQ" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9999999999 NOCACHE NOCYCLE" />
+		<sequence name="APPEARANCE_SEQ" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 NOCACHE NOCYCLE" />
+		<sequence name="APPEAR_TO_SURFACE_DATA_SEQ" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 NOCACHE NOCYCLE" />
+		<sequence name="CODELIST_ENTRY_SEQ" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 NOCACHE NOCYCLE" />
+		<sequence name="CODELIST_SEQ" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 NOCACHE NOCYCLE" />
+		<sequence name="FEATURE_SEQ" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 NOCACHE NOCYCLE" />
+		<sequence name="GEOMETRY_DATA_SEQ" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 NOCACHE NOCYCLE" />
+		<sequence name="IMPLICIT_GEOMETRY_SEQ" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 NOCACHE NOCYCLE" />
+		<sequence name="PROPERTY_SEQ" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 NOCACHE NOCYCLE" />
+		<sequence name="SURFACE_DATA_SEQ" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 NOCACHE NOCYCLE" />
+		<sequence name="TEX_IMAGE_SEQ" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 NOCACHE NOCYCLE" />
+	</schema>
+	<layout name="3DCityDB" id="015db4f3-b04f-4182-a346-9bf5c40d499a" joined_routing="y" show_column_type="y" show_relation="no_text" >
+		<entity schema="CITYDB" name="FEATURE" color="F4DDBE" x="57" y="95" />
+		<entity schema="CITYDB" name="CODELIST" color="F4F3BE" x="950" y="1121" />
+		<entity schema="CITYDB" name="TEX_IMAGE" color="F4BEC7" x="950" y="760" />
+		<entity schema="CITYDB" name="ADDRESS" color="F4DDBE" x="57" y="437" />
+		<entity schema="CITYDB" name="DATABASE_SRS" color="ECECF7" x="57" y="1121" />
+		<entity schema="CITYDB" name="APPEAR_TO_SURFACE_DATA" color="F4BEC7" x="1007" y="627" />
+		<entity schema="CITYDB" name="APPEARANCE" color="F4BEC7" x="950" y="399" />
+		<entity schema="CITYDB" name="GEOMETRY_DATA" color="C7F4BE" x="950" y="95" />
+		<entity schema="CITYDB" name="OBJECTCLASS" color="BEBEF4" x="57" y="893" />
+		<entity schema="CITYDB" name="SURFACE_DATA" color="F4BEC7" x="1330" y="589" />
+		<entity schema="CITYDB" name="IMPLICIT_GEOMETRY" color="EEF7EC" x="1349" y="95" />
+		<entity schema="CITYDB" name="SURFACE_DATA_MAPPING" color="F4BEC7" x="1330" y="399" />
+		<entity schema="CITYDB" name="PROPERTY" color="F7F2EC" x="513" y="95" />
+		<entity schema="CITYDB" name="ADE" color="ECECF7" x="342" y="893" />
+		<entity schema="CITYDB" name="NAMESPACE" color="ECECF7" x="342" y="1121" />
+		<entity schema="CITYDB" name="DATATYPE" color="ECECF7" x="627" y="893" />
+		<entity schema="CITYDB" name="CODELIST_ENTRY" color="F4F3BE" x="1425" y="1121" />
+		<group name="Feature" color="F7F2EC" >
+			<entity schema="CITYDB" name="FEATURE" />
+			<entity schema="CITYDB" name="ADDRESS" />
+			<entity schema="CITYDB" name="PROPERTY" />
+		</group>
+		<group name="Geometry" color="EEF7EC" >
+			<entity schema="CITYDB" name="GEOMETRY_DATA" />
+			<entity schema="CITYDB" name="IMPLICIT_GEOMETRY" />
+		</group>
+		<group name="Appearance" color="FFCCFF" >
+			<entity schema="CITYDB" name="TEX_IMAGE" />
+			<entity schema="CITYDB" name="APPEAR_TO_SURFACE_DATA" />
+			<entity schema="CITYDB" name="APPEARANCE" />
+			<entity schema="CITYDB" name="SURFACE_DATA" />
+			<entity schema="CITYDB" name="SURFACE_DATA_MAPPING" />
+		</group>
+		<group name="Metadata" color="ECECF7" >
+			<entity schema="CITYDB" name="DATABASE_SRS" />
+			<entity schema="CITYDB" name="OBJECTCLASS" />
+			<entity schema="CITYDB" name="ADE" />
+			<entity schema="CITYDB" name="NAMESPACE" />
+			<entity schema="CITYDB" name="DATATYPE" />
+		</group>
+		<group name="Codelist" color="F4F3BE" >
+			<entity schema="CITYDB" name="CODELIST" />
+			<entity schema="CITYDB" name="CODELIST_ENTRY" />
+		</group>
+	</layout>
+</project>
