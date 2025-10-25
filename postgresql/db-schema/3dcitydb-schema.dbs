@@ -125,9 +125,9 @@
 			</index>
 		</table>
 		<table name="datatype" prior="objectclass_0" >
+			<column name="id" type="integer" length="10" decimal="0" mandatory="y" />
 			<column name="supertype_id" prior="superclass_id" type="integer" length="10" decimal="0" />
 			<column name="typename" prior="name" type="text" length="256" />
-			<column name="id" type="integer" length="10" decimal="0" mandatory="y" />
 			<column name="is_abstract" type="integer" />
 			<column name="ade_id" type="integer" length="10" decimal="0" />
 			<column name="namespace_id" type="integer" />
@@ -519,11 +519,11 @@
 		<entity schema="citydb" name="surface_data" color="F4BEC7" x="1083" y="589" />
 		<entity schema="citydb" name="ade" color="BEBEF4" x="304" y="912" />
 		<entity schema="citydb" name="namespace" color="BEBEF4" x="304" y="1121" />
-		<entity schema="citydb" name="datatype" color="BEBEF4" x="513" y="912" />
 		<entity schema="citydb" name="objectclass" color="BEBEF4" x="57" y="912" />
 		<entity schema="citydb" name="implicit_geometry" color="C7F4BE" x="1159" y="95" />
 		<entity schema="citydb" name="codelist_entry" color="F4F3BE" x="1216" y="1121" />
 		<entity schema="citydb" name="feature" color="F4DDBE" x="57" y="95" />
+		<entity schema="citydb" name="datatype" color="BEBEF4" x="513" y="912" />
 		<group name="Geometry" color="EEF7EC" >
 			<entity schema="citydb" name="geometry_data" />
 			<entity schema="citydb" name="implicit_geometry" />
@@ -532,8 +532,8 @@
 			<entity schema="citydb" name="database_srs" />
 			<entity schema="citydb" name="ade" />
 			<entity schema="citydb" name="namespace" />
-			<entity schema="citydb" name="datatype" />
 			<entity schema="citydb" name="objectclass" />
+			<entity schema="citydb" name="datatype" />
 		</group>
 		<group name="Feature" color="F7F2EC" >
 			<entity schema="citydb" name="address" />

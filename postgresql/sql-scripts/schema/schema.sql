@@ -187,9 +187,9 @@ CREATE INDEX appearance_implicit_geom_fkx ON appearance  ( implicit_geometry_id 
 CREATE INDEX appearance_theme_inx ON appearance  ( theme );
 
 CREATE  TABLE datatype ( 
+	id                   integer  NOT NULL  ,
 	supertype_id         integer    ,
 	typename             text    ,
-	id                   integer  NOT NULL  ,
 	is_abstract          integer    ,
 	ade_id               integer    ,
 	namespace_id         integer    ,
