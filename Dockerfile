@@ -15,6 +15,9 @@ FROM eclipse-temurin:${BUILDER_IMAGE_TAG} AS builder
 WORKDIR /build
 COPY . /build
 
+# Make init script executable
+RUN chmod +x /build/build/install/3dcitydb/oracle/docker-scripts/3dcitydb-initdb.sh
+
 # Build
 RUN chmod u+x ./gradlew && ./gradlew installDist
 
@@ -31,9 +34,6 @@ WORKDIR /3dcitydb
 COPY --from=builder /build/build/install/3dcitydb/version.txt .
 COPY --from=builder /build/build/install/3dcitydb/postgresql/sql-scripts .
 COPY --from=builder /build/build/install/3dcitydb/postgresql/docker-scripts/3dcitydb-initdb.sh /docker-entrypoint-initdb.d/
-
-# Make init script executable
-RUN chmod +x /docker-entrypoint-initdb.d/3dcitydb-initdb.sh
 
 # Set labels
 LABEL maintainer="Bruno Willenborg"
