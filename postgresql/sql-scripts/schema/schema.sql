@@ -54,7 +54,7 @@ CREATE  TABLE codelist (
 	codelist_type        text    ,
 	url                  text    ,
 	mime_type            text    ,
-	CONSTRAINT codelist_pkey PRIMARY KEY ( id )
+	CONSTRAINT codelist_pk PRIMARY KEY ( id )
  );
 
 CREATE INDEX codelist_codelist_type_inx ON codelist  ( codelist_type );
@@ -64,7 +64,7 @@ CREATE  TABLE codelist_entry (
 	codelist_id          bigint  NOT NULL  ,
 	code                 text    ,
 	definition           text    ,
-	CONSTRAINT codelist_entry_pkey PRIMARY KEY ( id )
+	CONSTRAINT codelist_entry_pk PRIMARY KEY ( id )
  );
 
 CREATE INDEX codelist_entry_codelist_fkx ON codelist_entry  ( codelist_id );
