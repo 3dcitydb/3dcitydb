@@ -130,8 +130,8 @@ if "%res%"=="f" (
 
 :: Run create-db.sql to create the 3D City Database instance ------------------
 echo.
-echo Connecting to "%DB_USER%@%DB_HOST%:%DB_PORT%/%DB_SERVICE%" ...
+echo Connecting to "%DB_USER%@%DB_HOST%:%DB_PORT%/%ORACLE_PDB%" ...
 <nul set /p="Enter password: "
-sqlplus -S -L "%DB_USER%@%DB_HOST%:%DB_PORT%/%DB_SERVICE%" @create-db.sql "%SRID%" "%SRS_NAME%" "%CHANGELOG%"
+sqlplus -S -L "%DB_USER%@%DB_HOST%:%DB_PORT%/%ORACLE_PDB%" @create-db.sql "%SRID%" "%SRS_NAME%" "%CHANGELOG%"
 
 pause

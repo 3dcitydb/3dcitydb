@@ -1,4 +1,4 @@
-# 3DCityDB PostGIS Dockerfile #################################################
+# 3DCityDB Oracle Dockerfile ##################################################
 #   Official website    https://www.3dcitydb.org
 #   GitHub              https://github.com/3dcitydb
 ###############################################################################
@@ -9,7 +9,7 @@ ARG BASEIMAGE_TAG='latest'
 ARG BUILDER_IMAGE_TAG='21-jdk-jammy'
 
 # Base image
-FROM container-registry.oracle.com/database/free:${BUILDER_IMAGE_TAG} AS builder
+FROM eclipse-temurin:${BUILDER_IMAGE_TAG} AS builder
 
 # Copy source code
 WORKDIR /build
@@ -23,7 +23,7 @@ RUN chmod u+x ./gradlew && ./gradlew installDist
 FROM container-registry.oracle.com/database/free:${BASEIMAGE_TAG} AS runtime
 
 # Set 3DCityDB version
-ARG CITYDB_VERSION=5.0
+ARG CITYDB_VERSION
 ENV CITYDB_VERSION=${CITYDB_VERSION}
 
 # Copy SQL scripts
