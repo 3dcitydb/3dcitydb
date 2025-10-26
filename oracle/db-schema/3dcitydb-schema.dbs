@@ -5,29 +5,31 @@
 			<column name="ID" type="NUMBER" length="38" mandatory="y" >
 				<defo><![CDATA[ADDRESS_SEQ.NEXTVAL]]></defo>
 			</column>
-			<column name="OBJECTID" type="VARCHAR2" length="4000" />
-			<column name="IDENTIFIER" type="VARCHAR2" length="4000" />
+			<column name="OBJECTID" type="VARCHAR2" length="1000" />
+			<column name="IDENTIFIER" type="VARCHAR2" length="1000" />
 			<column name="IDENTIFIER_CODESPACE" type="VARCHAR2" length="4000" />
-			<column name="STREET" type="VARCHAR2" length="4000" />
-			<column name="HOUSE_NUMBER" type="VARCHAR2" length="4000" />
-			<column name="PO_BOX" type="VARCHAR2" length="4000" />
-			<column name="ZIP_CODE" type="VARCHAR2" length="4000" />
-			<column name="CITY" type="VARCHAR2" length="4000" />
-			<column name="STATE" type="VARCHAR2" length="4000" />
-			<column name="COUNTRY" type="VARCHAR2" length="4000" />
+			<column name="STREET" type="VARCHAR2" length="1000" />
+			<column name="HOUSE_NUMBER" type="VARCHAR2" length="1000" />
+			<column name="PO_BOX" type="VARCHAR2" length="1000" />
+			<column name="ZIP_CODE" type="VARCHAR2" length="1000" />
+			<column name="CITY" type="VARCHAR2" length="1000" />
+			<column name="STATE" type="VARCHAR2" length="1000" />
+			<column name="COUNTRY" type="VARCHAR2" length="1000" />
 			<column name="FREE_TEXT" type="JSON" />
 			<column name="MULTI_POINT" type="SDO_GEOMETRY" />
 			<column name="CONTENT" type="VARCHAR2" length="4000" />
-			<column name="CONTENT_MIME_TYPE" type="VARCHAR2" length="4000" />
+			<column name="CONTENT_MIME_TYPE" type="VARCHAR2" length="1000" />
 			<index name="ADDRESS_PK" unique="PRIMARY_KEY" >
 				<column name="ID" />
 			</index>
 		</table>
 		<table name="ADE" prior="TBL" >
-			<column name="ID" type="NUMBER" length="10" mandatory="y" />
-			<column name="NAME" type="VARCHAR2" length="4000" mandatory="y" />
+			<column name="ID" type="NUMBER" length="10" mandatory="y" >
+				<defo><![CDATA[ADE_SEQ.NEXTVAL]]></defo>
+			</column>
+			<column name="NAME" type="VARCHAR2" length="1000" mandatory="y" />
 			<column name="DESCRIPTION" type="VARCHAR2" length="4000" />
-			<column name="VERSION" type="VARCHAR2" length="4000" />
+			<column name="VERSION" type="VARCHAR2" length="100" />
 			<index name="ADE_PK" unique="PRIMARY_KEY" >
 				<column name="ID" />
 			</index>
@@ -36,10 +38,10 @@
 			<column name="ID" type="NUMBER" length="38" mandatory="y" >
 				<defo><![CDATA[APPEARANCE_SEQ.NEXTVAL]]></defo>
 			</column>
-			<column name="OBJECTID" type="VARCHAR2" length="4000" />
-			<column name="IDENTIFIER" type="VARCHAR2" length="4000" />
+			<column name="OBJECTID" type="VARCHAR2" length="1000" />
+			<column name="IDENTIFIER" type="VARCHAR2" length="1000" />
 			<column name="IDENTIFIER_CODESPACE" type="VARCHAR2" length="4000" />
-			<column name="THEME" type="VARCHAR2" length="4000" />
+			<column name="THEME" type="VARCHAR2" length="1000" />
 			<column name="IS_GLOBAL" type="NUMBER" length="1" />
 			<column name="FEATURE_ID" type="NUMBER" length="38" />
 			<column name="IMPLICIT_GEOMETRY_ID" type="NUMBER" length="38" />
@@ -88,9 +90,9 @@
 			<column name="ID" type="NUMBER" length="38" mandatory="y" >
 				<defo><![CDATA[CODELIST_SEQ.NEXTVAL]]></defo>
 			</column>
-			<column name="CODELIST_TYPE" type="VARCHAR2" length="4000" />
+			<column name="CODELIST_TYPE" type="VARCHAR2" length="1000" />
 			<column name="URL" type="VARCHAR2" length="4000" />
-			<column name="MIME_TYPE" type="VARCHAR2" length="4000" />
+			<column name="MIME_TYPE" type="VARCHAR2" length="1000" />
 			<index name="CODELIST_PK" unique="PRIMARY_KEY" >
 				<column name="ID" />
 			</index>
@@ -103,7 +105,7 @@
 				<defo><![CDATA[CODELIST_ENTRY_SEQ.NEXTVAL]]></defo>
 			</column>
 			<column name="CODELIST_ID" type="NUMBER" length="38" />
-			<column name="CODE" type="VARCHAR2" length="4000" />
+			<column name="CODE" type="VARCHAR2" length="1000" />
 			<column name="DEFINITION" type="VARCHAR2" length="4000" />
 			<index name="CODELIST_ENTRY_PK" unique="PRIMARY_KEY" >
 				<column name="ID" />
@@ -116,8 +118,8 @@
 			</fk>
 		</table>
 		<table name="DATABASE_SRS" prior="TBL" >
-			<column name="SRID" prior="ID" type="NUMBER" length="10" mandatory="y" />
-			<column name="SRS_NAME" type="VARCHAR2" length="4000" />
+			<column name="SRID" prior="ID" type="NUMBER" length="38" mandatory="y" />
+			<column name="SRS_NAME" type="VARCHAR2" length="1000" />
 			<index name="DATABASE_SRS_PK" unique="PRIMARY_KEY" >
 				<column name="SRID" />
 			</index>
@@ -125,7 +127,7 @@
 		<table name="DATATYPE" prior="TBL" >
 			<column name="ID" type="NUMBER" length="10" mandatory="y" />
 			<column name="SUPERTYPE_ID" type="NUMBER" length="10" />
-			<column name="TYPENAME" type="VARCHAR2" length="4000" />
+			<column name="TYPENAME" type="VARCHAR2" length="255" />
 			<column name="IS_ABSTRACT" type="NUMBER" length="1" />
 			<column name="ADE_ID" type="NUMBER" length="10" />
 			<column name="NAMESPACE_ID" type="NUMBER" length="10" />
@@ -151,12 +153,12 @@
 				<defo><![CDATA[FEATURE_SEQ.NEXTVAL]]></defo>
 			</column>
 			<column name="OBJECTCLASS_ID" type="NUMBER" length="10" mandatory="y" />
-			<column name="OBJECTID" prior="OBJECT_ID" type="VARCHAR2" length="4000" />
-			<column name="IDENTIFIER" type="VARCHAR2" length="4000" />
+			<column name="OBJECTID" prior="OBJECT_ID" type="VARCHAR2" length="1000" />
+			<column name="IDENTIFIER" type="VARCHAR2" length="1000" />
 			<column name="IDENTIFIER_CODESPACE" type="VARCHAR2" length="4000" />
 			<column name="ENVELOPE" type="SDO_GEOMETRY" />
 			<column name="LAST_MODIFICATION_DATE" type="TIMESTAMP WITH TIME ZONE" />
-			<column name="UPDATING_PERSON" type="VARCHAR2" length="4000" />
+			<column name="UPDATING_PERSON" type="VARCHAR2" length="1000" />
 			<column name="REASON_FOR_UPDATE" type="VARCHAR2" length="4000" />
 			<column name="LINEAGE" type="VARCHAR2" length="4000" />
 			<column name="CREATION_DATE" type="TIMESTAMP WITH TIME ZONE" />
@@ -220,8 +222,8 @@
 			<column name="ID" type="NUMBER" length="38" mandatory="y" >
 				<defo><![CDATA[IMPLICIT_GEOMETRY_SEQ.NEXTVAL]]></defo>
 			</column>
-			<column name="OBJECTID" type="VARCHAR2" length="4000" />
-			<column name="MIME_TYPE" type="VARCHAR2" length="4000" />
+			<column name="OBJECTID" type="VARCHAR2" length="1000" />
+			<column name="MIME_TYPE" type="VARCHAR2" length="1000" />
 			<column name="MIME_TYPE_CODESPACE" type="VARCHAR2" length="4000" />
 			<column name="REFERENCE_TO_LIBRARY" type="VARCHAR2" length="4000" />
 			<column name="LIBRARY_OBJECT" type="BLOB" />
@@ -241,8 +243,8 @@
 		</table>
 		<table name="NAMESPACE" prior="TBL" >
 			<column name="ID" type="NUMBER" length="10" mandatory="y" />
-			<column name="ALIAS" type="VARCHAR2" length="20" />
-			<column name="NAMESPACE" type="VARCHAR2" length="4000" />
+			<column name="ALIAS" type="VARCHAR2" length="50" />
+			<column name="NAMESPACE" type="VARCHAR2" length="1000" />
 			<column name="ADE_ID" type="NUMBER" length="10" />
 			<index name="NAMESPACE_PK" unique="PRIMARY_KEY" >
 				<column name="ID" />
@@ -254,7 +256,7 @@
 		<table name="OBJECTCLASS" prior="TBL" >
 			<column name="ID" prior="SUPERCLASS_ID" type="NUMBER" length="10" mandatory="y" />
 			<column name="SUPERCLASS_ID" type="NUMBER" length="10" />
-			<column name="CLASSNAME" type="VARCHAR2" length="4000" />
+			<column name="CLASSNAME" type="VARCHAR2" length="255" />
 			<column name="IS_ABSTRACT" type="NUMBER" length="1" />
 			<column name="IS_TOPLEVEL" type="NUMBER" length="1" />
 			<column name="ADE_ID" type="NUMBER" length="10" />
@@ -284,7 +286,7 @@
 			<column name="PARENT_ID" type="NUMBER" length="38" />
 			<column name="DATATYPE_ID" type="NUMBER" length="10" mandatory="y" />
 			<column name="NAMESPACE_ID" type="NUMBER" length="10" />
-			<column name="NAME" type="VARCHAR2" length="4000" />
+			<column name="NAME" type="VARCHAR2" length="1000" />
 			<column name="VAL_INT" type="NUMBER" length="38" />
 			<column name="VAL_DOUBLE" type="BINARY_DOUBLE" />
 			<column name="VAL_STRING" type="VARCHAR2" length="4000" />
@@ -293,7 +295,7 @@
 			<column name="VAL_CODESPACE" type="VARCHAR2" length="4000" />
 			<column name="VAL_UOM" type="VARCHAR2" length="4000" />
 			<column name="VAL_ARRAY" type="JSON" />
-			<column name="VAL_LOD" type="VARCHAR2" length="4000" />
+			<column name="VAL_LOD" type="VARCHAR2" length="255" />
 			<column name="VAL_GEOMETRY_ID" type="NUMBER" length="38" />
 			<column name="VAL_IMPLICITGEOM_ID" type="NUMBER" length="38" />
 			<column name="VAL_IMPLICITGEOM_REFPOINT" type="SDO_GEOMETRY" />
@@ -302,7 +304,7 @@
 			<column name="VAL_FEATURE_ID" type="NUMBER" length="38" />
 			<column name="VAL_RELATION_TYPE" type="NUMBER" length="10" />
 			<column name="VAL_CONTENT" type="VARCHAR2" length="4000" />
-			<column name="VAL_CONTENT_MIME_TYPE" type="VARCHAR2" length="4000" />
+			<column name="VAL_CONTENT_MIME_TYPE" type="VARCHAR2" length="1000" />
 			<index name="PROPERTY_PK" unique="PRIMARY_KEY" >
 				<column name="ID" />
 			</index>
@@ -383,8 +385,8 @@
 			<column name="ID" type="NUMBER" length="38" mandatory="y" >
 				<defo><![CDATA[SURFACE_DATA_SEQ.NEXTVAL]]></defo>
 			</column>
-			<column name="OBJECTID" type="VARCHAR2" length="4000" />
-			<column name="IDENTIFIER" type="VARCHAR2" length="4000" />
+			<column name="OBJECTID" type="VARCHAR2" length="1000" />
+			<column name="IDENTIFIER" type="VARCHAR2" length="1000" />
 			<column name="IDENTIFIER_CODESPACE" type="VARCHAR2" length="4000" />
 			<column name="IS_FRONT" type="NUMBER" length="1" />
 			<column name="OBJECTCLASS_ID" type="NUMBER" length="10" mandatory="y" />
@@ -396,8 +398,8 @@
 			<column name="X3D_EMISSIVE_COLOR" type="VARCHAR2" length="20" />
 			<column name="X3D_IS_SMOOTH" type="NUMBER" length="1" />
 			<column name="TEX_IMAGE_ID" type="NUMBER" length="38" />
-			<column name="TEX_TEXTURE_TYPE" type="VARCHAR2" length="4000" />
-			<column name="TEX_WRAP_MODE" type="VARCHAR2" length="4000" />
+			<column name="TEX_TEXTURE_TYPE" type="VARCHAR2" length="255" />
+			<column name="TEX_WRAP_MODE" type="VARCHAR2" length="255" />
 			<column name="TEX_BORDER_COLOR" type="VARCHAR2" length="20" />
 			<column name="GT_ORIENTATION" type="JSON" />
 			<column name="GT_REFERENCE_POINT" type="SDO_GEOMETRY" />
@@ -444,9 +446,9 @@
 			</column>
 			<column name="IMAGE_URI" type="VARCHAR2" length="4000" />
 			<column name="IMAGE_DATA" type="BLOB" />
-			<column name="MIME_TYPE" type="VARCHAR2" length="4000" />
+			<column name="MIME_TYPE" type="VARCHAR2" length="1000" />
 			<column name="MIME_TYPE_CODESPACE" type="VARCHAR2" length="4000" />
-			<index name="PK_TEX_IMAGE" unique="PRIMARY_KEY" >
+			<index name="TEX_IMAGE_PK" unique="PRIMARY_KEY" >
 				<column name="ID" />
 			</index>
 		</table>
@@ -464,23 +466,23 @@
 		<sequence name="TEX_IMAGE_SEQ" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 NOCACHE NOCYCLE" />
 	</schema>
 	<layout name="3DCityDB" id="015db4f3-b04f-4182-a346-9bf5c40d499a" joined_routing="y" show_column_type="y" show_relation="no_text" >
-		<entity schema="CITYDB" name="FEATURE" color="F4DDBE" x="57" y="95" />
-		<entity schema="CITYDB" name="CODELIST" color="F4F3BE" x="950" y="1121" />
-		<entity schema="CITYDB" name="TEX_IMAGE" color="F4BEC7" x="950" y="760" />
-		<entity schema="CITYDB" name="ADDRESS" color="F4DDBE" x="57" y="437" />
-		<entity schema="CITYDB" name="DATABASE_SRS" color="ECECF7" x="57" y="1121" />
 		<entity schema="CITYDB" name="APPEAR_TO_SURFACE_DATA" color="F4BEC7" x="1007" y="627" />
-		<entity schema="CITYDB" name="APPEARANCE" color="F4BEC7" x="950" y="399" />
 		<entity schema="CITYDB" name="GEOMETRY_DATA" color="C7F4BE" x="950" y="95" />
-		<entity schema="CITYDB" name="OBJECTCLASS" color="BEBEF4" x="57" y="893" />
-		<entity schema="CITYDB" name="SURFACE_DATA" color="F4BEC7" x="1330" y="589" />
-		<entity schema="CITYDB" name="IMPLICIT_GEOMETRY" color="EEF7EC" x="1349" y="95" />
 		<entity schema="CITYDB" name="SURFACE_DATA_MAPPING" color="F4BEC7" x="1330" y="399" />
-		<entity schema="CITYDB" name="PROPERTY" color="F7F2EC" x="513" y="95" />
-		<entity schema="CITYDB" name="ADE" color="ECECF7" x="342" y="893" />
 		<entity schema="CITYDB" name="NAMESPACE" color="ECECF7" x="342" y="1121" />
+		<entity schema="CITYDB" name="FEATURE" color="F4DDBE" x="57" y="95" />
+		<entity schema="CITYDB" name="ADDRESS" color="F4DDBE" x="57" y="437" />
+		<entity schema="CITYDB" name="OBJECTCLASS" color="BEBEF4" x="57" y="893" />
 		<entity schema="CITYDB" name="DATATYPE" color="ECECF7" x="627" y="893" />
+		<entity schema="CITYDB" name="PROPERTY" color="F7F2EC" x="513" y="95" />
+		<entity schema="CITYDB" name="APPEARANCE" color="F4BEC7" x="950" y="399" />
+		<entity schema="CITYDB" name="TEX_IMAGE" color="F4BEC7" x="950" y="760" />
+		<entity schema="CITYDB" name="SURFACE_DATA" color="F4BEC7" x="1330" y="589" />
+		<entity schema="CITYDB" name="CODELIST" color="F4F3BE" x="950" y="1121" />
 		<entity schema="CITYDB" name="CODELIST_ENTRY" color="F4F3BE" x="1425" y="1121" />
+		<entity schema="CITYDB" name="ADE" color="ECECF7" x="342" y="893" />
+		<entity schema="CITYDB" name="DATABASE_SRS" color="ECECF7" x="57" y="1121" />
+		<entity schema="CITYDB" name="IMPLICIT_GEOMETRY" color="EEF7EC" x="1349" y="95" />
 		<group name="Feature" color="F7F2EC" >
 			<entity schema="CITYDB" name="FEATURE" />
 			<entity schema="CITYDB" name="ADDRESS" />
@@ -491,18 +493,18 @@
 			<entity schema="CITYDB" name="IMPLICIT_GEOMETRY" />
 		</group>
 		<group name="Appearance" color="FFCCFF" >
-			<entity schema="CITYDB" name="TEX_IMAGE" />
 			<entity schema="CITYDB" name="APPEAR_TO_SURFACE_DATA" />
-			<entity schema="CITYDB" name="APPEARANCE" />
-			<entity schema="CITYDB" name="SURFACE_DATA" />
 			<entity schema="CITYDB" name="SURFACE_DATA_MAPPING" />
+			<entity schema="CITYDB" name="APPEARANCE" />
+			<entity schema="CITYDB" name="TEX_IMAGE" />
+			<entity schema="CITYDB" name="SURFACE_DATA" />
 		</group>
 		<group name="Metadata" color="ECECF7" >
-			<entity schema="CITYDB" name="DATABASE_SRS" />
-			<entity schema="CITYDB" name="OBJECTCLASS" />
-			<entity schema="CITYDB" name="ADE" />
 			<entity schema="CITYDB" name="NAMESPACE" />
+			<entity schema="CITYDB" name="OBJECTCLASS" />
 			<entity schema="CITYDB" name="DATATYPE" />
+			<entity schema="CITYDB" name="ADE" />
+			<entity schema="CITYDB" name="DATABASE_SRS" />
 		</group>
 		<group name="Codelist" color="F4F3BE" >
 			<entity schema="CITYDB" name="CODELIST" />
