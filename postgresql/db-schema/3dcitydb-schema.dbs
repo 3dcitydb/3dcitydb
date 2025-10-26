@@ -93,7 +93,7 @@
 			<column name="codelist_type" type="text" length="256" />
 			<column name="url" type="text" length="4000" />
 			<column name="mime_type" prior="mimetype" type="text" length="256" />
-			<index name="codelist_pkey" unique="PRIMARY_KEY" >
+			<index name="codelist_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 			<index name="codelist_codelist_type_inx" unique="NORMAL" >
@@ -107,7 +107,7 @@
 			<column name="codelist_id" type="bigint" mandatory="y" />
 			<column name="code" type="text" length="256" />
 			<column name="definition" type="text" length="256" />
-			<index name="codelist_entry_pkey" unique="PRIMARY_KEY" >
+			<index name="codelist_entry_pk" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 			<index name="codelist_entry_codelist_fkx" unique="NORMAL" >
@@ -507,7 +507,6 @@
 	</schema>
 	<layout name="3DCityDB" id="Layout-1758" confirmed="y" joined_routing="y" show_column_type="y" show_relation="no_text" >
 		<comment><![CDATA[3DCityDB]]></comment>
-		<entity schema="citydb" name="codelist" color="F4F3BE" x="798" y="1121" />
 		<entity schema="citydb" name="appearance" color="F4BEC7" x="798" y="399" />
 		<entity schema="citydb" name="geometry_data" color="C7F4BE" x="798" y="95" />
 		<entity schema="citydb" name="property" color="F4DDBE" x="399" y="95" />
@@ -515,7 +514,6 @@
 		<entity schema="citydb" name="ade" color="BEBEF4" x="304" y="893" />
 		<entity schema="citydb" name="objectclass" color="BEBEF4" x="57" y="893" />
 		<entity schema="citydb" name="implicit_geometry" color="C7F4BE" x="1159" y="95" />
-		<entity schema="citydb" name="codelist_entry" color="F4F3BE" x="1216" y="1121" />
 		<entity schema="citydb" name="feature" color="F4DDBE" x="57" y="95" />
 		<entity schema="citydb" name="datatype" color="BEBEF4" x="513" y="893" />
 		<entity schema="citydb" name="namespace" color="BEBEF4" x="304" y="1121" />
@@ -524,6 +522,8 @@
 		<entity schema="citydb" name="tex_image" color="F4BEC7" x="798" y="760" />
 		<entity schema="citydb" name="address" color="F4DDBE" x="57" y="437" />
 		<entity schema="citydb" name="database_srs" color="BEBEF4" x="57" y="1121" />
+		<entity schema="citydb" name="codelist" color="F4F3BE" x="798" y="1121" />
+		<entity schema="citydb" name="codelist_entry" color="F4F3BE" x="1216" y="1121" />
 		<group name="Geometry" color="EEF7EC" >
 			<entity schema="citydb" name="geometry_data" />
 			<entity schema="citydb" name="implicit_geometry" />
