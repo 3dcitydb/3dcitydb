@@ -16,7 +16,7 @@ WORKDIR /build
 COPY . /build
 
 # Make init script executable
-RUN chmod +x /build/build/install/3dcitydb/oracle/docker-scripts/3dcitydb-initdb.sh
+RUN chmod +x /build/build/install/3dcitydb/postgresql/docker-scripts/3dcitydb-initdb.sh
 
 # Build
 RUN chmod u+x ./gradlew && ./gradlew installDist
