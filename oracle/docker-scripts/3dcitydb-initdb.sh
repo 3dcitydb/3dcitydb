@@ -14,7 +14,8 @@ fi
 if [ -z $ORACLE_PWD ]; then
   echo
   echo "ORACLE_PWD is not set. No 3DCityDB instance will be created."
-  exit 1
+  echo
+  exit
 fi
 
 # SRID ------------------------------------------------------------------------
@@ -23,7 +24,8 @@ if [ -z ${SRID+x} ]; then
   # No SRID set -> give instructions on how to create a DB and do nothing
   echo
   echo "SRID is not set. No 3DCityDB instance will be created."
-  exit 1
+  echo
+  exit
 else
   # SRID given, check if valid
   if [[ ! $SRID =~ $regex_numeric ]] || [ $SRID -le 0 ]; then
