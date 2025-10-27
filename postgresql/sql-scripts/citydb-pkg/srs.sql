@@ -225,9 +225,9 @@ LANGUAGE plpgsql STABLE;
 *******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.check_srid(srid INTEGER) RETURNS INTEGER AS
 $body$
-SELECT COALESCE((
+SELECT CASE WHEN EXISTS (
   SELECT 1 FROM spatial_ref_sys WHERE srid = $1
-), 0);
+) THEN 1 ELSE 0 END;
 $body$
 LANGUAGE sql STABLE;
 
