@@ -76,24 +76,17 @@ AS
     unknown_srs_ex EXCEPTION;
 
   BEGIN
-    SELECT
-      COUNT(srid) INTO l_srid
-    FROM
-      mdsys.cs_srs
-    WHERE
-      srid = p_srid;
+    SELECT CASE
+      WHEN EXISTS (SELECT 1 FROM mdsys.cs_srs WHERE srid = p_srid)
+      THEN
+        1
+      ELSE
+        0
+      END
+    INTO l_srid
+    FROM dual;
 
-    IF l_srid = 0 THEN
-      RAISE unknown_srs_ex;
-    ELSE
-      RETURN 1;
-    END IF;
-
-    EXCEPTION
-      WHEN unknown_srs_ex THEN
-        DBMS_OUTPUT.PUT_LINE('Table MDSYS.CS_SRS does not contain the SRID ' || p_srid || '.');
-        RETURN 0;
-
+    RETURN l_srid;
   END check_srid;
   -- End of function
 
