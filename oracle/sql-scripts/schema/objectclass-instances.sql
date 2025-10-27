@@ -58,7 +58,7 @@ END;
 
 DECLARE
   v_schema100 JSON := JSON(@dyn:Dynamizer@);
-  v_schema101 JSON := JSON(@dynAbstractTimeseries@);
+  v_schema101 JSON := JSON(@dyn:AbstractTimeseries@);
   v_schema102 JSON := JSON(@dyn:AbstractAtomicTimeseries@);
   v_schema103 JSON := JSON(@dyn:TabulatedFileTimeseries@);
   v_schema104 JSON := JSON(@dyn:StandardFileTimeseries@);
