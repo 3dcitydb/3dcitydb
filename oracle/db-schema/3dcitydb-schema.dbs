@@ -174,7 +174,7 @@
 			<index name="FEATURE_OBJECTID_INX" unique="NORMAL" >
 				<column name="OBJECTID" />
 			</index>
-			<index name="FEATURE_ENVELOPE_SPX" unique="NORMAL" options="INDEXTYPE IS MDSYS.SPATIAL_INDEX" virtual="y" >
+			<index name="FEATURE_ENVELOPE_SPX" unique="NORMAL" options="INDEXTYPE IS MDSYS.SPATIAL_INDEX_V2" virtual="y" >
 				<column name="ENVELOPE" />
 			</index>
 			<index name="FEATURE_IDENTIFIER_INX" unique="NORMAL" >
@@ -208,10 +208,7 @@
 			<index name="GEOMETRY_DATA_FEATURE_FKX" unique="NORMAL" >
 				<column name="FEATURE_ID" />
 			</index>
-			<index name="GEOMETRY_DATA_SPX" unique="NORMAL" options="INDEXTYPE IS MDSYS.SPATIAL_INDEX" virtual="y" >
-				<column name="GEOMETRY" />
-			</index>
-			<index name="GEOMETRY_DATA_SPX" unique="NORMAL" options="INDEXTYPE IS MDSYS.SPATIAL_INDEX" virtual="y" >
+			<index name="GEOMETRY_DATA_SPX" unique="NORMAL" options="INDEXTYPE IS MDSYS.SPATIAL_INDEX_V2" virtual="y" >
 				<column name="GEOMETRY" />
 			</index>
 			<fk name="GEOMETRY_DATA_FEATURE_FK" to_schema="CITYDB" to_table="FEATURE" delete_action="setNull" >
@@ -509,49 +506,49 @@
 		<sequence name="FEATURE_CHANGELOG_SEQ" options="START WITH 1 INCREMENT BY 1 MINVALUE 0 NOCACHE NOCYCLE" />
 	</schema>
 	<layout name="3DCityDB" id="015db4f3-b04f-4182-a346-9bf5c40d499a" joined_routing="y" show_column_type="y" show_relation="no_text" >
-		<entity schema="CITYDB" name="APPEAR_TO_SURFACE_DATA" color="F4BEC7" x="1007" y="627" />
-		<entity schema="CITYDB" name="SURFACE_DATA_MAPPING" color="F4BEC7" x="1330" y="399" />
-		<entity schema="CITYDB" name="NAMESPACE" color="ECECF7" x="342" y="1121" />
-		<entity schema="CITYDB" name="DATATYPE" color="ECECF7" x="627" y="893" />
-		<entity schema="CITYDB" name="TEX_IMAGE" color="F4BEC7" x="950" y="760" />
-		<entity schema="CITYDB" name="SURFACE_DATA" color="F4BEC7" x="1330" y="589" />
-		<entity schema="CITYDB" name="CODELIST_ENTRY" color="F4F3BE" x="1425" y="1121" />
-		<entity schema="CITYDB" name="ADE" color="ECECF7" x="342" y="893" />
-		<entity schema="CITYDB" name="DATABASE_SRS" color="ECECF7" x="57" y="1121" />
-		<entity schema="CITYDB" name="IMPLICIT_GEOMETRY" color="EEF7EC" x="1349" y="95" />
 		<entity schema="CITYDB" name="FEATURE" color="F4DDBE" x="57" y="95" />
-		<entity schema="CITYDB" name="APPEARANCE" color="F4BEC7" x="950" y="399" />
-		<entity schema="CITYDB" name="CODELIST" color="F4F3BE" x="950" y="1121" />
+		<entity schema="CITYDB" name="PROPERTY" color="F7F2EC" x="513" y="95" />
 		<entity schema="CITYDB" name="ADDRESS" color="F4DDBE" x="57" y="437" />
 		<entity schema="CITYDB" name="GEOMETRY_DATA" color="C7F4BE" x="950" y="95" />
-		<entity schema="CITYDB" name="PROPERTY" color="F7F2EC" x="513" y="95" />
+		<entity schema="CITYDB" name="IMPLICIT_GEOMETRY" color="EEF7EC" x="1349" y="95" />
+		<entity schema="CITYDB" name="APPEARANCE" color="F4BEC7" x="950" y="399" />
+		<entity schema="CITYDB" name="SURFACE_DATA_MAPPING" color="F4BEC7" x="1330" y="399" />
+		<entity schema="CITYDB" name="APPEAR_TO_SURFACE_DATA" color="F4BEC7" x="1007" y="627" />
+		<entity schema="CITYDB" name="SURFACE_DATA" color="F4BEC7" x="1330" y="589" />
+		<entity schema="CITYDB" name="TEX_IMAGE" color="F4BEC7" x="950" y="760" />
 		<entity schema="CITYDB" name="OBJECTCLASS" color="BEBEF4" x="57" y="893" />
+		<entity schema="CITYDB" name="ADE" color="ECECF7" x="342" y="893" />
+		<entity schema="CITYDB" name="DATATYPE" color="ECECF7" x="627" y="893" />
+		<entity schema="CITYDB" name="DATABASE_SRS" color="ECECF7" x="57" y="1121" />
+		<entity schema="CITYDB" name="NAMESPACE" color="ECECF7" x="342" y="1121" />
+		<entity schema="CITYDB" name="CODELIST" color="F4F3BE" x="950" y="1121" />
+		<entity schema="CITYDB" name="CODELIST_ENTRY" color="F4F3BE" x="1425" y="1121" />
 		<group name="Feature" color="F7F2EC" >
 			<entity schema="CITYDB" name="FEATURE" />
-			<entity schema="CITYDB" name="ADDRESS" />
 			<entity schema="CITYDB" name="PROPERTY" />
+			<entity schema="CITYDB" name="ADDRESS" />
 		</group>
 		<group name="Geometry" color="EEF7EC" >
-			<entity schema="CITYDB" name="IMPLICIT_GEOMETRY" />
 			<entity schema="CITYDB" name="GEOMETRY_DATA" />
+			<entity schema="CITYDB" name="IMPLICIT_GEOMETRY" />
 		</group>
 		<group name="Appearance" color="FFCCFF" >
-			<entity schema="CITYDB" name="APPEAR_TO_SURFACE_DATA" />
-			<entity schema="CITYDB" name="SURFACE_DATA_MAPPING" />
-			<entity schema="CITYDB" name="TEX_IMAGE" />
-			<entity schema="CITYDB" name="SURFACE_DATA" />
 			<entity schema="CITYDB" name="APPEARANCE" />
+			<entity schema="CITYDB" name="SURFACE_DATA_MAPPING" />
+			<entity schema="CITYDB" name="APPEAR_TO_SURFACE_DATA" />
+			<entity schema="CITYDB" name="SURFACE_DATA" />
+			<entity schema="CITYDB" name="TEX_IMAGE" />
 		</group>
 		<group name="Metadata" color="ECECF7" >
-			<entity schema="CITYDB" name="NAMESPACE" />
-			<entity schema="CITYDB" name="DATATYPE" />
-			<entity schema="CITYDB" name="ADE" />
-			<entity schema="CITYDB" name="DATABASE_SRS" />
 			<entity schema="CITYDB" name="OBJECTCLASS" />
+			<entity schema="CITYDB" name="ADE" />
+			<entity schema="CITYDB" name="DATATYPE" />
+			<entity schema="CITYDB" name="DATABASE_SRS" />
+			<entity schema="CITYDB" name="NAMESPACE" />
 		</group>
 		<group name="Codelist" color="F4F3BE" >
-			<entity schema="CITYDB" name="CODELIST_ENTRY" />
 			<entity schema="CITYDB" name="CODELIST" />
+			<entity schema="CITYDB" name="CODELIST_ENTRY" />
 		</group>
 	</layout>
 	<layout name="Appearance module" id="ee682387-44a0-4718-81e6-2bceb8e5e1a3" confirmed="y" joined_routing="y" show_column_type="y" show_relation="no_text" >
