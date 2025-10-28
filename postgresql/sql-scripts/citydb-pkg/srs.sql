@@ -19,29 +19,31 @@ $body$
 DECLARE
   schema_name TEXT;
   idx_name TEXT;
-  idx_param TEXT;
+  idx_def TEXT;
   geometry_type TEXT;
 BEGIN
   schema_name := citydb_pkg.get_current_schema();
 
   -- check if a spatial index is defined for the column
-  SELECT 
-    pgc_i.relname,
-    pgoc.opcname
+  SELECT
+    i.relname,
+    pg_get_indexdef(i.oid)
   INTO
     idx_name,
-    idx_param
-  FROM pg_class pgc_t
-  JOIN pg_index pgi ON pgi.indrelid = pgc_t.oid  
-  JOIN pg_class pgc_i ON pgc_i.oid = pgi.indexrelid
-  JOIN pg_opclass pgoc ON pgoc.oid = pgi.indclass[0]
-  JOIN pg_am pgam ON pgam.oid = pgc_i.relam
-  JOIN pg_attribute pga ON pga.attrelid = pgc_i.oid
-  JOIN pg_namespace pgns ON pgns.oid = pgc_i.relnamespace
-  WHERE pgns.nspname = schema_name
-    AND pgc_t.relname = $1
-    AND pga.attname = $2
-    AND pgam.amname = 'gist';
+    idx_def
+  FROM pg_index idx
+  JOIN pg_class t ON t.oid = idx.indrelid
+  JOIN pg_namespace n ON n.oid = t.relnamespace
+  JOIN pg_class i ON i.oid = idx.indexrelid
+  JOIN pg_am am ON am.oid = i.relam
+  JOIN pg_attribute a ON a.attrelid = t.oid AND a.attname = $2
+  WHERE n.nspname = schema_name
+    AND t.relname = $1
+    AND idx.indnatts = 1
+    AND a.attnum = ANY(idx.indkey)
+    AND am.amname = 'gist'
+    AND idx.indisvalid
+  LIMIT 1;
 
   IF idx_name IS NOT NULL THEN
     EXECUTE format('DROP INDEX %I.%I', schema_name, idx_name);
@@ -69,10 +71,7 @@ BEGIN
 
   IF idx_name IS NOT NULL THEN
     -- recreate spatial index
-    EXECUTE format(
-      'CREATE INDEX %I ON %I.%I USING GIST (%I %I)',
-      idx_name, schema_name, $1, $2, idx_param
-    );
+    EXECUTE idx_def;
   END IF;
 END;
 $body$
