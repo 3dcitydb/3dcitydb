@@ -23,6 +23,10 @@ DECLARE
 BEGIN
   schema_name := citydb_pkg.get_current_schema();
 
+  IF Find_SRID(schema_name, $1, $2) = target_srid THEN
+     RETURN;
+  END IF;
+
   IF transform <> 0 THEN
     -- construct correct geometry type
     IF dim = 3 AND right($6, 1) <> 'M' THEN
@@ -60,6 +64,7 @@ BEGIN
       AND am.amname = 'gist'
       AND idx.indisvalid
   LOOP
+    RAISE DEBUG 'Dropping and recreating index "%" on %(%).', rec.index_name, $1, $2;
     EXECUTE format('DROP INDEX IF EXISTS %I.%I', schema_name, rec.index_name);
     EXECUTE rec.index_definition;
   END LOOP;
