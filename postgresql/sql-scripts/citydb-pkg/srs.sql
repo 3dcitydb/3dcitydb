@@ -18,36 +18,10 @@ CREATE OR REPLACE FUNCTION citydb_pkg.change_column_srid(
 $body$
 DECLARE
   schema_name TEXT;
-  idx_name TEXT;
-  idx_def TEXT;
   geometry_type TEXT;
+  rec RECORD;
 BEGIN
   schema_name := citydb_pkg.get_current_schema();
-
-  -- check if a spatial index is defined for the column
-  SELECT
-    i.relname,
-    pg_get_indexdef(i.oid)
-  INTO
-    idx_name,
-    idx_def
-  FROM pg_index idx
-  JOIN pg_class t ON t.oid = idx.indrelid
-  JOIN pg_namespace n ON n.oid = t.relnamespace
-  JOIN pg_class i ON i.oid = idx.indexrelid
-  JOIN pg_am am ON am.oid = i.relam
-  JOIN pg_attribute a ON a.attrelid = t.oid AND a.attname = $2
-  WHERE n.nspname = schema_name
-    AND t.relname = $1
-    AND idx.indnatts = 1
-    AND a.attnum = ANY(idx.indkey)
-    AND am.amname = 'gist'
-    AND idx.indisvalid
-  LIMIT 1;
-
-  IF idx_name IS NOT NULL THEN
-    EXECUTE format('DROP INDEX %I.%I', schema_name, idx_name);
-  END IF;
 
   IF transform <> 0 THEN
     -- construct correct geometry type
@@ -69,10 +43,26 @@ BEGIN
     PERFORM UpdateGeometrySRID(schema_name, $1, $2, $4);
   END IF;
 
-  IF idx_name IS NOT NULL THEN
-    -- recreate spatial index
-    EXECUTE idx_def;
-  END IF;
+  -- drop and recreate spatial indexes involving the column
+  FOR rec IN
+    SELECT
+      i.relname AS index_name,
+      pg_get_indexdef(i.oid) AS index_definition
+    FROM pg_index idx
+    JOIN pg_class t ON t.oid = idx.indrelid
+    JOIN pg_namespace n ON n.oid = t.relnamespace
+    JOIN pg_class i ON i.oid = idx.indexrelid
+    JOIN pg_am am ON am.oid = i.relam
+    JOIN pg_attribute a ON a.attrelid = t.oid AND a.attname = $2
+    WHERE n.nspname = schema_name
+      AND t.relname = $1
+      AND a.attnum = ANY(idx.indkey)
+      AND am.amname = 'gist'
+      AND idx.indisvalid
+  LOOP
+    EXECUTE format('DROP INDEX IF EXISTS %I.%I', schema_name, rec.index_name);
+    EXECUTE rec.index_definition;
+  END LOOP;
 END;
 $body$
 LANGUAGE plpgsql;
