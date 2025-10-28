@@ -27,7 +27,7 @@ BEGIN
     END;
   END LOOP;
 
-  EXECUTE IMMEDIATE 'DELETE FROM user_sdo_geom_metadata';
+  DELETE FROM user_sdo_geom_metadata;
 END;
 /
 
