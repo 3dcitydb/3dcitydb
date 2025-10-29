@@ -62,11 +62,13 @@ BEGIN
       AND t.relname = $1
       AND a.attnum = ANY(idx.indkey)
       AND am.amname = 'gist'
-      AND idx.indisvalid
+    GROUP BY i.relname, i.oid
   LOOP
-    RAISE DEBUG 'Dropping and recreating index "%" on %(%).', rec.index_name, $1, $2;
-    EXECUTE format('DROP INDEX IF EXISTS %I.%I', schema_name, rec.index_name);
-    EXECUTE rec.index_definition;
+    IF rec.index_definition IS NOT NULL THEN
+      RAISE DEBUG 'Dropping and recreating index "%".', rec.index_name;
+      EXECUTE format('DROP INDEX IF EXISTS %I.%I', schema_name, rec.index_name);
+      EXECUTE rec.index_definition;
+    END IF;
   END LOOP;
 END;
 $body$
