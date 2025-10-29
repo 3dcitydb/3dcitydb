@@ -27,6 +27,7 @@ END;
 PROMPT Setting up database schema of 3DCityDB instance ...
 @@schema/schema.sql
 @@schema/schema-annotations.sql
+@@schema/spatial-objects.sql
 
 -- populate metadata tables
 @@schema/namespace-instances.sql
@@ -40,9 +41,6 @@ PROMPT Setting up database schema of 3DCityDB instance ...
 -- create citydb packages
 PROMPT Creating 'citydb' packages ...
 @@citydb-pkg/srs.sql
-
-PROMPT Setting spatial reference system of 3DCityDB instance ...
-EXEC citydb_srs.change_schema_srid(:V_SRID, :V_SRS_NAME);
 
 PROMPT 3DCityDB instance successfully created.
 QUIT;
