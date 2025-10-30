@@ -1,6 +1,8 @@
 SET client_min_messages TO WARNING;
 \set ON_ERROR_STOP ON
 
+\set SCHEMA_NAME :schema_name
+
 \echo 'Setting up changelog extension ...'
 
 \ir changelog/changelog-table.sql

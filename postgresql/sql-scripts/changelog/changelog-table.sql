@@ -1,4 +1,3 @@
-\set SCHEMA_NAME :schema_name
 \set SEQ_NAME :SCHEMA_NAME.feature_changelog_seq
 
 CREATE SEQUENCE :SCHEMA_NAME.feature_changelog_seq START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE;
