@@ -1,5 +1,3 @@
-\set SCHEMA_NAME :schema_name
-
 SELECT format($sql$
 CREATE OR REPLACE FUNCTION %I.log_feature_changes() RETURNS TRIGGER AS
 $body$

@@ -16,8 +16,12 @@ else
   fi
 fi
 
-# Add PGBIN to PATH
-export PATH="$PGBIN:$PATH"
+# Set database client
+if [ -z "$PGBIN" ]; then
+  PGBIN="psql"
+elif [ -d "$PGBIN" ]; then
+  PGBIN="$PGBIN/psql"
+fi
 
 # Welcome message
 echo ' _______   ___ _ _        ___  ___ '
@@ -48,7 +52,7 @@ echo '##########################################################################
 # List the existing 3DCityDB schemas ------------------------------------------
 echo
 echo "Reading 3DCityDB schemas from \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/util/list-schemas.sql"
+"$PGBIN" -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/util/list-schemas.sql"
 
 if [[ $? -ne 0 ]] ; then
   echo 'Failed to read 3DCityDB schemas from database.'
@@ -74,7 +78,7 @@ done;
 # Run drop-schema.sql to remove the selected 3DCityDB schema ------------------
 echo
 echo "Connecting to \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/drop-schema.sql" -v schema_name="$SCHEMA_NAME"
+"$PGBIN" -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/drop-schema.sql" -v schema_name="$SCHEMA_NAME"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'

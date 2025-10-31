@@ -3,48 +3,49 @@
 *
 * @param table_name Name of table
 * @param column_name Name of spatial column
-* @param dim Dimension of geometry
 * @param target_srid The SRID of the coordinate system to be used for the spatial column
 * @param transform Set to 1 if existing data shall be transformed, 0 if not
-* @param geom_type The geometry type of the given spatial column
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.change_column_srid(
   table_name TEXT,
   column_name TEXT,
-  dim INTEGER,
   target_srid INTEGER,
-  transform INTEGER DEFAULT 0,
-  geom_type TEXT DEFAULT 'GEOMETRY') RETURNS SETOF VOID AS
+  transform INTEGER DEFAULT 0) RETURNS SETOF VOID AS
 $body$
 DECLARE
   schema_name TEXT;
+  current_srid INTEGER;
   geometry_type TEXT;
   rec RECORD;
 BEGIN
   schema_name := citydb_pkg.get_current_schema();
 
-  IF Find_SRID(schema_name, $1, $2) = target_srid THEN
-     RETURN;
+  SELECT
+    COALESCE(postgis_typmod_srid(a.atttypmod), target_srid),
+    COALESCE(postgis_typmod_type(a.atttypmod), 'GEOMETRYZ')
+  INTO current_srid, geometry_type
+  FROM pg_attribute a
+  JOIN pg_class c ON a.attrelid = c.oid
+  JOIN pg_namespace n ON n.oid = c.relnamespace
+  WHERE n.nspname = schema_name
+    AND c.relname = $1
+    AND a.attname = $2
+    AND a.atttypid = 'geometry'::regtype;
+
+  IF current_srid IS NULL OR current_srid = 0 OR target_srid = current_srid THEN
+    RETURN;
   END IF;
 
+  -- transform coordinates
   IF transform <> 0 THEN
-    -- construct correct geometry type
-    IF dim = 3 AND right($6, 1) <> 'M' THEN
-      geometry_type := $6 || 'Z';
-    ELSIF dim = 4 THEN
-      geometry_type := $6 || 'ZM';
-    ELSE
-      geometry_type := $6;
-    END IF;
-
-    -- coordinates of existent geometries will be transformed
+    -- transform coordinates of geometries
     EXECUTE format(
-      'ALTER TABLE %I.%I ALTER COLUMN %I TYPE geometry(%I,%L) USING ST_Transform(%I,%L::int)',
-      schema_name, $1, $2, geometry_type, $4, $2, $4
+      'ALTER TABLE %I.%I ALTER COLUMN %I TYPE geometry(%I, %L) USING ST_Transform(%I, %L::int)',
+      schema_name, $1, $2, geometry_type, $3, $2, $3
     );
   ELSE
-    -- only update metadata
-    PERFORM UpdateGeometrySRID(schema_name, $1, $2, $4);
+    -- only update column metadata
+    PERFORM UpdateGeometrySRID(schema_name, $1, $2, $3);
   END IF;
 
   -- drop and recreate spatial indexes involving the column
@@ -79,24 +80,20 @@ LANGUAGE plpgsql;
 *
 * @param table_name Name of table
 * @param column_name Name of spatial column
-* @param dim Dimension of geometry
 * @param target_srid The SRID of the coordinate system to be used for the spatial column
 * @param schema_name Name of schema
 * @param transform Set to 1 if existing data shall be transformed, 0 if not
-* @param geom_type The geometry type of the given spatial column
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.change_column_srid(
   table_name TEXT,
   column_name TEXT,
-  dim INTEGER,
   target_srid INTEGER,
   schema_name TEXT,
-  transform INTEGER DEFAULT 0,
-  geom_type TEXT DEFAULT 'GEOMETRY') RETURNS SETOF VOID AS
+  transform INTEGER DEFAULT 0) RETURNS SETOF VOID AS
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-  PERFORM citydb_pkg.change_column_srid(table_name, column_name, dim, target_srid, transform, geom_type);
+  PERFORM citydb_pkg.change_column_srid(table_name, column_name, target_srid, transform);
 END;
 $body$
 LANGUAGE plpgsql;
@@ -119,10 +116,9 @@ BEGIN
   INSERT INTO database_srs (srid, srs_name) VALUES ($1, $2);
 
   -- change SRID of spatial columns
-  PERFORM citydb_pkg.change_column_srid(f_table_name, f_geometry_column, coord_dimension, $1, $3, type)
+  PERFORM citydb_pkg.change_column_srid(f_table_name, f_geometry_column, $1, $3)
   FROM geometry_columns
-  WHERE f_table_schema = citydb_pkg.get_current_schema()
-    AND f_geometry_column <> 'implicit_geometry';
+  WHERE f_table_schema = citydb_pkg.get_current_schema();
 END;
 $body$
 LANGUAGE plpgsql;
