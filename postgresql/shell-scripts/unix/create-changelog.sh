@@ -16,8 +16,12 @@ else
   fi
 fi
 
-# Add PGBIN to PATH
-export PATH="$PGBIN:$PATH"
+# Set database client
+if [ -z "$PGBIN" ]; then
+  PGBIN="psql"
+elif [ -d "$PGBIN" ]; then
+  PGBIN="$PGBIN/psql"
+fi
 
 # Welcome message
 echo ' _______   ___ _ _        ___  ___ '
@@ -48,7 +52,7 @@ echo '##########################################################################
 # List the existing 3DCityDB schemas -------------------------------------
 echo
 echo "Reading 3DCityDB schemas from \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/util/list-schemas-with-changelog.sql"
+"$PGBIN" -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/util/list-schemas-with-changelog.sql"
 
 if [[ $? -ne 0 ]] ; then
   echo 'Failed to read schemas from database.'
@@ -66,7 +70,7 @@ SCHEMA_NAME=${var:-$SCHEMA_NAME}
 # Run create-db-extension.sql to create the 3DCityDB changelog extension ---------------
 echo
 echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/create-changelog.sql" -v schema_name="$SCHEMA_NAME"
+"$PGBIN" -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/create-changelog.sql" -v schema_name="$SCHEMA_NAME"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'

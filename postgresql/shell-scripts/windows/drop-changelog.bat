@@ -16,8 +16,14 @@ if NOT [%1]==[] (
   )
 )
 
-:: Add PGBIN to PATH
-set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
+:: Set database client
+if "%PGBIN%"=="" (
+  set "PGBIN=psql"
+) else (
+  if exist "%PGBIN%\" (
+    set "PGBIN=%PGBIN%\psql"
+  )
+)
 
 :: Welcome message
 echo  _______   ___ _ _        ___  ___
@@ -48,7 +54,7 @@ echo ###########################################################################
 :: List the existing 3DCityDB schemas with changelog ------------------------------------
 echo.
 echo Reading 3DCityDB schemas "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\util\list-schemas-with-changelog.sql"
+"%PGBIN%" -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\util\list-schemas-with-changelog.sql"
 
 if errorlevel 1 (
   echo Failed to read schemas from database.
@@ -65,6 +71,6 @@ if /i not "%var%"=="" set SCHEMA_NAME=%var%
 :: Run drop-db-extension.sql to drop the 3DCityDB changelog extension --------------
 echo.
 echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\drop-changelog.sql" -v schema_name="%SCHEMA_NAME%"
+"%PGBIN%" -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\drop-changelog.sql" -v schema_name="%SCHEMA_NAME%"
 
 pause
