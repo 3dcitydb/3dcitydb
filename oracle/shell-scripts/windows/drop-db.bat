@@ -55,4 +55,5 @@ echo.
 echo Connecting to "%DB_USER%@%DB_HOST%:%DB_PORT%/%ORACLE_PDB%" ...
 "%ORACLE_CLIENT%" -L "%DB_USER%@%DB_HOST%:%DB_PORT%/%ORACLE_PDB%" @drop-db.sql
 
+echo.
 pause
