@@ -113,4 +113,5 @@ echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
 "%PGBIN%" -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\grant-access.sql" -v username="%GRANTEE%" -v schema_name="%SCHEMA_NAME%" -v access_mode="%ACCESS_MODE%"
 
+echo.
 pause

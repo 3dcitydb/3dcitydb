@@ -73,4 +73,5 @@ echo.
 echo Connecting to the database "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
 "%PGBIN%" -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\create-changelog.sql" -v schema_name="%SCHEMA_NAME%"
 
+echo.
 pause
