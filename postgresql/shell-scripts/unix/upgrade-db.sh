@@ -16,8 +16,12 @@ else
   fi
 fi
 
-# Add PGBIN to PATH
-export PATH="$PGBIN:$PATH"
+# Set database client
+if [ -z "$PGBIN" ]; then
+  PGBIN="psql"
+elif [ -d "$PGBIN" ]; then
+  PGBIN="$PGBIN/psql"
+fi
 
 # Welcome message
 echo ' _______   ___ _ _        ___  ___ '
@@ -46,7 +50,7 @@ echo '##########################################################################
 # Run upgrade-db.sql to upgrade the 3D City Database instance -----------------
 echo
 echo "Connecting to \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/upgrade-db.sql"
+"$PGBIN" -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/upgrade-db.sql"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'

@@ -16,8 +16,12 @@ else
   fi
 fi
 
-# Add PGBIN to PATH
-export PATH="$PGBIN:$PATH"
+# Set database client
+if [ -z "$PGBIN" ]; then
+  PGBIN="psql"
+elif [ -d "$PGBIN" ]; then
+  PGBIN="$PGBIN/psql"
+fi
 
 # Welcome message
 echo ' _______   ___ _ _        ___  ___ '
@@ -109,7 +113,7 @@ done
 # Run create-db.sql to create the 3D City Database instance -------------------
 echo
 echo "Connecting to \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/create-db.sql" -v srid="$SRID" -v srs_name="$SRS_NAME" -v changelog="$CHANGELOG"
+"$PGBIN" -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/create-db.sql" -v srid="$SRID" -v srs_name="$SRS_NAME" -v changelog="$CHANGELOG"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'
