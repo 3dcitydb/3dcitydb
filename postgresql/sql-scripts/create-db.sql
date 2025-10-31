@@ -5,6 +5,7 @@ SET client_min_messages TO WARNING;
 \set SRID :srid
 \set SRS_NAME :srs_name
 \set CHANGELOG :changelog
+\set SCHEMA_NAME citydb
 
 -- check if the PostGIS extension is available
 SELECT postgis_lib_version() AS postgis_version
@@ -23,17 +24,18 @@ END
 $$;
 
 -- create schema
-CREATE SCHEMA citydb;
+CREATE SCHEMA :"SCHEMA_NAME";
 
 -- set search_path for this session
 SELECT current_setting('search_path') AS current_path
 \gset
-SET search_path TO citydb, :current_path;
+SET search_path TO :"SCHEMA_NAME", :current_path;
 
 -- create tables, sequences, constraints, indexes
 \echo
 \echo 'Setting up database schema of 3DCityDB instance ...'
 \ir schema/schema.sql
+\ir schema/spatial-objects.sql
 
 -- populate metadata tables
 \ir schema/namespace-instances.sql
@@ -55,21 +57,16 @@ CREATE SCHEMA citydb_pkg;
 \ir citydb-pkg/delete.sql
 
 -- update search_path on database level
-ALTER DATABASE :"DBNAME" SET search_path TO citydb, citydb_pkg, :current_path;
+ALTER DATABASE :"DBNAME" SET search_path TO :"SCHEMA_NAME", citydb_pkg, :current_path;
 
 -- create changelog extension
 \echo
-SELECT 'citydb' AS schema_name
-\gset
-
+\set schema_name :SCHEMA_NAME
 SELECT CASE
   WHEN upper(:'CHANGELOG') = 'YES' THEN 'create-changelog.sql'
   ELSE 'util/do-nothing.sql'
 END AS create_changelog_extension
 \gset
 \ir :create_changelog_extension;
-
-\echo 'Setting spatial reference system of 3DCityDB instance ...'
-SELECT citydb_pkg.change_schema_srid(:SRID,:'SRS_NAME');
 
 \echo '3DCityDB instance successfully created.'

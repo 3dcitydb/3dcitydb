@@ -97,8 +97,6 @@ CREATE INDEX feature_objectclass_inx ON feature  ( objectclass_id  );
 
 CREATE INDEX feature_objectid_inx ON feature  ( objectid  );
 
-CREATE INDEX feature_envelope_spx ON feature USING GiST ( envelope );
-
 CREATE INDEX feature_identifier_inx ON feature  ( identifier , identifier_codespace );
 
 CREATE INDEX feature_creation_date_inx ON feature  ( creation_date );
@@ -119,8 +117,6 @@ CREATE  TABLE geometry_data (
  );
 
 CREATE INDEX geometry_data_feature_fkx ON geometry_data  ( feature_id );
-
-CREATE INDEX geometry_data_spx ON geometry_data USING GiST ( geometry );
 
 CREATE  TABLE implicit_geometry ( 
 	id                   bigint DEFAULT nextval('implicit_geometry_seq'::regclass) NOT NULL  ,
