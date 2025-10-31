@@ -54,4 +54,5 @@ echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
 "%PGBIN%" -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\upgrade-db.sql"
 
+echo.
 pause
