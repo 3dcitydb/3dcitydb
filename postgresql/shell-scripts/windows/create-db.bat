@@ -138,4 +138,5 @@ echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
 "%PGBIN%" -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\create-db.sql" -v srid="%SRID%" -v srs_name="%SRS_NAME%" -v changelog="%CHANGELOG%"
 
+echo.
 pause
