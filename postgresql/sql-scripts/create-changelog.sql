@@ -5,8 +5,13 @@ SET client_min_messages TO WARNING;
 
 \echo 'Setting up changelog extension ...'
 
+SELECT srid from :SCHEMA_NAME.database_srs
+\gset
+\set SRID :srid
+
 \ir changelog/changelog-table.sql
 \ir changelog/feature-trigger.sql
+\ir changelog/spatial-objects.sql
 
 \echo
 \echo 'Changelog extension successfully created.'

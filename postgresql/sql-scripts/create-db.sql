@@ -35,6 +35,7 @@ SET search_path TO :"SCHEMA_NAME", :current_path;
 \echo
 \echo 'Setting up database schema of 3DCityDB instance ...'
 \ir schema/schema.sql
+\ir schema/spatial-objects.sql
 
 -- populate metadata tables
 \ir schema/namespace-instances.sql
@@ -67,8 +68,5 @@ SELECT CASE
 END AS create_changelog_extension
 \gset
 \ir :create_changelog_extension;
-
-\echo 'Setting spatial reference system of 3DCityDB instance ...'
-SELECT citydb_pkg.change_schema_srid(:SRID,:'SRS_NAME');
 
 \echo '3DCityDB instance successfully created.'

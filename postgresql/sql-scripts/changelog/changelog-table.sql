@@ -27,7 +27,5 @@ CREATE INDEX feature_changelog_identifier_inx ON :SCHEMA_NAME.feature_changelog 
 
 CREATE INDEX feature_changelog_transaction_date_inx ON :SCHEMA_NAME.feature_changelog  ( transaction_date ) WITH ( FILLFACTOR = 100 );
 
-CREATE INDEX feature_changelog_envelope_spx ON :SCHEMA_NAME.feature_changelog USING GiST ( envelope );
-
 ALTER TABLE :SCHEMA_NAME.feature_changelog ADD CONSTRAINT feature_changelog_feature_fk FOREIGN KEY ( feature_id ) REFERENCES :SCHEMA_NAME.feature( id ) ON DELETE SET NULL;
 
