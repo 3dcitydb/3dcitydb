@@ -17,8 +17,14 @@ if NOT [%1]==[] (
   )
 )
 
-:: Add SQLPLUS_PATH to PATH
-set PATH=%SQLPLUS_PATH%;%PATH%;%SYSTEMROOT%\System32
+:: Set database client
+if "%ORACLE_CLIENT%"=="" (
+  set "ORACLE_CLIENT=sqlplus"
+) else (
+  if exist "%ORACLE_CLIENT%\" (
+    set "ORACLE_CLIENT=%ORACLE_CLIENT%\sqlplus"
+  )
+)
 
 :: Welcome message
 echo  _______   ___ _ _        ___  ___
@@ -131,7 +137,6 @@ if "%res%"=="f" (
 :: Run create-db.sql to create the 3D City Database instance ------------------
 echo.
 echo Connecting to "%DB_USER%@%DB_HOST%:%DB_PORT%/%ORACLE_PDB%" ...
-<nul set /p="Enter password: "
-sqlplus -S -L "%DB_USER%@%DB_HOST%:%DB_PORT%/%ORACLE_PDB%" @create-db.sql "%SRID%" "%SRS_NAME%" "%CHANGELOG%"
+"%ORACLE_CLIENT%" -L "%DB_USER%@%DB_HOST%:%DB_PORT%/%ORACLE_PDB%" @create-db.sql "%SRID%" "%SRS_NAME%" "%CHANGELOG%"
 
 pause

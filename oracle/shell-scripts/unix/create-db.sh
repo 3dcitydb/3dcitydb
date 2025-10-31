@@ -17,8 +17,12 @@ else
   fi
 fi
 
-# Add SQLPLUS_PATH to PATH
-export PATH="$SQLPLUS_PATH:$PATH"
+# Set database client
+if [ -z "$ORACLE_CLIENT" ]; then
+  ORACLE_CLIENT="sqlplus"
+elif [ -d "$ORACLE_CLIENT" ]; then
+  ORACLE_CLIENT="$ORACLE_CLIENT/sqlplus"
+fi
 
 # Welcome message
 echo ' _______   ___ _ _        ___  ___ '
@@ -110,8 +114,7 @@ done
 # Run create-db.sql to create the 3D City Database instance -------------------
 echo
 echo "Connecting to \"$DB_USER@$DB_HOST:$DB_PORT/$ORACLE_PDB\" ..."
-echo -n "Enter password: "
-sqlplus -S -L "${DB_USER}@${DB_HOST}:${DB_PORT}/${ORACLE_PDB}" @create-db.sql "$SRID" "$SRS_NAME" "$CHANGELOG"
+"$ORACLE_CLIENT" -L "${DB_USER}@${DB_HOST}:${DB_PORT}/${ORACLE_PDB}" @create-db.sql "$SRID" "$SRS_NAME" "$CHANGELOG"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'
