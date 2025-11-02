@@ -4,10 +4,21 @@
  * Methods to handle the spatial reference system
  *****************************************************************/
 
+CREATE OR REPLACE TYPE crs_info AS OBJECT (
+  coord_ref_sys_name VARCHAR2(255),
+  coord_ref_sys_kind VARCHAR2(255),
+  wktext VARCHAR2(4000)
+);
+/
+
+CREATE OR REPLACE TYPE crs_info_tab IS TABLE OF crs_info;
+/
+
 -- Package declaration
 CREATE OR REPLACE PACKAGE citydb_srs
 AS
-  FUNCTION is_coord_ref_sys_3d (p_schema_srid IN INTEGER) RETURN INTEGER;
+  FUNCTION get_coord_ref_sys_info (p_srid IN INTEGER) RETURN crs_info_tab;
+  FUNCTION is_coord_ref_sys_3d (p_srid IN INTEGER) RETURN INTEGER;
   FUNCTION is_db_coord_ref_sys_3d RETURN INTEGER;
   FUNCTION is_db_coord_ref_sys_3d (p_schema_name IN VARCHAR2) RETURN INTEGER;
   FUNCTION check_srid (p_srid IN INTEGER DEFAULT 0) RETURN INTEGER;
@@ -21,6 +32,49 @@ CREATE OR REPLACE PACKAGE BODY citydb_srs
 AS
   
   /*****************************************************************
+  * Function GET_COORD_REF_SYS_INFO
+  *
+  * Parameters:
+  *   - p_srid => The SRID to retrieve the CRS information for
+  *
+  * Return value:
+  *   - crs_info_tab => CRS information as table with columns
+  *       coord_ref_sys_name, coord_ref_sys_kind, wktext
+  ******************************************************************/
+  FUNCTION get_coord_ref_sys_info (
+    p_srid IN INTEGER
+  )
+  RETURN crs_info_tab
+  IS
+    v_crs_info crs_info := crs_info(NULL, NULL, NULL);
+  BEGIN
+    BEGIN
+      SELECT coord_ref_sys_name,
+        coord_ref_sys_kind
+      INTO
+        v_crs_info.coord_ref_sys_name,
+        v_crs_info.coord_ref_sys_kind
+      FROM sdo_coord_ref_sys
+      WHERE srid = p_srid;
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN crs_info_tab();
+    END;
+
+    BEGIN
+      SELECT COALESCE(wktext3d, wktext)
+      INTO v_crs_info.wktext
+      FROM cs_srs
+      WHERE srid = p_srid;
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        v_crs_info.wktext := NULL;
+    END;
+
+    RETURN crs_info_tab(v_crs_info);
+  END get_coord_ref_sys_info;
+
+  /*****************************************************************
   * Function IS_COORD_REF_SYS_3D
   *
   * Parameters:
@@ -30,7 +84,7 @@ AS
   *   - INTEGER => The boolean result encoded as INTEGER: 0 = false, 1 = true
   ******************************************************************/
   FUNCTION is_coord_ref_sys_3d (
-    p_schema_srid IN INTEGER
+    p_srid IN INTEGER
   )
   RETURN INTEGER
   IS
@@ -38,8 +92,8 @@ AS
   BEGIN
     SELECT CASE
       WHEN
-        EXISTS (SELECT 1 FROM sdo_crs_compound WHERE srid = p_schema_srid) OR
-        EXISTS (SELECT 1 FROM sdo_crs_geographic3d WHERE srid = p_schema_srid)
+        EXISTS (SELECT 1 FROM sdo_crs_compound WHERE srid = p_srid) OR
+        EXISTS (SELECT 1 FROM sdo_crs_geographic3d WHERE srid = p_srid)
       THEN 1 ELSE 0 END
     INTO v_is_3d
     FROM dual;
