@@ -26,6 +26,9 @@ CREATE OR REPLACE TYPE db_info AS OBJECT (
 
 CREATE OR REPLACE TYPE db_info_tab IS TABLE OF db_info;
 /
+
+CREATE OR REPLACE TYPE number_tab IS TABLE OF NUMBER;
+/
  
 -- Package declaration
 CREATE OR REPLACE PACKAGE citydb_util
@@ -33,6 +36,7 @@ AS
   FUNCTION citydb_version RETURN version_tab;
   FUNCTION db_metadata RETURN db_info_tab;
   FUNCTION db_metadata (p_schema_name IN VARCHAR2) RETURN db_info_tab;
+  FUNCTION get_seq_values (p_seq_name IN VARCHAR2, p_seq_count IN NUMBER) RETURN number_tab;
 END citydb_util;
 /
 
@@ -70,7 +74,7 @@ AS
   FUNCTION db_metadata
   RETURN db_info_tab
   IS
-    v_metadata db_info_tab := db_info_tab();
+    v_metadata db_info_tab;
   BEGIN
     SELECT
       db_info(
@@ -106,7 +110,7 @@ AS
   RETURN db_info_tab
   IS
     v_schema_name VARCHAR2(128);
-    v_metadata db_info_tab := db_info_tab();
+    v_metadata db_info_tab;
   BEGIN
     v_schema_name := DBMS_ASSERT.simple_sql_name(p_schema_name);
  
@@ -117,6 +121,41 @@ AS
     
     RETURN v_metadata;
   END db_metadata;
+
+  /*****************************************************************
+  * Function GET_SEQ_VALUES
+  *
+  * Parameters:
+  *   - p_seq_name => Name of the sequence including a schema prefix
+  *   - p_seq_count => Number of values to be queried from the sequence
+  *
+  * Return value:
+  *   - number_tab => List of sequence values from given sequence
+  ******************************************************************/
+  FUNCTION get_seq_values (
+    p_seq_name IN VARCHAR2,
+    p_seq_count IN NUMBER
+  )
+  RETURN number_tab
+  IS
+    v_seq_name VARCHAR2(128);
+    v_values number_tab;
+  BEGIN
+    IF p_seq_count IS NULL OR p_seq_count <= 0 THEN
+      RETURN number_tab();
+    END IF;
+  
+    v_seq_name := DBMS_ASSERT.qualified_sql_name(upper(p_seq_name));
+    
+    EXECUTE IMMEDIATE
+      'SELECT ' || v_seq_name || '.NEXTVAL ' ||
+      'FROM dual ' ||
+      'CONNECT BY LEVEL <= :1'
+    BULK COLLECT INTO v_values
+    USING p_seq_count;
+    
+    RETURN v_values;
+  END get_seq_values;
 
 END citydb_util;
 /
