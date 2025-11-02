@@ -64,6 +64,9 @@ distributions.main.contents {
         filesMatching('**/objectclass-instances.sql') {
             filter { String line -> replaceTokens(line, splitValues(featureTypes, 4000, "'||\n'")) }
         }
+        filesMatching('**/util.sql') {
+            filter { String line -> replaceTokens(line, version, '', '') }
+        }
     }
 }
 

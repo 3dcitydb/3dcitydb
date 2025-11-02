@@ -39,6 +39,7 @@ PROMPT Setting up database schema of 3DCityDB instance ...
 -- create citydb packages
 PROMPT Creating 'citydb' packages ...
 @@citydb-pkg/srs.sql
+@@citydb-pkg/util.sql
 
 PROMPT 3DCityDB instance successfully created.
 QUIT;
