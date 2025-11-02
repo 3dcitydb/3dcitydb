@@ -1,17 +1,18 @@
 /*****************************************************************
 * citydb_version
 *
-* @return RECORD with columns
+* @return TABLE with columns
 *   version - version of 3DCityDB as string
 *   major_version - major version number of 3DCityDB instance
 *   minor_version - minor version number of 3DCityDB instance
 *   minor_revision - minor revision number of 3DCityDB instance
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.citydb_version( 
-  OUT version TEXT, 
-  OUT major_version INTEGER, 
-  OUT minor_version INTEGER, 
-  OUT minor_revision INTEGER) RETURNS RECORD AS
+CREATE OR REPLACE FUNCTION citydb_pkg.citydb_version()
+  RETURNS TABLE(
+    version TEXT,
+    major_version INTEGER,
+    minor_version INTEGER,
+    minor_revision INTEGER) AS
 $body$
 SELECT 
   '@versionString@'::text AS version,
@@ -24,25 +25,27 @@ LANGUAGE sql IMMUTABLE;
 /******************************************************************
 * db_metadata
 *
-* @return RECORD with columns
+* @return TABLE with columns
 *    srid, srs_name,
 *    coord_ref_sys_name, coord_ref_sys_kind, wktext
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(
-  OUT srid INTEGER,
-  OUT srs_name TEXT,
-  OUT coord_ref_sys_name TEXT, 
-  OUT coord_ref_sys_kind TEXT,
-  OUT wktext TEXT) RETURNS RECORD AS
+CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata()
+  RETURNS TABLE(
+    srid INTEGER,
+    srs_name TEXT,
+    coord_ref_sys_name TEXT,
+    coord_ref_sys_kind TEXT,
+    wktext TEXT) AS
 $body$
 BEGIN
-  SELECT
-    d.srid, d.srs_name, crs.coord_ref_sys_name, crs.coord_ref_sys_kind, crs.wktext
-  INTO
-    srid, srs_name, coord_ref_sys_name, coord_ref_sys_kind, wktext
-  FROM
-    database_srs d,
-    citydb_pkg.get_coord_ref_sys_info(d.srid) crs;
+  RETURN QUERY
+    SELECT
+      d.srid, d.srs_name, crs.coord_ref_sys_name, crs.coord_ref_sys_kind, crs.wktext
+    FROM
+      database_srs d
+    JOIN LATERAL
+      citydb_pkg.get_coord_ref_sys_info(d.srid) crs ON true
+    LIMIT 1;
 END;
 $body$
 LANGUAGE plpgsql STABLE;
@@ -51,27 +54,21 @@ LANGUAGE plpgsql STABLE;
 * db_metadata
 *
 * @param schema_name Name of database schema
-* @return RECORD with columns
+* @return TABLE with columns
 *    srid, srs_name,
 *    coord_ref_sys_name, coord_ref_sys_kind, wktext
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(
-  schema_name TEXT,
-  OUT srid INTEGER,
-  OUT srs_name TEXT,
-  OUT coord_ref_sys_name TEXT,
-  OUT coord_ref_sys_kind TEXT,
-  OUT wktext TEXT) RETURNS RECORD AS
+CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(schema_name TEXT)
+  RETURNS TABLE(
+    srid INTEGER,
+    srs_name TEXT,
+    coord_ref_sys_name TEXT,
+    coord_ref_sys_kind TEXT,
+    wktext TEXT) AS
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
-  SELECT
-    m.srid, m.srs_name, m.coord_ref_sys_name, m.coord_ref_sys_kind, m.wktext
-  INTO
-    srid, srs_name, coord_ref_sys_name, coord_ref_sys_kind, wktext
-  FROM
-    citydb_pkg.db_metadata() m;
+  RETURN QUERY SELECT * FROM citydb_pkg.db_metadata();
 END;
 $body$
 LANGUAGE plpgsql STABLE;
