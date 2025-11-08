@@ -55,6 +55,7 @@ CREATE SCHEMA citydb_pkg;
 \ir citydb-pkg/srs.sql
 \ir citydb-pkg/envelope.sql
 \ir citydb-pkg/delete.sql
+\ir citydb-pkg/schema-mapping.sql
 
 -- update search_path on database level
 ALTER DATABASE :"DBNAME" SET search_path TO :"SCHEMA_NAME", citydb_pkg, :current_path;

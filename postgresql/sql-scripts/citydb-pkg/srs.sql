@@ -148,23 +148,23 @@ LANGUAGE plpgsql;
 * get_coord_ref_sys_info
 *
 * @param srid The SRID to retrieve the CRS information for
-* @return RECORD with columns
+* @return TABLE with columns
 *    coord_ref_sys_name, coord_ref_sys_kind, wktext
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_coord_ref_sys_info(
-  srid INTEGER,
-  OUT coord_ref_sys_name TEXT,
-  OUT coord_ref_sys_kind TEXT,
-  OUT wktext TEXT) RETURNS RECORD AS
+CREATE OR REPLACE FUNCTION citydb_pkg.get_coord_ref_sys_info(srid INTEGER)
+  RETURNS TABLE(
+    coord_ref_sys_name TEXT,
+    coord_ref_sys_kind TEXT,
+    wktext TEXT) AS
 $body$
 SELECT
-  split_part(s.srtext, '"', 2) as coord_ref_sys_name,
-  split_part(s.srtext, '[', 1) as coord_ref_sys_kind,
-  s.srtext as wktext
+  split_part(srtext, '"', 2) as coord_ref_sys_name,
+  split_part(srtext, '[', 1) as coord_ref_sys_kind,
+  srtext as wktext
 FROM
-  spatial_ref_sys s
+  spatial_ref_sys
 WHERE
-  s.srid = $1;
+  srid = $1;
 $body$
 LANGUAGE sql STRICT;
 
