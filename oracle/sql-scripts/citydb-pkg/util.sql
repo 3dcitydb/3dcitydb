@@ -37,6 +37,7 @@ AS
   FUNCTION db_metadata RETURN db_info_tab;
   FUNCTION db_metadata (p_schema_name IN VARCHAR2) RETURN db_info_tab;
   FUNCTION get_seq_values (p_seq_name IN VARCHAR2, p_seq_count IN NUMBER) RETURN number_tab;
+  FUNCTION get_seq_values (p_seq_name IN VARCHAR2, p_seq_count IN NUMBER, p_schema_name IN VARCHAR2) RETURN number_tab;
 END citydb_util;
 /
 
@@ -126,7 +127,7 @@ AS
   * Function GET_SEQ_VALUES
   *
   * Parameters:
-  *   - p_seq_name => Name of the sequence including a schema prefix
+  *   - p_seq_name => Name of the sequence possibly including a schema prefix
   *   - p_seq_count => Number of values to be queried from the sequence
   *
   * Return value:
@@ -141,7 +142,7 @@ AS
     v_seq_name VARCHAR2(128);
     v_values number_tab;
   BEGIN
-    IF p_seq_count IS NULL OR p_seq_count <= 0 THEN
+    IF p_seq_count IS NULL OR p_seq_count < 1 THEN
       RETURN number_tab();
     END IF;
   
@@ -154,6 +155,37 @@ AS
     BULK COLLECT INTO v_values
     USING p_seq_count;
     
+    RETURN v_values;
+  END get_seq_values;
+
+  /*****************************************************************
+  * Function GET_SEQ_VALUES
+  *
+  * Parameters:
+  *   - p_seq_name => Name of the sequence possibly including a schema prefix
+  *   - p_seq_count => Number of values to be queried from the sequence
+  *   - p_schema_name => Name of the target schema
+  *
+  * Return value:
+  *   - number_tab => List of sequence values from given sequence
+  ******************************************************************/
+  FUNCTION get_seq_values (
+    p_seq_name IN VARCHAR2,
+    p_seq_count IN NUMBER,
+    p_schema_name IN VARCHAR2
+  )
+  RETURN number_tab
+  IS
+    v_schema_name VARCHAR2(128);
+    v_values number_tab;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(p_schema_name);
+
+    EXECUTE IMMEDIATE
+      'SELECT * FROM TABLE(' || v_schema_name || '.citydb_util.get_seq_values(:1, :2))'
+    BULK COLLECT INTO v_values
+    USING p_seq_name, p_seq_count;
+
     RETURN v_values;
   END get_seq_values;
 
