@@ -87,8 +87,6 @@ BEGIN
     (63, null, 'ADEOfAbstractVersionTransition', 1, 1, v_schema63),
     (64, null, 'ADEOfCityModel', 1, 1, v_schema64),
     (65, null, 'ADEOfClosureSurface', 1, 1, v_schema65);
-
-  COMMIT;
 END;
 /
 
@@ -136,8 +134,6 @@ BEGIN
     (116, null, 'ADEOfGenericTimeseries', 1, 2, v_schema116),
     (117, null, 'ADEOfStandardFileTimeseries', 1, 2, v_schema117),
     (118, null, 'ADEOfTabulatedFileTimeseries', 1, 2, v_schema118);
-
-  COMMIT;
 END;
 /
 
@@ -157,8 +153,6 @@ BEGIN
     (202, null, 'ADEOfGenericOccupiedSpace', 1, 3, v_schema202),
     (203, null, 'ADEOfGenericThematicSurface', 1, 3, v_schema203),
     (204, null, 'ADEOfGenericUnoccupiedSpace', 1, 3, v_schema204);
-
-  COMMIT;
 END;
 /
 
@@ -170,8 +164,6 @@ BEGIN
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (300, null, 'ADEOfLandUse', 1, 4, v_schema300);
-
-  COMMIT;
 END;
 /
 
@@ -183,8 +175,6 @@ BEGIN
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (400, null, 'ADEOfPointCloud', 1, 5, v_schema400);
-
-  COMMIT;
 END;
 /
 
@@ -206,8 +196,6 @@ BEGIN
     (503, null, 'ADEOfRasterRelief', 1, 6, v_schema503),
     (504, null, 'ADEOfReliefFeature', 1, 6, v_schema504),
     (505, null, 'ADEOfTINRelief', 1, 6, v_schema505);
-
-  COMMIT;
 END;
 /
 
@@ -249,8 +237,6 @@ BEGIN
     (613, null, 'ADEOfTrafficArea', 1, 7, v_schema613),
     (614, null, 'ADEOfTrafficSpace', 1, 7, v_schema614),
     (615, null, 'ADEOfWaterway', 1, 7, v_schema615);
-
-  COMMIT;
 END;
 /
 
@@ -306,8 +292,6 @@ BEGIN
     (720, null, 'ADEOfWallSurface', 1, 8, v_schema720),
     (721, null, 'ADEOfWindow', 1, 8, v_schema721),
     (722, null, 'ADEOfWindowSurface', 1, 8, v_schema722);
-
-  COMMIT;
 END;
 /
 
@@ -331,8 +315,6 @@ BEGIN
     (804, null, 'ADEOfTunnelFurniture', 1, 9, v_schema804),
     (805, null, 'ADEOfTunnelInstallation', 1, 9, v_schema805),
     (806, null, 'ADEOfTunnelPart', 1, 9, v_schema806);
-
-  COMMIT;
 END;
 /
 
@@ -364,8 +346,6 @@ BEGIN
     (908, null, 'ADEOfBuildingRoom', 1, 10, v_schema908),
     (909, null, 'ADEOfBuildingUnit', 1, 10, v_schema909),
     (910, null, 'ADEOfStorey', 1, 10, v_schema910);
-
-  COMMIT;
 END;
 /
 
@@ -389,8 +369,6 @@ BEGIN
     (1004, null, 'ADEOfBridgeInstallation', 1, 11, v_schema1004),
     (1005, null, 'ADEOfBridgePart', 1, 11, v_schema1005),
     (1006, null, 'ADEOfBridgeRoom', 1, 11, v_schema1006);
-
-  COMMIT;
 END;
 /
 
@@ -404,8 +382,6 @@ BEGIN
   VALUES
     (1200, null, 'Role', 0, 13, v_schema1200),
     (1201, null, 'ADEOfCityObjectGroup', 1, 13, v_schema1201);
-
-  COMMIT;
 END;
 /
 
@@ -421,8 +397,6 @@ BEGIN
     (1300, null, 'ADEOfAbstractVegetationObject', 1, 14, v_schema1300),
     (1301, null, 'ADEOfPlantCover', 1, 14, v_schema1301),
     (1302, null, 'ADEOfSolitaryVegetationObject', 1, 14, v_schema1302);
-
-  COMMIT;
 END;
 /
 
@@ -438,8 +412,6 @@ BEGIN
     (1400, null, 'Transaction', 0, 15, v_schema1400),
     (1401, null, 'ADEOfVersion', 1, 15, v_schema1401),
     (1402, null, 'ADEOfVersionTransition', 1, 15, v_schema1402);
-
-  COMMIT;
 END;
 /
 
@@ -458,8 +430,6 @@ BEGIN
     (1501, null, 'ADEOfWaterBody', 1, 16, v_schema1501),
     (1502, null, 'ADEOfWaterGroundSurface', 1, 16, v_schema1502),
     (1503, null, 'ADEOfWaterSurface', 1, 16, v_schema1503);
-
-  COMMIT;
 END;
 /
 
@@ -471,7 +441,5 @@ BEGIN
   INSERT INTO datatype (ID, SUPERTYPE_ID, TYPENAME, IS_ABSTRACT, NAMESPACE_ID, SCHEMA)
   VALUES
     (1600, null, 'ADEOfCityFurniture', 1, 17, v_schema1600);
-
-  COMMIT;
 END;
 /

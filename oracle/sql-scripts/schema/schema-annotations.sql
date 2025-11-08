@@ -240,5 +240,3 @@ ALTER TABLE datatype MODIFY (is_abstract ANNOTATIONS (ADD DESCRIPTION 'The flag 
 ALTER TABLE datatype MODIFY (ade_id ANNOTATIONS (ADD DESCRIPTION 'Users can extend the DATATYPE table with custom data types, typically from an ADE. The ADE_ID foreign key must point to the ADE registered in the ADE table that defines the data type.'));
 ALTER TABLE datatype MODIFY (namespace_id ANNOTATIONS (ADD DESCRIPTION 'Every data type registered in the DATATYPE table is uniquely identified by its name and namespace, which are stored in the TYPENAME and NAMESPACE_ID columns. The namespace_id is a foreign key referencing a namespace from the NAMESPACE table.'));
 ALTER TABLE datatype MODIFY (schema ANNOTATIONS (ADD DESCRIPTION 'Each data type defines the structure and format for storing property values in the database, including details on the property value format and the table and column where the value is stored. This schema mapping information is available in the schema column in JSON format.'));
-
-COMMIT;

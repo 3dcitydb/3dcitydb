@@ -49,8 +49,6 @@ BEGIN
     (19, 6, 'AbstractVersion', 1, 0, 1, v_schema19),
     (20, null, 'AbstractAppearance', 1, 0, 1, v_schema20),
     (21, null, 'ImplicitGeometry', 0, 0, 1, v_schema21);
-
-  COMMIT;
 END;
 /
 
@@ -74,8 +72,6 @@ BEGIN
     (104, 102, 'StandardFileTimeseries', 0, 0, 2, v_schema104),
     (105, 102, 'GenericTimeseries', 0, 0, 2, v_schema105),
     (106, 101, 'CompositeTimeseries', 0, 0, 2, v_schema106);
-
-  COMMIT;
 END;
 /
 
@@ -93,8 +89,6 @@ BEGIN
     (201, 12, 'GenericOccupiedSpace', 0, 1, 3, v_schema201),
     (202, 11, 'GenericUnoccupiedSpace', 0, 1, 3, v_schema202),
     (203, 14, 'GenericThematicSurface', 0, 0, 3, v_schema203);
-
-  COMMIT;
 END;
 /
 
@@ -106,8 +100,6 @@ BEGIN
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (300, 14, 'LandUse', 0, 1, 4, v_schema300);
-
-  COMMIT;
 END;
 /
 
@@ -119,8 +111,6 @@ BEGIN
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (400, 5, 'PointCloud', 0, 0, 5, v_schema400);
-
-  COMMIT;
 END;
 /
 
@@ -142,8 +132,6 @@ BEGIN
     (503, 501, 'MassPointRelief', 0, 0, 6, v_schema503),
     (504, 501, 'BreaklineRelief', 0, 0, 6, v_schema504),
     (505, 501, 'RasterRelief', 0, 0, 6, v_schema505);
-
-  COMMIT;
 END;
 /
 
@@ -185,8 +173,6 @@ BEGIN
     (613, 14, 'TrafficArea', 0, 0, 7, v_schema613),
     (614, 14, 'Marking', 0, 0, 7, v_schema614),
     (615, 14, 'HoleSurface', 0, 0, 7, v_schema615);
-
-  COMMIT;
 END;
 /
 
@@ -236,8 +222,6 @@ BEGIN
     (717, 14, 'AbstractFillingSurface', 1, 0, 8, v_schema717),
     (718, 717, 'DoorSurface', 0, 0, 8, v_schema718),
     (719, 717, 'WindowSurface', 0, 0, 8, v_schema719);
-
-  COMMIT;
 END;
 /
 
@@ -261,8 +245,6 @@ BEGIN
     (804, 11, 'HollowSpace', 0, 0, 9, v_schema804),
     (805, 707, 'TunnelInstallation', 0, 0, 9, v_schema805),
     (806, 706, 'TunnelFurniture', 0, 0, 9, v_schema806);
-
-  COMMIT;
 END;
 /
 
@@ -292,8 +274,6 @@ BEGIN
     (907, 9, 'AbstractBuildingSubdivision', 1, 0, 10, v_schema907),
     (908, 907, 'BuildingUnit', 0, 0, 10, v_schema908),
     (909, 907, 'Storey', 0, 0, 10, v_schema909);
-
-  COMMIT;
 END;
 /
 
@@ -317,8 +297,6 @@ BEGIN
     (1004, 11, 'BridgeRoom', 0, 0, 11, v_schema1004),
     (1005, 707, 'BridgeInstallation', 0, 0, 11, v_schema1005),
     (1006, 706, 'BridgeFurniture', 0, 0, 11, v_schema1006);
-
-  COMMIT;
 END;
 /
 
@@ -340,8 +318,6 @@ BEGIN
     (1103, 1101, 'AbstractTexture', 1, 0, 12, v_schema1103),
     (1104, 1103, 'ParameterizedTexture', 0, 0, 12, v_schema1104),
     (1105, 1103, 'GeoreferencedTexture', 0, 0, 12, v_schema1105);
-
-  COMMIT;
 END;
 /
 
@@ -353,8 +329,6 @@ BEGIN
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (1200, 9, 'CityObjectGroup', 0, 1, 13, v_schema1200);
-
-  COMMIT;
 END;
 /
 
@@ -370,8 +344,6 @@ BEGIN
     (1300, 12, 'AbstractVegetationObject', 1, 0, 14, v_schema1300),
     (1301, 1300, 'SolitaryVegetationObject', 0, 1, 14, v_schema1301),
     (1302, 1300, 'PlantCover', 0, 1, 14, v_schema1302);
-
-  COMMIT;
 END;
 /
 
@@ -385,8 +357,6 @@ BEGIN
   VALUES
     (1400, 19, 'Version', 0, 0, 15, v_schema1400),
     (1401, 17, 'VersionTransition', 0, 0, 15, v_schema1401);
-
-  COMMIT;
 END;
 /
 
@@ -404,8 +374,6 @@ BEGIN
     (1501, 14, 'AbstractWaterBoundarySurface', 1, 0, 16, v_schema1501),
     (1502, 1501, 'WaterSurface', 0, 0, 16, v_schema1502),
     (1503, 1501, 'WaterGroundSurface', 0, 0, 16, v_schema1503);
-
-  COMMIT;
 END;
 /
 
@@ -417,8 +385,6 @@ BEGIN
   INSERT INTO objectclass (ID, SUPERCLASS_ID, CLASSNAME, IS_ABSTRACT, IS_TOPLEVEL, NAMESPACE_ID, SCHEMA)
   VALUES
     (1600, 12, 'CityFurniture', 0, 1, 17, v_schema1600);
-
-  COMMIT;
 END;
 /
 

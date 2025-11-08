@@ -32,6 +32,7 @@ END;
 /
 
 PURGE RECYCLEBIN;
+COMMIT;
 
 PROMPT 3DCityDB instance successfully removed.
 QUIT;

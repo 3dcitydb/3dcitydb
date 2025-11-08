@@ -364,5 +364,3 @@ VALUES
   (2, 2640, 'bothy'),
   (2, 2650, 'tourist information centre'),
   (2, 2700, 'others');
-
-COMMIT;

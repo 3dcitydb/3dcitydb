@@ -41,6 +41,8 @@ PROMPT Creating 'citydb' packages ...
 @@citydb-pkg/srs.sql
 @@citydb-pkg/util.sql
 
+COMMIT;
+
 PROMPT 3DCityDB instance successfully created.
 QUIT;
 /
