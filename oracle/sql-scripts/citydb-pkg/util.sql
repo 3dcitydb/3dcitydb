@@ -26,9 +26,6 @@ CREATE OR REPLACE TYPE db_info AS OBJECT (
 
 CREATE OR REPLACE TYPE db_info_tab IS TABLE OF db_info;
 /
-
-CREATE OR REPLACE TYPE number_tab IS TABLE OF NUMBER;
-/
  
 -- Package declaration
 CREATE OR REPLACE PACKAGE citydb_util
@@ -36,8 +33,8 @@ AS
   FUNCTION citydb_version RETURN version_tab;
   FUNCTION db_metadata RETURN db_info_tab;
   FUNCTION db_metadata (p_schema_name IN VARCHAR2) RETURN db_info_tab;
-  FUNCTION get_seq_values (p_seq_name IN VARCHAR2, p_seq_count IN NUMBER) RETURN number_tab;
-  FUNCTION get_seq_values (p_seq_name IN VARCHAR2, p_seq_count IN NUMBER, p_schema_name IN VARCHAR2) RETURN number_tab;
+  FUNCTION get_seq_values (p_seq_name IN VARCHAR2, p_seq_count IN INTEGER) RETURN number_tab;
+  FUNCTION get_seq_values (p_seq_name IN VARCHAR2, p_seq_count IN INTEGER, p_schema_name IN VARCHAR2) RETURN number_tab;
 END citydb_util;
 /
 
@@ -135,7 +132,7 @@ AS
   ******************************************************************/
   FUNCTION get_seq_values (
     p_seq_name IN VARCHAR2,
-    p_seq_count IN NUMBER
+    p_seq_count IN INTEGER
   )
   RETURN number_tab
   IS
@@ -171,7 +168,7 @@ AS
   ******************************************************************/
   FUNCTION get_seq_values (
     p_seq_name IN VARCHAR2,
-    p_seq_count IN NUMBER,
+    p_seq_count IN INTEGER,
     p_schema_name IN VARCHAR2
   )
   RETURN number_tab
