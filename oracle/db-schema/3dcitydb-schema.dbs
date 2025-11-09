@@ -499,7 +499,7 @@
 			<index name="FEATURE_CHANGELOG_ENVELOPE_SPX" unique="NORMAL" options="INDEXTYPE IS MDSYS.SPATIAL_INDEX" virtual="y" >
 				<column name="ENVELOPE" />
 			</index>
-			<fk name="FEATURE_CHANGELOG_FEATURE_FK" to_schema="CITYDB" to_table="FEATURE" delete_action="setNull" >
+			<fk name="FEATURE_CHANGELOG_FEATURE_FK" to_schema="CITYDB" to_table="FEATURE" >
 				<fk_column name="FEATURE_ID" pk="ID" />
 			</fk>
 		</table>

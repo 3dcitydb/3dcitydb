@@ -443,3 +443,5 @@ BEGIN
     (1600, null, 'ADEOfCityFurniture', 1, 17, v_schema1600);
 END;
 /
+
+SET DEFINE ON

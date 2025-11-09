@@ -43,6 +43,15 @@ PROMPT Creating 'citydb' packages ...
 @@citydb-pkg/util.sql
 @@citydb-pkg/schema-mapping.sql
 
+-- create changelog extension
+COLUMN script NEW_VALUE create_changelog_extension
+SELECT CASE
+  WHEN upper('&CHANGELOG')='YES' THEN 'create-changelog.sql'
+  ELSE 'util/do-nothing.sql'
+  END AS script
+FROM dual;
+@@&create_changelog_extension
+
 COMMIT;
 
 PROMPT 3DCityDB instance successfully created.
