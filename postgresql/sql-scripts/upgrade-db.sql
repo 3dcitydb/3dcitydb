@@ -12,6 +12,7 @@ SET client_min_messages TO WARNING;
 \set revision @minorRevision@
 \set version_string @versionString@
 
+\echo
 \echo 'Upgrading 3DCityDB to version ':version_string' ...'
 \echo
 

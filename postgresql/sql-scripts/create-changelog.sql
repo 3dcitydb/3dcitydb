@@ -3,6 +3,7 @@ SET client_min_messages TO WARNING;
 
 \set SCHEMA_NAME :schema_name
 
+\echo
 \echo 'Setting up changelog extension ...'
 
 SELECT srid from :SCHEMA_NAME.database_srs
