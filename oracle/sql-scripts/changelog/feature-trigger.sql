@@ -1,18 +1,27 @@
 CREATE OR REPLACE TRIGGER log_feature_deletes
 BEFORE DELETE ON feature
 FOR EACH ROW
+DECLARE
+  v_is_toplevel OBJECTCLASS.IS_TOPLEVEL%TYPE;
 BEGIN
-  UPDATE feature_changelog
-  SET feature_id = NULL
-  WHERE feature_id = :OLD.id;
+  SELECT is_toplevel
+  INTO v_is_toplevel
+  FROM objectclass
+  WHERE id = :OLD.objectclass_id;
 
-  INSERT INTO feature_changelog (
-    feature_id, objectclass_id, objectid, identifier, identifier_codespace,
-    envelope, transaction_type, transaction_date, db_user, reason_for_update
-  ) VALUES (
-    NULL, :OLD.objectclass_id, :OLD.objectid, :OLD.identifier, :OLD.identifier_codespace,
-    :OLD.envelope, 'DELETE', CURRENT_TIMESTAMP, USER, NULL
-  );
+  IF v_is_toplevel = 1 THEN
+    UPDATE feature_changelog
+    SET feature_id = NULL
+    WHERE feature_id = :OLD.id;
+
+    INSERT INTO feature_changelog (
+      feature_id, objectclass_id, objectid, identifier, identifier_codespace,
+      envelope, transaction_type, transaction_date, db_user, reason_for_update
+    ) VALUES (
+      NULL, :OLD.objectclass_id, :OLD.objectid, :OLD.identifier, :OLD.identifier_codespace,
+      :OLD.envelope, 'DELETE', CURRENT_TIMESTAMP, USER, NULL
+    );
+  END IF;
 END log_feature_deletes;
 /
 
