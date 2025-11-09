@@ -61,7 +61,6 @@ CREATE SCHEMA citydb_pkg;
 ALTER DATABASE :"DBNAME" SET search_path TO :"SCHEMA_NAME", citydb_pkg, :current_path;
 
 -- create changelog extension
-\echo
 \set schema_name :SCHEMA_NAME
 SELECT CASE
   WHEN upper(:'CHANGELOG') = 'YES' THEN 'create-changelog.sql'
@@ -70,4 +69,5 @@ END AS create_changelog_extension
 \gset
 \ir :create_changelog_extension;
 
+\echo
 \echo '3DCityDB instance successfully created.'

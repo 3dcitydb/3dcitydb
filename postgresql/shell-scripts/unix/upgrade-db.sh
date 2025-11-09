@@ -32,7 +32,7 @@ echo '                     |__/          '
 echo
 echo '3D City Database - The Open Source CityGML Database'
 echo
-echo '################################################################################'
+echo '#################################################################################'
 echo
 echo 'This script will upgrade the 3DCityDB instance to the latest version. Note that'
 echo 'this operation cannot be undone.'
@@ -45,7 +45,7 @@ echo 'Having problems or need support?'
 echo '   Please file an issue here:'
 echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
-echo '################################################################################'
+echo '#################################################################################'
 
 # Run upgrade-db.sql to upgrade the 3D City Database instance -----------------
 echo

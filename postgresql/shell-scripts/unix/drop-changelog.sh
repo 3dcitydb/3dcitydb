@@ -32,7 +32,7 @@ echo '                     |__/          '
 echo
 echo '3D City Database - The Open Source CityGML Database'
 echo
-echo '######################################################################################'
+echo '####################################################################################'
 echo
 echo 'This script will guide you through the process of dropping the changelog extension'
 echo 'for an existing 3DCityDB instance. Please follow the instructions of the script.'
@@ -47,9 +47,9 @@ echo 'Having problems or need support?'
 echo '   Please file an issue here:'
 echo '   https://github.com/3dcitydb/3dcitydb/issues'
 echo
-echo '######################################################################################'
+echo '####################################################################################'
 
-# List the existing 3DCityDB schemas with changelog-------------------------------------
+# List the existing 3DCityDB schemas with changelog ---------------------------
 echo
 echo "Reading 3DCityDB schemas from \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
 "$PGBIN" -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/util/list-schemas-with-changelog.sql"
@@ -67,7 +67,7 @@ echo 'Please enter the name of the 3DCityDB schema from which the changelog exte
 read -p "(default SCHEMA_NAME=$SCHEMA_NAME): " var
 SCHEMA_NAME=${var:-$SCHEMA_NAME}
 
-# Run drop-db-extension.sql to drop the 3DCityDB changelog extension ---------------
+# Run drop-db-extension.sql to drop the 3DCityDB changelog extension ----------
 echo
 echo "Connecting to the database \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
 "$PGBIN" -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/drop-changelog.sql" -v schema_name="$SCHEMA_NAME"

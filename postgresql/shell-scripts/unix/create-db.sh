@@ -92,7 +92,7 @@ echo 'Please enter the corresponding SRS name to be used in exports.'
 read -p "(default SRS_NAME=$SRS_NAME): " var
 SRS_NAME=${var:-$SRS_NAME}
 
-# Prompt for CHANGELOG ---------------------------------------------------------
+# Prompt for CHANGELOG --------------------------------------------------------
 while [ 1 ]; do
   echo
   echo "Shall the changelog extension be created (yes/no)?"

@@ -4,6 +4,7 @@ SET client_min_messages TO WARNING;
 
 \set SCHEMA_NAME :schema_name
 
+\echo
 \echo 'Creating 3DCityDB schema "':SCHEMA_NAME'" ...'
 
 -- create schema
@@ -15,7 +16,8 @@ SELECT current_setting('search_path') AS current_path
 SET search_path TO :"SCHEMA_NAME", :current_path;
 
 -- check if the PostGIS extension is available
-SELECT postgis_version();
+SELECT postgis_lib_version() AS postgis_version
+\gset
 
 -- get srid and srs_name from citydb schema
 \echo
