@@ -111,7 +111,7 @@ set /p var="(default SRS_NAME=%SRS_NAME%): "
 
 if /i not "%var%"=="" set SRS_NAME=%var%
 
-:: Prompt for CHANGELOG ------------------------------------------------------
+:: Prompt for CHANGELOG -------------------------------------------------------
 :changelog
 set var=
 echo.
