@@ -4,16 +4,6 @@
  * Methods to handle the spatial reference system
  *****************************************************************/
 
-CREATE OR REPLACE TYPE crs_info AS OBJECT (
-  coord_ref_sys_name VARCHAR2(255),
-  coord_ref_sys_kind VARCHAR2(255),
-  wktext VARCHAR2(4000)
-);
-/
-
-CREATE OR REPLACE TYPE crs_info_tab IS TABLE OF crs_info;
-/
-
 -- Package declaration
 CREATE OR REPLACE PACKAGE citydb_srs
 AS

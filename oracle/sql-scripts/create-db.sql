@@ -38,7 +38,7 @@ PROMPT Setting up database schema of 3DCityDB instance ...
 
 -- create citydb packages
 PROMPT Creating 'citydb' packages ...
-@@citydb-pkg/common-types.sql
+@@citydb-pkg/global-types.sql
 @@citydb-pkg/srs.sql
 @@citydb-pkg/util.sql
 @@citydb-pkg/schema-mapping.sql
