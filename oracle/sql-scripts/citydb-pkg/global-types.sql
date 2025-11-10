@@ -1,5 +1,5 @@
 /*****************************************************************
- * CONTENT: Common type definitions 
+ * CONTENT: Global type definitions
  *
  * Type definitions used by the PL/SQL packages
  *****************************************************************/
