@@ -226,6 +226,9 @@ AS
     IF p_transform <> 0 THEN
       EXECUTE IMMEDIATE 'UPDATE ' || v_table_name || ' SET ' || v_column_name || ' = sdo_cs.transform( ' || v_column_name || ', :1) WHERE ' || v_column_name || ' IS NOT NULL'
       USING p_target_srid;
+    ELSE
+      EXECUTE IMMEDIATE 'UPDATE ' || v_table_name || ' SET ' || v_column_name || '.SDO_SRID = :1 WHERE ' || v_column_name || ' IS NOT NULL'
+      USING p_target_srid;
     END IF;
     
     -- drop and recreate spatial indexes involving the column
