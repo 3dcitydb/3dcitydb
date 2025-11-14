@@ -16,8 +16,14 @@ if NOT [%1]==[] (
   )
 )
 
-:: Add PGBIN to PATH
-set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
+:: Set database client
+if "%PGBIN%"=="" (
+  set "PGBIN=psql"
+) else (
+  if exist "%PGBIN%\" (
+    set "PGBIN=%PGBIN%\psql"
+  )
+)
 
 :: Welcome message
 echo  _______   ___ _ _        ___  ___
@@ -105,7 +111,7 @@ set /p var="(default SRS_NAME=%SRS_NAME%): "
 
 if /i not "%var%"=="" set SRS_NAME=%var%
 
-:: Prompt for CHANGELOG ------------------------------------------------------
+:: Prompt for CHANGELOG -------------------------------------------------------
 :changelog
 set var=
 echo.
@@ -130,6 +136,7 @@ if "%res%"=="f" (
 :: Run create-db.sql to create the 3D City Database instance ------------------
 echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\create-db.sql" -v srid="%SRID%" -v srs_name="%SRS_NAME%" -v changelog="%CHANGELOG%"
+"%PGBIN%" -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\create-db.sql" -v srid="%SRID%" -v srs_name="%SRS_NAME%" -v changelog="%CHANGELOG%"
 
+echo.
 pause

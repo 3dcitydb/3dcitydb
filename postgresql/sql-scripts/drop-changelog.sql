@@ -1,10 +1,10 @@
 SET client_min_messages TO WARNING;
 \set ON_ERROR_STOP ON
 
+\set SCHEMA_NAME :schema_name
+
 \echo
 \echo 'Dropping changelog extension ...'
-
-\set SCHEMA_NAME :schema_name
 
 DROP TABLE IF EXISTS :SCHEMA_NAME.feature_changelog;
 DROP SEQUENCE IF EXISTS :SCHEMA_NAME.feature_changelog_seq;
