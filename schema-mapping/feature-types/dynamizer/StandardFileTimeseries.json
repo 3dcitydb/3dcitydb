@@ -1,6 +1,6 @@
 {
   "identifier": "dyn:StandardFileTimeseries",
-  "description": "A StandardFileTimeseries represents time-varying data for a single contiguous time interval. The data is provided in an external file referenced in the StandardFileTimeseries. The data within the external file is encoded according to a dedicated format for the representation of timeseries data such as using the OGC TimeseriesML or OGC Observations &amp; Measurements Standard. The data type of the data has to be specified within the external file.",
+  "description": "A StandardFileTimeseries represents time-varying data for a single contiguous time interval. The data is provided in an external file referenced in the StandardFileTimeseries. The data within the external file is encoded according to a dedicated format for the representation of timeseries data such as using the OGC TimeseriesML or OGC Observations & Measurements Standard. The data type of the data has to be specified within the external file.",
   "table": "feature",
   "properties": [
     {
