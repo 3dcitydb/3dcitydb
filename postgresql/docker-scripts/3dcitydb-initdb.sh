@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # 3DCityDB setup --------------------------------------------------------------
 
+# Exit on error
+set -e
+
 # Set 3DCityDB version --------------------------------------------------------
 if [ -z $CITYDB_VERSION ]; then
   # CITYDB_VERSION unset, read version from the version.txt file
-  read -r CITYDB_VERSION < version.txt
+  CITYDB_VERSION=$(< version.txt)
 fi
-
-# Print commands and their arguments as they are executed
-set -e
 
 # psql should stop on error
 psql=( psql -v ON_ERROR_STOP=1 )
@@ -24,7 +24,7 @@ else
   # SRID given, check if valid
   if [[ ! $SRID =~ $regex_numeric ]] || [ $SRID -le 0 ]; then
         echo
-        echo 'Illegal input! Enter a positive integer for the SRID.'
+        echo 'Illegal input. Enter a positive integer for the SRID.'
   fi
 fi
 
@@ -46,25 +46,21 @@ else
   if [ ! -z ${HEIGHT_EPSG+x} ]; then
     # SRS_NAME is set, HEIGHT_EPSG is ignored
     echo
-    echo "!!! WARNING: SRS_NAME is set. HEIGHT_EPSG will be ignored."
+    echo "WARNING: SRS_NAME is set. HEIGHT_EPSG will be ignored."
   fi
 fi
 
 # CHANGELOG -------------------------------------------------------------------
 if [ -z ${CHANGELOG+x} ]; then
   CHANGELOG="no"
-else
-  CHANGELOG="$CHANGELOG"
 fi
 
 # Add PostGIS SFCGAL extension ------------------------------------------------
 if [ ! -z ${POSTGIS_SFCGAL+x} ] && [ ${POSTGIS_SFCGAL} = true ] || [ "${POSTGIS_SFCGAL}" = "yes" ] ; then
-
+  echo
   echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' ..."
-
   "${psql[@]}" -d "$POSTGRES_DB" -c "CREATE EXTENSION IF NOT EXISTS postgis_sfcgal;"
-
-  echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' ...done!"
+  echo "Create PostGIS SFCGAL extensions in database '$POSTGRES_DB' done."
   SFCGAL=true
 else
   SFCGAL=false
@@ -73,11 +69,9 @@ fi
 # Setup 3DCityDB schema -------------------------------------------------------
 echo
 echo "Setting up 3DCityDB database schema in database '$POSTGRES_DB' ..."
-
 "${psql[@]}" -d "$POSTGRES_DB" -f "create-db.sql" \
   -v srid="$SRID" -v srs_name="$SRS_NAME" -v changelog="$CHANGELOG" > /dev/null
-
-echo "Setting up 3DCityDB database schema in database '$POSTGRES_DB' ...done!"
+echo "Setting up 3DCityDB database schema in database '$POSTGRES_DB' done."
 
 # Echo info -------------------------------------------------------------------
 cat <<EOF
@@ -89,7 +83,7 @@ cat <<EOF
 # |___/___/ \___|_|\__|\_, |___/|___/
 #                      |__/
 #
-# 3DCityDB Docker PostGIS
+# 3DCityDB Docker PostgreSQL
 #
 # PostgreSQL/PostGIS ----------------------------------------------------------
 #   PostgreSQL version  $PG_MAJOR - $PG_VERSION
@@ -97,9 +91,9 @@ cat <<EOF
 #
 # 3DCityDB --------------------------------------------------------------------
 #   3DCityDB version    $CITYDB_VERSION
-#   DBNAME              $POSTGRES_DB
+#   DB_NAME             $POSTGRES_DB
 #   SRID                $SRID
-#   SRSNAME             $SRS_NAME
+#   SRS_NAME            $SRS_NAME
 #   HEIGHT_EPSG         $HEIGHT_EPSG
 #   SFCGAL enabled      $SFCGAL
 #   CHANGELOG enabled   $CHANGELOG

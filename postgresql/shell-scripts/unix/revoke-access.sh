@@ -4,6 +4,8 @@
 
 # Get the current directory path of this script file
 CURRENT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+
+# Read database connection details
 if [ $# -ne 0 ]; then
   source "$1"
 else
@@ -14,8 +16,12 @@ else
   fi
 fi
 
-# Add PGBIN to PATH
-export PATH="$PGBIN:$PATH"
+# Set database client
+if [ -z "$PGBIN" ]; then
+  PGBIN="psql"
+elif [ -d "$PGBIN" ]; then
+  PGBIN="$PGBIN/psql"
+fi
 
 # Welcome message
 echo ' _______   ___ _ _        ___  ___ '
@@ -62,7 +68,7 @@ done
 # List the 3DCityDB schemas granted to GRANTEE --------------------------------
 echo
 echo "Reading 3DCityDB schemas granted to \"$GRANTEE\" from \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/util/list-schemas-with-access-grant.sql" -v username="$GRANTEE"
+"$PGBIN" -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/util/list-schemas-with-access-grant.sql" -v username="$GRANTEE"
 
 if [[ $? -ne 0 ]] ; then
   echo 'Failed to read 3DCityDB schemas from database.'
@@ -80,7 +86,7 @@ SCHEMA_NAME=${var:-$SCHEMA_NAME}
 # Run revoke-access.sql to revoke read-only access on a specific schema -------
 echo
 echo "Connecting to \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/revoke-access.sql" -v username="$GRANTEE" -v schema_name="$SCHEMA_NAME"
+"$PGBIN" -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/revoke-access.sql" -v username="$GRANTEE" -v schema_name="$SCHEMA_NAME"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'

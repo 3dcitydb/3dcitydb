@@ -4,6 +4,8 @@
 
 # Get the current directory path of this script file
 CURRENT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+
+# Read database connection details
 if [ $# -ne 0 ]; then
   source "$1"
 else
@@ -14,8 +16,12 @@ else
   fi
 fi
 
-# Add PGBIN to PATH
-export PATH="$PGBIN:$PATH"
+# Set database client
+if [ -z "$PGBIN" ]; then
+  PGBIN="psql"
+elif [ -d "$PGBIN" ]; then
+  PGBIN="$PGBIN/psql"
+fi
 
 # Welcome message
 echo ' _______   ___ _ _        ___  ___ '
@@ -62,7 +68,7 @@ done
 # List the existing 3DCityDB schemas ------------------------------------------
 echo
 echo "Reading 3DCityDB schemas from \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/util/list-schemas.sql"
+"$PGBIN" -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/util/list-schemas.sql"
 
 if [[ $? -ne 0 ]] ; then
   echo 'Failed to read 3DCityDB schemas from database.'
@@ -98,7 +104,7 @@ done
 # Run grant-access.sql to grant access privileges on a specific schema --------
 echo
 echo "Connecting to \"$PGUSER@$PGHOST:$PGPORT/$CITYDB\" ..."
-psql -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/grant-access.sql" -v username="$GRANTEE" -v schema_name="$SCHEMA_NAME" -v access_mode="$ACCESS_MODE"
+"$PGBIN" -d "$CITYDB" -f "$CURRENT_DIR/../../sql-scripts/grant-access.sql" -v username="$GRANTEE" -v schema_name="$SCHEMA_NAME" -v access_mode="$ACCESS_MODE"
 
 echo
 read -rsn1 -p 'Press ENTER to quit.'

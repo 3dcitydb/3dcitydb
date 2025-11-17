@@ -16,8 +16,14 @@ if NOT [%1]==[] (
   )
 )
 
-:: Add PGBIN to PATH
-set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
+:: Set database client
+if "%PGBIN%"=="" (
+  set "PGBIN=psql"
+) else (
+  if exist "%PGBIN%\" (
+    set "PGBIN=%PGBIN%\psql"
+  )
+)
 
 :: Welcome message
 echo  _______   ___ _ _        ___  ___
@@ -68,7 +74,7 @@ if /i not "%var%"=="" (
 :: List the 3DCityDB schemas granted to GRANTEE -------------------------------
 echo.
 echo Reading 3DCityDB schemas granted to "%GRANTEE%" from "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\util\list-schemas-with-access-grant.sql" -v username="%GRANTEE%"
+"%PGBIN%" -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\util\list-schemas-with-access-grant.sql" -v username="%GRANTEE%"
 
 if errorlevel 1 (
   echo Failed to read 3DCityDB schemas from database.
@@ -86,6 +92,7 @@ if /i not "%var%"=="" set SCHEMA_NAME=%var%
 :: Run revoke-access.sql to revoke access privileges on a specific schema -----
 echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\revoke-access.sql" -v username="%GRANTEE%" -v schema_name="%SCHEMA_NAME%"
+"%PGBIN%" -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\revoke-access.sql" -v username="%GRANTEE%" -v schema_name="%SCHEMA_NAME%"
 
+echo.
 pause

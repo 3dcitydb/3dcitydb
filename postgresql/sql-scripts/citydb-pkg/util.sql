@@ -1,17 +1,18 @@
 /*****************************************************************
 * citydb_version
 *
-* @return RECORD with columns
+* @return TABLE with columns
 *   version - version of 3DCityDB as string
 *   major_version - major version number of 3DCityDB instance
 *   minor_version - minor version number of 3DCityDB instance
 *   minor_revision - minor revision number of 3DCityDB instance
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.citydb_version( 
-  OUT version TEXT, 
-  OUT major_version INTEGER, 
-  OUT minor_version INTEGER, 
-  OUT minor_revision INTEGER) RETURNS RECORD AS
+CREATE OR REPLACE FUNCTION citydb_pkg.citydb_version()
+  RETURNS TABLE(
+    version TEXT,
+    major_version INTEGER,
+    minor_version INTEGER,
+    minor_revision INTEGER) AS
 $body$
 SELECT 
   '@versionString@'::text AS version,
@@ -24,25 +25,27 @@ LANGUAGE sql IMMUTABLE;
 /******************************************************************
 * db_metadata
 *
-* @return RECORD with columns
+* @return TABLE with columns
 *    srid, srs_name,
 *    coord_ref_sys_name, coord_ref_sys_kind, wktext
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(
-  OUT srid INTEGER,
-  OUT srs_name TEXT,
-  OUT coord_ref_sys_name TEXT, 
-  OUT coord_ref_sys_kind TEXT,
-  OUT wktext TEXT) RETURNS RECORD AS
+CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata()
+  RETURNS TABLE(
+    srid INTEGER,
+    srs_name TEXT,
+    coord_ref_sys_name TEXT,
+    coord_ref_sys_kind TEXT,
+    wktext TEXT) AS
 $body$
 BEGIN
-  SELECT
-    d.srid, d.srs_name, crs.coord_ref_sys_name, crs.coord_ref_sys_kind, crs.wktext
-  INTO
-    srid, srs_name, coord_ref_sys_name, coord_ref_sys_kind, wktext
-  FROM
-    database_srs d,
-    citydb_pkg.get_coord_ref_sys_info(d.srid) crs;
+  RETURN QUERY
+    SELECT
+      d.srid, d.srs_name, crs.coord_ref_sys_name, crs.coord_ref_sys_kind, crs.wktext
+    FROM
+      database_srs d
+    JOIN LATERAL
+      citydb_pkg.get_coord_ref_sys_info(d.srid) crs ON true
+    LIMIT 1;
 END;
 $body$
 LANGUAGE plpgsql STABLE;
@@ -51,27 +54,21 @@ LANGUAGE plpgsql STABLE;
 * db_metadata
 *
 * @param schema_name Name of database schema
-* @return RECORD with columns
+* @return TABLE with columns
 *    srid, srs_name,
 *    coord_ref_sys_name, coord_ref_sys_kind, wktext
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(
-  schema_name TEXT,
-  OUT srid INTEGER,
-  OUT srs_name TEXT,
-  OUT coord_ref_sys_name TEXT,
-  OUT coord_ref_sys_kind TEXT,
-  OUT wktext TEXT) RETURNS RECORD AS
+CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(schema_name TEXT)
+  RETURNS TABLE(
+    srid INTEGER,
+    srs_name TEXT,
+    coord_ref_sys_name TEXT,
+    coord_ref_sys_kind TEXT,
+    wktext TEXT) AS
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-
-  SELECT
-    m.srid, m.srs_name, m.coord_ref_sys_name, m.coord_ref_sys_kind, m.wktext
-  INTO
-    srid, srs_name, coord_ref_sys_name, coord_ref_sys_kind, wktext
-  FROM
-    citydb_pkg.db_metadata() m;
+  RETURN QUERY SELECT * FROM citydb_pkg.db_metadata();
 END;
 $body$
 LANGUAGE plpgsql STABLE;
@@ -112,7 +109,7 @@ LANGUAGE plpgsql STABLE;
 /*****************************************************************
 * get_seq_values
 *
-* @param seq_name Name of the sequence including a schema prefix
+* @param seq_name Name of the sequence possibly including a schema prefix
 * @param count Number of values to be queried from the sequence
 * @return List of sequence values from given sequence
 ******************************************************************/
@@ -125,69 +122,24 @@ $body$
 LANGUAGE sql STRICT;
 
 /*****************************************************************
-* get_child_objectclass_ids
+* get_seq_values
 *
-* @param class_id Identifier for object class
-* @param skip_abstract Set to 1 if abstract classes shall be skipped, 0 if not
-* @return The IDs of all transitive subclasses of the given object class
+* @param seq_name Name of the sequence possibly including a schema prefix
+* @param count Number of values to be queried from the sequence
+* @param schema_name Name of database schema
+* @return List of sequence values from given sequence
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_child_objectclass_ids(
-  class_id INTEGER,
-  skip_abstract INTEGER DEFAULT 0) RETURNS SETOF INTEGER AS
-$body$
-DECLARE
-  where_clause TEXT := '';
-BEGIN
-  IF skip_abstract <> 0 THEN
-    where_clause = 'WHERE h.is_abstract <> 1';
-  END IF;
-  
-  RETURN QUERY EXECUTE format('
-    WITH RECURSIVE class_hierarchy AS (
-      SELECT
-        o.id,
-        o.is_abstract
-      FROM
-        objectclass o
-      WHERE
-        o.id = %L
-      UNION ALL
-      SELECT
-        p.id,
-        p.is_abstract
-      FROM
-        objectclass p
-        INNER JOIN class_hierarchy h ON h.id = p.superclass_id
-    )
-    SELECT
-      h.id
-    FROM
-      class_hierarchy h ' || where_clause,
-	class_id);
-END;
-$body$
-LANGUAGE plpgsql STABLE STRICT;
-
-/*****************************************************************
-* get_child_objectclass_ids
-*
-* @param class_id Identifier for object class
-* @param schema_name Name of schema
-* @param skip_abstract Set to 1 if abstract classes shall be skipped, 0 if not
-* @return The IDs of all transitive subclasses of the given object class
-******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_child_objectclass_ids(
-  class_id INTEGER,
-  schema_name TEXT,
-  skip_abstract INTEGER DEFAULT 0) RETURNS SETOF INTEGER AS
+CREATE OR REPLACE FUNCTION citydb_pkg.get_seq_values(
+  seq_name TEXT,
+  seq_count BIGINT,
+  schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-  RETURN QUERY
-    SELECT citydb_pkg.get_child_objectclass_ids(class_id, skip_abstract);
+  RETURN QUERY SELECT * FROM citydb_pkg.get_seq_values(seq_name, seq_count);
 END;
 $body$
-LANGUAGE plpgsql STABLE STRICT;
+LANGUAGE plpgsql STABLE;
 
 /*****************************************************************
 * get_current_schema

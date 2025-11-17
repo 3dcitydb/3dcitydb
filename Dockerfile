@@ -18,6 +18,9 @@ COPY . /build
 # Build
 RUN chmod u+x ./gradlew && ./gradlew installDist
 
+# Make init script executable
+RUN chmod +x /build/build/install/3dcitydb/postgresql/docker-scripts/3dcitydb-initdb.sh
+
 # Runtime stage ###############################################################
 # Base image
 FROM postgis/postgis:${BASEIMAGE_TAG} AS runtime
@@ -31,9 +34,6 @@ WORKDIR /3dcitydb
 COPY --from=builder /build/build/install/3dcitydb/version.txt .
 COPY --from=builder /build/build/install/3dcitydb/postgresql/sql-scripts .
 COPY --from=builder /build/build/install/3dcitydb/postgresql/docker-scripts/3dcitydb-initdb.sh /docker-entrypoint-initdb.d/
-
-# Make init script executable
-RUN chmod +x /docker-entrypoint-initdb.d/3dcitydb-initdb.sh
 
 # Set labels
 LABEL maintainer="Bruno Willenborg"

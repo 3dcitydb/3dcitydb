@@ -1,26 +1,26 @@
-CREATE SEQUENCE address_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+CREATE SEQUENCE address_seq START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE;
 
-CREATE SEQUENCE ade_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 2147483647 CACHE 1 NO CYCLE;
+CREATE SEQUENCE ade_seq START WITH 1  INCREMENT BY 1  MINVALUE 0  MAXVALUE 2147483647  CACHE 1  NO CYCLE;
 
-CREATE SEQUENCE appear_to_surface_data_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+CREATE SEQUENCE appear_to_surface_data_seq START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE;
 
-CREATE SEQUENCE appearance_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+CREATE SEQUENCE appearance_seq START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE;
 
-CREATE SEQUENCE codelist_entry_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+CREATE SEQUENCE codelist_entry_seq START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE;
 
-CREATE SEQUENCE codelist_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+CREATE SEQUENCE codelist_seq START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE;
 
-CREATE SEQUENCE feature_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+CREATE SEQUENCE feature_seq START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE;
 
-CREATE SEQUENCE geometry_data_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+CREATE SEQUENCE geometry_data_seq START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE;
 
-CREATE SEQUENCE implicit_geometry_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+CREATE SEQUENCE implicit_geometry_seq START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE;
 
-CREATE SEQUENCE property_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+CREATE SEQUENCE property_seq START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE;
 
-CREATE SEQUENCE surface_data_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+CREATE SEQUENCE surface_data_seq START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE;
 
-CREATE SEQUENCE tex_image_seq START WITH 1 INCREMENT BY 1 MINVALUE 0 MAXVALUE 9223372036854775807 CACHE 1 NO CYCLE;
+CREATE SEQUENCE tex_image_seq START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE;
 
 CREATE  TABLE address ( 
 	id                   bigint DEFAULT nextval('address_seq'::regclass) NOT NULL  ,
@@ -54,7 +54,7 @@ CREATE  TABLE codelist (
 	codelist_type        text    ,
 	url                  text    ,
 	mime_type            text    ,
-	CONSTRAINT codelist_pkey PRIMARY KEY ( id )
+	CONSTRAINT codelist_pk PRIMARY KEY ( id )
  );
 
 CREATE INDEX codelist_codelist_type_inx ON codelist  ( codelist_type );
@@ -64,7 +64,7 @@ CREATE  TABLE codelist_entry (
 	codelist_id          bigint  NOT NULL  ,
 	code                 text    ,
 	definition           text    ,
-	CONSTRAINT codelist_entry_pkey PRIMARY KEY ( id )
+	CONSTRAINT codelist_entry_pk PRIMARY KEY ( id )
  );
 
 CREATE INDEX codelist_entry_codelist_fkx ON codelist_entry  ( codelist_id );
@@ -97,8 +97,6 @@ CREATE INDEX feature_objectclass_inx ON feature  ( objectclass_id  );
 
 CREATE INDEX feature_objectid_inx ON feature  ( objectid  );
 
-CREATE INDEX feature_envelope_spx ON feature USING GiST ( envelope );
-
 CREATE INDEX feature_identifier_inx ON feature  ( identifier , identifier_codespace );
 
 CREATE INDEX feature_creation_date_inx ON feature  ( creation_date );
@@ -119,8 +117,6 @@ CREATE  TABLE geometry_data (
  );
 
 CREATE INDEX geometry_data_feature_fkx ON geometry_data  ( feature_id );
-
-CREATE INDEX geometry_data_spx ON geometry_data USING GiST ( geometry );
 
 CREATE  TABLE implicit_geometry ( 
 	id                   bigint DEFAULT nextval('implicit_geometry_seq'::regclass) NOT NULL  ,
@@ -187,9 +183,9 @@ CREATE INDEX appearance_implicit_geom_fkx ON appearance  ( implicit_geometry_id 
 CREATE INDEX appearance_theme_inx ON appearance  ( theme );
 
 CREATE  TABLE datatype ( 
+	id                   integer  NOT NULL  ,
 	supertype_id         integer    ,
 	typename             text    ,
-	id                   integer  NOT NULL  ,
 	is_abstract          integer    ,
 	ade_id               integer    ,
 	namespace_id         integer    ,

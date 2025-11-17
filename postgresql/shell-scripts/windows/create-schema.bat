@@ -16,8 +16,14 @@ if NOT [%1]==[] (
   )
 )
 
-:: Add PGBIN to PATH
-set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
+:: Set database client
+if "%PGBIN%"=="" (
+  set "PGBIN=psql"
+) else (
+  if exist "%PGBIN%\" (
+    set "PGBIN=%PGBIN%\psql"
+  )
+)
 
 :: Welcome message
 echo  _______   ___ _ _        ___  ___
@@ -48,7 +54,7 @@ echo ###########################################################################
 :: List the existing 3DCityDB schemas -----------------------------------------
 echo.
 echo Reading 3DCityDB schemas from "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\util\list-schemas.sql"
+"%PGBIN%" -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\util\list-schemas.sql"
 
 if errorlevel 1 (
   echo Failed to read 3DCityDB schemas from database.
@@ -65,6 +71,7 @@ if /i not "%var%"=="" set SCHEMA_NAME=%var%
 :: Run create-schema.sql to create a new 3DCityDB schema ----------------------
 echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\create-schema.sql" -v schema_name="%SCHEMA_NAME%"
+"%PGBIN%" -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\create-schema.sql" -v schema_name="%SCHEMA_NAME%"
 
+echo.
 pause

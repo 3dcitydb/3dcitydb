@@ -16,8 +16,14 @@ if NOT [%1]==[] (
   )
 )
 
-:: Add PGBIN to PATH
-set PATH=%PGBIN%;%PATH%;%SYSTEMROOT%\System32
+:: Set database client
+if "%PGBIN%"=="" (
+  set "PGBIN=psql"
+) else (
+  if exist "%PGBIN%\" (
+    set "PGBIN=%PGBIN%\psql"
+  )
+)
 
 :: Welcome message
 echo  _______   ___ _ _        ___  ___
@@ -28,7 +34,7 @@ echo                      ^|__/
 echo.
 echo 3D City Database - The Open Source CityGML Database
 echo.
-echo ################################################################################
+echo #################################################################################
 echo.
 echo This script will upgrade the 3DCityDB instance to the latest version. Note that
 echo this operation cannot be undone.
@@ -41,11 +47,12 @@ echo Having problems or need support?
 echo    Please file an issue here:
 echo    https://github.com/3dcitydb/3dcitydb/issues
 echo.
-echo ################################################################################
+echo #################################################################################
 
 REM Run upgrade-db.sql to upgrade the 3D City Database instance ---------------
 echo.
 echo Connecting to "%PGUSER%@%PGHOST%:%PGPORT%/%CITYDB%" ...
-psql -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\upgrade-db.sql"
+"%PGBIN%" -d "%CITYDB%" -f "%CURRENT_DIR%..\..\sql-scripts\upgrade-db.sql"
 
+echo.
 pause

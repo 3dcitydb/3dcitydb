@@ -4,6 +4,7 @@ SET client_min_messages TO WARNING;
 
 \set SCHEMA_NAME :schema_name
 
+\echo
 \echo 'Dropping 3DCityDB schema "':SCHEMA_NAME'" ...'
 
 -- drop schemas
