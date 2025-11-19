@@ -6,7 +6,7 @@ DELETE FROM objectclass;
 DECLARE
   v_schema_1 JSON := JSON(@core:Undefined@);
   v_schema_2 JSON := JSON(@core:AbstractObject@);
-  v_schema_3 JSON := JSON(@core:AbstractObject@);
+  v_schema_3 JSON := JSON(@core:AbstractFeature@);
   v_schema_4 JSON := JSON(@core:Address@);
   v_schema_5 JSON := JSON(@core:AbstractPointCloud@);
   v_schema_6 JSON := JSON(@core:AbstractFeatureWithLifespan@);
@@ -387,5 +387,6 @@ BEGIN
     (1600, 12, 'CityFurniture', 0, 1, 17, v_schema_1600);
 END;
 /
+
 
 SET DEFINE ON
