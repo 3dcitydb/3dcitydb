@@ -615,7 +615,7 @@ BEGIN
       (SELECT DISTINCT unnest(tex_image_ids) AS a_id) a
     LEFT JOIN
       surface_data sd
-      ON sd.tex_image_id  = a.a_id
+      ON sd.tex_image_id = a.a_id
     WHERE sd.tex_image_id IS NULL;
   END IF;
 

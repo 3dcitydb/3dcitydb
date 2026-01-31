@@ -1,5 +1,8 @@
 SET client_min_messages TO NOTICE;
 
+\echo 'Upgrading 3DCityDB schemas to version 5.1.0 ...'
+\echo
+
 DO $$
 DECLARE
   schema_name text;

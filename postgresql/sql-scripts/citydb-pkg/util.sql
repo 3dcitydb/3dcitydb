@@ -26,8 +26,8 @@ LANGUAGE sql IMMUTABLE;
 * db_metadata
 *
 * @return TABLE with columns
-*    srid, srs_name,
-*    coord_ref_sys_name, coord_ref_sys_kind, wktext
+*   srid, srs_name,
+*   coord_ref_sys_name, coord_ref_sys_kind, wktext
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata()
   RETURNS TABLE(
@@ -55,8 +55,8 @@ LANGUAGE plpgsql STABLE;
 *
 * @param schema_name Name of database schema
 * @return TABLE with columns
-*    srid, srs_name,
-*    coord_ref_sys_name, coord_ref_sys_kind, wktext
+*   srid, srs_name,
+*   coord_ref_sys_name, coord_ref_sys_kind, wktext
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.db_metadata(schema_name TEXT)
   RETURNS TABLE(
@@ -124,7 +124,7 @@ LANGUAGE sql STRICT;
 /*****************************************************************
 * get_seq_values
 *
-* @param seq_name Name of the sequence possibly including a schema prefix
+* @param seq_name Name of the sequence
 * @param count Number of values to be queried from the sequence
 * @param schema_name Name of database schema
 * @return List of sequence values from given sequence
@@ -134,12 +134,9 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_seq_values(
   seq_count BIGINT,
   schema_name TEXT) RETURNS SETOF BIGINT AS
 $body$
-BEGIN
-  PERFORM citydb_pkg.set_current_schema(schema_name);
-  RETURN QUERY SELECT * FROM citydb_pkg.get_seq_values(seq_name, seq_count);
-END;
+SELECT nextval(format('%I.%I', $3, $1)::regclass)::bigint FROM generate_series(1, $2);
 $body$
-LANGUAGE plpgsql STABLE;
+LANGUAGE sql STRICT;
 
 /*****************************************************************
 * get_current_schema
@@ -182,7 +179,7 @@ BEGIN
   PERFORM set_config('search_path', format('%I, citydb_pkg, public', schema_name), local);
 END;
 $body$
-LANGUAGE plpgsql STABLE STRICT;
+LANGUAGE plpgsql STRICT;
 
 /*****************************************************************
 * schema_exists
@@ -192,13 +189,30 @@ LANGUAGE plpgsql STABLE STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.schema_exists(schema_name TEXT) RETURNS INTEGER AS
 $body$
-SELECT COALESCE((
+SELECT CASE WHEN EXISTS (
   SELECT 1
-  FROM information_schema.schemata s
-  JOIN information_schema.tables t ON t.table_schema = s.schema_name
-  WHERE s.schema_name = $1
-    AND t.table_name = 'database_srs'
+  FROM pg_class c
+  JOIN pg_namespace n ON n.oid = c.relnamespace
+  WHERE n.nspname = $1
+    AND c.relname = 'database_srs'
+    AND c.relkind = 'r'
   LIMIT 1
-), 0)
+) THEN 1 ELSE 0 END;
 $body$
 LANGUAGE sql STABLE;
+
+/******************************************************************
+* normalize_polyhedral
+*
+* @param geom The geometry to process
+* @return A geometry collection of polygons if input is a polyhedral surfaces,
+*   otherwise the original geometry
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.normalize_polyhedral(geom GEOMETRY) RETURNS GEOMETRY AS
+$body$
+SELECT CASE
+  WHEN ST_GeometryType($1) = 'ST_PolyhedralSurface' THEN ST_ForceCollection($1)
+  ELSE $1
+END;
+$body$
+LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE;

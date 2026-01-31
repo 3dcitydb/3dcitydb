@@ -149,7 +149,7 @@ LANGUAGE plpgsql;
 *
 * @param srid The SRID to retrieve the CRS information for
 * @return TABLE with columns
-*    coord_ref_sys_name, coord_ref_sys_kind, wktext
+*   coord_ref_sys_name, coord_ref_sys_kind, wktext
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_coord_ref_sys_info(srid INTEGER)
   RETURNS TABLE(
@@ -166,7 +166,7 @@ FROM
 WHERE
   srid = $1;
 $body$
-LANGUAGE sql STRICT;
+LANGUAGE sql STABLE STRICT;
 
 /******************************************************************
 * is_coord_ref_sys_3d
@@ -177,9 +177,9 @@ LANGUAGE sql STRICT;
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.is_coord_ref_sys_3d(srid INTEGER) RETURNS INTEGER AS
 $body$
-SELECT COALESCE((
+SELECT CASE WHEN EXISTS (
   SELECT 1 FROM spatial_ref_sys WHERE srid = $1 AND lower(srtext) SIMILAR TO '%\Wup\W%'
-), 0);
+) THEN 1 ELSE 0 END;
 $body$
 LANGUAGE sql STABLE;
 
@@ -236,4 +236,4 @@ CREATE OR REPLACE FUNCTION citydb_pkg.transform_or_null(
 $body$
 SELECT ST_Transform($1, $2);
 $body$
-LANGUAGE sql STABLE STRICT;
+LANGUAGE sql STABLE STRICT PARALLEL SAFE;

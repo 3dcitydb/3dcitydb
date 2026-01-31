@@ -92,7 +92,7 @@ create a GitHub issue.
 
 Latest release
 --------------
-The latest stable release of the 3D City Database is 5.1.0.
+The latest stable release of the 3D City Database is 5.1.1.
 
 You can download the latest release as well as previous releases from the
 [releases section](https://github.com/3dcitydb/3dcitydb/releases).
@@ -101,7 +101,7 @@ System requirements
 -------------------
 Setting up an instance of the 3D City Database requires an existing installation of a PostgreSQL database. Currently, only following database versions are supported:
 
-* PostgreSQL >= 13 with PostGIS >= 3.0
+* PostgreSQL >= 14 with PostGIS >= 3.1
 
 It is recommended that you always install the latest patches, minor releases, and security updates for your
 database system. Database versions that have reached end-of-life are no longer supported by the 3D City Database.

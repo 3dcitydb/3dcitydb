@@ -2,15 +2,15 @@ SELECT format($sql$
 CREATE OR REPLACE FUNCTION %I.log_feature_changes() RETURNS TRIGGER AS
 $body$
 DECLARE
-	v_feature_id bigint;
-	v_is_toplevel integer;
-	v_objectclass_id integer;
-	v_objectid text;
-	v_identifier text;
-	v_identifier_codespace text;
-	v_envelope geometry;
-	v_reason_for_update text;
-	v_transaction_type text;
+  v_feature_id bigint;
+  v_is_toplevel integer;
+  v_objectclass_id integer;
+  v_objectid text;
+  v_identifier text;
+  v_identifier_codespace text;
+  v_envelope geometry;
+  v_reason_for_update text;
+  v_transaction_type text;
 BEGIN
   v_transaction_type := TG_OP;
 
@@ -18,27 +18,27 @@ BEGIN
     RETURN NULL;
   END IF;
 
-	IF (v_transaction_type = 'DELETE') THEN
-		v_feature_id := NULL;
-		v_objectclass_id := OLD.objectclass_id;
-		v_objectid := OLD.objectid;
-		v_identifier := OLD.identifier;
-		v_identifier_codespace := OLD.identifier_codespace;
-		v_envelope := OLD.envelope;
-		v_reason_for_update := NULL;
-	ELSE
-		v_feature_id := NEW.id;
-		v_objectclass_id := NEW.objectclass_id;
-		v_objectid := NEW.objectid;
-		v_identifier := NEW.identifier;
-		v_identifier_codespace := NEW.identifier_codespace;
-		v_envelope := NEW.envelope;
-		v_reason_for_update := NEW.reason_for_update;
+  IF (v_transaction_type = 'DELETE') THEN
+    v_feature_id := NULL;
+    v_objectclass_id := OLD.objectclass_id;
+    v_objectid := OLD.objectid;
+    v_identifier := OLD.identifier;
+    v_identifier_codespace := OLD.identifier_codespace;
+    v_envelope := OLD.envelope;
+    v_reason_for_update := NULL;
+  ELSE
+    v_feature_id := NEW.id;
+    v_objectclass_id := NEW.objectclass_id;
+    v_objectid := NEW.objectid;
+    v_identifier := NEW.identifier;
+    v_identifier_codespace := NEW.identifier_codespace;
+    v_envelope := NEW.envelope;
+    v_reason_for_update := NEW.reason_for_update;
 
-		IF (NEW.termination_date IS NOT NULL) THEN
-			v_transaction_type := 'TERMINATE';
-		END IF;
-	END IF;
+    IF (NEW.termination_date IS NOT NULL) THEN
+      v_transaction_type := 'TERMINATE';
+    END IF;
+  END IF;
 
   SELECT is_toplevel
   INTO v_is_toplevel

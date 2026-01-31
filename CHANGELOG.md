@@ -2,9 +2,13 @@
 
 ## [Unreleased]
 
+## [5.1.1] - 2025-12-06
+
 ### Fixed
-- Fixed a regression where delete scripts did not return the `ID` when deleting nested features.
+- Resolved a regression where delete scripts did not return the `id` when deleting nested features.
 - Fixed the changelog trigger on `feature` to prevent recursive execution.
+- Updated the `id` column of the `feature_changelog` table to automatically generate values using
+  `feature_changelog_seq`.
 - Added a `NOT NULL` constraint on the `transaction_date` column of the `feature_changelog` table.
 
 ## [5.1.0] - 2025-08-24
@@ -50,7 +54,8 @@ the [user manual](https://3dcitydb.github.io/3dcitydb-mkdocs/) for complete docu
 The changelog of previous 3D City Database releases before version 5.0 is available
 [here](https://github.com/3dcitydb/3dcitydb/tree/3dcitydb-v4/CHANGES.md).
 
-[Unreleased]: https://github.com/3dcitydb/3dcitydb/compare/v5.1.0..HEAD
+[Unreleased]: https://github.com/3dcitydb/3dcitydb/compare/v5.1.1..HEAD
+[5.1.1]: https://github.com/3dcitydb/3dcitydb/releases/tag/v5.1.1
 [5.1.0]: https://github.com/3dcitydb/3dcitydb/releases/tag/v5.1.0
 [5.0.0]: https://github.com/3dcitydb/3dcitydb/releases/tag/v5.0.0
 [Before 5.0.0]: https://github.com/3dcitydb/3dcitydb/tree/3dcitydb-v4/CHANGES.md

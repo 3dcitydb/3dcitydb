@@ -5,7 +5,7 @@
 
 # Fetch & build stage #########################################################
 # ARGS
-ARG BASEIMAGE_TAG='17-3.5'
+ARG BASEIMAGE_TAG='18-3.6'
 ARG BUILDER_IMAGE_TAG='21-jdk-jammy'
 
 # Base image
