@@ -13,7 +13,7 @@ podman run -d --name orcl23aifree \
 -e ORACLE_PWD=Welcome_1234# \
 -e ENABLE_ARCHIVELOG=true \
 -e ENABLE_FORCE_LOGGING=true \
--v [<host mount point>:]/opt/oracle/data \
+-v [<host mount point>:]/opt/oracle/oradata \
 container-registry.oracle.com/database/free:latest
 ```
 
@@ -25,7 +25,7 @@ docker run -d --name orcl23aifree \
 -e ORACLE_PWD=Welcome_1234# \
 -e ENABLE_ARCHIVELOG=true \
 -e ENABLE_FORCE_LOGGING=true \
--v [<host mount point>:]/opt/oracle/data \
+-v [<host mount point>:]/opt/oracle/oradata \
 container-registry.oracle.com/database/free:latest
 ```
 
