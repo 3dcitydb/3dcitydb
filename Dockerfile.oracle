@@ -35,6 +35,15 @@ COPY --from=builder /build/build/install/3dcitydb/version.txt .
 COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts .
 COPY --from=builder /build/build/install/3dcitydb/oracle/docker-scripts/3dcitydb-initdb.sh /opt/oracle/scripts/startup/
 
+# Put Select AI helper SQLs outside startup (so they are NOT auto-executed)
+RUN mkdir -p /opt/oracle/3dcitydb-custom
+COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts/selectai_sys_setup.sql /opt/oracle/3dcitydb-custom/selectai_sys_setup.sql
+COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts/selectai_citydb_setup.sql /opt/oracle/3dcitydb-custom/selectai_citydb_setup.sql
+COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts/selectai_verify_dbms_cloud.sql /opt/oracle/3dcitydb-custom/selectai_verify_dbms_cloud.sql
+COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts/selectai_grantprivileges_locRol.sql /opt/oracle/3dcitydb-custom/selectai_grantprivileges_locRol.sql
+COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts/selectai_confACE_urRol.sql /opt/oracle/3dcitydb-custom/selectai_confACE_urRol.sql
+COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts/selectai_setup.sql /opt/oracle/3dcitydb-custom/selectai_setup.sql
+
 # Set labels
 LABEL maintainer="Karin Patenge"
 LABEL maintainer.email="karin.patenge(at)oracle.com"
