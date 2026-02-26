@@ -1,0 +1,72 @@
+SET SERVEROUTPUT ON
+SET FEEDBACK ON
+SET VER OFF
+
+-- parse arguments
+DEFINE USERNAME=&1;
+DEFINE SCHEMA_NAME=&2;
+DEFINE ACCESS_MODE=&3;
+
+VARIABLE text VARCHAR2(10);
+EXEC IF upper('&ACCESS_MODE') = 'RW' THEN :text := 'read-write'; ELSE :text := 'read-only'; END IF;
+
+SELECT 'Granting ' || :text || ' privileges on schema "' || upper('&SCHEMA_NAME') || '" to user "' || upper('&USERNAME') || '" ...' as message from DUAL;
+
+DECLARE
+  target_schema VARCHAR2(128) := upper('&SCHEMA_NAME');
+  user_name VARCHAR2(128) := upper('&USERNAME');
+  privilege_type VARCHAR2(10);
+BEGIN
+  -- GRANT ACCESS
+  -- user types
+  FOR rec IN (SELECT type_name FROM all_types WHERE owner = target_schema) LOOP
+    EXECUTE IMMEDIATE 'grant execute on '||target_schema||'."'||rec.type_name||'" to "'||user_name||'"';
+  END LOOP;
+  
+  -- packages
+  FOR rec IN (SELECT object_name FROM all_objects WHERE owner = target_schema AND upper(object_type) = 'PACKAGE'
+              AND object_name IN ('CITYDB_SCHEMA','CITYDB_UTIL','CITYDB_SRS')) LOOP
+    EXECUTE IMMEDIATE 'grant execute on '||target_schema||'."'||rec.object_name||'" to "'||user_name||'"';
+  END LOOP;
+  
+  IF upper('&ACCESS_MODE') = 'RW' THEN
+    FOR rec IN (SELECT object_name FROM all_objects WHERE owner = target_schema AND upper(object_type) = 'PACKAGE'
+                AND object_name IN ('CITYDB_DELETE')) LOOP
+      EXECUTE IMMEDIATE 'grant execute on '||target_schema||'."'||rec.object_name||'" to "'||user_name||'"';
+    END LOOP;
+  END IF;
+
+  -- tables
+  FOR rec IN (SELECT table_name FROM all_tables WHERE owner = target_schema) LOOP
+    IF upper('&ACCESS_MODE') = 'RW' THEN
+      privilege_type := 'all';
+    ELSE
+      privilege_type := 'select';
+    END IF;
+
+    EXECUTE IMMEDIATE 'grant '||privilege_type||' on '||target_schema||'."'||rec.table_name||'" to "'||user_name||'"';
+  END LOOP;
+
+  -- views
+  FOR rec IN (SELECT view_name FROM all_views WHERE owner = target_schema) LOOP
+    IF upper('&ACCESS_MODE') = 'RW' THEN
+      privilege_type := 'all';
+    ELSE
+      privilege_type := 'select';
+    END IF;
+
+    EXECUTE IMMEDIATE 'grant '||privilege_type||' on '||target_schema||'."'||rec.view_name||'" to "'||user_name||'"';
+  END LOOP;
+    
+  -- sequences
+  IF upper('&ACCESS_MODE') = 'RW' THEN
+    FOR rec IN (SELECT sequence_name FROM all_sequences WHERE sequence_owner = target_schema) LOOP
+      EXECUTE IMMEDIATE 'grant all on '||target_schema||'."'||rec.sequence_name||'" to "'||user_name||'"';
+    END LOOP;
+  END IF;
+END;
+/
+
+SELECT 'Successfully granted ' || :text || ' privileges.' as message from DUAL;
+
+QUIT;
