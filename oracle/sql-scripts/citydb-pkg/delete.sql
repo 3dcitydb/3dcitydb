@@ -26,8 +26,8 @@ AS
   FUNCTION delete_tex_image(pid NUMBER) RETURN NUMBER;
   FUNCTION delete_address(pid_array NUMBER_TAB) RETURN NUMBER_TAB;
   FUNCTION delete_address(pid NUMBER) RETURN NUMBER;
-  FUNCTION terminate_feature(pid_array NUMBER_TAB, metadata VARCHAR2 DEFAULT '{}', cascade NUMBER DEFAULT 1) RETURN NUMBER_TAB;
-  FUNCTION terminate_feature(pid NUMBER, metadata VARCHAR2 DEFAULT '{}', cascade NUMBER DEFAULT 1) RETURN NUMBER;
+  FUNCTION terminate_feature(pid_array NUMBER_TAB, metadata JSON DEFAULT '{}', cascade NUMBER DEFAULT 1) RETURN NUMBER_TAB;
+  FUNCTION terminate_feature(pid NUMBER, metadata JSON DEFAULT '{}', cascade NUMBER DEFAULT 1) RETURN NUMBER;
 END citydb_delete;
 /
 
@@ -473,7 +473,7 @@ AS
   /******************************************************************
   * terminate feature based on an id array
   ******************************************************************/
-  FUNCTION terminate_feature(pid_array NUMBER_TAB, metadata VARCHAR2 DEFAULT '{}', cascade NUMBER DEFAULT 1) RETURN NUMBER_TAB
+  FUNCTION terminate_feature(pid_array NUMBER_TAB, metadata JSON DEFAULT '{}', cascade NUMBER DEFAULT 1) RETURN NUMBER_TAB
   IS
     terminated_ids NUMBER_TAB := NUMBER_TAB();
     child_feature_ids NUMBER_TAB := NUMBER_TAB();
@@ -523,7 +523,7 @@ AS
   /******************************************************************
   * terminate a feature based on an id
   ******************************************************************/
-  FUNCTION terminate_feature(pid NUMBER, metadata VARCHAR2 DEFAULT '{}', cascade NUMBER DEFAULT 1) RETURN NUMBER
+  FUNCTION terminate_feature(pid NUMBER, metadata JSON DEFAULT '{}', cascade NUMBER DEFAULT 1) RETURN NUMBER
   IS
     result NUMBER_TAB;
   BEGIN
