@@ -449,18 +449,18 @@
 				<column name="id" />
 			</index>
 		</table>
-		<sequence name="address_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE" />
-		<sequence name="ade_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 0  MAXVALUE 2147483647  CACHE 1  NO CYCLE" />
-		<sequence name="appear_to_surface_data_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE" />
-		<sequence name="appearance_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE" />
-		<sequence name="codelist_entry_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE" />
-		<sequence name="codelist_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE" />
-		<sequence name="feature_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE" />
-		<sequence name="geometry_data_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE" />
-		<sequence name="implicit_geometry_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE" />
-		<sequence name="property_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE" />
-		<sequence name="surface_data_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE" />
-		<sequence name="tex_image_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE" />
+		<sequence name="address_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 1  NO MAXVALUE CACHE 1  NO CYCLE" />
+		<sequence name="ade_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 1  MAXVALUE 2147483647  CACHE 1  NO CYCLE" />
+		<sequence name="appear_to_surface_data_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 1  NO MAXVALUE CACHE 1  NO CYCLE" />
+		<sequence name="appearance_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 1  NO MAXVALUE CACHE 1  NO CYCLE" />
+		<sequence name="codelist_entry_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 1  NO MAXVALUE CACHE 1  NO CYCLE" />
+		<sequence name="codelist_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 1  NO MAXVALUE CACHE 1  NO CYCLE" />
+		<sequence name="feature_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 1  NO MAXVALUE CACHE 1  NO CYCLE" />
+		<sequence name="geometry_data_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 1  NO MAXVALUE CACHE 1  NO CYCLE" />
+		<sequence name="implicit_geometry_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 1  NO MAXVALUE CACHE 1  NO CYCLE" />
+		<sequence name="property_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 1  NO MAXVALUE CACHE 1  NO CYCLE" />
+		<sequence name="surface_data_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 1  NO MAXVALUE CACHE 1  NO CYCLE" />
+		<sequence name="tex_image_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 1  NO MAXVALUE CACHE 1  NO CYCLE" />
 	</schema>
 	<schema name="feature_changelog" >
 		<table name="feature_changelog" prior="feature_changelof" >
@@ -503,7 +503,7 @@
 				<fk_column name="feature_id" pk="id" />
 			</fk>
 		</table>
-		<sequence name="feature_changelog_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE" />
+		<sequence name="feature_changelog_seq" options="START WITH 1  INCREMENT BY 1  MINVALUE 1  NO MAXVALUE CACHE 1  NO CYCLE" />
 	</schema>
 	<layout name="3DCityDB" id="Layout-1758" confirmed="y" joined_routing="y" show_column_type="y" show_relation="no_text" >
 		<comment><![CDATA[3DCityDB]]></comment>

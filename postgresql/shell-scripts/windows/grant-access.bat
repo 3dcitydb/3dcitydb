@@ -90,7 +90,7 @@ if /i not "%var%"=="" set SCHEMA_NAME=%var%
 :access_mode
 set var=
 echo.
-echo What level of access should be granted to "%GRANTEE%" (read-only=RO/read-write=RW)?
+echo What level of access should be granted to "%GRANTEE%" (read-only=RO/read-update=RU/read-write=RW)?
 set /p var="(default ACCESS_MODE=RO): "
 
 if /i not "%var%"=="" (
@@ -101,10 +101,11 @@ if /i not "%var%"=="" (
 
 set res=f
 if /i "%ACCESS_MODE%"=="ro" (set res=t)
+if /i "%ACCESS_MODE%"=="ru" (set res=t)
 if /i "%ACCESS_MODE%"=="rw" (set res=t)
 if "%res%"=="f" (
   echo.
-  echo Illegal input! Enter RO or RW.
+  echo Illegal input! Enter RO, RU, or RW.
   goto access_mode
 )
 

@@ -34,6 +34,7 @@ $$;
 \ir ../citydb-pkg/srs.sql
 \ir ../citydb-pkg/envelope.sql
 \ir ../citydb-pkg/delete.sql
+\ir ../citydb-pkg/schema-mapping.sql
 
 \echo
 \echo '3DCityDB instance successfully upgraded.'

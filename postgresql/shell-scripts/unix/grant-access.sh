@@ -86,18 +86,18 @@ SCHEMA_NAME=${var:-$SCHEMA_NAME}
 # Prompt for ACCESS_MODE ------------------------------------------------------
 while [ 1 ]; do
   echo
-  echo "What level of access should be granted to \"$GRANTEE\" (read-only=RO/read-write=RW)?"
+  echo "What level of access should be granted to \"$GRANTEE\" (read-only=RO/read-update=RU/read-write=RW)?"
   read -p "(default ACCESS_MODE=RO): " ACCESS_MODE
   ACCESS_MODE=${ACCESS_MODE:-RO}
 
   # to upper case
   ACCESS_MODE=$(echo "$ACCESS_MODE" | awk '{print toupper($0)}')
 
-  if [ "$ACCESS_MODE" = "RO" ] || [ "$ACCESS_MODE" = "RW" ]; then
+  if [ "$ACCESS_MODE" = "RO" ] || [ "$ACCESS_MODE" = "RU" ] || [ "$ACCESS_MODE" = "RW" ]; then
     break;
   else
     echo
-    echo 'Illegal input! Enter RO or RW.'
+    echo 'Illegal input! Enter RO, RU, or RW.'
   fi
 done
 

@@ -92,7 +92,7 @@ create a GitHub issue.
 
 Latest release
 --------------
-The latest stable release of the 3D City Database is 5.1.1.
+The latest stable release of the 3D City Database is 5.1.2.
 
 You can download the latest release as well as previous releases from the
 [releases section](https://github.com/3dcitydb/3dcitydb/releases).
