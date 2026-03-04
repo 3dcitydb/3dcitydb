@@ -115,7 +115,7 @@ $body$
 LANGUAGE plpgsql STRICT;
 
 /******************************************************************
-* delete from FEATURE table based on an id and schema name
+* delete from FEATURE table based on an id
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_feature(pid bigint) RETURNS BIGINT AS
 $body$
@@ -308,7 +308,7 @@ $body$
 LANGUAGE plpgsql STRICT;
 
 /******************************************************************
-* delete from PROPERTY table based on an id and schema name
+* delete from PROPERTY table based on an id
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_property(pid bigint) RETURNS BIGINT AS
 $body$
@@ -375,7 +375,7 @@ $body$
 LANGUAGE plpgsql STRICT;
 
 /******************************************************************
-* delete from GEOMETRY_DATA table based on an id and schema name
+* delete from GEOMETRY_DATA table based on an id
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_geometry_data(pid bigint) RETURNS BIGINT AS
 $body$
@@ -461,7 +461,7 @@ $body$
 LANGUAGE plpgsql STRICT;
 
 /******************************************************************
-* delete from IMPLICIT_GEOMETRY table based on an id and schema name
+* delete from IMPLICIT_GEOMETRY table based on an id
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_implicit_geometry(pid bigint) RETURNS BIGINT AS
 $body$
@@ -557,7 +557,7 @@ $body$
 LANGUAGE plpgsql STRICT;
 
 /******************************************************************
-* delete from APPEARANCE table based on an id and schema name
+* delete from APPEARANCE table based on an id
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_appearance(pid bigint) RETURNS BIGINT AS
 $body$
@@ -639,7 +639,7 @@ $body$
 LANGUAGE plpgsql STRICT;
 
 /******************************************************************
-* delete from SURFACE_DATA table based on an id and schema name
+* delete from SURFACE_DATA table based on an id
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_surface_data(pid bigint) RETURNS BIGINT AS
 $body$
@@ -706,7 +706,7 @@ $body$
 LANGUAGE plpgsql STRICT;
 
 /******************************************************************
-* delete from TEX_IMAGE table based on an id and schema name
+* delete from TEX_IMAGE table based on an id
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_tex_image(pid bigint) RETURNS BIGINT AS
 $body$
@@ -773,12 +773,12 @@ $body$
 LANGUAGE plpgsql STRICT;
 
 /******************************************************************
-* delete from ADDRESS table based on an id and schema name
+* delete from ADDRESS table based on an id
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.delete_address(pid bigint) RETURNS BIGINT AS
 $body$
 BEGIN
-  RETURN citydb_pkg.del_address(ARRAY[pid]);
+  RETURN citydb_pkg.delete_address(ARRAY[pid]);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -790,7 +790,7 @@ CREATE OR REPLACE FUNCTION citydb_pkg.delete_address(pid bigint, schema_name TEX
 $body$
 BEGIN
   PERFORM citydb_pkg.set_current_schema(schema_name);
-  RETURN citydb_pkg.del_address(ARRAY[pid]);
+  RETURN citydb_pkg.delete_address(ARRAY[pid]);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -877,7 +877,7 @@ $body$
 LANGUAGE plpgsql STRICT;
 
 /******************************************************************
-* terminate a feature based on an id and schema name
+* terminate a feature based on an id
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid bigint, metadata JSONB DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS BIGINT AS
 $body$

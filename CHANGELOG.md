@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Fixed
+- Fixed failing `citydb_pkg.delete_address` functions caused by calls to non-existing functions. [#272](https://github.com/3dcitydb/3dcitydb/pull/272)
+
+## [5.1.2] - 2026-02-25
+
+### Added
+- Added a read-update (RU) mode to the `grant-access` script, bridging read-only (RO) and read-write (RW). RU allows
+  adding and terminating features but not deleting them, supporting feature history without physically removing
+  features from the database. [#264](https://github.com/3dcitydb/3dcitydb/issues/264)
+
 ## [5.1.1] - 2025-12-06
 
 ### Fixed
@@ -54,7 +64,8 @@ the [user manual](https://3dcitydb.github.io/3dcitydb-mkdocs/) for complete docu
 The changelog of previous 3D City Database releases before version 5.0 is available
 [here](https://github.com/3dcitydb/3dcitydb/tree/3dcitydb-v4/CHANGES.md).
 
-[Unreleased]: https://github.com/3dcitydb/3dcitydb/compare/v5.1.1..HEAD
+[Unreleased]: https://github.com/3dcitydb/3dcitydb/compare/v5.1.2..HEAD
+[5.1.2]: https://github.com/3dcitydb/3dcitydb/releases/tag/v5.1.2
 [5.1.1]: https://github.com/3dcitydb/3dcitydb/releases/tag/v5.1.1
 [5.1.0]: https://github.com/3dcitydb/3dcitydb/releases/tag/v5.1.0
 [5.0.0]: https://github.com/3dcitydb/3dcitydb/releases/tag/v5.0.0

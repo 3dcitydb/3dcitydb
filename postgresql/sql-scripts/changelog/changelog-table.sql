@@ -1,6 +1,6 @@
 \set SEQ_NAME :SCHEMA_NAME.feature_changelog_seq
 
-CREATE SEQUENCE :SCHEMA_NAME.feature_changelog_seq START WITH 1  INCREMENT BY 1  MINVALUE 0  NO MAXVALUE CACHE 1  NO CYCLE;
+CREATE SEQUENCE :SCHEMA_NAME.feature_changelog_seq START WITH 1  INCREMENT BY 1  MINVALUE 1  NO MAXVALUE CACHE 1  NO CYCLE;
 
 CREATE  TABLE :SCHEMA_NAME.feature_changelog (
 	id                   bigint DEFAULT nextval(:'SEQ_NAME'::regclass) NOT NULL  ,
