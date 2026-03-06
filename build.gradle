@@ -11,7 +11,7 @@ plugins {
 
 apply from: 'properties.gradle'
 
-version = '5.1.2'
+version = '5.1.3'
 group = 'org.citydb'
 
 tasks.register('versionFile') {
