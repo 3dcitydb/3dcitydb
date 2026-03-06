@@ -5,7 +5,7 @@ SET SERVEROUTPUT ON
 SET FEEDBACK OFF
 SET ECHO OFF
 SET VERIFY OFF
-SET TERMOUT OFF
+SET TERMOUT ON
 WHENEVER SQLERROR EXIT SQL.SQLCODE
 
 -- parameters passed by caller
@@ -19,12 +19,8 @@ DEFINE SCHEMA_NAME=&2;
 */
 BEGIN
   IF TRIM('&USERNAME') IS NULL
-     OR TRIM('&SCHEMA_NAME') IS NULL
-     OR TRIM('&ACCESS_MODE') IS NULL THEN
-    raise_application_error(-20010,'username, schema_name and access_mode are required');
-  END IF;
-  IF upper('&ACCESS_MODE') NOT IN ('RO','RW') THEN
-    raise_application_error(-20011,'ACCESS_MODE must be RO or RW');
+     OR TRIM('&SCHEMA_NAME') IS NULL THEN
+    raise_application_error(-20010,'username and schema_name are required');
   END IF;
 
   DECLARE
