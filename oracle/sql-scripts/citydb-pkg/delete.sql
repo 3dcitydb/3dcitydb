@@ -40,7 +40,26 @@ AS
   ******************************************************************/
   PROCEDURE cleanup_schema
   IS
+    TYPE spatial_idx_rec IS RECORD (
+      index_name VARCHAR2(128),
+      table_name VARCHAR2(128),
+      column_name VARCHAR2(128)
+    );
+    TYPE spatial_idx_tab IS TABLE OF spatial_idx_rec;
+    v_spatial_indexes spatial_idx_tab;
   BEGIN
+    -- save and drop spatial indexes before truncating
+    SELECT i.index_name, i.table_name, ic.column_name
+    BULK COLLECT INTO v_spatial_indexes
+    FROM user_indexes i
+    JOIN user_ind_columns ic ON ic.index_name = i.index_name
+    WHERE i.ityp_name = 'SPATIAL_INDEX_V2' AND i.ityp_owner = 'MDSYS';
+
+    FOR i IN 1..v_spatial_indexes.COUNT LOOP
+      EXECUTE IMMEDIATE 'DROP INDEX ' || v_spatial_indexes(i).index_name;
+    END LOOP;
+
+    -- disable foreign key constraints
     FOR rec IN (
       SELECT constraint_name, table_name
       FROM user_constraints WHERE constraint_type = 'R'
@@ -48,6 +67,7 @@ AS
       EXECUTE IMMEDIATE 'ALTER TABLE ' || rec.table_name || ' DISABLE CONSTRAINT ' || rec.constraint_name;
     END LOOP;
 
+    -- truncate data tables
     FOR rec IN (
       SELECT table_name FROM user_tables
       WHERE table_name NOT IN ('ADE','DATATYPE','DATABASE_SRS','CODELIST','CODELIST_ENTRY','NAMESPACE','OBJECTCLASS')
@@ -55,6 +75,7 @@ AS
       EXECUTE IMMEDIATE 'TRUNCATE TABLE ' || rec.table_name;
     END LOOP;
 
+    -- re-enable foreign key constraints
     FOR rec IN (
       SELECT constraint_name, table_name
       FROM user_constraints WHERE constraint_type = 'R'
@@ -62,6 +83,14 @@ AS
       EXECUTE IMMEDIATE 'ALTER TABLE ' || rec.table_name || ' ENABLE CONSTRAINT ' || rec.constraint_name;
     END LOOP;
 
+    -- recreate spatial indexes
+    FOR i IN 1..v_spatial_indexes.COUNT LOOP
+      EXECUTE IMMEDIATE 'CREATE INDEX ' || v_spatial_indexes(i).index_name || ' ON ' ||
+        v_spatial_indexes(i).table_name || ' (' || v_spatial_indexes(i).column_name ||
+        ') INDEXTYPE IS MDSYS.SPATIAL_INDEX_V2';
+    END LOOP;
+
+    -- reset sequences
     FOR rec IN (
       SELECT sequence_name FROM user_sequences
       WHERE sequence_name <> 'ADE_SEQ'
