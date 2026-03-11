@@ -18,8 +18,9 @@ COPY . /build
 # Build
 RUN chmod u+x ./gradlew && ./gradlew installDist
 
-# Make init script executable
-RUN chmod +x /build/build/install/3dcitydb/oracle/docker-scripts/3dcitydb-initdb.sh
+# Make scripts executable
+RUN chmod +x /build/build/install/3dcitydb/oracle/docker-scripts/3dcitydb-initdb.sh \
+    /build/build/install/3dcitydb/oracle/docker-scripts/install-dbms-cloud.sh
 
 # Runtime stage ###############################################################
 # Base image
@@ -35,14 +36,11 @@ COPY --from=builder /build/build/install/3dcitydb/version.txt .
 COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts .
 COPY --from=builder /build/build/install/3dcitydb/oracle/docker-scripts/3dcitydb-initdb.sh /opt/oracle/scripts/startup/
 
-# Put Select AI helper SQLs outside startup (so they are NOT auto-executed)
+# Place install-dbms-cloud.sh and Select AI SQLs outside startup
+# (so they are NOT auto-executed by Oracle; only sourced when ENABLE_SELECT_AI=true)
 RUN mkdir -p /opt/oracle/3dcitydb-custom
-COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts/selectai_sys_setup.sql /opt/oracle/3dcitydb-custom/selectai_sys_setup.sql
-COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts/selectai_citydb_setup.sql /opt/oracle/3dcitydb-custom/selectai_citydb_setup.sql
-COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts/selectai_verify_dbms_cloud.sql /opt/oracle/3dcitydb-custom/selectai_verify_dbms_cloud.sql
-COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts/selectai_grantprivileges_locRol.sql /opt/oracle/3dcitydb-custom/selectai_grantprivileges_locRol.sql
-COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts/selectai_confACE_urRol.sql /opt/oracle/3dcitydb-custom/selectai_confACE_urRol.sql
-COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts/selectai_setup.sql /opt/oracle/3dcitydb-custom/selectai_setup.sql
+COPY --from=builder /build/build/install/3dcitydb/oracle/docker-scripts/install-dbms-cloud.sh /opt/oracle/3dcitydb-custom/
+COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts/cloud-ai/ /opt/oracle/3dcitydb-custom/
 
 # Set labels
 LABEL maintainer="Karin Patenge"
