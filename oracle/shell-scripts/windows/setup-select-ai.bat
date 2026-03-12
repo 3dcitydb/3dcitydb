@@ -40,7 +40,7 @@ echo.
 echo This script sets up Oracle Select AI for the 3DCityDB. It requires:
 echo   - Oracle Database 23ai or higher with DBMS_CLOUD_AI pre-installed
 echo   - SYS (SYSDBA) access for network ACL and privilege configuration
-echo   - An OpenAI API key for the AI profile
+echo   - A Google API key for the AI profile (free at https://aistudio.google.com)
 echo.
 echo Documentation and help:
 echo    3DCityDB website:    https://www.3dcitydb.org
@@ -95,15 +95,21 @@ echo.
 set /p SSL_WALLET_DIR="Please enter the SSL wallet directory (default: C:\oracle\wallet): "
 if "%SSL_WALLET_DIR%"=="" set "SSL_WALLET_DIR=C:\oracle\wallet"
 
-:: Prompt for OpenAI API key ------------------------------------------------------
+:: Prompt for Google API key ------------------------------------------------------
 echo.
-set "OPENAI_API_KEY="
-set /p OPENAI_API_KEY="Please enter the OpenAI API key: "
+set "GOOGLE_API_KEY="
+set /p GOOGLE_API_KEY="Please enter the Google API key: "
 
-if "%OPENAI_API_KEY%"=="" (
-  echo ERROR: OpenAI API key is required.
+if "%GOOGLE_API_KEY%"=="" (
+  echo ERROR: Google API key is required.
   goto error
 )
+
+:: Prompt for Google model -------------------------------------------------------
+echo.
+set "GOOGLE_MODEL="
+set /p GOOGLE_MODEL="Please enter the Google model (default: gemini-2.5-flash): "
+if "%GOOGLE_MODEL%"=="" set "GOOGLE_MODEL=gemini-2.5-flash"
 
 :: --- Step 1: Run SYS setup (ACLs, roles, privileges, PDB grants) ---------------
 echo.
@@ -164,7 +170,7 @@ echo Property catalog and annotations created successfully.
 
 :: --- Step 3: Create AI profile (as app user) ------------------------------------
 echo.
-echo Creating OpenAI credential and AI profile ...
+echo Creating Google credential and AI profile ...
 echo Connecting to "%DB_USER%@%DB_HOST%:%DB_PORT%/%ORACLE_PDB%" ...
 
 set "TMPPROFILE=%TEMP%\3dcitydb_profile_%RANDOM%.sql"
@@ -172,7 +178,8 @@ set "TMPPROFILE=%TEMP%\3dcitydb_profile_%RANDOM%.sql"
 > "%TMPPROFILE%" (
   echo WHENEVER OSERROR EXIT 9;
   echo WHENEVER SQLERROR EXIT SQL.SQLCODE;
-  echo DEFINE OPENAI_API_KEY='%OPENAI_API_KEY%'
+  echo DEFINE GOOGLE_API_KEY='%GOOGLE_API_KEY%'
+  echo DEFINE GOOGLE_MODEL='%GOOGLE_MODEL%'
   echo DEFINE DB_USER='%DB_USER%'
   echo @cloud-ai/select-ai-create-profile.sql
   echo EXIT

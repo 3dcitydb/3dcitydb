@@ -166,10 +166,10 @@ GRANT EXECUTE ON DBMS_CLOUD_AI TO &DB_USER;
 
 PROMPT DBMS_CLOUD grants to &DB_USER completed.
 
--- Network ACL for OpenAI endpoint (remove + append for idempotency)
+-- Network ACL for Google Gemini API endpoint (remove + append for idempotency)
 BEGIN
   DBMS_NETWORK_ACL_ADMIN.REMOVE_HOST_ACE(
-    host       => 'api.openai.com',
+    host       => 'generativelanguage.googleapis.com',
     lower_port => 443,
     upper_port => 443,
     ace        => xs$ace_type(
@@ -184,7 +184,7 @@ END;
 
 BEGIN
   DBMS_NETWORK_ACL_ADMIN.APPEND_HOST_ACE(
-    host       => 'api.openai.com',
+    host       => 'generativelanguage.googleapis.com',
     lower_port => 443,
     upper_port => 443,
     ace        => xs$ace_type(
