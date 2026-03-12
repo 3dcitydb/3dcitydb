@@ -136,7 +136,33 @@ if %SYS_RC% NEQ 0 (
 
 echo SYS setup completed successfully.
 
-:: --- Step 2: Create AI profile (as app user) ------------------------------------
+:: --- Step 2: Property catalog view + annotations (as app user) -----------------
+echo.
+echo Creating property catalog view and schema annotations ...
+echo Connecting to "%DB_USER%@%DB_HOST%:%DB_PORT%/%ORACLE_PDB%" ...
+
+set "TMPCATALOG=%TEMP%\3dcitydb_catalog_%RANDOM%.sql"
+
+> "%TMPCATALOG%" (
+  echo WHENEVER OSERROR EXIT 9;
+  echo WHENEVER SQLERROR EXIT SQL.SQLCODE;
+  echo @cloud-ai/select-ai-property-catalog.sql
+  echo EXIT
+)
+
+"%ORACLE_CLIENT%" -S -L "%DB_USER%@%DB_HOST%:%DB_PORT%/%ORACLE_PDB%" @"%TMPCATALOG%"
+set CATALOG_RC=%ERRORLEVEL%
+del "%TMPCATALOG%" 2>nul
+
+if %CATALOG_RC% NEQ 0 (
+  echo.
+  echo ERROR: Property catalog setup failed.
+  goto error
+)
+
+echo Property catalog and annotations created successfully.
+
+:: --- Step 3: Create AI profile (as app user) ------------------------------------
 echo.
 echo Creating OpenAI credential and AI profile ...
 echo Connecting to "%DB_USER%@%DB_HOST%:%DB_PORT%/%ORACLE_PDB%" ...
