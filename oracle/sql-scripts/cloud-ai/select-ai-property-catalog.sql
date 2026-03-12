@@ -31,6 +31,8 @@ CREATE TABLE property_catalog (
   objectclass_id        NUMBER(10)    NOT NULL,
   feature_type          VARCHAR2(255) NOT NULL,
   is_toplevel           NUMBER(1)     NOT NULL,
+  namespace_alias       VARCHAR2(50),
+  ade_id                NUMBER(10),
   property_name         VARCHAR2(255) NOT NULL,
   parent_property       VARCHAR2(255),
   value_column          VARCHAR2(50),
@@ -40,6 +42,10 @@ CREATE TABLE property_catalog (
   relation_type         VARCHAR2(50),
   description           VARCHAR2(4000)
 );
+
+CREATE INDEX idx_propcat_oc_prop ON property_catalog(objectclass_id, property_name);
+CREATE INDEX idx_propcat_ft      ON property_catalog(feature_type);
+CREATE INDEX idx_propcat_ade     ON property_catalog(ade_id);
 
 -- ---------------------------------------------------------------
 -- 1.2 Populate: resolve inheritance + map containment targets
@@ -120,11 +126,22 @@ datatype_subprops AS (
   WHERE dt.schema IS NOT NULL
     AND JSON_EXISTS(dt.schema, '$.properties')
 ),
--- Build a full descendant tree so we can resolve abstract
--- FeatureProperty targets (e.g. AbstractSpaceBoundary) to
--- their concrete subclasses (WallSurface, RoofSurface ...).
+-- Pre-compute identifiers to avoid repeated JSON extraction in joins.
+oc_identifiers AS (
+  SELECT id, JSON_VALUE(schema, '$.identifier') AS identifier
+  FROM objectclass
+  WHERE schema IS NOT NULL
+),
+-- Build descendant tree only for objectclasses that are
+-- containment targets (not the full tree).
 descendant_chain (root_id, descendant_id) AS (
-  SELECT id, id FROM objectclass
+  SELECT oci.id, oci.id
+  FROM oc_identifiers oci
+  WHERE EXISTS (
+    SELECT 1 FROM raw_props rp
+    WHERE rp.relation_type = 'contains'
+      AND rp.property_target = oci.identifier
+  )
   UNION ALL
   SELECT dc.root_id, oc.id
   FROM descendant_chain dc
@@ -134,6 +151,8 @@ SELECT DISTINCT
   rp.objectclass_id,
   oc_src.classname,
   oc_src.is_toplevel,
+  ns.alias,
+  oc_src.ade_id,
   rp.property_name,
   NULL,                             -- parent_property (top-level properties)
   -- Map to storage column (data-driven from DATATYPE.SCHEMA) ---------------
@@ -154,17 +173,18 @@ SELECT DISTINCT
 FROM raw_props rp
 JOIN objectclass oc_src
   ON oc_src.id = rp.objectclass_id
+LEFT JOIN namespace ns ON ns.id = oc_src.namespace_id
 -- Look up value column and join table from DATATYPE schema
 LEFT JOIN datatype_map dm
   ON dm.type_id = rp.property_type
 -- Match the target identifier to an objectclass (containment only)
-LEFT JOIN objectclass oc_tgt
+LEFT JOIN oc_identifiers oci
   ON rp.relation_type = 'contains'
   AND rp.property_target IS NOT NULL
-  AND JSON_VALUE(oc_tgt.schema, '$.identifier') = rp.property_target
+  AND oci.identifier = rp.property_target
 -- Walk down to concrete descendants of the target
 LEFT JOIN descendant_chain dc
-  ON dc.root_id = oc_tgt.id
+  ON dc.root_id = oci.id
 LEFT JOIN objectclass tgt_concrete
   ON tgt_concrete.id = dc.descendant_id
   AND tgt_concrete.is_abstract = 0
@@ -179,6 +199,8 @@ SELECT DISTINCT
   rp.objectclass_id,
   oc_src.classname,
   oc_src.is_toplevel,
+  ns.alias,
+  oc_src.ade_id,
   dsp.sub_name,
   rp.property_name,
   COALESCE(UPPER(sub_dm.value_col), UPPER(sub_dm.join_col)),
@@ -189,10 +211,13 @@ SELECT DISTINCT
   dsp.sub_description
 FROM raw_props rp
 JOIN objectclass oc_src ON oc_src.id = rp.objectclass_id
+LEFT JOIN namespace ns ON ns.id = oc_src.namespace_id
 JOIN datatype_subprops dsp ON dsp.parent_type_id = rp.property_type
 LEFT JOIN datatype_map sub_dm ON sub_dm.type_id = dsp.sub_type;
 
 COMMIT;
+
+EXEC DBMS_STATS.GATHER_TABLE_STATS(USER, 'PROPERTY_CATALOG');
 
 DECLARE
   v_cnt NUMBER;
@@ -233,24 +258,21 @@ DECLARE
     END LOOP;
   END;
 BEGIN
-  drop_annotations('ADDRESS');
-  drop_annotations('FEATURE');
-  drop_annotations('PROPERTY');
-  drop_annotations('GEOMETRY_DATA');
-  drop_annotations('IMPLICIT_GEOMETRY');
-  drop_annotations('TEX_IMAGE');
-  drop_annotations('APPEARANCE');
-  drop_annotations('SURFACE_DATA');
-  drop_annotations('SURFACE_DATA_MAPPING');
-  drop_annotations('APPEAR_TO_SURFACE_DATA');
-  drop_annotations('CODELIST');
-  drop_annotations('CODELIST_ENTRY');
-  drop_annotations('ADE');
-  drop_annotations('DATABASE_SRS');
-  drop_annotations('NAMESPACE');
-  drop_annotations('OBJECTCLASS');
-  drop_annotations('DATATYPE');
-  drop_annotations('PROPERTY_CATALOG');
+  -- Only drop annotations on tables managed by THIS script.
+  -- ADE extension scripts should manage their own annotations separately.
+  FOR t IN (
+    SELECT column_value AS table_name
+    FROM TABLE(SYS.ODCIVARCHAR2LIST(
+      'ADDRESS', 'FEATURE', 'PROPERTY', 'GEOMETRY_DATA',
+      'IMPLICIT_GEOMETRY', 'TEX_IMAGE', 'APPEARANCE',
+      'SURFACE_DATA', 'SURFACE_DATA_MAPPING',
+      'APPEAR_TO_SURFACE_DATA', 'CODELIST', 'CODELIST_ENTRY',
+      'ADE', 'DATABASE_SRS', 'NAMESPACE', 'OBJECTCLASS',
+      'DATATYPE', 'PROPERTY_CATALOG'
+    ))
+  ) LOOP
+    drop_annotations(t.table_name);
+  END LOOP;
 END;
 /
 
@@ -568,6 +590,14 @@ ALTER TABLE property_catalog MODIFY (
     'Whether this feature type is a top-level city object (1) or a subordinate part (0). Top-level features like Building, Road, Bridge can be queried directly.')
 );
 ALTER TABLE property_catalog MODIFY (
+  namespace_alias ANNOTATIONS (ADD DESCRIPTION
+    'CityGML module or ADE namespace alias (e.g. bldg, con, tran). Identifies which module defines this feature type. NULL should not normally occur.')
+);
+ALTER TABLE property_catalog MODIFY (
+  ade_id ANNOTATIONS (ADD DESCRIPTION
+    'NULL for core CityGML types. Non-NULL references ADE.ID for Application Domain Extension types. Use to filter or group ADE-specific properties.')
+);
+ALTER TABLE property_catalog MODIFY (
   property_name ANNOTATIONS (ADD DESCRIPTION
     'The property name. Use this to filter PROPERTY.NAME when querying EAV properties. Examples: class, function, usage, roofType, storeysAboveGround, boundary, lod2Solid. For sub-properties (parent_property IS NOT NULL) this is the child property name (e.g. lowReference).')
 );
@@ -615,7 +645,6 @@ PROMPT Generating COMMENT ON TABLE FEATURE ...
 DECLARE
   v_comment VARCHAR2(4000);
   v_entry   VARCHAR2(200);
-  v_paths   VARCHAR2(4000) := '';
   v_pentry  VARCHAR2(500);
 BEGIN
   -- Part A: Query rules + objectclass_id mappings
@@ -626,59 +655,40 @@ BEGIN
     || '(4) Containment: child features linked via PROPERTY.VAL_FEATURE_ID. '
     || 'CRITICAL: some types require MULTI-HOP traversal. '
     || 'WindowSurface belongs to WallSurface, NOT directly to Building. '
-    || 'To find windows of a building, chain two hops using CONTAINMENT PATHS: '
-    || 'Building(901)--boundary-->WallSurface(709), then WallSurface(709)--fillingSurface-->WindowSurface(719). '
-    || 'SQL: SELECT b.objectid,COUNT(w.id) FROM feature b '
-    || 'JOIN property p1 ON p1.feature_id=b.id AND p1.name=''boundary'' '
-    || 'JOIN feature ws ON ws.id=p1.val_feature_id AND ws.objectclass_id IN(709,710,712) '
-    || 'JOIN property p2 ON p2.feature_id=ws.id AND p2.name=''fillingSurface'' '
-    || 'JOIN feature w ON w.id=p2.val_feature_id AND w.objectclass_id=719 '
-    || 'WHERE b.objectclass_id=901 GROUP BY b.objectid. '
+    || 'To find windows: Building(901)--boundary-->WallSurface(709)--fillingSurface-->WindowSurface(719). '
+    || 'Pattern: f_parent JOIN property p1 (feature_id,name) JOIN feature f_child (p1.val_feature_id) '
+    || 'JOIN property p2 (feature_id,name) JOIN feature f_grandchild (p2.val_feature_id). '
     || 'IDS: ';
 
   FOR r IN (
-    SELECT id, classname
-    FROM objectclass
-    WHERE is_abstract = 0 AND is_toplevel = 1
-    ORDER BY classname
+    SELECT ns.alias, oc.id, oc.classname
+    FROM objectclass oc
+    LEFT JOIN namespace ns ON ns.id = oc.namespace_id
+    WHERE oc.is_abstract = 0 AND oc.is_toplevel = 1
+    ORDER BY oc.ade_id NULLS FIRST, ns.alias, oc.classname
   ) LOOP
-    v_entry := r.classname || '=' || r.id || ', ';
+    v_entry := NVL(r.alias, '?') || ':' || r.classname || '=' || r.id || ', ';
     EXIT WHEN LENGTH(v_comment) + LENGTH(v_entry) > 2500;
     v_comment := v_comment || v_entry;
   END LOOP;
   v_comment := RTRIM(v_comment, ', ') || '. ';
 
   -- Part B: Containment paths from PROPERTY_CATALOG
-  -- Generate: "ParentType(id)--propName-->ChildType(id)" chains
+  -- Generate: "ParentType(id)--propName-->ChildType(id)" chains.
+  -- Non-toplevel paths (second-hop, e.g. WallSurface-->WindowSurface) are
+  -- listed first because they are critical for multi-hop traversal.
   v_comment := v_comment || 'CONTAINMENT PATHS: ';
 
   FOR r IN (
     SELECT DISTINCT
       pc.feature_type || '(' || pc.objectclass_id || ')'
         || '--' || pc.property_name || '-->'
-        || pc.target_feature_type || '(' || pc.target_objectclass_id || ')' AS path_segment
+        || pc.target_feature_type || '(' || pc.target_objectclass_id || ')' AS path_segment,
+      pc.is_toplevel
     FROM property_catalog pc
     WHERE pc.relation_type = 'contains'
       AND pc.target_objectclass_id IS NOT NULL
-      AND pc.is_toplevel = 1
-    ORDER BY 1
-  ) LOOP
-    v_pentry := r.path_segment || ', ';
-    EXIT WHEN LENGTH(v_comment) + LENGTH(v_pentry) > 3950;
-    v_comment := v_comment || v_pentry;
-  END LOOP;
-
-  -- Also add second-hop paths (child-of-child, e.g. WallSurface-->WindowSurface)
-  FOR r IN (
-    SELECT DISTINCT
-      pc.feature_type || '(' || pc.objectclass_id || ')'
-        || '--' || pc.property_name || '-->'
-        || pc.target_feature_type || '(' || pc.target_objectclass_id || ')' AS path_segment
-    FROM property_catalog pc
-    WHERE pc.relation_type = 'contains'
-      AND pc.target_objectclass_id IS NOT NULL
-      AND pc.is_toplevel = 0
-    ORDER BY 1
+    ORDER BY pc.is_toplevel ASC, 1
   ) LOOP
     v_pentry := r.path_segment || ', ';
     EXIT WHEN LENGTH(v_comment) + LENGTH(v_pentry) > 3950;
@@ -699,22 +709,25 @@ END;
 -- 3.2 COMMENT ON TABLE PROPERTY (static: PARENT_ID join rules)
 -- ---------------------------------------------------------------
 PROMPT Adding COMMENT ON TABLE PROPERTY ...
+DECLARE
+  v_comment VARCHAR2(4000);
 BEGIN
-  EXECUTE IMMEDIATE 'COMMENT ON TABLE property IS '''
-    || 'QUERY RULES: '
+  v_comment := 'QUERY RULES: '
     || 'CRITICAL: Some properties are sub-properties of complex types. '
     || 'You MUST check PROPERTY_CATALOG.PARENT_PROPERTY before querying. '
     || 'If PARENT_PROPERTY IS NOT NULL, use a two-hop PARENT_ID join. '
-    || 'WRONG: JOIN property p ON p.feature_id=f.id AND p.name=''''lowReference'''' (RETURNS NO ROWS). '
-    || 'CORRECT: JOIN property p_parent ON p_parent.feature_id=f.id AND p_parent.name=''''height'''' '
-    || 'JOIN property p_child ON p_child.parent_id=p_parent.id AND p_child.name=''''lowReference'''', '
+    || q'[WRONG: JOIN property p ON p.feature_id=f.id AND p.name='lowReference' (RETURNS NO ROWS). ]'
+    || q'[CORRECT: JOIN property p_parent ON p_parent.feature_id=f.id AND p_parent.name='height' ]'
+    || q'[JOIN property p_child ON p_child.parent_id=p_parent.id AND p_child.name='lowReference', ]'
     || 'value in p_child.val_string. '
-    || 'If PARENT_PROPERTY IS NULL, use direct join: JOIN property p ON p.feature_id=f.id AND p.name=''''<name>''''. '
+    || q'[If PARENT_PROPERTY IS NULL, use direct join: JOIN property p ON p.feature_id=f.id AND p.name='<name>'. ]'
     || 'VALUE COLUMNS: val_string (text/codes), val_int (integers/booleans), val_double (measurements), '
     || 'val_timestamp (dates), val_feature_id (child features), val_geometry_id (geometries), '
     || 'val_address_id (addresses). '
     || 'Code properties: value in val_string, code space in val_codespace. '
-    || 'Measure properties: value in val_double, unit in val_uom.''';
+    || 'Measure properties: value in val_double, unit in val_uom.';
+  EXECUTE IMMEDIATE 'COMMENT ON TABLE property IS '''
+    || REPLACE(v_comment, '''', '''''') || '''';
 END;
 /
 
