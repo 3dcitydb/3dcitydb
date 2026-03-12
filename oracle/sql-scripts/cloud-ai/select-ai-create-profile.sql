@@ -81,4 +81,13 @@ BEGIN
 END;
 /
 
+PROMPT Creating login trigger to auto-set AI profile ...
+
+CREATE OR REPLACE TRIGGER set_ai_profile_on_login
+AFTER LOGON ON SCHEMA
+BEGIN
+  DBMS_CLOUD_AI.SET_PROFILE('OPENAI');
+END;
+/
+
 PROMPT AI profile created successfully.

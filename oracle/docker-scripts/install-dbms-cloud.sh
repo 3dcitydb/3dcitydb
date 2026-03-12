@@ -114,7 +114,22 @@ else
   echo "[SelectAI][VERIFY][WARN] Cannot reach https://api.openai.com (ignored)."
 fi
 
-# --- Step 6: Create AI profile (must run as app user in PDB) -----------------
+# --- Step 6: Property catalog view + annotations (as app user in PDB) --------
+echo
+echo "[SelectAI] Creating property catalog view and schema annotations ..."
+
+sqlplus -S "$DB_USER"/"$ORACLE_PWD"@"$ORACLE_PDB" <<SQL
+WHENEVER OSERROR EXIT 9;
+WHENEVER SQLERROR EXIT SQL.SQLCODE;
+
+@${CUSTOM_SQL_DIR}/select-ai-property-catalog.sql
+
+EXIT
+SQL
+
+echo "[SelectAI] Property catalog and annotations created."
+
+# --- Step 7: Create AI profile (must run as app user in PDB) -----------------
 if [ -z "${OPENAI_API_KEY}" ]; then
   echo
   echo "[SelectAI][WARN] OPENAI_API_KEY is not set. Skipping AI profile creation."
