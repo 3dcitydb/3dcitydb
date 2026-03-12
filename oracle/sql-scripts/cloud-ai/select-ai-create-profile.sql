@@ -71,9 +71,11 @@ BEGIN
         {"owner": "&DB_USER", "name": "TEX_IMAGE"},
         {"owner": "&DB_USER", "name": "PROPERTY_CATALOG"}
       ],
+      "model": "gpt-4o",
       "conversation": "true",
       "annotations": "true",
-      "constraints": "true"
+      "constraints": "true",
+      "comments": "true"
     }'
   );
 END;
