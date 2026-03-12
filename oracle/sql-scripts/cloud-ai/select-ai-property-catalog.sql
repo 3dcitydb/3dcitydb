@@ -289,7 +289,7 @@ ALTER TABLE feature ANNOTATIONS (
     DESCRIPTION 'Central table storing all city objects using an Entity-Attribute-Value (EAV) pattern. The feature type is determined by OBJECTCLASS_ID (foreign key to OBJECTCLASS). Feature properties are stored in the PROPERTY table joined via PROPERTY.FEATURE_ID = FEATURE.ID. IMPORTANT: To look up which properties a feature type has and which PROPERTY VAL_* column stores each value, query the PROPERTY_CATALOG table by feature_type or objectclass_id. Features form a containment hierarchy linked through PROPERTY rows where VAL_FEATURE_ID points to child features. To traverse: FEATURE (parent) -> PROPERTY (feature_id) -> FEATURE (val_feature_id). Use PROPERTY_CATALOG.target_objectclass_id to find valid child types. Example (EAV simple property): SELECT f.objectid, p.val_string FROM feature f JOIN property p ON p.feature_id = f.id WHERE f.objectclass_id = 901 AND p.name = ''roofType''. Example (two-hop containment, windows per building): SELECT b.objectid, COUNT(w.id) FROM feature b JOIN property p1 ON p1.feature_id = b.id JOIN feature ws ON ws.id = p1.val_feature_id AND ws.objectclass_id IN (709,712,710) JOIN property p2 ON p2.feature_id = ws.id JOIN feature w ON w.id = p2.val_feature_id AND w.objectclass_id = 719 WHERE b.objectclass_id = 901 GROUP BY b.objectid.'
 );
 ALTER TABLE feature MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE feature MODIFY (objectclass_id ANNOTATIONS (ADD DESCRIPTION 'Determines the feature type. Foreign key to OBJECTCLASS. To find the objectclass_id for a type name, query: SELECT objectclass_id FROM property_catalog WHERE feature_type = ''Building'' AND ROWNUM = 1.'));
+ALTER TABLE feature MODIFY (objectclass_id ANNOTATIONS (ADD DESCRIPTION 'Determines the feature type. Do NOT join OBJECTCLASS to resolve type names. Use the objectclass_id values listed in COMMENT ON TABLE FEATURE directly.'));
 ALTER TABLE feature MODIFY (objectid ANNOTATIONS (ADD DESCRIPTION 'String identifier to uniquely reference a feature within the database.'));
 ALTER TABLE feature MODIFY (identifier ANNOTATIONS (ADD DESCRIPTION 'Optional cross-system identifier.'));
 ALTER TABLE feature MODIFY (identifier_codespace ANNOTATIONS (ADD DESCRIPTION 'Authority responsible for maintaining the identifier.'));
@@ -552,7 +552,7 @@ ALTER TABLE datatype MODIFY (schema ANNOTATIONS (ADD DESCRIPTION 'JSON schema ma
 ALTER TABLE property_catalog ANNOTATIONS (
   ADD
     MODULE 'Select AI',
-    DESCRIPTION 'Complete property catalog for all CityGML feature types with inheritance fully resolved. Each row maps one property of a feature type to its storage location. Value column and join table mappings are derived from the DATATYPE schema. HOW TO USE: (1) Find all properties of a feature type: SELECT * FROM property_catalog WHERE feature_type = ''Building''. (2) VALUE_COLUMN tells where the value is stored. Columns starting with VAL_ (e.g. VAL_STRING, VAL_INT) are in the PROPERTY table; other names (e.g. CREATION_DATE) are direct FEATURE columns. (3) JOIN_TABLE tells which table to join to for reference properties. For example: JOIN_TABLE=GEOMETRY_DATA means JOIN geometry_data gd ON gd.id = p.<value_column>. JOIN_TABLE=FEATURE means containment via VAL_FEATURE_ID. JOIN_TABLE=ADDRESS means JOIN address a ON a.id = p.val_address_id. (4) Simple property query pattern: SELECT f.objectid, p.<value_column> FROM feature f JOIN property p ON p.feature_id = f.id AND p.name = ''<property_name>'' WHERE f.objectclass_id = <objectclass_id>. (5) For containment queries (join_table=FEATURE, relation_type=contains), use TARGET_OBJECTCLASS_ID to filter child features. (6) Multi-hop containment: chain lookups. Example: Building(901).boundary contains WallSurface(709), WallSurface(709).fillingSurface contains WindowSurface(719). SQL: feature b(901) -> property p1 -> feature ws(709) -> property p2 -> feature w(719). (7) Sub-properties of complex types (PARENT_PROPERTY IS NOT NULL): stored as child PROPERTY rows via PARENT_ID. Query: JOIN property p_parent ON p_parent.feature_id = f.id AND p_parent.name = ''<parent_property>'' JOIN property p_child ON p_child.parent_id = p_parent.id AND p_child.name = ''<property_name>'' -> p_child.<value_column>. See LONG_FORM for complete sub-property reference and examples.'
+    DESCRIPTION 'Property catalog with inheritance resolved. Each row maps a property to its storage location. IMPORTANT: When PARENT_PROPERTY IS NOT NULL, the property is a sub-property. You MUST use a two-hop PARENT_ID join: JOIN property p_parent ON p_parent.feature_id=f.id AND p_parent.name=<parent_property> JOIN property p_child ON p_child.parent_id=p_parent.id AND p_child.name=<property_name>, value in p_child.<value_column>. Example: height has sub-properties lowReference, highReference, value, status. To query lowReference of height: JOIN property p_h ON p_h.feature_id=f.id AND p_h.name=''height'' JOIN property p_lr ON p_lr.parent_id=p_h.id AND p_lr.name=''lowReference'' WHERE p_lr.val_string=''someValue''. Simple properties (PARENT_PROPERTY IS NULL): SELECT p.<value_column> FROM feature f JOIN property p ON p.feature_id=f.id AND p.name=''<property_name>'' WHERE f.objectclass_id=<objectclass_id>. VALUE_COLUMN: VAL_* columns are in PROPERTY table; others (CREATION_DATE) are FEATURE columns. JOIN_TABLE: GEOMETRY_DATA, ADDRESS, FEATURE (containment), etc. Containment: use TARGET_OBJECTCLASS_ID to filter child features. See LONG_FORM for complete sub-property listing.'
 );
 
 -- Dynamically generate LONG_FORM from PROPERTY_CATALOG data so that
@@ -562,13 +562,14 @@ DECLARE
   v_ref     VARCHAR2(4000);
   v_prev    VARCHAR2(255) := NULL;
   v_first   BOOLEAN := TRUE;
-  -- DBMS_CLOUD_AI internal buffer is limited to 4000 chars for annotation
-  -- values, regardless of the database max_string_size setting.
+  -- Oracle annotation values are limited to 4000 chars (ORA-11545).
   v_maxlen  CONSTANT NUMBER := 4000;
   v_entry   VARCHAR2(500);
+  v_sql     VARCHAR2(32767);
 BEGIN
-  -- Build sub-property reference: "parent: sub1(COL), sub2(COL). ..."
-  v_ref := 'Sub-property ref (PARENT_ID join). ';
+  -- Build complete sub-property listing: "parent: sub1(COL), sub2(COL). ..."
+  -- This tells the LLM which properties require a PARENT_ID join.
+  v_ref := 'PARENT_ID sub-properties (query via two-hop join). ';
 
   FOR r IN (
     SELECT DISTINCT parent_property, property_name, value_column
@@ -592,40 +593,11 @@ BEGIN
             || '(' || NVL(r.value_column, 'COMPLEX') || ')';
     v_first := FALSE;
 
-    -- Stop before exceeding the limit (reserve ~900 chars for dynamic examples)
-    IF LENGTH(v_ref) + LENGTH(v_entry) > v_maxlen - 900 THEN
+    -- Stop before exceeding 4000 char limit
+    IF LENGTH(v_ref) + LENGTH(v_entry) > v_maxlen - 50 THEN
       v_ref := v_ref || '...';
       EXIT;
     END IF;
-    v_ref := v_ref || v_entry;
-  END LOOP;
-  v_ref := v_ref || '. ';
-
-  -- Dynamically generate SQL examples from the first few sub-properties
-  -- that belong to a top-level feature type (e.g. Building).
-  FOR ex IN (
-    SELECT parent_property, property_name, value_column, objectclass_id,
-           ROW_NUMBER() OVER (ORDER BY parent_property, property_name) AS rn
-    FROM (
-      SELECT DISTINCT parent_property, property_name, value_column,
-             MIN(objectclass_id) AS objectclass_id
-      FROM property_catalog
-      WHERE parent_property IS NOT NULL
-        AND value_column IS NOT NULL
-        AND is_toplevel = 1
-      GROUP BY parent_property, property_name, value_column
-    )
-  ) LOOP
-    EXIT WHEN ex.rn > 3;
-    v_entry := 'EX' || ex.rn || ' ' || ex.parent_property
-      || '.' || ex.property_name || ': '
-      || 'SELECT p_c.' || LOWER(ex.value_column) || ' FROM feature f '
-      || 'JOIN property p_p ON p_p.feature_id=f.id AND p_p.name='''
-      || ex.parent_property || ''' '
-      || 'JOIN property p_c ON p_c.parent_id=p_p.id AND p_c.name='''
-      || ex.property_name || ''' '
-      || 'WHERE f.objectclass_id=' || ex.objectclass_id || '. ';
-    EXIT WHEN LENGTH(v_ref) + LENGTH(v_entry) > v_maxlen - 50;
     v_ref := v_ref || v_entry;
   END LOOP;
 
@@ -634,9 +606,11 @@ BEGIN
     v_ref := SUBSTR(v_ref, 1, v_maxlen - 4) || '...';
   END IF;
 
-  EXECUTE IMMEDIATE
-    'ALTER TABLE property_catalog ANNOTATIONS (ADD LONG_FORM '''
-    || REPLACE(v_ref, '''', '''''') || ''')';
+  -- Use a separate VARCHAR2(32767) for the SQL to avoid overflow
+  -- when REPLACE doubles the single quotes.
+  v_sql := 'ALTER TABLE property_catalog ANNOTATIONS (ADD LONG_FORM '''
+         || REPLACE(v_ref, '''', '''''') || ''')';
+  EXECUTE IMMEDIATE v_sql;
 
   DBMS_OUTPUT.PUT_LINE('LONG_FORM annotation generated ('
     || LENGTH(v_ref) || ' / ' || v_maxlen || ' chars).');
@@ -686,5 +660,41 @@ ALTER TABLE property_catalog MODIFY (
   description ANNOTATIONS (ADD DESCRIPTION
     'Human-readable description of the property from the CityGML schema mapping.')
 );
+
+-- ===============================================================
+-- PART 3 – Table comments with objectclass_id mappings
+-- ===============================================================
+-- Dynamically generate COMMENT ON TABLE FEATURE listing all
+-- top-level feature type -> objectclass_id mappings so that the
+-- LLM can use objectclass_id values directly without joins.
+
+PROMPT Generating COMMENT ON TABLE FEATURE with objectclass_id mappings ...
+DECLARE
+  v_comment VARCHAR2(4000);
+  v_entry   VARCHAR2(200);
+BEGIN
+  v_comment := 'Feature type objectclass_id mappings (use directly in WHERE clause, do NOT join OBJECTCLASS): ';
+
+  FOR r IN (
+    SELECT id, classname
+    FROM objectclass
+    WHERE is_abstract = 0 AND is_toplevel = 1
+    ORDER BY classname
+  ) LOOP
+    v_entry := r.classname || '=' || r.id || ', ';
+    EXIT WHEN LENGTH(v_comment) + LENGTH(v_entry) > 3950;
+    v_comment := v_comment || v_entry;
+  END LOOP;
+
+  -- Remove trailing comma-space
+  v_comment := RTRIM(v_comment, ', ');
+
+  EXECUTE IMMEDIATE 'COMMENT ON TABLE feature IS '''
+    || REPLACE(v_comment, '''', '''''') || '''';
+
+  DBMS_OUTPUT.PUT_LINE('COMMENT ON TABLE FEATURE generated ('
+    || LENGTH(v_comment) || ' chars).');
+END;
+/
 
 PROMPT Select AI context setup complete.
