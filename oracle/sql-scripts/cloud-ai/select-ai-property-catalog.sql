@@ -286,10 +286,10 @@ ALTER TABLE address MODIFY (content_mime_type ANNOTATIONS (ADD DESCRIPTION 'MIME
 ALTER TABLE feature ANNOTATIONS (
   ADD
     MODULE 'Feature',
-    DESCRIPTION 'Central table storing all city objects (EAV pattern). Type determined by OBJECTCLASS_ID. Properties in PROPERTY table via FEATURE_ID. Containment hierarchy via PROPERTY.VAL_FEATURE_ID. See table comment for query rules and objectclass_id mappings.'
+    DESCRIPTION 'Central table storing all city objects (EAV pattern). Type determined by OBJECTCLASS_ID (see table comment for type-to-ID mappings like Building=901). Properties in PROPERTY table via FEATURE_ID. Query: SELECT p.<value_column> FROM feature f JOIN property p ON p.feature_id=f.id AND p.name=''<name>'' WHERE f.objectclass_id=<id>. Always check PROPERTY_CATALOG for value_column and parent_property before querying. Containment hierarchy via PROPERTY.VAL_FEATURE_ID.'
 );
 ALTER TABLE feature MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE feature MODIFY (objectclass_id ANNOTATIONS (ADD DESCRIPTION 'Determines the feature type. Do NOT join OBJECTCLASS to resolve type names. Use the objectclass_id values listed in COMMENT ON TABLE FEATURE directly.'));
+ALTER TABLE feature MODIFY (objectclass_id ANNOTATIONS (ADD DESCRIPTION 'Determines the feature type. Do NOT join OBJECTCLASS table. Use objectclass_id directly from table comment mappings (e.g. Building=901).'));
 ALTER TABLE feature MODIFY (objectid ANNOTATIONS (ADD DESCRIPTION 'String identifier to uniquely reference a feature within the database.'));
 ALTER TABLE feature MODIFY (identifier ANNOTATIONS (ADD DESCRIPTION 'Optional cross-system identifier.'));
 ALTER TABLE feature MODIFY (identifier_codespace ANNOTATIONS (ADD DESCRIPTION 'Authority responsible for maintaining the identifier.'));
@@ -309,7 +309,7 @@ ALTER TABLE feature MODIFY (valid_to ANNOTATIONS (ADD DESCRIPTION 'Real-world en
 ALTER TABLE property ANNOTATIONS (
   ADD
     MODULE 'Feature',
-    DESCRIPTION 'Stores feature properties (EAV). Each row is one property joined via FEATURE_ID. NAME holds the property name, value in VAL_* columns. See table comment for PARENT_ID join rules and value column usage.'
+    DESCRIPTION 'Stores feature properties (EAV). Each row is one property joined via FEATURE_ID. NAME holds the property name, value in a type-specific VAL_* column (check PROPERTY_CATALOG.value_column). CRITICAL: If PROPERTY_CATALOG.parent_property IS NOT NULL, you MUST use two-hop join: property p_parent (name=parent_property) then property p_child (parent_id=p_parent.id, name=property_name). See table comment for WRONG/CORRECT examples.'
 );
 ALTER TABLE property MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
 ALTER TABLE property MODIFY (feature_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to FEATURE. Links this property to its owning feature.'));
@@ -552,7 +552,7 @@ ALTER TABLE datatype MODIFY (schema ANNOTATIONS (ADD DESCRIPTION 'JSON schema ma
 ALTER TABLE property_catalog ANNOTATIONS (
   ADD
     MODULE 'Select AI',
-    DESCRIPTION 'Property catalog with inheritance resolved. Maps each property to its storage location (value_column, join_table). If parent_property IS NOT NULL, it is a sub-property requiring PARENT_ID join. See table comment for query rules and complete sub-property listing.'
+    DESCRIPTION 'Property catalog with inheritance resolved. Maps each property to its storage location. ALWAYS query this table FIRST to get value_column and parent_property. If parent_property IS NOT NULL, use two-hop PARENT_ID join on PROPERTY table. If parent_property IS NULL, use direct single join. See table comment for complete sub-property listing.'
 );
 
 ALTER TABLE property_catalog MODIFY (
@@ -573,7 +573,7 @@ ALTER TABLE property_catalog MODIFY (
 );
 ALTER TABLE property_catalog MODIFY (
   parent_property ANNOTATIONS (ADD DESCRIPTION
-    'For sub-properties of complex types (con:Height, core:Occupancy, con:ConstructionEvent, etc.): the name of the parent property. NULL for top-level properties. When NOT NULL, the sub-property is stored as a child PROPERTY row linked via PARENT_ID. Query pattern: JOIN property p_parent ON p_parent.feature_id = f.id AND p_parent.name = <parent_property> JOIN property p_child ON p_child.parent_id = p_parent.id AND p_child.name = <property_name>, then read p_child.<value_column>. Example 1 (height.lowReference): JOIN property p_h ON p_h.feature_id=f.id AND p_h.name=''height'' JOIN property p_lr ON p_lr.parent_id=p_h.id AND p_lr.name=''lowReference'' -> p_lr.val_string. Example 2 (constructionEvent.dateOfEvent): JOIN property p_ce ON p_ce.feature_id=f.id AND p_ce.name=''constructionEvent'' JOIN property p_doe ON p_doe.parent_id=p_ce.id AND p_doe.name=''dateOfEvent'' -> p_doe.val_timestamp.')
+    'NULL for simple properties. When NOT NULL, this is a sub-property: query requires two-hop PARENT_ID join. Pattern: JOIN property p_parent ON p_parent.feature_id=f.id AND p_parent.name=<this column value> JOIN property p_child ON p_child.parent_id=p_parent.id AND p_child.name=<property_name>, read p_child.<value_column>.')
 );
 ALTER TABLE property_catalog MODIFY (
   value_column ANNOTATIONS (ADD DESCRIPTION
@@ -615,15 +615,26 @@ PROMPT Generating COMMENT ON TABLE FEATURE ...
 DECLARE
   v_comment VARCHAR2(4000);
   v_entry   VARCHAR2(200);
+  v_paths   VARCHAR2(4000) := '';
+  v_pentry  VARCHAR2(500);
 BEGIN
-  v_comment := 'QUERY RULES: '
+  -- Part A: Query rules + objectclass_id mappings
+  v_comment := 'RULES: '
     || '(1) Do NOT join OBJECTCLASS. Use objectclass_id directly. '
-    || '(2) Properties are in PROPERTY table (EAV). Join: property p ON p.feature_id=f.id AND p.name=''<name>''. '
+    || '(2) Properties in PROPERTY (EAV): JOIN property p ON p.feature_id=f.id AND p.name=''<name>''. '
     || '(3) Check PROPERTY_CATALOG for value_column and parent_property. '
-    || '(4) Example: SELECT f.objectid, p.val_string FROM feature f '
-    || 'JOIN property p ON p.feature_id=f.id AND p.name=''roofType'' '
-    || 'WHERE f.objectclass_id=901. '
-    || 'OBJECTCLASS_ID MAPPINGS: ';
+    || '(4) Containment: child features linked via PROPERTY.VAL_FEATURE_ID. '
+    || 'CRITICAL: some types require MULTI-HOP traversal. '
+    || 'WindowSurface belongs to WallSurface, NOT directly to Building. '
+    || 'To find windows of a building, chain two hops using CONTAINMENT PATHS: '
+    || 'Building(901)--boundary-->WallSurface(709), then WallSurface(709)--fillingSurface-->WindowSurface(719). '
+    || 'SQL: SELECT b.objectid,COUNT(w.id) FROM feature b '
+    || 'JOIN property p1 ON p1.feature_id=b.id AND p1.name=''boundary'' '
+    || 'JOIN feature ws ON ws.id=p1.val_feature_id AND ws.objectclass_id IN(709,710,712) '
+    || 'JOIN property p2 ON p2.feature_id=ws.id AND p2.name=''fillingSurface'' '
+    || 'JOIN feature w ON w.id=p2.val_feature_id AND w.objectclass_id=719 '
+    || 'WHERE b.objectclass_id=901 GROUP BY b.objectid. '
+    || 'IDS: ';
 
   FOR r IN (
     SELECT id, classname
@@ -632,8 +643,46 @@ BEGIN
     ORDER BY classname
   ) LOOP
     v_entry := r.classname || '=' || r.id || ', ';
-    EXIT WHEN LENGTH(v_comment) + LENGTH(v_entry) > 3950;
+    EXIT WHEN LENGTH(v_comment) + LENGTH(v_entry) > 2500;
     v_comment := v_comment || v_entry;
+  END LOOP;
+  v_comment := RTRIM(v_comment, ', ') || '. ';
+
+  -- Part B: Containment paths from PROPERTY_CATALOG
+  -- Generate: "ParentType(id)--propName-->ChildType(id)" chains
+  v_comment := v_comment || 'CONTAINMENT PATHS: ';
+
+  FOR r IN (
+    SELECT DISTINCT
+      pc.feature_type || '(' || pc.objectclass_id || ')'
+        || '--' || pc.property_name || '-->'
+        || pc.target_feature_type || '(' || pc.target_objectclass_id || ')' AS path_segment
+    FROM property_catalog pc
+    WHERE pc.relation_type = 'contains'
+      AND pc.target_objectclass_id IS NOT NULL
+      AND pc.is_toplevel = 1
+    ORDER BY 1
+  ) LOOP
+    v_pentry := r.path_segment || ', ';
+    EXIT WHEN LENGTH(v_comment) + LENGTH(v_pentry) > 3950;
+    v_comment := v_comment || v_pentry;
+  END LOOP;
+
+  -- Also add second-hop paths (child-of-child, e.g. WallSurface-->WindowSurface)
+  FOR r IN (
+    SELECT DISTINCT
+      pc.feature_type || '(' || pc.objectclass_id || ')'
+        || '--' || pc.property_name || '-->'
+        || pc.target_feature_type || '(' || pc.target_objectclass_id || ')' AS path_segment
+    FROM property_catalog pc
+    WHERE pc.relation_type = 'contains'
+      AND pc.target_objectclass_id IS NOT NULL
+      AND pc.is_toplevel = 0
+    ORDER BY 1
+  ) LOOP
+    v_pentry := r.path_segment || ', ';
+    EXIT WHEN LENGTH(v_comment) + LENGTH(v_pentry) > 3950;
+    v_comment := v_comment || v_pentry;
   END LOOP;
 
   v_comment := RTRIM(v_comment, ', ');
