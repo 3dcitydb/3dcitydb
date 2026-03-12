@@ -68,9 +68,12 @@ BEGIN
         {"owner": "&DB_USER", "name": "PROPERTY"},
         {"owner": "&DB_USER", "name": "SURFACE_DATA"},
         {"owner": "&DB_USER", "name": "SURFACE_DATA_MAPPING"},
-        {"owner": "&DB_USER", "name": "TEX_IMAGE"}
+        {"owner": "&DB_USER", "name": "TEX_IMAGE"},
+        {"owner": "&DB_USER", "name": "PROPERTY_CATALOG"}
       ],
-      "conversation": "true"
+      "conversation": "true",
+      "annotations": "true",
+      "constraints": "true"
     }'
   );
 END;
