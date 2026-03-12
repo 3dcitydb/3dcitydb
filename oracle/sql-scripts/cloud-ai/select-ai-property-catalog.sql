@@ -286,7 +286,7 @@ ALTER TABLE address MODIFY (content_mime_type ANNOTATIONS (ADD DESCRIPTION 'MIME
 ALTER TABLE feature ANNOTATIONS (
   ADD
     MODULE 'Feature',
-    DESCRIPTION 'Central table storing all city objects using an Entity-Attribute-Value (EAV) pattern. The feature type is determined by OBJECTCLASS_ID (foreign key to OBJECTCLASS). Feature properties are stored in the PROPERTY table joined via PROPERTY.FEATURE_ID = FEATURE.ID. IMPORTANT: To look up which properties a feature type has and which PROPERTY VAL_* column stores each value, query the PROPERTY_CATALOG table by feature_type or objectclass_id. Features form a containment hierarchy linked through PROPERTY rows where VAL_FEATURE_ID points to child features. To traverse: FEATURE (parent) -> PROPERTY (feature_id) -> FEATURE (val_feature_id). Use PROPERTY_CATALOG.target_objectclass_id to find valid child types. Example (EAV simple property): SELECT f.objectid, p.val_string FROM feature f JOIN property p ON p.feature_id = f.id WHERE f.objectclass_id = 901 AND p.name = ''roofType''. Example (two-hop containment, windows per building): SELECT b.objectid, COUNT(w.id) FROM feature b JOIN property p1 ON p1.feature_id = b.id JOIN feature ws ON ws.id = p1.val_feature_id AND ws.objectclass_id IN (709,712,710) JOIN property p2 ON p2.feature_id = ws.id JOIN feature w ON w.id = p2.val_feature_id AND w.objectclass_id = 719 WHERE b.objectclass_id = 901 GROUP BY b.objectid.'
+    DESCRIPTION 'Central table storing all city objects (EAV pattern). Type determined by OBJECTCLASS_ID. Properties in PROPERTY table via FEATURE_ID. Containment hierarchy via PROPERTY.VAL_FEATURE_ID. See table comment for query rules and objectclass_id mappings.'
 );
 ALTER TABLE feature MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
 ALTER TABLE feature MODIFY (objectclass_id ANNOTATIONS (ADD DESCRIPTION 'Determines the feature type. Do NOT join OBJECTCLASS to resolve type names. Use the objectclass_id values listed in COMMENT ON TABLE FEATURE directly.'));
@@ -309,7 +309,7 @@ ALTER TABLE feature MODIFY (valid_to ANNOTATIONS (ADD DESCRIPTION 'Real-world en
 ALTER TABLE property ANNOTATIONS (
   ADD
     MODULE 'Feature',
-    DESCRIPTION 'Stores feature properties using an EAV (Entity-Attribute-Value) pattern. Each row is one property of a feature, joined via FEATURE_ID. The NAME column holds the property name. The value is stored in a type-specific VAL_* column. IMPORTANT: To determine which VAL_* column stores a given property, query: SELECT value_column FROM property_catalog WHERE feature_type = ''Building'' AND property_name = ''roofType''. For linked objects: VAL_FEATURE_ID references FEATURE (containment hierarchy), VAL_GEOMETRY_ID references GEOMETRY_DATA, VAL_ADDRESS_ID references ADDRESS, VAL_APPEARANCE_ID references APPEARANCE, VAL_IMPLICITGEOM_ID references IMPLICIT_GEOMETRY. Code-type properties store the value in VAL_STRING and the code space in VAL_CODESPACE. Measure-type properties store the value in VAL_DOUBLE and the unit in VAL_UOM.'
+    DESCRIPTION 'Stores feature properties (EAV). Each row is one property joined via FEATURE_ID. NAME holds the property name, value in VAL_* columns. See table comment for PARENT_ID join rules and value column usage.'
 );
 ALTER TABLE property MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
 ALTER TABLE property MODIFY (feature_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to FEATURE. Links this property to its owning feature.'));
@@ -552,70 +552,9 @@ ALTER TABLE datatype MODIFY (schema ANNOTATIONS (ADD DESCRIPTION 'JSON schema ma
 ALTER TABLE property_catalog ANNOTATIONS (
   ADD
     MODULE 'Select AI',
-    DESCRIPTION 'Property catalog with inheritance resolved. Each row maps a property to its storage location. IMPORTANT: When PARENT_PROPERTY IS NOT NULL, the property is a sub-property. You MUST use a two-hop PARENT_ID join: JOIN property p_parent ON p_parent.feature_id=f.id AND p_parent.name=<parent_property> JOIN property p_child ON p_child.parent_id=p_parent.id AND p_child.name=<property_name>, value in p_child.<value_column>. Example: height has sub-properties lowReference, highReference, value, status. To query lowReference of height: JOIN property p_h ON p_h.feature_id=f.id AND p_h.name=''height'' JOIN property p_lr ON p_lr.parent_id=p_h.id AND p_lr.name=''lowReference'' WHERE p_lr.val_string=''someValue''. Simple properties (PARENT_PROPERTY IS NULL): SELECT p.<value_column> FROM feature f JOIN property p ON p.feature_id=f.id AND p.name=''<property_name>'' WHERE f.objectclass_id=<objectclass_id>. VALUE_COLUMN: VAL_* columns are in PROPERTY table; others (CREATION_DATE) are FEATURE columns. JOIN_TABLE: GEOMETRY_DATA, ADDRESS, FEATURE (containment), etc. Containment: use TARGET_OBJECTCLASS_ID to filter child features. See LONG_FORM for complete sub-property listing.'
+    DESCRIPTION 'Property catalog with inheritance resolved. Maps each property to its storage location (value_column, join_table). If parent_property IS NOT NULL, it is a sub-property requiring PARENT_ID join. See table comment for query rules and complete sub-property listing.'
 );
 
--- Dynamically generate LONG_FORM from PROPERTY_CATALOG data so that
--- ADE complex types are automatically included.
-PROMPT Generating dynamic LONG_FORM annotation for PROPERTY_CATALOG ...
-DECLARE
-  v_ref     VARCHAR2(4000);
-  v_prev    VARCHAR2(255) := NULL;
-  v_first   BOOLEAN := TRUE;
-  -- Oracle annotation values are limited to 4000 chars (ORA-11545).
-  v_maxlen  CONSTANT NUMBER := 4000;
-  v_entry   VARCHAR2(500);
-  v_sql     VARCHAR2(32767);
-BEGIN
-  -- Build complete sub-property listing: "parent: sub1(COL), sub2(COL). ..."
-  -- This tells the LLM which properties require a PARENT_ID join.
-  v_ref := 'PARENT_ID sub-properties (query via two-hop join). ';
-
-  FOR r IN (
-    SELECT DISTINCT parent_property, property_name, value_column
-    FROM property_catalog
-    WHERE parent_property IS NOT NULL
-    ORDER BY parent_property, property_name
-  ) LOOP
-    v_entry := '';
-    IF v_prev IS NULL OR v_prev != r.parent_property THEN
-      IF v_prev IS NOT NULL THEN
-        v_entry := v_entry || '. ';
-      END IF;
-      v_entry := v_entry || r.parent_property || ': ';
-      v_prev := r.parent_property;
-      v_first := TRUE;
-    END IF;
-    IF NOT v_first THEN
-      v_entry := v_entry || ', ';
-    END IF;
-    v_entry := v_entry || r.property_name
-            || '(' || NVL(r.value_column, 'COMPLEX') || ')';
-    v_first := FALSE;
-
-    -- Stop before exceeding 4000 char limit
-    IF LENGTH(v_ref) + LENGTH(v_entry) > v_maxlen - 50 THEN
-      v_ref := v_ref || '...';
-      EXIT;
-    END IF;
-    v_ref := v_ref || v_entry;
-  END LOOP;
-
-  -- Final safety truncation
-  IF LENGTH(v_ref) > v_maxlen THEN
-    v_ref := SUBSTR(v_ref, 1, v_maxlen - 4) || '...';
-  END IF;
-
-  -- Use a separate VARCHAR2(32767) for the SQL to avoid overflow
-  -- when REPLACE doubles the single quotes.
-  v_sql := 'ALTER TABLE property_catalog ANNOTATIONS (ADD LONG_FORM '''
-         || REPLACE(v_ref, '''', '''''') || ''')';
-  EXECUTE IMMEDIATE v_sql;
-
-  DBMS_OUTPUT.PUT_LINE('LONG_FORM annotation generated ('
-    || LENGTH(v_ref) || ' / ' || v_maxlen || ' chars).');
-END;
-/
 ALTER TABLE property_catalog MODIFY (
   objectclass_id ANNOTATIONS (ADD DESCRIPTION
     'The objectclass_id of the feature type. Use this value to filter FEATURE.OBJECTCLASS_ID.')
@@ -662,18 +601,29 @@ ALTER TABLE property_catalog MODIFY (
 );
 
 -- ===============================================================
--- PART 3 – Table comments with objectclass_id mappings
+-- PART 3 – Table comments (query rules + mappings for Select AI)
 -- ===============================================================
--- Dynamically generate COMMENT ON TABLE FEATURE listing all
--- top-level feature type -> objectclass_id mappings so that the
--- LLM can use objectclass_id values directly without joins.
+-- Annotations describe what tables/columns ARE.
+-- Comments describe HOW TO QUERY them with rules and examples.
+-- Both are sent to the LLM when "annotations" and "comments" are
+-- enabled in the Select AI profile.
 
-PROMPT Generating COMMENT ON TABLE FEATURE with objectclass_id mappings ...
+-- ---------------------------------------------------------------
+-- 3.1 COMMENT ON TABLE FEATURE (dynamic: objectclass_id mappings)
+-- ---------------------------------------------------------------
+PROMPT Generating COMMENT ON TABLE FEATURE ...
 DECLARE
   v_comment VARCHAR2(4000);
   v_entry   VARCHAR2(200);
 BEGIN
-  v_comment := 'Feature type objectclass_id mappings (use directly in WHERE clause, do NOT join OBJECTCLASS): ';
+  v_comment := 'QUERY RULES: '
+    || '(1) Do NOT join OBJECTCLASS. Use objectclass_id directly. '
+    || '(2) Properties are in PROPERTY table (EAV). Join: property p ON p.feature_id=f.id AND p.name=''<name>''. '
+    || '(3) Check PROPERTY_CATALOG for value_column and parent_property. '
+    || '(4) Example: SELECT f.objectid, p.val_string FROM feature f '
+    || 'JOIN property p ON p.feature_id=f.id AND p.name=''roofType'' '
+    || 'WHERE f.objectclass_id=901. '
+    || 'OBJECTCLASS_ID MAPPINGS: ';
 
   FOR r IN (
     SELECT id, classname
@@ -686,13 +636,84 @@ BEGIN
     v_comment := v_comment || v_entry;
   END LOOP;
 
-  -- Remove trailing comma-space
   v_comment := RTRIM(v_comment, ', ');
 
   EXECUTE IMMEDIATE 'COMMENT ON TABLE feature IS '''
     || REPLACE(v_comment, '''', '''''') || '''';
 
   DBMS_OUTPUT.PUT_LINE('COMMENT ON TABLE FEATURE generated ('
+    || LENGTH(v_comment) || ' chars).');
+END;
+/
+
+-- ---------------------------------------------------------------
+-- 3.2 COMMENT ON TABLE PROPERTY (static: PARENT_ID join rules)
+-- ---------------------------------------------------------------
+PROMPT Adding COMMENT ON TABLE PROPERTY ...
+BEGIN
+  EXECUTE IMMEDIATE 'COMMENT ON TABLE property IS '''
+    || 'QUERY RULES: '
+    || 'CRITICAL: Some properties are sub-properties of complex types. '
+    || 'You MUST check PROPERTY_CATALOG.PARENT_PROPERTY before querying. '
+    || 'If PARENT_PROPERTY IS NOT NULL, use a two-hop PARENT_ID join. '
+    || 'WRONG: JOIN property p ON p.feature_id=f.id AND p.name=''''lowReference'''' (RETURNS NO ROWS). '
+    || 'CORRECT: JOIN property p_parent ON p_parent.feature_id=f.id AND p_parent.name=''''height'''' '
+    || 'JOIN property p_child ON p_child.parent_id=p_parent.id AND p_child.name=''''lowReference'''', '
+    || 'value in p_child.val_string. '
+    || 'If PARENT_PROPERTY IS NULL, use direct join: JOIN property p ON p.feature_id=f.id AND p.name=''''<name>''''. '
+    || 'VALUE COLUMNS: val_string (text/codes), val_int (integers/booleans), val_double (measurements), '
+    || 'val_timestamp (dates), val_feature_id (child features), val_geometry_id (geometries), '
+    || 'val_address_id (addresses). '
+    || 'Code properties: value in val_string, code space in val_codespace. '
+    || 'Measure properties: value in val_double, unit in val_uom.''';
+END;
+/
+
+-- ---------------------------------------------------------------
+-- 3.3 COMMENT ON TABLE PROPERTY_CATALOG (dynamic: sub-properties)
+-- ---------------------------------------------------------------
+PROMPT Generating COMMENT ON TABLE PROPERTY_CATALOG ...
+DECLARE
+  v_comment VARCHAR2(4000);
+  v_prev    VARCHAR2(255) := NULL;
+  v_first   BOOLEAN := TRUE;
+  v_entry   VARCHAR2(500);
+BEGIN
+  v_comment := 'QUERY RULES: '
+    || 'Always query this table first to find value_column and parent_property. '
+    || 'If parent_property IS NOT NULL, use two-hop PARENT_ID join on PROPERTY. '
+    || 'SUB-PROPERTY LIST (parent: child1(column), child2(column)): ';
+
+  FOR r IN (
+    SELECT DISTINCT parent_property, property_name, value_column
+    FROM property_catalog
+    WHERE parent_property IS NOT NULL
+    ORDER BY parent_property, property_name
+  ) LOOP
+    v_entry := '';
+    IF v_prev IS NULL OR v_prev != r.parent_property THEN
+      IF v_prev IS NOT NULL THEN
+        v_entry := v_entry || '. ';
+      END IF;
+      v_entry := v_entry || r.parent_property || ': ';
+      v_prev := r.parent_property;
+      v_first := TRUE;
+    END IF;
+    IF NOT v_first THEN
+      v_entry := v_entry || ', ';
+    END IF;
+    v_entry := v_entry || r.property_name
+            || '(' || NVL(r.value_column, 'COMPLEX') || ')';
+    v_first := FALSE;
+
+    EXIT WHEN LENGTH(v_comment) + LENGTH(v_entry) > 3950;
+    v_comment := v_comment || v_entry;
+  END LOOP;
+
+  EXECUTE IMMEDIATE 'COMMENT ON TABLE property_catalog IS '''
+    || REPLACE(v_comment, '''', '''''') || '''';
+
+  DBMS_OUTPUT.PUT_LINE('COMMENT ON TABLE PROPERTY_CATALOG generated ('
     || LENGTH(v_comment) || ' chars).');
 END;
 /
