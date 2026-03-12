@@ -1,6 +1,6 @@
 -- select-ai-property-catalog.sql
 -- Sets up Oracle Select AI context for the 3DCityDB schema:
---   1. Creates and populates the PROPERTY_CATALOG table
+--   1. Creates the PROPERTY_CATALOG view
 --      (flattened property catalog with inheritance resolved)
 --   2. Adds semantic annotations on all core tables and columns
 --
@@ -11,13 +11,13 @@ SET FEEDBACK ON
 SET SERVEROUTPUT ON
 
 -- ===============================================================
--- PART 1 – PROPERTY_CATALOG table
+-- PART 1 – PROPERTY_CATALOG view
 -- ===============================================================
 
 -- ---------------------------------------------------------------
--- 1.1 Drop / create the PROPERTY_CATALOG table
+-- 1.1 Drop legacy table (if upgrading) and create view
 -- ---------------------------------------------------------------
-PROMPT Dropping existing PROPERTY_CATALOG table (if exists) ...
+PROMPT Dropping legacy PROPERTY_CATALOG table (if exists) ...
 BEGIN
   EXECUTE IMMEDIATE 'DROP TABLE property_catalog PURGE';
 EXCEPTION
@@ -26,33 +26,13 @@ EXCEPTION
 END;
 /
 
-PROMPT Creating PROPERTY_CATALOG table ...
-CREATE TABLE property_catalog (
-  objectclass_id        NUMBER(10)    NOT NULL,
-  feature_type          VARCHAR2(255) NOT NULL,
-  is_toplevel           NUMBER(1)     NOT NULL,
-  namespace_alias       VARCHAR2(50),
-  ade_id                NUMBER(10),
-  property_name         VARCHAR2(255) NOT NULL,
-  parent_property       VARCHAR2(255),
-  value_column          VARCHAR2(50),
-  join_table            VARCHAR2(255),
-  target_objectclass_id NUMBER(10),
-  target_feature_type   VARCHAR2(255),
-  relation_type         VARCHAR2(50),
-  description           VARCHAR2(4000)
-);
-
-CREATE INDEX idx_propcat_oc_prop ON property_catalog(objectclass_id, property_name);
-CREATE INDEX idx_propcat_ft      ON property_catalog(feature_type);
-CREATE INDEX idx_propcat_ade     ON property_catalog(ade_id);
-
--- ---------------------------------------------------------------
--- 1.2 Populate: resolve inheritance + map containment targets
--- ---------------------------------------------------------------
-PROMPT Populating PROPERTY_CATALOG ...
-
-INSERT INTO property_catalog
+PROMPT Creating PROPERTY_CATALOG view ...
+CREATE OR REPLACE VIEW property_catalog (
+  objectclass_id, feature_type, is_toplevel, namespace_alias,
+  ade_id, property_name, parent_property, value_column,
+  join_table, target_objectclass_id, target_feature_type,
+  relation_type, description
+) AS
 WITH
 -- Walk UP from each concrete class to collect all ancestor IDs.
 ancestor_chain (leaf_id, current_id) AS (
@@ -215,15 +195,11 @@ LEFT JOIN namespace ns ON ns.id = oc_src.namespace_id
 JOIN datatype_subprops dsp ON dsp.parent_type_id = rp.property_type
 LEFT JOIN datatype_map sub_dm ON sub_dm.type_id = dsp.sub_type;
 
-COMMIT;
-
-EXEC DBMS_STATS.GATHER_TABLE_STATS(USER, 'PROPERTY_CATALOG');
-
 DECLARE
   v_cnt NUMBER;
 BEGIN
   SELECT COUNT(*) INTO v_cnt FROM property_catalog;
-  DBMS_OUTPUT.PUT_LINE('PROPERTY_CATALOG populated: ' || v_cnt || ' rows.');
+  DBMS_OUTPUT.PUT_LINE('PROPERTY_CATALOG view created: ' || v_cnt || ' rows resolved.');
 END;
 /
 
@@ -234,23 +210,30 @@ END;
 -- Drop all existing annotations to make this script idempotent.
 PROMPT Dropping existing annotations ...
 DECLARE
-  PROCEDURE drop_annotations(p_table VARCHAR2) IS
+  PROCEDURE drop_annotations(p_object VARCHAR2) IS
     v_names SYS.ODCIVARCHAR2LIST := SYS.ODCIVARCHAR2LIST('MODULE', 'DESCRIPTION', 'LONG_FORM');
+    v_kind  VARCHAR2(5);
   BEGIN
+    BEGIN
+      SELECT CASE WHEN object_type = 'VIEW' THEN 'VIEW' ELSE 'TABLE' END
+        INTO v_kind FROM user_objects
+       WHERE object_name = p_object AND ROWNUM = 1;
+    EXCEPTION WHEN NO_DATA_FOUND THEN RETURN;
+    END;
     FOR i IN 1..v_names.COUNT LOOP
       BEGIN
         EXECUTE IMMEDIATE
-          'ALTER TABLE "' || p_table || '" ANNOTATIONS (DROP "' || v_names(i) || '")';
+          'ALTER ' || v_kind || ' "' || p_object || '" ANNOTATIONS (DROP "' || v_names(i) || '")';
       EXCEPTION WHEN OTHERS THEN NULL;
       END;
     END LOOP;
     FOR c IN (
-      SELECT column_name FROM user_tab_columns WHERE table_name = p_table
+      SELECT column_name FROM user_tab_columns WHERE table_name = p_object
     ) LOOP
       FOR i IN 1..v_names.COUNT LOOP
         BEGIN
           EXECUTE IMMEDIATE
-            'ALTER TABLE "' || p_table || '" MODIFY ("' || c.column_name
+            'ALTER ' || v_kind || ' "' || p_object || '" MODIFY ("' || c.column_name
             || '" ANNOTATIONS (DROP "' || v_names(i) || '"))';
         EXCEPTION WHEN OTHERS THEN NULL;
         END;
@@ -569,63 +552,63 @@ ALTER TABLE datatype MODIFY (namespace_id ANNOTATIONS (ADD DESCRIPTION 'Foreign 
 ALTER TABLE datatype MODIFY (schema ANNOTATIONS (ADD DESCRIPTION 'JSON schema mapping describing how values of this type are stored (column, type, sub-attributes, joins).'));
 
 -- =================================================================
--- PROPERTY_CATALOG (self-annotation)
+-- PROPERTY_CATALOG view (self-annotation)
 -- =================================================================
-ALTER TABLE property_catalog ANNOTATIONS (
+ALTER VIEW property_catalog ANNOTATIONS (
   ADD
     MODULE 'Select AI',
     DESCRIPTION 'Property catalog with inheritance resolved. Maps each property to its storage location. ALWAYS query this table FIRST to get value_column and parent_property. If parent_property IS NOT NULL, use two-hop PARENT_ID join on PROPERTY table. If parent_property IS NULL, use direct single join. See table comment for complete sub-property listing.'
 );
 
-ALTER TABLE property_catalog MODIFY (
+ALTER VIEW property_catalog MODIFY (
   objectclass_id ANNOTATIONS (ADD DESCRIPTION
     'The objectclass_id of the feature type. Use this value to filter FEATURE.OBJECTCLASS_ID.')
 );
-ALTER TABLE property_catalog MODIFY (
+ALTER VIEW property_catalog MODIFY (
   feature_type ANNOTATIONS (ADD DESCRIPTION
     'Human-readable feature type name, e.g. Building, Road, Bridge. Matches OBJECTCLASS.CLASSNAME.')
 );
-ALTER TABLE property_catalog MODIFY (
+ALTER VIEW property_catalog MODIFY (
   is_toplevel ANNOTATIONS (ADD DESCRIPTION
     'Whether this feature type is a top-level city object (1) or a subordinate part (0). Top-level features like Building, Road, Bridge can be queried directly.')
 );
-ALTER TABLE property_catalog MODIFY (
+ALTER VIEW property_catalog MODIFY (
   namespace_alias ANNOTATIONS (ADD DESCRIPTION
     'CityGML module or ADE namespace alias (e.g. bldg, con, tran). Identifies which module defines this feature type. NULL should not normally occur.')
 );
-ALTER TABLE property_catalog MODIFY (
+ALTER VIEW property_catalog MODIFY (
   ade_id ANNOTATIONS (ADD DESCRIPTION
     'NULL for core CityGML types. Non-NULL references ADE.ID for Application Domain Extension types. Use to filter or group ADE-specific properties.')
 );
-ALTER TABLE property_catalog MODIFY (
+ALTER VIEW property_catalog MODIFY (
   property_name ANNOTATIONS (ADD DESCRIPTION
     'The property name. Use this to filter PROPERTY.NAME when querying EAV properties. Examples: class, function, usage, roofType, storeysAboveGround, boundary, lod2Solid. For sub-properties (parent_property IS NOT NULL) this is the child property name (e.g. lowReference).')
 );
-ALTER TABLE property_catalog MODIFY (
+ALTER VIEW property_catalog MODIFY (
   parent_property ANNOTATIONS (ADD DESCRIPTION
     'NULL for simple properties. When NOT NULL, this is a sub-property: query requires two-hop PARENT_ID join. Pattern: JOIN property p_parent ON p_parent.feature_id=f.id AND p_parent.name=<this column value> JOIN property p_child ON p_child.parent_id=p_parent.id AND p_child.name=<property_name>, read p_child.<value_column>.')
 );
-ALTER TABLE property_catalog MODIFY (
+ALTER VIEW property_catalog MODIFY (
   value_column ANNOTATIONS (ADD DESCRIPTION
     'Which column stores the property value, derived from DATATYPE.SCHEMA. For simple types: value.column (e.g. VAL_STRING, VAL_INT, VAL_DOUBLE). For reference types: join.fromColumn (e.g. VAL_FEATURE_ID, VAL_GEOMETRY_ID, VAL_ADDRESS_ID). Columns without VAL_ prefix (e.g. CREATION_DATE) are direct FEATURE table columns. NULL means the property uses nested sub-properties via PROPERTY.PARENT_ID.')
 );
-ALTER TABLE property_catalog MODIFY (
+ALTER VIEW property_catalog MODIFY (
   join_table ANNOTATIONS (ADD DESCRIPTION
     'For reference-type properties: the table to JOIN to via VALUE_COLUMN. Derived from DATATYPE.SCHEMA join.table. Examples: FEATURE (containment via VAL_FEATURE_ID), GEOMETRY_DATA (geometries via VAL_GEOMETRY_ID), ADDRESS (addresses via VAL_ADDRESS_ID), APPEARANCE, IMPLICIT_GEOMETRY. NULL for simple-value properties and direct FEATURE columns.')
 );
-ALTER TABLE property_catalog MODIFY (
+ALTER VIEW property_catalog MODIFY (
   target_objectclass_id ANNOTATIONS (ADD DESCRIPTION
     'For containment FeatureProperty: the objectclass_id of the concrete child feature type. Use to filter child FEATURE.OBJECTCLASS_ID. For example, Building boundary has targets 709 (WallSurface), 712 (RoofSurface), 710 (GroundSurface), etc. NULL for non-containment properties.')
 );
-ALTER TABLE property_catalog MODIFY (
+ALTER VIEW property_catalog MODIFY (
   target_feature_type ANNOTATIONS (ADD DESCRIPTION
     'For containment FeatureProperty: the name of the concrete child feature type, e.g. WallSurface, RoofSurface. NULL for non-containment properties.')
 );
-ALTER TABLE property_catalog MODIFY (
+ALTER VIEW property_catalog MODIFY (
   relation_type ANNOTATIONS (ADD DESCRIPTION
     'For FeatureProperty: contains (parent owns child in hierarchy) or relates (reference link). Use contains relations for containment hierarchy queries.')
 );
-ALTER TABLE property_catalog MODIFY (
+ALTER VIEW property_catalog MODIFY (
   description ANNOTATIONS (ADD DESCRIPTION
     'Human-readable description of the property from the CityGML schema mapping.')
 );
