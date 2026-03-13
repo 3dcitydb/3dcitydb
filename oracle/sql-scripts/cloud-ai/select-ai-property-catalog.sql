@@ -383,7 +383,7 @@ ALTER TABLE property MODIFY (val_timestamp ANNOTATIONS (ADD DESCRIPTION 'Timesta
 ALTER TABLE property MODIFY (val_uri ANNOTATIONS (ADD DESCRIPTION 'URI value.', LONG_FORM 'URI = Uniform Resource Identifier'));
 ALTER TABLE property MODIFY (val_codespace ANNOTATIONS (ADD DESCRIPTION 'Code space for Code-type properties (accompanies VAL_STRING).'));
 ALTER TABLE property MODIFY (val_uom ANNOTATIONS (ADD DESCRIPTION 'Unit of measurement for Measure-type properties (accompanies VAL_DOUBLE).', LONG_FORM 'UoM = Unit of Measure'));
-ALTER TABLE property MODIFY (val_array ANNOTATIONS (ADD DESCRIPTION 'JSON array value for array-type properties.'));
+ALTER TABLE property MODIFY (val_array ANNOTATIONS (ADD DESCRIPTION 'JSON array value for array-type properties. Use JSON_TABLE or JSON_VALUE to extract individual elements.'));
 ALTER TABLE property MODIFY (val_lod ANNOTATIONS (ADD DESCRIPTION 'Level of Detail for geometry properties.', LONG_FORM 'Level of Detail'));
 ALTER TABLE property MODIFY (val_geometry_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to GEOMETRY_DATA. Links to explicit geometries.'));
 ALTER TABLE property MODIFY (val_implicitgeom_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to IMPLICIT_GEOMETRY. Links to template geometries.'));
@@ -636,7 +636,7 @@ ALTER VIEW property_catalog MODIFY (
 );
 ALTER VIEW property_catalog MODIFY (
   property_name ANNOTATIONS (ADD DESCRIPTION
-    'The property name. Use this to filter PROPERTY.NAME when querying EAV properties. Examples: class, function, usage, roofType, storeysAboveGround, boundary, lod2Solid. For sub-properties (parent_property IS NOT NULL) this is the child property name (e.g. lowReference).')
+    'The property name. Use EXACT case and spelling from this column for PROPERTY.NAME filters — mismatches return zero rows. Examples: class, function, usage, roofType, storeysAboveGround, boundary, lod2Solid. For sub-properties (parent_property IS NOT NULL) this is the child property name (e.g. lowReference).')
 );
 ALTER VIEW property_catalog MODIFY (
   parent_property ANNOTATIONS (ADD DESCRIPTION
@@ -668,7 +668,7 @@ ALTER VIEW property_catalog MODIFY (
 );
 ALTER VIEW property_catalog MODIFY (
   query_pattern ANNOTATIONS (ADD DESCRIPTION
-    'Ready-to-use SQL query template for retrieving this property value. Copy and adapt this pattern to build your query. For sub-properties (parent_property IS NOT NULL), the pattern includes the required two-hop PARENT_ID join. NULL for complex parent types whose sub-properties should be queried individually.')
+    'SQL template for retrieving this property value. ACTION: Copy the FROM and JOIN clauses into your query. Adjust the WHERE clause to match user intent (e.g. add f.id = :id). NOTE: f.objectclass_id filter ensures type-safety. For polymorphic queries (searching multiple types), change = to IN(...) or remove the filter entirely. For sub-properties (parent_property IS NOT NULL), the two-hop PARENT_ID join is already included. NULL for complex parent types whose sub-properties should be queried individually.')
 );
 
 -- ===============================================================
@@ -782,9 +782,13 @@ BEGIN
   v_comment := 'QUERY RULES: '
     || 'Always query this table first to find value_column, parent_property, and query_pattern. '
     || 'The query_pattern column provides a ready-to-use SQL template for each property. '
-    || 'Copy and adapt query_pattern to build your actual query. '
+    || 'Copy the FROM/JOIN clauses from query_pattern and adjust the WHERE clause to match user intent. '
     || 'If parent_property IS NOT NULL, the query_pattern already includes the two-hop PARENT_ID join. '
-    || 'If parent_property IS NULL, use direct single join as shown in query_pattern.';
+    || 'If parent_property IS NULL, use direct single join as shown in query_pattern. '
+    || 'CROSS-TYPE: If the user query is generic (e.g. all objects with height > 20), '
+    || 'remove the objectclass_id filter from the pattern or use IN(...) with multiple IDs. '
+    || 'AGGREGATION: For COUNT, SUM, AVG, etc., wrap the value column from query_pattern '
+    || 'with the appropriate SQL function instead of selecting it directly.';
 
   EXECUTE IMMEDIATE 'COMMENT ON TABLE property_catalog IS '''
     || REPLACE(v_comment, '''', '''''') || '''';
