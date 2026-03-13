@@ -38,7 +38,7 @@ echo
 echo 'This script sets up Oracle Select AI for the 3DCityDB. It requires:'
 echo '  - Oracle Database 23ai or higher with DBMS_CLOUD_AI pre-installed'
 echo '  - SYS (SYSDBA) access for network ACL and privilege configuration'
-echo '  - An Google API key for the AI profile'
+echo '  - An OpenAI API key for the AI profile'
 echo
 echo 'Documentation and help:'
 echo '   3DCityDB website:    https://www.3dcitydb.org'
@@ -86,19 +86,14 @@ echo
 read -p "Please enter the SSL wallet directory (default: /opt/oracle/wallet): " SSL_WALLET_DIR
 SSL_WALLET_DIR=${SSL_WALLET_DIR:-/opt/oracle/wallet}
 
-# Prompt for Google API key ------------------------------------------------------
+# Prompt for OpenAI API key ------------------------------------------------------
 echo
-read -sp "Please enter the Google API key: " GOOGLE_API_KEY
+read -sp "Please enter the OpenAI API key: " OPENAI_API_KEY
 echo
-if [ -z "$GOOGLE_API_KEY" ]; then
-  echo "ERROR: Google API key is required."
+if [ -z "$OPENAI_API_KEY" ]; then
+  echo "ERROR: OpenAI API key is required."
   exit 1
 fi
-
-# Prompt for Google model -------------------------------------------------------
-echo
-read -p "Please enter the Google model (default: gemini-2.5-flash): " GOOGLE_MODEL
-GOOGLE_MODEL=${GOOGLE_MODEL:-gemini-2.5-flash}
 
 # Uppercase DB_USER for Oracle identifiers
 DB_USER_UPPER=$(echo "$DB_USER" | tr '[:lower:]' '[:upper:]')
@@ -158,15 +153,14 @@ echo "Property catalog and annotations created successfully."
 
 # --- Step 3: Create AI profile (as app user) ------------------------------------
 echo
-echo "Creating Google credential and AI profile ..."
+echo "Creating OpenAI credential and AI profile ..."
 echo "Connecting to \"$DB_USER@$DB_HOST:$DB_PORT/$ORACLE_PDB\" ..."
 
 "$ORACLE_CLIENT" -S -L "${DB_USER}@${DB_HOST}:${DB_PORT}/${ORACLE_PDB}" <<SQL
 WHENEVER OSERROR EXIT 9;
 WHENEVER SQLERROR EXIT SQL.SQLCODE;
 
-DEFINE GOOGLE_API_KEY='${GOOGLE_API_KEY}'
-DEFINE GOOGLE_MODEL='${GOOGLE_MODEL}'
+DEFINE OPENAI_API_KEY='${OPENAI_API_KEY}'
 DEFINE DB_USER='${DB_USER_UPPER}'
 
 @cloud-ai/select-ai-create-profile.sql

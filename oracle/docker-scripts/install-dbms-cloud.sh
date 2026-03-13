@@ -108,10 +108,10 @@ echo "[SelectAI][SYS] SYS setup completed."
 echo
 echo "Verifying outbound HTTPS connectivity ..."
 
-if curl -fsSL --max-time 10 https://generativelanguage.googleapis.com >/dev/null 2>&1; then
+if curl -fsSL --max-time 10 https://api.openai.com >/dev/null 2>&1; then
   echo "[SelectAI][VERIFY] HTTPS connectivity OK."
 else
-  echo "[SelectAI][VERIFY][WARN] Cannot reach https://generativelanguage.googleapis.com (ignored)."
+  echo "[SelectAI][VERIFY][WARN] Cannot reach https://api.openai.com (ignored)."
 fi
 
 # --- Step 6: Property catalog view + annotations (as app user in PDB) --------
@@ -130,20 +130,19 @@ SQL
 echo "[SelectAI] Property catalog and annotations created."
 
 # --- Step 7: Create AI profile (must run as app user in PDB) -----------------
-if [ -z "${GOOGLE_API_KEY}" ]; then
+if [ -z "${OPENAI_API_KEY}" ]; then
   echo
-  echo "[SelectAI][WARN] GOOGLE_API_KEY is not set. Skipping AI profile creation."
+  echo "[SelectAI][WARN] OPENAI_API_KEY is not set. Skipping AI profile creation."
   echo "You can create the profile manually later by running select-ai-create-profile.sql."
 else
   echo
-  echo "Creating Google credential and profile ..."
+  echo "Creating OpenAI credential and profile ..."
 
   sqlplus -S "$DB_USER"/"$ORACLE_PWD"@"$ORACLE_PDB" <<SQL
 WHENEVER OSERROR EXIT 9;
 WHENEVER SQLERROR EXIT SQL.SQLCODE;
 
-DEFINE GOOGLE_API_KEY='${GOOGLE_API_KEY}'
-DEFINE GOOGLE_MODEL='${GOOGLE_MODEL:-gemini-2.5-flash}'
+DEFINE OPENAI_API_KEY='${OPENAI_API_KEY}'
 DEFINE DB_USER='${DB_USER^^}'
 
 @${CUSTOM_SQL_DIR}/select-ai-create-profile.sql
