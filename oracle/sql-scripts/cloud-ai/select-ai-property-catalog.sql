@@ -31,7 +31,7 @@ CREATE OR REPLACE VIEW property_catalog (
   objectclass_id, feature_type, is_toplevel, namespace_alias,
   ade_id, property_name, parent_property, value_column,
   join_table, target_objectclass_id, target_feature_type,
-  relation_type, description
+  relation_type, description, query_pattern
 ) AS
 WITH
 -- Walk UP from each concrete class to collect all ancestor IDs.
@@ -149,7 +149,39 @@ SELECT DISTINCT
   CASE WHEN rp.relation_type = 'contains'
     THEN tgt_concrete.classname ELSE NULL END,
   rp.relation_type,
-  rp.description
+  rp.description,
+  -- Pre-built SQL query pattern for this property
+  CASE
+    -- Direct FEATURE-table column (e.g. VALID_FROM, CREATION_DATE)
+    WHEN rp.direct_column IS NOT NULL THEN
+      'SELECT f.' || LOWER(rp.direct_column)
+        || ' FROM feature f'
+        || ' WHERE f.objectclass_id = ' || rp.objectclass_id
+    -- Containment: parent -> child feature via val_feature_id
+    WHEN rp.relation_type = 'contains' AND tgt_concrete.id IS NOT NULL THEN
+      'SELECT f_child.* FROM feature f'
+        || ' JOIN property p ON p.feature_id = f.id'
+        || ' AND p.name = ''' || rp.property_name || ''''
+        || ' JOIN feature f_child ON f_child.id = p.val_feature_id'
+        || ' AND f_child.objectclass_id = ' || tgt_concrete.id
+        || ' WHERE f.objectclass_id = ' || rp.objectclass_id
+    -- Reference to join table (geometry_data, address, appearance, etc.)
+    WHEN dm.join_col IS NOT NULL AND dm.join_tbl IS NOT NULL THEN
+      'SELECT jt.* FROM feature f'
+        || ' JOIN property p ON p.feature_id = f.id'
+        || ' AND p.name = ''' || rp.property_name || ''''
+        || ' JOIN ' || LOWER(dm.join_tbl) || ' jt ON jt.id = p.' || LOWER(dm.join_col)
+        || ' WHERE f.objectclass_id = ' || rp.objectclass_id
+    -- Simple EAV value (val_string, val_int, val_double, etc.)
+    WHEN dm.value_col IS NOT NULL THEN
+      'SELECT p.' || LOWER(dm.value_col)
+        || ' FROM feature f'
+        || ' JOIN property p ON p.feature_id = f.id'
+        || ' AND p.name = ''' || rp.property_name || ''''
+        || ' WHERE f.objectclass_id = ' || rp.objectclass_id
+    -- Complex parent type (sub-properties queried individually) -> NULL
+    ELSE NULL
+  END
 FROM raw_props rp
 JOIN objectclass oc_src
   ON oc_src.id = rp.objectclass_id
@@ -188,7 +220,29 @@ SELECT DISTINCT
   NULL,
   NULL,
   NULL,
-  dsp.sub_description
+  dsp.sub_description,
+  -- Pre-built SQL query pattern for this sub-property (two-hop PARENT_ID join)
+  CASE
+    -- Sub-property references a join table
+    WHEN sub_dm.join_col IS NOT NULL AND sub_dm.join_tbl IS NOT NULL THEN
+      'SELECT jt.* FROM feature f'
+        || ' JOIN property pp ON pp.feature_id = f.id'
+        || ' AND pp.name = ''' || rp.property_name || ''''
+        || ' JOIN property p_child ON p_child.parent_id = pp.id'
+        || ' AND p_child.name = ''' || dsp.sub_name || ''''
+        || ' JOIN ' || LOWER(sub_dm.join_tbl) || ' jt ON jt.id = p_child.' || LOWER(sub_dm.join_col)
+        || ' WHERE f.objectclass_id = ' || rp.objectclass_id
+    -- Sub-property has a direct value column
+    WHEN sub_dm.value_col IS NOT NULL THEN
+      'SELECT p_child.' || LOWER(sub_dm.value_col)
+        || ' FROM feature f'
+        || ' JOIN property pp ON pp.feature_id = f.id'
+        || ' AND pp.name = ''' || rp.property_name || ''''
+        || ' JOIN property p_child ON p_child.parent_id = pp.id'
+        || ' AND p_child.name = ''' || dsp.sub_name || ''''
+        || ' WHERE f.objectclass_id = ' || rp.objectclass_id
+    ELSE NULL
+  END
 FROM raw_props rp
 JOIN objectclass oc_src ON oc_src.id = rp.objectclass_id
 LEFT JOIN namespace ns ON ns.id = oc_src.namespace_id
@@ -557,7 +611,7 @@ ALTER TABLE datatype MODIFY (schema ANNOTATIONS (ADD DESCRIPTION 'JSON schema ma
 ALTER VIEW property_catalog ANNOTATIONS (
   ADD
     MODULE 'Select AI',
-    DESCRIPTION 'Property catalog with inheritance resolved. Maps each property to its storage location. ALWAYS query this table FIRST to get value_column and parent_property. If parent_property IS NOT NULL, use two-hop PARENT_ID join on PROPERTY table. If parent_property IS NULL, use direct single join. See table comment for complete sub-property listing.'
+    DESCRIPTION 'Property catalog with inheritance resolved. Maps each property to its storage location. ALWAYS query this table FIRST to get value_column, parent_property, and query_pattern. The query_pattern column provides a ready-to-use SQL template for each property. If parent_property IS NOT NULL, use two-hop PARENT_ID join on PROPERTY table. If parent_property IS NULL, use direct single join.'
 );
 
 ALTER VIEW property_catalog MODIFY (
@@ -611,6 +665,10 @@ ALTER VIEW property_catalog MODIFY (
 ALTER VIEW property_catalog MODIFY (
   description ANNOTATIONS (ADD DESCRIPTION
     'Human-readable description of the property from the CityGML schema mapping.')
+);
+ALTER VIEW property_catalog MODIFY (
+  query_pattern ANNOTATIONS (ADD DESCRIPTION
+    'Ready-to-use SQL query template for retrieving this property value. Copy and adapt this pattern to build your query. For sub-properties (parent_property IS NOT NULL), the pattern includes the required two-hop PARENT_ID join. NULL for complex parent types whose sub-properties should be queried individually.')
 );
 
 -- ===============================================================
@@ -720,40 +778,13 @@ END;
 PROMPT Generating COMMENT ON TABLE PROPERTY_CATALOG ...
 DECLARE
   v_comment VARCHAR2(4000);
-  v_prev    VARCHAR2(255) := NULL;
-  v_first   BOOLEAN := TRUE;
-  v_entry   VARCHAR2(500);
 BEGIN
   v_comment := 'QUERY RULES: '
-    || 'Always query this table first to find value_column and parent_property. '
-    || 'If parent_property IS NOT NULL, use two-hop PARENT_ID join on PROPERTY. '
-    || 'SUB-PROPERTY LIST (parent: child1(column), child2(column)): ';
-
-  FOR r IN (
-    SELECT DISTINCT parent_property, property_name, value_column
-    FROM property_catalog
-    WHERE parent_property IS NOT NULL
-    ORDER BY parent_property, property_name
-  ) LOOP
-    v_entry := '';
-    IF v_prev IS NULL OR v_prev != r.parent_property THEN
-      IF v_prev IS NOT NULL THEN
-        v_entry := v_entry || '. ';
-      END IF;
-      v_entry := v_entry || r.parent_property || ': ';
-      v_prev := r.parent_property;
-      v_first := TRUE;
-    END IF;
-    IF NOT v_first THEN
-      v_entry := v_entry || ', ';
-    END IF;
-    v_entry := v_entry || r.property_name
-            || '(' || NVL(r.value_column, 'COMPLEX') || ')';
-    v_first := FALSE;
-
-    EXIT WHEN LENGTH(v_comment) + LENGTH(v_entry) > 3950;
-    v_comment := v_comment || v_entry;
-  END LOOP;
+    || 'Always query this table first to find value_column, parent_property, and query_pattern. '
+    || 'The query_pattern column provides a ready-to-use SQL template for each property. '
+    || 'Copy and adapt query_pattern to build your actual query. '
+    || 'If parent_property IS NOT NULL, the query_pattern already includes the two-hop PARENT_ID join. '
+    || 'If parent_property IS NULL, use direct single join as shown in query_pattern.';
 
   EXECUTE IMMEDIATE 'COMMENT ON TABLE property_catalog IS '''
     || REPLACE(v_comment, '''', '''''') || '''';
