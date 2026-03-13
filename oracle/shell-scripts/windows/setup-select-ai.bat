@@ -120,7 +120,7 @@ set "TMPSYS=%TEMP%\3dcitydb_sys_%RANDOM%.sql"
   echo DEFINE CLOUD_OWNER='C##CLOUD$SERVICE'
   echo DEFINE PDB_NAME='%ORACLE_PDB%'
   echo DEFINE DB_USER='%DB_USER%'
-  echo @cloud-ai/select-ai-sys-setup.sql
+  echo @select-ai/select-ai-sys-setup.sql
   echo EXIT
 )
 
@@ -146,7 +146,7 @@ set "TMPCATALOG=%TEMP%\3dcitydb_catalog_%RANDOM%.sql"
 > "%TMPCATALOG%" (
   echo WHENEVER OSERROR EXIT 9;
   echo WHENEVER SQLERROR EXIT SQL.SQLCODE;
-  echo @cloud-ai/select-ai-property-catalog.sql
+  echo @select-ai/select-ai-property-catalog.sql
   echo EXIT
 )
 
@@ -174,7 +174,7 @@ set "TMPPROFILE=%TEMP%\3dcitydb_profile_%RANDOM%.sql"
   echo WHENEVER SQLERROR EXIT SQL.SQLCODE;
   echo DEFINE OPENAI_API_KEY='%OPENAI_API_KEY%'
   echo DEFINE DB_USER='%DB_USER%'
-  echo @cloud-ai/select-ai-create-profile.sql
+  echo @select-ai/select-ai-create-profile.sql
   echo EXIT
 )
 

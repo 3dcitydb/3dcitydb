@@ -114,7 +114,7 @@ DEFINE CLOUD_OWNER='C##CLOUD\$SERVICE'
 DEFINE PDB_NAME='${ORACLE_PDB}'
 DEFINE DB_USER='${DB_USER_UPPER}'
 
-@cloud-ai/select-ai-sys-setup.sql
+@select-ai/select-ai-sys-setup.sql
 EXIT
 SQL
 
@@ -137,7 +137,7 @@ echo "Connecting to \"$DB_USER@$DB_HOST:$DB_PORT/$ORACLE_PDB\" ..."
 WHENEVER OSERROR EXIT 9;
 WHENEVER SQLERROR EXIT SQL.SQLCODE;
 
-@cloud-ai/select-ai-property-catalog.sql
+@select-ai/select-ai-property-catalog.sql
 EXIT
 SQL
 
@@ -163,7 +163,7 @@ WHENEVER SQLERROR EXIT SQL.SQLCODE;
 DEFINE OPENAI_API_KEY='${OPENAI_API_KEY}'
 DEFINE DB_USER='${DB_USER_UPPER}'
 
-@cloud-ai/select-ai-create-profile.sql
+@select-ai/select-ai-create-profile.sql
 EXIT
 SQL
 

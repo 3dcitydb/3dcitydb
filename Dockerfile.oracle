@@ -40,7 +40,7 @@ COPY --from=builder /build/build/install/3dcitydb/oracle/docker-scripts/3dcitydb
 # (so they are NOT auto-executed by Oracle; only sourced when ENABLE_SELECT_AI=true)
 RUN mkdir -p /opt/oracle/3dcitydb-custom
 COPY --from=builder /build/build/install/3dcitydb/oracle/docker-scripts/install-dbms-cloud.sh /opt/oracle/3dcitydb-custom/
-COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts/cloud-ai/ /opt/oracle/3dcitydb-custom/
+COPY --from=builder /build/build/install/3dcitydb/oracle/sql-scripts/select-ai/ /opt/oracle/3dcitydb-custom/
 
 # Set labels
 LABEL maintainer="Karin Patenge"
