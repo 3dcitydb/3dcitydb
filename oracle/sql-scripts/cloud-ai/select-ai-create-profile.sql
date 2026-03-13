@@ -1,9 +1,8 @@
 -- select-ai-create-profile.sql
 -- Run as the application user (e.g. CITYDB) in the target PDB.
 -- Required SQL*Plus defines:
---   GOOGLE_API_KEY  (the API key value)
---   GOOGLE_MODEL    (e.g. gemini-2.5-flash, gemini-2.5-pro)
---   DB_USER         (e.g. CITYDB)
+--   OPENAI_API_KEY (the API key value)
+--   DB_USER        (e.g. CITYDB)
 
 WHENEVER SQLERROR EXIT SQL.SQLCODE;
 
@@ -11,11 +10,11 @@ SET FEEDBACK ON
 SET SERVEROUTPUT ON
 SET VERIFY OFF
 
-PROMPT Creating Google credential (drop if exists) ...
+PROMPT Creating OpenAI credential (drop if exists) ...
 
 -- Drop existing credential (idempotent)
 BEGIN
-  DBMS_CLOUD.DROP_CREDENTIAL(credential_name => 'GOOGLE_CRED');
+  DBMS_CLOUD.DROP_CREDENTIAL(credential_name => 'OPENAI_CRED');
 EXCEPTION
   WHEN OTHERS THEN
     IF SQLCODE BETWEEN -20999 AND -20000 THEN NULL;  -- DBMS_CLOUD custom error (e.g. does not exist)
@@ -26,9 +25,9 @@ END;
 
 BEGIN
   DBMS_CLOUD.CREATE_CREDENTIAL(
-    credential_name => 'GOOGLE_CRED',
-    username        => 'GOOGLE',
-    password        => '&GOOGLE_API_KEY'
+    credential_name => 'OPENAI_CRED',
+    username        => 'OPENAI',
+    password        => '&OPENAI_API_KEY'
   );
 END;
 /
@@ -37,7 +36,7 @@ PROMPT Creating AI profile (drop if exists) ...
 
 -- Drop existing profile (idempotent)
 BEGIN
-  DBMS_CLOUD_AI.DROP_PROFILE(profile_name => 'GOOGLE');
+  DBMS_CLOUD_AI.DROP_PROFILE(profile_name => 'OPENAI');
 EXCEPTION
   WHEN OTHERS THEN
     IF SQLCODE BETWEEN -20999 AND -20000 THEN NULL;  -- DBMS_CLOUD_AI custom error (e.g. does not exist)
@@ -48,10 +47,9 @@ END;
 
 BEGIN
   DBMS_CLOUD_AI.CREATE_PROFILE(
-    profile_name => 'GOOGLE',
-    attributes   => '{"provider": "google",
-      "credential_name": "GOOGLE_CRED",
-      "model": "&GOOGLE_MODEL",
+    profile_name => 'OPENAI',
+    attributes   => '{"provider": "openai",
+      "credential_name": "OPENAI_CRED",
       "object_list": [
         {"owner": "&DB_USER", "name": "ADDRESS"},
         {"owner": "&DB_USER", "name": "ADE"},
@@ -73,6 +71,7 @@ BEGIN
         {"owner": "&DB_USER", "name": "TEX_IMAGE"},
         {"owner": "&DB_USER", "name": "PROPERTY_CATALOG"}
       ],
+      "model": "gpt-4o",
       "conversation": "true",
       "annotations": "true",
       "constraints": "true",
@@ -87,7 +86,7 @@ PROMPT Creating login trigger to auto-set AI profile ...
 CREATE OR REPLACE TRIGGER set_ai_profile_on_login
 AFTER LOGON ON SCHEMA
 BEGIN
-  DBMS_CLOUD_AI.SET_PROFILE('GOOGLE');
+  DBMS_CLOUD_AI.SET_PROFILE('OPENAI');
 END;
 /
 
