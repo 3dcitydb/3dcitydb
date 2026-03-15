@@ -671,6 +671,39 @@ ALTER VIEW property_catalog MODIFY (
     'SQL template for retrieving this property value. ACTION: Copy the FROM and JOIN clauses into your query. Adjust the WHERE clause to match user intent (e.g. add f.id = :id). NOTE: f.objectclass_id filter ensures type-safety. For polymorphic queries (searching multiple types), change = to IN(...) or remove the filter entirely. For sub-properties (parent_property IS NOT NULL), the two-hop PARENT_ID join is already included. NULL for complex parent types whose sub-properties should be queried individually.')
 );
 
+-- =================================================================
+-- FEATURE_CHANGELOG (optional — only exists when changelog is enabled)
+-- =================================================================
+DECLARE
+  v_exists NUMBER;
+BEGIN
+  SELECT COUNT(*) INTO v_exists FROM user_tables WHERE table_name = 'FEATURE_CHANGELOG';
+  IF v_exists = 0 THEN
+    DBMS_OUTPUT.PUT_LINE('FEATURE_CHANGELOG table not found — skipping annotations.');
+    RETURN;
+  END IF;
+
+  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog ANNOTATIONS (
+    ADD
+      MODULE 'Changelog',
+      DESCRIPTION 'Audit log tracking INSERT, UPDATE, TERMINATE, and DELETE operations on top-level features. Each row records one transaction. Rows are created automatically by triggers on the FEATURE table. Use OBJECTCLASS_ID with the same mappings as the FEATURE table (e.g. Building=901). For DELETE transactions, FEATURE_ID is NULL because the feature no longer exists. Query: SELECT * FROM feature_changelog WHERE objectclass_id = <id> ORDER BY transaction_date DESC.'
+  )]';
+  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key (auto-generated sequence).'))]';
+  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (feature_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to FEATURE. NULL for DELETE transactions because the feature has been removed.'))]';
+  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (objectclass_id ANNOTATIONS (ADD DESCRIPTION 'Feature type at time of transaction. Same IDs as FEATURE.OBJECTCLASS_ID (e.g. Building=901).'))]';
+  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (objectid ANNOTATIONS (ADD DESCRIPTION 'String identifier of the feature at time of transaction.'))]';
+  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (identifier ANNOTATIONS (ADD DESCRIPTION 'Cross-system identifier of the feature at time of transaction.'))]';
+  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (identifier_codespace ANNOTATIONS (ADD DESCRIPTION 'Authority for the identifier at time of transaction.'))]';
+  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (envelope ANNOTATIONS (ADD DESCRIPTION 'Spatial envelope of the feature at time of transaction.'))]';
+  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (transaction_type ANNOTATIONS (ADD DESCRIPTION 'Type of change: INSERT (new feature), UPDATE (modified), TERMINATE (termination_date set), DELETE (removed).'))]';
+  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (transaction_date ANNOTATIONS (ADD DESCRIPTION 'Timestamp when the transaction occurred. Use for time-range queries (e.g. changes in the last 7 days).'))]';
+  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (db_user ANNOTATIONS (ADD DESCRIPTION 'Database user who performed the transaction.'))]';
+  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (reason_for_update ANNOTATIONS (ADD DESCRIPTION 'Optional reason provided for the change.'))]';
+
+  DBMS_OUTPUT.PUT_LINE('FEATURE_CHANGELOG annotations added.');
+END;
+/
+
 -- ===============================================================
 -- PART 3 – Table comments (query rules + mappings for Select AI)
 -- ===============================================================
@@ -795,6 +828,36 @@ BEGIN
 
   DBMS_OUTPUT.PUT_LINE('COMMENT ON TABLE PROPERTY_CATALOG generated ('
     || LENGTH(v_comment) || ' chars).');
+END;
+/
+
+-- ---------------------------------------------------------------
+-- 3.4 COMMENT ON TABLE FEATURE_CHANGELOG (static: audit queries)
+-- ---------------------------------------------------------------
+PROMPT Adding COMMENT ON TABLE FEATURE_CHANGELOG (if present) ...
+DECLARE
+  v_exists  NUMBER;
+  v_comment VARCHAR2(4000);
+BEGIN
+  SELECT COUNT(*) INTO v_exists FROM user_tables WHERE table_name = 'FEATURE_CHANGELOG';
+  IF v_exists = 0 THEN
+    DBMS_OUTPUT.PUT_LINE('FEATURE_CHANGELOG table not found — skipping comment.');
+    RETURN;
+  END IF;
+
+  v_comment := 'QUERY RULES: '
+    || 'Audit log for top-level feature changes. Populated automatically by triggers on the FEATURE table. '
+    || 'TRANSACTION_TYPE values: INSERT (new), UPDATE (modified), TERMINATE (termination_date set), DELETE (removed). '
+    || 'For DELETE rows, FEATURE_ID is NULL. Use OBJECTID to identify the deleted feature. '
+    || 'OBJECTCLASS_ID uses the same mappings as the FEATURE table (e.g. Building=901). '
+    || 'TIME RANGE: Filter by TRANSACTION_DATE for recent changes '
+    || q'[(e.g. WHERE transaction_date > SYSTIMESTAMP - INTERVAL '7' DAY). ]'
+    || 'HISTORY: To see all changes for a specific feature, filter by OBJECTID and ORDER BY TRANSACTION_DATE. '
+    || 'USER TRACKING: DB_USER shows who made the change.';
+  EXECUTE IMMEDIATE 'COMMENT ON TABLE feature_changelog IS '''
+    || REPLACE(v_comment, '''', '''''') || '''';
+
+  DBMS_OUTPUT.PUT_LINE('COMMENT ON TABLE FEATURE_CHANGELOG added.');
 END;
 /
 
