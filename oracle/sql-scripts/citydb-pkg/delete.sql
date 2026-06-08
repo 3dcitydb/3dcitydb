@@ -40,33 +40,50 @@ AS
   ******************************************************************/
   PROCEDURE cleanup_schema
   IS
+    -- Unlike the PostgreSQL version, we use whitelists here. PostgreSQL keeps all 3DCityDB
+    -- tables in a dedicated schema (e.g. citydb), whereas in Oracle they share the user
+    -- schema with any external tables the user may have created. The whitelists ensure that
+    -- only 3DCityDB objects are touched and external tables are left alone entirely.
+    data_tables STRING_TAB := STRING_TAB(
+      'FEATURE','PROPERTY','GEOMETRY_DATA','IMPLICIT_GEOMETRY','APPEARANCE','SURFACE_DATA',
+      'SURFACE_DATA_MAPPING','APPEAR_TO_SURFACE_DATA','TEX_IMAGE','ADDRESS','FEATURE_CHANGELOG');
+    data_sequences STRING_TAB := STRING_TAB(
+      'FEATURE_SEQ','PROPERTY_SEQ','GEOMETRY_DATA_SEQ','IMPLICIT_GEOMETRY_SEQ','APPEARANCE_SEQ',
+      'SURFACE_DATA_SEQ','APPEAR_TO_SURFACE_DATA_SEQ','TEX_IMAGE_SEQ','ADDRESS_SEQ','FEATURE_CHANGELOG_SEQ');
   BEGIN
+    -- Oracle's TRUNCATE ... CASCADE only follows ON DELETE CASCADE constraints while the
+    -- schema also uses plain and ON DELETE SET NULL keys. We therefore disable every foreign
+    -- key whose referenced (parent) table is a 3DCityDB table up front and re-enable it after
+    -- truncating. Filtering on the parent table keeps external-only foreign keys untouched
+    -- while still covering external tables that reference a 3DCityDB table.
     FOR rec IN (
-      SELECT constraint_name, table_name
-      FROM user_constraints WHERE constraint_type = 'R'
+      SELECT c.constraint_name, c.table_name
+      FROM user_constraints c
+      JOIN user_constraints r ON c.r_constraint_name = r.constraint_name
+      WHERE c.constraint_type = 'R' AND r.table_name MEMBER OF data_tables
     ) LOOP
       EXECUTE IMMEDIATE 'ALTER TABLE ' || rec.table_name || ' DISABLE CONSTRAINT ' || rec.constraint_name;
     END LOOP;
 
     FOR rec IN (
       SELECT table_name FROM user_tables
-      WHERE table_name IN ('FEATURE','PROPERTY','GEOMETRY_DATA','IMPLICIT_GEOMETRY',
-        'APPEARANCE','SURFACE_DATA','SURFACE_DATA_MAPPING','APPEAR_TO_SURFACE_DATA',
-        'TEX_IMAGE','ADDRESS')
+      WHERE table_name MEMBER OF data_tables
     ) LOOP
       EXECUTE IMMEDIATE 'TRUNCATE TABLE ' || rec.table_name;
     END LOOP;
 
     FOR rec IN (
-      SELECT constraint_name, table_name
-      FROM user_constraints WHERE constraint_type = 'R'
+      SELECT c.constraint_name, c.table_name
+      FROM user_constraints c
+      JOIN user_constraints r ON c.r_constraint_name = r.constraint_name
+      WHERE c.constraint_type = 'R' AND r.table_name MEMBER OF data_tables
     ) LOOP
       EXECUTE IMMEDIATE 'ALTER TABLE ' || rec.table_name || ' ENABLE CONSTRAINT ' || rec.constraint_name;
     END LOOP;
 
     FOR rec IN (
       SELECT sequence_name FROM user_sequences
-      WHERE sequence_name <> 'ADE_SEQ'
+      WHERE sequence_name MEMBER OF data_sequences
     ) LOOP
       EXECUTE IMMEDIATE 'ALTER SEQUENCE ' || rec.sequence_name || ' RESTART';
     END LOOP;
