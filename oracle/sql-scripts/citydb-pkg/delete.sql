@@ -9,25 +9,44 @@ CREATE OR REPLACE PACKAGE citydb_delete
 AUTHID DEFINER
 AS
   PROCEDURE cleanup_schema;
+  PROCEDURE cleanup_schema(schema_name VARCHAR2);
   FUNCTION delete_feature(pid_array NUMBER_TAB) RETURN NUMBER_TAB;
+  FUNCTION delete_feature(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB;
   FUNCTION delete_feature(pid NUMBER) RETURN NUMBER;
+  FUNCTION delete_feature(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER;
   FUNCTION delete_property_row(pid_array NUMBER_TAB) RETURN NUMBER_TAB;
   FUNCTION delete_property(pid_array NUMBER_TAB) RETURN NUMBER_TAB;
+  FUNCTION delete_property(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB;
   FUNCTION delete_property(pid NUMBER) RETURN NUMBER;
+  FUNCTION delete_property(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER;
   FUNCTION delete_geometry_data(pid_array NUMBER_TAB) RETURN NUMBER_TAB;
+  FUNCTION delete_geometry_data(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB;
   FUNCTION delete_geometry_data(pid NUMBER) RETURN NUMBER;
+  FUNCTION delete_geometry_data(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER;
   FUNCTION delete_implicit_geometry(pid_array NUMBER_TAB) RETURN NUMBER_TAB;
+  FUNCTION delete_implicit_geometry(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB;
   FUNCTION delete_implicit_geometry(pid NUMBER) RETURN NUMBER;
+  FUNCTION delete_implicit_geometry(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER;
   FUNCTION delete_appearance(pid_array NUMBER_TAB) RETURN NUMBER_TAB;
+  FUNCTION delete_appearance(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB;
   FUNCTION delete_appearance(pid NUMBER) RETURN NUMBER;
+  FUNCTION delete_appearance(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER;
   FUNCTION delete_surface_data(pid_array NUMBER_TAB) RETURN NUMBER_TAB;
+  FUNCTION delete_surface_data(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB;
   FUNCTION delete_surface_data(pid NUMBER) RETURN NUMBER;
+  FUNCTION delete_surface_data(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER;
   FUNCTION delete_tex_image(pid_array NUMBER_TAB) RETURN NUMBER_TAB;
+  FUNCTION delete_tex_image(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB;
   FUNCTION delete_tex_image(pid NUMBER) RETURN NUMBER;
+  FUNCTION delete_tex_image(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER;
   FUNCTION delete_address(pid_array NUMBER_TAB) RETURN NUMBER_TAB;
+  FUNCTION delete_address(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB;
   FUNCTION delete_address(pid NUMBER) RETURN NUMBER;
+  FUNCTION delete_address(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER;
   FUNCTION terminate_feature(pid_array NUMBER_TAB, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER_TAB;
+  FUNCTION terminate_feature(pid_array NUMBER_TAB, schema_name VARCHAR2, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER_TAB;
   FUNCTION terminate_feature(pid NUMBER, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER;
+  FUNCTION terminate_feature(pid NUMBER, schema_name VARCHAR2, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER;
 END citydb_delete;
 /
 
@@ -90,6 +109,21 @@ AS
   END cleanup_schema;
 
   /******************************************************************
+  * truncates all data tables in the given schema
+  *
+  * Unlike PostgreSQL, the 3DCityDB packages are AUTHID DEFINER, so unqualified
+  * table names always resolve to the package owner. To operate on another schema
+  * we therefore delegate to the citydb_delete package installed in that schema.
+  ******************************************************************/
+  PROCEDURE cleanup_schema(schema_name VARCHAR2)
+  IS
+    v_schema_name VARCHAR2(128);
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN ' || v_schema_name || '.citydb_delete.cleanup_schema; END;';
+  END cleanup_schema;
+
+  /******************************************************************
   * delete from FEATURE table based on an id array
   ******************************************************************/
   FUNCTION delete_feature(pid_array NUMBER_TAB) RETURN NUMBER_TAB
@@ -131,6 +165,20 @@ AS
   END delete_feature;
 
   /******************************************************************
+  * delete from FEATURE table based on an id array and schema name
+  ******************************************************************/
+  FUNCTION delete_feature(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER_TAB;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_feature(:p); END;'
+    USING OUT result, IN pid_array;
+    RETURN result;
+  END delete_feature;
+
+  /******************************************************************
   * delete from FEATURE table based on an id
   ******************************************************************/
   FUNCTION delete_feature(pid NUMBER) RETURN NUMBER
@@ -139,6 +187,20 @@ AS
   BEGIN
     result := delete_feature(NUMBER_TAB(pid));
     IF result.COUNT > 0 THEN RETURN result(1); ELSE RETURN NULL; END IF;
+  END delete_feature;
+
+  /******************************************************************
+  * delete from FEATURE table based on an id and schema name
+  ******************************************************************/
+  FUNCTION delete_feature(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_feature(:p); END;'
+    USING OUT result, IN pid;
+    RETURN result;
   END delete_feature;
 
   /******************************************************************
@@ -279,6 +341,20 @@ AS
   END delete_property;
 
   /******************************************************************
+  * delete from PROPERTY table based on an id array and schema name
+  ******************************************************************/
+  FUNCTION delete_property(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER_TAB;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_property(:p); END;'
+    USING OUT result, IN pid_array;
+    RETURN result;
+  END delete_property;
+
+  /******************************************************************
   * delete from PROPERTY table based on an id
   ******************************************************************/
   FUNCTION delete_property(pid NUMBER) RETURN NUMBER
@@ -287,6 +363,20 @@ AS
   BEGIN
     result := delete_property(NUMBER_TAB(pid));
     IF result.COUNT > 0 THEN RETURN result(1); ELSE RETURN NULL; END IF;
+  END delete_property;
+
+  /******************************************************************
+  * delete from PROPERTY table based on an id and schema name
+  ******************************************************************/
+  FUNCTION delete_property(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_property(:p); END;'
+    USING OUT result, IN pid;
+    RETURN result;
   END delete_property;
 
   /******************************************************************
@@ -303,6 +393,20 @@ AS
   END delete_geometry_data;
 
   /******************************************************************
+  * delete from GEOMETRY_DATA table based on an id array and schema name
+  ******************************************************************/
+  FUNCTION delete_geometry_data(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER_TAB;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_geometry_data(:p); END;'
+    USING OUT result, IN pid_array;
+    RETURN result;
+  END delete_geometry_data;
+
+  /******************************************************************
   * delete from GEOMETRY_DATA table based on an id
   ******************************************************************/
   FUNCTION delete_geometry_data(pid NUMBER) RETURN NUMBER
@@ -311,6 +415,20 @@ AS
   BEGIN
     result := delete_geometry_data(NUMBER_TAB(pid));
     IF result.COUNT > 0 THEN RETURN result(1); ELSE RETURN NULL; END IF;
+  END delete_geometry_data;
+
+  /******************************************************************
+  * delete from GEOMETRY_DATA table based on an id and schema name
+  ******************************************************************/
+  FUNCTION delete_geometry_data(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_geometry_data(:p); END;'
+    USING OUT result, IN pid;
+    RETURN result;
   END delete_geometry_data;
 
   /******************************************************************
@@ -349,6 +467,20 @@ AS
   END delete_implicit_geometry;
 
   /******************************************************************
+  * delete from IMPLICIT_GEOMETRY table based on an id array and schema name
+  ******************************************************************/
+  FUNCTION delete_implicit_geometry(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER_TAB;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_implicit_geometry(:p); END;'
+    USING OUT result, IN pid_array;
+    RETURN result;
+  END delete_implicit_geometry;
+
+  /******************************************************************
   * delete from IMPLICIT_GEOMETRY table based on an id
   ******************************************************************/
   FUNCTION delete_implicit_geometry(pid NUMBER) RETURN NUMBER
@@ -357,6 +489,20 @@ AS
   BEGIN
     result := delete_implicit_geometry(NUMBER_TAB(pid));
     IF result.COUNT > 0 THEN RETURN result(1); ELSE RETURN NULL; END IF;
+  END delete_implicit_geometry;
+
+  /******************************************************************
+  * delete from IMPLICIT_GEOMETRY table based on an id and schema name
+  ******************************************************************/
+  FUNCTION delete_implicit_geometry(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_implicit_geometry(:p); END;'
+    USING OUT result, IN pid;
+    RETURN result;
   END delete_implicit_geometry;
 
   /******************************************************************
@@ -392,6 +538,20 @@ AS
   END delete_appearance;
 
   /******************************************************************
+  * delete from APPEARANCE table based on an id array and schema name
+  ******************************************************************/
+  FUNCTION delete_appearance(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER_TAB;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_appearance(:p); END;'
+    USING OUT result, IN pid_array;
+    RETURN result;
+  END delete_appearance;
+
+  /******************************************************************
   * delete from APPEARANCE table based on an id
   ******************************************************************/
   FUNCTION delete_appearance(pid NUMBER) RETURN NUMBER
@@ -400,6 +560,20 @@ AS
   BEGIN
     result := delete_appearance(NUMBER_TAB(pid));
     IF result.COUNT > 0 THEN RETURN result(1); ELSE RETURN NULL; END IF;
+  END delete_appearance;
+
+  /******************************************************************
+  * delete from APPEARANCE table based on an id and schema name
+  ******************************************************************/
+  FUNCTION delete_appearance(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_appearance(:p); END;'
+    USING OUT result, IN pid;
+    RETURN result;
   END delete_appearance;
 
   /******************************************************************
@@ -431,6 +605,20 @@ AS
   END delete_surface_data;
 
   /******************************************************************
+  * delete from SURFACE_DATA table based on an id array and schema name
+  ******************************************************************/
+  FUNCTION delete_surface_data(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER_TAB;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_surface_data(:p); END;'
+    USING OUT result, IN pid_array;
+    RETURN result;
+  END delete_surface_data;
+
+  /******************************************************************
   * delete from SURFACE_DATA table based on an id
   ******************************************************************/
   FUNCTION delete_surface_data(pid NUMBER) RETURN NUMBER
@@ -439,6 +627,20 @@ AS
   BEGIN
     result := delete_surface_data(NUMBER_TAB(pid));
     IF result.COUNT > 0 THEN RETURN result(1); ELSE RETURN NULL; END IF;
+  END delete_surface_data;
+
+  /******************************************************************
+  * delete from SURFACE_DATA table based on an id and schema name
+  ******************************************************************/
+  FUNCTION delete_surface_data(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_surface_data(:p); END;'
+    USING OUT result, IN pid;
+    RETURN result;
   END delete_surface_data;
 
   /******************************************************************
@@ -455,6 +657,20 @@ AS
   END delete_tex_image;
 
   /******************************************************************
+  * delete from TEX_IMAGE table based on an id array and schema name
+  ******************************************************************/
+  FUNCTION delete_tex_image(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER_TAB;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_tex_image(:p); END;'
+    USING OUT result, IN pid_array;
+    RETURN result;
+  END delete_tex_image;
+
+  /******************************************************************
   * delete from TEX_IMAGE table based on an id
   ******************************************************************/
   FUNCTION delete_tex_image(pid NUMBER) RETURN NUMBER
@@ -463,6 +679,20 @@ AS
   BEGIN
     result := delete_tex_image(NUMBER_TAB(pid));
     IF result.COUNT > 0 THEN RETURN result(1); ELSE RETURN NULL; END IF;
+  END delete_tex_image;
+
+  /******************************************************************
+  * delete from TEX_IMAGE table based on an id and schema name
+  ******************************************************************/
+  FUNCTION delete_tex_image(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_tex_image(:p); END;'
+    USING OUT result, IN pid;
+    RETURN result;
   END delete_tex_image;
 
   /******************************************************************
@@ -479,6 +709,20 @@ AS
   END delete_address;
 
   /******************************************************************
+  * delete from ADDRESS table based on an id array and schema name
+  ******************************************************************/
+  FUNCTION delete_address(pid_array NUMBER_TAB, schema_name VARCHAR2) RETURN NUMBER_TAB
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER_TAB;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_address(:p); END;'
+    USING OUT result, IN pid_array;
+    RETURN result;
+  END delete_address;
+
+  /******************************************************************
   * delete from ADDRESS table based on an id
   ******************************************************************/
   FUNCTION delete_address(pid NUMBER) RETURN NUMBER
@@ -487,6 +731,20 @@ AS
   BEGIN
     result := delete_address(NUMBER_TAB(pid));
     IF result.COUNT > 0 THEN RETURN result(1); ELSE RETURN NULL; END IF;
+  END delete_address;
+
+  /******************************************************************
+  * delete from ADDRESS table based on an id and schema name
+  ******************************************************************/
+  FUNCTION delete_address(pid NUMBER, schema_name VARCHAR2) RETURN NUMBER
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_address(:p); END;'
+    USING OUT result, IN pid;
+    RETURN result;
   END delete_address;
 
   /******************************************************************
@@ -540,6 +798,20 @@ AS
   END terminate_feature;
 
   /******************************************************************
+  * terminate features based on an id array and schema name
+  ******************************************************************/
+  FUNCTION terminate_feature(pid_array NUMBER_TAB, schema_name VARCHAR2, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER_TAB
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER_TAB;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.terminate_feature(:p, :m, :c); END;'
+    USING OUT result, IN pid_array, IN metadata, IN cascade;
+    RETURN result;
+  END terminate_feature;
+
+  /******************************************************************
   * terminate a feature based on an id
   ******************************************************************/
   FUNCTION terminate_feature(pid NUMBER, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER
@@ -548,6 +820,20 @@ AS
   BEGIN
     result := terminate_feature(NUMBER_TAB(pid), metadata, cascade);
     IF result.COUNT > 0 THEN RETURN result(1); ELSE RETURN NULL; END IF;
+  END terminate_feature;
+
+  /******************************************************************
+  * terminate a feature based on an id and schema name
+  ******************************************************************/
+  FUNCTION terminate_feature(pid NUMBER, schema_name VARCHAR2, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER
+  IS
+    v_schema_name VARCHAR2(128);
+    result NUMBER;
+  BEGIN
+    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.terminate_feature(:p, :m, :c); END;'
+    USING OUT result, IN pid, IN metadata, IN cascade;
+    RETURN result;
   END terminate_feature;
 
 END citydb_delete;
