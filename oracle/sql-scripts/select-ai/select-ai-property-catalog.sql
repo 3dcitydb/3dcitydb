@@ -636,7 +636,7 @@ ALTER VIEW property_catalog MODIFY (
 );
 ALTER VIEW property_catalog MODIFY (
   property_name ANNOTATIONS (ADD DESCRIPTION
-    'The property name. Use EXACT case and spelling from this column for PROPERTY.NAME filters — mismatches return zero rows. Examples: class, function, usage, roofType, storeysAboveGround, boundary, lod2Solid. For sub-properties (parent_property IS NOT NULL) this is the child property name (e.g. lowReference).')
+    'The property name. Use EXACT case and spelling from this column for PROPERTY.NAME filters - mismatches return zero rows. Examples: class, function, usage, roofType, storeysAboveGround, boundary, lod2Solid. For sub-properties (parent_property IS NOT NULL) this is the child property name (e.g. lowReference).')
 );
 ALTER VIEW property_catalog MODIFY (
   parent_property ANNOTATIONS (ADD DESCRIPTION
@@ -719,7 +719,6 @@ PROMPT Generating COMMENT ON TABLE FEATURE ...
 DECLARE
   v_comment VARCHAR2(4000);
   v_entry   VARCHAR2(200);
-  v_pentry  VARCHAR2(500);
 BEGIN
   -- Part A: Query rules + objectclass_id mappings
   v_comment := 'RULES: '
@@ -747,27 +746,17 @@ BEGIN
   END LOOP;
   v_comment := RTRIM(v_comment, ', ') || '. ';
 
-  -- Part B: Containment paths from PROPERTY_CATALOG
-  -- Generate: "ParentType(id)--propName-->ChildType(id)" chains.
-  -- Non-toplevel paths (second-hop, e.g. WallSurface-->WindowSurface) are
-  -- listed first because they are critical for multi-hop traversal.
-  v_comment := v_comment || 'CONTAINMENT PATHS: ';
-
-  FOR r IN (
-    SELECT DISTINCT
-      pc.feature_type || '(' || pc.objectclass_id || ')'
-        || '--' || pc.property_name || '-->'
-        || pc.target_feature_type || '(' || pc.target_objectclass_id || ')' AS path_segment,
-      pc.is_toplevel
-    FROM property_catalog pc
-    WHERE pc.relation_type = 'contains'
-      AND pc.target_objectclass_id IS NOT NULL
-    ORDER BY pc.is_toplevel ASC, 1
-  ) LOOP
-    v_pentry := r.path_segment || ', ';
-    EXIT WHEN LENGTH(v_comment) + LENGTH(v_pentry) > 3950;
-    v_comment := v_comment || v_pentry;
-  END LOOP;
+  -- Part B: Point the model at PROPERTY_CATALOG to discover containment paths.
+  -- The full containment graph (every surface boundary relationship) does NOT
+  -- fit in a 4000-char comment. Dumping it here silently truncated at the byte
+  -- budget and -- because non-toplevel paths sorted first -- dropped exactly the
+  -- top-level entry points (Building, Road, Bridge, ...) that users start from.
+  -- PROPERTY_CATALOG already holds the complete, queryable graph.
+  v_comment := v_comment
+    || 'CONTAINMENT: To find child/nested features, query PROPERTY_CATALOG '
+    || 'WHERE relation_type=''contains'' [AND objectclass_id=<parent>] to get '
+    || 'target_objectclass_id + query_pattern. Some paths need MULTI-HOP traversal '
+    || '(e.g. Building(901)->WallSurface(709)->WindowSurface(719)).';
 
   v_comment := RTRIM(v_comment, ', ');
 
