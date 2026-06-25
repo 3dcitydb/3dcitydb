@@ -138,6 +138,7 @@ WHENEVER OSERROR EXIT 9;
 WHENEVER SQLERROR EXIT SQL.SQLCODE;
 
 @select-ai/select-ai-property-catalog.sql
+@select-ai/select-ai-nl2sql.sql
 EXIT
 SQL
 
