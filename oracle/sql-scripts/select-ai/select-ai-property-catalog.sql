@@ -1,22 +1,48 @@
 -- select-ai-property-catalog.sql
--- Sets up Oracle Select AI context for the 3DCityDB schema:
---   1. Creates the PROPERTY_CATALOG view
---      (flattened property catalog with inheritance resolved)
---   2. Adds semantic annotations on all core tables and columns
+-- Builds the property catalog and its LLM-prompt renderer for the 3DCityDB
+-- natural-language-to-SQL layer on top of Oracle Select AI (DBMS_CLOUD_AI).
 --
--- Run as the application user (e.g. CITYDB) in the target PDB
--- AFTER schema.sql, objectclass-instances.sql and datatype-instances.sql.
+--   PART 1 -- PROPERTY_CATALOG view: a flattened, inheritance-resolved catalog
+--             mapping every CityGML property of every feature type to its
+--             storage location (a PROPERTY VAL_* column, a direct FEATURE
+--             column, or a containment target), tagged with the ancestor class
+--             that DECLARES each property. PROPERTY_CATALOG_TEXT renders one
+--             compact "prop -> storage" line per property on top of it. Neither
+--             is in the Select AI object_list nor carries annotations (those
+--             live in select-ai-annotations.sql).
+--   PART 2 -- CITYDB_AI package: assembles PART 1 (plus the EAV query rules)
+--             into the prompt. Properties shared via inheritance are emitted
+--             ONCE as named blocks (@namespace:AbstractClass); each feature type
+--             lists the blocks it inherits plus its own properties -- keeping
+--             the injected catalog compact for a native Select AI NL2SQL call.
+--
+-- WHY PART 2 EXISTS
+-- ----------------
+-- Native `SELECT AI "<question>"` feeds the LLM only the STRUCTURAL metadata of
+-- the object_list tables (columns, types, comments) -- never their ROWS. So the
+-- PROPERTY_CATALOG view, whose value IS its rows (which property maps to which
+-- VAL_* column), is invisible to the model and it just guesses. BUILD_CONTEXT
+-- renders the catalog to text and injects it as the prompt, supplying the
+-- semantic layer Select AI cannot infer from DDL (EAV pattern + property->column
+-- map). Because the rows now travel in the prompt, PROPERTY_CATALOG and the
+-- metadata tables OBJECTCLASS/DATATYPE/NAMESPACE/ADE are kept out of the
+-- object_list (see select-ai-create-profile.sql).
+--
+--   -- inspect the prompt (no LLM call, no DML), or get / run the SQL:
+--   SELECT DBMS_CLOUD_AI.GENERATE(
+--            prompt       => citydb_ai.build_context('How many buildings higher than 20 m?'),
+--            profile_name => 'OPENAI',
+--            action       => 'showprompt') FROM dual;   -- or 'showsql' / 'runsql'
+--
+-- Run as the application user (e.g. CITYDB) in the target PDB AFTER
+-- schema.sql, objectclass-instances.sql and datatype-instances.sql.
 
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
 
 -- ===============================================================
--- PART 1 – PROPERTY_CATALOG view
+-- PART 1 – PROPERTY_CATALOG view (data source for PART 2)
 -- ===============================================================
-
--- ---------------------------------------------------------------
--- 1.1 Drop legacy table (if upgrading) and create view
--- ---------------------------------------------------------------
 PROMPT Dropping legacy PROPERTY_CATALOG table (if exists) ...
 BEGIN
   EXECUTE IMMEDIATE 'DROP TABLE property_catalog PURGE';
@@ -31,16 +57,17 @@ CREATE OR REPLACE VIEW property_catalog (
   objectclass_id, feature_type, is_toplevel, namespace_alias,
   ade_id, property_name, parent_property, value_column,
   join_table, target_objectclass_id, target_feature_type,
-  relation_type, description, query_pattern
+  relation_type, description, query_pattern,
+  declaring_class_id, declaring_class_name, declaring_namespace_alias, inheritance_level
 ) AS
 WITH
 -- Walk UP from each concrete class to collect all ancestor IDs.
-ancestor_chain (leaf_id, current_id) AS (
-  SELECT id, id
+ancestor_chain (leaf_id, current_id, lvl) AS (
+  SELECT id, id, 0
   FROM objectclass
   WHERE is_abstract = 0
   UNION ALL
-  SELECT ac.leaf_id, oc.superclass_id
+  SELECT ac.leaf_id, oc.superclass_id, ac.lvl + 1
   FROM ancestor_chain ac
   JOIN objectclass oc ON oc.id = ac.current_id
   WHERE oc.superclass_id IS NOT NULL
@@ -52,6 +79,8 @@ ancestor_chain (leaf_id, current_id) AS (
 raw_props AS (
   SELECT
     ac.leaf_id AS objectclass_id,
+    ac.current_id AS declaring_class_id,   -- ancestor class that declares the property
+    ac.lvl AS inheritance_level,           -- 0 = the leaf itself, higher = nearer the root
     jt.property_name,
     jt.property_type,
     jt.direct_column,
@@ -181,10 +210,19 @@ SELECT DISTINCT
         || ' WHERE f.objectclass_id = ' || rp.objectclass_id
     -- Complex parent type (sub-properties queried individually) -> NULL
     ELSE NULL
-  END
+  END,
+  -- Inheritance provenance: which ancestor class declared this property -------
+  rp.declaring_class_id,
+  dcoc.classname,
+  dcns.alias,
+  rp.inheritance_level
 FROM raw_props rp
 JOIN objectclass oc_src
   ON oc_src.id = rp.objectclass_id
+-- Metadata of the declaring (ancestor) class, for inheritance-block rendering
+JOIN objectclass dcoc
+  ON dcoc.id = rp.declaring_class_id
+LEFT JOIN namespace dcns ON dcns.id = dcoc.namespace_id
 LEFT JOIN namespace ns ON ns.id = oc_src.namespace_id
 -- Look up value column and join table from DATATYPE schema
 LEFT JOIN datatype_map dm
@@ -242,9 +280,16 @@ SELECT DISTINCT
         || ' AND p_child.name = ''' || dsp.sub_name || ''''
         || ' WHERE f.objectclass_id = ' || rp.objectclass_id
     ELSE NULL
-  END
+  END,
+  -- Sub-properties inherit the declaring class of their parent property -------
+  rp.declaring_class_id,
+  dcoc.classname,
+  dcns.alias,
+  rp.inheritance_level
 FROM raw_props rp
 JOIN objectclass oc_src ON oc_src.id = rp.objectclass_id
+JOIN objectclass dcoc ON dcoc.id = rp.declaring_class_id
+LEFT JOIN namespace dcns ON dcns.id = dcoc.namespace_id
 LEFT JOIN namespace ns ON ns.id = oc_src.namespace_id
 JOIN datatype_subprops dsp ON dsp.parent_type_id = rp.property_type
 LEFT JOIN datatype_map sub_dm ON sub_dm.type_id = dsp.sub_type;
@@ -257,535 +302,284 @@ BEGIN
 END;
 /
 
--- ===============================================================
--- PART 2 – Schema annotations for Select AI context
--- ===============================================================
+-- ---------------------------------------------------------------
+-- PROPERTY_CATALOG_TEXT: one rendered catalog LINE per (feature type,
+-- property), tagged with the class that declares it. This is where the
+-- "prop -> storage" text and the containment LISTAGG live (once), so the
+-- package only has to group and concatenate. IS_INHERITED = 1 means the
+-- property comes from an ancestor class (rendered once as a shared BLOCK);
+-- IS_INHERITED = 0 means the feature type declares it itself.
+-- ---------------------------------------------------------------
+PROMPT Creating PROPERTY_CATALOG_TEXT view ...
+CREATE OR REPLACE VIEW property_catalog_text (
+  objectclass_id, namespace_alias, feature_type, is_toplevel,
+  declaring_class_id, block_name, inheritance_level, is_inherited, line
+) AS
+SELECT
+  pc.objectclass_id,
+  NVL(pc.namespace_alias, '?'),
+  pc.feature_type,
+  pc.is_toplevel,
+  pc.declaring_class_id,
+  NVL(pc.declaring_namespace_alias, '?') || ':' || pc.declaring_class_name,
+  pc.inheritance_level,
+  CASE WHEN pc.declaring_class_id = pc.objectclass_id THEN 0 ELSE 1 END,
+  CASE
+    WHEN pc.relation_type = 'contains' THEN
+      pc.property_name || ' -> contains '
+      || LISTAGG(
+           CASE WHEN pc.target_objectclass_id IS NOT NULL
+                THEN pc.target_feature_type || '(' || pc.target_objectclass_id || ')'
+           END,
+           ',' ON OVERFLOW TRUNCATE)
+           WITHIN GROUP (ORDER BY pc.target_objectclass_id)
+      || ' via VAL_FEATURE_ID'
+    WHEN pc.parent_property IS NOT NULL THEN
+      pc.parent_property || '.' || pc.property_name
+      || ' -> property.' || LOWER(pc.value_column)
+    WHEN pc.join_table IS NOT NULL THEN
+      pc.property_name || ' -> ' || LOWER(pc.join_table)
+      || ' via property.' || LOWER(pc.value_column)
+    WHEN pc.value_column LIKE 'VAL\_%' ESCAPE '\' THEN
+      pc.property_name || ' -> property.' || LOWER(pc.value_column)
+    WHEN pc.value_column IS NOT NULL THEN
+      pc.property_name || ' -> feature.' || LOWER(pc.value_column)
+    ELSE
+      pc.property_name || ' -> (complex; see sub-properties)'
+  END
+FROM property_catalog pc
+-- Keep every top-level property; drop sub-properties (parent.child) with no
+-- storage column resolved (they would render a useless empty-column line).
+WHERE pc.parent_property IS NULL OR pc.value_column IS NOT NULL
+GROUP BY
+  pc.objectclass_id, pc.namespace_alias, pc.feature_type, pc.is_toplevel,
+  pc.declaring_class_id, pc.declaring_namespace_alias, pc.declaring_class_name,
+  pc.inheritance_level, pc.parent_property, pc.property_name, pc.relation_type,
+  pc.value_column, pc.join_table;
 
--- Drop all existing annotations to make this script idempotent.
-PROMPT Dropping existing annotations ...
-DECLARE
-  PROCEDURE drop_annotations(p_object VARCHAR2) IS
-    v_names SYS.ODCIVARCHAR2LIST := SYS.ODCIVARCHAR2LIST('MODULE', 'DESCRIPTION', 'LONG_FORM');
-    v_kind  VARCHAR2(5);
+PROMPT PROPERTY_CATALOG views ready.
+
+-- ===============================================================
+-- PART 2 – CITYDB_AI package (renders PART 1 into the LLM prompt)
+-- ===============================================================
+PROMPT Creating CITYDB_AI package specification ...
+CREATE OR REPLACE PACKAGE citydb_ai AS
+
+  -- Slim context for INJECTION into native Select AI: EAV data-model rules + the
+  -- PROPERTY_CATALOG + the question, but WITHOUT a system role or output-format
+  -- instructions (Select AI supplies those and the physical-table DDL from the
+  -- profile object_list). See the file header for a call example.
+  FUNCTION build_context(p_question IN CLOB) RETURN CLOB;
+END citydb_ai;
+/
+
+PROMPT Creating CITYDB_AI package body ...
+CREATE OR REPLACE PACKAGE BODY citydb_ai AS
+
+  -- ---- internal: append a VARCHAR2 buffer to a CLOB efficiently ------------
+  PROCEDURE append_line(p_clob IN OUT NOCOPY CLOB, p_text IN VARCHAR2) IS
   BEGIN
-    BEGIN
-      SELECT CASE WHEN object_type = 'VIEW' THEN 'VIEW' ELSE 'TABLE' END
-        INTO v_kind FROM user_objects
-       WHERE object_name = p_object AND ROWNUM = 1;
-    EXCEPTION WHEN NO_DATA_FOUND THEN RETURN;
-    END;
-    FOR i IN 1..v_names.COUNT LOOP
-      BEGIN
-        EXECUTE IMMEDIATE
-          'ALTER ' || v_kind || ' "' || p_object || '" ANNOTATIONS (DROP "' || v_names(i) || '")';
-      EXCEPTION WHEN OTHERS THEN NULL;
-      END;
-    END LOOP;
-    FOR c IN (
-      SELECT column_name FROM user_tab_columns WHERE table_name = p_object
-    ) LOOP
-      FOR i IN 1..v_names.COUNT LOOP
-        BEGIN
-          EXECUTE IMMEDIATE
-            'ALTER ' || v_kind || ' "' || p_object || '" MODIFY ("' || c.column_name
-            || '" ANNOTATIONS (DROP "' || v_names(i) || '"))';
-        EXCEPTION WHEN OTHERS THEN NULL;
-        END;
-      END LOOP;
-    END LOOP;
+    DBMS_LOB.WRITEAPPEND(p_clob, LENGTH(p_text), p_text);
   END;
-BEGIN
-  -- Only drop annotations on tables managed by THIS script.
-  -- ADE extension scripts should manage their own annotations separately.
-  FOR t IN (
-    SELECT column_value AS table_name
-    FROM TABLE(SYS.ODCIVARCHAR2LIST(
-      'ADDRESS', 'FEATURE', 'PROPERTY', 'GEOMETRY_DATA',
-      'IMPLICIT_GEOMETRY', 'TEX_IMAGE', 'APPEARANCE',
-      'SURFACE_DATA', 'SURFACE_DATA_MAPPING',
-      'APPEAR_TO_SURFACE_DATA', 'CODELIST', 'CODELIST_ENTRY',
-      'ADE', 'DATABASE_SRS', 'NAMESPACE', 'OBJECTCLASS',
-      'DATATYPE', 'PROPERTY_CATALOG'
-    ))
-  ) LOOP
-    drop_annotations(t.table_name);
-  END LOOP;
-END;
+
+  -- ---- render the catalog into one CLOB -----------------------------------
+  -- Properties shared by many feature types via CityGML inheritance are emitted
+  -- ONCE as named BLOCKS (@namespace:AbstractClass). Each concrete feature type
+  -- then lists the blocks it inherits ("[...] : @A @B") plus only the properties
+  -- it declares itself. PROPERTY_CATALOG(_TEXT) is small, so this is rendered on
+  -- demand per question rather than cached.
+  FUNCTION render_catalog RETURN CLOB IS
+    v_ctx   CLOB;
+    v_prev  NUMBER := -1;
+    v_hdr   VARCHAR2(4000);
+    v_lf    CONSTANT VARCHAR2(2) := CHR(10);
+    -- PROPERTY_CATALOG_TEXT sits on recursive CTEs, so we scan it a FIXED number
+    -- of times (block refs, own lines, blocks, type headers) and buffer the
+    -- per-type pieces in memory instead of querying once per feature type.
+    TYPE str_t IS TABLE OF VARCHAR2(32767) INDEX BY PLS_INTEGER;
+    v_refs  str_t;   -- objectclass_id -> "@blockA @blockB ..."
+    v_own   str_t;   -- objectclass_id -> its own (self-declared) lines, joined
+  BEGIN
+    DBMS_LOB.CREATETEMPORARY(v_ctx, TRUE);
+
+    append_line(v_ctx,
+      '=== 3DCITYDB PROPERTY CATALOG ===' || v_lf ||
+      'Per feature type: every property and where its value is stored.' || v_lf ||
+      'Shared (inherited) properties are factored into BLOCKS listed first. A' || v_lf ||
+      'feature header "[alias:Type id=N] : @A @B" means the type ALSO HAS every' || v_lf ||
+      'property under blocks @A and @B -- resolve inherited properties by reading' || v_lf ||
+      'those blocks. Lines under a header are the type''s OWN (self-declared) properties.' || v_lf ||
+      'Header format: [alias:FeatureType id=<objectclass_id> TOPLEVEL?] : @blocks.' || v_lf ||
+      'Use the exact property name (case-sensitive) shown before "->" for PROPERTY.NAME filters.' || v_lf ||
+      'Mapping legend:' || v_lf ||
+      '  prop -> property.val_x        : JOIN property p ON p.feature_id=f.id AND p.name=''prop''; value in p.val_x' || v_lf ||
+      '  prop -> feature.col           : value is the direct FEATURE column f.col (no PROPERTY join)' || v_lf ||
+      '  parent.child -> property.val_x: two-hop. JOIN property pp ON pp.feature_id=f.id AND pp.name=''parent''' || v_lf ||
+      '                                  JOIN property pc ON pc.parent_id=pp.id AND pc.name=''child''; value in pc.val_x' || v_lf ||
+      '  prop -> <table> via property.val_x_id : JOIN property p (feature_id,name) JOIN <table> t ON t.id=p.val_x_id' || v_lf ||
+      '  prop -> contains T1(id1),T2(id2) via VAL_FEATURE_ID : child features. JOIN property p (feature_id,name)' || v_lf ||
+      '                                  JOIN feature fc ON fc.id=p.val_feature_id AND fc.objectclass_id IN (id1,id2,...)' || v_lf ||
+      '  (complex; see sub-properties) : value lives in the parent.child sub-property lines below.' || v_lf);
+
+    -- Pre-compute, per feature type, the space-separated list of inherited
+    -- blocks, ordered root -> leaf (highest inheritance_level first).
+    FOR b IN (
+      SELECT objectclass_id,
+             LISTAGG('@' || block_name, ' ')
+               WITHIN GROUP (ORDER BY inheritance_level DESC, block_name) AS refs
+      FROM ( SELECT DISTINCT objectclass_id, block_name, inheritance_level
+             FROM property_catalog_text
+             WHERE is_inherited = 1 )
+      GROUP BY objectclass_id
+    ) LOOP
+      v_refs(b.objectclass_id) := b.refs;
+    END LOOP;
+
+    -- Scan 2: buffer each feature type's OWN (self-declared) lines.
+    FOR r IN (
+      SELECT objectclass_id, line
+      FROM property_catalog_text
+      WHERE is_inherited = 0
+      ORDER BY objectclass_id, line
+    ) LOOP
+      IF NOT v_own.EXISTS(r.objectclass_id) THEN
+        v_own(r.objectclass_id) := '';
+      END IF;
+      v_own(r.objectclass_id) := v_own(r.objectclass_id) || '  ' || r.line || v_lf;
+    END LOOP;
+
+    -- ===================== inherited property blocks =====================
+    -- Scan 3: emit each ancestor block once.
+    append_line(v_ctx, v_lf || '=== INHERITED PROPERTY BLOCKS ===' || v_lf);
+    FOR r IN (
+      SELECT DISTINCT t.declaring_class_id, t.block_name, t.line
+      FROM property_catalog_text t
+      WHERE t.is_inherited = 1
+      ORDER BY t.block_name, t.line
+    ) LOOP
+      IF r.declaring_class_id != v_prev THEN
+        append_line(v_ctx, v_lf || '@' || r.block_name || v_lf);
+        v_prev := r.declaring_class_id;
+      END IF;
+      append_line(v_ctx, '  ' || r.line || v_lf);
+    END LOOP;
+
+    -- ===================== concrete feature types ========================
+    -- Scan 4: type headers (with inherited-block refs) + buffered own lines.
+    append_line(v_ctx, v_lf || '=== FEATURE TYPES ===' || v_lf);
+    FOR t IN (
+      SELECT DISTINCT objectclass_id, namespace_alias, feature_type, is_toplevel
+      FROM property_catalog_text
+      ORDER BY is_toplevel DESC, namespace_alias, feature_type, objectclass_id
+    ) LOOP
+      v_hdr := v_lf || '[' || t.namespace_alias || ':' || t.feature_type
+        || ' id=' || t.objectclass_id
+        || CASE WHEN t.is_toplevel = 1 THEN ' TOPLEVEL' END || ']';
+      IF v_refs.EXISTS(t.objectclass_id) THEN
+        v_hdr := v_hdr || ' : ' || v_refs(t.objectclass_id);
+      END IF;
+      append_line(v_ctx, v_hdr || v_lf);
+
+      IF v_own.EXISTS(t.objectclass_id) THEN
+        append_line(v_ctx, v_own(t.objectclass_id));
+      END IF;
+    END LOOP;
+
+    -- ===================== reverse containment index =====================
+    -- Scan 5: for each contained child type, which property reaches it and which
+    -- class declares that property (a @block above, or a [type] header). Supports
+    -- TARGET-FIRST path finding. Aggregated by DECLARING class (not concrete
+    -- containers) so a property like boundary appears once, not per owning type.
+    append_line(v_ctx, v_lf || '=== CONTAINED-BY INDEX ===' || v_lf ||
+      'Reverse map: for each child feature type, the property/-ies whose "contains" includes' || v_lf ||
+      'it, each tagged [declaring class] (find that class as a @block or a [type] header).' || v_lf ||
+      'To reach the child, end your containment path at that property on a feature that has it.' || v_lf ||
+      'Top-level types (reachable only as members of the CityModel collection) are omitted --' || v_lf ||
+      'query those directly by objectclass_id.' || v_lf);
+    FOR r IN (
+      SELECT x.tgt, x.tgt_id,
+             LISTAGG(x.via, ', ' ON OVERFLOW TRUNCATE)
+               WITHIN GROUP (ORDER BY x.via) AS vias
+      FROM (
+        SELECT DISTINCT
+          pc.target_feature_type || '(' || pc.target_objectclass_id || ')' AS tgt,
+          pc.target_objectclass_id AS tgt_id,
+          pc.property_name || ' [' || NVL(pc.declaring_namespace_alias, '?')
+            || ':' || pc.declaring_class_name || ']' AS via
+        FROM property_catalog pc
+        WHERE pc.relation_type = 'contains'
+          AND pc.target_objectclass_id IS NOT NULL
+          -- Exclude the CityModel document-root collection (featureMember /
+          -- cityObjectMember / ...): it "contains" almost every type, so here it is
+          -- pure noise and is never the parent for a "belongs to X" query. Those
+          -- membership properties stay listed under the [core:CityModel] header.
+          AND NVL(pc.declaring_class_name, '?') <> 'CityModel'
+      ) x
+      GROUP BY x.tgt, x.tgt_id
+      ORDER BY x.tgt
+    ) LOOP
+      append_line(v_ctx, '  ' || r.tgt || ' <- ' || r.vias || v_lf);
+    END LOOP;
+
+    RETURN v_ctx;
+  END render_catalog;
+
+  -- ---- public: slim context (EAV rules + catalog + question; rationale in spec)
+  FUNCTION build_context(p_question IN CLOB) RETURN CLOB IS
+    v_ctx CLOB;
+    v_cat CLOB;
+    v_lf  CONSTANT VARCHAR2(2) := CHR(10);
+  BEGIN
+    IF p_question IS NULL OR DBMS_LOB.GETLENGTH(p_question) = 0 THEN
+      RAISE_APPLICATION_ERROR(-20800, 'Question must not be empty.');
+    END IF;
+
+    DBMS_LOB.CREATETEMPORARY(v_ctx, TRUE);
+
+    append_line(v_ctx,
+      'DATA MODEL (Entity-Attribute-Value):' || v_lf ||
+      '- FEATURE: one row per city object. Its type is FEATURE.OBJECTCLASS_ID (an integer).' || v_lf ||
+      '  NEVER join the OBJECTCLASS table; filter f.objectclass_id by the literal id from the catalog header.' || v_lf ||
+      '- PROPERTY: attributes of a feature (EAV). Join via PROPERTY.FEATURE_ID = FEATURE.ID and' || v_lf ||
+      '  filter PROPERTY.NAME = ''<exact property name>''. The value sits in a type-specific column' || v_lf ||
+      '  (val_string, val_int, val_double, val_timestamp, val_uri, val_feature_id, val_geometry_id, ...).' || v_lf ||
+      '  Code value: val_string (+ val_codespace). Measure value: val_double (+ val_uom). Boolean: val_int (0/1).' || v_lf ||
+      '- Nested/complex properties use PROPERTY.PARENT_ID (two-hop join; see catalog "parent.child" lines).' || v_lf ||
+      '- Containment: a parent owns child features via a PROPERTY whose VAL_FEATURE_ID is the' || v_lf ||
+      '  child FEATURE.ID. Traverse it TARGET-FIRST by these rules:' || v_lf ||
+      '  (1) Identify the wanted feature type T. From the CONTAINED-BY INDEX (end of catalog)' || v_lf ||
+      '      read EVERY property whose "contains" list includes T''s id; your path MUST end at' || v_lf ||
+      '      one of those properties, on a feature that has it.' || v_lf ||
+      '  (2) At each hop use ONLY a property whose "contains" list includes the next type''s id,' || v_lf ||
+      '      and filter the joined feature by that exact objectclass_id (match NAME + id).' || v_lf ||
+      '  (3) If the terminating property sits on an intermediate type, hop down to it first:' || v_lf ||
+      '      follow a property whose "contains" lists that intermediate type, join, then repeat' || v_lf ||
+      '      -- one property+feature join per hop -- until you reach the property that lists T.' || v_lf ||
+      '  (4) Never filter a containment join by an objectclass_id absent from that property''s' || v_lf ||
+      '      "contains" list, and never choose the terminating property by NAME resemblance to' || v_lf ||
+      '      T -- the "contains" list is the only authority; a wrong path returns nothing.' || v_lf ||
+      '- GEOMETRY_DATA.GEOMETRY holds SDO_GEOMETRY; reach it via a property''s val_geometry_id.' || v_lf ||
+      '- ADDRESS is reached via a property''s val_address_id (addresses are NOT in FEATURE).' || v_lf || v_lf ||
+      'CATALOG RULES:' || v_lf ||
+      '- Use ONLY the feature types, property names and storage columns from the CATALOG below.' || v_lf ||
+      '- Property names are case-sensitive; copy them verbatim.' || v_lf ||
+      '- Prefer table aliases f (feature), p / pp / pc (property), gd (geometry_data).' || v_lf || v_lf);
+
+    -- render_catalog returns a session-duration temporary LOB; capture it so we
+    -- can release it after appending (an inline call would leak it every question).
+    v_cat := render_catalog;
+    DBMS_LOB.APPEND(v_ctx, v_cat);
+    IF DBMS_LOB.ISTEMPORARY(v_cat) = 1 THEN
+      DBMS_LOB.FREETEMPORARY(v_cat);
+    END IF;
+
+    append_line(v_ctx, v_lf || v_lf || '=== USER QUESTION ===' || v_lf);
+    DBMS_LOB.APPEND(v_ctx, p_question);
+
+    RETURN v_ctx;
+  END build_context;
+
+END citydb_ai;
 /
 
-PROMPT Adding annotations ...
-
--- =================================================================
--- ADDRESS
--- =================================================================
-ALTER TABLE address ANNOTATIONS (
-  ADD
-    MODULE 'Feature',
-    DESCRIPTION 'Although ADDRESS is a feature type in CityGML, it is not stored in the FEATURE table. Instead, it is mapped to a dedicated ADDRESS table. Storing addresses separately enables efficient indexing and querying. Features reference addresses via PROPERTY.VAL_ADDRESS_ID.'
-);
-ALTER TABLE address MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE address MODIFY (objectid ANNOTATIONS (ADD DESCRIPTION 'Unique string identifier for the address object.'));
-ALTER TABLE address MODIFY (identifier ANNOTATIONS (ADD DESCRIPTION 'Optional cross-system identifier.'));
-ALTER TABLE address MODIFY (identifier_codespace ANNOTATIONS (ADD DESCRIPTION 'Authority responsible for maintaining the identifier.'));
-ALTER TABLE address MODIFY (street ANNOTATIONS (ADD DESCRIPTION 'Street or road name.'));
-ALTER TABLE address MODIFY (house_number ANNOTATIONS (ADD DESCRIPTION 'Building or house number.'));
-ALTER TABLE address MODIFY (po_box ANNOTATIONS (ADD DESCRIPTION 'Post office box number.'));
-ALTER TABLE address MODIFY (zip_code ANNOTATIONS (ADD DESCRIPTION 'Postal or ZIP code.'));
-ALTER TABLE address MODIFY (city ANNOTATIONS (ADD DESCRIPTION 'City or locality name.'));
-ALTER TABLE address MODIFY (state ANNOTATIONS (ADD DESCRIPTION 'State, province, or region.'));
-ALTER TABLE address MODIFY (country ANNOTATIONS (ADD DESCRIPTION 'Country name.'));
-ALTER TABLE address MODIFY (free_text ANNOTATIONS (ADD DESCRIPTION 'Unstructured text address.'));
-ALTER TABLE address MODIFY (multi_point ANNOTATIONS (ADD DESCRIPTION 'Geolocation as multi-point geometry.'));
-ALTER TABLE address MODIFY (content ANNOTATIONS (ADD DESCRIPTION 'Original address data preserved as a character blob.'));
-ALTER TABLE address MODIFY (content_mime_type ANNOTATIONS (ADD DESCRIPTION 'MIME type of the CONTENT column.'));
-
--- =================================================================
--- FEATURE
--- =================================================================
-ALTER TABLE feature ANNOTATIONS (
-  ADD
-    MODULE 'Feature',
-    DESCRIPTION 'Central table storing all city objects, one row per feature, using an Entity-Attribute-Value model. The feature type is given by OBJECTCLASS_ID. Most attribute values live in the PROPERTY table (linked via FEATURE_ID); a few lifecycle fields are direct columns here.'
-);
-ALTER TABLE feature MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE feature MODIFY (objectclass_id ANNOTATIONS (ADD DESCRIPTION 'Discriminator for the feature type (CityGML object class id), e.g. Building.'));
-ALTER TABLE feature MODIFY (objectid ANNOTATIONS (ADD DESCRIPTION 'String identifier to uniquely reference a feature within the database.'));
-ALTER TABLE feature MODIFY (identifier ANNOTATIONS (ADD DESCRIPTION 'Optional cross-system identifier.'));
-ALTER TABLE feature MODIFY (identifier_codespace ANNOTATIONS (ADD DESCRIPTION 'Authority responsible for maintaining the identifier.'));
-ALTER TABLE feature MODIFY (envelope ANNOTATIONS (ADD DESCRIPTION 'Spatial envelope (minimal 3D bounding box) for efficient spatial queries.'));
-ALTER TABLE feature MODIFY (last_modification_date ANNOTATIONS (ADD DESCRIPTION 'Timestamp of the last modification (3DCityDB-specific).'));
-ALTER TABLE feature MODIFY (updating_person ANNOTATIONS (ADD DESCRIPTION 'Person responsible for a change (3DCityDB-specific).'));
-ALTER TABLE feature MODIFY (reason_for_update ANNOTATIONS (ADD DESCRIPTION 'Reason for a change (3DCityDB-specific).'));
-ALTER TABLE feature MODIFY (lineage ANNOTATIONS (ADD DESCRIPTION 'Origin of the feature (3DCityDB-specific).'));
-ALTER TABLE feature MODIFY (creation_date ANNOTATIONS (ADD DESCRIPTION 'Database time when the feature was inserted.'));
-ALTER TABLE feature MODIFY (termination_date ANNOTATIONS (ADD DESCRIPTION 'Database time when the feature was terminated.'));
-ALTER TABLE feature MODIFY (valid_from ANNOTATIONS (ADD DESCRIPTION 'Real-world start of the feature lifespan.'));
-ALTER TABLE feature MODIFY (valid_to ANNOTATIONS (ADD DESCRIPTION 'Real-world end of the feature lifespan.'));
-
--- =================================================================
--- PROPERTY
--- =================================================================
-ALTER TABLE property ANNOTATIONS (
-  ADD
-    MODULE 'Feature',
-    DESCRIPTION 'Stores feature attributes as Entity-Attribute-Value rows: each row is one attribute of the feature referenced by FEATURE_ID. NAME holds the attribute name; the value is in a type-specific VAL_* column. Nested attributes of complex types reference their parent row via PARENT_ID.'
-);
-ALTER TABLE property MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE property MODIFY (feature_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to FEATURE. Links this property to its owning feature.'));
-ALTER TABLE property MODIFY (parent_id ANNOTATIONS (ADD DESCRIPTION 'For nested/complex properties: references the parent property row. Used by complex types like con:Height whose sub-attributes (value, status, lowReference, highReference) are stored as child property rows.'));
-ALTER TABLE property MODIFY (datatype_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to DATATYPE. Defines the data type of this property.'));
-ALTER TABLE property MODIFY (namespace_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to NAMESPACE.'));
-ALTER TABLE property MODIFY (name ANNOTATIONS (ADD DESCRIPTION 'The attribute name (e.g. class, function, storeysAboveGround). Case-sensitive.'));
-ALTER TABLE property MODIFY (val_int ANNOTATIONS (ADD DESCRIPTION 'Integer value (also used for booleans: 0=false, 1=true).'));
-ALTER TABLE property MODIFY (val_double ANNOTATIONS (ADD DESCRIPTION 'Double value (measurements, amounts).'));
-ALTER TABLE property MODIFY (val_string ANNOTATIONS (ADD DESCRIPTION 'String value (text, codes, type names).'));
-ALTER TABLE property MODIFY (val_timestamp ANNOTATIONS (ADD DESCRIPTION 'Timestamp value.'));
-ALTER TABLE property MODIFY (val_uri ANNOTATIONS (ADD DESCRIPTION 'URI value.', LONG_FORM 'URI = Uniform Resource Identifier'));
-ALTER TABLE property MODIFY (val_codespace ANNOTATIONS (ADD DESCRIPTION 'Code space for Code-type properties (accompanies VAL_STRING).'));
-ALTER TABLE property MODIFY (val_uom ANNOTATIONS (ADD DESCRIPTION 'Unit of measurement for Measure-type properties (accompanies VAL_DOUBLE).', LONG_FORM 'UoM = Unit of Measure'));
-ALTER TABLE property MODIFY (val_array ANNOTATIONS (ADD DESCRIPTION 'JSON array value for array-type properties. Use JSON_TABLE or JSON_VALUE to extract individual elements.'));
-ALTER TABLE property MODIFY (val_lod ANNOTATIONS (ADD DESCRIPTION 'Level of Detail for geometry properties.', LONG_FORM 'Level of Detail'));
-ALTER TABLE property MODIFY (val_geometry_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to GEOMETRY_DATA. Links to explicit geometries.'));
-ALTER TABLE property MODIFY (val_implicitgeom_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to IMPLICIT_GEOMETRY. Links to template geometries.'));
-ALTER TABLE property MODIFY (val_implicitgeom_refpoint ANNOTATIONS (ADD DESCRIPTION 'Reference point for implicit geometry placement.'));
-ALTER TABLE property MODIFY (val_appearance_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to APPEARANCE.'));
-ALTER TABLE property MODIFY (val_address_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to ADDRESS.'));
-ALTER TABLE property MODIFY (val_feature_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to FEATURE. When set, links a parent feature to a contained child feature, forming the containment hierarchy.'));
-ALTER TABLE property MODIFY (val_relation_type ANNOTATIONS (ADD DESCRIPTION 'Type of the feature relationship (integer).'));
-ALTER TABLE property MODIFY (val_content ANNOTATIONS (ADD DESCRIPTION 'Arbitrary content as character lob.'));
-ALTER TABLE property MODIFY (val_content_mime_type ANNOTATIONS (ADD DESCRIPTION 'MIME type of VAL_CONTENT.'));
-
--- =================================================================
--- GEOMETRY_DATA
--- =================================================================
-ALTER TABLE geometry_data ANNOTATIONS (
-  ADD
-    MODULE 'Geometry',
-    DESCRIPTION 'Stores all explicit and implicit geometries. Linked from PROPERTY via VAL_GEOMETRY_ID. Each geometry belongs to a feature via FEATURE_ID. Example: SELECT gd.geometry FROM feature f JOIN property p ON p.feature_id = f.id JOIN geometry_data gd ON gd.id = p.val_geometry_id WHERE f.objectclass_id = 901 AND p.name = ''lod2Solid''.'
-);
-ALTER TABLE geometry_data MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE geometry_data MODIFY (geometry ANNOTATIONS (ADD DESCRIPTION 'Explicit feature geometry with real-world 3D coordinates (SDO_GEOMETRY). Spatially indexed.', LONG_FORM 'CRS = Coordinate Reference System'));
-ALTER TABLE geometry_data MODIFY (implicit_geometry ANNOTATIONS (ADD DESCRIPTION 'Template geometry using local coordinates. Reusable by multiple features. Not spatially indexed by default.'));
-ALTER TABLE geometry_data MODIFY (geometry_properties ANNOTATIONS (ADD DESCRIPTION 'JSON metadata about the geometry type and structure.'));
-ALTER TABLE geometry_data MODIFY (feature_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to FEATURE. NULL for implicit geometries.'));
-
--- =================================================================
--- IMPLICIT_GEOMETRY
--- =================================================================
-ALTER TABLE implicit_geometry ANNOTATIONS (
-  ADD
-    MODULE 'Geometry',
-    DESCRIPTION 'Template geometries that can be reused by multiple city objects (e.g. 3D tree models).'
-);
-ALTER TABLE implicit_geometry MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE implicit_geometry MODIFY (objectid ANNOTATIONS (ADD DESCRIPTION 'Unique identifier.'));
-ALTER TABLE implicit_geometry MODIFY (mime_type ANNOTATIONS (ADD DESCRIPTION 'MIME type of the binary 3D model or external file.'));
-ALTER TABLE implicit_geometry MODIFY (mime_type_codespace ANNOTATIONS (ADD DESCRIPTION 'Optional code space for the MIME type.'));
-ALTER TABLE implicit_geometry MODIFY (reference_to_library ANNOTATIONS (ADD DESCRIPTION 'URI reference to an external 3D model file.'));
-ALTER TABLE implicit_geometry MODIFY (library_object ANNOTATIONS (ADD DESCRIPTION 'Binary blob of the 3D model.'));
-ALTER TABLE implicit_geometry MODIFY (relative_geometry_id ANNOTATIONS (ADD DESCRIPTION 'Reference to geometry stored with local coordinates.'));
-
--- =================================================================
--- TEX_IMAGE
--- =================================================================
-ALTER TABLE tex_image ANNOTATIONS (
-  ADD
-    MODULE 'Appearance',
-    DESCRIPTION 'Stores texture images for ParameterizedTexture and GeoreferencedTexture.'
-);
-ALTER TABLE tex_image MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE tex_image MODIFY (image_uri ANNOTATIONS (ADD DESCRIPTION 'File name or original path of the texture image.'));
-ALTER TABLE tex_image MODIFY (image_data ANNOTATIONS (ADD DESCRIPTION 'Texture image as binary blob. NULL if stored externally.'));
-ALTER TABLE tex_image MODIFY (mime_type ANNOTATIONS (ADD DESCRIPTION 'MIME type of the texture image (e.g. image/png, image/jpeg).'));
-ALTER TABLE tex_image MODIFY (mime_type_codespace ANNOTATIONS (ADD DESCRIPTION 'Optional code space for the MIME type.'));
-
--- =================================================================
--- APPEARANCE
--- =================================================================
-ALTER TABLE appearance ANNOTATIONS (
-  ADD
-    MODULE 'Appearance',
-    DESCRIPTION 'Central appearance table. Appearances define visual properties of surfaces and are not stored in the FEATURE table. Linked to features via FEATURE_ID or to implicit geometries via IMPLICIT_GEOMETRY_ID.'
-);
-ALTER TABLE appearance MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE appearance MODIFY (objectid ANNOTATIONS (ADD DESCRIPTION 'Unique string identifier.'));
-ALTER TABLE appearance MODIFY (identifier ANNOTATIONS (ADD DESCRIPTION 'Optional cross-system identifier.'));
-ALTER TABLE appearance MODIFY (identifier_codespace ANNOTATIONS (ADD DESCRIPTION 'Authority for the identifier.'));
-ALTER TABLE appearance MODIFY (theme ANNOTATIONS (ADD DESCRIPTION 'Theme name for the surface data.'));
-ALTER TABLE appearance MODIFY (is_global ANNOTATIONS (ADD DESCRIPTION '1 = global appearance (FEATURE_ID and IMPLICIT_GEOMETRY_ID are NULL).'));
-ALTER TABLE appearance MODIFY (feature_id ANNOTATIONS (ADD DESCRIPTION 'Back-link to FEATURE.'));
-ALTER TABLE appearance MODIFY (implicit_geometry_id ANNOTATIONS (ADD DESCRIPTION 'Link to IMPLICIT_GEOMETRY for template appearances.'));
-
--- =================================================================
--- SURFACE_DATA
--- =================================================================
-ALTER TABLE surface_data ANNOTATIONS (
-  ADD
-    MODULE 'Appearance',
-    DESCRIPTION 'Stores textures and materials. Linked to appearances via APPEAR_TO_SURFACE_DATA (n:m). Linked to target geometries via SURFACE_DATA_MAPPING.'
-);
-ALTER TABLE surface_data MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE surface_data MODIFY (objectid ANNOTATIONS (ADD DESCRIPTION 'Unique string identifier.'));
-ALTER TABLE surface_data MODIFY (identifier ANNOTATIONS (ADD DESCRIPTION 'Optional cross-system identifier.'));
-ALTER TABLE surface_data MODIFY (identifier_codespace ANNOTATIONS (ADD DESCRIPTION 'Authority for the identifier.'));
-ALTER TABLE surface_data MODIFY (is_front ANNOTATIONS (ADD DESCRIPTION '1 = front face, 0 = back face.'));
-ALTER TABLE surface_data MODIFY (objectclass_id ANNOTATIONS (ADD DESCRIPTION 'Type of surface data (foreign key to OBJECTCLASS): X3DMaterial=1102, ParameterizedTexture=1104, GeoreferencedTexture=1105.'));
-ALTER TABLE surface_data MODIFY (x3d_shininess ANNOTATIONS (ADD DESCRIPTION 'Specular highlight sharpness (0..1).'));
-ALTER TABLE surface_data MODIFY (x3d_transparency ANNOTATIONS (ADD DESCRIPTION 'Transparency (0.0=opaque, 1.0=fully transparent).'));
-ALTER TABLE surface_data MODIFY (x3d_ambient_intensity ANNOTATIONS (ADD DESCRIPTION 'Minimum diffuse color visibility (0..1).'));
-ALTER TABLE surface_data MODIFY (x3d_specular_color ANNOTATIONS (ADD DESCRIPTION 'Specular reflection color (#RRGGBB).'));
-ALTER TABLE surface_data MODIFY (x3d_diffuse_color ANNOTATIONS (ADD DESCRIPTION 'Diffuse reflection color (#RRGGBB).'));
-ALTER TABLE surface_data MODIFY (x3d_emissive_color ANNOTATIONS (ADD DESCRIPTION 'Self-illumination color (#RRGGBB).'));
-ALTER TABLE surface_data MODIFY (x3d_is_smooth ANNOTATIONS (ADD DESCRIPTION '1 = smooth, 0 = faceted.'));
-ALTER TABLE surface_data MODIFY (tex_image_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to TEX_IMAGE.'));
-ALTER TABLE surface_data MODIFY (tex_texture_type ANNOTATIONS (ADD DESCRIPTION 'Texture type: specific, typical, unknown.'));
-ALTER TABLE surface_data MODIFY (tex_wrap_mode ANNOTATIONS (ADD DESCRIPTION 'Wrap mode: none, wrap, mirror, clamp, border.'));
-ALTER TABLE surface_data MODIFY (tex_border_color ANNOTATIONS (ADD DESCRIPTION 'Border color (#RRGGBBAA).'));
-ALTER TABLE surface_data MODIFY (gt_orientation ANNOTATIONS (ADD DESCRIPTION 'Georeferenced texture 2x2 rotation/scaling matrix as JSON array.'));
-ALTER TABLE surface_data MODIFY (gt_reference_point ANNOTATIONS (ADD DESCRIPTION 'Georeferenced texture reference point in real-world space.'));
-
--- =================================================================
--- SURFACE_DATA_MAPPING
--- =================================================================
-ALTER TABLE surface_data_mapping ANNOTATIONS (
-  ADD
-    MODULE 'Appearance',
-    DESCRIPTION 'Links surface data to target geometries via SURFACE_DATA_ID and GEOMETRY_DATA_ID.'
-);
-ALTER TABLE surface_data_mapping MODIFY (surface_data_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to SURFACE_DATA.'));
-ALTER TABLE surface_data_mapping MODIFY (geometry_data_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to GEOMETRY_DATA.'));
-ALTER TABLE surface_data_mapping MODIFY (material_mapping ANNOTATIONS (ADD DESCRIPTION 'Material mapping data.'));
-ALTER TABLE surface_data_mapping MODIFY (texture_mapping ANNOTATIONS (ADD DESCRIPTION 'Texture coordinate mapping data.'));
-ALTER TABLE surface_data_mapping MODIFY (world_to_texture_mapping ANNOTATIONS (ADD DESCRIPTION 'Matrix-based texture mapping.'));
-ALTER TABLE surface_data_mapping MODIFY (georeferenced_texture_mapping ANNOTATIONS (ADD DESCRIPTION 'Georeferenced texture mapping data.'));
-
--- =================================================================
--- APPEAR_TO_SURFACE_DATA
--- =================================================================
-ALTER TABLE appear_to_surface_data ANNOTATIONS (
-  ADD
-    MODULE 'Appearance',
-    DESCRIPTION 'Many-to-many link between APPEARANCE and SURFACE_DATA.'
-);
-ALTER TABLE appear_to_surface_data MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE appear_to_surface_data MODIFY (appearance_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to APPEARANCE.'));
-ALTER TABLE appear_to_surface_data MODIFY (surface_data_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to SURFACE_DATA.'));
-
--- =================================================================
--- CODELIST / CODELIST_ENTRY
--- =================================================================
-ALTER TABLE codelist ANNOTATIONS (
-  ADD
-    MODULE 'Codelist',
-    DESCRIPTION 'Registry of codelists used for Code-type property values.'
-);
-ALTER TABLE codelist MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE codelist MODIFY (codelist_type ANNOTATIONS (ADD DESCRIPTION 'CityGML data type associated with the codelist.'));
-ALTER TABLE codelist MODIFY (url ANNOTATIONS (ADD DESCRIPTION 'URL as unique codelist identifier.'));
-ALTER TABLE codelist MODIFY (mime_type ANNOTATIONS (ADD DESCRIPTION 'MIME type if url points to an external file.'));
-
-ALTER TABLE codelist_entry ANNOTATIONS (
-  ADD
-    MODULE 'Codelist',
-    DESCRIPTION 'Stores individual codelist values.'
-);
-ALTER TABLE codelist_entry MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE codelist_entry MODIFY (codelist_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to CODELIST.'));
-ALTER TABLE codelist_entry MODIFY (code ANNOTATIONS (ADD DESCRIPTION 'The code value.'));
-ALTER TABLE codelist_entry MODIFY (definition ANNOTATIONS (ADD DESCRIPTION 'Code definition or description.'));
-
--- =================================================================
--- ADE
--- =================================================================
-ALTER TABLE ade ANNOTATIONS (
-  ADD
-    MODULE 'Metadata',
-    DESCRIPTION 'Registry of Application Domain Extensions (ADE) that extend the CityGML schema.',
-    LONG_FORM 'Application Domain Extension'
-);
-ALTER TABLE ade MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE ade MODIFY (name ANNOTATIONS (ADD DESCRIPTION 'ADE name.'));
-ALTER TABLE ade MODIFY (description ANNOTATIONS (ADD DESCRIPTION 'ADE description.'));
-ALTER TABLE ade MODIFY (version ANNOTATIONS (ADD DESCRIPTION 'ADE version.'));
-
--- =================================================================
--- DATABASE_SRS
--- =================================================================
-ALTER TABLE database_srs ANNOTATIONS (
-  ADD
-    MODULE 'Metadata',
-    DESCRIPTION 'Coordinate Reference System (CRS) of this 3DCityDB instance. Applies to all stored geometries.'
-);
-ALTER TABLE database_srs MODIFY (srid ANNOTATIONS (ADD DESCRIPTION 'Spatial Reference ID.'));
-ALTER TABLE database_srs MODIFY (srs_name ANNOTATIONS (ADD DESCRIPTION 'Name of the spatial reference system.'));
-
--- =================================================================
--- NAMESPACE
--- =================================================================
-ALTER TABLE namespace ANNOTATIONS (
-  ADD
-    MODULE 'Metadata',
-    DESCRIPTION 'Registry of namespaces. All types and properties must be associated with a namespace.'
-);
-ALTER TABLE namespace MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE namespace MODIFY (alias ANNOTATIONS (ADD DESCRIPTION 'Namespace alias (shortcut), must be unique.'));
-ALTER TABLE namespace MODIFY (namespace ANNOTATIONS (ADD DESCRIPTION 'Full namespace URI.'));
-ALTER TABLE namespace MODIFY (ade_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to ADE for user-defined namespaces.'));
-
--- =================================================================
--- OBJECTCLASS
--- =================================================================
-ALTER TABLE objectclass ANNOTATIONS (
-  ADD
-    MODULE 'Metadata',
-    DESCRIPTION 'Registry of all feature types. Every FEATURE row references an objectclass via OBJECTCLASS_ID. To find the objectclass_id for a type name or its properties, query the PROPERTY_CATALOG table. The SCHEMA column contains a JSON schema mapping describing properties specific to this type (without inherited properties).'
-);
-ALTER TABLE objectclass MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key. Used as FEATURE.OBJECTCLASS_ID.'));
-ALTER TABLE objectclass MODIFY (superclass_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to parent type for inheritance hierarchy.'));
-ALTER TABLE objectclass MODIFY (classname ANNOTATIONS (ADD DESCRIPTION 'Feature type name (e.g. Building, Road, Bridge).'));
-ALTER TABLE objectclass MODIFY (is_abstract ANNOTATIONS (ADD DESCRIPTION '1 = abstract type (cannot be instantiated directly).'));
-ALTER TABLE objectclass MODIFY (is_toplevel ANNOTATIONS (ADD DESCRIPTION '1 = top-level feature type.'));
-ALTER TABLE objectclass MODIFY (ade_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to ADE for extension types.'));
-ALTER TABLE objectclass MODIFY (namespace_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to NAMESPACE.'));
-ALTER TABLE objectclass MODIFY (schema ANNOTATIONS (ADD DESCRIPTION 'JSON schema mapping for this type''s own properties. The PROPERTY_CATALOG table provides the fully resolved (inheritance-aware) version.'));
-
--- =================================================================
--- DATATYPE
--- =================================================================
-ALTER TABLE datatype ANNOTATIONS (
-  ADD
-    MODULE 'Metadata',
-    DESCRIPTION 'Registry of data types. Each PROPERTY row references a data type via DATATYPE_ID. The PROPERTY_CATALOG table provides the resolved mapping from property names to PROPERTY VAL_* columns.'
-);
-ALTER TABLE datatype MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE datatype MODIFY (supertype_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to parent type for inheritance.'));
-ALTER TABLE datatype MODIFY (typename ANNOTATIONS (ADD DESCRIPTION 'Data type name (e.g. Code, Integer, Measure, FeatureProperty).'));
-ALTER TABLE datatype MODIFY (is_abstract ANNOTATIONS (ADD DESCRIPTION '1 = abstract data type.'));
-ALTER TABLE datatype MODIFY (ade_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to ADE for extension types.'));
-ALTER TABLE datatype MODIFY (namespace_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to NAMESPACE.'));
-ALTER TABLE datatype MODIFY (schema ANNOTATIONS (ADD DESCRIPTION 'JSON schema mapping describing how values of this type are stored (column, type, sub-attributes, joins).'));
-
--- =================================================================
--- PROPERTY_CATALOG view (self-annotation)
--- =================================================================
-ALTER VIEW property_catalog ANNOTATIONS (
-  ADD
-    MODULE 'Select AI',
-    DESCRIPTION 'Property catalog with inheritance resolved. Maps each property to its storage location. ALWAYS query this table FIRST to get value_column, parent_property, and query_pattern. The query_pattern column provides a ready-to-use SQL template for each property. If parent_property IS NOT NULL, use two-hop PARENT_ID join on PROPERTY table. If parent_property IS NULL, use direct single join.'
-);
-
-ALTER VIEW property_catalog MODIFY (
-  objectclass_id ANNOTATIONS (ADD DESCRIPTION
-    'The objectclass_id of the feature type. Use this value to filter FEATURE.OBJECTCLASS_ID.')
-);
-ALTER VIEW property_catalog MODIFY (
-  feature_type ANNOTATIONS (ADD DESCRIPTION
-    'Human-readable feature type name, e.g. Building, Road, Bridge. Matches OBJECTCLASS.CLASSNAME.')
-);
-ALTER VIEW property_catalog MODIFY (
-  is_toplevel ANNOTATIONS (ADD DESCRIPTION
-    'Whether this feature type is a top-level city object (1) or a subordinate part (0). Top-level features like Building, Road, Bridge can be queried directly.')
-);
-ALTER VIEW property_catalog MODIFY (
-  namespace_alias ANNOTATIONS (ADD DESCRIPTION
-    'CityGML module or ADE namespace alias (e.g. bldg, con, tran). Identifies which module defines this feature type. NULL should not normally occur.')
-);
-ALTER VIEW property_catalog MODIFY (
-  ade_id ANNOTATIONS (ADD DESCRIPTION
-    'NULL for core CityGML types. Non-NULL references ADE.ID for Application Domain Extension types. Use to filter or group ADE-specific properties.')
-);
-ALTER VIEW property_catalog MODIFY (
-  property_name ANNOTATIONS (ADD DESCRIPTION
-    'The property name. Use EXACT case and spelling from this column for PROPERTY.NAME filters - mismatches return zero rows. Examples: class, function, usage, roofType, storeysAboveGround, boundary, lod2Solid. For sub-properties (parent_property IS NOT NULL) this is the child property name (e.g. lowReference).')
-);
-ALTER VIEW property_catalog MODIFY (
-  parent_property ANNOTATIONS (ADD DESCRIPTION
-    'NULL for simple properties. When NOT NULL, this is a sub-property: query requires two-hop PARENT_ID join. Pattern: JOIN property p_parent ON p_parent.feature_id=f.id AND p_parent.name=<this column value> JOIN property p_child ON p_child.parent_id=p_parent.id AND p_child.name=<property_name>, read p_child.<value_column>.')
-);
-ALTER VIEW property_catalog MODIFY (
-  value_column ANNOTATIONS (ADD DESCRIPTION
-    'Which column stores the property value, derived from DATATYPE.SCHEMA. For simple types: value.column (e.g. VAL_STRING, VAL_INT, VAL_DOUBLE). For reference types: join.fromColumn (e.g. VAL_FEATURE_ID, VAL_GEOMETRY_ID, VAL_ADDRESS_ID). Columns without VAL_ prefix (e.g. CREATION_DATE) are direct FEATURE table columns. NULL means the property uses nested sub-properties via PROPERTY.PARENT_ID.')
-);
-ALTER VIEW property_catalog MODIFY (
-  join_table ANNOTATIONS (ADD DESCRIPTION
-    'For reference-type properties: the table to JOIN to via VALUE_COLUMN. Derived from DATATYPE.SCHEMA join.table. Examples: FEATURE (containment via VAL_FEATURE_ID), GEOMETRY_DATA (geometries via VAL_GEOMETRY_ID), ADDRESS (addresses via VAL_ADDRESS_ID), APPEARANCE, IMPLICIT_GEOMETRY. NULL for simple-value properties and direct FEATURE columns.')
-);
-ALTER VIEW property_catalog MODIFY (
-  target_objectclass_id ANNOTATIONS (ADD DESCRIPTION
-    'For containment FeatureProperty: the objectclass_id of the concrete child feature type. Use to filter child FEATURE.OBJECTCLASS_ID. For example, Building boundary has targets 709 (WallSurface), 712 (RoofSurface), 710 (GroundSurface), etc. NULL for non-containment properties.')
-);
-ALTER VIEW property_catalog MODIFY (
-  target_feature_type ANNOTATIONS (ADD DESCRIPTION
-    'For containment FeatureProperty: the name of the concrete child feature type, e.g. WallSurface, RoofSurface. NULL for non-containment properties.')
-);
-ALTER VIEW property_catalog MODIFY (
-  relation_type ANNOTATIONS (ADD DESCRIPTION
-    'For FeatureProperty: contains (parent owns child in hierarchy) or relates (reference link). Use contains relations for containment hierarchy queries.')
-);
-ALTER VIEW property_catalog MODIFY (
-  description ANNOTATIONS (ADD DESCRIPTION
-    'Human-readable description of the property from the CityGML schema mapping.')
-);
-ALTER VIEW property_catalog MODIFY (
-  query_pattern ANNOTATIONS (ADD DESCRIPTION
-    'SQL template for retrieving this property value. ACTION: Copy the FROM and JOIN clauses into your query. Adjust the WHERE clause to match user intent (e.g. add f.id = :id). NOTE: f.objectclass_id filter ensures type-safety. For polymorphic queries (searching multiple types), change = to IN(...) or remove the filter entirely. For sub-properties (parent_property IS NOT NULL), the two-hop PARENT_ID join is already included. NULL for complex parent types whose sub-properties should be queried individually.')
-);
-
--- =================================================================
--- FEATURE_CHANGELOG (optional — only exists when changelog is enabled)
--- =================================================================
-DECLARE
-  v_exists NUMBER;
-BEGIN
-  SELECT COUNT(*) INTO v_exists FROM user_tables WHERE table_name = 'FEATURE_CHANGELOG';
-  IF v_exists = 0 THEN
-    DBMS_OUTPUT.PUT_LINE('FEATURE_CHANGELOG table not found — skipping annotations.');
-    RETURN;
-  END IF;
-
-  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog ANNOTATIONS (
-    ADD
-      MODULE 'Changelog',
-      DESCRIPTION 'Audit log tracking INSERT, UPDATE, TERMINATE, and DELETE operations on top-level features. Each row records one transaction. Rows are created automatically by triggers on the FEATURE table. Use OBJECTCLASS_ID with the same mappings as the FEATURE table (e.g. Building=901). For DELETE transactions, FEATURE_ID is NULL because the feature no longer exists. Query: SELECT * FROM feature_changelog WHERE objectclass_id = <id> ORDER BY transaction_date DESC.'
-  )]';
-  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key (auto-generated sequence).'))]';
-  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (feature_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to FEATURE. NULL for DELETE transactions because the feature has been removed.'))]';
-  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (objectclass_id ANNOTATIONS (ADD DESCRIPTION 'Feature type at time of transaction. Same IDs as FEATURE.OBJECTCLASS_ID (e.g. Building=901).'))]';
-  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (objectid ANNOTATIONS (ADD DESCRIPTION 'String identifier of the feature at time of transaction.'))]';
-  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (identifier ANNOTATIONS (ADD DESCRIPTION 'Cross-system identifier of the feature at time of transaction.'))]';
-  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (identifier_codespace ANNOTATIONS (ADD DESCRIPTION 'Authority for the identifier at time of transaction.'))]';
-  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (envelope ANNOTATIONS (ADD DESCRIPTION 'Spatial envelope of the feature at time of transaction.'))]';
-  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (transaction_type ANNOTATIONS (ADD DESCRIPTION 'Type of change: INSERT (new feature), UPDATE (modified), TERMINATE (termination_date set), DELETE (removed).'))]';
-  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (transaction_date ANNOTATIONS (ADD DESCRIPTION 'Timestamp when the transaction occurred. Use for time-range queries (e.g. changes in the last 7 days).'))]';
-  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (db_user ANNOTATIONS (ADD DESCRIPTION 'Database user who performed the transaction.'))]';
-  EXECUTE IMMEDIATE q'[ALTER TABLE feature_changelog MODIFY (reason_for_update ANNOTATIONS (ADD DESCRIPTION 'Optional reason provided for the change.'))]';
-
-  DBMS_OUTPUT.PUT_LINE('FEATURE_CHANGELOG annotations added.');
-END;
-/
-
--- ===============================================================
--- PART 3 – Table comments (query rules + mappings for Select AI)
--- ===============================================================
--- Annotations describe what tables/columns ARE.
--- Comments describe HOW TO QUERY them with rules and examples.
--- Both are sent to the LLM when "annotations" and "comments" are
--- enabled in the Select AI profile.
-
--- NOTE: The FEATURE/PROPERTY table COMMENTs are deliberately short. The EAV
--- query rules, the objectclass-id map and the containment graph are injected
--- per request by CITYDB_AI.BUILD_CONTEXT (see select-ai-nl2sql.sql); repeating
--- them in a 4000-char table comment would only duplicate the prompt. Each
--- comment below is a localized anchor for its table, nothing more.
-
--- ---------------------------------------------------------------
--- 3.1 COMMENT ON TABLE FEATURE
--- ---------------------------------------------------------------
-PROMPT Adding COMMENT ON TABLE FEATURE ...
-COMMENT ON TABLE feature IS
-  'Central table for all city objects (one row per feature, EAV model). The feature type is FEATURE.OBJECTCLASS_ID. Attribute names, their storage columns and containment paths are described in the CATALOG provided with each request.';
-
--- ---------------------------------------------------------------
--- 3.2 COMMENT ON TABLE PROPERTY
--- ---------------------------------------------------------------
-PROMPT Adding COMMENT ON TABLE PROPERTY ...
-COMMENT ON TABLE property IS
-  'Feature attributes stored as Entity-Attribute-Value rows (joined to FEATURE via FEATURE_ID; nested attributes via PARENT_ID). Which VAL_* column holds each attribute, and whether a two-hop PARENT_ID join is required, is described in the CATALOG provided with each request.';
-
--- ---------------------------------------------------------------
--- 3.3 COMMENT ON TABLE PROPERTY_CATALOG (dynamic: sub-properties)
--- ---------------------------------------------------------------
-PROMPT Generating COMMENT ON TABLE PROPERTY_CATALOG ...
-DECLARE
-  v_comment VARCHAR2(4000);
-BEGIN
-  v_comment := 'QUERY RULES: '
-    || 'Always query this table first to find value_column, parent_property, and query_pattern. '
-    || 'The query_pattern column provides a ready-to-use SQL template for each property. '
-    || 'Copy the FROM/JOIN clauses from query_pattern and adjust the WHERE clause to match user intent. '
-    || 'If parent_property IS NOT NULL, the query_pattern already includes the two-hop PARENT_ID join. '
-    || 'If parent_property IS NULL, use direct single join as shown in query_pattern. '
-    || 'CROSS-TYPE: If the user query is generic (e.g. all objects with height > 20), '
-    || 'remove the objectclass_id filter from the pattern or use IN(...) with multiple IDs. '
-    || 'AGGREGATION: For COUNT, SUM, AVG, etc., wrap the value column from query_pattern '
-    || 'with the appropriate SQL function instead of selecting it directly.';
-
-  EXECUTE IMMEDIATE 'COMMENT ON TABLE property_catalog IS '''
-    || REPLACE(v_comment, '''', '''''') || '''';
-
-  DBMS_OUTPUT.PUT_LINE('COMMENT ON TABLE PROPERTY_CATALOG generated ('
-    || LENGTH(v_comment) || ' chars).');
-END;
-/
-
--- ---------------------------------------------------------------
--- 3.4 COMMENT ON TABLE FEATURE_CHANGELOG (static: audit queries)
--- ---------------------------------------------------------------
-PROMPT Adding COMMENT ON TABLE FEATURE_CHANGELOG (if present) ...
-DECLARE
-  v_exists  NUMBER;
-  v_comment VARCHAR2(4000);
-BEGIN
-  SELECT COUNT(*) INTO v_exists FROM user_tables WHERE table_name = 'FEATURE_CHANGELOG';
-  IF v_exists = 0 THEN
-    DBMS_OUTPUT.PUT_LINE('FEATURE_CHANGELOG table not found — skipping comment.');
-    RETURN;
-  END IF;
-
-  v_comment := 'QUERY RULES: '
-    || 'Audit log for top-level feature changes. Populated automatically by triggers on the FEATURE table. '
-    || 'TRANSACTION_TYPE values: INSERT (new), UPDATE (modified), TERMINATE (termination_date set), DELETE (removed). '
-    || 'For DELETE rows, FEATURE_ID is NULL. Use OBJECTID to identify the deleted feature. '
-    || 'OBJECTCLASS_ID uses the same mappings as the FEATURE table (e.g. Building=901). '
-    || 'TIME RANGE: Filter by TRANSACTION_DATE for recent changes '
-    || q'[(e.g. WHERE transaction_date > SYSTIMESTAMP - INTERVAL '7' DAY). ]'
-    || 'HISTORY: To see all changes for a specific feature, filter by OBJECTID and ORDER BY TRANSACTION_DATE. '
-    || 'USER TRACKING: DB_USER shows who made the change.';
-  EXECUTE IMMEDIATE 'COMMENT ON TABLE feature_changelog IS '''
-    || REPLACE(v_comment, '''', '''''') || '''';
-
-  DBMS_OUTPUT.PUT_LINE('COMMENT ON TABLE FEATURE_CHANGELOG added.');
-END;
-/
-
-PROMPT Select AI context setup complete.
+PROMPT CITYDB_AI NL2SQL layer setup complete.
