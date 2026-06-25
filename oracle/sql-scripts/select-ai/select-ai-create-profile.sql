@@ -45,6 +45,13 @@ EXCEPTION
 END;
 /
 
+-- object_list contains only the PHYSICAL data tables the generated SQL runs
+-- against. The metadata/registry tables (OBJECTCLASS, DATATYPE, NAMESPACE, ADE)
+-- and the PROPERTY_CATALOG view are intentionally EXCLUDED: their useful content
+-- (objectclass-id map, property->column mapping) is rendered into the prompt by
+-- CITYDB_AI.BUILD_CONTEXT instead. Exposing them here only tempted the model to
+-- emit OBJECTCLASS joins and could never surface the catalog ROWS anyway, since
+-- Select AI sends table structure, not data. See select-ai-nl2sql.sql.
 BEGIN
   DBMS_CLOUD_AI.CREATE_PROFILE(
     profile_name => 'OPENAI',
@@ -52,24 +59,19 @@ BEGIN
       "credential_name": "OPENAI_CRED",
       "object_list": [
         {"owner": "&DB_USER", "name": "ADDRESS"},
-        {"owner": "&DB_USER", "name": "ADE"},
         {"owner": "&DB_USER", "name": "APPEAR_TO_SURFACE_DATA"},
         {"owner": "&DB_USER", "name": "APPEARANCE"},
         {"owner": "&DB_USER", "name": "CODELIST"},
         {"owner": "&DB_USER", "name": "CODELIST_ENTRY"},
         {"owner": "&DB_USER", "name": "DATABASE_SRS"},
-        {"owner": "&DB_USER", "name": "DATATYPE"},
         {"owner": "&DB_USER", "name": "FEATURE"},
         {"owner": "&DB_USER", "name": "FEATURE_CHANGELOG"},
         {"owner": "&DB_USER", "name": "GEOMETRY_DATA"},
         {"owner": "&DB_USER", "name": "IMPLICIT_GEOMETRY"},
-        {"owner": "&DB_USER", "name": "NAMESPACE"},
-        {"owner": "&DB_USER", "name": "OBJECTCLASS"},
         {"owner": "&DB_USER", "name": "PROPERTY"},
         {"owner": "&DB_USER", "name": "SURFACE_DATA"},
         {"owner": "&DB_USER", "name": "SURFACE_DATA_MAPPING"},
-        {"owner": "&DB_USER", "name": "TEX_IMAGE"},
-        {"owner": "&DB_USER", "name": "PROPERTY_CATALOG"}
+        {"owner": "&DB_USER", "name": "TEX_IMAGE"}
       ],
       "model": "gpt-4o",
       "conversation": "true",

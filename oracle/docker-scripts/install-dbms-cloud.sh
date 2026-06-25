@@ -123,11 +123,12 @@ WHENEVER OSERROR EXIT 9;
 WHENEVER SQLERROR EXIT SQL.SQLCODE;
 
 @${CUSTOM_SQL_DIR}/select-ai-property-catalog.sql
+@${CUSTOM_SQL_DIR}/select-ai-nl2sql.sql
 
 EXIT
 SQL
 
-echo "[SelectAI] Property catalog and annotations created."
+echo "[SelectAI] Property catalog, annotations and NL2SQL layer created."
 
 # --- Step 7: Create AI profile (must run as app user in PDB) -----------------
 if [ -z "${OPENAI_API_KEY}" ]; then

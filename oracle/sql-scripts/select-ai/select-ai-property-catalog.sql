@@ -345,10 +345,10 @@ ALTER TABLE address MODIFY (content_mime_type ANNOTATIONS (ADD DESCRIPTION 'MIME
 ALTER TABLE feature ANNOTATIONS (
   ADD
     MODULE 'Feature',
-    DESCRIPTION 'Central table storing all city objects (EAV pattern). Type determined by OBJECTCLASS_ID (see table comment for type-to-ID mappings like Building=901). Properties in PROPERTY table via FEATURE_ID. Query: SELECT p.<value_column> FROM feature f JOIN property p ON p.feature_id=f.id AND p.name=''<name>'' WHERE f.objectclass_id=<id>. Always check PROPERTY_CATALOG for value_column and parent_property before querying. Containment hierarchy via PROPERTY.VAL_FEATURE_ID.'
+    DESCRIPTION 'Central table storing all city objects, one row per feature, using an Entity-Attribute-Value model. The feature type is given by OBJECTCLASS_ID. Most attribute values live in the PROPERTY table (linked via FEATURE_ID); a few lifecycle fields are direct columns here.'
 );
 ALTER TABLE feature MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
-ALTER TABLE feature MODIFY (objectclass_id ANNOTATIONS (ADD DESCRIPTION 'Determines the feature type. Do NOT join OBJECTCLASS table. Use objectclass_id directly from table comment mappings (e.g. Building=901).'));
+ALTER TABLE feature MODIFY (objectclass_id ANNOTATIONS (ADD DESCRIPTION 'Discriminator for the feature type (CityGML object class id), e.g. Building.'));
 ALTER TABLE feature MODIFY (objectid ANNOTATIONS (ADD DESCRIPTION 'String identifier to uniquely reference a feature within the database.'));
 ALTER TABLE feature MODIFY (identifier ANNOTATIONS (ADD DESCRIPTION 'Optional cross-system identifier.'));
 ALTER TABLE feature MODIFY (identifier_codespace ANNOTATIONS (ADD DESCRIPTION 'Authority responsible for maintaining the identifier.'));
@@ -368,14 +368,14 @@ ALTER TABLE feature MODIFY (valid_to ANNOTATIONS (ADD DESCRIPTION 'Real-world en
 ALTER TABLE property ANNOTATIONS (
   ADD
     MODULE 'Feature',
-    DESCRIPTION 'Stores feature properties (EAV). Each row is one property joined via FEATURE_ID. NAME holds the property name, value in a type-specific VAL_* column (check PROPERTY_CATALOG.value_column). CRITICAL: If PROPERTY_CATALOG.parent_property IS NOT NULL, you MUST use two-hop join: property p_parent (name=parent_property) then property p_child (parent_id=p_parent.id, name=property_name). See table comment for WRONG/CORRECT examples.'
+    DESCRIPTION 'Stores feature attributes as Entity-Attribute-Value rows: each row is one attribute of the feature referenced by FEATURE_ID. NAME holds the attribute name; the value is in a type-specific VAL_* column. Nested attributes of complex types reference their parent row via PARENT_ID.'
 );
 ALTER TABLE property MODIFY (id ANNOTATIONS (ADD DESCRIPTION 'Unique primary key.'));
 ALTER TABLE property MODIFY (feature_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to FEATURE. Links this property to its owning feature.'));
 ALTER TABLE property MODIFY (parent_id ANNOTATIONS (ADD DESCRIPTION 'For nested/complex properties: references the parent property row. Used by complex types like con:Height whose sub-attributes (value, status, lowReference, highReference) are stored as child property rows.'));
 ALTER TABLE property MODIFY (datatype_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to DATATYPE. Defines the data type of this property.'));
 ALTER TABLE property MODIFY (namespace_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to NAMESPACE.'));
-ALTER TABLE property MODIFY (name ANNOTATIONS (ADD DESCRIPTION 'Property name. Use PROPERTY_CATALOG to look up which feature types have which property names and which VAL_* column stores the value.'));
+ALTER TABLE property MODIFY (name ANNOTATIONS (ADD DESCRIPTION 'The attribute name (e.g. class, function, storeysAboveGround). Case-sensitive.'));
 ALTER TABLE property MODIFY (val_int ANNOTATIONS (ADD DESCRIPTION 'Integer value (also used for booleans: 0=false, 1=true).'));
 ALTER TABLE property MODIFY (val_double ANNOTATIONS (ADD DESCRIPTION 'Double value (measurements, amounts).'));
 ALTER TABLE property MODIFY (val_string ANNOTATIONS (ADD DESCRIPTION 'String value (text, codes, type names).'));
@@ -390,7 +390,7 @@ ALTER TABLE property MODIFY (val_implicitgeom_id ANNOTATIONS (ADD DESCRIPTION 'F
 ALTER TABLE property MODIFY (val_implicitgeom_refpoint ANNOTATIONS (ADD DESCRIPTION 'Reference point for implicit geometry placement.'));
 ALTER TABLE property MODIFY (val_appearance_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to APPEARANCE.'));
 ALTER TABLE property MODIFY (val_address_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to ADDRESS.'));
-ALTER TABLE property MODIFY (val_feature_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to FEATURE. Creates parent-child containment hierarchy. To find valid child types for a parent, query: SELECT target_objectclass_id, target_feature_type FROM property_catalog WHERE objectclass_id = <parent_objectclass_id> AND value_column = ''VAL_FEATURE_ID'' AND relation_type = ''contains''. Each containment hop: parent FEATURE -> PROPERTY (feature_id) -> child FEATURE (val_feature_id).'));
+ALTER TABLE property MODIFY (val_feature_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to FEATURE. When set, links a parent feature to a contained child feature, forming the containment hierarchy.'));
 ALTER TABLE property MODIFY (val_relation_type ANNOTATIONS (ADD DESCRIPTION 'Type of the feature relationship (integer).'));
 ALTER TABLE property MODIFY (val_content ANNOTATIONS (ADD DESCRIPTION 'Arbitrary content as character lob.'));
 ALTER TABLE property MODIFY (val_content_mime_type ANNOTATIONS (ADD DESCRIPTION 'MIME type of VAL_CONTENT.'));
@@ -712,87 +712,25 @@ END;
 -- Both are sent to the LLM when "annotations" and "comments" are
 -- enabled in the Select AI profile.
 
--- ---------------------------------------------------------------
--- 3.1 COMMENT ON TABLE FEATURE (dynamic: objectclass_id mappings)
--- ---------------------------------------------------------------
-PROMPT Generating COMMENT ON TABLE FEATURE ...
-DECLARE
-  v_comment VARCHAR2(4000);
-  v_entry   VARCHAR2(200);
-BEGIN
-  -- Part A: Query rules + objectclass_id mappings
-  v_comment := 'RULES: '
-    || '(1) Do NOT join OBJECTCLASS. Use objectclass_id directly. '
-    || '(2) Properties in PROPERTY (EAV): JOIN property p ON p.feature_id=f.id AND p.name=''<name>''. '
-    || '(3) Check PROPERTY_CATALOG for value_column and parent_property. '
-    || '(4) Containment: child features linked via PROPERTY.VAL_FEATURE_ID. '
-    || 'CRITICAL: some types require MULTI-HOP traversal. '
-    || 'WindowSurface belongs to WallSurface, NOT directly to Building. '
-    || 'To find windows: Building(901)--boundary-->WallSurface(709)--fillingSurface-->WindowSurface(719). '
-    || 'Pattern: f_parent JOIN property p1 (feature_id,name) JOIN feature f_child (p1.val_feature_id) '
-    || 'JOIN property p2 (feature_id,name) JOIN feature f_grandchild (p2.val_feature_id). '
-    || 'IDS: ';
-
-  FOR r IN (
-    SELECT ns.alias, oc.id, oc.classname
-    FROM objectclass oc
-    LEFT JOIN namespace ns ON ns.id = oc.namespace_id
-    WHERE oc.is_abstract = 0 AND oc.is_toplevel = 1
-    ORDER BY oc.ade_id NULLS FIRST, ns.alias, oc.classname
-  ) LOOP
-    v_entry := NVL(r.alias, '?') || ':' || r.classname || '=' || r.id || ', ';
-    EXIT WHEN LENGTH(v_comment) + LENGTH(v_entry) > 2500;
-    v_comment := v_comment || v_entry;
-  END LOOP;
-  v_comment := RTRIM(v_comment, ', ') || '. ';
-
-  -- Part B: Point the model at PROPERTY_CATALOG to discover containment paths.
-  -- The full containment graph (every surface boundary relationship) does NOT
-  -- fit in a 4000-char comment. Dumping it here silently truncated at the byte
-  -- budget and -- because non-toplevel paths sorted first -- dropped exactly the
-  -- top-level entry points (Building, Road, Bridge, ...) that users start from.
-  -- PROPERTY_CATALOG already holds the complete, queryable graph.
-  v_comment := v_comment
-    || 'CONTAINMENT: To find child/nested features, query PROPERTY_CATALOG '
-    || 'WHERE relation_type=''contains'' [AND objectclass_id=<parent>] to get '
-    || 'target_objectclass_id + query_pattern. Some paths need MULTI-HOP traversal '
-    || '(e.g. Building(901)->WallSurface(709)->WindowSurface(719)).';
-
-  v_comment := RTRIM(v_comment, ', ');
-
-  EXECUTE IMMEDIATE 'COMMENT ON TABLE feature IS '''
-    || REPLACE(v_comment, '''', '''''') || '''';
-
-  DBMS_OUTPUT.PUT_LINE('COMMENT ON TABLE FEATURE generated ('
-    || LENGTH(v_comment) || ' chars).');
-END;
-/
+-- NOTE: The FEATURE/PROPERTY table COMMENTs are deliberately short. The EAV
+-- query rules, the objectclass-id map and the containment graph are injected
+-- per request by CITYDB_AI.BUILD_CONTEXT (see select-ai-nl2sql.sql); repeating
+-- them in a 4000-char table comment would only duplicate the prompt. Each
+-- comment below is a localized anchor for its table, nothing more.
 
 -- ---------------------------------------------------------------
--- 3.2 COMMENT ON TABLE PROPERTY (static: PARENT_ID join rules)
+-- 3.1 COMMENT ON TABLE FEATURE
+-- ---------------------------------------------------------------
+PROMPT Adding COMMENT ON TABLE FEATURE ...
+COMMENT ON TABLE feature IS
+  'Central table for all city objects (one row per feature, EAV model). The feature type is FEATURE.OBJECTCLASS_ID. Attribute names, their storage columns and containment paths are described in the CATALOG provided with each request.';
+
+-- ---------------------------------------------------------------
+-- 3.2 COMMENT ON TABLE PROPERTY
 -- ---------------------------------------------------------------
 PROMPT Adding COMMENT ON TABLE PROPERTY ...
-DECLARE
-  v_comment VARCHAR2(4000);
-BEGIN
-  v_comment := 'QUERY RULES: '
-    || 'CRITICAL: Some properties are sub-properties of complex types. '
-    || 'You MUST check PROPERTY_CATALOG.PARENT_PROPERTY before querying. '
-    || 'If PARENT_PROPERTY IS NOT NULL, use a two-hop PARENT_ID join. '
-    || q'[WRONG: JOIN property p ON p.feature_id=f.id AND p.name='lowReference' (RETURNS NO ROWS). ]'
-    || q'[CORRECT: JOIN property p_parent ON p_parent.feature_id=f.id AND p_parent.name='height' ]'
-    || q'[JOIN property p_child ON p_child.parent_id=p_parent.id AND p_child.name='lowReference', ]'
-    || 'value in p_child.val_string. '
-    || q'[If PARENT_PROPERTY IS NULL, use direct join: JOIN property p ON p.feature_id=f.id AND p.name='<name>'. ]'
-    || 'VALUE COLUMNS: val_string (text/codes), val_int (integers/booleans), val_double (measurements), '
-    || 'val_timestamp (dates), val_feature_id (child features), val_geometry_id (geometries), '
-    || 'val_address_id (addresses). '
-    || 'Code properties: value in val_string, code space in val_codespace. '
-    || 'Measure properties: value in val_double, unit in val_uom.';
-  EXECUTE IMMEDIATE 'COMMENT ON TABLE property IS '''
-    || REPLACE(v_comment, '''', '''''') || '''';
-END;
-/
+COMMENT ON TABLE property IS
+  'Feature attributes stored as Entity-Attribute-Value rows (joined to FEATURE via FEATURE_ID; nested attributes via PARENT_ID). Which VAL_* column holds each attribute, and whether a two-hop PARENT_ID join is required, is described in the CATALOG provided with each request.';
 
 -- ---------------------------------------------------------------
 -- 3.3 COMMENT ON TABLE PROPERTY_CATALOG (dynamic: sub-properties)
