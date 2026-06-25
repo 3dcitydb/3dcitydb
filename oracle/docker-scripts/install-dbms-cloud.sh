@@ -123,7 +123,7 @@ WHENEVER OSERROR EXIT 9;
 WHENEVER SQLERROR EXIT SQL.SQLCODE;
 
 @${CUSTOM_SQL_DIR}/select-ai-property-catalog.sql
-@${CUSTOM_SQL_DIR}/select-ai-nl2sql.sql
+@${CUSTOM_SQL_DIR}/select-ai-annotations.sql
 
 EXIT
 SQL

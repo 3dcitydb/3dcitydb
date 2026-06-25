@@ -147,7 +147,7 @@ set "TMPCATALOG=%TEMP%\3dcitydb_catalog_%RANDOM%.sql"
   echo WHENEVER OSERROR EXIT 9;
   echo WHENEVER SQLERROR EXIT SQL.SQLCODE;
   echo @select-ai/select-ai-property-catalog.sql
-  echo @select-ai/select-ai-nl2sql.sql
+  echo @select-ai/select-ai-annotations.sql
   echo EXIT
 )
 

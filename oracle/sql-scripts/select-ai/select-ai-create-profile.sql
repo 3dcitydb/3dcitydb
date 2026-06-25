@@ -51,7 +51,7 @@ END;
 -- (objectclass-id map, property->column mapping) is rendered into the prompt by
 -- CITYDB_AI.BUILD_CONTEXT instead. Exposing them here only tempted the model to
 -- emit OBJECTCLASS joins and could never surface the catalog ROWS anyway, since
--- Select AI sends table structure, not data. See select-ai-nl2sql.sql.
+-- Select AI sends table structure, not data. See select-ai-property-catalog.sql.
 BEGIN
   DBMS_CLOUD_AI.CREATE_PROFILE(
     profile_name => 'OPENAI',
