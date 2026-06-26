@@ -558,6 +558,23 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
       '  (4) Never filter a containment join by an objectclass_id absent from that property''s' || v_lf ||
       '      "contains" list, and never choose the terminating property by NAME resemblance to' || v_lf ||
       '      T -- the "contains" list is the only authority; a wrong path returns nothing.' || v_lf ||
+      '  (5) For "all T within / belonging to / inside a <container>" where T may be nested at' || v_lf ||
+      '      ANY depth, a fixed join chain UNDER-counts (it misses T nested inside intermediate' || v_lf ||
+      '      sub-containers). Instead RECURSE the containment tree from the' || v_lf ||
+      '      container down, following ONLY containment edges (PROPERTY.VAL_RELATION_TYPE = 1;' || v_lf ||
+      '      VAL_RELATION_TYPE = 0 is a non-owning cross-reference),' || v_lf ||
+      '      then filter by T''s objectclass_id:' || v_lf ||
+      '        WITH sub(id) AS (' || v_lf ||
+      '          SELECT f.id FROM feature f WHERE <container filter>' || v_lf ||
+      '          UNION ALL' || v_lf ||
+      '          SELECT p.val_feature_id FROM sub s JOIN property p ON p.feature_id = s.id' || v_lf ||
+      '            AND p.val_relation_type = 1 AND p.val_feature_id IS NOT NULL)' || v_lf ||
+      '        SELECT COUNT(DISTINCT ft.id) FROM feature ft JOIN sub ON sub.id = ft.id WHERE ft.objectclass_id = <T id>;' || v_lf ||
+      '      Containment is a DAG, not a strict tree: a feature can be reached by MORE THAN ONE' || v_lf ||
+      '      path, and the recursion''s UNION ALL keeps every path. ALWAYS de-duplicate by' || v_lf ||
+      '      feature id -- COUNT(DISTINCT ft.id), or SELECT DISTINCT when listing.' || v_lf ||
+      '      Rules (1)-(4) still apply when you want a SPECIFIC/direct relationship rather than' || v_lf ||
+      '      the whole subtree.' || v_lf ||
       '- GEOMETRY_DATA.GEOMETRY holds SDO_GEOMETRY; reach it via a property''s val_geometry_id.' || v_lf ||
       '- ADDRESS is reached via a property''s val_address_id (addresses are NOT in FEATURE).' || v_lf || v_lf ||
       'CATALOG RULES:' || v_lf ||

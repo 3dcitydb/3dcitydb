@@ -144,8 +144,8 @@ ALTER TABLE property MODIFY (val_implicitgeom_id ANNOTATIONS (ADD DESCRIPTION 'F
 ALTER TABLE property MODIFY (val_implicitgeom_refpoint ANNOTATIONS (ADD DESCRIPTION 'Reference point for implicit geometry placement.'));
 ALTER TABLE property MODIFY (val_appearance_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to APPEARANCE.'));
 ALTER TABLE property MODIFY (val_address_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to ADDRESS.'));
-ALTER TABLE property MODIFY (val_feature_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to FEATURE. When set, links a parent feature to a contained child feature, forming the containment hierarchy.'));
-ALTER TABLE property MODIFY (val_relation_type ANNOTATIONS (ADD DESCRIPTION 'Type of the feature relationship (integer).'));
+ALTER TABLE property MODIFY (val_feature_id ANNOTATIONS (ADD DESCRIPTION 'Foreign key to another FEATURE referenced by this property. VAL_RELATION_TYPE tells which kind of link it is: 1 = a contained child (composition / containment hierarchy), 0 = a non-owning reference (e.g. generalizesTo, relatedTo). To walk the containment tree, follow only VAL_FEATURE_ID where VAL_RELATION_TYPE = 1.'));
+ALTER TABLE property MODIFY (val_relation_type ANNOTATIONS (ADD DESCRIPTION 'Kind of the VAL_FEATURE_ID link: 1 = CONTAINS (referenced feature is a composed child; use for containment-hierarchy traversal), 0 = RELATES (a non-owning cross reference).'));
 ALTER TABLE property MODIFY (val_content ANNOTATIONS (ADD DESCRIPTION 'Arbitrary content as character lob.'));
 ALTER TABLE property MODIFY (val_content_mime_type ANNOTATIONS (ADD DESCRIPTION 'MIME type of VAL_CONTENT.'));
 
