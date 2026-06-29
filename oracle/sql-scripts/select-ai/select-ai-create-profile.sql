@@ -73,7 +73,7 @@ BEGIN
         {"owner": "&DB_USER", "name": "SURFACE_DATA_MAPPING"},
         {"owner": "&DB_USER", "name": "TEX_IMAGE"}
       ],
-      "model": "gpt-4o",
+      "model": "gpt-5.4",
       "conversation": "true",
       "annotations": "true",
       "constraints": "true",
