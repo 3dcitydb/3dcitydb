@@ -29,9 +29,14 @@ jobs:
       name: Checkout repo
       uses: actions/checkout@v5
     -
-      name: Get release version without v
+      name: Get release version
       id: release_version
-      uses: battila7/get-version-action@v2
+      env:
+        REF_NAME: ${{ github.event.release.tag_name || github.ref_name }}
+      run: |
+        version="${REF_NAME}"
+        echo "version=${version}" >> "$GITHUB_OUTPUT"
+        echo "version-without-v=${version#v}" >> "$GITHUB_OUTPUT"
     -
       name: set lower case owner name
       run: |
