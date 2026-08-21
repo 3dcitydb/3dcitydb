@@ -119,7 +119,7 @@ AS
   IS
     v_schema_name VARCHAR2(128);
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN ' || v_schema_name || '.citydb_delete.cleanup_schema; END;';
   END cleanup_schema;
 
@@ -172,7 +172,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER_TAB;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_feature(:p); END;'
     USING OUT result, IN pid_array;
     RETURN result;
@@ -197,7 +197,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_feature(:p); END;'
     USING OUT result, IN pid;
     RETURN result;
@@ -348,7 +348,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER_TAB;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_property(:p); END;'
     USING OUT result, IN pid_array;
     RETURN result;
@@ -373,7 +373,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_property(:p); END;'
     USING OUT result, IN pid;
     RETURN result;
@@ -400,7 +400,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER_TAB;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_geometry_data(:p); END;'
     USING OUT result, IN pid_array;
     RETURN result;
@@ -425,7 +425,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_geometry_data(:p); END;'
     USING OUT result, IN pid;
     RETURN result;
@@ -474,7 +474,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER_TAB;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_implicit_geometry(:p); END;'
     USING OUT result, IN pid_array;
     RETURN result;
@@ -499,7 +499,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_implicit_geometry(:p); END;'
     USING OUT result, IN pid;
     RETURN result;
@@ -545,7 +545,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER_TAB;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_appearance(:p); END;'
     USING OUT result, IN pid_array;
     RETURN result;
@@ -570,7 +570,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_appearance(:p); END;'
     USING OUT result, IN pid;
     RETURN result;
@@ -612,7 +612,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER_TAB;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_surface_data(:p); END;'
     USING OUT result, IN pid_array;
     RETURN result;
@@ -637,7 +637,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_surface_data(:p); END;'
     USING OUT result, IN pid;
     RETURN result;
@@ -664,7 +664,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER_TAB;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_tex_image(:p); END;'
     USING OUT result, IN pid_array;
     RETURN result;
@@ -689,7 +689,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_tex_image(:p); END;'
     USING OUT result, IN pid;
     RETURN result;
@@ -716,7 +716,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER_TAB;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_address(:p); END;'
     USING OUT result, IN pid_array;
     RETURN result;
@@ -741,7 +741,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.delete_address(:p); END;'
     USING OUT result, IN pid;
     RETURN result;
@@ -805,7 +805,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER_TAB;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.terminate_feature(:p, :m, :c); END;'
     USING OUT result, IN pid_array, IN metadata, IN cascade;
     RETURN result;
@@ -830,7 +830,7 @@ AS
     v_schema_name VARCHAR2(128);
     result NUMBER;
   BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(schema_name);
+    v_schema_name := DBMS_ASSERT.SIMPLE_SQL_NAME(schema_name);
     EXECUTE IMMEDIATE 'BEGIN :r := ' || v_schema_name || '.citydb_delete.terminate_feature(:p, :m, :c); END;'
     USING OUT result, IN pid, IN metadata, IN cascade;
     RETURN result;
