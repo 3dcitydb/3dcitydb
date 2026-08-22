@@ -14,7 +14,6 @@ $body$
 DECLARE
   bbox GEOMETRY;
   bbox_tmp GEOMETRY;
-  rec RECORD;
 BEGIN
   IF compute_envelope = 0 THEN
     SELECT envelope INTO bbox FROM feature WHERE id = fid;
@@ -23,19 +22,15 @@ BEGIN
     END IF;
   END IF;
 
-  FOR rec IN
-    SELECT
-      p.val_feature_id
-    FROM
-      property p
-    WHERE
-      p.feature_id = fid
-      AND p.val_feature_id IS NOT NULL
-      AND p.val_relation_type = 1
-  LOOP
-    bbox := ST_Collect(bbox,
-      citydb_pkg.get_feature_envelope(rec.val_feature_id, compute_envelope, set_envelope));
-  END LOOP;    
+  SELECT
+    ST_Collect(citydb_pkg.get_feature_envelope(p.val_feature_id, compute_envelope, set_envelope))
+  INTO bbox
+  FROM
+    property p
+  WHERE
+    p.feature_id = fid
+    AND p.val_feature_id IS NOT NULL
+    AND p.val_relation_type = 1;
 
   SELECT ST_Collect(citydb_pkg.get_envelope(geom)) INTO bbox_tmp FROM (
     SELECT

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+- Optimized envelope computation in `citydb_pkg.get_feature_envelope` for features with many child features by
+  avoiding repeated geometry collection.
+
 ## [5.1.3] - 2026-03-06
 
 ### Fixed
