@@ -1,20 +1,29 @@
 /*****************************************************************
-* Returns the envelope geometry of a given feature
+* Returns the envelope geometry of a given feature while tracking
+* visited feature IDs to skip cycles.
 *
 * @param fid ID of the feature for which the envelope is computed
 * @param compute_envelope If 0 (default), returns the envelope from the ENVELOPE column unless it is NULL, in which case the envelope is computed. If 1, the envelope is always computed.
 * @param set_envelope If 1 (default = 0), the ENVELOPE column of the FEATURE table will be updated with the computed envelope.
+* @param visited_ids Feature IDs already visited on the current recursion path
 * @return Envelope geometry as required by the ENVELOPE column of the FEATURE table
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_feature_envelope(
+CREATE OR REPLACE FUNCTION citydb_pkg.get_feature_envelope_internal(
   fid BIGINT,
-  compute_envelope INTEGER DEFAULT 0,
-  set_envelope INTEGER DEFAULT 0) RETURNS GEOMETRY AS
+  compute_envelope INTEGER,
+  set_envelope INTEGER,
+  visited_ids BIGINT[]) RETURNS GEOMETRY AS
 $body$
 DECLARE
   bbox GEOMETRY;
   bbox_tmp GEOMETRY;
 BEGIN
+  IF fid = ANY(visited_ids) THEN
+    RETURN NULL;
+  END IF;
+
+  visited_ids := visited_ids || fid;
+
   IF compute_envelope = 0 THEN
     SELECT envelope INTO bbox FROM feature WHERE id = fid;
     IF bbox IS NOT NULL THEN
@@ -23,7 +32,8 @@ BEGIN
   END IF;
 
   SELECT
-    ST_Collect(citydb_pkg.get_feature_envelope(p.val_feature_id, compute_envelope, set_envelope))
+    ST_Collect(citydb_pkg.get_feature_envelope_internal(
+      p.val_feature_id, compute_envelope, set_envelope, visited_ids))
   INTO bbox
   FROM
     property p
@@ -58,6 +68,26 @@ BEGIN
   END IF;
 
   RETURN bbox;
+END;
+$body$
+LANGUAGE plpgsql;
+
+/*****************************************************************
+* Returns the envelope geometry of a given feature
+*
+* @param fid ID of the feature for which the envelope is computed
+* @param compute_envelope If 0 (default), returns the envelope from the ENVELOPE column unless it is NULL, in which case the envelope is computed. If 1, the envelope is always computed.
+* @param set_envelope If 1 (default = 0), the ENVELOPE column of the FEATURE table will be updated with the computed envelope.
+* @return Envelope geometry as required by the ENVELOPE column of the FEATURE table
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.get_feature_envelope(
+  fid BIGINT,
+  compute_envelope INTEGER DEFAULT 0,
+  set_envelope INTEGER DEFAULT 0) RETURNS GEOMETRY AS
+$body$
+BEGIN
+  RETURN citydb_pkg.get_feature_envelope_internal(
+    fid, compute_envelope, set_envelope, ARRAY[]::BIGINT[]);
 END;
 $body$
 LANGUAGE plpgsql;

@@ -235,23 +235,30 @@ $body$
 LANGUAGE plpgsql STRICT;
 
 /******************************************************************
-* delete from PROPERTY table based on an id array
+* delete from PROPERTY table based on an id array with cycle tracking
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_property(pid_array bigint[]) RETURNS SETOF BIGINT AS
+CREATE OR REPLACE FUNCTION citydb_pkg.delete_property_internal(
+  pid_array BIGINT[],
+  visited_ids BIGINT[]) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
   cascade_delete_ids bigint[] := '{}';
   property_ids bigint[] := '{}';
+  current_ids bigint[];
 BEGIN
+  current_ids := COALESCE(visited_ids, '{}'::bigint[]) ||
+    COALESCE(pid_array, '{}'::bigint[]);
+
   WITH parent_refs AS (
     SELECT
-      c.id, citydb_pkg.delete_property(p.id)
+      c.id, citydb_pkg.delete_property_internal(ARRAY[p.id], current_ids)
     FROM
       property c
     INNER JOIN unnest($1) AS a(a_id) ON c.id = a.a_id
     INNER JOIN property p ON p.id = c.parent_id
     WHERE
       p.name = c.name AND p.namespace_id = c.namespace_id
+      AND NOT (p.id = ANY(current_ids))
   )
   SELECT
     array_agg(id)
@@ -268,7 +275,7 @@ BEGIN
       unnest($1) AS a(a_id)
     WHERE
       p.id = a.a_id
-    UNION ALL
+    UNION
     SELECT
       p.id
     FROM
@@ -290,6 +297,18 @@ BEGIN
     SELECT unnest($1)
     UNION
     SELECT unnest(cascade_delete_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+
+/******************************************************************
+* delete from PROPERTY table based on an id array
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.delete_property(pid_array bigint[]) RETURNS SETOF BIGINT AS
+$body$
+BEGIN
+  RETURN QUERY
+    SELECT citydb_pkg.delete_property_internal($1, '{}'::bigint[]);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
