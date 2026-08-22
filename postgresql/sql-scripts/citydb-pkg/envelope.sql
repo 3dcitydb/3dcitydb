@@ -50,13 +50,13 @@ BEGIN
       p.feature_id = fid
       AND p.val_implicitgeom_id IS NOT NULL
   ) g;
-  
+
   bbox := citydb_pkg.get_envelope(ST_Collect(bbox, bbox_tmp));
 
   IF set_envelope <> 0 THEN
     UPDATE feature SET envelope = bbox WHERE id = fid;
   END IF;
-  
+
   RETURN bbox;
 END;
 $body$
@@ -98,16 +98,17 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_implicit_geometry_envelope(
   matrix JSONB) RETURNS GEOMETRY AS
 $body$
 DECLARE
-  envelope GEOMETRY;
+  bbox BOX3D;
+  corners GEOMETRY;
   params DOUBLE PRECISION[] := ARRAY[]::float8[];
 BEGIN
   SELECT
-    citydb_pkg.get_envelope(gd.implicit_geometry) INTO envelope
+    ST_3DExtent(gd.implicit_geometry) INTO bbox
   FROM
-    implicit_geometry ig, geometry_data gd
+    implicit_geometry ig
+  JOIN geometry_data gd ON gd.id = ig.relative_geometry_id
   WHERE
     ig.id = gid
-    AND gd.id = ig.relative_geometry_id
     AND gd.implicit_geometry IS NOT NULL;
 
   IF matrix IS NOT NULL THEN
@@ -134,12 +135,25 @@ BEGIN
     params[12] := params[12] + ST_Z(ref_pt);
   END IF;
 
-  IF envelope IS NOT NULL THEN
-    RETURN ST_Affine(envelope,
+  IF bbox IS NOT NULL THEN
+    corners := ST_Collect(ARRAY[
+      ST_MakePoint(ST_XMin(bbox), ST_YMin(bbox), ST_ZMin(bbox)),
+      ST_MakePoint(ST_XMin(bbox), ST_YMin(bbox), ST_ZMax(bbox)),
+      ST_MakePoint(ST_XMin(bbox), ST_YMax(bbox), ST_ZMin(bbox)),
+      ST_MakePoint(ST_XMin(bbox), ST_YMax(bbox), ST_ZMax(bbox)),
+      ST_MakePoint(ST_XMax(bbox), ST_YMin(bbox), ST_ZMin(bbox)),
+      ST_MakePoint(ST_XMax(bbox), ST_YMin(bbox), ST_ZMax(bbox)),
+      ST_MakePoint(ST_XMax(bbox), ST_YMax(bbox), ST_ZMin(bbox)),
+      ST_MakePoint(ST_XMax(bbox), ST_YMax(bbox), ST_ZMax(bbox))
+    ]);
+
+    corners := ST_Affine(corners,
       params[1], params[2], params[3],
       params[5], params[6], params[7],
       params[9], params[10], params[11],
       params[4], params[8], params[12]);
+
+    RETURN citydb_pkg.get_envelope(corners);
   ELSIF ref_pt IS NOT NULL THEN
     RETURN citydb_pkg.get_envelope(ST_MakePoint(params[4], params[8], params[12]));
   ELSE

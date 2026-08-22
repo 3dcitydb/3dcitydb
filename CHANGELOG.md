@@ -6,6 +6,10 @@
 - Optimized envelope computation in `citydb_pkg.get_feature_envelope` for features with many child features by
   avoiding repeated geometry collection.
 
+### Fixed
+- Fixed incorrect envelope computation for implicit geometries in `citydb_pkg.get_implicit_geometry_envelope` by
+  transforming all eight corners of their 3D bounding boxes.
+
 ## [5.1.3] - 2026-03-06
 
 ### Fixed
