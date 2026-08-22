@@ -116,11 +116,14 @@ BEGIN
       RAISE EXCEPTION 'The transformation matrix must be a JSON array';
     END IF;
 
-    params := ARRAY(SELECT jsonb_array_elements_text(matrix)::float8);
-
-    IF array_length(params, 1) < 12 THEN
+    IF jsonb_array_length(matrix) < 12 THEN
       RAISE EXCEPTION 'Invalid transformation matrix: %', matrix USING HINT = '12 elements are required';
     END IF;
+
+    params := ARRAY[
+      (matrix->>0)::float8, (matrix->>1)::float8, (matrix->>2)::float8, (matrix->>3)::float8,
+      (matrix->>4)::float8, (matrix->>5)::float8, (matrix->>6)::float8, (matrix->>7)::float8,
+      (matrix->>8)::float8, (matrix->>9)::float8, (matrix->>10)::float8, (matrix->>11)::float8];
   ELSE
     params := ARRAY[
       1, 0, 0, 0,
