@@ -246,8 +246,7 @@ DECLARE
   property_ids bigint[] := '{}';
   current_ids bigint[];
 BEGIN
-  current_ids := COALESCE(visited_ids, '{}'::bigint[]) ||
-    COALESCE(pid_array, '{}'::bigint[]);
+  current_ids := visited_ids || pid_array;
 
   WITH parent_refs AS (
     SELECT
@@ -828,8 +827,7 @@ DECLARE
   child_feature_ids bigint[] := '{}';
   current_ids bigint[];
 BEGIN
-  current_ids := COALESCE(visited_ids, '{}'::bigint[]) ||
-    COALESCE(pid_array, '{}'::bigint[]);
+  current_ids := visited_ids || pid_array;
 
   WITH terminated_objects AS (
     UPDATE
