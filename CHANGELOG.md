@@ -2,14 +2,15 @@
 
 ## [Unreleased]
 
+## [5.1.4] - 2026-08-25
+
 ### Changed
 - Optimized envelope computation in `citydb_pkg.get_feature_envelope` for features with many child features by
   avoiding repeated geometry collection.
 - Added cycle protection to envelope, delete, and terminate functions.
 
 ### Fixed
-- Fixed incorrect envelope computation for implicit geometries in `citydb_pkg.get_implicit_geometry_envelope` by
-  transforming all eight corners of their 3D bounding boxes.
+- Fixed incorrect envelope computation for implicit geometries in `citydb_pkg.get_implicit_geometry_envelope`.
 
 ## [5.1.3] - 2026-03-06
 
@@ -75,7 +76,8 @@ the [user manual](https://3dcitydb.github.io/3dcitydb-mkdocs/) for complete docu
 The changelog of previous 3D City Database releases before version 5.0 is available
 [here](https://github.com/3dcitydb/3dcitydb/tree/3dcitydb-v4/CHANGES.md).
 
-[Unreleased]: https://github.com/3dcitydb/3dcitydb/compare/v5.1.3..HEAD
+[Unreleased]: https://github.com/3dcitydb/3dcitydb/compare/v5.1.4..HEAD
+[5.1.4]: https://github.com/3dcitydb/3dcitydb/releases/tag/v5.1.4
 [5.1.3]: https://github.com/3dcitydb/3dcitydb/releases/tag/v5.1.3
 [5.1.2]: https://github.com/3dcitydb/3dcitydb/releases/tag/v5.1.2
 [5.1.1]: https://github.com/3dcitydb/3dcitydb/releases/tag/v5.1.1

@@ -85,14 +85,9 @@ The 3D City Database is licensed under the
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 See the `LICENSE` file for more details.
 
-Note that releases of the software before version 3.3.0 continue to be licensed under 
-[GNU LGPL 3.0](https://www.gnu.org/licenses/lgpl-3.0.en.html).
-To request a previous release of the 3D City Database under Apache License 2.0 
-create a GitHub issue.
-
 Latest release
 --------------
-The latest stable release of the 3D City Database is 5.1.3.
+The latest stable release of the 3D City Database is 5.1.4.
 
 You can download the latest release as well as previous releases from the
 [releases section](https://github.com/3dcitydb/3dcitydb/releases).
@@ -101,7 +96,7 @@ System requirements
 -------------------
 Setting up an instance of the 3D City Database requires an existing installation of a PostgreSQL database. Currently, only following database versions are supported:
 
-* PostgreSQL >= 14 with PostGIS >= 3.1
+* PostgreSQL >= 14 with PostGIS >= 3.2
 
 It is recommended that you always install the latest patches, minor releases, and security updates for your
 database system. Database versions that have reached end-of-life are no longer supported by the 3D City Database.
