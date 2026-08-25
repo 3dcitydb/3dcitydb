@@ -246,8 +246,7 @@ DECLARE
   property_ids bigint[] := '{}';
   current_ids bigint[];
 BEGIN
-  current_ids := COALESCE(visited_ids, '{}'::bigint[]) ||
-    COALESCE(pid_array, '{}'::bigint[]);
+  current_ids := visited_ids || pid_array;
 
   WITH parent_refs AS (
     SELECT
@@ -815,14 +814,21 @@ $body$
 LANGUAGE plpgsql STRICT;
 
 /******************************************************************
-* terminate feature based on an id array
+* terminate feature based on an id array with cycle tracking
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid_array bigint[], metadata JSONB DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS SETOF BIGINT AS
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature_internal(
+  pid_array bigint[],
+  metadata JSONB,
+  cascade BOOLEAN,
+  visited_ids bigint[]) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
   terminated_ids bigint[] := '{}';
   child_feature_ids bigint[] := '{}';
+  current_ids bigint[];
 BEGIN
+  current_ids := visited_ids || pid_array;
+
   WITH terminated_objects AS (
     UPDATE
       feature f
@@ -855,11 +861,12 @@ BEGIN
       property p,
       unnest(terminated_ids) AS a(a_id)
     WHERE
-      p.feature_id = a.a_id AND val_relation_type = 1;
+      p.feature_id = a.a_id AND val_relation_type = 1
+      AND NOT (p.val_feature_id = ANY(current_ids));
 
     IF -1 = ALL(child_feature_ids) IS NOT NULL THEN
       PERFORM
-        citydb_pkg.terminate_feature(array_agg(a.a_id), metadata, cascade)
+        citydb_pkg.terminate_feature_internal(array_agg(a.a_id), metadata, cascade, current_ids)
       FROM
         (SELECT DISTINCT unnest(child_feature_ids) AS a_id) a
       WHERE NOT EXISTS
@@ -878,6 +885,18 @@ BEGIN
 
   RETURN QUERY
     SELECT unnest(terminated_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+
+/******************************************************************
+* terminate feature based on an id array
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid_array bigint[], metadata JSONB DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS SETOF BIGINT AS
+$body$
+BEGIN
+  RETURN QUERY
+    SELECT citydb_pkg.terminate_feature_internal($1, metadata, cascade, '{}'::bigint[]);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
