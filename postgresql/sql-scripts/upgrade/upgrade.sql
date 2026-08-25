@@ -36,5 +36,9 @@ $$;
 \ir ../citydb-pkg/delete.sql
 \ir ../citydb-pkg/schema-mapping.sql
 
+-- get the new version
+SELECT version AS new_version FROM citydb_pkg.citydb_version()
+\gset
+
 \echo
-\echo '3DCityDB instance successfully upgraded to version ':version_string'.'
+\echo '3DCityDB instance successfully upgraded to version ':new_version'.'
