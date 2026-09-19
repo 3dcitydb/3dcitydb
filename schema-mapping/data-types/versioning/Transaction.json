@@ -8,6 +8,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
       "description": "Indicates the specific type of the Transaction.",
       "type": "core:String",
+      "minOccurs": 1,
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",
@@ -21,6 +23,7 @@
       "type": "core:FeatureProperty",
       "target": "core:AbstractFeatureWithLifespan",
       "relationType": "relates",
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",
@@ -34,6 +37,7 @@
       "type": "core:FeatureProperty",
       "target": "core:AbstractFeatureWithLifespan",
       "relationType": "relates",
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",

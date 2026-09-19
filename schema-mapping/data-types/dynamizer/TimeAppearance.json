@@ -8,6 +8,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the appearance value at the given timepoint.",
       "type": "core:AppearanceProperty",
+      "minOccurs": 1,
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",

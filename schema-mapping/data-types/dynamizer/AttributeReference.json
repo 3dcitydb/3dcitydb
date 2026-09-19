@@ -14,7 +14,8 @@
       "value": {
         "column": "val_int",
         "type": "integer"
-      }
+      },
+      "maxOccurs": 1
     }
   ]
 }

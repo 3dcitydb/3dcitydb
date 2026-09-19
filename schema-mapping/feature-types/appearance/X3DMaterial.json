@@ -4,40 +4,14 @@
   "table": "surface_data",
   "properties": [
     {
-      "name": "shininess",
-      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
-      "description": "Specifies the sharpness of the specular highlight.",
-      "value": {
-        "column": "x3d_shininess",
-        "type": "double"
-      }
-    },
-    {
-      "name": "transparency",
-      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
-      "description": "Specifies the degree of transparency of the surface geometry object.",
-      "value": {
-        "column": "x3d_transparency",
-        "type": "double"
-      }
-    },
-    {
       "name": "ambientIntensity",
       "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
       "description": "Specifies the minimum percentage of diffuseColor that is visible regardless of light sources.",
       "value": {
         "column": "x3d_ambient_intensity",
         "type": "double"
-      }
-    },
-    {
-      "name": "specularColor",
-      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
-      "description": "Specifies the color of the light directly reflected by the surface geometry object.",
-      "value": {
-        "column": "x3d_specular_color",
-        "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "diffuseColor",
@@ -46,7 +20,8 @@
       "value": {
         "column": "x3d_diffuse_color",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "emissiveColor",
@@ -55,7 +30,38 @@
       "value": {
         "column": "x3d_emissive_color",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
+    },
+    {
+      "name": "specularColor",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "description": "Specifies the color of the light directly reflected by the surface geometry object.",
+      "value": {
+        "column": "x3d_specular_color",
+        "type": "string"
+      },
+      "maxOccurs": 1
+    },
+    {
+      "name": "shininess",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "description": "Specifies the sharpness of the specular highlight.",
+      "value": {
+        "column": "x3d_shininess",
+        "type": "double"
+      },
+      "maxOccurs": 1
+    },
+    {
+      "name": "transparency",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "description": "Specifies the degree of transparency of the surface geometry object.",
+      "value": {
+        "column": "x3d_transparency",
+        "type": "double"
+      },
+      "maxOccurs": 1
     },
     {
       "name": "isSmooth",
@@ -64,7 +70,8 @@
       "value": {
         "column": "x3d_is_smooth",
         "type": "boolean"
-      }
+      },
+      "maxOccurs": 1
     }
   ]
 }

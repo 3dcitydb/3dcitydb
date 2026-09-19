@@ -7,7 +7,8 @@
       "name": "trafficDirection",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
       "description": "Indicates the direction of traffic flow relative to the corresponding linear geometry representation.",
-      "type": "core:String"
+      "type": "core:String",
+      "maxOccurs": 1
     },
     {
       "name": "occupancy",
@@ -52,14 +53,16 @@
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
       "description": "Relates to a 3D MultiSurface geometry that represents the transportation space in Level of Detail 1. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
-      "target": "core:MultiSurface"
+      "target": "core:MultiSurface",
+      "maxOccurs": 1
     },
     {
       "name": "lod4MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
       "description": "Relates to a 3D MultiSurface geometry that represents the transportation space in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
-      "target": "core:MultiSurface"
+      "target": "core:MultiSurface",
+      "maxOccurs": 1
     }
   ]
 }

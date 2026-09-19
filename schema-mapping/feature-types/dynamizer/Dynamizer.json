@@ -7,19 +7,23 @@
       "name": "attributeRef",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the attribute of a feature whose value is overridden or replaced by the (dynamic) values specified by the Dynamizer.",
-      "type": "dyn:AttributeReference"
+      "type": "dyn:AttributeReference",
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "startTime",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the beginning of the time span for which the Dynamizer provides dynamic values.",
-      "type": "core:TimePosition"
+      "type": "core:TimePosition",
+      "maxOccurs": 1
     },
     {
       "name": "endTime",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the end of the time span for which the Dynamizer provides dynamic values.",
-      "type": "core:TimePosition"
+      "type": "core:TimePosition",
+      "maxOccurs": 1
     },
     {
       "name": "dynamicData",
@@ -27,13 +31,15 @@
       "description": "Relates to the timeseries data.",
       "type": "core:FeatureProperty",
       "target": "dyn:AbstractTimeseries",
-      "relationType": "contains"
+      "relationType": "contains",
+      "maxOccurs": 1
     },
     {
       "name": "sensorConnection",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Relates to the sensor API that delivers timeseries data.",
-      "type": "dyn:SensorConnection"
+      "type": "dyn:SensorConnection",
+      "maxOccurs": 1
     }
   ]
 }

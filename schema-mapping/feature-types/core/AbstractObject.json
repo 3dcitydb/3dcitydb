@@ -10,7 +10,9 @@
       "value": {
         "column": "id",
         "type": "integer"
-      }
+      },
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "objectId",
@@ -19,7 +21,8 @@
       "value": {
         "column": "objectid",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "identifier",
@@ -28,7 +31,8 @@
       "value": {
         "column": "identifier",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "codeSpace",
@@ -38,7 +42,9 @@
         "column": "identifier_codespace",
         "type": "string"
       },
-      "parent": 1
+      "parent": 1,
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "envelope",
@@ -47,7 +53,8 @@
       "value": {
         "column": "envelope",
         "type": "core:Envelope"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "objectClassId",
@@ -56,7 +63,8 @@
       "value": {
         "column": "objectclass_id",
         "type": "integer"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "lastModificationDate",
@@ -65,7 +73,8 @@
       "value": {
         "column": "last_modification_date",
         "type": "timestamp"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "updatingPerson",
@@ -74,7 +83,8 @@
       "value": {
         "column": "updating_person",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "reasonForUpdate",
@@ -83,7 +93,8 @@
       "value": {
         "column": "reason_for_update",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "lineage",
@@ -92,19 +103,22 @@
       "value": {
         "column": "lineage",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "description",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Specifies a text description of the object.",
-      "type": "core:StringOrRef"
+      "type": "core:StringOrRef",
+      "maxOccurs": 1
     },
     {
       "name": "descriptionReference",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Specifies a reference to a remote text description of the object.",
-      "type": "core:Reference"
+      "type": "core:Reference",
+      "maxOccurs": 1
     },
     {
       "name": "name",
