@@ -1,5 +1,38 @@
+SET client_min_messages TO NOTICE;
+
+\echo 'Upgrading 3DCityDB schemas to version 5.2.0 ...'
+\echo
+
+DO $$
+DECLARE
+  schema_name text;
+BEGIN
+  FOR schema_name IN
+    SELECT nspname FROM pg_catalog.pg_class c
+    JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+    WHERE c.relname = 'database_srs' AND c.relkind = 'r'
+  LOOP
+    EXECUTE format('set search_path to %I, citydb_pkg, public', schema_name);
+    RAISE NOTICE 'Upgrading schema "%" ...', schema_name;
+
+    RAISE NOTICE 'Setting "objectclass.is_toplevel" to true for GenericThematicSurface ...';
+    UPDATE objectclass SET is_toplevel = 1 WHERE id = 203;
+  END LOOP;
+END
+$$;
+
 SELECT format($sql$
-CREATE OR REPLACE FUNCTION %I.log_feature_changes() RETURNS TRIGGER AS
+SET search_path TO %I, citydb_pkg, public;
+
+DO $$
+BEGIN
+  RAISE NOTICE E'Re-creating changelog triggers on "feature" table ...\n';
+END
+$$;
+
+DROP TRIGGER IF EXISTS feature_changelog_trigger ON feature;
+
+CREATE OR REPLACE FUNCTION log_feature_changes() RETURNS TRIGGER AS
 $body$
 DECLARE
   v_feature_id bigint;
@@ -45,17 +78,17 @@ BEGIN
 
   SELECT is_toplevel
   INTO v_is_toplevel
-  FROM %I.objectclass o
+  FROM objectclass o
   WHERE id = v_objectclass_id;
 
   IF v_is_toplevel = 1
      AND (v_objectclass_id <> 203 OR NOT EXISTS (
        SELECT 1
-       FROM %I.property p
+       FROM property p
        WHERE p.val_feature_id = v_feature_id
          AND p.val_relation_type = 1
      )) THEN
-    INSERT INTO %I.feature_changelog (
+    INSERT INTO feature_changelog (
       feature_id, objectclass_id, objectid, identifier, identifier_codespace,
       envelope, transaction_type, transaction_date, db_user, reason_for_update
     ) VALUES (
@@ -70,14 +103,18 @@ BEGIN
 
   RETURN NULL;
 END;
-$body$ LANGUAGE plpgsql
-$sql$, :'SCHEMA_NAME', :'SCHEMA_NAME', :'SCHEMA_NAME', :'SCHEMA_NAME')
-\gexec
+$body$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER feature_changelog_delete_trigger
-  BEFORE DELETE ON :SCHEMA_NAME.feature
-  FOR EACH ROW EXECUTE PROCEDURE :SCHEMA_NAME.log_feature_changes();
+  BEFORE DELETE ON feature
+  FOR EACH ROW EXECUTE PROCEDURE log_feature_changes();
 
 CREATE OR REPLACE TRIGGER feature_changelog_insert_update_trigger
-  AFTER INSERT OR UPDATE ON :SCHEMA_NAME.feature
-  FOR EACH ROW EXECUTE PROCEDURE :SCHEMA_NAME.log_feature_changes();
+  AFTER INSERT OR UPDATE ON feature
+  FOR EACH ROW EXECUTE PROCEDURE log_feature_changes();
+
+$sql$, nspname)
+FROM pg_catalog.pg_class c
+JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+WHERE c.relname = 'feature_changelog' AND c.relkind = 'r'
+\gexec

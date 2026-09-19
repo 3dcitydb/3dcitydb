@@ -14,6 +14,14 @@ END AS do_action
 \gset
 \ir :do_action
 
+-- check upgrade to 5.2.0
+SELECT CASE
+  WHEN :current_major = 5 AND :current_minor <= 1 THEN 'upgrade-5.2.0.sql'
+  ELSE '../util/do-nothing.sql'
+END AS do_action
+\gset
+\ir :do_action
+
 \echo 'Upgrading schema "citydb_pkg" ...'
 
 DO $$
