@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+- Fixed `GenericThematicSurface` not being treated as a top-level feature and updated the corresponding metadata in the
+  `objectclass` table.
+
 ## [5.1.4] - 2026-08-25
 
 ### Changed
