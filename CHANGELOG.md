@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Changed
+- PostGIS 3.3 is now the minimum supported version.
+
 ### Fixed
 - Fixed `GenericThematicSurface` not being treated as a top-level feature and updated the corresponding metadata in the
   `objectclass` table.
