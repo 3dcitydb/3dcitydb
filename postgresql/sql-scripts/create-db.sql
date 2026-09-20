@@ -7,9 +7,10 @@ SET client_min_messages TO WARNING;
 \set CHANGELOG :changelog
 \set SCHEMA_NAME citydb
 
--- check if the PostGIS extension is available
-SELECT postgis_lib_version() AS postgis_version
-\gset
+-- check PostGIS version
+\echo
+\echo 'Checking PostGIS version ...'
+\ir util/check-postgis-version.sql
 
 -- check if the provided SRID is supported
 \echo

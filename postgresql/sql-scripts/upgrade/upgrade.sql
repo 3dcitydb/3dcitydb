@@ -1,3 +1,7 @@
+-- check PostGIS version
+\echo 'Checking PostGIS version ...'
+\ir ../util/check-postgis-version.sql
+
 -- check upgrade to 5.1.0
 SELECT CASE
   WHEN :current_major = 5 AND :current_minor < 1 THEN 'upgrade-5.1.0.sql'

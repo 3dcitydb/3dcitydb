@@ -6,6 +6,13 @@
 - Added `minOccurs` and `maxOccurs` multiplicity attributes to properties in the JSON schema mapping.
   `minOccurs` defaults to `0`; omitting `maxOccurs` denotes an unbounded maximum.
 
+### Changed
+- PostGIS 3.3 is now the minimum supported version.
+
+### Fixed
+- Fixed `GenericThematicSurface` not being treated as a top-level feature and updated the corresponding metadata in the
+  `objectclass` table.
+
 ## [5.1.4] - 2026-08-25
 
 ### Changed
