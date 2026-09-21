@@ -2,12 +2,6 @@ name: Build/push dev Docker images
 
 on:
   pull_request:
-  workflow_dispatch:
-    inputs:
-      pr-number:
-        description: "Pull Request Number"
-        required: true
-        default: "0"
 
 env:
   REGISTRY: ghcr.io
@@ -18,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        baseimage-tag: ["18-3.6"] # base image tags for 'edge' image
-        variant: ["", "-alpine"] # image variants: '' = debian
+        baseimage-tag: ["18-3.6"]
+        variant: ["", "-alpine"]
     permissions:
       contents: read
       packages: write
@@ -31,9 +25,10 @@ jobs:
         run: |
           tmp=${{ github.event.pull_request.head.sha }}
           echo "sha_short=${tmp::7}" >> $GITHUB_OUTPUT
-      - name: set lower case owner name
+      - name: Set lower case owner name
+        id: owner
         run: |
-          echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+          echo "owner_lc=${OWNER,,}" >> "$GITHUB_OUTPUT"
         env:
           OWNER: "${{ github.repository_owner }}"
       - name: Log in to the Github Container Registry
@@ -47,11 +42,11 @@ jobs:
         uses: docker/metadata-action@v6
         with:
           images: |
-            ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY }}/${{ steps.owner.outputs.owner_lc }}/${{ env.IMAGE_NAME }}
           tags: |
-            # Latest tag for PR, PR number only
+            # Pull request tag.
             type=ref,event=pr,prefix=3dcitydb-pr-,suffix=${{ matrix.variant }}
-            # Tag for with commit sha appended
+            # Pull request tag with commit SHA appended.
             type=ref,event=pr,prefix=3dcitydb-pr-,suffix=-${{ steps.sha-short.outputs.sha_short }}${{ matrix.variant }}
           labels: |
             maintainer=Bruno Willenborg
@@ -78,5 +73,5 @@ jobs:
 
       - name: Print image names
         run: |
-          echo "${{ env.REGISTRY }}/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.number }}${{ matrix.variant }}"
-          echo "${{ env.REGISTRY }}/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.number }}-${{ steps.sha-short.outputs.sha_short }}${{ matrix.variant }}"
+          echo "${{ env.REGISTRY }}/${{ steps.owner.outputs.owner_lc }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.number }}${{ matrix.variant }}"
+          echo "${{ env.REGISTRY }}/${{ steps.owner.outputs.owner_lc }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.number }}-${{ steps.sha-short.outputs.sha_short }}${{ matrix.variant }}"
