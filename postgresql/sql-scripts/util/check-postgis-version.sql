@@ -1,9 +1,14 @@
 -- check the PostGIS version
 DO $$
 DECLARE
+  required_major_version CONSTANT int := @majorVersion@;
+  required_minor_version CONSTANT int := @minorVersion@;
+  required_revision CONSTANT int := @minorRevision@;
+
   version text;
   major_version int;
   minor_version int;
+  minor_revision int;
 BEGIN
   BEGIN
     version := postgis_lib_version();
@@ -14,10 +19,16 @@ BEGIN
 
   major_version := split_part(version, '.', 1)::int;
   minor_version := split_part(version, '.', 2)::int;
+  minor_revision := split_part(version, '.', 3)::int;
 
-  IF major_version < 3
-     OR (major_version = 3 AND minor_version < 3) THEN
-    RAISE EXCEPTION 'PostGIS version % is not supported. Version 3.3 or newer is required.', version;
+  IF major_version < required_major_version
+     OR (major_version = required_major_version
+         AND minor_version < required_minor_version)
+     OR (major_version = required_major_version
+         AND minor_version = required_minor_version
+         AND minor_revision < required_revision) THEN
+    RAISE EXCEPTION 'PostGIS version % is not supported. Version %.%.% or newer is required.',
+      version, required_major_version, required_minor_version, required_revision;
   END IF;
 END
 $$;
