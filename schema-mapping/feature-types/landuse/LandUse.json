@@ -7,7 +7,8 @@
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/landuse/5.0",
       "description": "Indicates the specific type of the LandUse.",
-      "type": "core:Code"
+      "type": "core:Code",
+      "maxOccurs": 1
     },
     {
       "name": "function",

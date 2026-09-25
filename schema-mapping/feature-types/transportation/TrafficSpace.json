@@ -7,7 +7,8 @@
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
       "description": "Indicates the specific type of the TrafficSpace.",
-      "type": "core:Code"
+      "type": "core:Code",
+      "maxOccurs": 1
     },
     {
       "name": "function",
@@ -25,13 +26,16 @@
       "name": "granularity",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
       "description": "Defines whether traffic spaces are represented by individual ways or by individual lanes, depending on the desired level of spatial and semantic decomposition.",
-      "type": "core:String"
+      "type": "core:String",
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "trafficDirection",
       "namespace": "http://3dcitydb.org/3dcitydb/transportation/5.0",
       "description": "Indicates the direction of traffic flow relative to the corresponding linear geometry representation.",
-      "type": "core:String"
+      "type": "core:String",
+      "maxOccurs": 1
     },
     {
       "name": "occupancy",

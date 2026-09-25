@@ -14,7 +14,9 @@
       "value": {
         "column": "val_uom",
         "type": "string"
-      }
+      },
+      "minOccurs": 1,
+      "maxOccurs": 1
     }
   ]
 }

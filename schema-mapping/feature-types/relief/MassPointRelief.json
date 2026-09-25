@@ -8,7 +8,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
       "description": "Relates to the 3D MultiPoint geometry of the MassPointRelief.",
       "type": "core:GeometryProperty",
-      "target": "core:MultiPoint"
+      "target": "core:MultiPoint",
+      "maxOccurs": 1
     },
     {
       "name": "pointCloud",
@@ -16,7 +17,8 @@
       "description": "Relates to the 3D PointCloud of the MassPointRelief.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractPointCloud",
-      "relationType": "contains"
+      "relationType": "contains",
+      "maxOccurs": 1
     }
   ]
 }

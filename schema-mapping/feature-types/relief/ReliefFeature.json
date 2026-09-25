@@ -7,7 +7,9 @@
       "name": "lod",
       "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
       "description": "Indicates the Level of Detail of the ReliefFeature.",
-      "type": "core:Integer"
+      "type": "core:Integer",
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "reliefComponent",
@@ -15,7 +17,8 @@
       "description": "Relates to the terrain components that are part of the ReliefFeature.",
       "type": "core:FeatureProperty",
       "target": "dem:AbstractReliefComponent",
-      "relationType": "contains"
+      "relationType": "contains",
+      "minOccurs": 1
     }
   ]
 }

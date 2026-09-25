@@ -9,7 +9,8 @@
       "description": "Specifies the city objects that are part of the CityModel.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractCityObject",
-      "relationType": "contains"
+      "relationType": "contains",
+      "maxOccurs": 1
     },
     {
       "name": "versionMember",
@@ -17,7 +18,8 @@
       "description": "Specifies the different versions of the CityModel.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractVersion",
-      "relationType": "contains"
+      "relationType": "contains",
+      "maxOccurs": 1
     },
     {
       "name": "versionTransitionMember",
@@ -25,13 +27,15 @@
       "description": "Specifies the transitions between the different versions of the CityModel.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractVersionTransition",
-      "relationType": "contains"
+      "relationType": "contains",
+      "maxOccurs": 1
     },
     {
       "name": "appearanceMember",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Specifies the appearances of the CityModel.",
-      "type": "core:AppearanceProperty"
+      "type": "core:AppearanceProperty",
+      "maxOccurs": 1
     },
     {
       "name": "featureMember",
@@ -39,7 +43,8 @@
       "description": "Specifies the feature objects that are part of the CityModel. It allows to include features that are not derived from core:AbstractCityObject.",
       "type": "core:FeatureProperty",
       "target": "core:AbstractFeature",
-      "relationType": "contains"
+      "relationType": "contains",
+      "maxOccurs": 1
     }
   ]
 }

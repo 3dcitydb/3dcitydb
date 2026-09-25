@@ -8,14 +8,16 @@
       "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
       "description": "Relates to the 3D MultiCurve geometry of the ridge or valley lines of the BreaklineRelief.",
       "type": "core:GeometryProperty",
-      "target": "core:MultiLineString"
+      "target": "core:MultiLineString",
+      "maxOccurs": 1
     },
     {
       "name": "breaklines",
       "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
       "description": "Relates to the 3D MultiCurve geometry of the break lines of the BreaklineRelief.",
       "type": "core:GeometryProperty",
-      "target": "core:MultiLineString"
+      "target": "core:MultiLineString",
+      "maxOccurs": 1
     }
   ]
 }

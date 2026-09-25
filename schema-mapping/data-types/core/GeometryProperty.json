@@ -10,7 +10,8 @@
       "value": {
         "column": "val_lod",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     }
   ],
   "join": {

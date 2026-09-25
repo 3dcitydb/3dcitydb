@@ -8,6 +8,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies how often the timeseries that is referenced by the TimeseriesComponent should be iterated.",
       "type": "core:Integer",
+      "minOccurs": 1,
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",
@@ -19,6 +21,7 @@
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies how much extra time is added after all repetitions as an additional gap.",
       "type": "core:Duration",
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",
@@ -32,6 +35,8 @@
       "type": "core:FeatureProperty",
       "target": "dyn:AbstractTimeseries",
       "relationType": "contains",
+      "minOccurs": 1,
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",

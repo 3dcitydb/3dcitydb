@@ -21,6 +21,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Indicates the specific type of the CityObjectRelation.",
       "type": "core:Code",
+      "minOccurs": 1,
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",

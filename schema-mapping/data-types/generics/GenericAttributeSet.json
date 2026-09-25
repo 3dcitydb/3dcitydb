@@ -1,5 +1,17 @@
 {
   "identifier": "gen:GenericAttributeSet",
   "description": "A GenericAttributeSet is a named collection of generic attributes.",
-  "table": "property"
+  "table": "property",
+  "properties": [
+    {
+      "name": "codeSpace",
+      "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
+      "description": "Associates the GenericAttributeSet with an authority that maintains the collection of generic attributes.",
+      "value": {
+        "column": "val_codespace",
+        "type": "string"
+      },
+      "maxOccurs": 1
+    }
+  ]
 }

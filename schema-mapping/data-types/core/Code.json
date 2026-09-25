@@ -14,7 +14,8 @@
       "value": {
         "column": "val_codespace",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     }
   ]
 }

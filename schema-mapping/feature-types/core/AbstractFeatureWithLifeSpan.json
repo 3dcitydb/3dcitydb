@@ -10,7 +10,8 @@
       "value": {
         "column": "creation_date",
         "type": "timestamp"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "terminationDate",
@@ -19,7 +20,8 @@
       "value": {
         "column": "termination_date",
         "type": "timestamp"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "validFrom",
@@ -28,7 +30,8 @@
       "value": {
         "column": "valid_from",
         "type": "timestamp"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "validTo",
@@ -37,7 +40,8 @@
       "value": {
         "column": "valid_to",
         "type": "timestamp"
-      }
+      },
+      "maxOccurs": 1
     }
   ]
 }
