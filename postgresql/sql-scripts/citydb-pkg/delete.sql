@@ -190,10 +190,12 @@ BEGIN
       citydb_pkg.delete_feature(array_agg(a.a_id))
     FROM
       (SELECT DISTINCT unnest(feature_ids) AS a_id) a
-    LEFT JOIN
-      property p
-      ON p.val_feature_id = a.a_id
-    WHERE p.val_feature_id IS NULL OR p.val_relation_type IS NULL OR p.val_relation_type = 0;
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM property p
+      WHERE p.val_feature_id = a.a_id
+        AND p.val_relation_type = 1
+    );
   END IF;
 
   IF -1 = ALL(geometry_ids) IS NOT NULL THEN
