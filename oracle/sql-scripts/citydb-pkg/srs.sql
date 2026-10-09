@@ -6,11 +6,11 @@
 
 -- Package declaration
 CREATE OR REPLACE PACKAGE citydb_srs
+AUTHID DEFINER
 AS
   FUNCTION get_coord_ref_sys_info (p_srid IN INTEGER) RETURN crs_info_tab;
   FUNCTION is_coord_ref_sys_3d (p_srid IN INTEGER) RETURN INTEGER;
   FUNCTION is_db_coord_ref_sys_3d RETURN INTEGER;
-  FUNCTION is_db_coord_ref_sys_3d (p_schema_name IN VARCHAR2) RETURN INTEGER;
   FUNCTION check_srid (p_srid IN INTEGER DEFAULT 0) RETURN INTEGER;
   FUNCTION transform_or_null (p_geom IN SDO_GEOMETRY, p_srid IN INTEGER) RETURN SDO_GEOMETRY;
   PROCEDURE change_schema_srid (p_target_srid IN INTEGER, p_target_srs_name IN VARCHAR2, p_transform IN INTEGER DEFAULT 0);
@@ -107,28 +107,6 @@ AS
   EXCEPTION
     WHEN NO_DATA_FOUND THEN
       RETURN 0;
-  END is_db_coord_ref_sys_3d;
-
-  /*****************************************************************
-  * Function IS_DB_COORD_REF_SYS_3D
-  *
-  * Parameters:
-  *   - p_schema_name => Name of the target schema
-  *
-  * Return value:
-  *   - INTEGER => The boolean result encoded as INTEGER: 0 = false, 1 = true
-  ******************************************************************/
-  FUNCTION is_db_coord_ref_sys_3d (
-    p_schema_name IN VARCHAR2
-  )
-  RETURN INTEGER
-  IS
-    v_schema_name VARCHAR2(128);
-    v_srid INTEGER;
-  BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(p_schema_name);
-    EXECUTE IMMEDIATE 'SELECT ' || v_schema_name || '.citydb_srs.is_db_coord_ref_sys_3d FROM dual' INTO v_srid;
-    RETURN v_srid;
   END is_db_coord_ref_sys_3d;
 
   /*******************************************************************
