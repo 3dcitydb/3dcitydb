@@ -168,7 +168,7 @@ BEGIN
   )
   SELECT
     array_agg(id),
-    array_agg(val_feature_id),
+    array_agg(val_feature_id) FILTER (WHERE val_relation_type = 1),
     array_agg(val_geometry_id),
     array_agg(val_implicitgeom_id),
     array_agg(val_appearance_id),
@@ -181,19 +181,19 @@ BEGIN
     appearance_ids,
     address_ids
   FROM
-    property_ids
-  WHERE
-    val_feature_id IS NULL OR val_relation_type = 1;
+    property_ids;
 
   IF -1 = ALL(feature_ids) IS NOT NULL THEN
     PERFORM
       citydb_pkg.delete_feature(array_agg(a.a_id))
     FROM
       (SELECT DISTINCT unnest(feature_ids) AS a_id) a
-    LEFT JOIN
-      property p
-      ON p.val_feature_id = a.a_id
-    WHERE p.val_feature_id IS NULL OR p.val_relation_type IS NULL OR p.val_relation_type = 0;
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM property p
+      WHERE p.val_feature_id = a.a_id
+        AND p.val_relation_type = 1
+    );
   END IF;
 
   IF -1 = ALL(geometry_ids) IS NOT NULL THEN
@@ -256,7 +256,8 @@ BEGIN
     INNER JOIN unnest($1) AS a(a_id) ON c.id = a.a_id
     INNER JOIN property p ON p.id = c.parent_id
     WHERE
-      p.name = c.name AND p.namespace_id = c.namespace_id
+      p.name IS NOT DISTINCT FROM c.name
+      AND p.namespace_id IS NOT DISTINCT FROM c.namespace_id
       AND NOT (p.id = ANY(current_ids))
   )
   SELECT
