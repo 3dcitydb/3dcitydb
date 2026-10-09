@@ -168,11 +168,11 @@ BEGIN
   )
   SELECT
     array_agg(id),
-    array_agg(val_feature_id) FILTER (WHERE val_feature_id IS NULL OR val_relation_type = 1),
-    array_agg(val_geometry_id) FILTER (WHERE val_feature_id IS NULL OR val_relation_type = 1),
-    array_agg(val_implicitgeom_id) FILTER (WHERE val_feature_id IS NULL OR val_relation_type = 1),
-    array_agg(val_appearance_id) FILTER (WHERE val_feature_id IS NULL OR val_relation_type = 1),
-    array_agg(val_address_id) FILTER (WHERE val_feature_id IS NULL OR val_relation_type = 1)
+    array_agg(val_feature_id) FILTER (WHERE val_relation_type = 1),
+    array_agg(val_geometry_id),
+    array_agg(val_implicitgeom_id),
+    array_agg(val_appearance_id),
+    array_agg(val_address_id)
   INTO
     deleted_ids,
     feature_ids,
