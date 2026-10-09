@@ -258,7 +258,8 @@ BEGIN
     INNER JOIN unnest($1) AS a(a_id) ON c.id = a.a_id
     INNER JOIN property p ON p.id = c.parent_id
     WHERE
-      p.name = c.name AND p.namespace_id = c.namespace_id
+      p.name IS NOT DISTINCT FROM c.name
+      AND p.namespace_id IS NOT DISTINCT FROM c.namespace_id
       AND NOT (p.id = ANY(current_ids))
   )
   SELECT
