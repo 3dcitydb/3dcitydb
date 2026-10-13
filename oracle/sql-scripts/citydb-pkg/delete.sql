@@ -253,30 +253,30 @@ AS
   END delete_property_row;
 
   /******************************************************************
-  * delete from PROPERTY table based on an id array
+  * delete from PROPERTY table based on an id array with cycle tracking
   ******************************************************************/
-  FUNCTION delete_property(pid_array NUMBER_TAB) RETURN NUMBER_TAB
+  FUNCTION delete_property_internal(pid_array NUMBER_TAB, visited_ids NUMBER_TAB) RETURN NUMBER_TAB
   IS
     cascade_delete_ids NUMBER_TAB := NUMBER_TAB();
     property_ids NUMBER_TAB := NUMBER_TAB();
-    child_ids NUMBER_TAB;
+    current_ids NUMBER_TAB;
     parent_ids NUMBER_TAB;
     deleted NUMBER_TAB;
     result NUMBER_TAB;
-    dummy NUMBER;
+    dummy NUMBER_TAB;
   BEGIN
-    SELECT c.id, p.id BULK COLLECT INTO child_ids, parent_ids
+    current_ids := visited_ids MULTISET UNION pid_array;
+
+    SELECT c.id, p.id BULK COLLECT INTO cascade_delete_ids, parent_ids
     FROM property c
     JOIN TABLE(pid_array) a ON c.id = a.COLUMN_VALUE
     JOIN property p ON p.id = c.parent_id
-    WHERE p.name = c.name AND p.namespace_id = c.namespace_id;
+    WHERE p.name = c.name AND p.namespace_id = c.namespace_id
+      AND p.id NOT IN (SELECT COLUMN_VALUE FROM TABLE(current_ids));
 
-    IF child_ids.COUNT > 0 THEN
-      cascade_delete_ids := child_ids;
-      FOR i IN 1..parent_ids.COUNT LOOP
-        dummy := delete_property(parent_ids(i));
-      END LOOP;
-    END IF;
+    FOR i IN 1..parent_ids.COUNT LOOP
+      dummy := delete_property_internal(NUMBER_TAB(parent_ids(i)), current_ids);
+    END LOOP;
 
     WITH child_refs (id) AS (
       SELECT p.id FROM property p
@@ -285,7 +285,8 @@ AS
       SELECT p.id FROM property p
       JOIN child_refs c ON p.parent_id = c.id
     )
-    SELECT id BULK COLLECT INTO property_ids FROM child_refs;
+    CYCLE id SET is_cycle TO '1' DEFAULT '0'
+    SELECT DISTINCT id BULK COLLECT INTO property_ids FROM child_refs;
 
     deleted := delete_property_row(property_ids);
 
@@ -299,6 +300,15 @@ AS
     );
 
     RETURN result;
+  END delete_property_internal;
+
+  /******************************************************************
+  * delete from PROPERTY table based on an id array
+  ******************************************************************/
+  FUNCTION delete_property(pid_array NUMBER_TAB) RETURN NUMBER_TAB
+  IS
+  BEGIN
+    RETURN delete_property_internal(pid_array, NUMBER_TAB());
   END delete_property;
 
   /******************************************************************
@@ -529,15 +539,18 @@ CREATE OR REPLACE PACKAGE BODY citydb_terminate
 AS
 
   /******************************************************************
-  * terminate feature based on an id array
+  * terminate feature based on an id array with cycle tracking
   ******************************************************************/
-  FUNCTION terminate_feature(pid_array NUMBER_TAB, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER_TAB
+  FUNCTION terminate_feature_internal(pid_array NUMBER_TAB, metadata JSON, cascade NUMBER, visited_ids NUMBER_TAB) RETURN NUMBER_TAB
   IS
     terminated_ids NUMBER_TAB := NUMBER_TAB();
     child_feature_ids NUMBER_TAB := NUMBER_TAB();
+    current_ids NUMBER_TAB;
     temp NUMBER_TAB;
     dummy NUMBER_TAB;
   BEGIN
+    current_ids := visited_ids MULTISET UNION pid_array;
+
     UPDATE feature f SET
       termination_date = COALESCE(
         TO_TIMESTAMP_TZ(JSON_VALUE(metadata, '$.termination_date'), 'YYYY-MM-DD"T"HH24:MI:SS.FFTZH:TZM'),
@@ -556,7 +569,8 @@ AS
       FROM property p
       WHERE p.feature_id IN (SELECT COLUMN_VALUE FROM TABLE(terminated_ids))
         AND p.val_relation_type = 1
-        AND p.val_feature_id IS NOT NULL;
+        AND p.val_feature_id IS NOT NULL
+        AND p.val_feature_id NOT IN (SELECT COLUMN_VALUE FROM TABLE(current_ids));
 
       IF child_feature_ids.COUNT > 0 THEN
         SELECT DISTINCT a.COLUMN_VALUE BULK COLLECT INTO temp
@@ -570,12 +584,21 @@ AS
         );
 
         IF temp.COUNT > 0 THEN
-          dummy := terminate_feature(temp, metadata, cascade);
+          dummy := terminate_feature_internal(temp, metadata, cascade, current_ids);
         END IF;
       END IF;
     END IF;
 
     RETURN terminated_ids;
+  END terminate_feature_internal;
+
+  /******************************************************************
+  * terminate feature based on an id array
+  ******************************************************************/
+  FUNCTION terminate_feature(pid_array NUMBER_TAB, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER_TAB
+  IS
+  BEGIN
+    RETURN terminate_feature_internal(pid_array, metadata, cascade, NUMBER_TAB());
   END terminate_feature;
 
   /******************************************************************
