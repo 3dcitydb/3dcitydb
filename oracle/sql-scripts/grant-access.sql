@@ -82,6 +82,18 @@ BEGIN
             FROM all_objects
            WHERE owner = target_schema
              AND upper(object_type) = 'PACKAGE'
+             AND object_name = 'CITYDB_TERMINATE'
+    ) LOOP
+      EXECUTE IMMEDIATE 'grant execute on '||target_schema||'."'||rec.object_name||'" to "'||user_name||'"';
+    END LOOP;
+  END IF;
+
+  IF upper('&ACCESS_MODE') = 'RW' THEN
+    FOR rec IN (
+          SELECT object_name
+            FROM all_objects
+           WHERE owner = target_schema
+             AND upper(object_type) = 'PACKAGE'
              AND object_name = 'CITYDB_DELETE'
     ) LOOP
       EXECUTE IMMEDIATE 'grant execute on '||target_schema||'."'||rec.object_name||'" to "'||user_name||'"';

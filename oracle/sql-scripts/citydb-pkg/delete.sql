@@ -1,7 +1,10 @@
 /*****************************************************************
- * CONTENT: PL/SQL Package CITYDB_DELETE
+ * CONTENT: PL/SQL Packages CITYDB_DELETE and CITYDB_TERMINATE
  *
- * Methods for deleting data from the 3DCityDB
+ * CITYDB_DELETE: Methods for deleting data from the 3DCityDB
+ *   (granted to RW access mode only)
+ * CITYDB_TERMINATE: Methods for terminating features, which only
+ *   updates the FEATURE table (granted to RU and RW access modes)
  *****************************************************************/
 
 -- Package declaration
@@ -26,8 +29,6 @@ AS
   FUNCTION delete_tex_image(pid NUMBER) RETURN NUMBER;
   FUNCTION delete_address(pid_array NUMBER_TAB) RETURN NUMBER_TAB;
   FUNCTION delete_address(pid NUMBER) RETURN NUMBER;
-  FUNCTION terminate_feature(pid_array NUMBER_TAB, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER_TAB;
-  FUNCTION terminate_feature(pid NUMBER, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER;
 END citydb_delete;
 /
 
@@ -489,6 +490,22 @@ AS
     IF result.COUNT > 0 THEN RETURN result(1); ELSE RETURN NULL; END IF;
   END delete_address;
 
+END citydb_delete;
+/
+
+-- Package declaration
+CREATE OR REPLACE PACKAGE citydb_terminate
+AUTHID DEFINER
+AS
+  FUNCTION terminate_feature(pid_array NUMBER_TAB, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER_TAB;
+  FUNCTION terminate_feature(pid NUMBER, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER;
+END citydb_terminate;
+/
+
+-- Package body definition
+CREATE OR REPLACE PACKAGE BODY citydb_terminate
+AS
+
   /******************************************************************
   * terminate feature based on an id array
   ******************************************************************/
@@ -550,5 +567,5 @@ AS
     IF result.COUNT > 0 THEN RETURN result(1); ELSE RETURN NULL; END IF;
   END terminate_feature;
 
-END citydb_delete;
+END citydb_terminate;
 /
