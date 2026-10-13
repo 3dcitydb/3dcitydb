@@ -45,7 +45,7 @@ VALUES
   (200, 9, 'GenericLogicalSpace', 0, 1, 3, @gen:GenericLogicalSpace@),
   (201, 12, 'GenericOccupiedSpace', 0, 1, 3, @gen:GenericOccupiedSpace@),
   (202, 11, 'GenericUnoccupiedSpace', 0, 1, 3, @gen:GenericUnoccupiedSpace@),
-  (203, 14, 'GenericThematicSurface', 0, 0, 3, @gen:GenericThematicSurface@);
+  (203, 14, 'GenericThematicSurface', 0, 1, 3, @gen:GenericThematicSurface@);
 
 -- LandUse Module --
 

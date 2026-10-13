@@ -1,21 +1,29 @@
 /*****************************************************************
-* Returns the envelope geometry of a given feature
+* Returns the envelope geometry of a given feature while tracking
+* visited feature IDs to skip cycles.
 *
 * @param fid ID of the feature for which the envelope is computed
 * @param compute_envelope If 0 (default), returns the envelope from the ENVELOPE column unless it is NULL, in which case the envelope is computed. If 1, the envelope is always computed.
 * @param set_envelope If 1 (default = 0), the ENVELOPE column of the FEATURE table will be updated with the computed envelope.
+* @param visited_ids Feature IDs already visited on the current recursion path
 * @return Envelope geometry as required by the ENVELOPE column of the FEATURE table
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.get_feature_envelope(
+CREATE OR REPLACE FUNCTION citydb_pkg.get_feature_envelope_internal(
   fid BIGINT,
-  compute_envelope INTEGER DEFAULT 0,
-  set_envelope INTEGER DEFAULT 0) RETURNS GEOMETRY AS
+  compute_envelope INTEGER,
+  set_envelope INTEGER,
+  visited_ids BIGINT[]) RETURNS GEOMETRY AS
 $body$
 DECLARE
   bbox GEOMETRY;
   bbox_tmp GEOMETRY;
-  rec RECORD;
 BEGIN
+  IF fid = ANY(visited_ids) THEN
+    RETURN NULL;
+  END IF;
+
+  visited_ids := visited_ids || fid;
+
   IF compute_envelope = 0 THEN
     SELECT envelope INTO bbox FROM feature WHERE id = fid;
     IF bbox IS NOT NULL THEN
@@ -23,19 +31,16 @@ BEGIN
     END IF;
   END IF;
 
-  FOR rec IN
-    SELECT
-      p.val_feature_id
-    FROM
-      property p
-    WHERE
-      p.feature_id = fid
-      AND p.val_feature_id IS NOT NULL
-      AND p.val_relation_type = 1
-  LOOP
-    bbox := ST_Collect(bbox,
-      citydb_pkg.get_feature_envelope(rec.val_feature_id, compute_envelope, set_envelope));
-  END LOOP;    
+  SELECT
+    ST_Collect(citydb_pkg.get_feature_envelope_internal(
+      p.val_feature_id, compute_envelope, set_envelope, visited_ids))
+  INTO bbox
+  FROM
+    property p
+  WHERE
+    p.feature_id = fid
+    AND p.val_feature_id IS NOT NULL
+    AND p.val_relation_type = 1;
 
   SELECT ST_Collect(citydb_pkg.get_envelope(geom)) INTO bbox_tmp FROM (
     SELECT
@@ -55,14 +60,34 @@ BEGIN
       p.feature_id = fid
       AND p.val_implicitgeom_id IS NOT NULL
   ) g;
-  
+
   bbox := citydb_pkg.get_envelope(ST_Collect(bbox, bbox_tmp));
 
   IF set_envelope <> 0 THEN
     UPDATE feature SET envelope = bbox WHERE id = fid;
   END IF;
-  
+
   RETURN bbox;
+END;
+$body$
+LANGUAGE plpgsql;
+
+/*****************************************************************
+* Returns the envelope geometry of a given feature
+*
+* @param fid ID of the feature for which the envelope is computed
+* @param compute_envelope If 0 (default), returns the envelope from the ENVELOPE column unless it is NULL, in which case the envelope is computed. If 1, the envelope is always computed.
+* @param set_envelope If 1 (default = 0), the ENVELOPE column of the FEATURE table will be updated with the computed envelope.
+* @return Envelope geometry as required by the ENVELOPE column of the FEATURE table
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.get_feature_envelope(
+  fid BIGINT,
+  compute_envelope INTEGER DEFAULT 0,
+  set_envelope INTEGER DEFAULT 0) RETURNS GEOMETRY AS
+$body$
+BEGIN
+  RETURN citydb_pkg.get_feature_envelope_internal(
+    fid, compute_envelope, set_envelope, ARRAY[]::BIGINT[]);
 END;
 $body$
 LANGUAGE plpgsql;
@@ -103,16 +128,17 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_implicit_geometry_envelope(
   matrix JSONB) RETURNS GEOMETRY AS
 $body$
 DECLARE
-  envelope GEOMETRY;
+  bbox BOX3D;
+  corners GEOMETRY;
   params DOUBLE PRECISION[] := ARRAY[]::float8[];
 BEGIN
   SELECT
-    citydb_pkg.get_envelope(gd.implicit_geometry) INTO envelope
+    ST_3DExtent(gd.implicit_geometry) INTO bbox
   FROM
-    implicit_geometry ig, geometry_data gd
+    implicit_geometry ig
+  JOIN geometry_data gd ON gd.id = ig.relative_geometry_id
   WHERE
     ig.id = gid
-    AND gd.id = ig.relative_geometry_id
     AND gd.implicit_geometry IS NOT NULL;
 
   IF matrix IS NOT NULL THEN
@@ -120,11 +146,14 @@ BEGIN
       RAISE EXCEPTION 'The transformation matrix must be a JSON array';
     END IF;
 
-    params := ARRAY(SELECT jsonb_array_elements_text(matrix)::float8);
-
-    IF array_length(params, 1) < 12 THEN
+    IF jsonb_array_length(matrix) < 12 THEN
       RAISE EXCEPTION 'Invalid transformation matrix: %', matrix USING HINT = '12 elements are required';
     END IF;
+
+    params := ARRAY[
+      (matrix->>0)::float8, (matrix->>1)::float8, (matrix->>2)::float8, (matrix->>3)::float8,
+      (matrix->>4)::float8, (matrix->>5)::float8, (matrix->>6)::float8, (matrix->>7)::float8,
+      (matrix->>8)::float8, (matrix->>9)::float8, (matrix->>10)::float8, (matrix->>11)::float8];
   ELSE
     params := ARRAY[
       1, 0, 0, 0,
@@ -139,12 +168,25 @@ BEGIN
     params[12] := params[12] + ST_Z(ref_pt);
   END IF;
 
-  IF envelope IS NOT NULL THEN
-    RETURN ST_Affine(envelope,
+  IF bbox IS NOT NULL THEN
+    corners := ST_Collect(ARRAY[
+      ST_MakePoint(ST_XMin(bbox), ST_YMin(bbox), ST_ZMin(bbox)),
+      ST_MakePoint(ST_XMin(bbox), ST_YMin(bbox), ST_ZMax(bbox)),
+      ST_MakePoint(ST_XMin(bbox), ST_YMax(bbox), ST_ZMin(bbox)),
+      ST_MakePoint(ST_XMin(bbox), ST_YMax(bbox), ST_ZMax(bbox)),
+      ST_MakePoint(ST_XMax(bbox), ST_YMin(bbox), ST_ZMin(bbox)),
+      ST_MakePoint(ST_XMax(bbox), ST_YMin(bbox), ST_ZMax(bbox)),
+      ST_MakePoint(ST_XMax(bbox), ST_YMax(bbox), ST_ZMin(bbox)),
+      ST_MakePoint(ST_XMax(bbox), ST_YMax(bbox), ST_ZMax(bbox))
+    ]);
+
+    corners := ST_Affine(corners,
       params[1], params[2], params[3],
       params[5], params[6], params[7],
       params[9], params[10], params[11],
       params[4], params[8], params[12]);
+
+    RETURN citydb_pkg.get_envelope(corners);
   ELSIF ref_pt IS NOT NULL THEN
     RETURN citydb_pkg.get_envelope(ST_MakePoint(params[4], params[8], params[12]));
   ELSE

@@ -11,8 +11,12 @@ plugins {
 
 apply from: 'properties.gradle'
 
-version = '5.1.2'
+version = '5.1.4'
 group = 'org.citydb'
+
+ext {
+    postgisVersion = '3.3.0'
+}
 
 tasks.register('versionFile') {
     outputs.dir "$projectDir/build/version"
@@ -33,6 +37,8 @@ distributions.main.contents {
     Map<String, String> featureTypes = readJsonTypes('schema-mapping/feature-types')
     Map<String, String> dataTypes = readJsonTypes('schema-mapping/data-types')
     Map<String, String> version = parseVersion("$project.version")
+    Map<String, String> postgisVersion = parseVersion("$ext.postgisVersion")
+
     filteringCharset = 'UTF-8'
 
     from 'LICENSE'
@@ -54,6 +60,9 @@ distributions.main.contents {
         }
         filesMatching(['**/upgrade-db.sql', '**/util.sql']) {
             filter { String line -> replaceTokens(line, version, '', '') }
+        }
+        filesMatching(['**/check-postgis-version.sql']) {
+            filter { String line -> replaceTokens(line, postgisVersion, '', '') }
         }
     }
     into('oracle') {

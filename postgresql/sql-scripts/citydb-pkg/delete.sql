@@ -168,7 +168,7 @@ BEGIN
   )
   SELECT
     array_agg(id),
-    array_agg(val_feature_id),
+    array_agg(val_feature_id) FILTER (WHERE val_relation_type = 1),
     array_agg(val_geometry_id),
     array_agg(val_implicitgeom_id),
     array_agg(val_appearance_id),
@@ -181,19 +181,19 @@ BEGIN
     appearance_ids,
     address_ids
   FROM
-    property_ids
-  WHERE
-    val_feature_id IS NULL OR val_relation_type = 1;
+    property_ids;
 
   IF -1 = ALL(feature_ids) IS NOT NULL THEN
     PERFORM
       citydb_pkg.delete_feature(array_agg(a.a_id))
     FROM
       (SELECT DISTINCT unnest(feature_ids) AS a_id) a
-    LEFT JOIN
-      property p
-      ON p.val_feature_id = a.a_id
-    WHERE p.val_feature_id IS NULL OR p.val_relation_type IS NULL OR p.val_relation_type = 0;
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM property p
+      WHERE p.val_feature_id = a.a_id
+        AND p.val_relation_type = 1
+    );
   END IF;
 
   IF -1 = ALL(geometry_ids) IS NOT NULL THEN
@@ -235,23 +235,30 @@ $body$
 LANGUAGE plpgsql STRICT;
 
 /******************************************************************
-* delete from PROPERTY table based on an id array
+* delete from PROPERTY table based on an id array with cycle tracking
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.delete_property(pid_array bigint[]) RETURNS SETOF BIGINT AS
+CREATE OR REPLACE FUNCTION citydb_pkg.delete_property_internal(
+  pid_array BIGINT[],
+  visited_ids BIGINT[]) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
   cascade_delete_ids bigint[] := '{}';
   property_ids bigint[] := '{}';
+  current_ids bigint[];
 BEGIN
+  current_ids := visited_ids || pid_array;
+
   WITH parent_refs AS (
     SELECT
-      c.id, citydb_pkg.delete_property(p.id)
+      c.id, citydb_pkg.delete_property_internal(ARRAY[p.id], current_ids)
     FROM
       property c
     INNER JOIN unnest($1) AS a(a_id) ON c.id = a.a_id
     INNER JOIN property p ON p.id = c.parent_id
     WHERE
-      p.name = c.name AND p.namespace_id = c.namespace_id
+      p.name IS NOT DISTINCT FROM c.name
+      AND p.namespace_id IS NOT DISTINCT FROM c.namespace_id
+      AND NOT (p.id = ANY(current_ids))
   )
   SELECT
     array_agg(id)
@@ -268,7 +275,7 @@ BEGIN
       unnest($1) AS a(a_id)
     WHERE
       p.id = a.a_id
-    UNION ALL
+    UNION
     SELECT
       p.id
     FROM
@@ -290,6 +297,18 @@ BEGIN
     SELECT unnest($1)
     UNION
     SELECT unnest(cascade_delete_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+
+/******************************************************************
+* delete from PROPERTY table based on an id array
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.delete_property(pid_array bigint[]) RETURNS SETOF BIGINT AS
+$body$
+BEGIN
+  RETURN QUERY
+    SELECT citydb_pkg.delete_property_internal($1, '{}'::bigint[]);
 END;
 $body$
 LANGUAGE plpgsql STRICT;
@@ -796,14 +815,21 @@ $body$
 LANGUAGE plpgsql STRICT;
 
 /******************************************************************
-* terminate feature based on an id array
+* terminate feature based on an id array with cycle tracking
 ******************************************************************/
-CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid_array bigint[], metadata JSONB DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS SETOF BIGINT AS
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature_internal(
+  pid_array bigint[],
+  metadata JSONB,
+  cascade BOOLEAN,
+  visited_ids bigint[]) RETURNS SETOF BIGINT AS
 $body$
 DECLARE
   terminated_ids bigint[] := '{}';
   child_feature_ids bigint[] := '{}';
+  current_ids bigint[];
 BEGIN
+  current_ids := visited_ids || pid_array;
+
   WITH terminated_objects AS (
     UPDATE
       feature f
@@ -836,11 +862,12 @@ BEGIN
       property p,
       unnest(terminated_ids) AS a(a_id)
     WHERE
-      p.feature_id = a.a_id AND val_relation_type = 1;
+      p.feature_id = a.a_id AND val_relation_type = 1
+      AND NOT (p.val_feature_id = ANY(current_ids));
 
     IF -1 = ALL(child_feature_ids) IS NOT NULL THEN
       PERFORM
-        citydb_pkg.terminate_feature(array_agg(a.a_id), metadata, cascade)
+        citydb_pkg.terminate_feature_internal(array_agg(a.a_id), metadata, cascade, current_ids)
       FROM
         (SELECT DISTINCT unnest(child_feature_ids) AS a_id) a
       WHERE NOT EXISTS
@@ -859,6 +886,18 @@ BEGIN
 
   RETURN QUERY
     SELECT unnest(terminated_ids);
+END;
+$body$
+LANGUAGE plpgsql STRICT;
+
+/******************************************************************
+* terminate feature based on an id array
+******************************************************************/
+CREATE OR REPLACE FUNCTION citydb_pkg.terminate_feature(pid_array bigint[], metadata JSONB DEFAULT '{}', cascade BOOLEAN DEFAULT TRUE) RETURNS SETOF BIGINT AS
+$body$
+BEGIN
+  RETURN QUERY
+    SELECT citydb_pkg.terminate_feature_internal($1, metadata, cascade, '{}'::bigint[]);
 END;
 $body$
 LANGUAGE plpgsql STRICT;

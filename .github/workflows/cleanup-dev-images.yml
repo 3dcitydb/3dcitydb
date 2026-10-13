@@ -9,6 +9,9 @@ on:
         required: true
         default: "0"
 
+permissions:
+  packages: write
+
 env:
   PACKAGE_NAME: 3dcitydb-pg-dev
 
