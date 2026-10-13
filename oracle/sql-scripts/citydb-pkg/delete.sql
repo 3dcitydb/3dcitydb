@@ -192,31 +192,33 @@ AS
     BULK COLLECT INTO ids, feat_ids, rel_types, geom_ids, ig_ids, app_ids, addr_ids;
 
     FOR i IN 1..ids.COUNT LOOP
-      IF feat_ids(i) IS NULL OR rel_types(i) = 1 THEN
-        deleted_ids.EXTEND; deleted_ids(deleted_ids.COUNT) := ids(i);
-        IF feat_ids(i) IS NOT NULL THEN
-          feature_ids.EXTEND; feature_ids(feature_ids.COUNT) := feat_ids(i);
-        END IF;
-        IF geom_ids(i) IS NOT NULL THEN
-          geometry_ids.EXTEND; geometry_ids(geometry_ids.COUNT) := geom_ids(i);
-        END IF;
-        IF ig_ids(i) IS NOT NULL THEN
-          implicit_geometry_ids.EXTEND; implicit_geometry_ids(implicit_geometry_ids.COUNT) := ig_ids(i);
-        END IF;
-        IF app_ids(i) IS NOT NULL THEN
-          appearance_ids.EXTEND; appearance_ids(appearance_ids.COUNT) := app_ids(i);
-        END IF;
-        IF addr_ids(i) IS NOT NULL THEN
-          address_ids.EXTEND; address_ids(address_ids.COUNT) := addr_ids(i);
-        END IF;
+      deleted_ids.EXTEND; deleted_ids(deleted_ids.COUNT) := ids(i);
+      IF feat_ids(i) IS NOT NULL AND rel_types(i) = 1 THEN
+        feature_ids.EXTEND; feature_ids(feature_ids.COUNT) := feat_ids(i);
+      END IF;
+      IF geom_ids(i) IS NOT NULL THEN
+        geometry_ids.EXTEND; geometry_ids(geometry_ids.COUNT) := geom_ids(i);
+      END IF;
+      IF ig_ids(i) IS NOT NULL THEN
+        implicit_geometry_ids.EXTEND; implicit_geometry_ids(implicit_geometry_ids.COUNT) := ig_ids(i);
+      END IF;
+      IF app_ids(i) IS NOT NULL THEN
+        appearance_ids.EXTEND; appearance_ids(appearance_ids.COUNT) := app_ids(i);
+      END IF;
+      IF addr_ids(i) IS NOT NULL THEN
+        address_ids.EXTEND; address_ids(address_ids.COUNT) := addr_ids(i);
       END IF;
     END LOOP;
 
     IF feature_ids.COUNT > 0 THEN
       SELECT DISTINCT a.COLUMN_VALUE BULK COLLECT INTO temp
       FROM TABLE(feature_ids) a
-      LEFT JOIN property p ON p.val_feature_id = a.COLUMN_VALUE
-      WHERE p.val_feature_id IS NULL OR p.val_relation_type IS NULL OR p.val_relation_type = 0;
+      WHERE NOT EXISTS (
+        SELECT 1
+        FROM property p
+        WHERE p.val_feature_id = a.COLUMN_VALUE
+          AND p.val_relation_type = 1
+      );
 
       IF temp.COUNT > 0 THEN
         dummy := delete_feature(temp);
@@ -271,7 +273,8 @@ AS
     FROM property c
     JOIN TABLE(pid_array) a ON c.id = a.COLUMN_VALUE
     JOIN property p ON p.id = c.parent_id
-    WHERE p.name = c.name AND p.namespace_id = c.namespace_id
+    WHERE (p.name = c.name OR (p.name IS NULL AND c.name IS NULL))
+      AND (p.namespace_id = c.namespace_id OR (p.namespace_id IS NULL AND c.namespace_id IS NULL))
       AND p.id NOT IN (SELECT COLUMN_VALUE FROM TABLE(current_ids));
 
     FOR i IN 1..parent_ids.COUNT LOOP
