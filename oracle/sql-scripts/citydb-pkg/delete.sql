@@ -51,17 +51,37 @@ AS
     data_sequences STRING_TAB := STRING_TAB(
       'FEATURE_SEQ','PROPERTY_SEQ','GEOMETRY_DATA_SEQ','IMPLICIT_GEOMETRY_SEQ','APPEARANCE_SEQ',
       'SURFACE_DATA_SEQ','APPEAR_TO_SURFACE_DATA_SEQ','TEX_IMAGE_SEQ','ADDRESS_SEQ','FEATURE_CHANGELOG_SEQ');
+    external_refs VARCHAR2(4000);
   BEGIN
+    -- Every ALTER and TRUNCATE below commits implicitly, so nothing can be rolled back once
+    -- we start. External tables referencing a 3DCityDB table are not supported: their rows
+    -- would be orphaned by the truncate and re-enabling their foreign keys would fail, leaving
+    -- the schema in an inconsistent state. Reject such references before touching anything.
+    SELECT LISTAGG(c.table_name || '.' || c.constraint_name, ', ') WITHIN GROUP (ORDER BY c.table_name, c.constraint_name)
+    INTO external_refs
+    FROM user_constraints c
+    JOIN user_constraints r ON c.r_constraint_name = r.constraint_name
+    WHERE c.constraint_type = 'R'
+      AND r.table_name MEMBER OF data_tables
+      AND c.table_name NOT MEMBER OF data_tables;
+
+    IF external_refs IS NOT NULL THEN
+      RAISE_APPLICATION_ERROR(-20001,
+        'cleanup_schema aborted: tables outside the 3DCityDB schema reference 3DCityDB tables (' || external_refs || '). ' ||
+        'Drop these foreign keys or tables before running cleanup_schema.');
+    END IF;
+
     -- Oracle's TRUNCATE ... CASCADE only follows ON DELETE CASCADE constraints while the
     -- schema also uses plain and ON DELETE SET NULL keys. We therefore disable every foreign
-    -- key whose referenced (parent) table is a 3DCityDB table up front and re-enable it after
-    -- truncating. Filtering on the parent table keeps external-only foreign keys untouched
-    -- while still covering external tables that reference a 3DCityDB table.
+    -- key between 3DCityDB tables up front and re-enable it after truncating. Both the child
+    -- and the parent table must be on the whitelist so that external objects are never touched.
     FOR rec IN (
       SELECT c.constraint_name, c.table_name
       FROM user_constraints c
       JOIN user_constraints r ON c.r_constraint_name = r.constraint_name
-      WHERE c.constraint_type = 'R' AND r.table_name MEMBER OF data_tables
+      WHERE c.constraint_type = 'R'
+        AND c.table_name MEMBER OF data_tables
+        AND r.table_name MEMBER OF data_tables
     ) LOOP
       EXECUTE IMMEDIATE 'ALTER TABLE ' || rec.table_name || ' DISABLE CONSTRAINT ' || rec.constraint_name;
     END LOOP;
@@ -77,7 +97,9 @@ AS
       SELECT c.constraint_name, c.table_name
       FROM user_constraints c
       JOIN user_constraints r ON c.r_constraint_name = r.constraint_name
-      WHERE c.constraint_type = 'R' AND r.table_name MEMBER OF data_tables
+      WHERE c.constraint_type = 'R'
+        AND c.table_name MEMBER OF data_tables
+        AND r.table_name MEMBER OF data_tables
     ) LOOP
       EXECUTE IMMEDIATE 'ALTER TABLE ' || rec.table_name || ' ENABLE CONSTRAINT ' || rec.constraint_name;
     END LOOP;
