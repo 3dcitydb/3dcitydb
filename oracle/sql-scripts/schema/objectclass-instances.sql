@@ -88,7 +88,7 @@ BEGIN
     (200, 9, 'GenericLogicalSpace', 0, 1, 3, v_schema_200),
     (201, 12, 'GenericOccupiedSpace', 0, 1, 3, v_schema_201),
     (202, 11, 'GenericUnoccupiedSpace', 0, 1, 3, v_schema_202),
-    (203, 14, 'GenericThematicSurface', 0, 0, 3, v_schema_203);
+    (203, 14, 'GenericThematicSurface', 0, 1, 3, v_schema_203);
 END;
 /
 

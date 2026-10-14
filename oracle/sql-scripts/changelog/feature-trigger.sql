@@ -30,6 +30,7 @@ AFTER INSERT OR UPDATE ON feature
 FOR EACH ROW
 DECLARE
   v_is_toplevel OBJECTCLASS.IS_TOPLEVEL%TYPE;
+  v_is_nested NUMBER := 0;
   transaction_type VARCHAR2(50);
 BEGIN
   IF UPDATING AND NVL(:OLD.last_modification_date, TO_DATE('1900-01-01','YYYY-MM-DD')) = NVL(:NEW.last_modification_date, TO_DATE('1900-01-01','YYYY-MM-DD')) THEN
@@ -41,7 +42,18 @@ BEGIN
   FROM objectclass
   WHERE id = :NEW.objectclass_id;
 
-  IF v_is_toplevel = 1 THEN
+  IF v_is_toplevel = 1 AND :NEW.objectclass_id = 203 THEN
+    SELECT CASE WHEN EXISTS (
+      SELECT 1
+      FROM property p
+      WHERE p.val_feature_id = :NEW.id
+        AND p.val_relation_type = 1
+    ) THEN 1 ELSE 0 END
+    INTO v_is_nested
+    FROM dual;
+  END IF;
+
+  IF v_is_toplevel = 1 AND v_is_nested = 0 THEN
     IF INSERTING THEN
       transaction_type := 'INSERT';
     ELSIF UPDATING THEN
