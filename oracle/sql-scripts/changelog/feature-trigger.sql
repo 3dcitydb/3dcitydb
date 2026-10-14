@@ -1,4 +1,4 @@
-CREATE OR REPLACE TRIGGER log_feature_deletes
+CREATE OR REPLACE TRIGGER feature_changelog_delete_trigger
 BEFORE DELETE ON feature
 FOR EACH ROW
 DECLARE
@@ -22,10 +22,10 @@ BEGIN
       :OLD.envelope, 'DELETE', CURRENT_TIMESTAMP, USER, NULL
     );
   END IF;
-END log_feature_deletes;
+END feature_changelog_delete_trigger;
 /
 
-CREATE OR REPLACE TRIGGER log_feature_upserts
+CREATE OR REPLACE TRIGGER feature_changelog_insert_update_trigger
 AFTER INSERT OR UPDATE ON feature
 FOR EACH ROW
 DECLARE
@@ -54,14 +54,12 @@ BEGIN
   END IF;
 
   IF v_is_toplevel = 1 AND v_is_nested = 0 THEN
-    IF INSERTING THEN
+    IF :NEW.termination_date IS NOT NULL THEN
+      transaction_type := 'TERMINATE';
+    ELSIF INSERTING THEN
       transaction_type := 'INSERT';
-    ELSIF UPDATING THEN
-      IF :NEW.termination_date IS NOT NULL THEN
-        transaction_type := 'TERMINATE';
-      ELSE
-        transaction_type := 'UPDATE';
-      END IF;
+    ELSE
+      transaction_type := 'UPDATE';
     END IF;
 
     INSERT INTO feature_changelog (
@@ -72,5 +70,5 @@ BEGIN
       :NEW.envelope, transaction_type, CURRENT_TIMESTAMP, USER, :NEW.reason_for_update
     );
   END IF;
-END log_feature_upserts;
+END feature_changelog_insert_update_trigger;
 /

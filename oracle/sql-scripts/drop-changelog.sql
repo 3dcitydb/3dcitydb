@@ -15,8 +15,8 @@ DECLARE
   TYPE t_object_tab IS TABLE OF t_object;
   v_objects t_object_tab := t_object_tab(
     t_object('SEQUENCE', 'FEATURE_CHANGELOG_SEQ'),
-    t_object('TRIGGER', 'LOG_FEATURE_DELETES'),
-    t_object('TRIGGER', 'LOG_FEATURE_UPSERTS'),
+    t_object('TRIGGER', 'FEATURE_CHANGELOG_DELETE_TRIGGER'),
+    t_object('TRIGGER', 'FEATURE_CHANGELOG_INSERT_UPDATE_TRIGGER'),
     t_object('TABLE', 'FEATURE_CHANGELOG')
   );
   v_sql VARCHAR2(255);
