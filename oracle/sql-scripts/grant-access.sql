@@ -71,7 +71,7 @@ BEGIN
           FROM all_objects
          WHERE owner = target_schema
            AND upper(object_type) = 'PACKAGE'
-           AND object_name IN ('CITYDB_SCHEMA','CITYDB_UTIL','CITYDB_SRS')
+           AND object_name IN ('CITYDB_SCHEMA','CITYDB_UTIL','CITYDB_SRS','CITYDB_ENVELOPE')
   ) LOOP
     EXECUTE IMMEDIATE 'grant execute on '||target_schema||'."'||rec.object_name||'" to "'||user_name||'"';
   END LOOP;
@@ -82,7 +82,7 @@ BEGIN
             FROM all_objects
            WHERE owner = target_schema
              AND upper(object_type) = 'PACKAGE'
-             AND object_name = 'CITYDB_TERMINATE'
+             AND object_name IN ('CITYDB_TERMINATE','CITYDB_ENVELOPE_UPDATE')
     ) LOOP
       EXECUTE IMMEDIATE 'grant execute on '||target_schema||'."'||rec.object_name||'" to "'||user_name||'"';
     END LOOP;
