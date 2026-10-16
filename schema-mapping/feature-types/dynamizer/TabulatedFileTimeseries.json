@@ -7,85 +7,103 @@
       "name": "fileLocation",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the URI that points to the external timeseries file.",
-      "type": "core:URI"
+      "type": "core:URI",
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "fileType",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the format used to represent the timeseries data.",
-      "type": "core:Code"
+      "type": "core:Code",
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "mimeType",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the MIME type of the external timeseries file.",
-      "type": "core:Code"
+      "type": "core:Code",
+      "maxOccurs": 1
     },
     {
       "name": "valueType",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Indicates the specific type of the timeseries data.",
-      "type": "core:String"
+      "type": "core:String",
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "numberOfHeaderLines",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Indicates the number of lines at the beginning of the tabulated file that represent headers.",
-      "type": "core:Integer"
+      "type": "core:Integer",
+      "maxOccurs": 1
     },
     {
       "name": "fieldSeparator",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Indicates which symbol is used to separate the individual values in the tabulated file.",
-      "type": "core:String"
+      "type": "core:String",
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "decimalSymbol",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Indicates which symbol is used to separate the integer part from the fractional part of a decimal number.",
-      "type": "core:String"
+      "type": "core:String",
+      "maxOccurs": 1
     },
     {
       "name": "idColumnNo",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the number of the column that stores the identifier of the time-value-pair.",
-      "type": "core:Integer"
+      "type": "core:Integer",
+      "maxOccurs": 1
     },
     {
       "name": "idColumnName",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the name of the column that stores the identifier of the time-value-pair.",
-      "type": "core:String"
+      "type": "core:String",
+      "maxOccurs": 1
     },
     {
       "name": "idValue",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the value of the identifier for which the time-value-pairs are to be selected.",
-      "type": "core:String"
+      "type": "core:String",
+      "maxOccurs": 1
     },
     {
       "name": "timeColumnNo",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the number of the column that stores the timestamp of the time-value-pair.",
-      "type": "core:Integer"
+      "type": "core:Integer",
+      "maxOccurs": 1
     },
     {
       "name": "timeColumnName",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the name of the column that stores the timestamp of the time-value-pair.",
-      "type": "core:String"
+      "type": "core:String",
+      "maxOccurs": 1
     },
     {
       "name": "valueColumnNo",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the number of the column that stores the value of the time-value-pair.",
-      "type": "core:Integer"
+      "type": "core:Integer",
+      "maxOccurs": 1
     },
     {
       "name": "valueColumnName",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the name of the column that stores the value of the time-value-pair.",
-      "type": "core:String"
+      "type": "core:String",
+      "maxOccurs": 1
     }
   ]
 }

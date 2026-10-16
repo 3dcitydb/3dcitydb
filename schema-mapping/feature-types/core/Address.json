@@ -10,7 +10,8 @@
       "value": {
         "column": "objectid",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "identifier",
@@ -19,7 +20,8 @@
       "value": {
         "column": "identifier",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "codeSpace",
@@ -29,7 +31,9 @@
         "column": "identifier_codespace",
         "type": "string"
       },
-      "parent": 1
+      "parent": 1,
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "street",
@@ -38,7 +42,8 @@
       "value": {
         "column": "street",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "houseNumber",
@@ -47,7 +52,8 @@
       "value": {
         "column": "house_number",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "poBox",
@@ -56,7 +62,8 @@
       "value": {
         "column": "po_box",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "zipCode",
@@ -65,7 +72,8 @@
       "value": {
         "column": "zip_code",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "city",
@@ -74,7 +82,8 @@
       "value": {
         "column": "city",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "state",
@@ -83,7 +92,8 @@
       "value": {
         "column": "state",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "country",
@@ -92,7 +102,8 @@
       "value": {
         "column": "country",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "multiPoint",
@@ -101,7 +112,8 @@
       "value": {
         "column": "multi_point",
         "type": "core:MultiPoint"
-      }
+      },
+      "maxOccurs": 1
     }
   ]
 }

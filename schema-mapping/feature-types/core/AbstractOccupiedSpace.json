@@ -7,19 +7,22 @@
       "name": "lod1ImplicitRepresentation",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Relates to an implicit geometry that represents the occupied space in Level of Detail 1.",
-      "type": "core:ImplicitGeometryProperty"
+      "type": "core:ImplicitGeometryProperty",
+      "maxOccurs": 1
     },
     {
       "name": "lod2ImplicitRepresentation",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Relates to an implicit geometry that represents the occupied space in Level of Detail 2.",
-      "type": "core:ImplicitGeometryProperty"
+      "type": "core:ImplicitGeometryProperty",
+      "maxOccurs": 1
     },
     {
       "name": "lod3ImplicitRepresentation",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Relates to an implicit geometry that represents the occupied space in Level of Detail 3.",
-      "type": "core:ImplicitGeometryProperty"
+      "type": "core:ImplicitGeometryProperty",
+      "maxOccurs": 1
     }
   ]
 }

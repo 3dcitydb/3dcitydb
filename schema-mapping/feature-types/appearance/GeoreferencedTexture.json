@@ -10,7 +10,8 @@
       "value": {
         "column": "gt_reference_point",
         "type": "core:Point"
-      }
+      },
+      "maxOccurs": 1
     }
   ]
 }

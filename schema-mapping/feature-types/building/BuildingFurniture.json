@@ -7,7 +7,8 @@
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
       "description": "Indicates the specific type of the BuildingFurniture.",
-      "type": "core:Code"
+      "type": "core:Code",
+      "maxOccurs": 1
     },
     {
       "name": "function",
@@ -26,13 +27,15 @@
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
       "description": "Relates to a 3D geometry that represents the BuildingFurniture in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
-      "target": "core:AbstractGeometry"
+      "target": "core:AbstractGeometry",
+      "maxOccurs": 1
     },
     {
       "name": "lod4ImplicitRepresentation",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
       "description": "Relates to an implicit geometry that represents the BuildingFurniture in Level of Detail 4. Deprecated since CityGML 3.0.",
-      "type": "core:ImplicitGeometryProperty"
+      "type": "core:ImplicitGeometryProperty",
+      "maxOccurs": 1
     }
   ]
 }

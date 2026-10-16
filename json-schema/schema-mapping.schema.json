@@ -95,6 +95,17 @@
         "parent": {
           "type": "integer",
           "minimum": 0
+        },
+        "minOccurs": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0,
+          "description": "Minimum number of occurrences. Defaults to 0."
+        },
+        "maxOccurs": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum number of occurrences. If omitted, there is no upper limit."
         }
       },
       "allOf": [

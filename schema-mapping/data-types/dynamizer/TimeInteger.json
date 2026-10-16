@@ -7,7 +7,9 @@
       "name": "value",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the integer value at the given timepoint.",
-      "type": "core:Integer"
+      "type": "core:Integer",
+      "minOccurs": 1,
+      "maxOccurs": 1
     }
   ]
 }

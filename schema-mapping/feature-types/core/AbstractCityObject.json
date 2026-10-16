@@ -21,13 +21,15 @@
       "name": "relativeToTerrain",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Describes the vertical position of the city object relative to the surrounding terrain.",
-      "type": "core:String"
+      "type": "core:String",
+      "maxOccurs": 1
     },
     {
       "name": "relativeToWater",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Describes the vertical position of the city object relative to the surrounding water surface.",
-      "type": "core:String"
+      "type": "core:String",
+      "maxOccurs": 1
     },
     {
       "name": "relatedTo",
