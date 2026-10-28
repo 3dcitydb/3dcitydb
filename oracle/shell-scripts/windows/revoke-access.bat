@@ -42,7 +42,7 @@ echo this operation cannot be undone. Please follow the instructions of the scri
 echo Enter the required parameters when prompted and press ENTER to confirm.
 echo Just press ENTER to use the default values.
 echo.
-echo Note: This script requires schema owner or DBA privileges.
+echo Note: This script requires schema owner privileges.
 echo.
 echo Documentation and help:
 echo    3DCityDB website:    https://www.3dcitydb.org
