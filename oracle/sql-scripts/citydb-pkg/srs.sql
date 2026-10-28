@@ -1,19 +1,22 @@
 /*****************************************************************
- * CONTENT: PL/SQL Package CITYDB_SRS
+ * CONTENT: PL/SQL Packages CITYDB_SRS and CITYDB_SRS_ADMIN
  *
- * Methods to handle the spatial reference system
+ * CITYDB_SRS: Read-only methods to query the spatial reference
+ *   system (granted to all access modes)
+ * CITYDB_SRS_ADMIN: Methods to change the spatial reference
+ *   system of the schema (not granted by grant-access.sql; must
+ *   be executed by the schema owner)
  *****************************************************************/
 
 -- Package declaration
 CREATE OR REPLACE PACKAGE citydb_srs
+AUTHID DEFINER
 AS
   FUNCTION get_coord_ref_sys_info (p_srid IN INTEGER) RETURN crs_info_tab;
   FUNCTION is_coord_ref_sys_3d (p_srid IN INTEGER) RETURN INTEGER;
   FUNCTION is_db_coord_ref_sys_3d RETURN INTEGER;
-  FUNCTION is_db_coord_ref_sys_3d (p_schema_name IN VARCHAR2) RETURN INTEGER;
   FUNCTION check_srid (p_srid IN INTEGER DEFAULT 0) RETURN INTEGER;
   FUNCTION transform_or_null (p_geom IN SDO_GEOMETRY, p_srid IN INTEGER) RETURN SDO_GEOMETRY;
-  PROCEDURE change_schema_srid (p_target_srid IN INTEGER, p_target_srs_name IN VARCHAR2, p_transform IN INTEGER DEFAULT 0);
 END citydb_srs;
 /
 
@@ -109,28 +112,6 @@ AS
       RETURN 0;
   END is_db_coord_ref_sys_3d;
 
-  /*****************************************************************
-  * Function IS_DB_COORD_REF_SYS_3D
-  *
-  * Parameters:
-  *   - p_schema_name => Name of the target schema
-  *
-  * Return value:
-  *   - INTEGER => The boolean result encoded as INTEGER: 0 = false, 1 = true
-  ******************************************************************/
-  FUNCTION is_db_coord_ref_sys_3d (
-    p_schema_name IN VARCHAR2
-  )
-  RETURN INTEGER
-  IS
-    v_schema_name VARCHAR2(128);
-    v_srid INTEGER;
-  BEGIN
-    v_schema_name := DBMS_ASSERT.simple_sql_name(p_schema_name);
-    EXECUTE IMMEDIATE 'SELECT ' || v_schema_name || '.citydb_srs.is_db_coord_ref_sys_3d FROM dual' INTO v_srid;
-    RETURN v_srid;
-  END is_db_coord_ref_sys_3d;
-
   /*******************************************************************
   * Function CHECK_SRID
   *
@@ -180,6 +161,21 @@ AS
     END IF;
   END transform_or_null;
 
+END citydb_srs;
+/
+
+-- Package declaration
+CREATE OR REPLACE PACKAGE citydb_srs_admin
+AUTHID DEFINER
+AS
+  PROCEDURE change_schema_srid (p_target_srid IN INTEGER, p_target_srs_name IN VARCHAR2, p_transform IN INTEGER DEFAULT 0);
+END citydb_srs_admin;
+/
+
+-- Package body definition
+CREATE OR REPLACE PACKAGE BODY citydb_srs_admin
+AS
+
   /*****************************************************************
   * Procedure CHANGE_COLUMN_SRID
   *
@@ -196,9 +192,11 @@ AS
     p_transform IN INTEGER DEFAULT 0
   )
   IS
+    TYPE clob_tab IS TABLE OF CLOB;
     v_table_name VARCHAR2(128);
     v_column_name VARCHAR2(128);
     v_current_srid INTEGER;
+    v_index_ddls clob_tab := clob_tab();
   BEGIN
     v_table_name := DBMS_ASSERT.SIMPLE_SQL_NAME(upper(p_table_name));
     v_column_name := DBMS_ASSERT.SIMPLE_SQL_NAME(upper(p_column_name));
@@ -215,23 +213,9 @@ AS
     IF p_target_srid = v_current_srid THEN
       RETURN;
     END IF;
-    
-    -- update column metadata
-    UPDATE user_sdo_geom_metadata
-    SET srid = p_target_srid
-    WHERE table_name = v_table_name
-      AND column_name = v_column_name;
-    
-    -- transform coordinates
-    IF p_transform <> 0 THEN
-      EXECUTE IMMEDIATE 'UPDATE ' || v_table_name || ' SET ' || v_column_name || ' = sdo_cs.transform( ' || v_column_name || ', :1) WHERE ' || v_column_name || ' IS NOT NULL'
-      USING p_target_srid;
-    ELSE
-      EXECUTE IMMEDIATE 'UPDATE ' || v_table_name || ' SET ' || v_column_name || '.SDO_SRID = :1 WHERE ' || v_column_name || ' IS NOT NULL'
-      USING p_target_srid;
-    END IF;
-    
-    -- drop and recreate spatial indexes involving the column
+
+    -- drop spatial indexes involving the column; they must not exist while the
+    -- SRID is changed, because the index validates the SRID of every updated geometry
     FOR rec IN (
       SELECT ui.index_name,
         DBMS_METADATA.GET_DDL('INDEX', ui.index_name) AS index_definition
@@ -247,9 +231,30 @@ AS
     LOOP
       IF rec.index_definition IS NOT NULL THEN
         dbms_output.put_line('Dropping and recreating index "' || rec.index_name || '".');
+        v_index_ddls.EXTEND;
+        v_index_ddls(v_index_ddls.COUNT) := rec.index_definition;
         EXECUTE IMMEDIATE 'DROP INDEX IF EXISTS ' || rec.index_name || ' FORCE';
-        EXECUTE IMMEDIATE rec.index_definition;
       END IF;
+    END LOOP;
+
+    -- update column metadata
+    UPDATE user_sdo_geom_metadata
+    SET srid = p_target_srid
+    WHERE table_name = v_table_name
+      AND column_name = v_column_name;
+
+    -- transform coordinates
+    IF p_transform <> 0 THEN
+      EXECUTE IMMEDIATE 'UPDATE ' || v_table_name || ' t SET t.' || v_column_name || ' = sdo_cs.transform(t.' || v_column_name || ', :1) WHERE t.' || v_column_name || ' IS NOT NULL'
+      USING p_target_srid;
+    ELSE
+      EXECUTE IMMEDIATE 'UPDATE ' || v_table_name || ' t SET t.' || v_column_name || '.SDO_SRID = :1 WHERE t.' || v_column_name || ' IS NOT NULL'
+      USING p_target_srid;
+    END IF;
+
+    -- recreate spatial indexes with the new SRID
+    FOR i IN 1 .. v_index_ddls.COUNT LOOP
+      EXECUTE IMMEDIATE v_index_ddls(i);
     END LOOP;
   END change_column_srid;
 
@@ -268,6 +273,14 @@ AS
   )
   IS
   BEGIN
+    -- The INSTEAD OF triggers on USER_SDO_GEOM_METADATA resolve the owner from
+    -- SESSION_USER. Called by any user other than the schema owner, the metadata
+    -- update below would silently go to the wrong owner, so refuse upfront.
+    IF SYS_CONTEXT('USERENV', 'SESSION_USER') <> SYS_CONTEXT('USERENV', 'CURRENT_USER') THEN
+      raise_application_error(-20001, 'change_schema_srid must be executed by the schema owner ' ||
+        SYS_CONTEXT('USERENV', 'CURRENT_USER') || '.');
+    END IF;
+
     -- update entry in database_srs table
     EXECUTE IMMEDIATE 'DELETE FROM database_srs';
     EXECUTE IMMEDIATE 'INSERT INTO database_srs (srid, srs_name) VALUES (:1, :2)' USING p_target_srid, p_target_srs_name;
@@ -280,9 +293,9 @@ AS
       WHERE data_type = 'SDO_GEOMETRY'
     )
     LOOP
-      change_column_srid(rec.table_name, rec.column_name, p_target_srid, p_transform);   
+      change_column_srid(rec.table_name, rec.column_name, p_target_srid, p_transform);
     END LOOP;
   END change_schema_srid;
 
-END citydb_srs;
+END citydb_srs_admin;
 /
