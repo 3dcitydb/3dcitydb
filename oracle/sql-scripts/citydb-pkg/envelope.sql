@@ -221,9 +221,17 @@ AS
   * @param compute_envelope If 0, returns the envelope from the ENVELOPE column unless it is NULL, in which case the envelope is computed. If 1, the envelope is always computed.
   * @param set_envelope If 1, the ENVELOPE column of the FEATURE table will be updated with the computed envelope.
   * @param visited_ids Feature IDs already visited on the current recursion path
+  * @param root_terminated Whether the requested root feature is terminated
+  * @param is_terminated Whether the feature identified by fid is terminated
   * @return Envelope geometry as required by the ENVELOPE column of the FEATURE table
   ******************************************************************/
-  FUNCTION get_feature_envelope(fid NUMBER, compute_envelope NUMBER, set_envelope NUMBER, visited_ids NUMBER_TAB) RETURN SDO_GEOMETRY
+  FUNCTION get_feature_envelope_rec(
+    fid NUMBER,
+    compute_envelope NUMBER,
+    set_envelope NUMBER,
+    visited_ids NUMBER_TAB,
+    root_terminated BOOLEAN,
+    is_terminated BOOLEAN) RETURN SDO_GEOMETRY
   IS
     bbox SDO_GEOMETRY;
     bounds bounds_rec;
@@ -249,13 +257,18 @@ AS
     END IF;
 
     FOR rec IN (
-      SELECT p.val_feature_id
+      SELECT p.val_feature_id, child.termination_date
       FROM property p
+      JOIN feature child ON child.id = p.val_feature_id
       WHERE p.feature_id = fid
         AND p.val_feature_id IS NOT NULL
         AND p.val_relation_type = 1
     ) LOOP
-      extend_bounds(bounds, get_feature_envelope(rec.val_feature_id, compute_envelope, set_envelope, current_ids));
+      IF root_terminated OR rec.termination_date IS NULL THEN
+        extend_bounds(bounds, get_feature_envelope_rec(
+          rec.val_feature_id, compute_envelope, set_envelope, current_ids,
+          root_terminated, rec.termination_date IS NOT NULL));
+      END IF;
     END LOOP;
 
     SELECT SDO_AGGR_MBR(gd.geometry)
@@ -276,11 +289,38 @@ AS
 
     bbox := bounds_to_envelope(bounds);
 
-    IF set_envelope <> 0 THEN
+    -- do not store a full-subtree envelope on an active feature reached from a terminated root
+    IF set_envelope <> 0 AND (NOT root_terminated OR is_terminated) THEN
       UPDATE feature SET envelope = bbox WHERE id = fid;
     END IF;
 
     RETURN bbox;
+  END get_feature_envelope_rec;
+
+  /******************************************************************
+  * Returns the envelope geometry of a given feature. Determines whether
+  * the root feature is terminated and delegates to get_feature_envelope_rec.
+  *
+  * @param fid ID of the feature for which the envelope is computed
+  * @param compute_envelope If 0, returns the envelope from the ENVELOPE column unless it is NULL, in which case the envelope is computed. If 1, the envelope is always computed.
+  * @param set_envelope If 1, the ENVELOPE column of the FEATURE table will be updated with the computed envelope.
+  * @param visited_ids Feature IDs already visited on the current recursion path
+  * @return Envelope geometry as required by the ENVELOPE column of the FEATURE table
+  ******************************************************************/
+  FUNCTION get_feature_envelope(fid NUMBER, compute_envelope NUMBER, set_envelope NUMBER, visited_ids NUMBER_TAB) RETURN SDO_GEOMETRY
+  IS
+    root_termination_date feature.termination_date%TYPE;
+  BEGIN
+    BEGIN
+      SELECT termination_date INTO root_termination_date FROM feature WHERE id = fid;
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        root_termination_date := NULL;
+    END;
+
+    RETURN get_feature_envelope_rec(
+      fid, compute_envelope, set_envelope, visited_ids,
+      root_termination_date IS NOT NULL, root_termination_date IS NOT NULL);
   END get_feature_envelope;
 
 END citydb_envelope_internal;

@@ -565,12 +565,13 @@ AS
       updating_person = COALESCE(JSON_VALUE(metadata, '$.updating_person'), USER),
       lineage = COALESCE(JSON_VALUE(metadata, '$.lineage'), f.lineage)
     WHERE f.id IN (SELECT COLUMN_VALUE FROM TABLE(pid_array))
+      AND f.termination_date IS NULL
     RETURNING f.id BULK COLLECT INTO terminated_ids;
 
-    IF cascade = 1 AND terminated_ids.COUNT > 0 THEN
+    IF cascade = 1 AND pid_array.COUNT > 0 THEN
       SELECT p.val_feature_id BULK COLLECT INTO child_feature_ids
       FROM property p
-      WHERE p.feature_id IN (SELECT COLUMN_VALUE FROM TABLE(terminated_ids))
+      WHERE p.feature_id IN (SELECT COLUMN_VALUE FROM TABLE(pid_array))
         AND p.val_relation_type = 1
         AND p.val_feature_id IS NOT NULL
         AND p.val_feature_id NOT IN (SELECT COLUMN_VALUE FROM TABLE(current_ids));
