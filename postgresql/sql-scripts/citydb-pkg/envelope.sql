@@ -6,17 +6,13 @@
 * @param compute_envelope If 0 (default), returns the envelope from the ENVELOPE column unless it is NULL, in which case the envelope is computed. If 1, the envelope is always computed.
 * @param set_envelope If 1 (default = 0), the ENVELOPE column of the FEATURE table will be updated with the computed envelope.
 * @param visited_ids Feature IDs already visited on the current recursion path
-* @param root_terminated Whether the requested root feature is terminated
-* @param is_terminated Whether the feature identified by fid is terminated
 * @return Envelope geometry as required by the ENVELOPE column of the FEATURE table
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.get_feature_envelope_internal(
   fid BIGINT,
   compute_envelope INTEGER,
   set_envelope INTEGER,
-  visited_ids BIGINT[],
-  root_terminated BOOLEAN,
-  is_terminated BOOLEAN) RETURNS GEOMETRY AS
+  visited_ids BIGINT[]) RETURNS GEOMETRY AS
 $body$
 DECLARE
   bbox GEOMETRY;
@@ -37,19 +33,14 @@ BEGIN
 
   SELECT
     ST_Collect(citydb_pkg.get_feature_envelope_internal(
-      p.val_feature_id, compute_envelope, set_envelope, visited_ids,
-      root_terminated, child.termination_date IS NOT NULL))
+      p.val_feature_id, compute_envelope, set_envelope, visited_ids))
   INTO bbox
   FROM
     property p
-  JOIN
-    feature child
-    ON child.id = p.val_feature_id
   WHERE
     p.feature_id = fid
     AND p.val_feature_id IS NOT NULL
-    AND p.val_relation_type = 1
-    AND (root_terminated OR child.termination_date IS NULL);
+    AND p.val_relation_type = 1;
 
   SELECT ST_Collect(citydb_pkg.get_envelope(geom)) INTO bbox_tmp FROM (
     SELECT
@@ -72,8 +63,7 @@ BEGIN
 
   bbox := citydb_pkg.get_envelope(ST_Collect(bbox, bbox_tmp));
 
-  -- do not store a full-subtree envelope on an active feature reached from a terminated root
-  IF set_envelope <> 0 AND (NOT root_terminated OR is_terminated) THEN
+  IF set_envelope <> 0 THEN
     UPDATE feature SET envelope = bbox WHERE id = fid;
   END IF;
 
@@ -95,25 +85,9 @@ CREATE OR REPLACE FUNCTION citydb_pkg.get_feature_envelope(
   compute_envelope INTEGER DEFAULT 0,
   set_envelope INTEGER DEFAULT 0) RETURNS GEOMETRY AS
 $body$
-DECLARE
-  root_terminated BOOLEAN;
 BEGIN
-  SELECT
-    f.termination_date IS NOT NULL
-  INTO
-    root_terminated
-  FROM
-    feature f
-  WHERE
-    f.id = fid;
-
   RETURN citydb_pkg.get_feature_envelope_internal(
-    fid,
-    compute_envelope,
-    set_envelope,
-    ARRAY[]::BIGINT[],
-    COALESCE(root_terminated, FALSE),
-    COALESCE(root_terminated, FALSE));
+    fid, compute_envelope, set_envelope, ARRAY[]::BIGINT[]);
 END;
 $body$
 LANGUAGE plpgsql;
