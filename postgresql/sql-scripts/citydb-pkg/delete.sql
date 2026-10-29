@@ -843,6 +843,7 @@ BEGIN
       unnest($1) AS a(a_id)
     WHERE
       f.id = a.a_id
+      AND f.termination_date IS NULL
     RETURNING
       f.id
   )
@@ -860,7 +861,7 @@ BEGIN
       child_feature_ids
     FROM
       property p,
-      unnest(terminated_ids) AS a(a_id)
+      unnest(pid_array) AS a(a_id)
     WHERE
       p.feature_id = a.a_id AND val_relation_type = 1
       AND NOT (p.val_feature_id = ANY(current_ids));
