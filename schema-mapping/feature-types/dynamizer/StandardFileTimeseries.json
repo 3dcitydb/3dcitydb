@@ -7,19 +7,24 @@
       "name": "fileLocation",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the URI that points to the external timeseries file.",
-      "type": "core:URI"
+      "type": "core:URI",
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "fileType",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the format used to represent the timeseries data.",
-      "type": "core:Code"
+      "type": "core:Code",
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "mimeType",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the MIME type of the external timeseries file.",
-      "type": "core:Code"
+      "type": "core:Code",
+      "maxOccurs": 1
     }
   ]
 }

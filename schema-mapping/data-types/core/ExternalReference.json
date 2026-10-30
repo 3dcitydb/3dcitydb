@@ -7,7 +7,9 @@
       "name": "targetResource",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Specifies the URI that points to the object in the external information system.",
-      "type": "core:URI"
+      "type": "core:URI",
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "informationSystem",
@@ -16,7 +18,8 @@
       "value": {
         "column": "val_codespace",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "relationType",
@@ -25,7 +28,8 @@
       "value": {
         "column": "val_string",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     }
   ]
 }

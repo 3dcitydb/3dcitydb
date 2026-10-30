@@ -10,7 +10,9 @@
       "value": {
         "column": "objectid",
         "type": "string"
-      }
+      },
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "mimeType",
@@ -19,7 +21,8 @@
       "value": {
         "column": "mime_type",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "codeSpace",
@@ -29,7 +32,8 @@
         "column": "mime_type_codespace",
         "type": "string"
       },
-      "parent": 1
+      "parent": 1,
+      "maxOccurs": 1
     },
     {
       "name": "libraryObject",
@@ -38,7 +42,8 @@
       "value": {
         "column": "reference_to_library",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "relativeGeometry",
@@ -49,13 +54,15 @@
         "table": "geometry_data",
         "fromColumn": "relative_geometry_id",
         "toColumn": "id"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "appearance",
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Relates appearances to the ImplicitGeometry.",
       "target": "app:Appearance",
+      "maxOccurs": 1,
       "join": {
         "table": "appearance",
         "fromColumn": "id",

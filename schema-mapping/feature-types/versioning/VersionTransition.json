@@ -7,19 +7,23 @@
       "name": "reason",
       "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
       "description": "Specifies why the VersionTransition has been carried out.",
-      "type": "core:String"
+      "type": "core:String",
+      "maxOccurs": 1
     },
     {
       "name": "clonePredecessor",
       "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
       "description": "Indicates whether the set of city object instances belonging to the successor version of the city model is either explicitly enumerated within the successor version object (attribute clonePredecessor=false), or has to be derived from the modifications of the city model provided as a list of transactions on the city object versions contained in the predecessor version (attribute clonePredecessor=true).",
-      "type": "core:Boolean"
+      "type": "core:Boolean",
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "type",
       "namespace": "http://3dcitydb.org/3dcitydb/versioning/5.0",
       "description": "Indicates the specific type of the VersionTransition.",
-      "type": "core:String"
+      "type": "core:String",
+      "maxOccurs": 1
     },
     {
       "name": "from",
@@ -27,7 +31,8 @@
       "description": "Relates to the predecessor version of the VersionTransition.",
       "type": "core:FeatureProperty",
       "target": "vers:Version",
-      "relationType": "contains"
+      "relationType": "contains",
+      "maxOccurs": 1
     },
     {
       "name": "to",
@@ -35,7 +40,8 @@
       "description": "Relates to the successor version of the VersionTransition.",
       "type": "core:FeatureProperty",
       "target": "vers:Version",
-      "relationType": "contains"
+      "relationType": "contains",
+      "maxOccurs": 1
     },
     {
       "name": "transaction",
