@@ -149,6 +149,8 @@ DECLARE
   implicit_geometry_ids bigint[] := '{}';
   appearance_ids bigint[] := '{}';
   address_ids bigint[] := '{}';
+  orphan_feature_ids bigint[];
+  kept_feature_ids bigint[];
 BEGIN
   WITH property_ids AS (
     DELETE FROM
@@ -184,36 +186,50 @@ BEGIN
     property_ids;
 
   IF -1 = ALL(feature_ids) IS NOT NULL THEN
-    PERFORM
-      citydb_pkg.delete_feature(array_agg(a.a_id))
-    FROM
-      (SELECT DISTINCT unnest(feature_ids) AS a_id) a
-    WHERE NOT EXISTS (
-      SELECT 1
-      FROM property p
-      WHERE p.val_feature_id = a.a_id
-        AND p.val_relation_type = 1
-    );
+    SELECT
+      array_agg(a.a_id) FILTER (WHERE NOT a.is_contained),
+      array_agg(a.a_id) FILTER (WHERE a.is_contained)
+    INTO
+      orphan_feature_ids,
+      kept_feature_ids
+    FROM (
+      SELECT
+        c.a_id,
+        EXISTS (
+          SELECT 1
+          FROM property p
+          WHERE p.val_feature_id = c.a_id
+            AND p.val_relation_type = 1
+        ) AS is_contained
+      FROM
+        (SELECT DISTINCT unnest(feature_ids) AS a_id) c
+    ) a;
+
+    IF orphan_feature_ids IS NOT NULL THEN
+      PERFORM citydb_pkg.delete_feature(orphan_feature_ids);
+    END IF;
 
     -- a feature below a terminated feature is terminated itself, so subfeatures that are only kept
     -- because terminated features still contain them are terminated
-    PERFORM
-      citydb_pkg.terminate_feature(array_agg(f.id))
-    FROM
-      (SELECT DISTINCT unnest(feature_ids) AS a_id) a
-    JOIN
-      feature f
-      ON f.id = a.a_id AND f.termination_date IS NULL
-    WHERE NOT EXISTS (
-      SELECT 1
-      FROM property p
-      JOIN feature pf ON pf.id = p.feature_id
-      WHERE p.val_feature_id = a.a_id
-        AND p.val_relation_type = 1
-        AND pf.termination_date IS NULL
-    )
-    HAVING
-      count(*) > 0;
+    IF kept_feature_ids IS NOT NULL THEN
+      PERFORM
+        citydb_pkg.terminate_feature(array_agg(f.id))
+      FROM
+        unnest(kept_feature_ids) AS a(a_id)
+      JOIN
+        feature f
+        ON f.id = a.a_id AND f.termination_date IS NULL
+      WHERE NOT EXISTS (
+        SELECT 1
+        FROM property p
+        JOIN feature pf ON pf.id = p.feature_id
+        WHERE p.val_feature_id = a.a_id
+          AND p.val_relation_type = 1
+          AND pf.termination_date IS NULL
+      )
+      HAVING
+        count(*) > 0;
+    END IF;
   END IF;
 
   IF -1 = ALL(geometry_ids) IS NOT NULL THEN
