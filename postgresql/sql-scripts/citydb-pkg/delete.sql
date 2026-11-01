@@ -194,6 +194,26 @@ BEGIN
       WHERE p.val_feature_id = a.a_id
         AND p.val_relation_type = 1
     );
+
+    -- a feature below a terminated feature is terminated itself, so subfeatures that are only kept
+    -- because terminated features still contain them are terminated
+    PERFORM
+      citydb_pkg.terminate_feature(array_agg(f.id))
+    FROM
+      (SELECT DISTINCT unnest(feature_ids) AS a_id) a
+    JOIN
+      feature f
+      ON f.id = a.a_id AND f.termination_date IS NULL
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM property p
+      JOIN feature pf ON pf.id = p.feature_id
+      WHERE p.val_feature_id = a.a_id
+        AND p.val_relation_type = 1
+        AND pf.termination_date IS NULL
+    )
+    HAVING
+      count(*) > 0;
   END IF;
 
   IF -1 = ALL(geometry_ids) IS NOT NULL THEN

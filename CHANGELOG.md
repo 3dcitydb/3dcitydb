@@ -5,7 +5,10 @@
 ### Changed
 - **Breaking**: `citydb_pkg.terminate_feature` always terminates contained subfeatures, so every feature below a
   terminated feature is terminated itself. The `cascade` parameter was removed.
+- `citydb_pkg.delete_feature` terminates contained subfeatures that are kept because other features still contain
+  them, if all these features are terminated.
 - PostGIS 3.3 is now the minimum supported version.
+
 
 ### Fixed
 - Fixed `GenericThematicSurface` not being treated as a top-level feature and updated the corresponding metadata in the
