@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 ### Changed
+- **Breaking**: `citydb_pkg.terminate_feature` always terminates contained subfeatures, so every feature below a
+  terminated feature is terminated itself. The `cascade` parameter was removed.
 - PostGIS 3.3 is now the minimum supported version.
 
 ### Fixed

@@ -118,3 +118,69 @@ FROM pg_catalog.pg_class c
 JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
 WHERE c.relname = 'feature_changelog' AND c.relkind = 'r'
 \gexec
+
+DO $$
+DECLARE
+  schema_name text;
+  updated bigint;
+  total bigint;
+BEGIN
+  FOR schema_name IN
+    SELECT nspname FROM pg_catalog.pg_class c
+    JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+    WHERE c.relname = 'database_srs' AND c.relkind = 'r'
+  LOOP
+    EXECUTE format('set search_path to %I, citydb_pkg, public', schema_name);
+    RAISE NOTICE 'Terminating active subfeatures of terminated features in schema "%" ...', schema_name;
+
+    total := 0;
+    LOOP
+      WITH candidates AS (
+        SELECT
+          c.id,
+          max(t.termination_date) AS termination_date
+        FROM
+          feature t
+        JOIN
+          property p
+          ON p.feature_id = t.id AND p.val_relation_type = 1
+        JOIN
+          feature c
+          ON c.id = p.val_feature_id
+        WHERE
+          t.termination_date IS NOT NULL
+          AND c.termination_date IS NULL
+          AND NOT EXISTS (
+            SELECT
+              1
+            FROM
+              property ap
+            JOIN
+              feature a
+              ON a.id = ap.feature_id
+            WHERE
+              ap.val_feature_id = c.id
+              AND ap.val_relation_type = 1
+              AND a.termination_date IS NULL
+          )
+        GROUP BY
+          c.id
+      )
+      UPDATE
+        feature f
+      SET
+        termination_date = c.termination_date
+      FROM
+        candidates c
+      WHERE
+        f.id = c.id;
+
+      GET DIAGNOSTICS updated = ROW_COUNT;
+      EXIT WHEN updated = 0;
+      total := total + updated;
+    END LOOP;
+
+    RAISE NOTICE 'Terminated % subfeatures in schema "%".', total, schema_name;
+  END LOOP;
+END
+$$;
