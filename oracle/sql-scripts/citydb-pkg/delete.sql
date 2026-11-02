@@ -8,6 +8,98 @@
  *****************************************************************/
 
 -- Package declaration
+CREATE OR REPLACE PACKAGE citydb_terminate
+AUTHID DEFINER
+AS
+  FUNCTION terminate_feature(pid_array NUMBER_TAB, metadata JSON DEFAULT JSON('{}')) RETURN NUMBER_TAB;
+  FUNCTION terminate_feature(pid NUMBER, metadata JSON DEFAULT JSON('{}')) RETURN NUMBER;
+END citydb_terminate;
+/
+
+-- Package body definition
+CREATE OR REPLACE PACKAGE BODY citydb_terminate
+AS
+
+  /******************************************************************
+  * terminate feature and its contained subfeatures based on an id
+  * array with cycle tracking
+  ******************************************************************/
+  FUNCTION terminate_feature_internal(pid_array NUMBER_TAB, metadata JSON, visited_ids NUMBER_TAB) RETURN NUMBER_TAB
+  IS
+    terminated_ids NUMBER_TAB := NUMBER_TAB();
+    child_feature_ids NUMBER_TAB := NUMBER_TAB();
+    current_ids NUMBER_TAB;
+    temp NUMBER_TAB;
+    dummy NUMBER_TAB;
+  BEGIN
+    current_ids := visited_ids MULTISET UNION pid_array;
+
+    UPDATE feature f SET
+      termination_date = COALESCE(
+        TO_TIMESTAMP_TZ(JSON_VALUE(metadata, '$.termination_date'), 'YYYY-MM-DD"T"HH24:MI:SS.FFTZH:TZM'),
+        SYSTIMESTAMP),
+      last_modification_date = COALESCE(
+        TO_TIMESTAMP_TZ(JSON_VALUE(metadata, '$.last_modification_date'), 'YYYY-MM-DD"T"HH24:MI:SS.FFTZH:TZM'),
+        SYSTIMESTAMP),
+      reason_for_update = COALESCE(JSON_VALUE(metadata, '$.reason_for_update'), f.reason_for_update),
+      updating_person = COALESCE(JSON_VALUE(metadata, '$.updating_person'), USER),
+      lineage = COALESCE(JSON_VALUE(metadata, '$.lineage'), f.lineage)
+    WHERE f.id IN (SELECT COLUMN_VALUE FROM TABLE(pid_array))
+      AND f.termination_date IS NULL
+    RETURNING f.id BULK COLLECT INTO terminated_ids;
+
+    IF terminated_ids.COUNT > 0 THEN
+      SELECT p.val_feature_id BULK COLLECT INTO child_feature_ids
+      FROM property p
+      WHERE p.feature_id IN (SELECT COLUMN_VALUE FROM TABLE(terminated_ids))
+        AND p.val_relation_type = 1
+        AND p.val_feature_id IS NOT NULL
+        AND p.val_feature_id NOT IN (SELECT COLUMN_VALUE FROM TABLE(current_ids));
+
+      IF child_feature_ids.COUNT > 0 THEN
+        SELECT DISTINCT a.COLUMN_VALUE BULK COLLECT INTO temp
+        FROM TABLE(child_feature_ids) a
+        WHERE NOT EXISTS (
+          SELECT 1 FROM property p
+          INNER JOIN feature f ON f.id = p.feature_id
+          WHERE p.val_feature_id = a.COLUMN_VALUE
+            AND f.termination_date IS NULL
+            AND p.val_relation_type = 1
+        );
+
+        IF temp.COUNT > 0 THEN
+          dummy := terminate_feature_internal(temp, metadata, current_ids);
+        END IF;
+      END IF;
+    END IF;
+
+    RETURN terminated_ids;
+  END terminate_feature_internal;
+
+  /******************************************************************
+  * terminate feature based on an id array
+  ******************************************************************/
+  FUNCTION terminate_feature(pid_array NUMBER_TAB, metadata JSON DEFAULT JSON('{}')) RETURN NUMBER_TAB
+  IS
+  BEGIN
+    RETURN terminate_feature_internal(pid_array, metadata, NUMBER_TAB());
+  END terminate_feature;
+
+  /******************************************************************
+  * terminate a feature based on an id
+  ******************************************************************/
+  FUNCTION terminate_feature(pid NUMBER, metadata JSON DEFAULT JSON('{}')) RETURN NUMBER
+  IS
+    result NUMBER_TAB;
+  BEGIN
+    result := terminate_feature(NUMBER_TAB(pid), metadata);
+    IF result.COUNT > 0 THEN RETURN result(1); ELSE RETURN NULL; END IF;
+  END terminate_feature;
+
+END citydb_terminate;
+/
+
+-- Package declaration
 CREATE OR REPLACE PACKAGE citydb_delete
 AUTHID DEFINER
 AS
@@ -182,6 +274,8 @@ AS
     implicit_geometry_ids NUMBER_TAB := NUMBER_TAB();
     appearance_ids NUMBER_TAB := NUMBER_TAB();
     address_ids NUMBER_TAB := NUMBER_TAB();
+    orphan_feature_ids NUMBER_TAB;
+    kept_feature_ids NUMBER_TAB;
     temp NUMBER_TAB;
     dummy NUMBER_TAB;
   BEGIN
@@ -211,7 +305,7 @@ AS
     END LOOP;
 
     IF feature_ids.COUNT > 0 THEN
-      SELECT DISTINCT a.COLUMN_VALUE BULK COLLECT INTO temp
+      SELECT DISTINCT a.COLUMN_VALUE BULK COLLECT INTO orphan_feature_ids
       FROM TABLE(feature_ids) a
       WHERE NOT EXISTS (
         SELECT 1
@@ -220,8 +314,37 @@ AS
           AND p.val_relation_type = 1
       );
 
-      IF temp.COUNT > 0 THEN
-        dummy := delete_feature(temp);
+      SELECT DISTINCT a.COLUMN_VALUE BULK COLLECT INTO kept_feature_ids
+      FROM TABLE(feature_ids) a
+      WHERE EXISTS (
+        SELECT 1
+        FROM property p
+        WHERE p.val_feature_id = a.COLUMN_VALUE
+          AND p.val_relation_type = 1
+      );
+
+      IF orphan_feature_ids.COUNT > 0 THEN
+        dummy := delete_feature(orphan_feature_ids);
+      END IF;
+
+      -- a feature below a terminated feature is terminated itself, so subfeatures that are only kept
+      -- because terminated features still contain them are terminated
+      IF kept_feature_ids.COUNT > 0 THEN
+        SELECT f.id BULK COLLECT INTO temp
+        FROM TABLE(kept_feature_ids) a
+        JOIN feature f ON f.id = a.COLUMN_VALUE AND f.termination_date IS NULL
+        WHERE NOT EXISTS (
+          SELECT 1
+          FROM property p
+          JOIN feature pf ON pf.id = p.feature_id
+          WHERE p.val_feature_id = a.COLUMN_VALUE
+            AND p.val_relation_type = 1
+            AND pf.termination_date IS NULL
+        );
+
+        IF temp.COUNT > 0 THEN
+          dummy := citydb_terminate.terminate_feature(temp);
+        END IF;
       END IF;
     END IF;
 
@@ -526,95 +649,4 @@ AS
   END delete_address;
 
 END citydb_delete;
-/
-
--- Package declaration
-CREATE OR REPLACE PACKAGE citydb_terminate
-AUTHID DEFINER
-AS
-  FUNCTION terminate_feature(pid_array NUMBER_TAB, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER_TAB;
-  FUNCTION terminate_feature(pid NUMBER, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER;
-END citydb_terminate;
-/
-
--- Package body definition
-CREATE OR REPLACE PACKAGE BODY citydb_terminate
-AS
-
-  /******************************************************************
-  * terminate feature based on an id array with cycle tracking
-  ******************************************************************/
-  FUNCTION terminate_feature_internal(pid_array NUMBER_TAB, metadata JSON, cascade NUMBER, visited_ids NUMBER_TAB) RETURN NUMBER_TAB
-  IS
-    terminated_ids NUMBER_TAB := NUMBER_TAB();
-    child_feature_ids NUMBER_TAB := NUMBER_TAB();
-    current_ids NUMBER_TAB;
-    temp NUMBER_TAB;
-    dummy NUMBER_TAB;
-  BEGIN
-    current_ids := visited_ids MULTISET UNION pid_array;
-
-    UPDATE feature f SET
-      termination_date = COALESCE(
-        TO_TIMESTAMP_TZ(JSON_VALUE(metadata, '$.termination_date'), 'YYYY-MM-DD"T"HH24:MI:SS.FFTZH:TZM'),
-        SYSTIMESTAMP),
-      last_modification_date = COALESCE(
-        TO_TIMESTAMP_TZ(JSON_VALUE(metadata, '$.last_modification_date'), 'YYYY-MM-DD"T"HH24:MI:SS.FFTZH:TZM'),
-        SYSTIMESTAMP),
-      reason_for_update = COALESCE(JSON_VALUE(metadata, '$.reason_for_update'), f.reason_for_update),
-      updating_person = COALESCE(JSON_VALUE(metadata, '$.updating_person'), USER),
-      lineage = COALESCE(JSON_VALUE(metadata, '$.lineage'), f.lineage)
-    WHERE f.id IN (SELECT COLUMN_VALUE FROM TABLE(pid_array))
-      AND f.termination_date IS NULL
-    RETURNING f.id BULK COLLECT INTO terminated_ids;
-
-    IF cascade = 1 AND pid_array.COUNT > 0 THEN
-      SELECT p.val_feature_id BULK COLLECT INTO child_feature_ids
-      FROM property p
-      WHERE p.feature_id IN (SELECT COLUMN_VALUE FROM TABLE(pid_array))
-        AND p.val_relation_type = 1
-        AND p.val_feature_id IS NOT NULL
-        AND p.val_feature_id NOT IN (SELECT COLUMN_VALUE FROM TABLE(current_ids));
-
-      IF child_feature_ids.COUNT > 0 THEN
-        SELECT DISTINCT a.COLUMN_VALUE BULK COLLECT INTO temp
-        FROM TABLE(child_feature_ids) a
-        WHERE NOT EXISTS (
-          SELECT 1 FROM property p
-          INNER JOIN feature f ON f.id = p.feature_id
-          WHERE p.val_feature_id = a.COLUMN_VALUE
-            AND f.termination_date IS NULL
-            AND p.val_relation_type = 1
-        );
-
-        IF temp.COUNT > 0 THEN
-          dummy := terminate_feature_internal(temp, metadata, cascade, current_ids);
-        END IF;
-      END IF;
-    END IF;
-
-    RETURN terminated_ids;
-  END terminate_feature_internal;
-
-  /******************************************************************
-  * terminate feature based on an id array
-  ******************************************************************/
-  FUNCTION terminate_feature(pid_array NUMBER_TAB, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER_TAB
-  IS
-  BEGIN
-    RETURN terminate_feature_internal(pid_array, metadata, cascade, NUMBER_TAB());
-  END terminate_feature;
-
-  /******************************************************************
-  * terminate a feature based on an id
-  ******************************************************************/
-  FUNCTION terminate_feature(pid NUMBER, metadata JSON DEFAULT JSON('{}'), cascade NUMBER DEFAULT 1) RETURN NUMBER
-  IS
-    result NUMBER_TAB;
-  BEGIN
-    result := terminate_feature(NUMBER_TAB(pid), metadata, cascade);
-    IF result.COUNT > 0 THEN RETURN result(1); ELSE RETURN NULL; END IF;
-  END terminate_feature;
-
-END citydb_terminate;
 /
