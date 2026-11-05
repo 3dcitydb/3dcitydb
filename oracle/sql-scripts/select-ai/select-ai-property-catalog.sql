@@ -529,10 +529,14 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
     v_ctx CLOB;
     v_cat CLOB;
     v_lf  CONSTANT VARCHAR2(2) := CHR(10);
+    v_ns  VARCHAR2(4000);   -- 'alias=id ...' of every namespace, ADEs included
   BEGIN
     IF p_question IS NULL OR DBMS_LOB.GETLENGTH(p_question) = 0 THEN
       RAISE_APPLICATION_ERROR(-20800, 'Question must not be empty.');
     END IF;
+
+    SELECT LISTAGG(alias || '=' || id, ' ') WITHIN GROUP (ORDER BY id)
+      INTO v_ns FROM namespace WHERE alias IS NOT NULL;
 
     DBMS_LOB.CREATETEMPORARY(v_ctx, TRUE);
 
@@ -540,10 +544,15 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
       'DATA MODEL (Entity-Attribute-Value):' || v_lf ||
       '- FEATURE: one row per city object. Its type is FEATURE.OBJECTCLASS_ID (an integer).' || v_lf ||
       '  NEVER join the OBJECTCLASS table; filter f.objectclass_id by the literal id from the catalog header.' || v_lf ||
+      '- A feature whose TERMINATION_DATE is set is historic. Questions are about current features' || v_lf ||
+      '  unless they ask for terminated or historic ones, so the feature the question counts or lists' || v_lf ||
+      '  gets f.termination_date IS NULL; joined child features need no such filter.' || v_lf ||
       '- PROPERTY: attributes of a feature (EAV). Join via PROPERTY.FEATURE_ID = FEATURE.ID and' || v_lf ||
       '  filter PROPERTY.NAME = ''<exact property name>''. The value sits in a type-specific column' || v_lf ||
       '  (val_string, val_int, val_double, val_timestamp, val_uri, val_feature_id, val_geometry_id, ...).' || v_lf ||
       '  Code value: val_string (+ val_codespace). Measure value: val_double (+ val_uom). Boolean: val_int (0/1).' || v_lf ||
+      '  When the question writes a property with a namespace prefix (bldg:function), the prefix also' || v_lf ||
+      '  fixes PROPERTY.NAMESPACE_ID: ' || v_ns || v_lf ||
       '- Nested/complex properties use PROPERTY.PARENT_ID (two-hop join; see catalog "parent.child" lines).' || v_lf ||
       '- MULTI-VALUED PROPERTIES: a feature can have several PROPERTY rows with the same NAME, so a' || v_lf ||
       '  property p stands for the SET of its values (for a nested path: the values reached through' || v_lf ||
