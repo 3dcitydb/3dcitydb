@@ -545,6 +545,14 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
       '  (val_string, val_int, val_double, val_timestamp, val_uri, val_feature_id, val_geometry_id, ...).' || v_lf ||
       '  Code value: val_string (+ val_codespace). Measure value: val_double (+ val_uom). Boolean: val_int (0/1).' || v_lf ||
       '- Nested/complex properties use PROPERTY.PARENT_ID (two-hop join; see catalog "parent.child" lines).' || v_lf ||
+      '- MULTI-VALUED PROPERTIES: a feature can have several PROPERTY rows with the same NAME, so a' || v_lf ||
+      '  property p stands for the SET of its values (for a nested path: the values reached through' || v_lf ||
+      '  the whole join chain). Predicates on p use SQL three-valued logic over this set:' || v_lf ||
+      '  * a comparison (such as =, <>, <, IN, LIKE, BETWEEN) is TRUE if some value satisfies it;' || v_lf ||
+      '    else NULL if the set is empty or contains NULL; else FALSE.' || v_lf ||
+      '  * p IS NULL is TRUE if the set has no non-NULL value, else FALSE; IS NOT NULL inverts it.' || v_lf ||
+      '  * NOT, AND, OR combine these as in SQL; a feature is selected only when the filter is TRUE.' || v_lf ||
+      '  In SQL, give each predicate its own correlated subquery over the value rows of p.' || v_lf ||
       '- Containment: a parent owns child features via a PROPERTY whose VAL_FEATURE_ID is the' || v_lf ||
       '  child FEATURE.ID. Traverse it TARGET-FIRST by these rules:' || v_lf ||
       '  (1) Identify the wanted feature type T. From the CONTAINED-BY INDEX (end of catalog)' || v_lf ||
