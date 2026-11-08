@@ -377,6 +377,7 @@
 			<fk name="property_val_address_fk" to_schema="citydb" to_table="address" delete_action="cascade" >
 				<fk_column name="val_address_id" pk="id" />
 			</fk>
+			<post_script><![CDATA[CREATE STATISTICS property_name_namespace_stx (dependencies, mcv) ON name, namespace_id FROM property;]]></post_script>
 		</table>
 		<table name="surface_data" >
 			<column name="id" type="bigint" length="19" decimal="0" mandatory="y" >

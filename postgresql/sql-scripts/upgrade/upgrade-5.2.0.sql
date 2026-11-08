@@ -15,6 +15,11 @@ BEGIN
     EXECUTE format('set search_path to %I, citydb_pkg, public', schema_name);
     RAISE NOTICE 'Upgrading schema "%" ...', schema_name;
 
+    RAISE NOTICE 'Creating extended statistics on "property(name, namespace_id)" ...';
+    CREATE STATISTICS property_name_namespace_stx (dependencies, mcv)
+      ON name, namespace_id FROM property;
+    ANALYZE property (name, namespace_id);
+
     RAISE NOTICE 'Setting "objectclass.is_toplevel" to true for GenericThematicSurface ...';
     UPDATE objectclass SET is_toplevel = 1 WHERE id = 203;
   END LOOP;
