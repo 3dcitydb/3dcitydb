@@ -15,6 +15,7 @@
 ### Fixed
 - Fixed `GenericThematicSurface` not being treated as a top-level feature and updated the corresponding metadata in the
   `objectclass` table.
+- Fixed the schema mapping of `AbstractObject` defining `codeSpace` as child of `objectId` instead of `identifier`.
 
 ## [5.1.4] - 2026-08-25
 
