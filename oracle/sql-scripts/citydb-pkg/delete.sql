@@ -143,13 +143,14 @@ AS
     data_sequences STRING_TAB := STRING_TAB(
       'FEATURE_SEQ','PROPERTY_SEQ','GEOMETRY_DATA_SEQ','IMPLICIT_GEOMETRY_SEQ','APPEARANCE_SEQ',
       'SURFACE_DATA_SEQ','APPEAR_TO_SURFACE_DATA_SEQ','TEX_IMAGE_SEQ','ADDRESS_SEQ','FEATURE_CHANGELOG_SEQ');
-    external_refs VARCHAR2(4000);
+    external_refs VARCHAR2(32767);
   BEGIN
     -- Every ALTER and TRUNCATE below commits implicitly, so nothing can be rolled back once
     -- we start. External tables referencing a 3DCityDB table are not supported: their rows
     -- would be orphaned by the truncate and re-enabling their foreign keys would fail, leaving
     -- the schema in an inconsistent state. Reject such references before touching anything.
-    SELECT LISTAGG(c.table_name || '.' || c.constraint_name, ', ') WITHIN GROUP (ORDER BY c.table_name, c.constraint_name)
+    SELECT LISTAGG(c.table_name || '.' || c.constraint_name, ', ' ON OVERFLOW TRUNCATE '...' WITH COUNT)
+           WITHIN GROUP (ORDER BY c.table_name, c.constraint_name)
     INTO external_refs
     FROM user_constraints c
     JOIN user_constraints r ON c.r_constraint_name = r.constraint_name
@@ -158,6 +159,11 @@ AS
       AND c.table_name NOT MEMBER OF data_tables;
 
     IF external_refs IS NOT NULL THEN
+      -- the error message is limited to 2048 bytes, so only show the beginning of a long list
+      IF LENGTH(external_refs) > 1500 THEN
+        external_refs := SUBSTR(external_refs, 1, 1500) || '...';
+      END IF;
+
       RAISE_APPLICATION_ERROR(-20001,
         'cleanup_schema aborted: tables outside the 3DCityDB schema reference 3DCityDB tables (' || external_refs || '). ' ||
         'Drop these foreign keys or tables before running cleanup_schema.');
