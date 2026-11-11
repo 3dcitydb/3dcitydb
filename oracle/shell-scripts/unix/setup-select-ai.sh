@@ -97,12 +97,17 @@ SSL_WALLET_DIR=${SSL_WALLET_DIR:-/opt/oracle/wallet}
 
 # Prompt for OpenAI API key ------------------------------------------------------
 echo
-read -sp "Please enter the OpenAI API key: " OPENAI_API_KEY
+read -sp "Please enter the OpenAI API key: " AI_API_KEY
 echo
-if [ -z "$OPENAI_API_KEY" ]; then
+if [ -z "$AI_API_KEY" ]; then
   echo "ERROR: OpenAI API key is required."
   exit 1
 fi
+
+# Prompt for OpenAI model --------------------------------------------------------
+echo
+read -p "Please enter the OpenAI model (default: gpt-5.5): " AI_MODEL
+AI_MODEL=${AI_MODEL:-gpt-5.5}
 
 # Uppercase DB_USER for Oracle identifiers
 DB_USER_UPPER=$(echo "$DB_USER" | tr '[:lower:]' '[:upper:]')
@@ -170,8 +175,9 @@ echo "Connecting to \"$DB_USER@$DB_HOST:$DB_PORT/$ORACLE_PDB\" ..."
 WHENEVER OSERROR EXIT 9;
 WHENEVER SQLERROR EXIT SQL.SQLCODE;
 
-DEFINE OPENAI_API_KEY='${OPENAI_API_KEY}'
 DEFINE DB_USER='${DB_USER_UPPER}'
+DEFINE AI_API_KEY='${AI_API_KEY}'
+DEFINE AI_MODEL='${AI_MODEL}'
 
 @select-ai/select-ai-create-profile.sql
 EXIT

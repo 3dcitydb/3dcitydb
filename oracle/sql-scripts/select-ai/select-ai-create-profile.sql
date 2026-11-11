@@ -1,8 +1,9 @@
 -- select-ai-create-profile.sql
 -- Run as the application user (e.g. CITYDB) in the target PDB.
 -- Required SQL*Plus defines:
---   OPENAI_API_KEY (the API key value)
---   DB_USER        (e.g. CITYDB)
+--   DB_USER    (e.g. CITYDB)
+--   AI_API_KEY (the OpenAI API key value)
+--   AI_MODEL   (the OpenAI model name, e.g. gpt-5.5)
 
 WHENEVER SQLERROR EXIT SQL.SQLCODE;
 
@@ -27,7 +28,7 @@ BEGIN
   DBMS_CLOUD.CREATE_CREDENTIAL(
     credential_name => 'OPENAI_CRED',
     username        => 'OPENAI',
-    password        => '&OPENAI_API_KEY'
+    password        => '&AI_API_KEY'
   );
 END;
 /
@@ -73,7 +74,7 @@ BEGIN
         {"owner": "&DB_USER", "name": "SURFACE_DATA_MAPPING"},
         {"owner": "&DB_USER", "name": "TEX_IMAGE"}
       ],
-      "model": "gpt-5.4",
+      "model": "&AI_MODEL",
       "conversation": "true",
       "annotations": "true",
       "constraints": "true",

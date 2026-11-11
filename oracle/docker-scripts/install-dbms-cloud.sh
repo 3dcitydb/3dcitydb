@@ -18,6 +18,7 @@ SSL_WALLET_DIR="${SSL_WALLET_DIR:-/opt/oracle/wallet}"
 SSL_WALLET_PWD="${SSL_WALLET_PWD:-WalletPass123}"
 CLOUD_OWNER="${CLOUD_OWNER:-C##CLOUD\$SERVICE}"
 CUSTOM_SQL_DIR="${CUSTOM_SQL_DIR:-/opt/oracle/3dcitydb-custom}"
+AI_MODEL="${AI_MODEL:-gpt-5.5}"
 
 DBMS_CLOUD_CERTS_URL="${DBMS_CLOUD_CERTS_URL:-https://objectstorage.us-phoenix-1.oraclecloud.com/p/KB63IAuDCGhz_azOVQ07Qa_mxL3bGrFh1dtsltreRJPbmb-VwsH2aQ4Pur2ADBMA/n/adwcdemo/b/CERTS/o/dbc_certs.tar}"
 
@@ -104,17 +105,7 @@ SQL
 
 echo "[SelectAI][SYS] SYS setup completed."
 
-# --- Step 5: Verify outbound HTTPS connectivity (non-fatal) -----------------
-echo
-echo "Verifying outbound HTTPS connectivity ..."
-
-if curl -fsSL --max-time 10 https://api.openai.com >/dev/null 2>&1; then
-  echo "[SelectAI][VERIFY] HTTPS connectivity OK."
-else
-  echo "[SelectAI][VERIFY][WARN] Cannot reach https://api.openai.com (ignored)."
-fi
-
-# --- Step 6: Property catalog view + annotations (as app user in PDB) --------
+# --- Step 5: Property catalog view + annotations (as app user in PDB) --------
 echo
 echo "[SelectAI] Creating property catalog view and schema annotations ..."
 
@@ -130,10 +121,10 @@ SQL
 
 echo "[SelectAI] Property catalog, annotations and NL2SQL layer created."
 
-# --- Step 7: Create AI profile (must run as app user in PDB) -----------------
-if [ -z "${OPENAI_API_KEY}" ]; then
+# --- Step 6: Create AI profile (must run as app user in PDB) -----------------
+if [ -z "${AI_API_KEY}" ]; then
   echo
-  echo "[SelectAI][WARN] OPENAI_API_KEY is not set. Skipping AI profile creation."
+  echo "[SelectAI][WARN] AI_API_KEY is not set. Skipping AI profile creation."
   echo "You can create the profile manually later by running select-ai-create-profile.sql."
 else
   echo
@@ -143,8 +134,9 @@ else
 WHENEVER OSERROR EXIT 9;
 WHENEVER SQLERROR EXIT SQL.SQLCODE;
 
-DEFINE OPENAI_API_KEY='${OPENAI_API_KEY}'
 DEFINE DB_USER='${DB_USER^^}'
+DEFINE AI_API_KEY='${AI_API_KEY}'
+DEFINE AI_MODEL='${AI_MODEL}'
 
 @${CUSTOM_SQL_DIR}/select-ai-create-profile.sql
 

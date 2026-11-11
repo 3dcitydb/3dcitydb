@@ -97,13 +97,19 @@ if "%SSL_WALLET_DIR%"=="" set "SSL_WALLET_DIR=C:\oracle\wallet"
 
 :: Prompt for OpenAI API key ------------------------------------------------------
 echo.
-set "OPENAI_API_KEY="
-set /p OPENAI_API_KEY="Please enter the OpenAI API key: "
+set "AI_API_KEY="
+set /p AI_API_KEY="Please enter the OpenAI API key: "
 
-if "%OPENAI_API_KEY%"=="" (
+if "%AI_API_KEY%"=="" (
   echo ERROR: OpenAI API key is required.
   goto error
 )
+
+:: Prompt for OpenAI model --------------------------------------------------------
+echo.
+set "AI_MODEL="
+set /p AI_MODEL="Please enter the OpenAI model (default: gpt-5.5): "
+if "%AI_MODEL%"=="" set "AI_MODEL=gpt-5.5"
 
 :: --- Step 1: Run SYS setup (ACLs, roles, privileges, PDB grants) ---------------
 echo.
@@ -173,8 +179,9 @@ set "TMPPROFILE=%TEMP%\3dcitydb_profile_%RANDOM%.sql"
 > "%TMPPROFILE%" (
   echo WHENEVER OSERROR EXIT 9;
   echo WHENEVER SQLERROR EXIT SQL.SQLCODE;
-  echo DEFINE OPENAI_API_KEY='%OPENAI_API_KEY%'
   echo DEFINE DB_USER='%DB_USER%'
+  echo DEFINE AI_API_KEY='%AI_API_KEY%'
+  echo DEFINE AI_MODEL='%AI_MODEL%'
   echo @select-ai/select-ai-create-profile.sql
   echo EXIT
 )
