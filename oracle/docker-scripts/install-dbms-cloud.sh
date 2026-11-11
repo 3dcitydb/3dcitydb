@@ -105,21 +105,20 @@ SQL
 
 echo "[SelectAI][SYS] SYS setup completed."
 
-# --- Step 5: Property catalog view + annotations (as app user in PDB) --------
+# --- Step 5: Property catalog views + CITYDB_AI package (as app user in PDB) --
 echo
-echo "[SelectAI] Creating property catalog view and schema annotations ..."
+echo "[SelectAI] Creating property catalog views and CITYDB_AI package ..."
 
 sqlplus -S "$DB_USER"/"$ORACLE_PWD"@"$ORACLE_PDB" <<SQL
 WHENEVER OSERROR EXIT 9;
 WHENEVER SQLERROR EXIT SQL.SQLCODE;
 
 @${CUSTOM_SQL_DIR}/select-ai-property-catalog.sql
-@${CUSTOM_SQL_DIR}/select-ai-annotations.sql
 
 EXIT
 SQL
 
-echo "[SelectAI] Property catalog, annotations and NL2SQL layer created."
+echo "[SelectAI] Property catalog and NL2SQL layer created."
 
 # --- Step 6: Create AI profile (must run as app user in PDB) -----------------
 if [ -z "${AI_API_KEY}" ]; then

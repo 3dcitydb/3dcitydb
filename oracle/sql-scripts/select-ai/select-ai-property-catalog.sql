@@ -8,8 +8,7 @@
 --             column, or a containment target), tagged with the ancestor class
 --             that DECLARES each property. PROPERTY_CATALOG_TEXT renders one
 --             compact "prop -> storage" line per property on top of it. Neither
---             is in the Select AI object_list nor carries annotations (those
---             live in select-ai-annotations.sql).
+--             is in the Select AI object_list.
 --   PART 2 -- CITYDB_AI package: assembles PART 1 (plus the EAV query rules)
 --             into the prompt. Properties shared via inheritance are emitted
 --             ONCE as named blocks (@namespace:AbstractClass); each feature type
@@ -24,9 +23,11 @@
 -- VAL_* column), is invisible to the model and it just guesses. BUILD_CONTEXT
 -- renders the catalog to text and injects it as the prompt, supplying the
 -- semantic layer Select AI cannot infer from DDL (EAV pattern + property->column
--- map). Because the rows now travel in the prompt, PROPERTY_CATALOG and the
--- metadata tables OBJECTCLASS/DATATYPE/NAMESPACE/ADE are kept out of the
--- object_list (see select-ai-create-profile.sql).
+-- map + the meaning of the object_list tables, which carry no comments or
+-- annotations). A bare `SELECT AI "<question>"` bypasses all of it -- always go
+-- through BUILD_CONTEXT as shown below. Because the rows now travel in the
+-- prompt, PROPERTY_CATALOG and the metadata tables OBJECTCLASS/DATATYPE/
+-- NAMESPACE/ADE are kept out of the object_list (see select-ai-create-profile.sql).
 --
 --   -- inspect the prompt (no LLM call, no DML), or get / run the SQL:
 --   SELECT DBMS_CLOUD_AI.GENERATE(
@@ -530,6 +531,8 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
     v_cat CLOB;
     v_lf  CONSTANT VARCHAR2(2) := CHR(10);
     v_ns  VARCHAR2(4000);   -- 'alias=id ...' of every namespace, ADEs included
+    v_sd  VARCHAR2(4000);   -- 'classname=id, ...' of the SURFACE_DATA kinds
+    v_log NUMBER;           -- > 0 when the FEATURE_CHANGELOG table exists
   BEGIN
     IF p_question IS NULL OR DBMS_LOB.GETLENGTH(p_question) = 0 THEN
       RAISE_APPLICATION_ERROR(-20800, 'Question must not be empty.');
@@ -537,6 +540,12 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
 
     SELECT LISTAGG(alias || '=' || id, ' ') WITHIN GROUP (ORDER BY id)
       INTO v_ns FROM namespace WHERE alias IS NOT NULL;
+
+    SELECT LISTAGG(classname || '=' || id, ', ') WITHIN GROUP (ORDER BY id)
+      INTO v_sd FROM objectclass
+     WHERE classname IN ('X3DMaterial', 'ParameterizedTexture', 'GeoreferencedTexture');
+
+    SELECT COUNT(*) INTO v_log FROM user_tables WHERE table_name = 'FEATURE_CHANGELOG';
 
     DBMS_LOB.CREATETEMPORARY(v_ctx, TRUE);
 
@@ -593,7 +602,36 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
       '      Rules (1)-(4) still apply when you want a SPECIFIC/direct relationship rather than' || v_lf ||
       '      the whole subtree.' || v_lf ||
       '- GEOMETRY_DATA.GEOMETRY holds SDO_GEOMETRY; reach it via a property''s val_geometry_id.' || v_lf ||
-      '- ADDRESS is reached via a property''s val_address_id (addresses are NOT in FEATURE).' || v_lf || v_lf ||
+      '- ADDRESS is reached via a property''s val_address_id (addresses are NOT in FEATURE).' || v_lf);
+
+    -- Semantics of the remaining object_list tables. The tables carry no
+    -- comments or annotations, so this text is all the LLM learns about them.
+    append_line(v_ctx,
+      '- VAL_ARRAY holds a JSON array (array-type properties); extract elements with JSON_TABLE or' || v_lf ||
+      '  JSON_VALUE. VAL_LOD is the level of detail of a geometry property.' || v_lf ||
+      '- IMPLICIT_GEOMETRY: reusable template geometry, reached via a property''s val_implicitgeom_id.' || v_lf ||
+      '  Its shape is the GEOMETRY_DATA row IMPLICIT_GEOMETRY.RELATIVE_GEOMETRY_ID, stored in the column' || v_lf ||
+      '  GEOMETRY_DATA.IMPLICIT_GEOMETRY (local coordinates; GEOMETRY_DATA.FEATURE_ID is NULL for it).' || v_lf ||
+      '- APPEARANCE (not in FEATURE): belongs to a feature via APPEARANCE.FEATURE_ID or to a template' || v_lf ||
+      '  via APPEARANCE.IMPLICIT_GEOMETRY_ID; IS_GLOBAL = 1 means it belongs to neither. Its textures and' || v_lf ||
+      '  materials are SURFACE_DATA rows, linked n:m through APPEAR_TO_SURFACE_DATA (appearance_id,' || v_lf ||
+      '  surface_data_id). SURFACE_DATA.OBJECTCLASS_ID gives the kind: ' || v_sd || '.' || v_lf ||
+      '  SURFACE_DATA_MAPPING (surface_data_id, geometry_data_id) links surface data to its target' || v_lf ||
+      '  geometries; texture images are in TEX_IMAGE via SURFACE_DATA.TEX_IMAGE_ID.' || v_lf ||
+      '- CODELIST (codelist_type, url) registers codelists; CODELIST_ENTRY (codelist_id, code,' || v_lf ||
+      '  definition) holds their values.' || v_lf ||
+      '- DATABASE_SRS: SRID and SRS_NAME of the coordinate reference system of all stored geometries.' || v_lf);
+
+    -- FEATURE_CHANGELOG exists only when the changelog extension is enabled.
+    IF v_log > 0 THEN
+      append_line(v_ctx,
+        '- FEATURE_CHANGELOG: audit log, one row per change of a top-level feature. TRANSACTION_TYPE is' || v_lf ||
+        '  ''INSERT'', ''UPDATE'', ''TERMINATE'' or ''DELETE''; TRANSACTION_DATE is when it happened;' || v_lf ||
+        '  OBJECTCLASS_ID uses the same ids as FEATURE. Once a feature is deleted, FEATURE_ID is NULL in' || v_lf ||
+        '  ALL of its rows -- trace a feature''s history by OBJECTID, not FEATURE_ID.' || v_lf);
+    END IF;
+
+    append_line(v_ctx, v_lf ||
       'CATALOG RULES:' || v_lf ||
       '- Use ONLY the feature types, property names and storage columns from the CATALOG below.' || v_lf ||
       '- Property names are case-sensitive; copy them verbatim.' || v_lf ||

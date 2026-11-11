@@ -76,9 +76,7 @@ BEGIN
       ],
       "model": "&AI_MODEL",
       "conversation": "true",
-      "annotations": "true",
-      "constraints": "true",
-      "comments": "true"
+      "constraints": "true"
     }'
   );
 END;

@@ -142,9 +142,9 @@ if %SYS_RC% NEQ 0 (
 
 echo SYS setup completed successfully.
 
-:: --- Step 2: Property catalog view + annotations (as app user) -----------------
+:: --- Step 2: Property catalog views + CITYDB_AI package (as app user) ----------
 echo.
-echo Creating property catalog view and schema annotations ...
+echo Creating property catalog views and CITYDB_AI package ...
 echo Connecting to "%DB_USER%@%DB_HOST%:%DB_PORT%/%ORACLE_PDB%" ...
 
 set "TMPCATALOG=%TEMP%\3dcitydb_catalog_%RANDOM%.sql"
@@ -153,7 +153,6 @@ set "TMPCATALOG=%TEMP%\3dcitydb_catalog_%RANDOM%.sql"
   echo WHENEVER OSERROR EXIT 9;
   echo WHENEVER SQLERROR EXIT SQL.SQLCODE;
   echo @select-ai/select-ai-property-catalog.sql
-  echo @select-ai/select-ai-annotations.sql
   echo EXIT
 )
 
@@ -167,7 +166,7 @@ if %CATALOG_RC% NEQ 0 (
   goto error
 )
 
-echo Property catalog and annotations created successfully.
+echo Property catalog and CITYDB_AI package created successfully.
 
 :: --- Step 3: Create AI profile (as app user) ------------------------------------
 echo.

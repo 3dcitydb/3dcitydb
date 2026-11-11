@@ -142,9 +142,9 @@ fi
 
 echo "SYS setup completed successfully."
 
-# --- Step 2: Property catalog view + annotations (as app user) -----------------
+# --- Step 2: Property catalog views + CITYDB_AI package (as app user) ----------
 echo
-echo "Creating property catalog view and schema annotations ..."
+echo "Creating property catalog views and CITYDB_AI package ..."
 echo "Connecting to \"$DB_USER@$DB_HOST:$DB_PORT/$ORACLE_PDB\" ..."
 
 "$ORACLE_CLIENT" -S -L "${DB_USER}/${DB_PWD}@${DB_HOST}:${DB_PORT}/${ORACLE_PDB}" <<SQL
@@ -152,7 +152,6 @@ WHENEVER OSERROR EXIT 9;
 WHENEVER SQLERROR EXIT SQL.SQLCODE;
 
 @select-ai/select-ai-property-catalog.sql
-@select-ai/select-ai-annotations.sql
 EXIT
 SQL
 
@@ -164,7 +163,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo "Property catalog and annotations created successfully."
+echo "Property catalog and CITYDB_AI package created successfully."
 
 # --- Step 3: Create AI profile (as app user) ------------------------------------
 echo
