@@ -4,9 +4,11 @@
 --
 --   PART 1 -- PROPERTY_CATALOG view: a flattened, inheritance-resolved catalog
 --             mapping every CityGML property of every feature type to its
---             storage location (a PROPERTY VAL_* column, a direct FEATURE
---             column, or a containment target), tagged with the ancestor class
---             that DECLARES each property. PROPERTY_CATALOG_TEXT renders one
+--             storage location (a PROPERTY VAL_* column, a direct column of
+--             the table its class is stored in -- FEATURE, or ADDRESS /
+--             APPEARANCE / SURFACE_DATA / IMPLICIT_GEOMETRY -- or a containment
+--             target), tagged with the ancestor class that DECLARES each
+--             property. PROPERTY_CATALOG_TEXT renders one
 --             compact "prop -> storage" line per property on top of it. Neither
 --             is in the Select AI object_list.
 --   PART 2 -- CITYDB_AI package: assembles PART 1 (plus the EAV query rules)
@@ -59,7 +61,8 @@ CREATE OR REPLACE VIEW property_catalog (
   ade_id, property_name, parent_property, value_column,
   join_table, target_objectclass_id, target_feature_type,
   relation_type, description, query_pattern,
-  declaring_class_id, declaring_class_name, declaring_namespace_alias, inheritance_level
+  declaring_class_id, declaring_class_name, declaring_namespace_alias, inheritance_level,
+  source_table, join_condition, sub_storage
 ) AS
 WITH
 -- Walk UP from each concrete class to collect all ancestor IDs.
@@ -74,10 +77,13 @@ ancestor_chain (leaf_id, current_id, lvl) AS (
   WHERE oc.superclass_id IS NOT NULL
 ),
 -- Extract properties from each ancestor's SCHEMA JSON.
--- Handles two patterns:
+-- Handles these patterns:
 --   a) type-based  (type: "core:Code")         -> stored in PROPERTY table
---   b) direct-col  (value.column: "valid_from") -> stored in FEATURE table
-raw_props AS (
+--   b) direct-col  (value.column: "valid_from") -> column of the class's own
+--      table ($.table: FEATURE, ADDRESS, APPEARANCE, SURFACE_DATA, ...)
+--   c) join        (join / joinTable)           -> column or row of another
+--      table reached from the class's own table (e.g. TEX_IMAGE)
+raw_props_base AS (
   SELECT
     ac.leaf_id AS objectclass_id,
     ac.current_id AS declaring_class_id,   -- ancestor class that declares the property
@@ -87,20 +93,56 @@ raw_props AS (
     jt.direct_column,
     jt.property_target,
     jt.relation_type,
-    jt.description
+    jt.description,
+    jt.join_table, jt.join_from, jt.join_to,
+    jt.link_table, jt.link_src_col, jt.src_col, jt.link_tgt_col, jt.tgt_table, jt.tgt_col,
+    jt.ord, jt.parent_idx
   FROM ancestor_chain ac
   JOIN objectclass oc ON oc.id = ac.current_id
   CROSS APPLY JSON_TABLE(oc.schema, '$.properties[*]'
     COLUMNS (
+      ord             FOR ORDINALITY,
+      -- 0-based index of the property this one qualifies (e.g. the codeSpace
+      -- of mimeType); it is stored alongside that property
+      parent_idx      NUMBER         PATH '$.parent',
       property_name   VARCHAR2(255)  PATH '$.name',
       property_type   VARCHAR2(255)  PATH '$.type',
       direct_column   VARCHAR2(255)  PATH '$.value.column',
       property_target VARCHAR2(255)  PATH '$.target',
       relation_type   VARCHAR2(50)   PATH '$.relationType',
-      description     VARCHAR2(4000) PATH '$.description'
+      description     VARCHAR2(4000) PATH '$.description',
+      -- c) 1:n join: <join_table>.<join_to> = <own table>.<join_from>
+      join_table      VARCHAR2(128)  PATH '$.join.table',
+      join_from       VARCHAR2(128)  PATH '$.join.fromColumn',
+      join_to         VARCHAR2(128)  PATH '$.join.toColumn',
+      -- c) n:m join through a link table (e.g. APPEAR_TO_SURFACE_DATA)
+      link_table      VARCHAR2(128)  PATH '$.joinTable.table',
+      link_src_col    VARCHAR2(128)  PATH '$.joinTable.sourceJoin.toColumn',
+      src_col         VARCHAR2(128)  PATH '$.joinTable.sourceJoin.fromColumn',
+      link_tgt_col    VARCHAR2(128)  PATH '$.joinTable.targetJoin.fromColumn',
+      tgt_table       VARCHAR2(128)  PATH '$.joinTable.targetJoin.table',
+      tgt_col         VARCHAR2(128)  PATH '$.joinTable.targetJoin.toColumn'
     )
   ) jt
   WHERE oc.schema IS NOT NULL
+),
+-- A property that qualifies another one ("parent") lives where that one does,
+-- so it inherits the parent's join when it has none of its own.
+raw_props AS (
+  SELECT
+    b.objectclass_id, b.declaring_class_id, b.inheritance_level,
+    b.property_name, b.property_type, b.direct_column, b.property_target,
+    b.relation_type, b.description,
+    COALESCE(b.join_table, pp.join_table) AS join_table,
+    COALESCE(b.join_from, pp.join_from) AS join_from,
+    COALESCE(b.join_to, pp.join_to) AS join_to,
+    b.link_table, b.link_src_col, b.src_col, b.link_tgt_col, b.tgt_table, b.tgt_col
+  FROM raw_props_base b
+  LEFT JOIN raw_props_base pp
+    ON pp.objectclass_id = b.objectclass_id
+    AND pp.declaring_class_id = b.declaring_class_id
+    AND pp.ord = b.parent_idx + 1
+    AND b.join_table IS NULL
 ),
 -- Extract value-column and join-table mappings from DATATYPE.SCHEMA.
 -- This replaces hardcoded type->column mapping with data-driven lookup.
@@ -116,21 +158,29 @@ datatype_map AS (
   FROM datatype
   WHERE schema IS NOT NULL
 ),
--- Extract sub-properties from complex data types (con:Height,
--- core:Occupancy, etc.) whose sub-attributes are stored as child
--- rows in PROPERTY joined via PARENT_ID.
+-- Extract sub-properties from complex data types. They are stored in one of
+-- two ways, told apart by the sub-property's own "join":
+--   * join on PARENT_ID (con:Height, core:Occupancy, ...): a CHILD row in
+--     PROPERTY that references the parent row via PARENT_ID
+--   * no join (core:QualifiedArea, core:ExternalReference, core:Code, ...): a
+--     column of the parent property's OWN row, given by the sub-property's
+--     value.column or by its type.
 datatype_subprops AS (
   SELECT
     JSON_VALUE(dt.schema, '$.identifier') AS parent_type_id,
     jt.sub_name,
     jt.sub_type,
-    jt.sub_description
+    jt.sub_description,
+    jt.sub_column,
+    CASE WHEN LOWER(jt.sub_join_to) = 'parent_id' THEN 1 ELSE 0 END AS is_child_row
   FROM datatype dt
   CROSS APPLY JSON_TABLE(dt.schema, '$.properties[*]'
     COLUMNS (
       sub_name        VARCHAR2(255)  PATH '$.name',
       sub_type        VARCHAR2(255)  PATH '$.type',
-      sub_description VARCHAR2(4000) PATH '$.description'
+      sub_description VARCHAR2(4000) PATH '$.description',
+      sub_column      VARCHAR2(255)  PATH '$.value.column',
+      sub_join_to     VARCHAR2(128)  PATH '$.join.toColumn'
     )
   ) jt
   WHERE dt.schema IS NOT NULL
@@ -167,12 +217,13 @@ SELECT DISTINCT
   NULL,                             -- parent_property (top-level properties)
   -- Map to storage column (data-driven from DATATYPE.SCHEMA) ---------------
   COALESCE(
-    UPPER(rp.direct_column),          -- direct FEATURE-table column
+    UPPER(rp.direct_column),          -- direct column (own table, or join table)
     UPPER(dm.value_col),              -- simple types: value.column
     UPPER(dm.join_col)                -- reference types: join.fromColumn
   ),
-  -- Join table for reference types (e.g. geometry_data, address, feature) --
-  UPPER(dm.join_tbl),
+  -- Join table: a property-level join (pattern c) first, else the one of a
+  -- reference type (e.g. geometry_data, address, feature) -------------------
+  COALESCE(UPPER(rp.join_table), UPPER(rp.tgt_table), UPPER(dm.join_tbl)),
   -- Resolve containment targets to concrete objectclass_ids ----------------
   CASE WHEN rp.relation_type = 'contains'
     THEN tgt_concrete.id ELSE NULL END,
@@ -182,11 +233,20 @@ SELECT DISTINCT
   rp.description,
   -- Pre-built SQL query pattern for this property
   CASE
+    -- Reached through a property-level join (pattern c): no simple pattern
+    WHEN rp.join_table IS NOT NULL OR rp.link_table IS NOT NULL THEN NULL
     -- Direct FEATURE-table column (e.g. VALID_FROM, CREATION_DATE)
-    WHEN rp.direct_column IS NOT NULL THEN
+    WHEN rp.direct_column IS NOT NULL
+         AND LOWER(JSON_VALUE(oc_src.schema, '$.table')) = 'feature' THEN
       'SELECT f.' || LOWER(rp.direct_column)
         || ' FROM feature f'
         || ' WHERE f.objectclass_id = ' || rp.objectclass_id
+    -- Direct column of another table (ADDRESS, APPEARANCE, SURFACE_DATA, ...)
+    WHEN rp.direct_column IS NOT NULL THEN
+      'SELECT t.' || LOWER(rp.direct_column)
+        || ' FROM ' || LOWER(JSON_VALUE(oc_src.schema, '$.table')) || ' t'
+        || CASE WHEN LOWER(JSON_VALUE(oc_src.schema, '$.table')) = 'surface_data'
+                THEN ' WHERE t.objectclass_id = ' || rp.objectclass_id END
     -- Containment: parent -> child feature via val_feature_id
     WHEN rp.relation_type = 'contains' AND tgt_concrete.id IS NOT NULL THEN
       'SELECT f_child.* FROM feature f'
@@ -216,7 +276,22 @@ SELECT DISTINCT
   rp.declaring_class_id,
   dcoc.classname,
   dcns.alias,
-  rp.inheritance_level
+  rp.inheritance_level,
+  -- Table the class is stored in (FEATURE for city objects) -------------------
+  UPPER(JSON_VALUE(oc_src.schema, '$.table')),
+  -- Join condition of a property-level join (pattern c) -----------------------
+  CASE
+    WHEN rp.join_table IS NOT NULL THEN
+      LOWER(rp.join_table || '.' || rp.join_to || ' = '
+        || JSON_VALUE(oc_src.schema, '$.table') || '.' || rp.join_from)
+    WHEN rp.link_table IS NOT NULL THEN
+      LOWER(rp.link_table || '.' || rp.link_src_col || ' = '
+        || JSON_VALUE(oc_src.schema, '$.table') || '.' || rp.src_col)
+        || ' AND '
+        || LOWER(rp.tgt_table || '.' || rp.tgt_col || ' = '
+        || rp.link_table || '.' || rp.link_tgt_col)
+  END,
+  NULL                              -- sub_storage (top-level properties)
 FROM raw_props rp
 JOIN objectclass oc_src
   ON oc_src.id = rp.objectclass_id
@@ -241,11 +316,16 @@ LEFT JOIN objectclass tgt_concrete
   AND tgt_concrete.is_abstract = 0
   AND rp.relation_type = 'contains'
 UNION ALL
--- Sub-properties of complex types (accessed via PROPERTY.PARENT_ID join).
--- Query pattern for sub-properties:
---   JOIN property parent ON parent.feature_id = f.id AND parent.name = '<parent_property>'
---   JOIN property child  ON child.parent_id = parent.id AND child.name = '<property_name>'
---   Value in child.<value_column>
+-- Sub-properties of complex types. SUB_STORAGE tells where the value is:
+--   CHILD_ROW : a child PROPERTY row (two-hop join via PARENT_ID)
+--     JOIN property parent ON parent.feature_id = f.id AND parent.name = '<parent_property>'
+--     JOIN property child  ON child.parent_id = parent.id AND child.name = '<property_name>'
+--     Value in child.<value_column>
+--   SAME_ROW  : a column of the parent property's own row (single join)
+--     JOIN property parent ON parent.feature_id = f.id AND parent.name = '<parent_property>'
+--     Value in parent.<value_column>
+--   QUALIFIER : like SAME_ROW, but the parent row also holds a value of its own
+--     (codeSpace of a Code, uom of a Measure, lod of a geometry, ...)
 SELECT DISTINCT
   rp.objectclass_id,
   oc_src.classname,
@@ -254,15 +334,23 @@ SELECT DISTINCT
   oc_src.ade_id,
   dsp.sub_name,
   rp.property_name,
-  COALESCE(UPPER(sub_dm.value_col), UPPER(sub_dm.join_col)),
+  COALESCE(UPPER(dsp.sub_column), UPPER(sub_dm.value_col), UPPER(sub_dm.join_col)),
   UPPER(sub_dm.join_tbl),
   NULL,
   NULL,
   NULL,
   dsp.sub_description,
-  -- Pre-built SQL query pattern for this sub-property (two-hop PARENT_ID join)
+  -- Pre-built SQL query pattern for this sub-property
   CASE
-    -- Sub-property references a join table
+    -- Stored in the parent property's own row (single join)
+    WHEN dsp.is_child_row = 0
+         AND COALESCE(dsp.sub_column, sub_dm.value_col, sub_dm.join_col) IS NOT NULL THEN
+      'SELECT pp.' || LOWER(COALESCE(dsp.sub_column, sub_dm.value_col, sub_dm.join_col))
+        || ' FROM feature f'
+        || ' JOIN property pp ON pp.feature_id = f.id'
+        || ' AND pp.name = ''' || rp.property_name || ''''
+        || ' WHERE f.objectclass_id = ' || rp.objectclass_id
+    -- Child row (two-hop PARENT_ID join) that references a join table
     WHEN sub_dm.join_col IS NOT NULL AND sub_dm.join_tbl IS NOT NULL THEN
       'SELECT jt.* FROM feature f'
         || ' JOIN property pp ON pp.feature_id = f.id'
@@ -286,13 +374,21 @@ SELECT DISTINCT
   rp.declaring_class_id,
   dcoc.classname,
   dcns.alias,
-  rp.inheritance_level
+  rp.inheritance_level,
+  UPPER(JSON_VALUE(oc_src.schema, '$.table')),
+  NULL,                             -- join_condition
+  CASE
+    WHEN dsp.is_child_row = 1 THEN 'CHILD_ROW'
+    WHEN COALESCE(parent_dm.value_col, parent_dm.join_col) IS NOT NULL THEN 'QUALIFIER'
+    ELSE 'SAME_ROW'
+  END
 FROM raw_props rp
 JOIN objectclass oc_src ON oc_src.id = rp.objectclass_id
 JOIN objectclass dcoc ON dcoc.id = rp.declaring_class_id
 LEFT JOIN namespace dcns ON dcns.id = dcoc.namespace_id
 LEFT JOIN namespace ns ON ns.id = oc_src.namespace_id
 JOIN datatype_subprops dsp ON dsp.parent_type_id = rp.property_type
+LEFT JOIN datatype_map parent_dm ON parent_dm.type_id = rp.property_type
 LEFT JOIN datatype_map sub_dm ON sub_dm.type_id = dsp.sub_type;
 
 DECLARE
@@ -314,7 +410,8 @@ END;
 PROMPT Creating PROPERTY_CATALOG_TEXT view ...
 CREATE OR REPLACE VIEW property_catalog_text (
   objectclass_id, namespace_alias, feature_type, is_toplevel,
-  declaring_class_id, block_name, inheritance_level, is_inherited, line
+  declaring_class_id, block_name, inheritance_level, is_inherited, line,
+  source_table
 ) AS
 SELECT
   pc.objectclass_id,
@@ -338,25 +435,34 @@ SELECT
     WHEN pc.parent_property IS NOT NULL THEN
       pc.parent_property || '.' || pc.property_name
       || ' -> property.' || LOWER(pc.value_column)
+      || CASE WHEN pc.sub_storage = 'SAME_ROW' THEN ' (same row)' END
+    WHEN pc.join_condition IS NOT NULL THEN
+      pc.property_name || ' -> ' || LOWER(pc.join_table)
+      || CASE WHEN pc.value_column IS NOT NULL THEN '.' || LOWER(pc.value_column) END
+      || ' ON ' || pc.join_condition
     WHEN pc.join_table IS NOT NULL THEN
       pc.property_name || ' -> ' || LOWER(pc.join_table)
       || ' via property.' || LOWER(pc.value_column)
     WHEN pc.value_column LIKE 'VAL\_%' ESCAPE '\' THEN
       pc.property_name || ' -> property.' || LOWER(pc.value_column)
     WHEN pc.value_column IS NOT NULL THEN
-      pc.property_name || ' -> feature.' || LOWER(pc.value_column)
+      pc.property_name || ' -> ' || LOWER(pc.source_table) || '.' || LOWER(pc.value_column)
     ELSE
       pc.property_name || ' -> (complex; see sub-properties)'
-  END
+  END,
+  LOWER(pc.source_table)
 FROM property_catalog pc
--- Keep every top-level property; drop sub-properties (parent.child) with no
--- storage column resolved (they would render a useless empty-column line).
-WHERE pc.parent_property IS NULL OR pc.value_column IS NOT NULL
+-- Keep every top-level property. Of the sub-properties (parent.child) keep the
+-- ones with a resolved storage column, except QUALIFIER ones: codeSpace, uom,
+-- lod, ... recur on every Code / Measure / geometry property and are described
+-- once by the data-model rules in BUILD_CONTEXT instead.
+WHERE pc.parent_property IS NULL
+   OR (pc.value_column IS NOT NULL AND pc.sub_storage <> 'QUALIFIER')
 GROUP BY
   pc.objectclass_id, pc.namespace_alias, pc.feature_type, pc.is_toplevel,
   pc.declaring_class_id, pc.declaring_namespace_alias, pc.declaring_class_name,
   pc.inheritance_level, pc.parent_property, pc.property_name, pc.relation_type,
-  pc.value_column, pc.join_table;
+  pc.value_column, pc.join_table, pc.source_table, pc.join_condition, pc.sub_storage;
 
 PROMPT PROPERTY_CATALOG views ready.
 
@@ -410,13 +516,19 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
       'feature header "[alias:Type id=N] : @A @B" means the type ALSO HAS every' || v_lf ||
       'property under blocks @A and @B -- resolve inherited properties by reading' || v_lf ||
       'those blocks. Lines under a header are the type''s OWN (self-declared) properties.' || v_lf ||
-      'Header format: [alias:FeatureType id=<objectclass_id> TOPLEVEL?] : @blocks.' || v_lf ||
+      'Header format: [alias:FeatureType id=<objectclass_id> TOPLEVEL? table=T?] : @blocks.' || v_lf ||
+      'A header with "table=T" is NOT a FEATURE row: its rows live in table T, and its id is no' || v_lf ||
+      'FEATURE.OBJECTCLASS_ID (of these tables only SURFACE_DATA has an OBJECTCLASS_ID column).' || v_lf ||
       'Use the exact property name (case-sensitive) shown before "->" for PROPERTY.NAME filters.' || v_lf ||
       'Mapping legend:' || v_lf ||
       '  prop -> property.val_x        : JOIN property p ON p.feature_id=f.id AND p.name=''prop''; value in p.val_x' || v_lf ||
-      '  prop -> feature.col           : value is the direct FEATURE column f.col (no PROPERTY join)' || v_lf ||
+      '  prop -> <table>.col           : value is a direct column of <table> (no PROPERTY join): feature.col' || v_lf ||
+      '                                  is FEATURE column f.col; other tables belong to "table=T" headers' || v_lf ||
+      '  prop -> <table>[.col] ON <cond>: JOIN <table> with the join condition <cond>; value in <table>.col' || v_lf ||
       '  parent.child -> property.val_x: two-hop. JOIN property pp ON pp.feature_id=f.id AND pp.name=''parent''' || v_lf ||
       '                                  JOIN property pc ON pc.parent_id=pp.id AND pc.name=''child''; value in pc.val_x' || v_lf ||
+      '  parent.child -> property.val_x (same row): ONE hop, no child row. JOIN property pp ON' || v_lf ||
+      '                                  pp.feature_id=f.id AND pp.name=''parent''; value in pp.val_x' || v_lf ||
       '  prop -> <table> via property.val_x_id : JOIN property p (feature_id,name) JOIN <table> t ON t.id=p.val_x_id' || v_lf ||
       '  prop -> contains T1(id1),T2(id2) via VAL_FEATURE_ID : child features. JOIN property p (feature_id,name)' || v_lf ||
       '                                  JOIN feature fc ON fc.id=p.val_feature_id AND fc.objectclass_id IN (id1,id2,...)' || v_lf ||
@@ -469,13 +581,14 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
     -- Scan 4: type headers (with inherited-block refs) + buffered own lines.
     append_line(v_ctx, v_lf || '=== FEATURE TYPES ===' || v_lf);
     FOR t IN (
-      SELECT DISTINCT objectclass_id, namespace_alias, feature_type, is_toplevel
+      SELECT DISTINCT objectclass_id, namespace_alias, feature_type, is_toplevel, source_table
       FROM property_catalog_text
       ORDER BY is_toplevel DESC, namespace_alias, feature_type, objectclass_id
     ) LOOP
       v_hdr := v_lf || '[' || t.namespace_alias || ':' || t.feature_type
         || ' id=' || t.objectclass_id
-        || CASE WHEN t.is_toplevel = 1 THEN ' TOPLEVEL' END || ']';
+        || CASE WHEN t.is_toplevel = 1 THEN ' TOPLEVEL' END
+        || CASE WHEN t.source_table <> 'feature' THEN ' table=' || t.source_table END || ']';
       IF v_refs.EXISTS(t.objectclass_id) THEN
         v_hdr := v_hdr || ' : ' || v_refs(t.objectclass_id);
       END IF;
@@ -562,7 +675,9 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
       '  Code value: val_string (+ val_codespace). Measure value: val_double (+ val_uom). Boolean: val_int (0/1).' || v_lf ||
       '  When the question writes a property with a namespace prefix (bldg:function), the prefix also' || v_lf ||
       '  fixes PROPERTY.NAMESPACE_ID: ' || v_ns || v_lf ||
-      '- Nested/complex properties use PROPERTY.PARENT_ID (two-hop join; see catalog "parent.child" lines).' || v_lf ||
+      '- Nested/complex properties are the catalog "parent.child" lines: the child is a PROPERTY row of' || v_lf ||
+      '  its own, linked by PROPERTY.PARENT_ID (two-hop join) -- unless the line is marked (same row),' || v_lf ||
+      '  where it is a column of the parent property''s own row.' || v_lf ||
       '- MULTI-VALUED PROPERTIES: a feature can have several PROPERTY rows with the same NAME, so a' || v_lf ||
       '  property p stands for the SET of its values (for a nested path: the values reached through' || v_lf ||
       '  the whole join chain). Predicates on p use SQL three-valued logic over this set:' || v_lf ||
@@ -609,7 +724,9 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
     append_line(v_ctx,
       '- VAL_ARRAY holds a JSON array (array-type properties); extract elements with JSON_TABLE or' || v_lf ||
       '  JSON_VALUE. VAL_LOD is the level of detail of a geometry property.' || v_lf ||
-      '- IMPLICIT_GEOMETRY: reusable template geometry, reached via a property''s val_implicitgeom_id.' || v_lf ||
+      '- IMPLICIT_GEOMETRY: reusable template geometry, reached via a property''s val_implicitgeom_id;' || v_lf ||
+      '  the same property row holds its placement: VAL_ARRAY (transformation matrix) and' || v_lf ||
+      '  VAL_IMPLICITGEOM_REFPOINT (reference point).' || v_lf ||
       '  Its shape is the GEOMETRY_DATA row IMPLICIT_GEOMETRY.RELATIVE_GEOMETRY_ID, stored in the column' || v_lf ||
       '  GEOMETRY_DATA.IMPLICIT_GEOMETRY (local coordinates; GEOMETRY_DATA.FEATURE_ID is NULL for it).' || v_lf ||
       '- APPEARANCE (not in FEATURE): belongs to a feature via APPEARANCE.FEATURE_ID or to a template' || v_lf ||
