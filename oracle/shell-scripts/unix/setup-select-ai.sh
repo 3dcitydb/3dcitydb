@@ -55,6 +55,15 @@ if [ -z "$SYS_PWD" ]; then
   exit 1
 fi
 
+# Prompt for DB_USER password ----------------------------------------------------
+echo
+read -sp "Please enter the password for \"$DB_USER\": " DB_PWD
+echo
+if [ -z "$DB_PWD" ]; then
+  echo "ERROR: Password for \"$DB_USER\" is required."
+  exit 1
+fi
+
 # Check DBMS_CLOUD_AI availability -----------------------------------------------
 echo
 echo "Checking DBMS_CLOUD_AI availability ..."
@@ -133,7 +142,7 @@ echo
 echo "Creating property catalog view and schema annotations ..."
 echo "Connecting to \"$DB_USER@$DB_HOST:$DB_PORT/$ORACLE_PDB\" ..."
 
-"$ORACLE_CLIENT" -S -L "${DB_USER}@${DB_HOST}:${DB_PORT}/${ORACLE_PDB}" <<SQL
+"$ORACLE_CLIENT" -S -L "${DB_USER}/${DB_PWD}@${DB_HOST}:${DB_PORT}/${ORACLE_PDB}" <<SQL
 WHENEVER OSERROR EXIT 9;
 WHENEVER SQLERROR EXIT SQL.SQLCODE;
 
@@ -157,7 +166,7 @@ echo
 echo "Creating OpenAI credential and AI profile ..."
 echo "Connecting to \"$DB_USER@$DB_HOST:$DB_PORT/$ORACLE_PDB\" ..."
 
-"$ORACLE_CLIENT" -S -L "${DB_USER}@${DB_HOST}:${DB_PORT}/${ORACLE_PDB}" <<SQL
+"$ORACLE_CLIENT" -S -L "${DB_USER}/${DB_PWD}@${DB_HOST}:${DB_PORT}/${ORACLE_PDB}" <<SQL
 WHENEVER OSERROR EXIT 9;
 WHENEVER SQLERROR EXIT SQL.SQLCODE;
 

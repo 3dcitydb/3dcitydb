@@ -24,7 +24,6 @@ END;
 -- create tables, sequences, constraints, indexes
 PROMPT Setting up database schema of 3DCityDB instance ...
 @@schema/schema.sql
-@@schema/schema-annotations.sql
 @@schema/spatial-objects.sql
 
 -- populate metadata tables
