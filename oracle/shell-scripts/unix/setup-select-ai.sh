@@ -74,6 +74,16 @@ EXIT
 EOF
 )
 
+if [ $? -ne 0 ]; then
+  echo
+  echo "ERROR: Could not check the database as SYS at \"${DB_HOST}:${DB_PORT}/${ORACLE_PDB}\"."
+  echo "Please check the SYS password and the connection details."
+  echo
+  read -rsn1 -p 'Press ENTER to quit.'
+  echo
+  exit 1
+fi
+
 # Trim whitespace
 CLOUD_AI_CHECK=$(echo "$CLOUD_AI_CHECK" | tr -d '[:space:]')
 

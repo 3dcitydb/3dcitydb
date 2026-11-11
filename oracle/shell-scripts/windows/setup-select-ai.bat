@@ -72,9 +72,17 @@ set "TMPOUT=%TEMP%\3dcitydb_out_%RANDOM%.txt"
 )
 
 "%ORACLE_CLIENT%" -S -L "sys/%SYS_PWD%@%DB_HOST%:%DB_PORT%/%ORACLE_PDB% as sysdba" @"%TMPCHECK%" > "%TMPOUT%"
+set CHECK_RC=%ERRORLEVEL%
 set /p CLOUD_AI_CHECK=<"%TMPOUT%"
 del "%TMPCHECK%" 2>nul
 del "%TMPOUT%" 2>nul
+
+if %CHECK_RC% NEQ 0 (
+  echo.
+  echo ERROR: Could not check the database as SYS at "%DB_HOST%:%DB_PORT%/%ORACLE_PDB%".
+  echo Please check the SYS password and the connection details.
+  goto error
+)
 
 :: Trim spaces
 for /f "tokens=*" %%a in ("%CLOUD_AI_CHECK%") do set "CLOUD_AI_CHECK=%%a"
