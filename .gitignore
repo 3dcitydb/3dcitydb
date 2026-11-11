@@ -6,4 +6,3 @@ build/
 .idea/
 *.iml
 *.iws
-/.claude/
