@@ -423,6 +423,11 @@ SELECT
   pc.inheritance_level,
   CASE WHEN pc.declaring_class_id = pc.objectclass_id THEN 0 ELSE 1 END,
   CASE
+    -- The CityModel document-root collections (cityObjectMember / featureMember)
+    -- contain almost every type; listing them all is pure noise in the prompt.
+    WHEN pc.relation_type = 'contains' AND pc.declaring_class_name = 'CityModel'
+         AND COUNT(pc.target_objectclass_id) > 1 THEN
+      pc.property_name || ' -> contains member features of ANY type via VAL_FEATURE_ID'
     WHEN pc.relation_type = 'contains' THEN
       pc.property_name || ' -> contains '
       || LISTAGG(
@@ -472,8 +477,8 @@ PROMPT PROPERTY_CATALOG views ready.
 PROMPT Creating CITYDB_AI package specification ...
 CREATE OR REPLACE PACKAGE citydb_ai AS
 
-  -- Slim context for INJECTION into native Select AI: EAV data-model rules + the
-  -- PROPERTY_CATALOG + the question, but WITHOUT a system role or output-format
+  -- Slim context for INJECTION into native Select AI: the PROPERTY_CATALOG + EAV
+  -- data-model rules + the question (in this order), but WITHOUT a system role or output-format
   -- instructions (Select AI supplies those and the physical-table DDL from the
   -- profile object_list). See the file header for a call example.
   FUNCTION build_context(p_question IN CLOB) RETURN CLOB;
@@ -646,6 +651,9 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
     v_ns  VARCHAR2(4000);   -- 'alias=id ...' of every namespace, ADEs included
     v_sd  VARCHAR2(4000);   -- 'classname=id, ...' of the SURFACE_DATA kinds
     v_log NUMBER;           -- > 0 when the FEATURE_CHANGELOG table exists
+    -- Quoted schema owner, so the SQL template matches the owner-qualified,
+    -- double-quoted identifiers Select AI's own instructions ask for.
+    v_own CONSTANT VARCHAR2(130) := '"' || SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA') || '"';
   BEGIN
     IF p_question IS NULL OR DBMS_LOB.GETLENGTH(p_question) = 0 THEN
       RAISE_APPLICATION_ERROR(-20800, 'Question must not be empty.');
@@ -662,13 +670,24 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
 
     DBMS_LOB.CREATETEMPORARY(v_ctx, TRUE);
 
-    append_line(v_ctx,
+    -- The long reference material (catalog) goes FIRST and the rules LAST, right
+    -- before the question, so the rules are not buried under the catalog.
+    -- render_catalog returns a session-duration temporary LOB; capture it so we
+    -- can release it after appending (an inline call would leak it every question).
+    v_cat := render_catalog;
+    DBMS_LOB.APPEND(v_ctx, v_cat);
+    IF DBMS_LOB.ISTEMPORARY(v_cat) = 1 THEN
+      DBMS_LOB.FREETEMPORARY(v_cat);
+    END IF;
+
+    append_line(v_ctx, v_lf || v_lf ||
       'DATA MODEL (Entity-Attribute-Value):' || v_lf ||
       '- FEATURE: one row per city object. Its type is FEATURE.OBJECTCLASS_ID (an integer).' || v_lf ||
-      '  NEVER join the OBJECTCLASS table; filter f.objectclass_id by the literal id from the catalog header.' || v_lf ||
+      '  Filter f.objectclass_id by the literal id from the catalog header.' || v_lf ||
       '- A feature whose TERMINATION_DATE is set is historic. Questions are about current features' || v_lf ||
       '  unless they ask for terminated or historic ones, so the feature the question counts or lists' || v_lf ||
-      '  gets f.termination_date IS NULL; joined child features need no such filter.' || v_lf ||
+      '  gets TERMINATION_DATE IS NULL, and so does every other feature the query selects by' || v_lf ||
+      '  (the container it starts from, a joined parent or child feature).' || v_lf ||
       '- PROPERTY: attributes of a feature (EAV). Join via PROPERTY.FEATURE_ID = FEATURE.ID and' || v_lf ||
       '  filter PROPERTY.NAME = ''<exact property name>''. The value sits in a type-specific column' || v_lf ||
       '  (val_string, val_int, val_double, val_timestamp, val_uri, val_feature_id, val_geometry_id, ...).' || v_lf ||
@@ -705,12 +724,13 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
       '      container down, following ONLY containment edges (PROPERTY.VAL_RELATION_TYPE = 1;' || v_lf ||
       '      VAL_RELATION_TYPE = 0 is a non-owning cross-reference),' || v_lf ||
       '      then filter by T''s objectclass_id:' || v_lf ||
-      '        WITH sub(id) AS (' || v_lf ||
-      '          SELECT f.id FROM feature f WHERE <container filter>' || v_lf ||
+      '        WITH sub ("ID") AS (' || v_lf ||
+      '          SELECT f."ID" FROM ' || v_own || '."FEATURE" f WHERE <container filter>' || v_lf ||
       '          UNION ALL' || v_lf ||
-      '          SELECT p.val_feature_id FROM sub s JOIN property p ON p.feature_id = s.id' || v_lf ||
-      '            AND p.val_relation_type = 1 AND p.val_feature_id IS NOT NULL)' || v_lf ||
-      '        SELECT COUNT(DISTINCT ft.id) FROM feature ft JOIN sub ON sub.id = ft.id WHERE ft.objectclass_id = <T id>;' || v_lf ||
+      '          SELECT p."VAL_FEATURE_ID" FROM sub s JOIN ' || v_own || '."PROPERTY" p ON p."FEATURE_ID" = s."ID"' || v_lf ||
+      '            AND p."VAL_RELATION_TYPE" = 1 AND p."VAL_FEATURE_ID" IS NOT NULL)' || v_lf ||
+      '        SELECT COUNT(DISTINCT ft."ID") FROM ' || v_own || '."FEATURE" ft JOIN sub s ON s."ID" = ft."ID"' || v_lf ||
+      '        WHERE ft."OBJECTCLASS_ID" = <T id>' || v_lf ||
       '      Containment is a DAG, not a strict tree: a feature can be reached by MORE THAN ONE' || v_lf ||
       '      path, and the recursion''s UNION ALL keeps every path. ALWAYS de-duplicate by' || v_lf ||
       '      feature id -- COUNT(DISTINCT ft.id), or SELECT DISTINCT when listing.' || v_lf ||
@@ -750,17 +770,9 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
 
     append_line(v_ctx, v_lf ||
       'CATALOG RULES:' || v_lf ||
-      '- Use ONLY the feature types, property names and storage columns from the CATALOG below.' || v_lf ||
+      '- Use ONLY the feature types, property names and storage columns from the CATALOG above.' || v_lf ||
       '- Property names are case-sensitive; copy them verbatim.' || v_lf ||
-      '- Prefer table aliases f (feature), p / pp / pc (property), gd (geometry_data).' || v_lf || v_lf);
-
-    -- render_catalog returns a session-duration temporary LOB; capture it so we
-    -- can release it after appending (an inline call would leak it every question).
-    v_cat := render_catalog;
-    DBMS_LOB.APPEND(v_ctx, v_cat);
-    IF DBMS_LOB.ISTEMPORARY(v_cat) = 1 THEN
-      DBMS_LOB.FREETEMPORARY(v_cat);
-    END IF;
+      '- Prefer table aliases f (feature), p / pp / pc (property), gd (geometry_data).' || v_lf);
 
     append_line(v_ctx, v_lf || v_lf || '=== USER QUESTION ===' || v_lf);
     DBMS_LOB.APPEND(v_ctx, p_question);
