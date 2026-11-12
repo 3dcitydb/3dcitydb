@@ -699,7 +699,8 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
       '  where it is a column of the parent property''s own row.' || v_lf ||
       '- MULTI-VALUED PROPERTIES: a feature can have several PROPERTY rows with the same NAME, so a' || v_lf ||
       '  property p stands for the SET of its values (for a nested path: the values reached through' || v_lf ||
-      '  the whole join chain). Predicates on p use SQL three-valued logic over this set:' || v_lf ||
+      '  the whole chain of INNER joins -- a step without a matching row yields no value, not a' || v_lf ||
+      '  NULL). Predicates on p use SQL three-valued logic over this set:' || v_lf ||
       '  * a comparison (such as =, <>, <, IN, LIKE, BETWEEN) is TRUE if some value satisfies it;' || v_lf ||
       '    else NULL if the set is empty or contains NULL; else FALSE.' || v_lf ||
       '  * p IS NULL is TRUE if the set has no non-NULL value, else FALSE; IS NOT NULL inverts it.' || v_lf ||
@@ -718,9 +719,10 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
       '  (4) Never filter a containment join by an objectclass_id absent from that property''s' || v_lf ||
       '      "contains" list, and never choose the terminating property by NAME resemblance to' || v_lf ||
       '      T -- the "contains" list is the only authority; a wrong path returns nothing.' || v_lf ||
-      '  (5) For "all T within / belonging to / inside a <container>" where T may be nested at' || v_lf ||
-      '      ANY depth, a fixed join chain UNDER-counts (it misses T nested inside intermediate' || v_lf ||
-      '      sub-containers). Instead RECURSE the containment tree from the' || v_lf ||
+      '  (5) Whenever a question relates features of type T to a <container> (T of / in / within /' || v_lf ||
+      '      belonging to / that the container has) WITHOUT naming the property path to follow,' || v_lf ||
+      '      T may be nested at ANY depth, and a fixed join chain UNDER-counts (it misses T nested' || v_lf ||
+      '      inside intermediate sub-containers). Instead RECURSE the containment tree from the' || v_lf ||
       '      container down, following ONLY containment edges (PROPERTY.VAL_RELATION_TYPE = 1;' || v_lf ||
       '      VAL_RELATION_TYPE = 0 is a non-owning cross-reference),' || v_lf ||
       '      then filter by T''s objectclass_id:' || v_lf ||
@@ -734,8 +736,14 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
       '      Containment is a DAG, not a strict tree: a feature can be reached by MORE THAN ONE' || v_lf ||
       '      path, and the recursion''s UNION ALL keeps every path. ALWAYS de-duplicate by' || v_lf ||
       '      feature id -- COUNT(DISTINCT ft.id), or SELECT DISTINCT when listing.' || v_lf ||
-      '      Rules (1)-(4) still apply when you want a SPECIFIC/direct relationship rather than' || v_lf ||
-      '      the whole subtree.' || v_lf ||
+      '      The recursion step takes NO TERMINATION_DATE filter; apply TERMINATION_DATE IS NULL' || v_lf ||
+      '      only to the container in the anchor and to the final feature ft.' || v_lf ||
+      '      Use a fixed path by rules (1)-(4) ONLY when the question names the properties to' || v_lf ||
+      '      follow (a property path), asks for DIRECT children, or when EVERY entry for T in the' || v_lf ||
+      '      CONTAINED-BY INDEX is declared on the container''s own type (T can then only be its' || v_lf ||
+      '      direct child, so no recursion is needed). Such a fixed path keeps every join condition' || v_lf ||
+      '      of rule (2) (property NAME and the child''s objectclass_id); it only omits the' || v_lf ||
+      '      VAL_RELATION_TYPE condition, which is for this recursion.' || v_lf ||
       '- GEOMETRY_DATA.GEOMETRY holds SDO_GEOMETRY; reach it via a property''s val_geometry_id.' || v_lf ||
       '- ADDRESS is reached via a property''s val_address_id (addresses are NOT in FEATURE).' || v_lf);
 
