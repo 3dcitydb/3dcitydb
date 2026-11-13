@@ -97,6 +97,24 @@ sqlplus -S -L "$DB_USER"/"$ORACLE_PWD"@"$ORACLE_PDB" @create-db.sql \
   "${SRID}" "${SRS_NAME}" "${CHANGELOG}" > /dev/null
 echo "Setting up 3DCityDB database schema for user '$DB_USER' done."
 
+
+# DBMS_CLOUD + Select AI (optional) ------------------------------------------
+if [ "${ENABLE_SELECT_AI,,}" = "true" ] || [ "${ENABLE_SELECT_AI,,}" = "yes" ]; then
+  echo
+  echo "ENABLE_SELECT_AI is set. Installing DBMS_CLOUD and configuring Select AI ..."
+  INSTALL_SCRIPT="/opt/oracle/3dcitydb-custom/install-dbms-cloud.sh"
+  if [ -f "$INSTALL_SCRIPT" ]; then
+    source "$INSTALL_SCRIPT"
+  else
+    echo "ERROR: $INSTALL_SCRIPT not found. Skipping Select AI setup."
+  fi
+else
+  echo
+  echo "ENABLE_SELECT_AI is not set. Skipping DBMS_CLOUD / Select AI setup."
+  echo "Set ENABLE_SELECT_AI=true to enable it."
+fi
+
+
 # Echo info -------------------------------------------------------------------
 cat <<EOF
 
