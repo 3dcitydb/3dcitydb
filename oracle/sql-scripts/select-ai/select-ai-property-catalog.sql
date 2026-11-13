@@ -62,7 +62,8 @@ CREATE OR REPLACE VIEW property_catalog (
   join_table, target_objectclass_id, target_feature_type,
   relation_type, description, query_pattern,
   declaring_class_id, declaring_class_name, declaring_namespace_alias, inheritance_level,
-  source_table, join_condition, sub_storage
+  source_table, join_condition, sub_storage,
+  property_namespace_alias, parent_namespace_alias
 ) AS
 WITH
 -- Walk UP from each concrete class to collect all ancestor IDs.
@@ -89,6 +90,7 @@ raw_props_base AS (
     ac.current_id AS declaring_class_id,   -- ancestor class that declares the property
     ac.lvl AS inheritance_level,           -- 0 = the leaf itself, higher = nearer the root
     jt.property_name,
+    jt.property_ns,                        -- namespace URI of the property itself
     jt.property_type,
     jt.direct_column,
     jt.property_target,
@@ -106,6 +108,7 @@ raw_props_base AS (
       -- of mimeType); it is stored alongside that property
       parent_idx      NUMBER         PATH '$.parent',
       property_name   VARCHAR2(255)  PATH '$.name',
+      property_ns     VARCHAR2(1000) PATH '$.namespace',
       property_type   VARCHAR2(255)  PATH '$.type',
       direct_column   VARCHAR2(255)  PATH '$.value.column',
       property_target VARCHAR2(255)  PATH '$.target',
@@ -131,7 +134,7 @@ raw_props_base AS (
 raw_props AS (
   SELECT
     b.objectclass_id, b.declaring_class_id, b.inheritance_level,
-    b.property_name, b.property_type, b.direct_column, b.property_target,
+    b.property_name, b.property_ns, b.property_type, b.direct_column, b.property_target,
     b.relation_type, b.description,
     COALESCE(b.join_table, pp.join_table) AS join_table,
     COALESCE(b.join_from, pp.join_from) AS join_from,
@@ -169,6 +172,7 @@ datatype_subprops AS (
   SELECT
     JSON_VALUE(dt.schema, '$.identifier') AS parent_type_id,
     jt.sub_name,
+    jt.sub_ns,
     jt.sub_type,
     jt.sub_description,
     jt.sub_column,
@@ -177,6 +181,7 @@ datatype_subprops AS (
   CROSS APPLY JSON_TABLE(dt.schema, '$.properties[*]'
     COLUMNS (
       sub_name        VARCHAR2(255)  PATH '$.name',
+      sub_ns          VARCHAR2(1000) PATH '$.namespace',
       sub_type        VARCHAR2(255)  PATH '$.type',
       sub_description VARCHAR2(4000) PATH '$.description',
       sub_column      VARCHAR2(255)  PATH '$.value.column',
@@ -291,7 +296,10 @@ SELECT DISTINCT
         || LOWER(rp.tgt_table || '.' || rp.tgt_col || ' = '
         || rp.link_table || '.' || rp.link_tgt_col)
   END,
-  NULL                              -- sub_storage (top-level properties)
+  NULL,                             -- sub_storage (top-level properties)
+  -- Namespace of the property itself (can differ from the declaring class) -----
+  pns.alias,
+  NULL                              -- parent_namespace_alias
 FROM raw_props rp
 JOIN objectclass oc_src
   ON oc_src.id = rp.objectclass_id
@@ -300,6 +308,7 @@ JOIN objectclass dcoc
   ON dcoc.id = rp.declaring_class_id
 LEFT JOIN namespace dcns ON dcns.id = dcoc.namespace_id
 LEFT JOIN namespace ns ON ns.id = oc_src.namespace_id
+LEFT JOIN namespace pns ON pns.namespace = rp.property_ns
 -- Look up value column and join table from DATATYPE schema
 LEFT JOIN datatype_map dm
   ON dm.type_id = rp.property_type
@@ -381,13 +390,17 @@ SELECT DISTINCT
     WHEN dsp.is_child_row = 1 THEN 'CHILD_ROW'
     WHEN COALESCE(parent_dm.value_col, parent_dm.join_col) IS NOT NULL THEN 'QUALIFIER'
     ELSE 'SAME_ROW'
-  END
+  END,
+  sns.alias,                        -- namespace of the sub-property
+  pns.alias                         -- namespace of its parent property
 FROM raw_props rp
 JOIN objectclass oc_src ON oc_src.id = rp.objectclass_id
 JOIN objectclass dcoc ON dcoc.id = rp.declaring_class_id
 LEFT JOIN namespace dcns ON dcns.id = dcoc.namespace_id
 LEFT JOIN namespace ns ON ns.id = oc_src.namespace_id
+LEFT JOIN namespace pns ON pns.namespace = rp.property_ns
 JOIN datatype_subprops dsp ON dsp.parent_type_id = rp.property_type
+LEFT JOIN namespace sns ON sns.namespace = dsp.sub_ns
 LEFT JOIN datatype_map parent_dm ON parent_dm.type_id = rp.property_type
 LEFT JOIN datatype_map sub_dm ON sub_dm.type_id = dsp.sub_type;
 
@@ -427,9 +440,9 @@ SELECT
     -- contain almost every type; listing them all is pure noise in the prompt.
     WHEN pc.relation_type = 'contains' AND pc.declaring_class_name = 'CityModel'
          AND COUNT(pc.target_objectclass_id) > 1 THEN
-      pc.property_name || ' -> contains member features of ANY type via VAL_FEATURE_ID'
+      pc.qname || ' -> contains member features of ANY type via VAL_FEATURE_ID'
     WHEN pc.relation_type = 'contains' THEN
-      pc.property_name || ' -> contains '
+      pc.qname || ' -> contains '
       || LISTAGG(
            CASE WHEN pc.target_objectclass_id IS NOT NULL
                 THEN pc.target_feature_type || '(' || pc.target_objectclass_id || ')'
@@ -438,25 +451,34 @@ SELECT
            WITHIN GROUP (ORDER BY pc.target_objectclass_id)
       || ' via VAL_FEATURE_ID'
     WHEN pc.parent_property IS NOT NULL THEN
-      pc.parent_property || '.' || pc.property_name
+      pc.parent_qname || '.' || pc.qname
       || ' -> property.' || LOWER(pc.value_column)
       || CASE WHEN pc.sub_storage = 'SAME_ROW' THEN ' (same row)' END
     WHEN pc.join_condition IS NOT NULL THEN
-      pc.property_name || ' -> ' || LOWER(pc.join_table)
+      pc.qname || ' -> ' || LOWER(pc.join_table)
       || CASE WHEN pc.value_column IS NOT NULL THEN '.' || LOWER(pc.value_column) END
       || ' ON ' || pc.join_condition
     WHEN pc.join_table IS NOT NULL THEN
-      pc.property_name || ' -> ' || LOWER(pc.join_table)
+      pc.qname || ' -> ' || LOWER(pc.join_table)
       || ' via property.' || LOWER(pc.value_column)
     WHEN pc.value_column LIKE 'VAL\_%' ESCAPE '\' THEN
-      pc.property_name || ' -> property.' || LOWER(pc.value_column)
+      pc.qname || ' -> property.' || LOWER(pc.value_column)
     WHEN pc.value_column IS NOT NULL THEN
-      pc.property_name || ' -> ' || LOWER(pc.source_table) || '.' || LOWER(pc.value_column)
+      pc.qname || ' -> ' || LOWER(pc.source_table) || '.' || LOWER(pc.value_column)
     ELSE
-      pc.property_name || ' -> (complex; see sub-properties)'
+      pc.qname || ' -> (complex; see sub-properties)'
   END,
   LOWER(pc.source_table)
-FROM property_catalog pc
+-- QNAME / PARENT_QNAME: the property name prefixed with its namespace alias
+FROM (
+  SELECT c.*,
+         NVL2(c.property_namespace_alias, c.property_namespace_alias || ':', '')
+           || c.property_name AS qname,
+         NVL2(c.parent_property,
+              NVL2(c.parent_namespace_alias, c.parent_namespace_alias || ':', '')
+                || c.parent_property, NULL) AS parent_qname
+  FROM property_catalog c
+) pc
 -- Keep every top-level property. Of the sub-properties (parent.child) keep the
 -- ones with a resolved storage column, except QUALIFIER ones: codeSpace, uom,
 -- lod, ... recur on every Code / Measure / geometry property and are described
@@ -467,7 +489,8 @@ GROUP BY
   pc.objectclass_id, pc.namespace_alias, pc.feature_type, pc.is_toplevel,
   pc.declaring_class_id, pc.declaring_namespace_alias, pc.declaring_class_name,
   pc.inheritance_level, pc.parent_property, pc.property_name, pc.relation_type,
-  pc.value_column, pc.join_table, pc.source_table, pc.join_condition, pc.sub_storage;
+  pc.value_column, pc.join_table, pc.source_table, pc.join_condition, pc.sub_storage,
+  pc.qname, pc.parent_qname;
 
 PROMPT PROPERTY_CATALOG views ready.
 
@@ -524,9 +547,13 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
       'Header format: [alias:FeatureType id=<objectclass_id> TOPLEVEL? table=T?] : @blocks.' || v_lf ||
       'A header with "table=T" is NOT a FEATURE row: its rows live in table T, and its id is no' || v_lf ||
       'FEATURE.OBJECTCLASS_ID (of these tables only SURFACE_DATA has an OBJECTCLASS_ID column).' || v_lf ||
-      'Use the exact property name (case-sensitive) shown before "->" for PROPERTY.NAME filters.' || v_lf ||
+      'Every property is printed as alias:name. PROPERTY.NAME is the name WITHOUT the alias (exact,' || v_lf ||
+      'case-sensitive); the alias gives PROPERTY.NAMESPACE_ID (ids under DATA MODEL). In the legend' || v_lf ||
+      '"prop", "parent" and "child" each stand for such an alias:name, and EVERY join of a PROPERTY' || v_lf ||
+      'row filters both its name and its namespace_id, as spelled out in the first pattern.' || v_lf ||
       'Mapping legend:' || v_lf ||
-      '  prop -> property.val_x        : JOIN property p ON p.feature_id=f.id AND p.name=''prop''; value in p.val_x' || v_lf ||
+      '  ns:prop -> property.val_x     : JOIN property p ON p.feature_id=f.id AND p.name=''prop''' || v_lf ||
+      '                                  AND p.namespace_id=<id of ns>; value in p.val_x' || v_lf ||
       '  prop -> <table>.col           : value is a direct column of <table> (no PROPERTY join): feature.col' || v_lf ||
       '                                  is FEATURE column f.col; other tables belong to "table=T" headers' || v_lf ||
       '  prop -> <table>[.col] ON <cond>: JOIN <table> with the join condition <cond>; value in <table>.col' || v_lf ||
@@ -623,7 +650,8 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
         SELECT DISTINCT
           pc.target_feature_type || '(' || pc.target_objectclass_id || ')' AS tgt,
           pc.target_objectclass_id AS tgt_id,
-          pc.property_name || ' [' || NVL(pc.declaring_namespace_alias, '?')
+          NVL2(pc.property_namespace_alias, pc.property_namespace_alias || ':', '')
+            || pc.property_name || ' [' || NVL(pc.declaring_namespace_alias, '?')
             || ':' || pc.declaring_class_name || ']' AS via
         FROM property_catalog pc
         WHERE pc.relation_type = 'contains'
@@ -651,6 +679,7 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
     v_ns  VARCHAR2(4000);   -- 'alias=id ...' of every namespace, ADEs included
     v_sd  VARCHAR2(4000);   -- 'classname=id, ...' of the SURFACE_DATA kinds
     v_log NUMBER;           -- > 0 when the FEATURE_CHANGELOG table exists
+    v_srid NUMBER;          -- SRID of the database SRS (all stored geometries)
     -- Quoted schema owner, so the SQL template matches the owner-qualified,
     -- double-quoted identifiers Select AI's own instructions ask for.
     v_own CONSTANT VARCHAR2(130) := '"' || SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA') || '"';
@@ -667,6 +696,8 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
      WHERE classname IN ('X3DMaterial', 'ParameterizedTexture', 'GeoreferencedTexture');
 
     SELECT COUNT(*) INTO v_log FROM user_tables WHERE table_name = 'FEATURE_CHANGELOG';
+
+    SELECT MAX(srid) INTO v_srid FROM database_srs;
 
     DBMS_LOB.CREATETEMPORARY(v_ctx, TRUE);
 
@@ -692,8 +723,15 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
       '  filter PROPERTY.NAME = ''<exact property name>''. The value sits in a type-specific column' || v_lf ||
       '  (val_string, val_int, val_double, val_timestamp, val_uri, val_feature_id, val_geometry_id, ...).' || v_lf ||
       '  Code value: val_string (+ val_codespace). Measure value: val_double (+ val_uom). Boolean: val_int (0/1).' || v_lf ||
-      '  When the question writes a property with a namespace prefix (bldg:function), the prefix also' || v_lf ||
-      '  fixes PROPERTY.NAMESPACE_ID: ' || v_ns || v_lf ||
+      '  Every PROPERTY join also filters NAMESPACE_ID by the alias printed before the property name' || v_lf ||
+      '  in the catalog (for a parent.child line: the parent row by the parent''s alias, the child row' || v_lf ||
+      '  by the child''s alias). Namespace ids: ' || v_ns || v_lf ||
+      '  A property the question writes without a prefix is looked up in the catalog by its name.' || v_lf ||
+      '- GENERIC ATTRIBUTES: a name written with a cast suffix (name::type), or a property name the' || v_lf ||
+      '  catalog does not list at all, is a generic attribute. Filter PROPERTY.NAME = that name and' || v_lf ||
+      '  NAMESPACE_ID = the id of gen. The cast gives the value column (string -> val_string,' || v_lf ||
+      '  int -> val_int, double -> val_double, timestamp or date -> val_timestamp); without a cast' || v_lf ||
+      '  choose the column by the type of the compared literal.' || v_lf ||
       '- Nested/complex properties are the catalog "parent.child" lines: the child is a PROPERTY row of' || v_lf ||
       '  its own, linked by PROPERTY.PARENT_ID (two-hop join) -- unless the line is marked (same row),' || v_lf ||
       '  where it is a column of the parent property''s own row.' || v_lf ||
@@ -706,6 +744,18 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
       '  * p IS NULL is TRUE if the set has no non-NULL value, else FALSE; IS NOT NULL inverts it.' || v_lf ||
       '  * NOT, AND, OR combine these as in SQL; a feature is selected only when the filter is TRUE.' || v_lf ||
       '  In SQL, give each predicate its own correlated subquery over the value rows of p.' || v_lf ||
+      '- DATES AND TIMES: a date or time in the question that carries a time zone or UTC offset is' || v_lf ||
+      '  used as given; one without is in UTC. Write every such literal with an explicit offset:' || v_lf ||
+      '  TIMESTAMP ''<YYYY-MM-DD HH24:MI:SS> +00:00'' (or the offset given). A literal with a time of' || v_lf ||
+      '  day (a CQL2 TIMESTAMP(...) literal) is compared as that instant.' || v_lf ||
+      '  A date without a time of day (a CQL2 DATE(...) literal, or a calendar day, month or year' || v_lf ||
+      '  named in the question) stands for the WHOLE period in UTC: from its first instant up to, but' || v_lf ||
+      '  excluding, the first instant of the next period. Compare a timestamp column with it by' || v_lf ||
+      '  these bounds: after (>) is >= the start of the next period; before (<) is < its start;' || v_lf ||
+      '  >= is >= its start; <= is < the start of the next period; equal (or "in") is >= its start' || v_lf ||
+      '  AND < the start of the next period. Do not wrap the column in TRUNC, CAST or other functions.' || v_lf ||
+      '- LIKE in a CQL2 expression: use the pattern unchanged. Both % and _ are wildcards there, so' || v_lf ||
+      '  do not escape them.' || v_lf ||
       '- Containment: a parent owns child features via a PROPERTY whose VAL_FEATURE_ID is the' || v_lf ||
       '  child FEATURE.ID. Traverse it TARGET-FIRST by these rules:' || v_lf ||
       '  (1) Identify the wanted feature type T. From the CONTAINED-BY INDEX (end of catalog)' || v_lf ||
@@ -745,6 +795,10 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
       '      of rule (2) (property NAME and the child''s objectclass_id); it only omits the' || v_lf ||
       '      VAL_RELATION_TYPE condition, which is for this recursion.' || v_lf ||
       '- GEOMETRY_DATA.GEOMETRY holds SDO_GEOMETRY; reach it via a property''s val_geometry_id.' || v_lf ||
+      '- SPATIAL FILTERS: all stored geometries (FEATURE.ENVELOPE, GEOMETRY_DATA.GEOMETRY) are in the' || v_lf ||
+      '  database SRS, SRID ' || NVL(TO_CHAR(v_srid), 'DATABASE_SRS.SRID') || '. A geometry the question gives in another CRS is built with' || v_lf ||
+      '  that SRID and converted with SDO_CS.TRANSFORM(<geometry>, ' || NVL(TO_CHAR(v_srid), '<database SRID>') || ') before any spatial' || v_lf ||
+      '  operator. A geometry given without a CRS is already in the database SRS.' || v_lf ||
       '- ADDRESS is reached via a property''s val_address_id (addresses are NOT in FEATURE).' || v_lf);
 
     -- Semantics of the remaining object_list tables. The tables carry no
