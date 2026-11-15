@@ -7,7 +7,9 @@
       "name": "value",
       "namespace": "http://3dcitydb.org/3dcitydb/dynamizer/5.0",
       "description": "Specifies the boolean value at the given timepoint.",
-      "type": "core:Boolean"
+      "type": "core:Boolean",
+      "minOccurs": 1,
+      "maxOccurs": 1
     }
   ]
 }

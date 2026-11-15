@@ -21,6 +21,7 @@
       "namespace": "http://3dcitydb.org/3dcitydb/cityobjectgroup/5.0",
       "description": "Describes the role the city object plays within the CityObjectGroup.",
       "type": "core:String",
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",

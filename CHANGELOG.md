@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 ### Added
+- Added `minOccurs` and `maxOccurs` multiplicity attributes to properties in the JSON schema mapping.
+  `minOccurs` defaults to `0`; omitting `maxOccurs` denotes an unbounded maximum.
 - Added extended statistics on `property(name, namespace_id)`.
 
 ### Changed

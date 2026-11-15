@@ -7,7 +7,8 @@
       "name": "class",
       "namespace": "http://3dcitydb.org/3dcitydb/building/5.0",
       "description": "Indicates the specific type of the BuildingRoom.",
-      "type": "core:Code"
+      "type": "core:Code",
+      "maxOccurs": 1
     },
     {
       "name": "function",
@@ -48,14 +49,16 @@
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
       "description": "Relates to a 3D Solid geometry that represents the BuildingRoom in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
-      "target": "core:AbstractSolid"
+      "target": "core:AbstractSolid",
+      "maxOccurs": 1
     },
     {
       "name": "lod4MultiSurface",
       "namespace": "http://3dcitydb.org/3dcitydb/deprecated/5.0",
       "description": "Relates to a 3D MultiSurface geometry that represents the BuildingRoom in Level of Detail 4. Deprecated since CityGML 3.0.",
       "type": "core:GeometryProperty",
-      "target": "core:MultiSurface"
+      "target": "core:MultiSurface",
+      "maxOccurs": 1
     }
   ]
 }

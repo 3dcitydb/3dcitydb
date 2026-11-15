@@ -11,6 +11,8 @@
         "column": "image_uri",
         "type": "string"
       },
+      "minOccurs": 1,
+      "maxOccurs": 1,
       "join": {
         "table": "tex_image",
         "fromColumn": "tex_image_id",
@@ -25,6 +27,7 @@
         "column": "mime_type",
         "type": "string"
       },
+      "maxOccurs": 1,
       "join": {
         "table": "tex_image",
         "fromColumn": "tex_image_id",
@@ -39,7 +42,18 @@
         "column": "mime_type_codespace",
         "type": "string"
       },
-      "parent": 1
+      "parent": 1,
+      "maxOccurs": 1
+    },
+    {
+      "name": "textureType",
+      "namespace": "http://3dcitydb.org/3dcitydb/appearance/5.0",
+      "description": "Indicates the specific type of the texture.",
+      "value": {
+        "column": "tex_texture_type",
+        "type": "string"
+      },
+      "maxOccurs": 1
     },
     {
       "name": "wrapMode",
@@ -48,7 +62,8 @@
       "value": {
         "column": "tex_wrap_mode",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "borderColor",
@@ -57,7 +72,8 @@
       "value": {
         "column": "tex_border_color",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     }
   ]
 }

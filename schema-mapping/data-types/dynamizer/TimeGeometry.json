@@ -9,6 +9,8 @@
       "description": "Specifies the geometry value at the given timepoint.",
       "type": "core:GeometryProperty",
       "target": "core:AbstractGeometry",
+      "minOccurs": 1,
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",
