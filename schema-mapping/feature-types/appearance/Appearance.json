@@ -10,7 +10,8 @@
       "value": {
         "column": "objectid",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "identifier",
@@ -19,7 +20,8 @@
       "value": {
         "column": "identifier",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "codeSpace",
@@ -29,7 +31,9 @@
         "column": "identifier_codespace",
         "type": "string"
       },
-      "parent": 1
+      "parent": 1,
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "theme",
@@ -38,7 +42,8 @@
       "value": {
         "column": "theme",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     },
     {
       "name": "isGlobal",

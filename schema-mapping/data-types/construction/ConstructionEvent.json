@@ -11,6 +11,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
       "description": "Indicates the specific event type.",
       "type": "core:Code",
+      "minOccurs": 1,
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",
@@ -22,6 +24,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
       "description": "Specifies the date and time at which the event took or will take place.",
       "type": "core:Timestamp",
+      "minOccurs": 1,
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",
@@ -33,6 +37,7 @@
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
       "description": "Provides additional information on the event.",
       "type": "core:String",
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",

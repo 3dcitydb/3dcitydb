@@ -2,6 +2,11 @@
 \echo 'Checking PostGIS version ...'
 \ir ../util/check-postgis-version.sql
 
+-- run the entire upgrade in a single transaction so that a failure leaves the
+-- database unchanged. upgrade scripts must therefore not contain statements that
+-- cannot run inside a transaction block (e.g., VACUUM, CREATE INDEX CONCURRENTLY).
+BEGIN;
+
 -- check upgrade to 5.1.0
 SELECT CASE
   WHEN :current_major = 5 AND :current_minor < 1 THEN 'upgrade-5.1.0.sql'
@@ -47,6 +52,8 @@ $$;
 \ir ../citydb-pkg/envelope.sql
 \ir ../citydb-pkg/delete.sql
 \ir ../citydb-pkg/schema-mapping.sql
+
+COMMIT;
 
 -- get the new version
 SELECT version AS new_version FROM citydb_pkg.citydb_version()

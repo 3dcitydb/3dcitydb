@@ -3,25 +3,16 @@
   "description": "Height represents a vertical distance (measured or estimated) between a low reference and a high reference.",
   "table": "property",
   "value": {
-    "property": 0
+    "property": 3
   },
   "properties": [
     {
-      "name": "value",
+      "name": "highReference",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
-      "description": "Specifies the value of the height above or below ground.",
-      "type": "core:Measure",
-      "join": {
-        "table": "property",
-        "fromColumn": "id",
-        "toColumn": "parent_id"
-      }
-    },
-    {
-      "name": "status",
-      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
-      "description": "Indicates the way the height has been captured.",
-      "type": "core:String",
+      "description": "Indicates the high point used to calculate the value of the height.",
+      "type": "core:Code",
+      "minOccurs": 1,
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",
@@ -33,6 +24,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
       "description": "Indicates the low point used to calculate the value of the height.",
       "type": "core:Code",
+      "minOccurs": 1,
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",
@@ -40,10 +33,25 @@
       }
     },
     {
-      "name": "highReference",
+      "name": "status",
       "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
-      "description": "Indicates the high point used to calculate the value of the height.",
-      "type": "core:Code",
+      "description": "Indicates the way the height has been captured.",
+      "type": "core:String",
+      "minOccurs": 1,
+      "maxOccurs": 1,
+      "join": {
+        "table": "property",
+        "fromColumn": "id",
+        "toColumn": "parent_id"
+      }
+    },
+    {
+      "name": "value",
+      "namespace": "http://3dcitydb.org/3dcitydb/construction/5.0",
+      "description": "Specifies the value of the height above or below ground.",
+      "type": "core:Measure",
+      "minOccurs": 1,
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",

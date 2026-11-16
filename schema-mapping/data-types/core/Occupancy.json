@@ -11,6 +11,8 @@
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Indicates the number of occupants contained by a feature.",
       "type": "core:Integer",
+      "minOccurs": 1,
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",
@@ -22,6 +24,7 @@
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Indicates the time period the occupants are contained by a feature.",
       "type": "core:Code",
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",
@@ -33,6 +36,7 @@
       "namespace": "http://3dcitydb.org/3dcitydb/core/5.0",
       "description": "Indicates the specific type of the occupants that are contained by a feature.",
       "type": "core:Code",
+      "maxOccurs": 1,
       "join": {
         "table": "property",
         "fromColumn": "id",
