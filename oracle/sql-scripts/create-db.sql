@@ -2,7 +2,8 @@ SET SERVEROUTPUT ON
 SET FEEDBACK ON
 SET VERIFY OFF
 SET SHOWMODE OFF
-WHENEVER SQLERROR EXIT
+WHENEVER SQLERROR EXIT FAILURE
+WHENEVER OSERROR EXIT FAILURE
 
 -- parse arguments
 DEFINE SRID=&1;
@@ -53,6 +54,9 @@ SELECT CASE
   END AS script
 FROM dual;
 @@&create_changelog_extension
+
+-- check for compilation errors
+@@util/check-compilation.sql
 
 COMMIT;
 
