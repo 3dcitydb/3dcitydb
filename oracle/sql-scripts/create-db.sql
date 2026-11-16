@@ -48,7 +48,7 @@ PROMPT Creating 'citydb' packages ...
 -- create changelog extension
 COLUMN script NEW_VALUE create_changelog_extension
 SELECT CASE
-  WHEN upper('&CHANGELOG')='YES' THEN 'create-changelog.sql'
+  WHEN upper('&CHANGELOG')='YES' THEN 'changelog/changelog.sql'
   ELSE 'util/do-nothing.sql'
   END AS script
 FROM dual;

@@ -4,11 +4,7 @@ SET VERIFY OFF
 SET SHOWMODE OFF
 WHENEVER SQLERROR EXIT
 
-PROMPT
-PROMPT Setting up changelog extension ...
-@@changelog/changelog-table.sql
-@@changelog/feature-trigger.sql
-@@changelog/spatial-objects.sql
+@@changelog/changelog.sql
 
 COMMIT;
 
