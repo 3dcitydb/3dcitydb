@@ -99,7 +99,7 @@ System requirements
 Setting up an instance of the 3D City Database requires an existing installation of a PostgreSQL or Oracle database. Currently, only following database versions are supported:
 
 * PostgreSQL >= 14 with PostGIS >= 3.2
-* Oracle Database 23ai or later
+* Oracle AI Database 26ai
 
 It is recommended that you always install the latest patches, minor releases, and security updates for your
 database system. Database versions that have reached end-of-life are no longer supported by the 3D City Database.
