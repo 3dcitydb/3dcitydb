@@ -1,15 +1,20 @@
 -- select-ai-create-profile.sql
 -- Run as the application user (e.g. CITYDB) in the target PDB.
 -- Required SQL*Plus defines:
---   DB_USER    (e.g. CITYDB)
+--   DB_USER    (e.g. citydb)
 --   AI_API_KEY (the OpenAI API key value)
 --   AI_MODEL   (the OpenAI model name, e.g. gpt-5.5)
 
-WHENEVER SQLERROR EXIT SQL.SQLCODE;
+WHENEVER SQLERROR EXIT FAILURE
+WHENEVER OSERROR EXIT FAILURE
 
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
 SET VERIFY OFF
+
+-- use the upper-case user name as owner of the tables in the AI profile
+COLUMN db_user NEW_VALUE DB_USER
+SELECT upper('&DB_USER') AS db_user FROM dual;
 
 PROMPT Creating OpenAI credential (drop if exists) ...
 
@@ -90,5 +95,8 @@ BEGIN
   DBMS_CLOUD_AI.SET_PROFILE('OPENAI');
 END;
 /
+
+-- check for compilation errors
+@util/check-compilation.sql
 
 PROMPT AI profile created successfully.

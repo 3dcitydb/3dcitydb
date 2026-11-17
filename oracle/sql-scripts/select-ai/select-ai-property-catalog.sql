@@ -40,6 +40,9 @@
 -- Run as the application user (e.g. CITYDB) in the target PDB AFTER
 -- schema.sql, objectclass-instances.sql and datatype-instances.sql.
 
+WHENEVER SQLERROR EXIT FAILURE
+WHENEVER OSERROR EXIT FAILURE
+
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
 
@@ -844,5 +847,8 @@ CREATE OR REPLACE PACKAGE BODY citydb_ai AS
 
 END citydb_ai;
 /
+
+-- check for compilation errors
+@util/check-compilation.sql
 
 PROMPT CITYDB_AI NL2SQL layer setup complete.

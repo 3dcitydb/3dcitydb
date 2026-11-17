@@ -3,10 +3,7 @@
 # This script is called from 3dcitydb-initdb.sh when ENABLE_SELECT_AI=true
 # ---------------------------------------------------------------------------
 
-set -e
-
-# Required env vars (inherited from 3dcitydb-initdb.sh)
-: "${ORACLE_PWD:?ORACLE_PWD is required}"
+# Env vars (inherited from 3dcitydb-initdb.sh)
 : "${ORACLE_PDB:=FREEPDB1}"
 : "${DB_USER:=citydb}"
 
@@ -17,7 +14,7 @@ CATCON_PL="$CLOUD_ADMIN_DIR/catcon.pl"
 SSL_WALLET_DIR="${SSL_WALLET_DIR:-/opt/oracle/wallet}"
 SSL_WALLET_PWD="${SSL_WALLET_PWD:-WalletPass123}"
 CLOUD_OWNER="${CLOUD_OWNER:-C##CLOUD\$SERVICE}"
-CUSTOM_SQL_DIR="${CUSTOM_SQL_DIR:-/opt/oracle/3dcitydb-custom}"
+CUSTOM_SQL_DIR="${CUSTOM_SQL_DIR:-select-ai}"
 AI_MODEL="${AI_MODEL:-gpt-5.5}"
 
 DBMS_CLOUD_CERTS_URL="${DBMS_CLOUD_CERTS_URL:-https://objectstorage.us-phoenix-1.oraclecloud.com/p/KB63IAuDCGhz_azOVQ07Qa_mxL3bGrFh1dtsltreRJPbmb-VwsH2aQ4Pur2ADBMA/n/adwcdemo/b/CERTS/o/dbc_certs.tar}"
@@ -32,6 +29,10 @@ echo "[DBMS_CLOUD] Running catclouduser.sql (create C##CLOUD\$SERVICE) ..."
   -d "$CLOUD_ADMIN_DIR" \
   -l /tmp \
   catclouduser.sql
+if [ $? -ne 0 ]; then
+  echo "[DBMS_CLOUD] Failed to run catclouduser.sql."
+  return 1
+fi
 
 # --- Step 2: Install DBMS_CLOUD package family (dbms_cloud_install.sql) ------
 echo
@@ -43,6 +44,10 @@ echo "[DBMS_CLOUD] Running dbms_cloud_install.sql (install DBMS_CLOUD family) ..
   -d "$CLOUD_ADMIN_DIR" \
   -l /tmp \
   dbms_cloud_install.sql
+if [ $? -ne 0 ]; then
+  echo "[DBMS_CLOUD] Failed to run dbms_cloud_install.sql."
+  return 1
+fi
 
 echo "[DBMS_CLOUD] catcon.pl completed."
 
@@ -54,6 +59,10 @@ mkdir -p "$SSL_WALLET_DIR"
 
 if [ ! -f "$SSL_WALLET_DIR/ewallet.p12" ] && [ ! -f "$SSL_WALLET_DIR/cwallet.sso" ]; then
   ( cd "$SSL_WALLET_DIR" && orapki wallet create -wallet . -pwd "$SSL_WALLET_PWD" -auto_login )
+  if [ $? -ne 0 ]; then
+    echo "Failed to create SSL wallet at $SSL_WALLET_DIR."
+    return 1
+  fi
 fi
 
 # Download + unpack cert bundle (idempotent)
@@ -68,9 +77,12 @@ if [ ! -f "$CERT_TMP/.downloaded" ]; then
     wget -qO /tmp/dbc_certs.tar "$DBMS_CLOUD_CERTS_URL"
   else
     echo "Neither curl nor wget is available; cannot download certificates." >&2
-    exit 1
+    return 1
   fi
-  tar -xf /tmp/dbc_certs.tar -C "$CERT_TMP"
+  if [ $? -ne 0 ] || ! tar -xf /tmp/dbc_certs.tar -C "$CERT_TMP"; then
+    echo "Failed to download or unpack the DBMS_CLOUD certificates bundle." >&2
+    return 1
+  fi
   touch "$CERT_TMP/.downloaded"
 fi
 
@@ -89,8 +101,8 @@ echo
 echo "[SelectAI][SYS] Running SYS setup (ACLs, roles, privileges) ..."
 
 sqlplus -S -L / as sysdba <<SQL
-WHENEVER OSERROR EXIT 9;
-WHENEVER SQLERROR EXIT SQL.SQLCODE;
+WHENEVER SQLERROR EXIT FAILURE
+WHENEVER OSERROR EXIT FAILURE
 
 ALTER SESSION SET CONTAINER = CDB\$ROOT;
 
@@ -102,6 +114,10 @@ DEFINE DB_USER='${DB_USER}'
 @${CUSTOM_SQL_DIR}/select-ai-sys-setup.sql
 EXIT
 SQL
+if [ $? -ne 0 ]; then
+  echo "[SelectAI][SYS] SYS setup failed."
+  return 1
+fi
 
 echo "[SelectAI][SYS] SYS setup completed."
 
@@ -110,13 +126,17 @@ echo
 echo "[SelectAI] Creating property catalog views and CITYDB_AI package ..."
 
 sqlplus -S "$DB_USER"/"$ORACLE_PWD"@"$ORACLE_PDB" <<SQL
-WHENEVER OSERROR EXIT 9;
-WHENEVER SQLERROR EXIT SQL.SQLCODE;
+WHENEVER SQLERROR EXIT FAILURE
+WHENEVER OSERROR EXIT FAILURE
 
 @${CUSTOM_SQL_DIR}/select-ai-property-catalog.sql
 
 EXIT
 SQL
+if [ $? -ne 0 ]; then
+  echo "[SelectAI] Property catalog setup failed."
+  return 1
+fi
 
 echo "[SelectAI] Property catalog and NL2SQL layer created."
 
@@ -130,10 +150,10 @@ else
   echo "Creating OpenAI credential and profile ..."
 
   sqlplus -S "$DB_USER"/"$ORACLE_PWD"@"$ORACLE_PDB" <<SQL
-WHENEVER OSERROR EXIT 9;
-WHENEVER SQLERROR EXIT SQL.SQLCODE;
+WHENEVER SQLERROR EXIT FAILURE
+WHENEVER OSERROR EXIT FAILURE
 
-DEFINE DB_USER='${DB_USER^^}'
+DEFINE DB_USER='${DB_USER}'
 DEFINE AI_API_KEY='${AI_API_KEY}'
 DEFINE AI_MODEL='${AI_MODEL}'
 
@@ -141,6 +161,10 @@ DEFINE AI_MODEL='${AI_MODEL}'
 
 EXIT
 SQL
+  if [ $? -ne 0 ]; then
+    echo "AI profile creation failed."
+    return 1
+  fi
 
   echo "AI profile created successfully."
 fi

@@ -4,7 +4,6 @@
 
 :: Get the current directory path of this script file
 set CURRENT_DIR=%~dp0
-cd "%CURRENT_DIR%/../../sql-scripts"
 
 :: Read database connection details
 if NOT [%1]==[] (
@@ -16,6 +15,9 @@ if NOT [%1]==[] (
     call "%CURRENT_DIR%connection-details.bat"
   )
 )
+
+:: Change to the sql-scripts directory
+cd /d "%CURRENT_DIR%/../../sql-scripts"
 
 :: Set database client
 if "%ORACLE_CLIENT%"=="" (
@@ -127,8 +129,8 @@ echo Connecting as SYS to "%DB_HOST%:%DB_PORT%/%ORACLE_PDB%" ...
 set "TMPSYS=%TEMP%\3dcitydb_sys_%RANDOM%.sql"
 
 > "%TMPSYS%" (
-  echo WHENEVER OSERROR EXIT 9;
-  echo WHENEVER SQLERROR EXIT SQL.SQLCODE;
+  echo WHENEVER SQLERROR EXIT FAILURE
+  echo WHENEVER OSERROR EXIT FAILURE
   echo ALTER SESSION SET CONTAINER = CDB$ROOT;
   echo DEFINE SSL_WALLET_DIR='%SSL_WALLET_DIR%'
   echo DEFINE CLOUD_OWNER='C##CLOUD$SERVICE'
@@ -158,8 +160,8 @@ echo Connecting to "%DB_USER%@%DB_HOST%:%DB_PORT%/%ORACLE_PDB%" ...
 set "TMPCATALOG=%TEMP%\3dcitydb_catalog_%RANDOM%.sql"
 
 > "%TMPCATALOG%" (
-  echo WHENEVER OSERROR EXIT 9;
-  echo WHENEVER SQLERROR EXIT SQL.SQLCODE;
+  echo WHENEVER SQLERROR EXIT FAILURE
+  echo WHENEVER OSERROR EXIT FAILURE
   echo @select-ai/select-ai-property-catalog.sql
   echo EXIT
 )
@@ -184,8 +186,8 @@ echo Connecting to "%DB_USER%@%DB_HOST%:%DB_PORT%/%ORACLE_PDB%" ...
 set "TMPPROFILE=%TEMP%\3dcitydb_profile_%RANDOM%.sql"
 
 > "%TMPPROFILE%" (
-  echo WHENEVER OSERROR EXIT 9;
-  echo WHENEVER SQLERROR EXIT SQL.SQLCODE;
+  echo WHENEVER SQLERROR EXIT FAILURE
+  echo WHENEVER OSERROR EXIT FAILURE
   echo DEFINE DB_USER='%DB_USER%'
   echo DEFINE AI_API_KEY='%AI_API_KEY%'
   echo DEFINE AI_MODEL='%AI_MODEL%'

@@ -4,7 +4,6 @@
 
 # Get the current directory path of this script file
 CURRENT_DIR="$( cd "$( dirname "$0" )" && pwd )"
-cd "$CURRENT_DIR/../../sql-scripts"
 
 # Read database connection details
 if [ $# -ne 0 ]; then
@@ -16,6 +15,9 @@ else
     source "$CURRENT_DIR/connection-details.sh"
   fi
 fi
+
+# Change to the sql-scripts directory
+cd "$CURRENT_DIR/../../sql-scripts"
 
 # Set database client
 if [ -z "$ORACLE_CLIENT" ]; then
@@ -119,24 +121,21 @@ echo
 read -p "Please enter the OpenAI model (default: gpt-5.5): " AI_MODEL
 AI_MODEL=${AI_MODEL:-gpt-5.5}
 
-# Uppercase DB_USER for Oracle identifiers
-DB_USER_UPPER=$(echo "$DB_USER" | tr '[:lower:]' '[:upper:]')
-
 # --- Step 1: Run SYS setup (ACLs, roles, privileges, PDB grants) ---------------
 echo
 echo "Running SYS setup (ACLs, roles, privileges) ..."
 echo "Connecting as SYS to \"${DB_HOST}:${DB_PORT}/${ORACLE_PDB}\" ..."
 
 "$ORACLE_CLIENT" -S -L "sys/${SYS_PWD}@${DB_HOST}:${DB_PORT}/${ORACLE_PDB} as sysdba" <<SQL
-WHENEVER OSERROR EXIT 9;
-WHENEVER SQLERROR EXIT SQL.SQLCODE;
+WHENEVER SQLERROR EXIT FAILURE
+WHENEVER OSERROR EXIT FAILURE
 
 ALTER SESSION SET CONTAINER = CDB\$ROOT;
 
 DEFINE SSL_WALLET_DIR='${SSL_WALLET_DIR}'
 DEFINE CLOUD_OWNER='C##CLOUD\$SERVICE'
 DEFINE PDB_NAME='${ORACLE_PDB}'
-DEFINE DB_USER='${DB_USER_UPPER}'
+DEFINE DB_USER='${DB_USER}'
 
 @select-ai/select-ai-sys-setup.sql
 EXIT
@@ -158,8 +157,8 @@ echo "Creating property catalog views and CITYDB_AI package ..."
 echo "Connecting to \"$DB_USER@$DB_HOST:$DB_PORT/$ORACLE_PDB\" ..."
 
 "$ORACLE_CLIENT" -S -L "${DB_USER}/${DB_PWD}@${DB_HOST}:${DB_PORT}/${ORACLE_PDB}" <<SQL
-WHENEVER OSERROR EXIT 9;
-WHENEVER SQLERROR EXIT SQL.SQLCODE;
+WHENEVER SQLERROR EXIT FAILURE
+WHENEVER OSERROR EXIT FAILURE
 
 @select-ai/select-ai-property-catalog.sql
 EXIT
@@ -181,10 +180,10 @@ echo "Creating OpenAI credential and AI profile ..."
 echo "Connecting to \"$DB_USER@$DB_HOST:$DB_PORT/$ORACLE_PDB\" ..."
 
 "$ORACLE_CLIENT" -S -L "${DB_USER}/${DB_PWD}@${DB_HOST}:${DB_PORT}/${ORACLE_PDB}" <<SQL
-WHENEVER OSERROR EXIT 9;
-WHENEVER SQLERROR EXIT SQL.SQLCODE;
+WHENEVER SQLERROR EXIT FAILURE
+WHENEVER OSERROR EXIT FAILURE
 
-DEFINE DB_USER='${DB_USER_UPPER}'
+DEFINE DB_USER='${DB_USER}'
 DEFINE AI_API_KEY='${AI_API_KEY}'
 DEFINE AI_MODEL='${AI_MODEL}'
 
