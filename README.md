@@ -19,14 +19,15 @@ virtual 3D city models issued by the [Open Geospatial Consortium (OGC)](https://
 Compared to the earlier versions of the 3DCityDB (V4), more generic mapping rules have been
 applied resulting in a significant reduction of the number of database tables.
 Furthermore, geometry objects are now directly mapped onto corresponding data types 
-provided by PostGIS; i.e. Solid, MultiSurface, CompositeSurfaces, TINs, etc. are no longer
+provided by PostGIS or Oracle Spatial; i.e. Solid, MultiSurface, CompositeSurfaces, TINs, etc. are no longer
 split into their individual polygons stored as separate rows as it was done in 3DCityDB V4. 
 This makes it much easier to express spatial queries in SQL, faster to evaluate such queries, 
 and also to directly connect to the 3DCityDB from geoinformation systems 
 like QGIS or ArcGIS and utilize the spatial objects. Overview of the 
-[relational schema of 3DCityDB V5](postgresql/db-schema/3dcitydb-schema.pdf).
+relational schema of 3DCityDB V5 for [PostgreSQL](postgresql/db-schema/3dcitydb-schema.pdf)
+and [Oracle](oracle/db-schema/3dcitydb-schema.pdf).
 
-The 3D City Database has been realized as a PostgreSQL/PostGIS database schema with a collection of pgSQL utility functions, supporting following key features:
+The 3D City Database has been realized as a database schema for PostgreSQL/PostGIS and Oracle with a collection of utility functions (PL/pgSQL functions and PL/SQL packages, respectively), supporting following key features:
 
  * Full support for CityGML versions 3.0, 2.0 and 1.0
  * Complex thematic modelling including support for Application Domain Extensions (ADE). 
@@ -50,7 +51,8 @@ The 3D City Database has been realized as a PostgreSQL/PostGIS database schema w
 The 3D City Database comes as a collection of SQL scripts that allow for creating and 
 dropping database instances. Different versions of automatically generated Docker containers are
 available. They allow for an immediate launching of a PostgreSQL/PostGIS database with 
-preinstalled 3DCityDB data schema and scripts by a single command.
+preinstalled 3DCityDB data schema and scripts by a single command. For Oracle, a Docker file
+is provided to build such an image yourself.
 
 Who is using the 3D City Database?
 ----------------------------------
@@ -94,9 +96,10 @@ You can download the latest release as well as previous releases from the
 
 System requirements
 -------------------
-Setting up an instance of the 3D City Database requires an existing installation of a PostgreSQL database. Currently, only following database versions are supported:
+Setting up an instance of the 3D City Database requires an existing installation of a PostgreSQL or Oracle database. Currently, only following database versions are supported:
 
 * PostgreSQL >= 14 with PostGIS >= 3.2
+* Oracle Database 23ai or later
 
 It is recommended that you always install the latest patches, minor releases, and security updates for your
 database system. Database versions that have reached end-of-life are no longer supported by the 3D City Database.
@@ -106,10 +109,15 @@ Documentation and literature
 A complete and comprehensive user manual on the 3D City Database V5 and its tools is
 available [online](https://docs.3dcitydb.org/).
 
-An Open Access paper on the 3DCityDB (version 4) has been published in the International
-Journal on Open Geospatial Data, Software and Standards 3 (5), 2018: 
-[Z. Yao, C. Nagel, F. Kunde, G. Hudra, P. Willkomm, A. Donaubauer, T. Adolphi, T. H. Kolbe: 3DCityDB - a 3D geodatabase solution for the management, analysis, and visualization of semantic 3D city models based on CityGML](https://doi.org/10.1186/s40965-018-0046-7). 
-Please use this reference when citing the 3DCityDB project.
+The following Open Access papers on the 3DCityDB have been published:
+
+* 3DCityDB V5: ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences, X-4/W6-2025, 241–248, 2025:
+  [Z. Yao, C. Nagel, M. Kendir, B. Willenborg, T. H. Kolbe: The New 3D City Database 5.0 - Advancing 3D City Data Management based on CityGML 3.0](https://doi.org/10.5194/isprs-annals-X-4-W6-2025-241-2025).
+  Please use this reference when citing the 3DCityDB project.
+* Oracle support for 3DCityDB V5: The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, L-4/W2-2026, 253–259, 2026:
+  [Z. Yao, K. Patenge, H. Gong, C. Nagel, T. H. Kolbe: Extending 3DCityDB with Oracle AI Database Support and LLM-Based Natural Language Interfaces](https://doi.org/10.5194/isprs-archives-L-4-W2-2026-253-2026).
+* 3DCityDB V4: International Journal on Open Geospatial Data, Software and Standards 3 (5), 2018:
+  [Z. Yao, C. Nagel, F. Kunde, G. Hudra, P. Willkomm, A. Donaubauer, T. Adolphi, T. H. Kolbe: 3DCityDB - a 3D geodatabase solution for the management, analysis, and visualization of semantic 3D city models based on CityGML](https://doi.org/10.1186/s40965-018-0046-7).
 
 Database setup
 --------------
@@ -119,8 +127,8 @@ or [build](https://github.com/3dcitydb/3dcitydb#building) the database scripts
 from source. Afterwards, simply execute the `create-db.bat` batch script
 under Windows respectively the `create-db.sh` shell script under UNIX/Linux/MacOS
 environments. These scripts are available for PostgreSQL with PostGIS extension
-and can be found in the subfolders "3dcitydb/postgresql/shell-scripts/windows"
-and "3dcitydb/postgresql/shell-scripts/unix".
+and for Oracle. They can be found in the subfolders "3dcitydb/postgresql/shell-scripts"
+and "3dcitydb/oracle/shell-scripts", each of which contains a "windows" and a "unix" folder.
 
 The connection details for your database account have to be edited in the
 `connection-details` script prior to running the `create-db` script (or any
@@ -165,6 +173,15 @@ yourself using one of the provided Docker files or use a pre-built PostgreSQL im
 or from Github container registry at 
 [https://github.com/orgs/3dcitydb/packages?ecosystem=container](https://github.com/orgs/3dcitydb/packages?ecosystem=container).
 
+Pre-built images are not provided for Oracle. Instead, you can build an image yourself using the
+`Dockerfile.oracle` file, which requires access to the Oracle Container Registry:
+
+    docker build -f Dockerfile.oracle -t 3dcitydb-oracle .
+
+By default, the image is based on Oracle Database Free. Please use the build arguments `BASEIMAGE_NAME` and
+`BASEIMAGE_TAG` to choose a different base image such as
+`container-registry.oracle.com/database/enterprise`.
+
 A comprehensive documentation on how to use the 3D City Database with Docker can be found in the
 [online user manual](https://docs.3dcitydb.org/latest/3dcitydb/docker/).
 
@@ -199,12 +216,12 @@ The 3D City Database V5 has been developed by and with the support from the foll
 * [M.O.S.S. Computer Grafik Systeme GmbH, Taufkirchen](https://www.moss.de/)
 * [Zentrum für Geodäsie und Geoinformatik, Hochschule für Technik Stuttgart](https://www.hft-stuttgart.de/p/zhihang-yao)
 * [LIST Eco GmbH & Co. KG, Köln-Ehrenfeld](https://www.list-eco.de/)
+* [Oracle Global Services Deutschland GmbH](https://www.oracle.com/de/)
 
 Further plans
 -------------
 We are currently working on a couple of things and functionalities, that are intended to be provided in the future:
 
-* Support for the Oracle database management system (sponsors or contributors are welcome!)
 * Support for a tool to export visualization data in the form of 3DTiles. For that purpose we are 
   currently customizing the third-party Open Source tool [pg2b3dm](https://github.com/Geodan/pg2b3dm) 
   developed by Bert Temme to directly work on the 3DCityDB V5. The tool will be provided as a customized 
