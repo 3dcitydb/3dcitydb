@@ -2,17 +2,25 @@
 
 ## [Unreleased]
 
+### Added
+- Added `minOccurs` and `maxOccurs` multiplicity attributes to properties in the JSON schema mapping.
+  `minOccurs` defaults to `0`; omitting `maxOccurs` denotes an unbounded maximum.
+- Added extended statistics on `property(name, namespace_id)`.
+
 ### Changed
 - **Breaking**: `citydb_pkg.terminate_feature` always terminates contained subfeatures, so every feature below a
   terminated feature is terminated itself. The `cascade` parameter was removed.
 - `citydb_pkg.delete_feature` terminates contained subfeatures that are kept because other features still contain
   them, if all these features are terminated.
+- The upgrade runs in a single transaction, so a failed upgrade leaves the database unchanged.
 - PostGIS 3.3 is now the minimum supported version.
-
 
 ### Fixed
 - Fixed `GenericThematicSurface` not being treated as a top-level feature and updated the corresponding metadata in the
   `objectclass` table.
+- Fixed the schema mapping of `AbstractObject` defining `codeSpace` as child of `objectId` instead of `identifier`.
+- The upgrade now also applies schema changes of earlier releases that were missing from previous upgrade scripts,
+  including the `envelope` type of the `feature_changelog` table, which could make the changelog trigger fail.
 
 ## [5.1.4] - 2026-08-25
 

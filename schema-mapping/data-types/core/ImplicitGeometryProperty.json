@@ -10,7 +10,9 @@
       "value": {
         "column": "val_array",
         "type": "doubleArray"
-      }
+      },
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "referencePoint",
@@ -19,7 +21,9 @@
       "value": {
         "column": "val_implicitgeom_refpoint",
         "type": "core:Point"
-      }
+      },
+      "minOccurs": 1,
+      "maxOccurs": 1
     },
     {
       "name": "lod",
@@ -28,7 +32,8 @@
       "value": {
         "column": "val_lod",
         "type": "string"
-      }
+      },
+      "maxOccurs": 1
     }
   ],
   "join": {

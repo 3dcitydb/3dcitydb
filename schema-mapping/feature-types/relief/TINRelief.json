@@ -8,7 +8,9 @@
       "namespace": "http://3dcitydb.org/3dcitydb/relief/5.0",
       "description": "Relates to the triangulated surface of the TINRelief.",
       "type": "core:GeometryProperty",
-      "target": "core:TriangulatedSurface"
+      "target": "core:TriangulatedSurface",
+      "minOccurs": 1,
+      "maxOccurs": 1
     }
   ]
 }

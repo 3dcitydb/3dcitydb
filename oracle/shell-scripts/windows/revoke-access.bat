@@ -4,7 +4,6 @@
 
 :: Get the current directory path of this script file
 set CURRENT_DIR=%~dp0
-cd "%CURRENT_DIR%/../../sql-scripts"
 
 :: Read database connection details
 if NOT [%1]==[] (
@@ -16,6 +15,9 @@ if NOT [%1]==[] (
     call "%CURRENT_DIR%connection-details.bat"
   )
 )
+
+:: Change to the sql-scripts directory
+cd /d "%CURRENT_DIR%/../../sql-scripts"
 
 :: Set database client
 if "%ORACLE_CLIENT%"=="" (

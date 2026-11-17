@@ -253,6 +253,8 @@ CREATE  TABLE property (
 	CONSTRAINT property_pk PRIMARY KEY ( id )
  );
 
+CREATE STATISTICS property_name_namespace_stx (dependencies, mcv) ON name, namespace_id FROM property;
+
 CREATE INDEX property_feature_fkx ON property  ( feature_id );
 
 CREATE INDEX property_parent_fkx ON property  ( parent_id );

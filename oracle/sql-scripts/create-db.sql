@@ -2,7 +2,8 @@ SET SERVEROUTPUT ON
 SET FEEDBACK ON
 SET VERIFY OFF
 SET SHOWMODE OFF
-WHENEVER SQLERROR EXIT
+WHENEVER SQLERROR EXIT FAILURE
+WHENEVER OSERROR EXIT FAILURE
 
 -- parse arguments
 DEFINE SRID=&1;
@@ -47,11 +48,14 @@ PROMPT Creating 'citydb' packages ...
 -- create changelog extension
 COLUMN script NEW_VALUE create_changelog_extension
 SELECT CASE
-  WHEN upper('&CHANGELOG')='YES' THEN 'create-changelog.sql'
+  WHEN upper('&CHANGELOG')='YES' THEN 'changelog/changelog.sql'
   ELSE 'util/do-nothing.sql'
   END AS script
 FROM dual;
 @@&create_changelog_extension
+
+-- check for compilation errors
+@@util/check-compilation.sql
 
 COMMIT;
 

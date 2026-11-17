@@ -2,13 +2,13 @@ SET SERVEROUTPUT ON
 SET FEEDBACK ON
 SET VERIFY OFF
 SET SHOWMODE OFF
-WHENEVER SQLERROR EXIT
+WHENEVER SQLERROR EXIT FAILURE
+WHENEVER OSERROR EXIT FAILURE
 
-PROMPT
-PROMPT Setting up changelog extension ...
-@@changelog/changelog-table.sql
-@@changelog/feature-trigger.sql
-@@changelog/spatial-objects.sql
+@@changelog/changelog.sql
+
+-- check for compilation errors
+@@util/check-compilation.sql
 
 COMMIT;
 

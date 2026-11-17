@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 # 3DCityDB setup --------------------------------------------------------------
 
-# Exit on error
-set -e
-
 # Set 3DCityDB version --------------------------------------------------------
 if [ -z $CITYDB_VERSION ]; then
   # CITYDB_VERSION unset, read version from the version.txt file
@@ -15,7 +12,7 @@ if [ -z $ORACLE_PWD ]; then
   echo
   echo "ORACLE_PWD is not set. No 3DCityDB instance will be created."
   echo
-  exit
+  return
 fi
 
 # SRID ------------------------------------------------------------------------
@@ -25,7 +22,7 @@ if [ -z ${SRID+x} ]; then
   echo
   echo "SRID is not set. No 3DCityDB instance will be created."
   echo
-  exit
+  return
 else
   # SRID given, check if valid
   if [[ ! $SRID =~ $regex_numeric ]] || [ $SRID -le 0 ]; then
@@ -78,24 +75,45 @@ ORACLE_VERSION=$(sqlplus -S -L system/"$ORACLE_PWD"@"$ORACLE_PDB" <<-EOF
 EOF
 )
 
-# Create user -----------------------------------------------------------------
-echo
-echo "Creating user '$DB_USER' ..."
-sqlplus -S -L system/"$ORACLE_PWD"@"$ORACLE_PDB" <<-EOF > /dev/null
+# Check for an existing 3DCityDB instance -------------------------------------
+# This script runs on every container start, so skip the setup if it is already done
+CITYDB_EXISTS=$(sqlplus -S -L system/"$ORACLE_PWD"@"$ORACLE_PDB" <<-EOF
+  SET PAGESIZE 0 FEEDBACK OFF VERIFY OFF HEADING OFF ECHO OFF
+  SELECT COUNT(*) FROM dba_tables WHERE owner = UPPER('$DB_USER') AND table_name = 'DATABASE_SRS';
+EOF
+)
+
+if [ "${CITYDB_EXISTS//[[:space:]]/}" = "1" ]; then
+  echo
+  echo "3DCityDB instance already exists for user '$DB_USER'. Skipping setup."
+else
+  # Create user ---------------------------------------------------------------
+  echo
+  echo "Creating user '$DB_USER' ..."
+  sqlplus -S -L system/"$ORACLE_PWD"@"$ORACLE_PDB" <<-EOF > /dev/null
   CREATE USER IF NOT EXISTS $DB_USER IDENTIFIED BY $ORACLE_PWD;
   ALTER USER $DB_USER QUOTA UNLIMITED ON USERS;
   GRANT CONNECT, RESOURCE to $DB_USER;
   GRANT CREATE SESSION TO $DB_USER;
   GRANT DB_DEVELOPER_ROLE TO $DB_USER;
 EOF
-echo "Creating user '$DB_USER' done."
+  if [ $? -ne 0 ]; then
+    echo "Failed to create user '$DB_USER'."
+    return 1
+  fi
+  echo "Creating user '$DB_USER' done."
 
-# Setup 3DCityDB schema -------------------------------------------------------
-echo
-echo "Setting up 3DCityDB database schema for user '$DB_USER' ..."
-sqlplus -S -L "$DB_USER"/"$ORACLE_PWD"@"$ORACLE_PDB" @create-db.sql \
-  "${SRID}" "${SRS_NAME}" "${CHANGELOG}" > /dev/null
-echo "Setting up 3DCityDB database schema for user '$DB_USER' done."
+  # Setup 3DCityDB schema -----------------------------------------------------
+  echo
+  echo "Setting up 3DCityDB database schema for user '$DB_USER' ..."
+  sqlplus -S -L "$DB_USER"/"$ORACLE_PWD"@"$ORACLE_PDB" @create-db.sql \
+    "${SRID}" "${SRS_NAME}" "${CHANGELOG}" > /dev/null
+  if [ $? -ne 0 ]; then
+    echo "Failed to set up 3DCityDB database schema for user '$DB_USER'."
+    return 1
+  fi
+  echo "Setting up 3DCityDB database schema for user '$DB_USER' done."
+fi
 
 
 # DBMS_CLOUD + Select AI (optional) ------------------------------------------

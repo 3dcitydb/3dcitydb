@@ -4,7 +4,6 @@
 
 # Get the current directory path of this script file
 CURRENT_DIR="$( cd "$( dirname "$0" )" && pwd )"
-cd "$CURRENT_DIR/../../sql-scripts"
 
 # Read database connection details
 if [ $# -ne 0 ]; then
@@ -16,6 +15,9 @@ else
 	  source "$CURRENT_DIR/connection-details.sh"
   fi
 fi
+
+# Change to the sql-scripts directory
+cd "$CURRENT_DIR/../../sql-scripts"
 
 # Set database client
 if [ -z "$ORACLE_CLIENT" ]; then
