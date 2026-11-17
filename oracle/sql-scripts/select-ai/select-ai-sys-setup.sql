@@ -33,35 +33,6 @@ END;
 -- 1. Network ACL + wallet ACE for CLOUD_OWNER (CDB$ROOT)
 -- ============================================================
 
--- Remove existing ACEs to avoid duplicates on re-run
-BEGIN
-  DBMS_NETWORK_ACL_ADMIN.REMOVE_HOST_ACE(
-    host       => '*',
-    lower_port => 443,
-    upper_port => 443,
-    ace        => xs$ace_type(
-      privilege_list => xs$name_list('http', 'http_proxy'),
-      principal_name => UPPER('&CLOUD_OWNER'),
-      principal_type => xs_acl.ptype_db
-    )
-  );
-EXCEPTION WHEN OTHERS THEN NULL;
-END;
-/
-
-BEGIN
-  DBMS_NETWORK_ACL_ADMIN.REMOVE_WALLET_ACE(
-    wallet_path => 'file:&SSL_WALLET_DIR',
-    ace         => xs$ace_type(
-      privilege_list => xs$name_list('use_client_certificates', 'use_passwords'),
-      principal_name => UPPER('&CLOUD_OWNER'),
-      principal_type => xs_acl.ptype_db
-    )
-  );
-EXCEPTION WHEN OTHERS THEN NULL;
-END;
-/
-
 -- Allow HTTPS (port 443) to all hosts
 BEGIN
   DBMS_NETWORK_ACL_ADMIN.APPEND_HOST_ACE(
@@ -166,22 +137,7 @@ GRANT EXECUTE ON DBMS_CLOUD_AI TO &DB_USER;
 
 PROMPT DBMS_CLOUD grants to &DB_USER completed.
 
--- Network ACL for OpenAI endpoint (remove + append for idempotency)
-BEGIN
-  DBMS_NETWORK_ACL_ADMIN.REMOVE_HOST_ACE(
-    host       => 'api.openai.com',
-    lower_port => 443,
-    upper_port => 443,
-    ace        => xs$ace_type(
-                    privilege_list => xs$name_list('http'),
-                    principal_name => UPPER('&DB_USER'),
-                    principal_type => xs_acl.ptype_db
-                 )
-  );
-EXCEPTION WHEN OTHERS THEN NULL;
-END;
-/
-
+-- Network ACL for OpenAI endpoint
 BEGIN
   DBMS_NETWORK_ACL_ADMIN.APPEND_HOST_ACE(
     host       => 'api.openai.com',

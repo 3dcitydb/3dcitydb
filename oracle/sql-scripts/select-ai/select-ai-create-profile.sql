@@ -23,9 +23,7 @@ BEGIN
   DBMS_CLOUD.DROP_CREDENTIAL(credential_name => 'OPENAI_CRED');
 EXCEPTION
   WHEN OTHERS THEN
-    IF SQLCODE BETWEEN -20999 AND -20000 THEN NULL;  -- DBMS_CLOUD custom error (e.g. does not exist)
-    ELSE RAISE;
-    END IF;
+    IF SQLCODE != -20004 THEN RAISE; END IF;  -- ORA-20004: credential does not exist
 END;
 /
 
@@ -42,22 +40,13 @@ PROMPT Creating AI profile (drop if exists) ...
 
 -- Drop existing profile (idempotent)
 BEGIN
-  DBMS_CLOUD_AI.DROP_PROFILE(profile_name => 'OPENAI');
-EXCEPTION
-  WHEN OTHERS THEN
-    IF SQLCODE BETWEEN -20999 AND -20000 THEN NULL;  -- DBMS_CLOUD_AI custom error (e.g. does not exist)
-    ELSE RAISE;
-    END IF;
+  DBMS_CLOUD_AI.DROP_PROFILE(profile_name => 'OPENAI', force => TRUE);
 END;
 /
 
 -- object_list contains only the PHYSICAL data tables the generated SQL runs
 -- against. The metadata/registry tables (OBJECTCLASS, DATATYPE, NAMESPACE, ADE)
--- and the PROPERTY_CATALOG view are intentionally EXCLUDED: their useful content
--- (objectclass-id map, property->column mapping) is rendered into the prompt by
--- CITYDB_AI.BUILD_CONTEXT instead. Exposing them here only tempted the model to
--- emit OBJECTCLASS joins and could never surface the catalog ROWS anyway, since
--- Select AI sends table structure, not data. See select-ai-property-catalog.sql.
+-- and the PROPERTY_CATALOG view are intentionally EXCLUDED.
 BEGIN
   DBMS_CLOUD_AI.CREATE_PROFILE(
     profile_name => 'OPENAI',
