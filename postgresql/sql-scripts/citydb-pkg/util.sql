@@ -205,13 +205,14 @@ LANGUAGE sql STABLE;
 * normalize_polyhedral
 *
 * @param geom The geometry to process
-* @return A geometry collection of polygons if input is a polyhedral surfaces,
-*   otherwise the original geometry
+* @return A multipolygon if input is a polyhedral surface or a geometry
+*   collection of polyhedral surfaces, otherwise the original geometry
 ******************************************************************/
 CREATE OR REPLACE FUNCTION citydb_pkg.normalize_polyhedral(geom GEOMETRY) RETURNS GEOMETRY AS
 $body$
 SELECT CASE
-  WHEN ST_GeometryType($1) = 'ST_PolyhedralSurface' THEN ST_ForceCollection($1)
+  WHEN ST_GeometryType($1) = 'ST_PolyhedralSurface' THEN ST_CollectionExtract(ST_ForceCollection($1), 3)
+  WHEN ST_GeometryType($1) = 'ST_GeometryCollection' THEN ST_CollectionExtract($1, 3)
   ELSE $1
 END;
 $body$
