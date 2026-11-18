@@ -128,6 +128,36 @@ EOF
   echo "Setting up 3DCityDB database schema for user '$DB_USER' done."
 fi
 
+
+# DBMS_CLOUD + Select AI (optional) ------------------------------------------
+if [ "${ENABLE_SELECT_AI,,}" = "true" ] || [ "${ENABLE_SELECT_AI,,}" = "yes" ]; then
+  # Skip the setup if it is already done (this script runs on every container start)
+  SELECT_AI_EXISTS=$(sqlplus -S -L system/"$ORACLE_PWD"@"$ORACLE_PDB" <<-EOF
+  SET PAGESIZE 0 FEEDBACK OFF VERIFY OFF HEADING OFF ECHO OFF
+  SELECT COUNT(*) FROM dba_objects WHERE owner = UPPER('$DB_USER') AND object_name = 'CITYDB_AI' AND object_type = 'PACKAGE';
+EOF
+)
+
+  if [ "${SELECT_AI_EXISTS//[[:space:]]/}" = "1" ]; then
+    echo
+    echo "Select AI is already set up for user '$DB_USER'. Skipping setup."
+  else
+    echo
+    echo "ENABLE_SELECT_AI is set. Installing DBMS_CLOUD and configuring Select AI ..."
+    INSTALL_SCRIPT="/opt/oracle/3dcitydb-custom/install-dbms-cloud.sh"
+    if [ -f "$INSTALL_SCRIPT" ]; then
+      source "$INSTALL_SCRIPT" || return 1
+    else
+      echo "ERROR: $INSTALL_SCRIPT not found. Skipping Select AI setup."
+    fi
+  fi
+else
+  echo
+  echo "ENABLE_SELECT_AI is not set. Skipping DBMS_CLOUD / Select AI setup."
+  echo "Set ENABLE_SELECT_AI=true to enable it."
+fi
+
+
 # Echo info -------------------------------------------------------------------
 cat <<EOF
 
