@@ -17,7 +17,7 @@ END AS do_action
 
 -- check upgrade to 5.1.1
 SELECT CASE
-  WHEN :current_major = 5 AND :current_minor <= 1 AND :current_revision < 1 THEN 'upgrade-5.1.1.sql'
+  WHEN :current_major = 5 AND (:current_minor < 1 OR (:current_minor = 1 AND :current_revision < 1)) THEN 'upgrade-5.1.1.sql'
   ELSE '../util/do-nothing.sql'
 END AS do_action
 \gset

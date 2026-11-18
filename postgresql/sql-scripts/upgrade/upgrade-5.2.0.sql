@@ -498,6 +498,9 @@ BEGIN
       WHERE e.codelist_id = upgrade_codelist_id AND e.code = '1120';
       UPDATE codelist_entry e SET code = '1120'
       WHERE e.codelist_id = upgrade_codelist_id AND e.code = '1130';
+
+      PERFORM setval(format('%I.codelist_entry_seq', schema_name),
+        GREATEST((SELECT max(id) FROM codelist_entry), nextval(format('%I.codelist_entry_seq', schema_name)::regclass)));
       INSERT INTO codelist_entry (codelist_id, code, definition)
       VALUES (upgrade_codelist_id, '1130', 'communicating');
     END LOOP;
