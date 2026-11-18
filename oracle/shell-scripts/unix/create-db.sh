@@ -1,6 +1,6 @@
 #!/bin/bash
 # Shell script to create an instance of the 3D City Database
-# on Oracle Database 23ai or higher
+# on Oracle AI Database 26ai
 
 # Get the current directory path of this script file
 CURRENT_DIR="$( cd "$( dirname "$0" )" && pwd )"

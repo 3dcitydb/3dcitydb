@@ -1,6 +1,6 @@
 #!/bin/bash
 # Shell script to grant access privileges to a 3DCityDB schema
-# on Oracle Database 23ai or higher
+# on Oracle AI Database 26ai
 
 # Get the current directory path of this script file
 CURRENT_DIR="$( cd "$( dirname "$0" )" && pwd )"

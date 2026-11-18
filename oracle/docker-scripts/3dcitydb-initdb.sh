@@ -91,8 +91,21 @@ else
   echo
   echo "Creating user '$DB_USER' ..."
   sqlplus -S -L system/"$ORACLE_PWD"@"$ORACLE_PDB" <<-EOF > /dev/null
+  -- Create the USERS tablespace if the base image does not provide it (e.g., lite images)
+  DECLARE
+    v_dir VARCHAR2(513);
+  BEGIN
+    SELECT MIN(SUBSTR(file_name, 1, INSTR(file_name, '/', -1))) INTO v_dir
+    FROM dba_data_files
+    WHERE tablespace_name = 'SYSTEM'
+      AND NOT EXISTS (SELECT 1 FROM dba_tablespaces WHERE tablespace_name = 'USERS');
+    IF v_dir IS NOT NULL THEN
+      EXECUTE IMMEDIATE 'CREATE BIGFILE TABLESPACE USERS DATAFILE ''' || v_dir || 'users01.dbf'' SIZE 10M AUTOEXTEND ON';
+    END IF;
+  END;
+  /
   CREATE USER IF NOT EXISTS $DB_USER IDENTIFIED BY $ORACLE_PWD;
-  ALTER USER $DB_USER QUOTA UNLIMITED ON USERS;
+  ALTER USER $DB_USER DEFAULT TABLESPACE USERS QUOTA UNLIMITED ON USERS;
   GRANT CONNECT, RESOURCE to $DB_USER;
   GRANT CREATE SESSION TO $DB_USER;
   GRANT DB_DEVELOPER_ROLE TO $DB_USER;

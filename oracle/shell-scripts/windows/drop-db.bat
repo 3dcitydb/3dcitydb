@@ -1,6 +1,6 @@
 @echo off
 :: Shell script to drop an instance of the 3D City Database
-:: on Oracle Database 23ai or higher
+:: on Oracle AI Database 26ai
 
 :: Get the current directory path of this script file
 set CURRENT_DIR=%~dp0

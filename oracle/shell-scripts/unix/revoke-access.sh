@@ -1,6 +1,6 @@
 #!/bin/bash
 # Shell script to revoke access privileges from a 3DCityDB schema
-# on Oracle Database 23ai or higher
+# on Oracle AI Database 26ai
 
 # Get the current directory path of this script file
 CURRENT_DIR="$( cd "$( dirname "$0" )" && pwd )"

@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 ### Added
+- **Highlight**: Added support for Oracle AI Database 26ai as a second database system alongside
+  PostgreSQL/PostGIS.
 - Added `minOccurs` and `maxOccurs` multiplicity attributes to properties in the JSON schema mapping.
   `minOccurs` defaults to `0`; omitting `maxOccurs` denotes an unbounded maximum.
 - Added extended statistics on `property(name, namespace_id)`.
