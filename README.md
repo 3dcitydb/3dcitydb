@@ -178,9 +178,13 @@ Pre-built images are not provided for Oracle. Instead, you can build an image yo
 
     docker build -f Dockerfile.oracle -t 3dcitydb-oracle .
 
-By default, the image is based on Oracle Database Free. Please use the build arguments `BASEIMAGE_NAME` and
-`BASEIMAGE_TAG` to choose a different base image such as
-`container-registry.oracle.com/database/enterprise`.
+By default, the image is based on Oracle AI Database 26ai Free (`23.26.3.0`). Please use the build arguments
+`BASEIMAGE_NAME` and `BASEIMAGE_TAG` to choose a different base image. For example, to build on the
+Enterprise Edition:
+
+    docker build -f Dockerfile.oracle -t 3dcitydb-oracle \
+      --build-arg BASEIMAGE_NAME=container-registry.oracle.com/database/enterprise \
+      --build-arg BASEIMAGE_TAG=latest .
 
 A comprehensive documentation on how to use the 3D City Database with Docker can be found in the
 [online user manual](https://docs.3dcitydb.org/latest/3dcitydb/docker/).

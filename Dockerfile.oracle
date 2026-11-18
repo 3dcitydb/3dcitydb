@@ -6,7 +6,7 @@
 # Fetch & build stage #########################################################
 # ARGS
 ARG BASEIMAGE_NAME='container-registry.oracle.com/database/free'
-ARG BASEIMAGE_TAG='latest'
+ARG BASEIMAGE_TAG='23.26.3.0'
 ARG BUILDER_IMAGE_TAG='21-jdk-jammy'
 
 # Base image
