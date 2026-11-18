@@ -19,6 +19,7 @@
 - Fixed `GenericThematicSurface` not being treated as a top-level feature and updated the corresponding metadata in the
   `objectclass` table.
 - Fixed the schema mapping of `AbstractObject` defining `codeSpace` as child of `objectId` instead of `identifier`.
+- Fixed `citydb_pkg.terminate_feature` overwriting the termination date of already terminated features.
 - The upgrade now also applies schema changes of earlier releases that were missing from previous upgrade scripts,
   including the `envelope` type of the `feature_changelog` table, which could make the changelog trigger fail.
 
