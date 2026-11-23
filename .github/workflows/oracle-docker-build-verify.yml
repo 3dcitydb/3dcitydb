@@ -1,0 +1,179 @@
+name: oracle-docker-build-verify
+
+# Builds the Oracle Docker image and verifies that a container sets up a
+# 3DCityDB instance. The image is never pushed to a registry.
+
+on:
+  workflow_dispatch:
+  push:
+    # Branches only, so that a release tag push does not trigger a second run.
+    branches:
+      - '**'
+    paths:
+      - 'Dockerfile.oracle'
+      - '.dockerignore'
+      - 'oracle/**'
+      - '!oracle/db-schema/**'
+      - '!oracle/shell-scripts/**'
+      - 'schema-mapping/**'
+      - 'build.gradle'
+      - 'settings.gradle'
+      - 'properties.gradle'
+      - 'gradlew'
+      - 'gradle/**'
+      - '.github/workflows/oracle-docker-build-verify.yml'
+  pull_request:
+    paths:
+      - 'Dockerfile.oracle'
+      - '.dockerignore'
+      - 'oracle/**'
+      - '!oracle/db-schema/**'
+      - '!oracle/shell-scripts/**'
+      - 'schema-mapping/**'
+      - 'build.gradle'
+      - 'settings.gradle'
+      - 'properties.gradle'
+      - 'gradlew'
+      - 'gradle/**'
+      - '.github/workflows/oracle-docker-build-verify.yml'
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The lite image is used to keep the database startup short.
+  BASEIMAGE_TAG: '23.26.3.0-lite'
+  IMAGE: 3dcitydb-oracle:ci
+  CONTAINER: citydb-oracle
+  # Password of a throwaway database that only lives for the duration of the job.
+  ORACLE_PWD: CityDB_1234
+  SRID: '25832'
+  HEIGHT_EPSG: '7837'
+
+jobs:
+  build-verify:
+    name: build-verify (${{ matrix.platform.arch }}, changelog=${{ matrix.changelog }})
+
+    runs-on: ${{ matrix.platform.runner }}
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        changelog: ["no", "yes"]
+        platform:
+          - arch: amd64
+            runner: ubuntu-latest
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+
+    env:
+      CHANGELOG: ${{ matrix.changelog }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+      - name: Build image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: Dockerfile.oracle
+          push: false
+          load: true
+          tags: ${{ env.IMAGE }}
+          build-args: |
+            BASEIMAGE_TAG=${{ env.BASEIMAGE_TAG }}
+      - name: Check image architecture
+        env:
+          EXPECTED_ARCH: ${{ matrix.platform.arch }}
+        run: |
+          arch=$(docker image inspect --format '{{.Architecture}}' "$IMAGE")
+          echo "Image architecture: $arch"
+          if [ "$arch" != "$EXPECTED_ARCH" ]; then
+            echo "::error::Expected a $EXPECTED_ARCH image but got $arch."
+            exit 1
+          fi
+      - name: Start container
+        id: start
+        run: |
+          docker run -d --name "$CONTAINER" \
+            -e ORACLE_PWD -e SRID -e HEIGHT_EPSG -e CHANGELOG \
+            "$IMAGE"
+      - name: Wait for 3DCityDB setup
+        run: |
+          # The init script is sourced by the base image and does not stop the
+          # container on errors, so the result has to be read from the logs.
+          deadline=$((SECONDS + 900))
+          while true; do
+            logs=$(docker logs "$CONTAINER" 2>&1)
+            if grep -qF "Setting up 3DCityDB database schema for user 'citydb' done." <<< "$logs"; then
+              echo "3DCityDB setup finished after ${SECONDS}s."
+              break
+            fi
+            if grep -qF -e "Failed to create user" -e "Failed to set up 3DCityDB" \
+                -e "No 3DCityDB instance will be created" <<< "$logs"; then
+              echo "::error::3DCityDB setup failed, see the container logs."
+              exit 1
+            fi
+            if [ "$(docker inspect --format '{{.State.Running}}' "$CONTAINER")" != "true" ]; then
+              echo "::error::Container stopped before the 3DCityDB setup finished."
+              exit 1
+            fi
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              echo "::error::Timed out waiting for the 3DCityDB setup."
+              exit 1
+            fi
+            sleep 5
+          done
+      - name: Verify 3DCityDB instance
+        run: |
+          expected_version=$(docker exec "$CONTAINER" cat /3dcitydb/version.txt)
+          docker exec -i "$CONTAINER" sqlplus -S -L "citydb/${ORACLE_PWD}@FREEPDB1" <<EOF
+          WHENEVER SQLERROR EXIT FAILURE
+          WHENEVER OSERROR EXIT FAILURE
+          SET SERVEROUTPUT ON
+          SET DEFINE OFF
+          DECLARE
+            v_changelog NUMBER := CASE WHEN UPPER('${CHANGELOG}') = 'YES' THEN 1 ELSE 0 END;
+            v_version VARCHAR2(100);
+            v_srid NUMBER;
+            v_count NUMBER;
+            PROCEDURE assert_that(p_condition BOOLEAN, p_message VARCHAR2) IS
+            BEGIN
+              IF p_condition IS NULL OR NOT p_condition THEN
+                RAISE_APPLICATION_ERROR(-20000, p_message);
+              END IF;
+              DBMS_OUTPUT.PUT_LINE('OK: ' || p_message);
+            END;
+          BEGIN
+            SELECT t.version INTO v_version FROM TABLE(citydb_util.citydb_version) t;
+            assert_that(v_version = '${expected_version}',
+              '3DCityDB version is ${expected_version} (got ' || v_version || ')');
+            SELECT srid INTO v_srid FROM database_srs;
+            assert_that(v_srid = ${SRID}, 'SRID is ${SRID} (got ' || v_srid || ')');
+            SELECT COUNT(*) INTO v_count FROM user_objects WHERE status <> 'VALID';
+            assert_that(v_count = 0, 'no invalid database objects (got ' || v_count || ')');
+            SELECT COUNT(*) INTO v_count FROM namespace;
+            assert_that(v_count > 0, 'NAMESPACE is populated (got ' || v_count || ' rows)');
+            SELECT COUNT(*) INTO v_count FROM objectclass;
+            assert_that(v_count > 0, 'OBJECTCLASS is populated (got ' || v_count || ' rows)');
+            SELECT COUNT(*) INTO v_count FROM datatype;
+            assert_that(v_count > 0, 'DATATYPE is populated (got ' || v_count || ' rows)');
+            SELECT COUNT(*) INTO v_count FROM user_tables WHERE table_name = 'FEATURE_CHANGELOG';
+            assert_that(v_count = v_changelog,
+              'FEATURE_CHANGELOG tables: expected ' || v_changelog || ' (got ' || v_count || ')');
+            SELECT COUNT(*) INTO v_count FROM user_triggers WHERE trigger_name LIKE 'FEATURE_CHANGELOG%';
+            assert_that(v_count = 2 * v_changelog,
+              'changelog triggers: expected ' || 2 * v_changelog || ' (got ' || v_count || ')');
+          END;
+          /
+          EOF
+      - name: Print container logs
+        if: always() && steps.start.outcome == 'success'
+        run: docker logs "$CONTAINER"
