@@ -7,6 +7,11 @@ SET client_min_messages TO WARNING;
 \set CHANGELOG :changelog
 \set SCHEMA_NAME citydb
 
+-- check PostgreSQL version
+\echo
+\echo 'Checking PostgreSQL version ...'
+\ir util/check-postgresql-version.sql
+
 -- check PostGIS version
 \echo
 \echo 'Checking PostGIS version ...'

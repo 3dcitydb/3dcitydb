@@ -1,3 +1,7 @@
+-- check PostgreSQL version
+\echo 'Checking PostgreSQL version ...'
+\ir ../util/check-postgresql-version.sql
+
 -- check PostGIS version
 \echo 'Checking PostGIS version ...'
 \ir ../util/check-postgis-version.sql

@@ -13,7 +13,7 @@
 - `citydb_pkg.delete_feature` terminates contained subfeatures that are kept because other features still contain
   them, if all these features are terminated.
 - The upgrade runs in a single transaction, so a failed upgrade leaves the database unchanged.
-- PostGIS 3.3 is now the minimum supported version.
+- PostgreSQL 15 and PostGIS 3.3 are now the minimum supported versions. The setup and upgrade scripts check the PostgreSQL version.
 
 ### Fixed
 - Fixed `GenericThematicSurface` not being treated as a top-level feature and updated the corresponding metadata in the
