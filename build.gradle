@@ -11,10 +11,11 @@ plugins {
 
 apply from: 'properties.gradle'
 
-version = '5.1.4'
+version = '5.2.0-SNAPSHOT'
 group = 'org.citydb'
 
 ext {
+    postgresqlVersion = '15.0.0'
     postgisVersion = '3.3.0'
 }
 
@@ -37,6 +38,7 @@ distributions.main.contents {
     def featureTypes = readJsonTypes('schema-mapping/feature-types')
     def dataTypes = readJsonTypes('schema-mapping/data-types')
     def version = parseVersion("$project.version")
+    def postgresqlVersion = parseVersion("$ext.postgresqlVersion")
     def postgisVersion = parseVersion("$ext.postgisVersion")
     filteringCharset = 'UTF-8'
 
@@ -59,6 +61,9 @@ distributions.main.contents {
         }
         filesMatching(['**/upgrade-db.sql', '**/util.sql']) {
             filter { String line -> replaceTokens(line, version, '', '') }
+        }
+        filesMatching(['**/check-postgresql-version.sql']) {
+            filter { String line -> replaceTokens(line, postgresqlVersion, '', '') }
         }
         filesMatching(['**/check-postgis-version.sql']) {
             filter { String line -> replaceTokens(line, postgisVersion, '', '') }
