@@ -21,6 +21,7 @@
 - Fixed the schema mapping of `AbstractObject` defining `codeSpace` as child of `objectId` instead of `identifier`.
 - Fixed `citydb_pkg.terminate_feature` overwriting the termination date of already terminated features.
 - Fixed 2D spatial predicates failing on solids and multi-solids.
+- Fixed `citydb_pkg.delete_property` scanning the entire `property` table when deleting many nested properties.
 - The upgrade now also applies schema changes of earlier releases that were missing from previous upgrade scripts,
   including the `envelope` type of the `feature_changelog` table, which could make the changelog trigger fail.
 

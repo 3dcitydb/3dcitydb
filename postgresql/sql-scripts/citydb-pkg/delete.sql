@@ -284,17 +284,25 @@ DECLARE
 BEGIN
   current_ids := visited_ids || pid_array;
 
+  -- parents are looked up by index per property to avoid scanning the property table
   WITH parent_refs AS (
     SELECT
       c.id, citydb_pkg.delete_property_internal(ARRAY[p.id], current_ids)
     FROM
       property c
     INNER JOIN unnest($1) AS a(a_id) ON c.id = a.a_id
-    INNER JOIN property p ON p.id = c.parent_id
-    WHERE
-      p.name IS NOT DISTINCT FROM c.name
-      AND p.namespace_id IS NOT DISTINCT FROM c.namespace_id
-      AND NOT (p.id = ANY(current_ids))
+    CROSS JOIN LATERAL (
+      SELECT
+        p.id
+      FROM
+        property p
+      WHERE
+        p.id = c.parent_id
+        AND p.name IS NOT DISTINCT FROM c.name
+        AND p.namespace_id IS NOT DISTINCT FROM c.namespace_id
+        AND NOT (p.id = ANY(current_ids))
+      OFFSET 0
+    ) p
   )
   SELECT
     array_agg(id)
@@ -315,10 +323,16 @@ BEGIN
     SELECT
       p.id
     FROM
-      property p,
       child_refs c
-    WHERE
-      p.parent_id = c.id
+    CROSS JOIN LATERAL (
+      SELECT
+        p.id
+      FROM
+        property p
+      WHERE
+        p.parent_id = c.id
+      OFFSET 0
+    ) p
   )
   SELECT
     array_agg(id)
